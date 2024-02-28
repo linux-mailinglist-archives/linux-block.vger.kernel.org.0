@@ -1,131 +1,127 @@
-Return-Path: <linux-block+bounces-3820-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3822-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2090486BB55
-	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 23:58:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E385186BBE1
+	for <lists+linux-block@lfdr.de>; Thu, 29 Feb 2024 00:04:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD9A428AFE9
-	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 22:58:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F171283E77
+	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 23:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48E1815DBB5;
-	Wed, 28 Feb 2024 22:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34C413D2E5;
+	Wed, 28 Feb 2024 23:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ObCMGTaY"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Pnq2tk02"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1B17290B;
-	Wed, 28 Feb 2024 22:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA89413D2E3
+	for <linux-block@vger.kernel.org>; Wed, 28 Feb 2024 23:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161027; cv=none; b=oko8Z5AlwreFdg7Ls+MRKfxXVTuF7zYjAGeVvy0AlMHZs9ZIWbeB3FCR6u9XM28aRIJQaddqjEKJHrTGP1vaplk8hxdyyyCwdOjHnYM9N8tIbson73fuMYkfH22y5Jakv6QVfljuNEZkuupEjB6kMcP9oCYbQKTEdQC7tmyjnPg=
+	t=1709161346; cv=none; b=UVTFfoChHzbESXqnF4nBQBHlJuk/sEX6bb9Q4QMSeXGN2sPJsxlBAF1pZvZU09lMV2hh/UwUn2lnY0tkV8iF3EDDLO8mbK82ehSeE5ctjwJAGZHOFTVu2vfhUfgb/KKXCeWP/q2F614IYvUK4VMSas92aIV1kBaq997OjOEXrnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709161027; c=relaxed/simple;
-	bh=rjrBsSeN4TvfsIeude8FJjx7Vee0SyykGlyHSUvPlkU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hc/CRwQlTzORP5lXLe8nfS+XwzXAvVnFo8+07UFOkkm814Th99HSMo42Dn9BpGDZLnWKaTteg49NKqBaAWpsvGLZ5KkHBO0g+ZWVMJSdXz6dTHRYgQleXfMMKzBspZwXSnWtWcAkspM1Owwmlm43hcL/8h17W7QdEa9w48iJXig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ObCMGTaY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=s9Pu6ieiVUWU70yfnx7yKzpl91lyIUDqJOc53o+My9E=; b=ObCMGTaYmZ7eGaBIveicf6zCPg
-	4ldJZK3Zo/x9AzzJN+CyLM4jJgIgwbFC5bApatXQGhx3iDMfEQL+2Rc8oDSIj3Bpo4bOOqTjY/VUx
-	p9FHFxyBZ5XG1SLLPVDWVT+sSxR10tnFG8PmOSPxceqiRaUPC5Z7YCQ4oSDD13tZ6gqUOZKrLga33
-	wBVeBIo6p6zAHp4M+FYPMTJuLcjjBzLhQItZOYd2BODrPdKRcEFGuzSnRTUY4RVwE3HDE8KVZe2oY
-	GjPu5Fr/BVqq9v0i4JN4BYMvryraC5/39T6UIE+96kQ/e0vNpjxqnX9G//ASIDbgf/BPQXYR7mBVM
-	52OC7idg==;
-Received: from [4.28.11.157] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfSrI-0000000BCQ7-3WqO;
-	Wed, 28 Feb 2024 22:57:04 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Jens Axboe <axboe@kernel.dk>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>
-Cc: dm-devel@lists.linux.dev,
-	linux-block@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: [PATCH 14/14] block: remove disk_stack_limits
-Date: Wed, 28 Feb 2024 14:56:53 -0800
-Message-Id: <20240228225653.947152-15-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240228225653.947152-1-hch@lst.de>
-References: <20240228225653.947152-1-hch@lst.de>
+	s=arc-20240116; t=1709161346; c=relaxed/simple;
+	bh=rFdeaF8OvHp8ycIMfjI32IqX3BMfkKmkCnOldjcHl/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DO8STOASaiEgMEcMpvCyyvnL5D7IVGUL34sugrz6RJn72NBxzVx9B8ue1RzqvkwveZeIk81ydjp5US2mSQtX5t0Htfj/z4bZU4l/na0eXGk5jGyjESTVAqFoAUcNIs6sjFEt6gC6L2qFtApJLgfuH3NpwNEhCCyKpiGu4KXfm7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Pnq2tk02; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5640fef9fa6so449141a12.0
+        for <linux-block@vger.kernel.org>; Wed, 28 Feb 2024 15:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1709161343; x=1709766143; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XmDUVGJ7uYNuJQyRX/NAFGYz0phL9n1ekfsCjXQN9T0=;
+        b=Pnq2tk029hp2DbW9wkG6Ttyi0a4B7u0XS89VdZHBYs7YNjJFmMuUm8JnIMRX+y/z6H
+         j0kZL8TCzfachEc0eI36IGzZRWuDMpoCNfEvJy3xRlEJVr0pqEf7noUIRUujyaRNVOVR
+         YIF3UKbPKXsJ47h/5zLOBDTaR/W+FrqYzqnmY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709161343; x=1709766143;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XmDUVGJ7uYNuJQyRX/NAFGYz0phL9n1ekfsCjXQN9T0=;
+        b=qRbUSVy38Dv51V92ulUMOXAvqr5M7K/NVmz4tbfA8xpAcHcl9IFj1vL1++hRVA81/y
+         9amrGo/NBoW2EgH7iimygE2isJG8QusS0psIZoo5+svxc2c5c/5dMbanhSKUz9f9OO8s
+         dndnx3l5pwWF2CGbOx+E0d+vyb1ueD4vgD4ZxZ7P3KLzR9HvH79AsetFHPH+bNHBUTxb
+         eJBhkX8FsOqAfwDtdu5w4SHP7d68RSaH5LatMoxR8QFS3RaMaZ10WavZoIczfomL+Q8Y
+         rPWJuWVqfqIq1fG0bSw6qO4IRwDepmSKIqzBwkcdd1a1BKwzptZ1pYS+17lV2BZ3EGfm
+         Hu7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVyjFT6X3E9K1WNJj9gkjtBED5560ygHZQIrESy7JRtuqhXjKc+eGVddhxlmYdwvWwMdGon+GSxWjU7Xkshoi+s5SLTBO4C7f/lRJ4=
+X-Gm-Message-State: AOJu0Yx1b/+7g25KtI+Tkn5nHw3DUQSNclIP47esXRdpPR6Hang2mMxS
+	AZzTYSlbByO3nwgc/rf5xAiPJOhKNdKDAIu4J0+6e0VmZkhIWDfTE1DSNSZb4fKxOm3QFOUjhb7
+	ARoZe+g==
+X-Google-Smtp-Source: AGHT+IGKZTRd9qanFauWGlS6Uhq91ejSfg08JELqw+dFT3g9OTWLiGOzS/FnK/j7g1rLJgQ43NIZYA==
+X-Received: by 2002:a05:6402:1e87:b0:565:9fff:6046 with SMTP id f7-20020a0564021e8700b005659fff6046mr212728edf.3.1709161342762;
+        Wed, 28 Feb 2024 15:02:22 -0800 (PST)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id fd14-20020a056402388e00b005663bf7e207sm6959edb.1.2024.02.28.15.02.22
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 15:02:22 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412b246b386so2126775e9.3
+        for <linux-block@vger.kernel.org>; Wed, 28 Feb 2024 15:02:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUkwvvqnSdHQ97KE55af7RRpE1DSpqegrEgT0CxlwkiUU4fnn3UbHInGObdHR6hO/9IL9OF9ELi/5UYF0X5OAzCJeoLR6OpM/d/2Y0=
+X-Received: by 2002:a17:906:b7d4:b0:a44:f89:8104 with SMTP id
+ fy20-20020a170906b7d400b00a440f898104mr218606ejb.42.1709161037880; Wed, 28
+ Feb 2024 14:57:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20230925120309.1731676-1-dhowells@redhat.com> <20230925120309.1731676-8-dhowells@redhat.com>
+ <4e80924d-9c85-f13a-722a-6a5d2b1c225a@huawei.com> <CAHk-=whG+4ag+QLU9RJn_y47f1DBaK6b0qYq_6_eLkO=J=Mkmw@mail.gmail.com>
+In-Reply-To: <CAHk-=whG+4ag+QLU9RJn_y47f1DBaK6b0qYq_6_eLkO=J=Mkmw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 28 Feb 2024 14:57:00 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjSjuDrS9gc191PTEDDow7vHy6Kd3DKDaG+KVH0NQ3v=w@mail.gmail.com>
+Message-ID: <CAHk-=wjSjuDrS9gc191PTEDDow7vHy6Kd3DKDaG+KVH0NQ3v=w@mail.gmail.com>
+Subject: Re: [bug report] dead loop in generic_perform_write() //Re: [PATCH v7
+ 07/12] iov_iter: Convert iterate*() to inline funcs
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>, 
+	Christian Brauner <christian@brauner.io>, David Laight <David.Laight@aculab.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-disk_stack_limits is unused now, remove it.
+On Wed, 28 Feb 2024 at 13:21, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Hmm. If the copy doesn't succeed and make any progress at all, then
+> the code in generic_perform_write() after the "goto again"
+>
+>                 //[4]
+>                 if (unlikely(fault_in_iov_iter_readable(i, bytes) ==
+>                               bytes)) {
+>
+> should break out of the loop.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-settings.c   | 24 ------------------------
- include/linux/blkdev.h |  2 --
- 2 files changed, 26 deletions(-)
+Ahh. I see the problem. Or at least part of it.
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 13865a9f89726c..3c7d8d638ab59d 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -916,30 +916,6 @@ void queue_limits_stack_bdev(struct queue_limits *t, struct block_device *bdev,
- }
- EXPORT_SYMBOL_GPL(queue_limits_stack_bdev);
- 
--/**
-- * disk_stack_limits - adjust queue limits for stacked drivers
-- * @disk:  MD/DM gendisk (top)
-- * @bdev:  the underlying block device (bottom)
-- * @offset:  offset to beginning of data within component device
-- *
-- * Description:
-- *    Merges the limits for a top level gendisk and a bottom level
-- *    block_device.
-- */
--void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
--		       sector_t offset)
--{
--	struct request_queue *t = disk->queue;
--
--	if (blk_stack_limits(&t->limits, &bdev_get_queue(bdev)->limits,
--			get_start_sect(bdev) + (offset >> 9)) < 0)
--		pr_notice("%s: Warning: Device %pg is misaligned\n",
--			disk->disk_name, bdev);
--
--	disk_update_readahead(disk);
--}
--EXPORT_SYMBOL(disk_stack_limits);
--
- /**
-  * blk_queue_update_dma_pad - update pad mask
-  * @q:     the request queue for the device
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 285e82723d641f..75c909865a8b7b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -926,8 +926,6 @@ extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 			    sector_t offset);
- void queue_limits_stack_bdev(struct queue_limits *t, struct block_device *bdev,
- 		sector_t offset, const char *pfx);
--extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
--			      sector_t offset);
- extern void blk_queue_update_dma_pad(struct request_queue *, unsigned int);
- extern void blk_queue_segment_boundary(struct request_queue *, unsigned long);
- extern void blk_queue_virt_boundary(struct request_queue *, unsigned long);
--- 
-2.39.2
+The iter is an ITER_BVEC.
 
+And fault_in_iov_iter_readable() "knows" that an ITER_BVEC cannot
+fail. Because obviously it's a kernel address, so no user page fault.
+
+But for the machine check case, ITER_BVEC very much can fail.
+
+This should never have worked in the first place.
+
+What a crock.
+
+Do we need to make iterate_bvec() always succeed fully, and make
+copy_mc_to_kernel() zero out the end?
+
+                   Linus
 
