@@ -1,164 +1,126 @@
-Return-Path: <linux-block+bounces-3866-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3868-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A04C686D0BA
-	for <lists+linux-block@lfdr.de>; Thu, 29 Feb 2024 18:33:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5F3986D234
+	for <lists+linux-block@lfdr.de>; Thu, 29 Feb 2024 19:27:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F86F1F246C8
-	for <lists+linux-block@lfdr.de>; Thu, 29 Feb 2024 17:33:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F1D51C23660
+	for <lists+linux-block@lfdr.de>; Thu, 29 Feb 2024 18:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA8F757EC;
-	Thu, 29 Feb 2024 17:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920AA78295;
+	Thu, 29 Feb 2024 18:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Z2nu0BE0"
+	dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b="EHNEAJpH"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.cybernetics.com (mail.cybernetics.com [72.215.153.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FA270AFE
-	for <linux-block@vger.kernel.org>; Thu, 29 Feb 2024 17:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FE17A14E
+	for <linux-block@vger.kernel.org>; Thu, 29 Feb 2024 18:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.215.153.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227974; cv=none; b=s90GjspgCTqB16F/qCY0vgvgjPMTq7Lu6jtvVfaIsvhpahojkrEHKBrfZY8KMks2b7N4IcyzVYsajWslLqhK0Ufvsa7uG9MHYfDudm2kZGlMU5w20kZc7LkwXlh1+UoUjl6Y7pzS01+B+yoPzDor14900TgX/y6ygRRLRNZaNlA=
+	t=1709231238; cv=none; b=tnFtamNHNsFQP4Wj90wC/b0ok69XKJWKibq2oBsCk4wZLCkaqD0yMsuSv51DATs71eCEkUwvHpka2aaVUayEQPPLCHnHxCWeUR2+Cp2/1JBWTV+SKIqgZLIT4SUXmLYzYvg/siI5+6mBxDNXQIQXe3JBpwZFG7QYUGtpH9a43wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227974; c=relaxed/simple;
-	bh=jzGj5I4LRuYklOQyJfNOnG7oivOkxoCVa97TajgQgCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pPABH2insfbr7fp1uatLsZ+33z5NdZjz57CRPU8cXIrI6VfNDZLBllmui66x6pEqj3uRfDLPFyXLmyirSCO/w9qGjBUiMVUZ0cg0c9oe+vx24UIg3HQ8H9RnjAaA68zE2yAvERn3vfYxzBn2//BshsQN9Ag8pR41drKDO+KprAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Z2nu0BE0; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a446478b04bso70525166b.3
-        for <linux-block@vger.kernel.org>; Thu, 29 Feb 2024 09:32:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1709227970; x=1709832770; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JQrqXSOy2jKpIC5hjgybMDfk5pI8gvMKo0UOhxnaCp0=;
-        b=Z2nu0BE0b2qIues+0tbS6E5AL8obdL+PkIbExF4BJsmfByFxdn5EkWg9FQrOE/Okzd
-         8wDe/jEi5fxM4e7E9C+t00AhzyndVTjcvZjdQjN/1Daqc+qbRO6oLZ8nFgcViQx81hdF
-         ry4vmXpqCsLzv1jO9S9soDdIQqE3vWFiKL9jM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709227970; x=1709832770;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JQrqXSOy2jKpIC5hjgybMDfk5pI8gvMKo0UOhxnaCp0=;
-        b=TumpjBNCZOw3doDhnRhCB0z3Iq8ycuXunoieddpM0A1bbWSobdDnLuOjIO6SZhY7GE
-         29FWaHpdDq3tsExjPDUELebfqdjKhT8z+Rc1q8BSCXm6dOVTRSIsBTAj52xkRly27bTe
-         bA1xpYdJhQl8OvPT84IIvKp2IpfzohrRogKsb0k54Gs/ZjMuyfqpHDWOHvFR2pPX8ae5
-         LrywRuA5El9kYBeYGwDL0TXfmiWPyWesQH9Xr6rG3YrbAIbcEKoTLky/lKmb0ehGhkoK
-         UxkLLKATfMuVOgLVweE6SiVLaIqM2PiIk2Pzrbv0qsHv2rcNZgzFpUWOy7a0e2E9M1oJ
-         t7aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzhw0wRS9/tbMbmGAXuM4hfz/FZHVy+aNlT3XkKvfZvOBpqGqRlGHU4psLMzVGW+W/kTEeBHnLRprWVgBxkljwIE8+ZV64e5cH/2o=
-X-Gm-Message-State: AOJu0YyCP6sE2zAnSeD6jDZuYyj89cHOFwAVON+JsM5F8XEoJybmV1pA
-	UCrky0Lca1TqTNRW1GflzmN4Vv62KAcpRiOByao8jw5JmEQrkFm99HglykRdoAQh/rLNtEuvcnG
-	ksyMXOw==
-X-Google-Smtp-Source: AGHT+IHUIvIf/QWDZIXfvF+tbwexLOI+sH088EXRMB8FTC7OSlHrMOTkg/uPUS7AFA786LGV+jA8cw==
-X-Received: by 2002:a17:906:b84b:b0:a43:a628:ff31 with SMTP id ga11-20020a170906b84b00b00a43a628ff31mr1971142ejb.26.1709227969734;
-        Thu, 29 Feb 2024 09:32:49 -0800 (PST)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id k19-20020a170906a39300b00a3fb7cafad8sm883293ejz.39.2024.02.29.09.32.48
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 09:32:48 -0800 (PST)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a26fa294e56so231250966b.0
-        for <linux-block@vger.kernel.org>; Thu, 29 Feb 2024 09:32:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXGoYJBmc44Ecz2VfYlrb//Pj0PuxoBIJowBp0cm5qVg3w09+aAtEWvGUNyflVjD7yH6duU5v8vk3wtgHTfBnc0Rfxki0KwxFOlqUg=
-X-Received: by 2002:a17:906:b78e:b0:a44:176e:410c with SMTP id
- dt14-20020a170906b78e00b00a44176e410cmr2046490ejb.5.1709227968058; Thu, 29
- Feb 2024 09:32:48 -0800 (PST)
+	s=arc-20240116; t=1709231238; c=relaxed/simple;
+	bh=0ujY1W7EPTMDMv8Qjd/XFEAXcyl4EZ0O06CzvoVFYCc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=uwpQm0vw66nnO+cxAydzvS8hR8XppX6YV4cskIEUjFpBKWRAJ74Jbc0eGN86h4U6Lmipa6JzSJH58E5O5fjDmWkAYBKH57vNjaORpAaNi/9/04puBVA0nyv20OoWIG5jg1tCmJ4aJAgRzdDRKpzZFV1IT7FYlkTKvM3VUZbPKM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com; spf=pass smtp.mailfrom=cybernetics.com; dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b=EHNEAJpH; arc=none smtp.client-ip=72.215.153.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cybernetics.com
+X-ASG-Debug-ID: 1709230070-1cf4391a1c4fcf0002-Cu09wu
+Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id OKH4L5BwQIJxnplq; Thu, 29 Feb 2024 13:08:13 -0500 (EST)
+X-Barracuda-Envelope-From: tonyb@cybernetics.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.10.4.126
+X-ASG-Whitelist: Client
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cybernetics.com; s=mail;
+	bh=GyTYh7rZxyuaZxAK4E6INt0hy/oXnF2VsS983Qgm9WI=;
+	h=Content-Transfer-Encoding:Content-Type:Subject:From:Cc:To:Content-Language:
+	MIME-Version:Date:Message-ID; b=EHNEAJpH9NO6DGJeblalbgxMQVo9ZjLHP5lNuDo0CY5z+
+	3qRP6j8BSOQ1clNEfFa8V1xd1wyAxTkw7gIdJuf4r5DcXWB08/uQ/7qeVuc70mLwffJnHoNaXO4ro
+	5M6b7FYErqw/nqlHndEyRgwppLhJ5Aw8n43zpvTRnqCKTu0iA=
+Received: from [10.157.2.224] (HELO [192.168.200.1])
+  by cybernetics.com (CommuniGate Pro SMTP 7.1.1)
+  with ESMTPS id 13108803; Thu, 29 Feb 2024 13:08:10 -0500
+Message-ID: <86e592a9-98d4-4cff-a646-0c0084328356@cybernetics.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.157.2.224
+Date: Thu, 29 Feb 2024 13:08:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230925120309.1731676-1-dhowells@redhat.com> <20230925120309.1731676-8-dhowells@redhat.com>
- <4e80924d-9c85-f13a-722a-6a5d2b1c225a@huawei.com> <CAHk-=whG+4ag+QLU9RJn_y47f1DBaK6b0qYq_6_eLkO=J=Mkmw@mail.gmail.com>
- <CAHk-=wjSjuDrS9gc191PTEDDow7vHy6Kd3DKDaG+KVH0NQ3v=w@mail.gmail.com> <e985429e-5fc4-a175-0564-5bb4ca8f662c@huawei.com>
-In-Reply-To: <e985429e-5fc4-a175-0564-5bb4ca8f662c@huawei.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 29 Feb 2024 09:32:31 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh06M-1c9h7wZzZ=1KqooAmazy_qESh2oCcv7vg-sY6NQ@mail.gmail.com>
-Message-ID: <CAHk-=wh06M-1c9h7wZzZ=1KqooAmazy_qESh2oCcv7vg-sY6NQ@mail.gmail.com>
-Subject: Re: [bug report] dead loop in generic_perform_write() //Re: [PATCH v7
- 07/12] iov_iter: Convert iterate*() to inline funcs
-To: Tong Tiangen <tongtiangen@huawei.com>, Al Viro <viro@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
-	Christian Brauner <christian@brauner.io>, David Laight <David.Laight@aculab.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>
-Content-Type: multipart/mixed; boundary="000000000000e07d49061288a5ca"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jens Axboe <axboe@kernel.dk>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Hugh Dickins <hughd@google.com>, Hannes Reinecke <hare@suse.de>,
+ Keith Busch <kbusch@kernel.org>, linux-mm <linux-mm@kvack.org>,
+ linux-block@vger.kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Tony Battersby <tonyb@cybernetics.com>
+Subject: [PATCH] block: Fix page refcounts for unaligned buffers in
+ __bio_release_pages()
+Content-Type: text/plain; charset=UTF-8
+X-ASG-Orig-Subj: [PATCH] block: Fix page refcounts for unaligned buffers in
+ __bio_release_pages()
+Content-Transfer-Encoding: 7bit
+X-Barracuda-Connect: UNKNOWN[10.10.4.126]
+X-Barracuda-Start-Time: 1709230093
+X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
+X-Barracuda-BRTS-Status: 1
+X-Virus-Scanned: by bsmtpd at cybernetics.com
+X-Barracuda-Scan-Msg-Size: 1347
 
---000000000000e07d49061288a5ca
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fix an incorrect number of pages being released for buffers that do not
+start at the beginning of a page.
 
-On Thu, 29 Feb 2024 at 00:13, Tong Tiangen <tongtiangen@huawei.com> wrote:
->
-> See the logic before this patch, always success (((void)(K),0)) is
-> returned for three types: ITER_BVEC, ITER_KVEC and ITER_XARRAY.
+Fixes: 1b151e2435fc ("block: Remove special-casing of compound pages")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tony Battersby <tonyb@cybernetics.com>
+---
 
-No, look closer.
+Tested with 6.1.79.  The 6.1 backport can just use
+folio_put_refs(fi.folio, nr_pages) instead of do {...} while.
 
-Yes, the iterate_and_advance() macro does that "((void)(K),0)" to make
-the compiler generate better code for those cases (because then the
-compiler can see that the return value is a compile-time zero), but
-notice how _copy_mc_to_iter() didn't use that macro back then. It used
-the unvarnished __iterate_and_advance() exactly so that the MC copy
-case would *not* get that "always return zero" behavior.
+ block/bio.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-That goes back to (in a different form) at least commit 1b4fb5ffd79b
-("iov_iter: teach iterate_{bvec,xarray}() about possible short
-copies").
+diff --git a/block/bio.c b/block/bio.c
+index b9642a41f286..b52b56067e79 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1152,7 +1152,7 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
+ 
+ 	bio_for_each_folio_all(fi, bio) {
+ 		struct page *page;
+-		size_t done = 0;
++		size_t nr_pages;
+ 
+ 		if (mark_dirty) {
+ 			folio_lock(fi.folio);
+@@ -1160,10 +1160,11 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
+ 			folio_unlock(fi.folio);
+ 		}
+ 		page = folio_page(fi.folio, fi.offset / PAGE_SIZE);
++		nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
++			   fi.offset / PAGE_SIZE + 1;
+ 		do {
+ 			bio_release_page(bio, page++);
+-			done += PAGE_SIZE;
+-		} while (done < fi.length);
++		} while (--nr_pages != 0);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(__bio_release_pages);
 
-But hardly anybody ever tests this machine-check special case code, so
-who knows when it broke again.
+base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
+-- 
+2.25.1
 
-I'm just looking at the source code, and with all the macro games it's
-*really* hard to follow, so I may well be missing something.
-
-> Maybe we're all gonna fix it back? as follows=EF=BC=9A
-
-No. We could do it for the kvec and xarray case, just to get better
-code generation again (not that I looked at it, so who knows), but the
-one case that actually uses memcpy_from_iter_mc() needs to react to a
-short write.
-
-One option might be to make a failed memcpy_from_iter_mc() set another
-flag in the iter, and then make fault_in_iov_iter_readable() test that
-flag and return 'len' if that flag is set.
-
-Something like that (wild handwaving) should get the right error handling.
-
-The simpler alternative is maybe something like the attached.
-COMPLETELY UNTESTED. Maybe I've confused myself with all the different
-indiraction mazes in the iov_iter code.
-
-                     Linus
-
---000000000000e07d49061288a5ca
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lt7i5gtw0>
-X-Attachment-Id: f_lt7i5gtw0
-
-IGxpYi9pb3ZfaXRlci5jIHwgNSArKysrLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2xpYi9pb3ZfaXRlci5jIGIvbGliL2lvdl9p
-dGVyLmMKaW5kZXggZTBhYTZiNDQwY2E1Li41MjM2YzE2NzM0ZTAgMTAwNjQ0Ci0tLSBhL2xpYi9p
-b3ZfaXRlci5jCisrKyBiL2xpYi9pb3ZfaXRlci5jCkBAIC0yNDgsNyArMjQ4LDEwIEBAIHN0YXRp
-YyBfX2Fsd2F5c19pbmxpbmUKIHNpemVfdCBtZW1jcHlfZnJvbV9pdGVyX21jKHZvaWQgKml0ZXJf
-ZnJvbSwgc2l6ZV90IHByb2dyZXNzLAogCQkJICAgc2l6ZV90IGxlbiwgdm9pZCAqdG8sIHZvaWQg
-KnByaXYyKQogewotCXJldHVybiBjb3B5X21jX3RvX2tlcm5lbCh0byArIHByb2dyZXNzLCBpdGVy
-X2Zyb20sIGxlbik7CisJc2l6ZV90IG4gPSBjb3B5X21jX3RvX2tlcm5lbCh0byArIHByb2dyZXNz
-LCBpdGVyX2Zyb20sIGxlbik7CisJaWYgKG4pCisJCW1lbXNldCh0byArIHByb2dyZXNzIC0gbiwg
-MCwgbik7CisJcmV0dXJuIDA7CiB9CiAKIHN0YXRpYyBzaXplX3QgX19jb3B5X2Zyb21faXRlcl9t
-Yyh2b2lkICphZGRyLCBzaXplX3QgYnl0ZXMsIHN0cnVjdCBpb3ZfaXRlciAqaSkK
---000000000000e07d49061288a5ca--
 
