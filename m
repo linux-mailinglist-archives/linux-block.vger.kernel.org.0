@@ -1,257 +1,217 @@
-Return-Path: <linux-block+bounces-4054-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4049-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8330E871D4E
-	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 12:20:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB8DC871D36
+	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 12:18:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE9D21F236F2
-	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 11:20:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A799285170
+	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 11:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F03985B5B8;
-	Tue,  5 Mar 2024 11:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95051548FB;
+	Tue,  5 Mar 2024 11:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpdeScnU"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NpxF39sY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TVacvBji";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NpxF39sY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TVacvBji"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B930F5B5A9;
-	Tue,  5 Mar 2024 11:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F1F548F6
+	for <linux-block@vger.kernel.org>; Tue,  5 Mar 2024 11:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709637550; cv=none; b=l5YhC6EsRTVx2sDjwR5V/2Jp4rI39dQDBiQS/jHeSEN6U6RDL2IM+BRD5Wy+s4ykPY3BZog1T1xbUzK6fpj2RdJw20inBVKaMpWjNcmJ87nscAlfH3yzENTwVHC7gM0+g71C30idhHB9SDjo50glrQkRqP8flkdd1bSnX1I4I4I=
+	t=1709637527; cv=none; b=rRRU6FOX0rECVd1l+HHg0mWdnAo4j3qBNdYY9P7hwtsjyjADiJwXlvu5qxbQjghPvqRB6dIdFz2qkHKSIDa7plg1s478IDa/ynqkeYiNt9PTf2IwQQ+zzQleoDEpWJtgzdksL3RJirhYuMPBkChswkXDD2mm0jsnRYaZcqb/mGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709637550; c=relaxed/simple;
-	bh=W6hmByMbviZow30AysrbmdCiStk7NPI/+8Qeoey1JY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IxrWI2Mg+fqy2BH6nKEc83hC280UkDqbNgfHvNhhMYVibsbZWBHyyDgxCMnGcTCoSp8sH/QTnT93IUpjH6R+cWkhYEv+DOVnXOJHU4RDL+eWr3Ks80khrSjTrTOQ0PWXLGKt45ydLK3f4YbMw7X8b/MnIRXVcP22RYMmOMRB4mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpdeScnU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71CDC43399;
-	Tue,  5 Mar 2024 11:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709637550;
-	bh=W6hmByMbviZow30AysrbmdCiStk7NPI/+8Qeoey1JY8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MpdeScnUIeYk+dhaM84hI3cY+U/wRl1QwW6ChtfURz2UuXIkV/XmMb1iErLTtmXiG
-	 /HjgMX099w475jFo54Xe8Q+caajG6pt9XGe0DUtiQeES0xUT7BVd7CoWZIw8EA+uwo
-	 6dsPHe/M7bBaiSWUKfrDQaBJaxVr4WKQToT6uKCEnE7l4hHS5sYzkV1muh3ik4mCtm
-	 eJmV3SQytdzwIJJShgEZZtirWhrLq9A38CmemQNqmmnucs2zB1yVGEf9bDZylrpk3V
-	 omibGAuvCU7jmybm4/4tvGmiTBVuJ6HkGBg7ybwdZHbeop+Scpi/j4bhWKRUfyTUEQ
-	 3R/7MjGMtOeCw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: [RFC RESEND 04/16] iommu/dma: Provide an interface to allow preallocate IOVA
-Date: Tue,  5 Mar 2024 13:18:35 +0200
-Message-ID: <e580473eb571d56c8e3952ebcdab05151a7efe7c.1709635535.git.leon@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1709635535.git.leon@kernel.org>
-References: <cover.1709635535.git.leon@kernel.org>
+	s=arc-20240116; t=1709637527; c=relaxed/simple;
+	bh=Sl6vDjiP8ZdsPh+rmBCo/pgurmZdleSBeG3Miy+ixAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LG4BQvO69tn+kf3b/nmsIRUnVvlPCPQWS3gnln/7Gjw87KnkGCpyDksI3rLq7rQNGi4PoMBWLYhw4R66Y+F1w4P498NPmwgJ5JhMLHqvPE0M1/UiZRjx2ru6Fcmo0iJSI22xJlZR1LpS32VEXr0aXxmRapN2o7yuBlGCwkLh8+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NpxF39sY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TVacvBji; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NpxF39sY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TVacvBji; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 96C9176AF8;
+	Tue,  5 Mar 2024 11:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709637517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RCpNkeO38Vc6PYS+hznBwEQHFD/PUdYW47ZidYaWvc8=;
+	b=NpxF39sYIKrZNG2og1c7PQ2WbV9zLfnPlghYJIJ6VlSuCuw7N2xdc2q1P/AYYRwTvKn6aM
+	uJ1N1BxWSpzwKbzXRBHh0K+STPBM9fcnsg+dB2XJNseUUltnlzXnb2/fZ8xSQxuDLGkv+w
+	W6LZmBa08BgYCdjGPjiqXKtC7EY2BM4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709637517;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RCpNkeO38Vc6PYS+hznBwEQHFD/PUdYW47ZidYaWvc8=;
+	b=TVacvBjiJXGSDpQPyd0O1D3nzt7WdYopgMgRP1Y8Xefm0KcI9lRHvUKj3YJdQ119GPEUN5
+	eTpwd7eCLe+hfgDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709637517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RCpNkeO38Vc6PYS+hznBwEQHFD/PUdYW47ZidYaWvc8=;
+	b=NpxF39sYIKrZNG2og1c7PQ2WbV9zLfnPlghYJIJ6VlSuCuw7N2xdc2q1P/AYYRwTvKn6aM
+	uJ1N1BxWSpzwKbzXRBHh0K+STPBM9fcnsg+dB2XJNseUUltnlzXnb2/fZ8xSQxuDLGkv+w
+	W6LZmBa08BgYCdjGPjiqXKtC7EY2BM4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709637517;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RCpNkeO38Vc6PYS+hznBwEQHFD/PUdYW47ZidYaWvc8=;
+	b=TVacvBjiJXGSDpQPyd0O1D3nzt7WdYopgMgRP1Y8Xefm0KcI9lRHvUKj3YJdQ119GPEUN5
+	eTpwd7eCLe+hfgDw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8049213466;
+	Tue,  5 Mar 2024 11:18:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id MU0AH43/5mVxEQAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Tue, 05 Mar 2024 11:18:37 +0000
+Date: Tue, 5 Mar 2024 12:18:36 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>, 
+	Keith Busch <kbusch@kernel.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH blktests v1 0/2] extend nvme/045 to reconnect with
+ invalid key
+Message-ID: <p5xkwz6i2lfy2a65pbpq3en6wh57y75qcoz3y3eio3ze5b7cm3@zgfn5so4yuig>
+References: <20240304161303.19681-1-dwagner@suse.de>
+ <2ya2o6s6lyiezbjoqbr33oiae2l65e2nrc75g3c47maisbifyv@4kpdmolhkiwx>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ya2o6s6lyiezbjoqbr33oiae2l65e2nrc75g3c47maisbifyv@4kpdmolhkiwx>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NpxF39sY;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TVacvBji
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-6.01 / 50.00];
+	 ARC_NA(0.00)[];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -6.01
+X-Rspamd-Queue-Id: 96C9176AF8
+X-Spam-Flag: NO
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Tue, Mar 05, 2024 at 09:44:45AM +0000, Shinichiro Kawasaki wrote:
+> On Mar 04, 2024 / 17:13, Daniel Wagner wrote:
+> > The is the test case for
+> > 
+> > https://lore.kernel.org/linux-nvme/20240304161006.19328-1-dwagner@suse.de/
+> >
+> > 
+> > Daniel Wagner (2):
+> >   nvme/rc: add reconnect-delay argument only for fabrics transports
+> >   nvme/048: add reconnect after ctrl key change
+> 
+> I apply the kernel patches in the link above to v6.8-rc7, then ran nvme/045
+> with the blktests patches in the series. And I observed failure of the test
+> case with various transports [1]. Is this failure expected?
 
-Separate IOVA allocation to dedicated callback so it will allow
-cache of IOVA and reuse it in fast paths for devices which support
-ODP (on-demand-paging) mechanism.
+If you have these patches applied, the test should pass. But we might
+have still some more stuff to unify between the transports. The nvme/045
+test passes in my setup. Though I have seen runs which were hang for
+some reason. Haven't figured out yet what's happening there. But I
+haven't seen failures, IIRC.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/iommu/dma-iommu.c | 50 +++++++++++++++++++++++++++++----------
- 1 file changed, 38 insertions(+), 12 deletions(-)
+I am not really surprised we seeing some fallouts though. We start to
+test the error code paths with this test extension.
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 50ccc4f1ef81..e55726783501 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -356,7 +356,7 @@ int iommu_dma_init_fq(struct iommu_domain *domain)
- 	atomic_set(&cookie->fq_timer_on, 0);
- 	/*
- 	 * Prevent incomplete fq state being observable. Pairs with path from
--	 * __iommu_dma_unmap() through iommu_dma_free_iova() to queue_iova()
-+	 * __iommu_dma_unmap() through __iommu_dma_free_iova() to queue_iova()
- 	 */
- 	smp_wmb();
- 	WRITE_ONCE(cookie->fq_domain, domain);
-@@ -760,7 +760,7 @@ static int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
- 	}
- }
- 
--static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
-+static dma_addr_t __iommu_dma_alloc_iova(struct iommu_domain *domain,
- 		size_t size, u64 dma_limit, struct device *dev)
- {
- 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-@@ -806,7 +806,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
- 	return (dma_addr_t)iova << shift;
- }
- 
--static void iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
-+static void __iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
- 		dma_addr_t iova, size_t size, struct iommu_iotlb_gather *gather)
- {
- 	struct iova_domain *iovad = &cookie->iovad;
-@@ -843,7 +843,7 @@ static void __iommu_dma_unmap(struct device *dev, dma_addr_t dma_addr,
- 
- 	if (!iotlb_gather.queued)
- 		iommu_iotlb_sync(domain, &iotlb_gather);
--	iommu_dma_free_iova(cookie, dma_addr, size, &iotlb_gather);
-+	__iommu_dma_free_iova(cookie, dma_addr, size, &iotlb_gather);
- }
- 
- static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
-@@ -861,12 +861,12 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
- 
- 	size = iova_align(iovad, size + iova_off);
- 
--	iova = iommu_dma_alloc_iova(domain, size, dma_mask, dev);
-+	iova = __iommu_dma_alloc_iova(domain, size, dma_mask, dev);
- 	if (!iova)
- 		return DMA_MAPPING_ERROR;
- 
- 	if (iommu_map(domain, iova, phys - iova_off, size, prot, GFP_ATOMIC)) {
--		iommu_dma_free_iova(cookie, iova, size, NULL);
-+		__iommu_dma_free_iova(cookie, iova, size, NULL);
- 		return DMA_MAPPING_ERROR;
- 	}
- 	return iova + iova_off;
-@@ -970,7 +970,7 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
- 		return NULL;
- 
- 	size = iova_align(iovad, size);
--	iova = iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
-+	iova = __iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
- 	if (!iova)
- 		goto out_free_pages;
- 
-@@ -1004,7 +1004,7 @@ static struct page **__iommu_dma_alloc_noncontiguous(struct device *dev,
- out_free_sg:
- 	sg_free_table(sgt);
- out_free_iova:
--	iommu_dma_free_iova(cookie, iova, size, NULL);
-+	__iommu_dma_free_iova(cookie, iova, size, NULL);
- out_free_pages:
- 	__iommu_dma_free_pages(pages, count);
- 	return NULL;
-@@ -1436,7 +1436,7 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
- 	if (!iova_len)
- 		return __finalise_sg(dev, sg, nents, 0);
- 
--	iova = iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev), dev);
-+	iova = __iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev), dev);
- 	if (!iova) {
- 		ret = -ENOMEM;
- 		goto out_restore_sg;
-@@ -1453,7 +1453,7 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
- 	return __finalise_sg(dev, sg, nents, iova);
- 
- out_free_iova:
--	iommu_dma_free_iova(cookie, iova, iova_len, NULL);
-+	__iommu_dma_free_iova(cookie, iova, iova_len, NULL);
- out_restore_sg:
- 	__invalidate_sg(sg, nents);
- out:
-@@ -1706,6 +1706,30 @@ static size_t iommu_dma_opt_mapping_size(void)
- 	return iova_rcache_range();
- }
- 
-+static dma_addr_t iommu_dma_alloc_iova(struct device *dev, size_t size)
-+{
-+	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-+	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-+	struct iova_domain *iovad = &cookie->iovad;
-+	dma_addr_t dma_mask = dma_get_mask(dev);
-+
-+	size = iova_align(iovad, size);
-+	return __iommu_dma_alloc_iova(domain, size, dma_mask, dev);
-+}
-+
-+static void iommu_dma_free_iova(struct device *dev, dma_addr_t iova,
-+				size_t size)
-+{
-+	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-+	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-+	struct iova_domain *iovad = &cookie->iovad;
-+	struct iommu_iotlb_gather iotlb_gather;
-+
-+	size = iova_align(iovad, size);
-+	iommu_iotlb_gather_init(&iotlb_gather);
-+	__iommu_dma_free_iova(cookie, iova, size, &iotlb_gather);
-+}
-+
- static const struct dma_map_ops iommu_dma_ops = {
- 	.flags			= DMA_F_PCI_P2PDMA_SUPPORTED,
- 	.alloc			= iommu_dma_alloc,
-@@ -1728,6 +1752,8 @@ static const struct dma_map_ops iommu_dma_ops = {
- 	.unmap_resource		= iommu_dma_unmap_resource,
- 	.get_merge_boundary	= iommu_dma_get_merge_boundary,
- 	.opt_mapping_size	= iommu_dma_opt_mapping_size,
-+	.alloc_iova		= iommu_dma_alloc_iova,
-+	.free_iova		= iommu_dma_free_iova,
- };
- 
- /*
-@@ -1776,7 +1802,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
- 	if (!msi_page)
- 		return NULL;
- 
--	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
-+	iova = __iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
- 	if (!iova)
- 		goto out_free_page;
- 
-@@ -1790,7 +1816,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
- 	return msi_page;
- 
- out_free_iova:
--	iommu_dma_free_iova(cookie, iova, size, NULL);
-+	__iommu_dma_free_iova(cookie, iova, size, NULL);
- out_free_page:
- 	kfree(msi_page);
- 	return NULL;
--- 
-2.44.0
+> Also, I observed KASAN double-free [2]. Do you observe it in your environment?
+> I created a quick fix [3], and it looks resolving the double-free.
 
+No, I haven't seen this.
+
+> sudo ./check nvme/045
+> nvme/045 (Test re-authentication)                            [failed]
+>     runtime  8.069s  ...  7.639s
+>     --- tests/nvme/045.out      2024-03-05 18:09:07.267668493 +0900
+>     +++ /home/shin/Blktests/blktests/results/nodev/nvme/045.out.bad     2024-03-05 18:10:07.735494384 +0900
+>     @@ -9,5 +9,6 @@
+>      Change hash to hmac(sha512)
+>      Re-authenticate with changed hash
+>      Renew host key on the controller and force reconnect
+>     -disconnected 0 controller(s)
+>     +controller "nvme1" not deleted within 5 seconds
+>     +disconnected 1 controller(s)
+>      Test complete
+
+That means the host either successfully reconnected or never
+disconnected. We have another test case just for the disconnect test
+(number of queue changes), so if this test passes, it must be the
+former... Shouldn't really happen, this would mean the auth code has bug.
+
+> diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+> index f2832f70e7e0..4e161d3cd840 100644
+> --- a/drivers/nvme/host/sysfs.c
+> +++ b/drivers/nvme/host/sysfs.c
+> @@ -221,14 +221,10 @@ static int ns_update_nuse(struct nvme_ns *ns)
+>  
+>  	ret = nvme_identify_ns(ns->ctrl, ns->head->ns_id, &id);
+>  	if (ret)
+> -		goto out_free_id;
+> +		return ret;
+
+Yes, this is correct.
+>  
+>  	ns->head->nuse = le64_to_cpu(id->nuse);
+> -
+> -out_free_id:
+> -	kfree(id);
+> -
+> -	return ret;
+> +	return 0;
+>  }
+>
+
+I think you still need to free the 'id' on the normal exit path though
+
+If you have these patches applied, the test should pass. But we might
+have still some more stuff to unify between the transports. The nvme/045
+test passes in my setup. Though I have seen runs which were hang for
+some reason. Haven't figured out yet what's happening there. But I
+haven't seen failures.
 
