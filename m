@@ -1,64 +1,77 @@
-Return-Path: <linux-block+bounces-4071-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4073-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5BFC872062
-	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 14:38:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 469B5872074
+	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 14:40:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED7AB1C25B47
-	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 13:38:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9527BB22849
+	for <lists+linux-block@lfdr.de>; Tue,  5 Mar 2024 13:40:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0E585C70;
-	Tue,  5 Mar 2024 13:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D81784A48;
+	Tue,  5 Mar 2024 13:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nlYItw/A"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD44537F8
-	for <linux-block@vger.kernel.org>; Tue,  5 Mar 2024 13:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D928593E
+	for <linux-block@vger.kernel.org>; Tue,  5 Mar 2024 13:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709645907; cv=none; b=pmah07xlT9kgJrGD36kt1E7AJsHkveCaFZmKyaldN7QGB547kWYo13jYGmho/4ZK7q91KxnH1J9BKP7S2mCan8TKLv02YfOASgDwvv0E3XnptoKunVq37G7kYS+w83hnIWhP+oVK81uCZNAsXknbTg4jYh3/7PTN7Qlt78muztY=
+	t=1709646046; cv=none; b=X3DtBmnSSX9uwy1jcwyNDAU+WRend76l3ucg8ZP2iGZ+saX3GOtVwCm43h9F4t2FJCzcR0eQA4jj+PbnwwLXIJ9FaXUmGsCuRh6VLAxHs6HFW9f1I/XVYVnorlKpKBEJuu7UHG+0Tq3fOOsjN6yyhdNL5BYogmV5ZSJorhdF8bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709645907; c=relaxed/simple;
-	bh=HRTDo3YTOjNYxUYE9kfF0aUTx7bTnnuzdnYbe3GKqgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6j1zgJvdyxcbyufoCqs+ARc5oe+PixetoBzLUHGFOj9NZNNexQiniX6LJkulyukBmYCL2HfD2AQ85XSKW4qN03NiVxaBq/obQfNjROAExpCkwA6kO6rA/Ca/2YfTanTh+bdTWaya9aW8J2ElqJ+UGN6SD5qPIjGV20am+1oCKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+	s=arc-20240116; t=1709646046; c=relaxed/simple;
+	bh=R7n8lGHdKV1HeyZSMqFBE96bANiGE6jJY62XGwhejvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=quMFKi4ZCDiYhpeVHzqeUjPMmrTcJTwDc1/621agIwoStsbvDH4qZjpLA0+z5TMkE1AyC7oehhN5F7AsmmXKQaiUt4+2nhIdeSVt2xWgbgBNeAojaZLI4c3fZZuIzWeV0zP0b/CDcB+7FKxQ9vkwbJsSWSuUPAjgP2KCSCMmaSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nlYItw/A; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 546B468D07; Tue,  5 Mar 2024 14:38:13 +0100 (CET)
-Date: Tue, 5 Mar 2024 14:38:12 +0100
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=3uqF7GWkhm4u4EkLAwWWCLj3aw8Q/TDdp2iKlr/k3VQ=; b=nlYItw/ARjQD0Ym3tunsAtR0PQ
+	0BtKSt9D5OWcmpvNr5Vy24a/UAyXSraCzj1LRc8qUoOUNyo+MVdux/4Oua9M3i//ZkXZCke8X4opY
+	v7ZatTUJ+DMNUYojvD51x13beGRuB5bgpfiwiijrFJw16NH3hPI0xNYOzMlQuIBCMlIvpYkbK2xGP
+	7Ei9RoahcVIwPD7zRj67szOdlmFhE0YPPS7/gLmC/yEKOmrdrLwgXKTI8qGtO5IOdY7pnLRsCHZ8p
+	zMskxIZjO5RXPmdWlTt+psw9PxqAnqChUL3ogtkhTHdVV8DQkIld7Af6F8JQq9t3WO1JKgKAlGtOV
+	8aeLW9QA==;
+Received: from [50.219.53.154] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rhV2A-0000000DqwQ-0gqD;
+	Tue, 05 Mar 2024 13:40:42 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Christoph Hellwig <hch@lst.de>,
+To: Philipp Reisner <philipp.reisner@linbit.com>,
 	Lars Ellenberg <lars.ellenberg@linbit.com>,
-	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
-Subject: Re: drbd queue limits conversion ping
-Message-ID: <20240305133812.GA1345@lst.de>
-References: <20240226103004.281412-1-hch@lst.de> <20240226103004.281412-11-hch@lst.de> <20240303151438.GB27512@lst.de> <CADGDV=XqJ_3biGx-rX0jMMue4-dTg=J8NjyHOU-Ufonv4QiJ-A@mail.gmail.com> <CADGDV=WJWZHj89rebvNJ2BOhuqG=_Nr5S3+QXp6LTEGGKyzuKQ@mail.gmail.com>
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: drbd-dev@lists.linbit.com,
+	linux-block@vger.kernel.org
+Subject: drbd atomic queue limits conversion
+Date: Tue,  5 Mar 2024 06:40:34 -0700
+Message-Id: <20240305134041.137006-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADGDV=WJWZHj89rebvNJ2BOhuqG=_Nr5S3+QXp6LTEGGKyzuKQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Mar 05, 2024 at 10:39:55AM +0100, Philipp Reisner wrote:
-> Christoph,
-> 
-> we are fine with the queue limit conversion as you did it. Lars and I
-> reviewed it, and Christoph ran the tests. All fine.
+Hi Jens,
 
-Can you provide formal Reviewed-by and Tested-by tags?  I'll resend the
-patches standalone, maybe reply to those.
+this is a standalone resend of the drbd queue limits conversion.
+Philipp said Linbit has reviewed and tested it, and they'll hopefully
+provide the formal tags for that in a bit.
 
+Diffstat:
+ drbd_main.c |   13 ++-
+ drbd_nl.c   |  210 ++++++++++++++++++++++++++++--------------------------------
+ 2 files changed, 110 insertions(+), 113 deletions(-)
 
