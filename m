@@ -1,359 +1,453 @@
-Return-Path: <linux-block+bounces-4106-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4108-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B778E873103
-	for <lists+linux-block@lfdr.de>; Wed,  6 Mar 2024 09:45:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 320E187317D
+	for <lists+linux-block@lfdr.de>; Wed,  6 Mar 2024 09:57:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CB931F2121B
-	for <lists+linux-block@lfdr.de>; Wed,  6 Mar 2024 08:45:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E14C1F275D0
+	for <lists+linux-block@lfdr.de>; Wed,  6 Mar 2024 08:57:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232575D49E;
-	Wed,  6 Mar 2024 08:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nyzQajrx";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="WPBxrm8j"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6695DF3B;
+	Wed,  6 Mar 2024 08:55:37 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE9364A
-	for <linux-block@vger.kernel.org>; Wed,  6 Mar 2024 08:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.144
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709714700; cv=fail; b=aaySaXCZwtkJDNoeJ1pc2VKMwHR0Q3XusSoMtLXoAOJb5WlI7USDDwDapbiCzsCl/zQkcEYiD2QSeYwISuH1QY9bS32Sze17GoIt6KAGZMVAwFThw7hE62I7HqI2BY5UadtmAx41J2DQxkACWb45DzJMa/+vIV63MlUIaj0dCd0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709714700; c=relaxed/simple;
-	bh=tJaeCNId6ucTWrqdVjyK9iAPZr/Hk7ImgatXsRi/YbI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QOoMDazkf0y0hHaarKYsvyWrI72aOwTLLIPndg4Rw4Oh1OLpJKkY/3Xf6NoslznvqOvfoJxZhb8w7MKIGRPAugs8GqmBOBk5Y16fVZW8dQjI7bL2HGTMJ4m53I6i7TDiK0dfzynhvsSk9faTDT9jsjfOeR6qJhz+n38LpOoPTVg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=nyzQajrx; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=WPBxrm8j; arc=fail smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709714697; x=1741250697;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=tJaeCNId6ucTWrqdVjyK9iAPZr/Hk7ImgatXsRi/YbI=;
-  b=nyzQajrxkDkXbbJl8uEAKq25mvWSswo4C1tpNbuXIg4nFimB3dneXp/s
-   ShlwKKJP7AiCrsQUQsUY2rZubTk/tCmV7VSU4fGCo1rEdNoTi9sCSLMwk
-   Hkfw+jLdrLvJGfTmWrdQNBeOaAysdhFo771rx+zijaVsjOEn9VzxsHj3D
-   ydd75ztYQBJvbC0KU2CFuQL5Co+buDHau4B9kbHIbE6eHU8QEA3eEbt54
-   XvBUXkS/FKuMVOvblrKG345JOTviUcn6quJUzaL4TWHg32M/5MawrpwU8
-   N65o+yN9sJwVT04F30YY0QqW9f6h9nAJk0ExPWkFhdbFE7AxEj/MYvafK
-   A==;
-X-CSE-ConnectionGUID: /DH2JBceTWSuQfarzYCpPA==
-X-CSE-MsgGUID: vlefZfETTjyLnsLlpcAtwA==
-X-IronPort-AV: E=Sophos;i="6.06,207,1705334400"; 
-   d="scan'208";a="11520299"
-Received: from mail-bn8nam12lp2168.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.168])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Mar 2024 16:44:50 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bmxCbnsl6E2b8TB0DxVWib/6hhY+fShGQ3sGiWmMgWZTY7IIFEUTtUfRcBDb0OYiKw/L4Uz84sR8pnVtmOikxkoT4Oza2xAbYqDi7dsW6WTrhL0op/yT7vEYRWr4tPqsANC4icozrsqVwsTAuSUrayAkdDgK0Kpy1u7jAiBoYtvtXXgft55EQpvOwm8Z7UiPRyaNbJhIjmyS6TEwCHnJ52pFuj8NWduJJBI8s3xIcFKv1XWvWoybUDhcuW2KIGzlpMWu0YKT1BxQLiTOSukLd5wcbYP1x0bs398+h5HL8tM2zpZLeyroxy8TNblPVtVLKlUgQN9qU8fETcoivf8CCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j166oG5u1UgAFrjzuXPyBNPdNen6bawnPPNDPKTCRSk=;
- b=gm5GroGUru4eeWbZzUfY5y0nWyH8HO6aGh0QAqSBmqNuxMY+kTvXKnbk2Xy/RF1iu4HEU6r3GCJHx3cxfLSxi0GSigLqZKMKMcgLMh4D3l1i9LGKli0K12p9rYPjgOLI2Vy5szShre5vswiA3btbvaNhXYu5sHymf+vhSxUPNiD+il6+9sCYepox0POht9hV0NedbfZZ7CS2zTt5wJDZ43fy127XKIXSzjjYzAXMcikBPpcCdt6edYtLS8AASpqUKxcI5gKVmG4o/1Pm+HfWIxPi6UK9QYlrGKaYiVSi8a/7KsuhDbBAN5n3HRgrDCr+sWkxSa3Zad0NSvgI/iunNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j166oG5u1UgAFrjzuXPyBNPdNen6bawnPPNDPKTCRSk=;
- b=WPBxrm8jGztJnr8kT1dxvoN4F8/5YrpeXaf98GNWkT1j0JZV2YfuImiwc6zPl/Zj3UcMdCgSxivFJ/SsxZMZQOwRsUJULAswOe12BqQm6Zi2tAteKq4x6yln8FnoRisu/Ke2iiqub+mnRV00ajdTaTo2jOH4yOA+5b+2P3p49qI=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- CH2PR04MB7094.namprd04.prod.outlook.com (2603:10b6:610:98::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.24; Wed, 6 Mar 2024 08:44:48 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::c9e3:b196:e5ea:909b]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::c9e3:b196:e5ea:909b%4]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
- 08:44:48 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Daniel Wagner <dwagner@suse.de>
-CC: Chaitanya Kulkarni <chaitanyak@nvidia.com>, Keith Busch
-	<kbusch@kernel.org>, "linux-block@vger.kernel.org"
-	<linux-block@vger.kernel.org>, "linux-nvme@lists.infradead.org"
-	<linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH blktests v1 0/2] extend nvme/045 to reconnect with invalid
- key
-Thread-Topic: [PATCH blktests v1 0/2] extend nvme/045 to reconnect with
- invalid key
-Thread-Index: AQHabk7cqNwSTpUn+k6UjReb5QwC+7Eo5uSAgAAaOQCAAWdbgA==
-Date: Wed, 6 Mar 2024 08:44:48 +0000
-Message-ID: <bax2kpeovgvf63rrtycsgpbi7wmvjhpmcbfcpoznldkowczom4@czjddqccdsba>
-References: <20240304161303.19681-1-dwagner@suse.de>
- <2ya2o6s6lyiezbjoqbr33oiae2l65e2nrc75g3c47maisbifyv@4kpdmolhkiwx>
- <p5xkwz6i2lfy2a65pbpq3en6wh57y75qcoz3y3eio3ze5b7cm3@zgfn5so4yuig>
-In-Reply-To: <p5xkwz6i2lfy2a65pbpq3en6wh57y75qcoz3y3eio3ze5b7cm3@zgfn5so4yuig>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|CH2PR04MB7094:EE_
-x-ms-office365-filtering-correlation-id: a5d29a8c-2bd2-4ca7-11eb-08dc3db9ae61
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- mBUN7MoldoP2XFgtMjyNpBvx4ddeXJu7Io9pfPqlZ05u2Cqlg0RPLKpooDDXQ4ONdZTpH9jpGWnXsvdSF4G8O5XnvWepJOoqbBMLL6RhH1VGH1X9wX2bhBH9g1wdk27OXbdQdrWgjJtbGc+ERis/31X0Tjbv//WyXOvaTAXY3q6ralz7B6HNMugeRPU5U9LhgmAfgI4Ly0h4Ew2dd/+qDAEf564L0KOpukFL7CTs5hFv1vnKJEyfnpYv+LK/QQHKE39zzoaItpwBGw/rw7UI7qkXbfFCOQfrv/gbax+h1X0I1fnnqNqwPWNEsQzRopjhKdSmsodGEwlPWVpOMDxg5Ik25YhUtGY9IrdiSCiguRDSvxMrA5YiMvlf3clxSuUe3TsZJLX7qVLzHQ4mXqG0DK//2bcKFPHuYpIT7hEW+Bs4q3WVdfqUPb60EAzTEUwM4Hcz8r9gkao3U73LtKXQHO4iBJ3JsLQNwIJpMu5Yzr5PByRosgeAq82lh/DVTFEnr1SfHB8kpvdxHz4vM5NO2MH0VSrMmHrRQ6rTG+fB3NRg6iwl0TQDA2fWXDLLJyTTCLi0hHui+8M4+Cc5gqRhwCT1CgHiMaSS7Nb5peO6OlfFe9LVD1zfhXOzwj4jLPdhmxPVEX9oOLVPWXdaTkSOrCLTnhrJS5M08hv+UG8CGSFyhx4+zgmYPWFJtQ4YSs/T
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009)(27256008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?cgFBUCto+6m7BVEVpDzJPoLPSju/KiCBWtWnEkv4tx7Czz48DG2+RAx6MRFG?=
- =?us-ascii?Q?uUXvF+7/jA5lQH2G7bWsYCy3pyLNSMXyalxF+tF/uK+Kv5RFOckr1GpT+xv5?=
- =?us-ascii?Q?+KOPX+aPsS36sutlfz0efdIzzVvSAQtiXOuM5xlRjebsD3FSdcIGhAVdsA0W?=
- =?us-ascii?Q?2SB/a1OKzpM9b98EY0yAz7kdOROOs3zHjUQyVFx2V8UKgmtJ8ok2KCTurUuN?=
- =?us-ascii?Q?4BdyRLfaaRIdhB5od0iPrw3wt1acw0xT+YBZljBxUOcB1Ogg2bCag8r00iNP?=
- =?us-ascii?Q?MEU7B7SY2Slh7YpfiV0kFjie7vQckDOZ5jdW1M8EC7RwPMerXjV6UcGcECKU?=
- =?us-ascii?Q?LcrgqjQnXuF8RrA/EivC6B7bv+nbUtCP2T+TB42EIO4EnbfYUG+x0P17wN8p?=
- =?us-ascii?Q?W4x6ut6r6xD05j4P23c0cVUWPbHnHUkoTyfBe0QEMVBuc3raypv05amHM3b3?=
- =?us-ascii?Q?qbU+DnjnWXjQewlj+qGZpNbTlc0/Ipg1bOgbZtnk2/YLUfYh8Ogt3YiyPg0W?=
- =?us-ascii?Q?MH3SKNPaGR00uYgEnNT+nF/pTndxXEykN893xGqFO6J6BNw3KtTUzZDJDO6n?=
- =?us-ascii?Q?n7dd+mTRZ8s9aBgT0HeDZKS96q7kDyjfk8MnnAQxAIGrvhZQZJQle2tOrRX7?=
- =?us-ascii?Q?jNdU9g4bjf1TlAAL+0di16GRu6jBwGZi06smoLonLOQ73iSDkj2Y60gUdv0J?=
- =?us-ascii?Q?MKnvffJxE5U91rrl4bO5Lzg49JjD6vBMOKnJoMHazc3ON5o/AHf0tYUgDPuI?=
- =?us-ascii?Q?2zYfuSDVGMQ5VCk9pWAEpp/Umli5T8m97deSsOjveVwoueUcvfnxpLvbJ9Zj?=
- =?us-ascii?Q?y/b7E1Ri+E/tnuEduQ6pYpOZvBIRskwbvXjHd2nudyEgmM0TIY23bx4eLCc7?=
- =?us-ascii?Q?rgBAIrpqLVGP6L8kKUCDp0xaw3X4NOjkRiYdzPaQufEYnF6cYpN5hsjKzknS?=
- =?us-ascii?Q?QzB1QSZkeaIYWY5RqQk5YiqepP6OcMNDWIqWDY6TzWD7BpLVfdLtDyhM7hCK?=
- =?us-ascii?Q?LDUvohtkzIPIROugNLjH3wiguEiJy0Ur0p98ceoT6e6s5LXL+H3fw0m2GwhE?=
- =?us-ascii?Q?PP9i4VVhGsX4dbBgSvezsqpuJHVmBRUcEl5JMKRyMdUtnW0Gt5L090SMyCEk?=
- =?us-ascii?Q?WVD5Z6l88JWWS7VhQq4E/24kBX0XRd/UaANBV7y4a+mdrnHRgm9xVvzFDjfL?=
- =?us-ascii?Q?j4p3v5AYDFgR8Cu3LO2XUdG0QU/Qoa+itbJUO4gCm4ZBmgW9QIre7ULQI18T?=
- =?us-ascii?Q?4Befdtcp2R+mG3amzdqXxNbvrIw830uwS1UhPOQsCoX0eof96WCh6Tw8or+n?=
- =?us-ascii?Q?5bAr6j3I3fXZtr+qOcRmgrM481omZWOV2eDw1lq3FO4Bu8OhYmTK+YJYbW52?=
- =?us-ascii?Q?MonLgHuOZQhv8d6VigabzWEtEL/2hhQBh/db5aMUgKkC2OePmj4Rp1EBEM3F?=
- =?us-ascii?Q?+/pT6lR9fnQ0O3b32r8vQVnZiUi0FhM79CUgIyM16ggKGbjZJF+j2x0yUXw6?=
- =?us-ascii?Q?b95Jgfw2993zsktxxvSux5Sg5HVhdA6g6C+t/xJjUBnzWyk9bN4bc4lOq5Fv?=
- =?us-ascii?Q?pvyiDZHRT2Pa68HGPY3i3JYndpu7IGGt17SvisORodZ25PYGxh1+nOVDmKCc?=
- =?us-ascii?Q?JAu7QyGyXMuTfEAs2eNPmaU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2E246DA9529D8048B69C0AAA77DFA5A7@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9455DF1D;
+	Wed,  6 Mar 2024 08:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709715337; cv=none; b=nCs29rtsaavz8CLr6cU4/Nb3gmlV1gHYSTFGBd8nud286eJVXqfkqMy4swkydHL2012C6sva1INJXspJYQcSll/Dim7nuPXeaU/vS38pfvFNKImXQIj+NUuWeBCXXA2p+1GRptU2mZT7iTUnMLHe20tYeWPewAdWsO+OBhC1H0w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709715337; c=relaxed/simple;
+	bh=icefFzuufstYBdavP0at89nC0mEAcvbdJq+cd4S6B8k=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=sesCu9teUB53jKZ/Xdm37VnpRUJ86vL1fRHwck6Vc5o9TGwpcBXAPw0xViHqOjevQAgn5BOlVAMvjbNYxjAJ9chpvsJe68ZgKgNgk/L634KaIESONfomsoyhWYIW6bet7ceq1oVPIIUWfcqxjl8T1Iu2s30mkkfMeQAnMFvkhW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-28-65e82f7c660e
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	42.hyeyoo@gmail.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	hdanton@sina.com,
+	her0gyugyu@gmail.com
+Subject: [PATCH v13 00/27] DEPT(Dependency Tracker)
+Date: Wed,  6 Mar 2024 17:54:46 +0900
+Message-Id: <20240306085513.41482-1-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAAzXSa0hTYRgH8N73nPOeuVycptXJPhQDCbpoN+GJIgqiXoIu1LciauQhl5dk
+	mrauWq7M1FIwyyy81BRdWXNFljPTXDPLrFaZTMlheWkX0DZcSjWLvjz84P/n/+mRMcobXIRM
+	k5QqaZPUCSoiZ+Xu0IqlJ6KHpGU9DxdCQe4y8P3IZqG0zkig624tAqM5E8Nw22b45HchmHj9
+	hoHioi4E5f29DJitfQgs1WcIvB+YAXafl0B70UUCZyvrCLz9PonBcaUQQ61pK3RcrsDQHBhk
+	oXiYwPXiszh4hjAEDDU8GDIiwVldwsNk/3Jo7/vIgaVnMVy76SDQaGlnwfrIieH941ICfcbf
+	HHRYbSx0FeRxcMdTQeC738CAwefl4V1zGYZ7WcGhc2O/OHiR14zh3K37GOyfnyBoyv6CwWT8
+	SKDV58JQbypi4GdVGwJnvpsHfW6Ah+uZ+Qgu6q+wkOWIgYnxUrJ+NW11eRmaVZ9OLf4ylr6s
+	EGlDSS9Ps5p6eFpmOkLrqxfRysZhTMtHfRw11Vwg1DRayNMctx1TT2cnT21XJ1g6YC/GOyJ2
+	y9fGSgmaNEkbvW6/PC77/BiX/CbxqM88RjLQ8505KEQmCqtE99dL3H+7zFfJlImwUOzuDjBT
+	DhcWiPV53/52GMElF291bppymLBSbAs4/3ZYIVIsLPWgKSuEGLG9ysP+25wv1t5rDnbkQX+R
+	iSOVdvwvmCs+q+5mL6PpZWhaDVJqktIS1ZqEVVFxuiTN0agDhxNNKPg0hpOTex6h0a5dLUiQ
+	IVWoYn3IoKTk1GkpusQWJMoYVbjixM8BSamIVeuOSdrD+7RHEqSUFjRPxqrmKFb402OVwkF1
+	qhQvScmS9n+KZSERGSheP5Y8FP1gJNzuMMbkeeM36t2fwggu2TV7cJu/bqNOFZ89YLOGbqEv
+	0jv828w7TKJ164Hxm5sOOfXq2qZDa/N79/6yFozbYso/eFtXzDu9xhz52vHN9vSUe2Z/amZV
+	TuPtJfuM4Z7jBdsV92MbcpHOMvL7jsYQ2DDr1ZOIsAcGFZsSp16+iNGmqP8AKKmHhjADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzXSa0iTYRgG4N73O83V6msJfhiRjUJKUiOFpwNhdPClExVEUIGO/NCRTtnM
+	VIwstdRSVFJLLTzUPM3S6Q/PiadckVouK1NRsdScE9RJSzu4oj8PF9w3969HQsl/084SlTpc
+	1KiVwQpWSktP7YvbGeMxKXpO56yG9HueYF1IpCHvuZ6F3mflCPQ1NzFMdfjCh0UzgqU3PRRk
+	Z/YiKBgdoqCmcxhBU8ktFvrG14LJOsuCMfMuC3FFz1l4O72MYTArA0O54SS8TivE0GKboCF7
+	ioXc7Di8ciYx2HRlHOhit8FYSQ4Hy6O7wDjcz0DbIyMDTQNu8PDxIAuNTUYaOmvHMPTV57Ew
+	rP/NwOvOLhp601MYqLAUsjC9qKNAZ53l4F1LPobK+JW12/O/GHiZ0oLh9pMqDKZPDQiaE0cw
+	GPT9LLRZzRiqDZkU/CjuQDCWOsNBwj0bB7k3UxHcTciiIX7QG5a+57E+e0mbeZYi8dXXSNNi
+	Pk1eFQqkLmeII/HNAxzJN1wl1SU7SFHjFCYFc1aGGMqSWGKYy+BI8owJE0t3N0e6HizRZNyU
+	jU9vvCDdHyAGqyJEjccBf2lQ4p15JqwnJNJaM8/GovazychBIvBegrnmAWs3y7sKHz/aKLsd
+	eRehOuUrYzfFm6XCk+6jdm/gdwsdtrG/HZrfJmTkWZDdMt5bMBZb6H+bm4XyyhYqDUny0aoy
+	5KhSR4QoVcHe7torQVFqVaT75dAQA1p5C9315fRatNDn24p4CVKskfk4TIhyRhmhjQppRYKE
+	UjjKYn6Mi3JZgDIqWtSE+mmuBovaVrRRQiucZMfOi/5yPlAZLl4RxTBR8z/FEgfnWHRgYXDE
+	+mrN3MUu6dH7butWT1lPBB5psF3KikQuxkM9ExpX8ubg/j3UuHtpbegX09NN37HPoe1hp25w
+	4d0Fmfzn9Uv1L2pVVY5BqgK1088E5/vnnPyOp+q9bLmlRWdubN1w2PKtzBv/TErbMlPBRA/5
+	vfesUyukGaSwsp03+ckdFLQ2SLlrB6XRKv8As7FxcxIDAAA=
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Om3C5k6RiFV81GpzKcqAtAQQjYViLViovfNKpXOCr9Oy6v22G98EHVy4SIMi2ojlmDTvMpziK6xYiCA4s4vcXqldGRCEDu90Y2GV0Ok3w4EfXWb+sa5ReB+ZENT8zYatftkZxBBmgkgV3R8kwHaTnCcOtkQsJon4KxcMZ3qRmBY48d/CtHWuw240Q/L/zyw+wm+dRCBhxcuML38MzE1Qb1UrjPLf535ikukHzglAToOB1UGW6av/wwE+tnd1/GI2reTJmOO6kIE7csQl62o68R2QdWtiHq1d446U0LM4C6TPQTXzbPSpRIVRGILz5iQIJgLoEUdUxTqieXOF/zRv4yu9vDmdbK3Ci4ozjFLfThHe6t9YYF9NNZOgojdSwgiBNM+ZMVSxvuO6LGO1ukVbrlfqbXTIv0RY2QcgssZxo7rUyKpXtgATk2QsmhSInCqt+fTdU8FUllM/lrw/KzkYNjXlbVLdF4VyYBmHfccq4iq4Ex9MTd9iqJjn6KXep+QnyGQt9Ncgn3BtOxMQsenwLu9gNrem4sU8oL/WAC4v6ki8F98U2EjBf8oq/WZUDKKXLb1Oht8nKykXklSo2hKoOidI9ka/jzfWFiwfuqV8Ngs+JyEBTnOCd/84Rzo5gCtC
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5d29a8c-2bd2-4ca7-11eb-08dc3db9ae61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2024 08:44:48.3146
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eiBF07buldAl28qOn6PXZSBUypAUg7OrmGXH4tLGQWBnxrgBJfbTr5TTjAJjk4crQ2Iu1dcX6ay0+5hQ46Wm5MIhit4yvDDXrKKaQK5ZajE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB7094
 
-On Mar 05, 2024 / 12:18, Daniel Wagner wrote:
-> On Tue, Mar 05, 2024 at 09:44:45AM +0000, Shinichiro Kawasaki wrote:
-> > On Mar 04, 2024 / 17:13, Daniel Wagner wrote:
-> > > The is the test case for
-> > >=20
-> > > https://lore.kernel.org/linux-nvme/20240304161006.19328-1-dwagner@sus=
-e.de/
-> > >
-> > >=20
-> > > Daniel Wagner (2):
-> > >   nvme/rc: add reconnect-delay argument only for fabrics transports
-> > >   nvme/048: add reconnect after ctrl key change
-> >=20
-> > I apply the kernel patches in the link above to v6.8-rc7, then ran nvme=
-/045
-> > with the blktests patches in the series. And I observed failure of the =
-test
-> > case with various transports [1]. Is this failure expected?
->=20
-> If you have these patches applied, the test should pass. But we might
-> have still some more stuff to unify between the transports. The nvme/045
-> test passes in my setup. Though I have seen runs which were hang for
-> some reason. Haven't figured out yet what's happening there. But I
-> haven't seen failures, IIRC.
->=20
-> I am not really surprised we seeing some fallouts though. We start to
-> test the error code paths with this test extension.
->=20
-> > Also, I observed KASAN double-free [2]. Do you observe it in your envir=
-onment?
-> > I created a quick fix [3], and it looks resolving the double-free.
->=20
-> No, I haven't seen this.
->=20
-> > sudo ./check nvme/045
-> > nvme/045 (Test re-authentication)                            [failed]
-> >     runtime  8.069s  ...  7.639s
-> >     --- tests/nvme/045.out      2024-03-05 18:09:07.267668493 +0900
-> >     +++ /home/shin/Blktests/blktests/results/nodev/nvme/045.out.bad    =
- 2024-03-05 18:10:07.735494384 +0900
-> >     @@ -9,5 +9,6 @@
-> >      Change hash to hmac(sha512)
-> >      Re-authenticate with changed hash
-> >      Renew host key on the controller and force reconnect
-> >     -disconnected 0 controller(s)
-> >     +controller "nvme1" not deleted within 5 seconds
-> >     +disconnected 1 controller(s)
-> >      Test complete
->=20
-> That means the host either successfully reconnected or never
-> disconnected. We have another test case just for the disconnect test
-> (number of queue changes), so if this test passes, it must be the
-> former... Shouldn't really happen, this would mean the auth code has bug.
+I'm happy to see that DEPT reports a real problem in practice. See:
 
-The test case nvme/048 passes, so this looks a bug.
+   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/#t
+   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
 
->=20
-> > diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
-> > index f2832f70e7e0..4e161d3cd840 100644
-> > --- a/drivers/nvme/host/sysfs.c
-> > +++ b/drivers/nvme/host/sysfs.c
-> > @@ -221,14 +221,10 @@ static int ns_update_nuse(struct nvme_ns *ns)
-> > =20
-> >  	ret =3D nvme_identify_ns(ns->ctrl, ns->head->ns_id, &id);
-> >  	if (ret)
-> > -		goto out_free_id;
-> > +		return ret;
->=20
-> Yes, this is correct.
-> > =20
-> >  	ns->head->nuse =3D le64_to_cpu(id->nuse);
-> > -
-> > -out_free_id:
-> > -	kfree(id);
-> > -
-> > -	return ret;
-> > +	return 0;
-> >  }
-> >
->=20
-> I think you still need to free the 'id' on the normal exit path though
+I added a document describing DEPT, that would help you understand what
+DEPT is and how DEPT works. You can use DEPT just with CONFIG_DEPT on
+and by checking dmesg in runtime.
 
-Thanks, I posted the patch with the fix.
+---
 
->=20
-> If you have these patches applied, the test should pass. But we might
-> have still some more stuff to unify between the transports. The nvme/045
-> test passes in my setup. Though I have seen runs which were hang for
-> some reason. Haven't figured out yet what's happening there. But I
-> haven't seen failures.
+Hi Linus and folks,
 
-Still with the fix of the double-free, I observe the nvme/045 failure for r=
-dma,
-tcp and fc transports. I wonder where the difference between your system an=
-d
-mine comes from.
+I've been developing a tool for detecting deadlock possibilities by
+tracking wait/event rather than lock acquisition order to try to cover
+all synchonization machanisms.
 
-FYI, here I share the kernel messages for rdma transport. It shows that
-nvme_rdma_reconnect_or_remove() was called repeatedly and it tried to recon=
-nect.
-The status argument is -111 or 880, so I think the recon flag is always tru=
-e
-and no effect. I'm interested in the status values in your environment.
+Benifit:
+
+	0. Works with all lock primitives.
+	1. Works with wait_for_completion()/complete().
+	2. Works with PG_locked.
+	3. Works with swait/wakeup.
+	4. Works with waitqueue.
+	5. Works with wait_bit.
+	6. Multiple reports are allowed.
+	7. Deduplication control on multiple reports.
+	8. Withstand false positives thanks to 7.
+	9. Easy to tag any wait/event.
+
+Future work:
+
+	0. To make it more stable.
+	1. To separates Dept from Lockdep.
+	2. To improves performance in terms of time and space.
+	3. To use Dept as a dependency engine for Lockdep.
+	4. To add any missing tags of wait/event in the kernel.
+	5. To deduplicate stack trace.
+
+How to interpret reports:
+
+	[S] the start of the event context or the requestor having asked
+	    the event context to go
+	[W] the wait disturbing the event from triggering
+	[E] the event that cannot be reachable
+
+Thanks,
+Byungchul
+
+---
+
+Changes from v12:
+
+	1. Refine the whole document for DEPT.
+	2. Add 'Interpret DEPT report' section in the document, using a
+	   deadlock report obtained in practice. Hope this version of
+	   document helps guys understand DEPT better.
+
+	   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/#t
+	   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
+
+Changes from v11:
+
+	1. Add 'Dept' documentation describing the concept of Dept.
+	2. Rewrite the commit messages of the following commits for
+	   using weaker lockdep annotation, for better description.
+
+	   fs/jbd2: Use a weaker annotation in journal handling
+	   cpu/hotplug: Use a weaker annotation in AP thread
+
+	   (feedbacked by Thomas Gleixner)
+
+Changes from v10:
+
+	1. Fix noinstr warning when building kernel source.
+	2. Dept has been reporting some false positives due to the folio
+	   lock's unfairness. Reflect it and make Dept work based on
+	   dept annotaions instead of just wait and wake up primitives.
+	3. Remove the support for PG_writeback while working on 2. I
+	   will add the support later if needed.
+	4. Dept didn't print stacktrace for [S] if the participant of a
+	   deadlock is not lock mechanism but general wait and event.
+	   However, it made hard to interpret the report in that case.
+	   So add support to print stacktrace of the requestor who asked
+	   the event context to run - usually a waiter of the event does
+	   it just before going to wait state.
+	5. Give up tracking raw_local_irq_{disable,enable}() since it
+	   totally messed up dept's irq tracking. So make it work in the
+	   same way as Lockdep does. I will consider it once any false
+	   positives by those are observed again.
+	6. Change the manual rwsem_acquire_read(->j_trans_commit_map)
+	   annotation in fs/jbd2/transaction.c to the try version so
+	   that it works as much as it exactly needs.
+	7. Remove unnecessary 'inline' keyword in dept.c and add
+	   '__maybe_unused' to a needed place.
+
+Changes from v9:
+
+	1. Fix a bug. SDT tracking didn't work well because of my big
+	   mistake that I should've used waiter's map to indentify its
+	   class but it had been working with waker's one. FYI,
+	   PG_locked and PG_writeback weren't affected. They still
+	   worked well. (reported by YoungJun)
+	
+Changes from v8:
+
+	1. Fix build error by adding EXPORT_SYMBOL(PG_locked_map) and
+	   EXPORT_SYMBOL(PG_writeback_map) for kernel module build -
+	   appologize for that. (reported by kernel test robot)
+	2. Fix build error by removing header file's circular dependency
+	   that was caused by "atomic.h", "kernel.h" and "irqflags.h",
+	   which I introduced - appolgize for that. (reported by kernel
+	   test robot)
+
+Changes from v7:
+
+	1. Fix a bug that cannot track rwlock dependency properly,
+	   introduced in v7. (reported by Boqun and lockdep selftest)
+	2. Track wait/event of PG_{locked,writeback} more aggressively
+	   assuming that when a bit of PG_{locked,writeback} is cleared
+	   there might be waits on the bit. (reported by Linus, Hillf
+	   and syzbot)
+	3. Fix and clean bad style code e.i. unnecessarily introduced
+	   a randome pattern and so on. (pointed out by Linux)
+	4. Clean code for applying DEPT to wait_for_completion().
+
+Changes from v6:
+
+	1. Tie to task scheduler code to track sleep and try_to_wake_up()
+	   assuming sleeps cause waits, try_to_wake_up()s would be the
+	   events that those are waiting for, of course with proper DEPT
+	   annotations, sdt_might_sleep_weak(), sdt_might_sleep_strong()
+	   and so on. For these cases, class is classified at sleep
+	   entrance rather than the synchronization initialization code.
+	   Which would extremely reduce false alarms.
+	2. Remove the DEPT associated instance in each page struct for
+	   tracking dependencies by PG_locked and PG_writeback thanks to
+	   the 1. work above.
+	3. Introduce CONFIG_DEPT_AGGRESIVE_TIMEOUT_WAIT to suppress
+	   reports that waits with timeout set are involved, for those
+	   who don't like verbose reporting.
+	4. Add a mechanism to refill the internal memory pools on
+	   running out so that DEPT could keep working as long as free
+	   memory is available in the system.
+	5. Re-enable tracking hashed-waitqueue wait. That's going to no
+	   longer generate false positives because class is classified
+	   at sleep entrance rather than the waitqueue initailization.
+	6. Refactor to make it easier to port onto each new version of
+	   the kernel.
+	7. Apply DEPT to dma fence.
+	8. Do trivial optimizaitions.
+
+Changes from v5:
+
+	1. Use just pr_warn_once() rather than WARN_ONCE() on the lack
+	   of internal resources because WARN_*() printing stacktrace is
+	   too much for informing the lack. (feedback from Ted, Hyeonggon)
+	2. Fix trivial bugs like missing initializing a struct before
+	   using it.
+	3. Assign a different class per task when handling onstack
+	   variables for waitqueue or the like. Which makes Dept
+	   distinguish between onstack variables of different tasks so
+	   as to prevent false positives. (reported by Hyeonggon)
+	4. Make Dept aware of even raw_local_irq_*() to prevent false
+	   positives. (reported by Hyeonggon)
+	5. Don't consider dependencies between the events that might be
+	   triggered within __schedule() and the waits that requires
+	    __schedule(), real ones. (reported by Hyeonggon)
+	6. Unstage the staged wait that has prepare_to_wait_event()'ed
+	   *and* yet to get to __schedule(), if we encounter __schedule()
+	   in-between for another sleep, which is possible if e.g. a
+	   mutex_lock() exists in 'condition' of ___wait_event().
+	7. Turn on CONFIG_PROVE_LOCKING when CONFIG_DEPT is on, to rely
+	   on the hardirq and softirq entrance tracing to make Dept more
+	   portable for now.
+
+Changes from v4:
+
+	1. Fix some bugs that produce false alarms.
+	2. Distinguish each syscall context from another *for arm64*.
+	3. Make it not warn it but just print it in case Dept ring
+	   buffer gets exhausted. (feedback from Hyeonggon)
+	4. Explicitely describe "EXPERIMENTAL" and "Dept might produce
+	   false positive reports" in Kconfig. (feedback from Ted)
+
+Changes from v3:
+
+	1. Dept shouldn't create dependencies between different depths
+	   of a class that were indicated by *_lock_nested(). Dept
+	   normally doesn't but it does once another lock class comes
+	   in. So fixed it. (feedback from Hyeonggon)
+	2. Dept considered a wait as a real wait once getting to
+	   __schedule() even if it has been set to TASK_RUNNING by wake
+	   up sources in advance. Fixed it so that Dept doesn't consider
+	   the case as a real wait. (feedback from Jan Kara)
+	3. Stop tracking dependencies with a map once the event
+	   associated with the map has been handled. Dept will start to
+	   work with the map again, on the next sleep.
+
+Changes from v2:
+
+	1. Disable Dept on bit_wait_table[] in sched/wait_bit.c
+	   reporting a lot of false positives, which is my fault.
+	   Wait/event for bit_wait_table[] should've been tagged in a
+	   higher layer for better work, which is a future work.
+	   (feedback from Jan Kara)
+	2. Disable Dept on crypto_larval's completion to prevent a false
+	   positive.
+
+Changes from v1:
+
+	1. Fix coding style and typo. (feedback from Steven)
+	2. Distinguish each work context from another in workqueue.
+	3. Skip checking lock acquisition with nest_lock, which is about
+	   correct lock usage that should be checked by Lockdep.
+
+Changes from RFC(v0):
+
+	1. Prevent adding a wait tag at prepare_to_wait() but __schedule().
+	   (feedback from Linus and Matthew)
+	2. Use try version at lockdep_acquire_cpus_lock() annotation.
+	3. Distinguish each syscall context from another.
+
+Byungchul Park (27):
+  llist: Move llist_{head,node} definition to types.h
+  dept: Implement Dept(Dependency Tracker)
+  dept: Add single event dependency tracker APIs
+  dept: Add lock dependency tracker APIs
+  dept: Tie to Lockdep and IRQ tracing
+  dept: Add proc knobs to show stats and dependency graph
+  dept: Apply sdt_might_sleep_{start,end}() to
+    wait_for_completion()/complete()
+  dept: Apply sdt_might_sleep_{start,end}() to swait
+  dept: Apply sdt_might_sleep_{start,end}() to waitqueue wait
+  dept: Apply sdt_might_sleep_{start,end}() to hashed-waitqueue wait
+  dept: Distinguish each syscall context from another
+  dept: Distinguish each work from another
+  dept: Add a mechanism to refill the internal memory pools on running
+    out
+  cpu/hotplug: Use a weaker annotation in AP thread
+  dept: Apply sdt_might_sleep_{start,end}() to dma fence wait
+  dept: Track timeout waits separately with a new Kconfig
+  dept: Apply timeout consideration to wait_for_completion()/complete()
+  dept: Apply timeout consideration to swait
+  dept: Apply timeout consideration to waitqueue wait
+  dept: Apply timeout consideration to hashed-waitqueue wait
+  dept: Apply timeout consideration to dma fence wait
+  dept: Record the latest one out of consecutive waits of the same class
+  dept: Make Dept able to work with an external wgen
+  dept: Track PG_locked with dept
+  dept: Print event context requestor's stacktrace on report
+  fs/jbd2: Use a weaker annotation in journal handling
+  dept: Add documentation for Dept
+
+ Documentation/dependency/dept.txt   |  735 +++++++
+ arch/arm64/kernel/syscall.c         |    3 +
+ arch/x86/entry/common.c             |    4 +
+ drivers/dma-buf/dma-fence.c         |    5 +
+ fs/jbd2/transaction.c               |    2 +-
+ include/linux/completion.h          |   30 +-
+ include/linux/dept.h                |  617 ++++++
+ include/linux/dept_ldt.h            |   77 +
+ include/linux/dept_sdt.h            |   66 +
+ include/linux/hardirq.h             |    3 +
+ include/linux/irqflags.h            |    7 +-
+ include/linux/llist.h               |    8 -
+ include/linux/local_lock_internal.h |    1 +
+ include/linux/lockdep.h             |  102 +-
+ include/linux/lockdep_types.h       |    3 +
+ include/linux/mm_types.h            |    2 +
+ include/linux/mutex.h               |    1 +
+ include/linux/page-flags.h          |  105 +-
+ include/linux/pagemap.h             |    7 +-
+ include/linux/percpu-rwsem.h        |    2 +-
+ include/linux/rtmutex.h             |    1 +
+ include/linux/rwlock_types.h        |    1 +
+ include/linux/rwsem.h               |    1 +
+ include/linux/sched.h               |    3 +
+ include/linux/seqlock.h             |    2 +-
+ include/linux/spinlock_types_raw.h  |    3 +
+ include/linux/srcu.h                |    2 +-
+ include/linux/swait.h               |    3 +
+ include/linux/types.h               |    8 +
+ include/linux/wait.h                |    3 +
+ include/linux/wait_bit.h            |    3 +
+ init/init_task.c                    |    2 +
+ init/main.c                         |    2 +
+ kernel/Makefile                     |    1 +
+ kernel/cpu.c                        |    2 +-
+ kernel/dependency/Makefile          |    4 +
+ kernel/dependency/dept.c            | 3175 +++++++++++++++++++++++++++
+ kernel/dependency/dept_hash.h       |   10 +
+ kernel/dependency/dept_internal.h   |   26 +
+ kernel/dependency/dept_object.h     |   13 +
+ kernel/dependency/dept_proc.c       |   93 +
+ kernel/exit.c                       |    1 +
+ kernel/fork.c                       |    2 +
+ kernel/locking/lockdep.c            |   22 +
+ kernel/module/main.c                |    4 +
+ kernel/sched/completion.c           |    2 +-
+ kernel/sched/core.c                 |   10 +
+ kernel/workqueue.c                  |    3 +
+ lib/Kconfig.debug                   |   37 +
+ lib/locking-selftest.c              |    2 +
+ mm/filemap.c                        |   26 +
+ mm/mm_init.c                        |    2 +
+ 52 files changed, 5195 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/dependency/dept.txt
+ create mode 100644 include/linux/dept.h
+ create mode 100644 include/linux/dept_ldt.h
+ create mode 100644 include/linux/dept_sdt.h
+ create mode 100644 kernel/dependency/Makefile
+ create mode 100644 kernel/dependency/dept.c
+ create mode 100644 kernel/dependency/dept_hash.h
+ create mode 100644 kernel/dependency/dept_internal.h
+ create mode 100644 kernel/dependency/dept_object.h
+ create mode 100644 kernel/dependency/dept_proc.c
 
 
-[   59.117607] run blktests nvme/045 at 2024-03-06 17:05:55
-[   59.198629] (null): rxe_set_mtu: Set mtu to 1024
-[   59.211185] PCLMULQDQ-NI instructions are not detected.
-[   59.362952] infiniband ens3_rxe: set active
-[   59.363765] infiniband ens3_rxe: added ens3
-[   59.540499] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
-[   59.560541] nvmet_rdma: enabling port 0 (10.0.2.15:4420)
-[   59.688866] nvmet: creating nvm controller 1 for subsystem blktests-subs=
-ystem-1 for NQN nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e=
-60b8de349 with DH-HMAC-CHAP.
-[   59.701114] nvme nvme1: qid 0: authenticated with hash hmac(sha256) dhgr=
-oup ffdhe2048
-[   59.702195] nvme nvme1: qid 0: controller authenticated
-[   59.703310] nvme nvme1: qid 0: authenticated
-[   59.707478] nvme nvme1: Please enable CONFIG_NVME_MULTIPATH for full sup=
-port of multi-port devices.
-[   59.709883] nvme nvme1: creating 4 I/O queues.
-[   59.745087] nvme nvme1: mapped 4/0/0 default/read/poll queues.
-[   59.786869] nvme nvme1: new ctrl: NQN "blktests-subsystem-1", addr 10.0.=
-2.15:4420, hostnqn: nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3=
--51e60b8de349
-[   59.999761] nvme nvme1: re-authenticating controller
-[   60.010902] nvme nvme1: qid 0: authenticated with hash hmac(sha256) dhgr=
-oup ffdhe2048
-[   60.011640] nvme nvme1: qid 0: controller authenticated
-[   60.025652] nvme nvme1: re-authenticating controller
-[   60.035349] nvme nvme1: qid 0: authenticated with hash hmac(sha256) dhgr=
-oup ffdhe2048
-[   60.036375] nvme nvme1: qid 0: controller authenticated
-[   60.050449] nvme nvme1: re-authenticating controller
-[   60.060757] nvme nvme1: qid 0: authenticated with hash hmac(sha256) dhgr=
-oup ffdhe2048
-[   60.061460] nvme nvme1: qid 0: controller authenticated
-[   62.662430] nvme nvme1: re-authenticating controller
-[   62.859510] nvme nvme1: qid 0: authenticated with hash hmac(sha512) dhgr=
-oup ffdhe8192
-[   62.860502] nvme nvme1: qid 0: controller authenticated
-[   63.029182] nvme nvme1: re-authenticating controller
-[   63.192844] nvme nvme1: qid 0: authenticated with hash hmac(sha512) dhgr=
-oup ffdhe8192
-[   63.193900] nvme nvme1: qid 0: controller authenticated
-[   63.608561] nvme nvme1: starting error recovery
-[   63.653699] nvme nvme1: Reconnecting in 1 seconds...
-[   64.712627] nvmet: creating nvm controller 1 for subsystem blktests-subs=
-ystem-1 for NQN nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e=
-60b8de349 with DH-HMAC-CHAP.
-[   64.868896] nvmet: ctrl 1 qid 0 host response mismatch
-[   64.870065] nvmet: ctrl 1 qid 0 failure1 (1)
-[   64.871152] nvmet: ctrl 1 fatal error occurred!
-[   64.871519] nvme nvme1: qid 0: authentication failed
-[   64.874330] nvme nvme1: failed to connect queue: 0 ret=3D-111
-[   64.878612] nvme nvme1: Failed reconnect attempt 1
-[   64.880472] nvme nvme1: Reconnecting in 1 seconds...
-[   66.040957] nvmet: creating nvm controller 1 for subsystem blktests-subs=
-ystem-1 for NQN nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e=
-60b8de349 with DH-HMAC-CHAP.
-[   66.200862] nvmet: ctrl 1 qid 0 host response mismatch
-[   66.203005] nvmet: ctrl 1 qid 0 failure1 (1)
-[   66.204873] nvmet: ctrl 1 fatal error occurred!
-[   66.205148] nvme nvme1: qid 0: authentication failed
-[   66.208609] nvme nvme1: failed to connect queue: 0 ret=3D-111
-[   66.212033] nvme nvme1: Failed reconnect attempt 2
-[   66.213837] nvme nvme1: Reconnecting in 1 seconds...
-[   67.327576] nvmet: creating nvm controller 1 for subsystem blktests-subs=
-ystem-1 for NQN nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e=
-60b8de349 with DH-HMAC-CHAP.
-[   67.485392] nvmet: ctrl 1 qid 0 host response mismatch
-[   67.487440] nvmet: ctrl 1 qid 0 failure1 (1)
-[   67.489403] nvmet: ctrl 1 fatal error occurred!
-[   67.489565] nvme nvme1: qid 0: authentication failed
-[   67.493015] nvme nvme1: failed to connect queue: 0 ret=3D-111
-[   67.496909] nvme nvme1: Failed reconnect attempt 3
-[   67.498692] nvme nvme1: Reconnecting in 1 seconds...
-[   68.610640] nvmet: creating nvm controller 1 for subsystem blktests-subs=
-ystem-1 for NQN nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e=
-60b8de349 with DH-HMAC-CHAP.
-[   68.739298] nvme nvme1: Identify namespace failed (880)
-[   68.742833] nvme nvme1: Removing ctrl: NQN "blktests-subsystem-1"
-[   68.774125] nvmet: ctrl 1 qid 0 host response mismatch
-[   68.776440] nvme nvme1: qid 0 auth_send failed with status 880
-[   68.778133] nvme nvme1: qid 0 failed to receive success1, nvme status 88=
-0
-[   68.780300] nvme nvme1: qid 0: authentication failed
-[   68.782490] nvme nvme1: failed to connect queue: 0 ret=3D880
-[   68.785335] nvme nvme1: Failed reconnect attempt 4
-[   68.829188] nvme nvme1: Property Set error: 880, offset 0x14
-[   69.634482] rdma_rxe: unloaded
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+-- 
+2.17.1
 
 
