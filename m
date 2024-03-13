@@ -1,136 +1,79 @@
-Return-Path: <linux-block+bounces-4395-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4397-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E597187AA8B
-	for <lists+linux-block@lfdr.de>; Wed, 13 Mar 2024 16:40:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D60187AF30
+	for <lists+linux-block@lfdr.de>; Wed, 13 Mar 2024 19:19:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8633EB2212E
-	for <lists+linux-block@lfdr.de>; Wed, 13 Mar 2024 15:40:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE8641C255C3
+	for <lists+linux-block@lfdr.de>; Wed, 13 Mar 2024 18:19:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F96A47A40;
-	Wed, 13 Mar 2024 15:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431FC19AEEC;
+	Wed, 13 Mar 2024 17:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyPZrvut"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bzt1MI9P"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29134779E;
-	Wed, 13 Mar 2024 15:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEA319AF0D;
+	Wed, 13 Mar 2024 17:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710344425; cv=none; b=diD2MORyjyF6BTYW4R9n9N0rtNY2w26elYq0Hhm62E17hozu0HPPibZe4RJS1oiqwbPALhO8aARpfQOSyrYO6pBNKTY78N99sQ0EGP1Hb55V0QWV9b9x1OISt1X7GzAKOGzZvCDllp8ASKs+nbjTapkngWeNNcxT7TELDCNxIFI=
+	t=1710349445; cv=none; b=neFzYBLGTfg0sN0t0HiD4CpHOd6PvIQwgMWhVb1iRu+weq5hhOr9Zz1egORDSuBJO42/t9DaUqMciM1OyQij08nzo1rEUMPaRXxL7wBy8/3s3AD+WbuIiIAvamRKLMdV8tg5r84JHSX6CTsKotaboC/B77nRXCy30j04a+7AZkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710344425; c=relaxed/simple;
-	bh=4oJHI0KfHtFW48aWPDA3mAGSBQe8ddaVpidCtCXY66c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMNsMInso/pZf54MJqlDMm8Yq6lmACjq5fhRM3F5CMfjG78md4WlO1TeJZaf8lzfv+0fSCQuuCzljszUoSlI+2KEU+7NNc0R/ZwCdFhVgo8X3bKQO/Q13ElwV8DmiTa9FPdBjesUQ1SMas8yVSQzU8nW7JNEI1i36Lr/URYaGEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyPZrvut; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C3EC433C7;
-	Wed, 13 Mar 2024 15:40:23 +0000 (UTC)
+	s=arc-20240116; t=1710349445; c=relaxed/simple;
+	bh=N7LE9KXhWLqCJgHyjJFZZtb9L1TzaxLfv98xLSVoKxU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qcq+AunH3d0F5uOPSgDOTsLVdJImeXD0OVNHWfAGHIkmWIszFNBUCf3lq7cZS5lUwy6ecULJuyk4V6ydDjHCkTcogqfSGhb+Zd9Xb9QRv/XrgLOMMxvfmTfNkmZ54j6nvMROCUhfAEhbPu9G3jeY0qk+CbERh0zrODrWC98HU1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bzt1MI9P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE201C43390;
+	Wed, 13 Mar 2024 17:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710344424;
-	bh=4oJHI0KfHtFW48aWPDA3mAGSBQe8ddaVpidCtCXY66c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kyPZrvutV1rMvBM6CPZ6YdneIOaxMrU+MQB9zKY431uYWS7E8PUMD3VYPUUTQJPA/
-	 /RJYvsuyBXKtnvjCwpeeaIVOCWWddhNIL5K6YxIuVs9R4QmYTF4YrNGjG/TS/B0IJe
-	 P65yg0NF03klIR7w5fH2iGkInRgaOrKPVoGkDYPlvw1hue0GFj10WHZl6vvwvtjThs
-	 JMmF8xQE4aDFjb/zY9qWiGYCWcJDd17XiAwwaXacdNfQodkOzhK0aleDQ4ovDgdttu
-	 5pQFm0438fQpQ1mH7rQyOOnferj2EVI6wRiMrx6Szmvs0GOMYU1+yQiJ/4pHv/LgaB
-	 EyjMrw6sli/3g==
-Date: Wed, 13 Mar 2024 09:40:21 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Chandan Babu R <chandanbabu@kernel.org>,
-	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/5] block: move discard checks into the ioctl handler
-Message-ID: <ZfHI5Vr7BOU6__rv@kbusch-mbp>
-References: <20240312144532.1044427-1-hch@lst.de>
- <20240312144532.1044427-2-hch@lst.de>
+	s=k20201202; t=1710349445;
+	bh=N7LE9KXhWLqCJgHyjJFZZtb9L1TzaxLfv98xLSVoKxU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Bzt1MI9P0NVyr2Qzaju/viSZmhVJav3gIO5xH7zPf0gl/C72bFlvnKyfpNkdUpTPa
+	 /sYPCG42BG/g1+cKHNww9TT6Nl1rNW4sFDLeD9Yil6jtpOW+kBIQ2QUWsiMU/6JDjs
+	 hgHvdUwnLA31aNboN5Lo2rOV4J0QT5AUoGChuGPjt8MaI5RvQPESJRC67M0COxP8y9
+	 SOTyTHpv0Y6vwAeBIBzmmOvdivP9gU1ML1gfXFkAxhhCzH1sFA+TPtUzbxIjw659md
+	 ue6i0p1197LHtbey7sA1hBuQ+dFRrLRosOqQdmGKo0qGUnf//rAe1ErkSex3eNdxli
+	 mDwrumA1BebpQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DBA80D95054;
+	Wed, 13 Mar 2024 17:04:04 +0000 (UTC)
+Subject: Re: [git pull] device mapper changes to add VDO target for 6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Ze9Q5P10RERiflfL@redhat.com>
+References: <Ze9OCmWb-9LX5t8W@redhat.com> <Ze9Q5P10RERiflfL@redhat.com>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Ze9Q5P10RERiflfL@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.9/dm-vdo
+X-PR-Tracked-Commit-Id: cb824724dccb3195d22cad96e7b65fe13621d0a6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 61387b8dcf1dc0f30cf690956a48768a3fce1810
+Message-Id: <171034944489.7471.13439636710855598442.pr-tracker-bot@kernel.org>
+Date: Wed, 13 Mar 2024 17:04:04 +0000
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, dm-devel@lists.linux.dev, linux-block@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, Benjamin Marzinski <bmarzins@redhat.com>, Bruce Johnston <bjohnsto@redhat.com>, Chung Chung <cchung@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Ken Raeburn <raeburn@redhat.com>, Matthew Sakai <msakai@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Susan LeGendre-McGhee <slegendr@redhat.com>, Yang Li <yang.lee@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240312144532.1044427-2-hch@lst.de>
 
-On Tue, Mar 12, 2024 at 08:45:27AM -0600, Christoph Hellwig wrote:
-> @@ -95,6 +95,8 @@ static int compat_blkpg_ioctl(struct block_device *bdev,
->  static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
->  		unsigned long arg)
->  {
-> +	sector_t bs_mask = (bdev_logical_block_size(bdev) >> SECTOR_SHIFT) - 1;
-> +	sector_t sector, nr_sects;
->  	uint64_t range[2];
->  	uint64_t start, len;
->  	struct inode *inode = bdev->bd_inode;
-> @@ -105,18 +107,21 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
->  
->  	if (!bdev_max_discard_sectors(bdev))
->  		return -EOPNOTSUPP;
-> +	if (bdev_read_only(bdev))
-> +		return -EPERM;
->  
->  	if (copy_from_user(range, (void __user *)arg, sizeof(range)))
->  		return -EFAULT;
->  
->  	start = range[0];
->  	len = range[1];
-> +	sector = start >> SECTOR_SHIFT;
-> +	nr_sects = len >> SECTOR_SHIFT;
->  
-> -	if (start & 511)
-> +	if (!nr_sects)
->  		return -EINVAL;
-> -	if (len & 511)
-> +	if ((sector | nr_sects) & bs_mask)
->  		return -EINVAL;
-> -
->  	if (start + len > bdev_nr_bytes(bdev))
->  		return -EINVAL;
->  
-> @@ -124,7 +129,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
->  	err = truncate_bdev_range(bdev, mode, start, start + len - 1);
->  	if (err)
->  		goto fail;
-> -	err = blkdev_issue_discard(bdev, start >> 9, len >> 9, GFP_KERNEL);
-> +	err = blkdev_issue_discard(bdev, sector, nr_sects, GFP_KERNEL);
->  fail:
->  	filemap_invalidate_unlock(inode->i_mapping);
->  	return err;
-> -- 
+The pull request you sent on Mon, 11 Mar 2024 14:43:48 -0400:
 
-The incremental change I think you want atop this patch to keep the
-previous behavior:
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.9/dm-vdo
 
--- >8 --
-diff --git b/block/ioctl.c a/block/ioctl.c
-index 57c8171fda93c..e14388548ab97 100644
---- b/block/ioctl.c
-+++ a/block/ioctl.c
-@@ -95,7 +95,7 @@ static int compat_blkpg_ioctl(struct block_device *bdev,
- static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
- 		unsigned long arg)
- {
--	sector_t bs_mask = (bdev_logical_block_size(bdev) >> SECTOR_SHIFT) - 1;
-+	sector_t mask = bdev_logical_block_size(bdev) - 1;
- 	sector_t sector, nr_sects;
- 	uint64_t range[2];
- 	uint64_t start, len;
-@@ -120,7 +120,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
- 
- 	if (!nr_sects)
- 		return -EINVAL;
--	if ((sector | nr_sects) & bs_mask)
-+	if ((start | len) & mask)
- 		return -EINVAL;
- 	if (start + len > bdev_nr_bytes(bdev))
- 		return -EINVAL;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/61387b8dcf1dc0f30cf690956a48768a3fce1810
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
