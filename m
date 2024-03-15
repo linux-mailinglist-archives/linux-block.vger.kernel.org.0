@@ -1,252 +1,252 @@
-Return-Path: <linux-block+bounces-4456-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4459-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A6C387CECE
-	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 15:28:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E5787CF0C
+	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 15:36:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A876281F2E
-	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 14:28:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 539341F2328D
+	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 14:36:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C7B37145;
-	Fri, 15 Mar 2024 14:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 117A9335C0;
+	Fri, 15 Mar 2024 14:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KppBX0Ui";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PgpUIW3t";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KppBX0Ui";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PgpUIW3t"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kr0EeGjw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE5D25543;
-	Fri, 15 Mar 2024 14:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F94D249E8
+	for <linux-block@vger.kernel.org>; Fri, 15 Mar 2024 14:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710512886; cv=none; b=eauNNy+HFAvwQvM/t0fU9ujg2tgRw28ZoWvA20IlEKx74EdOAs54WoCdGyRrdqfK0ZeNfcb6dPGlWE4RnVYohwM7IN2tU6X2asHZZ9Fht98diMlaieuD39+3Yix/nSdTDZikunMTyP7NGW6gv4YxLjJoNlgbeuND2QUpGyFKl+4=
+	t=1710513370; cv=none; b=pl63/TVbMN8HubrY5azm+8T7x226T1Eys0ZlH/uIdyUAOQ/5K7CKdVNH5F2QQBXqnbLyrk5depSnntqFY8zvHaTCdURWyFY9qqCif81MxrKCbEKBOv+xLNqy+xoTAXc67toqrxY8lJ6ga3y1k2zRfkbKY8JpCOF/6mH3OaC0q+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710512886; c=relaxed/simple;
-	bh=ptKcQGvNLExqOhWDrtAimTpFjorljsqetWFvr5qfxag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8Dirc/Qi1HBdr8DV6kANlp/1quHAuzsbgqNTBXOz4d2hXvtU13rMh1sXLTrkI5jd1PR0DlAFmoSbhNfNTsdE375GKH/luk1cVDNPRTp03hIQguPea8S/sqOMFOHJEfEuH/dzTBiriSCe2oue5faxKGnBkiSuLOlBedwE/xVmLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KppBX0Ui; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PgpUIW3t; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KppBX0Ui; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PgpUIW3t; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A96B41FB6E;
-	Fri, 15 Mar 2024 14:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710512882; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5qcP3WTXoxRhAHwlYfBjFyJGoKiUMi4+gC0JUW+zVvY=;
-	b=KppBX0UivD4PuOE4zhwUFMF9p4+T3UIi2G4kMtA8DK5u58cqlX07hs0NQlo86xeYEKmDQU
-	eC5v+Iggp+AD7JSmGHvJOlDMimspS0nKVekk17igIaDZEgbKxDO5g0dM0OqKxxOObhnwwr
-	sYlRHaLrN5Z8IEIeYltb7wpVlgVvOrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710512882;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5qcP3WTXoxRhAHwlYfBjFyJGoKiUMi4+gC0JUW+zVvY=;
-	b=PgpUIW3tv+/la6mofkVRiS4LmyzUtuU24as4Sv3XYT5+PxC3DrwY+gLwPf0q2JZYUkGkUI
-	g5cQUUsZTRqVMBBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710512882; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5qcP3WTXoxRhAHwlYfBjFyJGoKiUMi4+gC0JUW+zVvY=;
-	b=KppBX0UivD4PuOE4zhwUFMF9p4+T3UIi2G4kMtA8DK5u58cqlX07hs0NQlo86xeYEKmDQU
-	eC5v+Iggp+AD7JSmGHvJOlDMimspS0nKVekk17igIaDZEgbKxDO5g0dM0OqKxxOObhnwwr
-	sYlRHaLrN5Z8IEIeYltb7wpVlgVvOrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710512882;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5qcP3WTXoxRhAHwlYfBjFyJGoKiUMi4+gC0JUW+zVvY=;
-	b=PgpUIW3tv+/la6mofkVRiS4LmyzUtuU24as4Sv3XYT5+PxC3DrwY+gLwPf0q2JZYUkGkUI
-	g5cQUUsZTRqVMBBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9F3BE1383D;
-	Fri, 15 Mar 2024 14:28:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fMzbJvJa9GX+PgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 15 Mar 2024 14:28:02 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 46625A07D9; Fri, 15 Mar 2024 15:28:02 +0100 (CET)
-Date: Fri, 15 Mar 2024 15:28:02 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
-	Jens Axboe <axboe@kernel.dk>, "Darrick J. Wong" <djwong@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH] fs,block: get holder during claim
-Message-ID: <20240315142802.i3ja63b4b7l3akeb@quack3>
-References: <20240314165814.tne3leyfmb4sqk2t@quack3>
- <20240315-freibad-annehmbar-ca68c375af91@brauner>
+	s=arc-20240116; t=1710513370; c=relaxed/simple;
+	bh=1xcOKkrVnP1J18Lj5L4jU5Fm29jx3LhLccVXkIDW85c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=GExwAQQiYw7E+uCWQePpFZbl+u9WdNvyT6c4TjAHVi587aXdhb3feFBbF1nLj9SVeKN5HY812XiEiqJbaSx3GaXiCpZveyjQSpuKjapuaK/wAzS7dbEjf1opAcfrXBI7OmOLCR9ASur/0bvb5AWqY5gE18L2kQfOWp2x9ZjGgWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kr0EeGjw; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42FE6lJL014114;
+	Fri, 15 Mar 2024 14:35:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : from : subject : to : cc : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=MRVQlCXViPyrX4Q0CMrvYnoBhqqbGH6iOcEOvhPSl38=;
+ b=Kr0EeGjwnBfuMSWNK9FdJQxNtnekY/4/jjZBO/Cf79CLM7LboOxybggDc82v34jwvUXZ
+ WqGJR1ryVFOs2+lHaOHnv5yuNBiScsJ2wu7corjc+sJAHUjJZHRkTDdAvBZd7idCA5e6
+ EMVCh0IRQFNYjeNWnU1D0CBjVGPHcqiZaqpS4FA/vOSnkNIsXRF9iN4HKUGVLXeK06r0
+ o4z+LCTLYawdklro53STw9GaqipsgL4NqjLaMr04Ntdi2zyksyEjRXgwSD183JLlopZg
+ iJy08K14CJRtxxMRIntiiEcj3EHIK3InDXs74BArfW5FYRrO8u4IGdRel97wNRK4xJnh BA== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wvqnargmd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Mar 2024 14:35:52 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42FCvZLt018134;
+	Fri, 15 Mar 2024 14:31:40 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ws23tvjdn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Mar 2024 14:31:40 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42FEVbvA11338358
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Mar 2024 14:31:39 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 63FF058054;
+	Fri, 15 Mar 2024 14:31:37 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 44B8058062;
+	Fri, 15 Mar 2024 14:31:35 +0000 (GMT)
+Received: from [9.109.198.202] (unknown [9.109.198.202])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 15 Mar 2024 14:31:34 +0000 (GMT)
+Message-ID: <7a3b35dd-7365-4427-95a0-929b28c64e73@linux.ibm.com>
+Date: Fri, 15 Mar 2024 20:01:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315-freibad-annehmbar-ca68c375af91@brauner>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+Subject: [Bug Report] nvme-cli fails re-formatting NVMe namespace
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Keith Busch <kbusch@kernel.org>, axboe@fb.com, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, Gregory Joyce <gjoyce@ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IvRHsfAaputHNMRkgiJf2wN2ihAG3Z8b
+X-Proofpoint-ORIG-GUID: IvRHsfAaputHNMRkgiJf2wN2ihAG3Z8b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-15_01,2024-03-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ bulkscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403150116
 
-On Fri 15-03-24 14:23:07, Christian Brauner wrote:
-> Now that we open block devices as files we need to deal with the
-> realities that closing is a deferred operation. An operation on the
-> block device such as e.g., freeze, thaw, or removal that runs
-> concurrently with umount, tries to acquire a stable reference on the
-> holder. The holder might already be gone though. Make that reliable by
-> grabbing a passive reference to the holder during bdev_open() and
-> releasing it during bdev_release().
-> 
-> Fixes: f3a608827d1f ("bdev: open block device as files") # mainline only
-> Reported-by: Christoph Hellwig <hch@infradead.org>
-> Link: https://lore.kernel.org/r/ZfEQQ9jZZVes0WCZ@infradead.org
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
-> Hey all,
-> 
-> I ran blktests with nbd enabled which contains a reliable repro for the
-> issue. Thanks to Christoph for pointing in that direction. The
-> underlying issue is not reproducible anymore with this patch applied.
-> xfstests and blktests pass.
+Hi,
 
-Thanks for the fix! It looks good to me. Feel free to add:
+We found that "nvme format ..." command fails to format nvme disk with block-size set to 512.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Notes and observations:
+====================== 
+This is observed on the latest linus kernel tree. This was working well on kernel v6.8.
 
-								Honza
+Test details:
+=============
+At system boot or when nvme is hot plugin, the nvme block size is 4096 and later if we try format
+it with the block-size of 512 (lbaf=2) then it fails. Interestingly, if we start with the nvme block
+size of 512 and later if we try format it with block-size of 4096 (lbaf=0) then it doesn't fail. 
+Please note that CONFIG_NVME_MULTIPATH is enabled.
+ 
+Please find below further details:
+
+# lspci 
+0018:01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM173X
+
+# nvme list 
+Node                  Generic               SN                   Model                                    Namespace  Usage                      Format           FW Rev  
+--------------------- --------------------- -------------------- ---------------------------------------- ---------- -------------------------- ---------------- --------
+/dev/nvme0n1          /dev/ng0n1            S6EUNA0R500358       1.6TB NVMe Gen4 U.2 SSD                  0x1          1.60  TB /   1.60  TB    512   B +  0 B   REV.SN49
+
+# nvme id-ns /dev/nvme0n1 -H 
+NVME Identify Namespace 1:
+nsze    : 0xba4d4ab0
+ncap    : 0xba4d4ab0
+nuse    : 0xba4d4ab0
+
+<snip>
+<snip>
+
+nlbaf   : 4
+flbas   : 0
+  [6:5] : 0	Most significant 2 bits of Current LBA Format Selected
+  [4:4] : 0	Metadata Transferred in Separate Contiguous Buffer
+  [3:0] : 0	Least significant 4 bits of Current LBA Format Selected
+  
+<snip>
+<snip>  
+
+LBA Format  0 : Metadata Size: 0   bytes - Data Size: 4096 bytes - Relative Performance: 0 Best (in use)
+LBA Format  1 : Metadata Size: 8   bytes - Data Size: 4096 bytes - Relative Performance: 0x2 Good 
+LBA Format  2 : Metadata Size: 0   bytes - Data Size: 512 bytes - Relative Performance: 0x1 Better 
+LBA Format  3 : Metadata Size: 8   bytes - Data Size: 512 bytes - Relative Performance: 0x3 Degraded 
+LBA Format  4 : Metadata Size: 64  bytes - Data Size: 4096 bytes - Relative Performance: 0x3 Degraded 
+
+# lsblk -t /dev/nvme0n1 
+NAME    ALIGNMENT MIN-IO OPT-IO PHY-SEC LOG-SEC ROTA SCHED RQ-SIZE  RA WSAME
+nvme0n1         0   4096      0    4096    4096    0               128    0B
+                                   ^^^     ^^^ 	
+
+!!!! FAILING TO FORMAT with 512 bytes of block size !!!!
+
+# nvme format /dev/nvme0n1 --lbaf=2 --pil=0 --ms=0 --pi=0 -f 
+Success formatting namespace:1
+failed to set block size to 512
+^^^
+
+# lsblk -t /dev/nvme0n1 
+NAME    ALIGNMENT MIN-IO OPT-IO PHY-SEC LOG-SEC ROTA SCHED RQ-SIZE  RA WSAME
+nvme0n1         0   4096      0    4096    4096    0               128    0B
+                                   ^^^     ^^^
+# cat /sys/block/nvme0n1/queue/logical_block_size:4096
+# cat /sys/block/nvme0n1/queue/physical_block_size:4096
+
+# cat /sys/block/nvme0c0n1/queue/logical_block_size:512
+# cat /sys/block/nvme0c0n1/queue/physical_block_size:512
 
 
-> diff --git a/block/bdev.c b/block/bdev.c
-> index e7adaaf1c219..7a5f611c3d2e 100644
-> --- a/block/bdev.c
-> +++ b/block/bdev.c
-> @@ -583,6 +583,9 @@ static void bd_finish_claiming(struct block_device *bdev, void *holder,
->  	mutex_unlock(&bdev->bd_holder_lock);
->  	bd_clear_claiming(whole, holder);
->  	mutex_unlock(&bdev_lock);
-> +
-> +	if (hops && hops->get_holder)
-> +		hops->get_holder(holder);
->  }
->  
->  /**
-> @@ -605,6 +608,7 @@ EXPORT_SYMBOL(bd_abort_claiming);
->  static void bd_end_claim(struct block_device *bdev, void *holder)
->  {
->  	struct block_device *whole = bdev_whole(bdev);
-> +	const struct blk_holder_ops *hops = bdev->bd_holder_ops;
->  	bool unblock = false;
->  
->  	/*
-> @@ -627,6 +631,9 @@ static void bd_end_claim(struct block_device *bdev, void *holder)
->  		whole->bd_holder = NULL;
->  	mutex_unlock(&bdev_lock);
->  
-> +	if (hops && hops->put_holder)
-> +		hops->put_holder(holder);
-> +
->  	/*
->  	 * If this was the last claim, remove holder link and unblock evpoll if
->  	 * it was a write holder.
-> diff --git a/fs/super.c b/fs/super.c
-> index ee05ab6b37e7..71d9779c42b1 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1515,11 +1515,29 @@ static int fs_bdev_thaw(struct block_device *bdev)
->  	return error;
->  }
->  
-> +static void fs_bdev_super_get(void *data)
-> +{
-> +	struct super_block *sb = data;
-> +
-> +	spin_lock(&sb_lock);
-> +	sb->s_count++;
-> +	spin_unlock(&sb_lock);
-> +}
-> +
-> +static void fs_bdev_super_put(void *data)
-> +{
-> +	struct super_block *sb = data;
-> +
-> +	put_super(sb);
-> +}
-> +
->  const struct blk_holder_ops fs_holder_ops = {
->  	.mark_dead		= fs_bdev_mark_dead,
->  	.sync			= fs_bdev_sync,
->  	.freeze			= fs_bdev_freeze,
->  	.thaw			= fs_bdev_thaw,
-> +	.get_holder		= fs_bdev_super_get,
-> +	.put_holder		= fs_bdev_super_put,
->  };
->  EXPORT_SYMBOL_GPL(fs_holder_ops);
->  
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index f9b87c39cab0..c3e8f7cf96be 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -1505,6 +1505,16 @@ struct blk_holder_ops {
->  	 * Thaw the file system mounted on the block device.
->  	 */
->  	int (*thaw)(struct block_device *bdev);
-> +
-> +	/*
-> +	 * If needed, get a reference to the holder.
-> +	 */
-> +	void (*get_holder)(void *holder);
-> +
-> +	/*
-> +	 * Release the holder.
-> +	 */
-> +	void (*put_holder)(void *holder);
->  };
->  
->  /*
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+# nvme id-ns /dev/nvme0n1 -H 
+NVME Identify Namespace 1:
+nsze    : 0xba4d4ab0
+ncap    : 0xba4d4ab0
+nuse    : 0xba4d4ab0
+<snip>
+<snip>
+nlbaf   : 4
+flbas   : 0x2
+  [6:5] : 0	Most significant 2 bits of Current LBA Format Selected
+  [4:4] : 0	Metadata Transferred in Separate Contiguous Buffer
+  [3:0] : 0x2	Least significant 4 bits of Current LBA Format Selected
+<snip>
+<snip>
+
+LBA Format  0 : Metadata Size: 0   bytes - Data Size: 4096 bytes - Relative Performance: 0 Best 
+LBA Format  1 : Metadata Size: 8   bytes - Data Size: 4096 bytes - Relative Performance: 0x2 Good 
+LBA Format  2 : Metadata Size: 0   bytes - Data Size: 512 bytes - Relative Performance: 0x1 Better (in use)
+LBA Format  3 : Metadata Size: 8   bytes - Data Size: 512 bytes - Relative Performance: 0x3 Degraded 
+LBA Format  4 : Metadata Size: 64  bytes - Data Size: 4096 bytes - Relative Performance: 0x3 Degraded 
+
+
+Note : We could see above that the NVMe is indeed formatted with lbaf 2(block size 512). However,
+the block queue limits are not correctly updated.
+
+Git bisect:
+==========
+Git bisect reveals the following commit as bad commit:
+
+8f03cfa117e06bd2d3ba7ed8bba70a3dda310cae is the first bad commit
+commit 8f03cfa117e06bd2d3ba7ed8bba70a3dda310cae
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Mon Mar 4 07:04:51 2024 -0700
+
+    nvme: don't use nvme_update_disk_info for the multipath disk
+    
+    Currently nvme_update_ns_info_block calls nvme_update_disk_info both for
+    the namespace attached disk, and the multipath one (if it exists).  This
+    is very different from how other stacking drivers work, and leads to
+    a lot of complexity.
+    
+    Switch to setting the disk capacity and initializing the integrity
+    profile, and let blk_stack_limits which already is called just below
+    deal with updating the other limits.
+    
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: Keith Busch <kbusch@kernel.org>
+
+ drivers/nvme/host/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+
+The above commit is part of the new atomic queue limit updates patch series. For 
+NVMe device if multipath config is enabled then we rely on blk_stack_limits to 
+update the queue limits for the stacked device. For updating the logical/physical
+queue limit of the top (nvme%dn%d) device, the blk_stack_limits() uses the max of 
+top and bottom limit:
+
+	t->logical_block_size = max(t->logical_block_size,
+				    b->logical_block_size);
+
+	t->physical_block_size = max(t->physical_block_size,
+				     b->physical_block_size);
+
+When we try formatting the nvme disk with block-size of 512, the value of 
+t->logical_block_size would be 4096 (as this is the initial block-size) however the
+value of b->logical_block_size would be 512 (the block size of the bottom device is first 
+updated in nvme_update_ns_info_block()).
+
+I think we may want to update the queue limits of both top and bottom devices in the
+nvme_update_ns_info_block(). Or if there's some other way?
+
+Let me know if you need any further information.
+
+Thanks,
+--Nilay
+
+
+
+
+
+
 
