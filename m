@@ -1,232 +1,225 @@
-Return-Path: <linux-block+bounces-4505-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4507-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 427F887D389
-	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 19:27:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0845387D38C
+	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 19:27:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBD1428578F
-	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 18:27:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7217D1F21B89
+	for <lists+linux-block@lfdr.de>; Fri, 15 Mar 2024 18:27:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D19C4C637;
-	Fri, 15 Mar 2024 18:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AB554EB22;
+	Fri, 15 Mar 2024 18:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hefHwerd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="V3Hk8GPN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hefHwerd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="V3Hk8GPN"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cozzzGfK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA24F1F8
-	for <linux-block@vger.kernel.org>; Fri, 15 Mar 2024 18:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D9E4E1CB;
+	Fri, 15 Mar 2024 18:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710527229; cv=none; b=fDmHqsLpOZy1GohnCRPHvZtg78FrmEYdPkKLihymzK+Cg6i6AYnl0KgIGMCkfZF8D1WSNDoCiT1+Z1g1w0FlwlcCkuZ4HuWXgq5q2H+7kLh6d8a6lU+a7Cc5UzhbIXraNgKw/ibBpL/vHCriH1P9vgZDlVXkJdpUSaaP2s4VkHU=
+	t=1710527257; cv=none; b=NnuFKW8v8yHNJugOKCmYkU3d5bqa/UcZImihYEExwAP4PxfPnNL48hceBntKKbImmYDFPMISj/B4PnAMFBz/wpCWhSMjtY+6IQbj0kGdikk7tbiXNIGFyqkvNL9ODAke506mmEbDfOAP8K7hIJaUrITw/jeutH7jh44Rx8SgnUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710527229; c=relaxed/simple;
-	bh=+3P91a6YJLKQ78DxQAocSynqpaP5mzawBLeC6btfyBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cLbWUwPC/id1KEFIs1uVdVpD8T1Tn+BGP+KHzR584q2cD98kuiayzIxRbkueHJ8pI0k6OmJOpYifiMD4Saf6uq+NirhmocRWJye1EBM2jYD8Xo4ub0wkUxDrfNQNhm2mzEVFrcZQ8EVnwyx2AjxeO4wXJhkCf6/xLdfSZA3tntQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hefHwerd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=V3Hk8GPN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hefHwerd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=V3Hk8GPN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3AA5D21DF4;
-	Fri, 15 Mar 2024 18:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710527222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F39mLGMroywL6C3XW5hd53XHtA0UOkK913HkL0rO37g=;
-	b=hefHwerdjopjWLfEOj1vhPJ6Hlh7SZ9tlEKdc6n3FDzZf+4AbM+DJPoKy3OUjrm3LWh9Uv
-	T9j5M63Wf4VkpG0119d+1oBxrtNPTEqLPLLrwCucrIu21hvNU0tWzShbnljh4ypDIElgRS
-	ibyrTNsmERdz/TRQoQr6fK6pEdJtQKw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710527222;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F39mLGMroywL6C3XW5hd53XHtA0UOkK913HkL0rO37g=;
-	b=V3Hk8GPN+ecWS3hHii6VRY1FDQy+7mXhxJi5e3ViRBrborp6VtxtrYvrfPhzBpKf7c2CcQ
-	Pto9plFn3wGlEXBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710527222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F39mLGMroywL6C3XW5hd53XHtA0UOkK913HkL0rO37g=;
-	b=hefHwerdjopjWLfEOj1vhPJ6Hlh7SZ9tlEKdc6n3FDzZf+4AbM+DJPoKy3OUjrm3LWh9Uv
-	T9j5M63Wf4VkpG0119d+1oBxrtNPTEqLPLLrwCucrIu21hvNU0tWzShbnljh4ypDIElgRS
-	ibyrTNsmERdz/TRQoQr6fK6pEdJtQKw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710527222;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F39mLGMroywL6C3XW5hd53XHtA0UOkK913HkL0rO37g=;
-	b=V3Hk8GPN+ecWS3hHii6VRY1FDQy+7mXhxJi5e3ViRBrborp6VtxtrYvrfPhzBpKf7c2CcQ
-	Pto9plFn3wGlEXBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB1FA13460;
-	Fri, 15 Mar 2024 18:27:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lXRpNvWS9GWUCwAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 15 Mar 2024 18:27:01 +0000
-Message-ID: <b9e5c71d-4d3a-4d1f-8956-68a6d2537e4b@suse.de>
-Date: Fri, 15 Mar 2024 19:27:01 +0100
+	s=arc-20240116; t=1710527257; c=relaxed/simple;
+	bh=o+Uvyz4YzYO4LBu6eCmoOI+ch0BavL/du69hBKagie8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I4XjxLsJNpNJZfTTp6gf6UneTL4/txUy2e/oVRdKOmLKzPuX/j+GvyqhK0li850g3MyAJODTmNiG8jUEXF8sLI0tt0vfvaxU75Qd8ibN0Ws+2g1X6aQpic7OZoNFzqkluD4NQo6jZveN2NYr14uU8IWTQkSqDXt9btWSnIMdxDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=cozzzGfK; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dcbcea9c261so2489884276.3;
+        Fri, 15 Mar 2024 11:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1710527253; x=1711132053; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D0l8ekWw0JTpeXusMsWqfGloumBIBWf5eNxMM1W0z7I=;
+        b=cozzzGfKpT66ssrNAfg7iJ8n0V/H88qsF4qgHUwGlym0eZ2sapdJnpZu2+tv4jOr9F
+         Rqq6Yl8p7NmVHdJLtkJAeZT1DDfUeb/cpFiU6/51lTWEMwGPdFR/MszrwuN5qH5OG2ud
+         ADJ1MNMDu1cb8ayUAzcILcH90G+TgrBKrBa0R9ZdZtuYWY0gym0nsjDy92kM6c50w+LB
+         fMBuqaYl9FDCxxONryz3SPM7reaq2AqFbJcvzQkc76SUcYKk8TllKZeT/CKWFrDCYuOn
+         hx5AcuHAEkYa2do0IVC56FiY2phEcaH/3rgvwVMIa8CEPG/WLu9fRCNXWBYECm7BbnPz
+         u1TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710527253; x=1711132053;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D0l8ekWw0JTpeXusMsWqfGloumBIBWf5eNxMM1W0z7I=;
+        b=jqVY9xksV3Fts1OKbr5CQFDXgCYR+Wr9AxBihi+ue+cA1lPwtrQpZUbrK5/s3plaSa
+         cj2MdMiIq6qQUb3lrDMz/0v6qYDbEiiMpEtlUXW2VS3IwkHeigOC3gmxjuxir7D+kckx
+         YiO7AMRV6UffK/pmapN0QtEJ0jd9QDDUdvgsQL41e9aZiq4I9V62W3THwHd94corK1Wo
+         Kq/gLTeLrRGrvRz2bH2Y5zUc3ZYvi8VboM+VgGs5qkvs+utknfmvvOneJStd7IKMCV59
+         Won3gllL0nsXiOD01F9p3Q0rEkX4b9RG1daY0sElgUyQvFQnGYi98vmsMvx9CTpeR7pM
+         Qmrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEbR337+prm7xImgbqFl7s/ZyVAM04f8Q4wJyCUriTHN4xt4nElMaXI3RC+4hkyefIoygXMnFpXaX/t5PFpcRlrdJc7sFHezmgnLUvrbOiPJEqxYyYWVxRz6aG+8uVM7CK7HTPniHiTvh5hl41rjHjusl9IRakS8U0Dd6sVlw=
+X-Gm-Message-State: AOJu0YyqzdZ/q6bvyJ3JUA1B/M2XWNJ9ns2QnnftYRQaC2y5ueaM+63k
+	OgtiDTNk160tQ0/VADlX/nzdIiyAEpsqRvZrz3a/dz7SoxsutMIsEyXkN8r2mKAqzdA9NnmwGB1
+	u4tLxfu1lyZcDE6P5sTqHBJomClIpIRlNAMAvsg==
+X-Google-Smtp-Source: AGHT+IFMhRRjG1ESUWFYiuNmqAYpvAzNTCRsgxJSy0t7rB+pBcx68HYz73ujPmf7VrBo4DOXQP/Zl+MVoPGaKfXcYu0=
+X-Received: by 2002:a25:bcc6:0:b0:dc6:ff32:aae2 with SMTP id
+ l6-20020a25bcc6000000b00dc6ff32aae2mr5004033ybm.63.1710527253128; Fri, 15 Mar
+ 2024 11:27:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] brd: Remove use of page->index
-Content-Language: en-US
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>
-References: <20240315181212.2573753-1-willy@infradead.org>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240315181212.2573753-1-willy@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -4.28
-X-Spamd-Result: default: False [-4.28 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.19)[-0.938];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,infradead.org:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Flag: NO
+References: <20240315113828.258005-1-cgzones@googlemail.com>
+ <20240315113828.258005-2-cgzones@googlemail.com> <CAEf4BzZF0A9qEzmRigHFLQ4vBQshGUQWZVG5L0q2_--kx4=AXA@mail.gmail.com>
+In-Reply-To: <CAEf4BzZF0A9qEzmRigHFLQ4vBQshGUQWZVG5L0q2_--kx4=AXA@mail.gmail.com>
+From: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Fri, 15 Mar 2024 19:27:22 +0100
+Message-ID: <CAJ2a_Dfy3DKnsZZhKUXiMbG-NZqH0APwz3tGF1Fdma+nYcHmOQ@mail.gmail.com>
+Subject: Re: [PATCH 02/10] capability: add any wrappers to test for multiple
+ caps with exactly one audit message
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: linux-security-module@vger.kernel.org, linux-block@vger.kernel.org, 
+	Serge Hallyn <serge@hallyn.com>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/15/24 19:12, Matthew Wilcox (Oracle) wrote:
-> This debugging check will become more costly in the future when we shrink
-> struct page.  It has not proven to be useful, so simply remove it.
-> 
-> This lets us use __xa_insert instead of __xa_cmpxchg() as we no longer
-> need to know about the page that is currently stored in the XArray.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->   drivers/block/brd.c | 40 +++++++++++-----------------------------
->   1 file changed, 11 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index e322cef6596b..b900fe9e0030 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -29,10 +29,7 @@
->   
->   /*
->    * Each block ramdisk device has a xarray brd_pages of pages that stores
-> - * the pages containing the block device's contents. A brd page's ->index is
-> - * its offset in PAGE_SIZE units. This is similar to, but in no way connected
-> - * with, the kernel's pagecache or buffer cache (which sit above our block
-> - * device).
-> + * the pages containing the block device's contents.
->    */
->   struct brd_device {
->   	int			brd_number;
-> @@ -51,15 +48,7 @@ struct brd_device {
->    */
->   static struct page *brd_lookup_page(struct brd_device *brd, sector_t sector)
->   {
-> -	pgoff_t idx;
-> -	struct page *page;
-> -
-> -	idx = sector >> PAGE_SECTORS_SHIFT; /* sector to page index */
-> -	page = xa_load(&brd->brd_pages, idx);
-> -
-> -	BUG_ON(page && page->index != idx);
-> -
-> -	return page;
-> +	return xa_load(&brd->brd_pages, sector >> PAGE_SECTORS_SHIFT);
->   }
->   
->   /*
-> @@ -67,8 +56,8 @@ static struct page *brd_lookup_page(struct brd_device *brd, sector_t sector)
->    */
->   static int brd_insert_page(struct brd_device *brd, sector_t sector, gfp_t gfp)
->   {
-> -	pgoff_t idx;
-> -	struct page *page, *cur;
-> +	pgoff_t idx = sector >> PAGE_SECTORS_SHIFT;
-> +	struct page *page;
->   	int ret = 0;
->   
->   	page = brd_lookup_page(brd, sector);
-> @@ -80,23 +69,16 @@ static int brd_insert_page(struct brd_device *brd, sector_t sector, gfp_t gfp)
->   		return -ENOMEM;
->   
->   	xa_lock(&brd->brd_pages);
-> -
-> -	idx = sector >> PAGE_SECTORS_SHIFT;
-> -	page->index = idx;
-> -
-> -	cur = __xa_cmpxchg(&brd->brd_pages, idx, NULL, page, gfp);
-> -
-> -	if (unlikely(cur)) {
-> -		__free_page(page);
-> -		ret = xa_err(cur);
-> -		if (!ret && (cur->index != idx))
-> -			ret = -EIO;
-> -	} else {
-> +	ret = __xa_insert(&brd->brd_pages, idx, page, gfp);
-> +	if (!ret)
->   		brd->brd_nr_pages++;
-> -	}
-> -
->   	xa_unlock(&brd->brd_pages);
->   
-> +	if (ret < 0) {
-> +		__free_page(page);
-> +		if (ret == -EBUSY)
-> +			ret = 0;
-> +	}
->   	return ret;
->   }
->   
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+On Fri, 15 Mar 2024 at 17:46, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
+rote:
+>
+> On Fri, Mar 15, 2024 at 4:39=E2=80=AFAM Christian G=C3=B6ttsche
+> <cgzones@googlemail.com> wrote:
+> >
+> > Add the interfaces `capable_any()` and `ns_capable_any()` as an
+> > alternative to multiple `capable()`/`ns_capable()` calls, like
+> > `capable_any(CAP_SYS_NICE, CAP_SYS_ADMIN)` instead of
+> > `capable(CAP_SYS_NICE) || capable(CAP_SYS_ADMIN)`.
+> >
+> > `capable_any()`/`ns_capable_any()` will in particular generate exactly
+> > one audit message, either for the left most capability in effect or, if
+> > the task has none, the first one.
+> >
+> > This is especially helpful with regard to SELinux, where each audit
+> > message about a not allowed capability request will create a denial
+> > message.  Using this new wrapper with the least invasive capability as
+> > left most argument (e.g. CAP_SYS_NICE before CAP_SYS_ADMIN) enables
+> > policy writers to only grant the least invasive one for the particular
+> > subject instead of both.
+> >
+> > CC: linux-block@vger.kernel.org
+> > Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> > ---
+> > v5:
+> >    - add check for identical passed capabilities
+> >    - rename internal helper according to flag rename to
+> >      ns_capable_noauditondeny()
+> > v4:
+> >    Use CAP_OPT_NODENYAUDIT via added ns_capable_nodenyaudit()
+> > v3:
+> >    - rename to capable_any()
+> >    - fix typo in function documentation
+> >    - add ns_capable_any()
+> > v2:
+> >    avoid varargs and fix to two capabilities; capable_or3() can be adde=
+d
+> >    later if needed
+> > ---
+> >  include/linux/capability.h | 10 ++++++
+> >  kernel/capability.c        | 73 ++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 83 insertions(+)
+> >
+>
+> [...]
+>
+> >
+> > +/**
+> > + * ns_capable_any - Determine if the current task has one of two super=
+ior capabilities in effect
+> > + * @ns:  The usernamespace we want the capability in
+> > + * @cap1: The capabilities to be tested for first
+> > + * @cap2: The capabilities to be tested for secondly
+> > + *
+> > + * Return true if the current task has at least one of the two given s=
+uperior
+> > + * capabilities currently available for use, false if not.
+> > + *
+> > + * In contrast to or'ing capable() this call will create exactly one a=
+udit
+> > + * message, either for @cap1, if it is granted or both are not permitt=
+ed,
+> > + * or @cap2, if it is granted while the other one is not.
+> > + *
+> > + * The capabilities should be ordered from least to most invasive, i.e=
+. CAP_SYS_ADMIN last.
+> > + *
+> > + * This sets PF_SUPERPRIV on the task if the capability is available o=
+n the
+> > + * assumption that it's about to be used.
+> > + */
+> > +bool ns_capable_any(struct user_namespace *ns, int cap1, int cap2)
+> > +{
+> > +       if (cap1 =3D=3D cap2)
+> > +               return ns_capable(ns, cap1);
+> > +
+> > +       if (ns_capable_noauditondeny(ns, cap1))
+> > +               return true;
+> > +
+> > +       if (ns_capable_noauditondeny(ns, cap2))
+> > +               return true;
+> > +
+> > +       return ns_capable(ns, cap1);
+>
+> this will incur an extra capable() check (with all the LSMs involved,
+> etc), and so for some cases where capability is expected to not be
+> present, this will be a regression. Is there some way to not redo the
+> check, but just audit the failure? At this point we do know that cap1
+> failed before, so might as well just log that.
 
-Cheers,
+Logging the failure is quite different in AppArmor and SELinux, so
+just log might not be so easy.
+One option would be to change the entire LSM hook security_capable()
+to take two capability arguments, and let the LSMs handle the any
+logic.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
-
+> > +}
+> > +EXPORT_SYMBOL(ns_capable_any);
+> > +
+> > +/**
+> > + * capable_any - Determine if the current task has one of two superior=
+ capabilities in effect
+> > + * @cap1: The capabilities to be tested for first
+> > + * @cap2: The capabilities to be tested for secondly
+> > + *
+> > + * Return true if the current task has at least one of the two given s=
+uperior
+> > + * capabilities currently available for use, false if not.
+> > + *
+> > + * In contrast to or'ing capable() this call will create exactly one a=
+udit
+> > + * message, either for @cap1, if it is granted or both are not permitt=
+ed,
+> > + * or @cap2, if it is granted while the other one is not.
+> > + *
+> > + * The capabilities should be ordered from least to most invasive, i.e=
+. CAP_SYS_ADMIN last.
+> > + *
+> > + * This sets PF_SUPERPRIV on the task if the capability is available o=
+n the
+> > + * assumption that it's about to be used.
+> > + */
+> > +bool capable_any(int cap1, int cap2)
+> > +{
+> > +       return ns_capable_any(&init_user_ns, cap1, cap2);
+> > +}
+> > +EXPORT_SYMBOL(capable_any);
+> > +
+> >  /**
+> >   * capable - Determine if the current task has a superior capability i=
+n effect
+> >   * @cap: The capability to be tested for
+> > --
+> > 2.43.0
+> >
+> >
 
