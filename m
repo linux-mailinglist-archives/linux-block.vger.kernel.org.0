@@ -1,46 +1,45 @@
-Return-Path: <linux-block+bounces-4582-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4583-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23B6D87E06C
-	for <lists+linux-block@lfdr.de>; Sun, 17 Mar 2024 22:37:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF73187E06E
+	for <lists+linux-block@lfdr.de>; Sun, 17 Mar 2024 22:39:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53FA41C20C32
-	for <lists+linux-block@lfdr.de>; Sun, 17 Mar 2024 21:37:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3710AB218C7
+	for <lists+linux-block@lfdr.de>; Sun, 17 Mar 2024 21:38:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F11E208B0;
-	Sun, 17 Mar 2024 21:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78AD7208B6;
+	Sun, 17 Mar 2024 21:38:53 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA511C6BC;
-	Sun, 17 Mar 2024 21:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E990A208B0;
+	Sun, 17 Mar 2024 21:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710711422; cv=none; b=jyGYINIUVLA3as1nuMRUsqRROYuAFwBPDm4KB/o0WjyzKOLdQSIQBqHWIawqon1d/npNFnJ0J5op7izV8MAF3vutGJQuG1r9JsZtQ1HkhiCj0mI68OFlVBwIsxkdxZ9px+WQfqC4SlG1qpmy8aGyAU5gtQo8ZuNfm++8Yb/WY6Q=
+	t=1710711533; cv=none; b=SLIf+FU4AUBac7zi1zzZQEPFhmdM4o+wId56MPpDT4L8Bk1u0c8COhILuKP02fuFEJKNCxVw6x4xVc/3HdXd9vEpsOZJXe2Md9ym3rjPNNGLFaekYIwADT+oHOXlvYLAw6fGKUpZfn6rZhFqlaWBEEINWt5atQIHHEP+SnfmwFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710711422; c=relaxed/simple;
-	bh=592dZ7WAUIsHG3MEKADuylxxO7ldI3EWhVAbE9SjKao=;
+	s=arc-20240116; t=1710711533; c=relaxed/simple;
+	bh=zH93ZOVLNgyUffwyHHoy0L+w1ZeG6/AOfheB1NZhu9s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSVWhJBxjA80IUCNr2dneoKE/wgWOWf6F+AWxT3DcbseyhJRGlxmynKiHxIOFJQ69vko0PZl0IMpJ7pJHjUz6L4B3FmecXHs8tWogGrsaw2t9TPvkkqpneOBwRJkYTH4Jys7sM+XAh3Gd9sJx2d+k3+Is6XMMPh8LUXV9KVAKs4=
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7QIwLWSh33ezr0ENEpCmuzvuFU5B9PuC/yaNUbBF/wC96zpO44hAaTzfByGNw7ONVBSaEm/RuQAmy4oGeIQUiAGlWSY0nYP30v4zBFf+2DABBwvPXy2rS5jb1TpWUOXJFjiDPw0DwFKYK8OOSPn/TZKsTE54S9tnUuO47IO17g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 28A9168BEB; Sun, 17 Mar 2024 22:36:58 +0100 (CET)
-Date: Sun, 17 Mar 2024 22:36:57 +0100
+	id BCA7E68BEB; Sun, 17 Mar 2024 22:38:47 +0100 (CET)
+Date: Sun, 17 Mar 2024 22:38:47 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Yu Kuai <yukuai1@huaweicloud.com>
 Cc: jack@suse.cz, hch@lst.de, brauner@kernel.org, axboe@kernel.dk,
 	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
 	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [RFC v4 linux-next 18/19] scsi: factor out a helper
- bdev_read_folio() from scsi_bios_ptable()
-Message-ID: <20240317213657.GC10665@lst.de>
-References: <20240222124555.2049140-1-yukuai1@huaweicloud.com> <20240222124555.2049140-19-yukuai1@huaweicloud.com>
+Subject: Re: [RFC v4 linux-next 19/19] fs & block: remove bdev->bd_inode
+Message-ID: <20240317213847.GD10665@lst.de>
+References: <20240222124555.2049140-1-yukuai1@huaweicloud.com> <20240222124555.2049140-20-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -49,13 +48,14 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222124555.2049140-19-yukuai1@huaweicloud.com>
+In-Reply-To: <20240222124555.2049140-20-yukuai1@huaweicloud.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Can you split this in a block layer patch adding the helper and scsi
-one using it?
+On Thu, Feb 22, 2024 at 08:45:55PM +0800, Yu Kuai wrote:
+> The only user that doesn't rely on files is the block layer itself in
+> block/fops.c where we only have access to the block device. As the bdev
+> filesystem doesn't open block devices as files obviously.
 
-Otherwise looks good:
+Why is that obvious?  Maybe I'm just thick but this seems odd to me.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 
