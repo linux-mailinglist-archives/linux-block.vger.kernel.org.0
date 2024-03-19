@@ -1,141 +1,118 @@
-Return-Path: <linux-block+bounces-4707-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4710-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBD5F87F4D5
-	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 02:14:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CC3687F503
+	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 02:36:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A961328212F
-	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 01:14:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC2801C2154F
+	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 01:36:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF478465;
-	Tue, 19 Mar 2024 01:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hkJJL3+3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20B164CC8;
+	Tue, 19 Mar 2024 01:36:19 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1DC846D
-	for <linux-block@vger.kernel.org>; Tue, 19 Mar 2024 01:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4F4626CD;
+	Tue, 19 Mar 2024 01:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710810852; cv=none; b=sKgn5GPyyecmySkG1mTUiuvamFZYo79yMkKar4FVuGusXQqTn1ts8MWGBHZFBpNrNM5p6JwIn1jF/Z5Rrjw59ZmS2UqICD2H7HHnuHnsNmnYFZn7Pp438o6Xe0p7vamZdQID8D1rprw0eHG6bJLVaphiOQfDmNi7YhR4XyfQq7E=
+	t=1710812179; cv=none; b=aUkUDyslrixPSdh1xJusZbjplTG5HNHZWsAcMpAuIl2G/tn9r4yQTq/O5pRQK7MSsmjcdC0J9/+QocFU1XyV8aklnPofx9S9Bnkaj7bWF3XyUE28X+sP1+qYi0j00EoTJtnRWXJj6TIpr/Q1HnH3t2La/UpA2VefIhSfZF29d/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710810852; c=relaxed/simple;
-	bh=aKNtM1auXFf5e2SfSjWXHtQS/lxJHV0FCYpjLFlyrP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwCxps6mRxQ+8GYwTIQCKLTVE3E30yZgzYf0SfETWIAISIWMYWZWPFr79igggql2Rl9ay2EGwMeXbalyuj3DipFNS9iaYVWVWLeofCxU4Ard/QpmiAJ1j7VO8MWt4nFOBQ+Avrxb1lBLaIVBILd4MtpgorLigctBsRVrYn6Mlgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hkJJL3+3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710810849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1+ki3M8LXsD9YdHWeoMgF7qk7wGMX3DA1a/BYmADzKU=;
-	b=hkJJL3+3Lq/d+xonEY7HfQaqBJv8D+eNird8VUFrvvJ7MNjCdPsf0pDjgc01zOG05J2QOH
-	wjXQcAFtczXOYizFXMQ8cohD3bQYcNz96txHjg6/Ok7SuXoVWG1d5wgW6qwNP6A6sg8/Nj
-	9kIfK1XH8jbq5QqCM2h+laGYmT1HpPI=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-166-CE8TpcnJMSaK3UwxRB1ZbQ-1; Mon, 18 Mar 2024 21:14:06 -0400
-X-MC-Unique: CE8TpcnJMSaK3UwxRB1ZbQ-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-78a09c0a053so103250785a.2
-        for <linux-block@vger.kernel.org>; Mon, 18 Mar 2024 18:14:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710810846; x=1711415646;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1+ki3M8LXsD9YdHWeoMgF7qk7wGMX3DA1a/BYmADzKU=;
-        b=V1W90qpscw7NNdcGBP7E1S4RVJ8hg7sZnaWcV0OA8wHbeLBcWQLAZWrQWWVg2W1oV0
-         crE2BdCcd9yZpydFI2O2PocsCYtq9dEEV0c+UWHEz2Y6a/2QqvzVOHDgUxTKdpw7DXwx
-         Dy80CF5H6al4kWXA9boP0tXcWazCNklAUWXUmOjiXACu1QNcqqMx59gOwgL+btgUc/uu
-         FLao0QoWV1tlmuFytkEpZa6UcVDRdbBjoC2exFnVpG1zuAJcIdvCaDcpCoxWiG7PexJb
-         WNOiaOrTWwrP1raM6DN0HIXDhVDyRzF+8FF73s1UMasCb7U9zStLaWmAiqf2odkfstEz
-         a6qw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9oYJHIFggfM99npZbWPa167gbjQzCFzdbVgsHPQzjSVvNKuBVzCecKYyxoczEMzJpBpaV2hQLFQ+Dm8SH6r0BtDkuTBz1a0L9tcc=
-X-Gm-Message-State: AOJu0Yw/3UohDnEvPA96h09y4KG3f5d0H9u1a4q9vFt4GxU5IESzQaDV
-	9jUK9k7G59HqaKueq3ssVElt7B8jPx/hqNksg1RKpmv3ZtRjrQgRkg1aqf3Yvfcz0uaNSB/KYoh
-	YWIkFToVI2fTmaldAaAlywvrrSBKQqAluWPv2U10WzwE7xNzhMF5ZiXLoEiLE
-X-Received: by 2002:a37:c40b:0:b0:788:7404:ae2d with SMTP id d11-20020a37c40b000000b007887404ae2dmr14022884qki.25.1710810846168;
-        Mon, 18 Mar 2024 18:14:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWmXddF0iwYjeP4bycVdQMfzAK4D9WL3tJ0LdZ64qcKqDIxZFiH5WyRSavWENWDuEFzVytrw==
-X-Received: by 2002:a37:c40b:0:b0:788:7404:ae2d with SMTP id d11-20020a37c40b000000b007887404ae2dmr14022873qki.25.1710810845902;
-        Mon, 18 Mar 2024 18:14:05 -0700 (PDT)
-Received: from [192.168.1.163] ([70.22.187.239])
-        by smtp.gmail.com with ESMTPSA id d14-20020a05620a204e00b00789e70d135dsm3468404qka.127.2024.03.18.18.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 18:14:05 -0700 (PDT)
-Message-ID: <a8be4040-280f-4698-0cfe-d84c0c8bdf34@redhat.com>
-Date: Mon, 18 Mar 2024 21:14:04 -0400
+	s=arc-20240116; t=1710812179; c=relaxed/simple;
+	bh=GzEBhKZ4LIu43FoyVX7+dAaGHt5sdgp1AOcuREBzOt0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=opGO0HTUWGQ21sSOcPAJlcz2UBuIlGG0u1Ya/sqYuKpKCaBd9oR3XIu3fjyHmH2PBBN87MxNvKDT0BOWsLziXlQtd7uRrhEI0eagSFWK7DIzmQWCoyGwPbp3o7t95+rtQdg8OJVijTeuyuvJCQVvnKxGfca8Km0Q2+Ftz+Eu2Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TzDPc5kTGz4f3kJq;
+	Tue, 19 Mar 2024 09:18:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9BE671A0172;
+	Tue, 19 Mar 2024 09:18:32 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxDm5_hltIiNHQ--.22830S3;
+	Tue, 19 Mar 2024 09:18:32 +0800 (CST)
+Subject: Re: [RFC v4 linux-next 00/19] fs & block: remove bdev->bd_inode
+To: Christian Brauner <brauner@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: jack@suse.cz, hch@lst.de, axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+ linux-block@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240222124555.2049140-1-yukuai1@huaweicloud.com>
+ <1324ffb5-28b6-34fb-014e-3f57df714095@huawei.com>
+ <20240315-assoziieren-hacken-b43f24f78970@brauner>
+ <ac0eb132-c604-9761-bce5-69158e73f256@huaweicloud.com>
+ <20240318-mythisch-pittoresk-1c57af743061@brauner>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <c9bfba49-9611-c965-713c-1ef0b1e305ce@huaweicloud.com>
+Date: Tue, 19 Mar 2024 09:18:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v4 02/39] dm vdo: add the MurmurHash3 fast hashing
- algorithm
-Content-Language: en-US
-To: Guenter Roeck <linux@roeck-us.net>, Kenneth Raeburn <raeburn@redhat.com>
-Cc: dm-devel@lists.linux.dev, linux-block@vger.kernel.org
-References: <20231026214136.1067410-1-msakai@redhat.com>
- <20231026214136.1067410-3-msakai@redhat.com>
- <ea57f231-f78e-4a55-bf85-c5d50e17237e@roeck-us.net>
- <CAK1Ur38jAmWo35HTNrDDAaN5Awiie9wRiPDMVrNUg6+ZM8mJ7A@mail.gmail.com>
- <28a88525-6b06-4215-9e78-2b3d8c0d8657@roeck-us.net>
-From: Matthew Sakai <msakai@redhat.com>
-In-Reply-To: <28a88525-6b06-4215-9e78-2b3d8c0d8657@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20240318-mythisch-pittoresk-1c57af743061@brauner>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxDm5_hltIiNHQ--.22830S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr47CFW3WF13JFWrWF48Zwb_yoWfCrgEvw
+	4akFykG34DZw1jqanxKrs0yrWDCFy3Jry5JryrJF13XayDXF98GF4kJw1kZwnxGa13KF1f
+	Cr4qqFy5ZrWfGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-
-On 3/18/24 16:54, Guenter Roeck wrote:
-> On 3/18/24 13:37, Kenneth Raeburn wrote:
->> (resend because of accidental HTML lossage)
+在 2024/03/18 17:39, Christian Brauner 写道:
+> On Sat, Mar 16, 2024 at 10:49:33AM +0800, Yu Kuai wrote:
+>> Hi, Christian
 >>
->> On Thu, Mar 14, 2024 at 7:38 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>> On sparc64, with gcc 11.4, the above code results in:
+>> 在 2024/03/15 21:54, Christian Brauner 写道:
+>>> On Fri, Mar 15, 2024 at 08:08:49PM +0800, Yu Kuai wrote:
+>>>> Hi, Christian
+>>>> Hi, Christoph
+>>>> Hi, Jan
+>>>>
+>>>> Perhaps now is a good time to send a formal version of this set.
+>>>> However, I'm not sure yet what branch should I rebase and send this set.
+>>>> Should I send to the vfs tree?
 >>>
->>> ERROR: modpost: "__bswapdi2" [drivers/md/dm-vdo/dm-vdo.ko] undefined!
->>>
->>> Guenter
+>>> Nearly all of it is in fs/ so I'd say yes.
+>>> .
 >>
->> Thanks for catching that. I don't think our team has any sparc
->> machines readily available for testing.
->> This is an artifact of our having imported user-mode code to use in
->> the kernel. We should probably be using le64_to_cpup and friends, as
->> we do elsewhere, so it doesn't try to pull in libgcc support routines.
->>
+>> I see that you just create a new branch vfs.fixes, perhaps can I rebase
+>> this set against this branch?
 > 
-> I am kind of getting wary about reporting such issues. Should I drop
-> building dm-vdo images for sparc ? Would it be possible to add
-> "depends on BROKEN if SPARC" configuration option to indicate that
-> the code isn't expected to be buildable on sparc, much less work ?
+> Please base it on vfs.super. I'll rebase it to v6.9-rc1 on Sunday.
 
-First off, sorry for the slow response. I was away for the last couple 
-of days.
+Okay, I just see that vfs.super doesn't contain commit
+1cdeac6da33f("btrfs: pass btrfs_device to btrfs_scratch_superblocks()"),
+and you might need to fix the conflict at some point.
 
-I would encourage you to report issues when you find them. 
-Theoretically, VDO should work on sparc. However since we don't have 
-that architecture readily available to us, we won't know what to fix 
-unless it gets reported.
+Thanks,
+Kuai
 
-In this case, we really shouldn't be relying on these libgcc builtins 
-anyway. I hope to have a patch in a couple of days that you can try out. 
-If it turns out there are more extensive issues with VDO on sparc, I am 
-open to disabling the config, but I hope it won't come to that.
-
-Matt
+> .
+> 
 
 
