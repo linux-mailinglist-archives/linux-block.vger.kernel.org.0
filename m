@@ -1,118 +1,90 @@
-Return-Path: <linux-block+bounces-4710-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4708-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CC3687F503
-	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 02:36:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCABB87F4F0
+	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 02:29:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC2801C2154F
-	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 01:36:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 730992822E7
+	for <lists+linux-block@lfdr.de>; Tue, 19 Mar 2024 01:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20B164CC8;
-	Tue, 19 Mar 2024 01:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15B3612F6;
+	Tue, 19 Mar 2024 01:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BdPtBVEy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4F4626CD;
-	Tue, 19 Mar 2024 01:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24474428
+	for <linux-block@vger.kernel.org>; Tue, 19 Mar 2024 01:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710812179; cv=none; b=aUkUDyslrixPSdh1xJusZbjplTG5HNHZWsAcMpAuIl2G/tn9r4yQTq/O5pRQK7MSsmjcdC0J9/+QocFU1XyV8aklnPofx9S9Bnkaj7bWF3XyUE28X+sP1+qYi0j00EoTJtnRWXJj6TIpr/Q1HnH3t2La/UpA2VefIhSfZF29d/U=
+	t=1710811764; cv=none; b=Ukj4c/4G09nzxc6tcEAnkPPpiQtvPd1NOrVIGf+rJBCPfmRL8cYxdDBeI76kAII4+L21laguWbAolNp5UXVMvTYr+2bWU3hp4jx8n3FWpYSczo3EHXGCuDbA1c8mOqXsefmBLV90pSGnGa1kOV9Q6WLcfAffZ+yhucviv6LFgik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710812179; c=relaxed/simple;
-	bh=GzEBhKZ4LIu43FoyVX7+dAaGHt5sdgp1AOcuREBzOt0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=opGO0HTUWGQ21sSOcPAJlcz2UBuIlGG0u1Ya/sqYuKpKCaBd9oR3XIu3fjyHmH2PBBN87MxNvKDT0BOWsLziXlQtd7uRrhEI0eagSFWK7DIzmQWCoyGwPbp3o7t95+rtQdg8OJVijTeuyuvJCQVvnKxGfca8Km0Q2+Ftz+Eu2Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TzDPc5kTGz4f3kJq;
-	Tue, 19 Mar 2024 09:18:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 9BE671A0172;
-	Tue, 19 Mar 2024 09:18:32 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxDm5_hltIiNHQ--.22830S3;
-	Tue, 19 Mar 2024 09:18:32 +0800 (CST)
-Subject: Re: [RFC v4 linux-next 00/19] fs & block: remove bdev->bd_inode
-To: Christian Brauner <brauner@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: jack@suse.cz, hch@lst.de, axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
- linux-block@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240222124555.2049140-1-yukuai1@huaweicloud.com>
- <1324ffb5-28b6-34fb-014e-3f57df714095@huawei.com>
- <20240315-assoziieren-hacken-b43f24f78970@brauner>
- <ac0eb132-c604-9761-bce5-69158e73f256@huaweicloud.com>
- <20240318-mythisch-pittoresk-1c57af743061@brauner>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <c9bfba49-9611-c965-713c-1ef0b1e305ce@huaweicloud.com>
-Date: Tue, 19 Mar 2024 09:18:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1710811764; c=relaxed/simple;
+	bh=RwvI02TlHaR74n7m6uzDSr1uuzDPPX0Mv/XnOnrDd9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsNryhfICKahRaj156aqPTuQ/OiW+Y04G8r19njbpKnMmYxY/YO8I/DLggiT1ZD8NKyzqHpnTpVDVFGx1mpiM0XnHP2oitJ4nhHWThRm82Yunu0dNDgEGx1dug5EZzKV9epKQDGevNh5ttzbau9q2FtQyipZdWuuDU0OOMnuCxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BdPtBVEy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710811761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOaLbKdTxqs6DhphwMrPQp4J7UgDoJxNkWKHjl0dqSU=;
+	b=BdPtBVEy6hucmCESLxj8uU9nYbtZA4qDLdD9XR5F5DHUIJGU3XbV6agW5LKlvuxcY+80TQ
+	TpNJs2Oi776rpt8Y3V5p2L7BKRGfjcUmn6v6+WGcgWmE96hbJITldnGVaf4XLnUAHUBGVs
+	/pQ9i0ECnX9K5BFf9WBspuuJLpmKMMo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-298-7iiAI85zNRaBIt-SyGl6lg-1; Mon,
+ 18 Mar 2024 21:29:19 -0400
+X-MC-Unique: 7iiAI85zNRaBIt-SyGl6lg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 911571C01B21;
+	Tue, 19 Mar 2024 01:29:19 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.95])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F1AF7111E5;
+	Tue, 19 Mar 2024 01:29:15 +0000 (UTC)
+Date: Tue, 19 Mar 2024 09:29:07 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, Kanchan Joshi <joshi.k@samsung.com>
+Subject: Re: [PATCH v3 01/13] io_uring/cmd: move
+ io_uring_try_cancel_uring_cmd()
+Message-ID: <ZfjqY8biuFwHrLFR@fedora>
+References: <cover.1710799188.git.asml.silence@gmail.com>
+ <43a3937af4933655f0fd9362c381802f804f43de.1710799188.git.asml.silence@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240318-mythisch-pittoresk-1c57af743061@brauner>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxDm5_hltIiNHQ--.22830S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Wr47CFW3WF13JFWrWF48Zwb_yoWfCrgEvw
-	4akFykG34DZw1jqanxKrs0yrWDCFy3Jry5JryrJF13XayDXF98GF4kJw1kZwnxGa13KF1f
-	Cr4qqFy5ZrWfGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43a3937af4933655f0fd9362c381802f804f43de.1710799188.git.asml.silence@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Hi,
-
-在 2024/03/18 17:39, Christian Brauner 写道:
-> On Sat, Mar 16, 2024 at 10:49:33AM +0800, Yu Kuai wrote:
->> Hi, Christian
->>
->> 在 2024/03/15 21:54, Christian Brauner 写道:
->>> On Fri, Mar 15, 2024 at 08:08:49PM +0800, Yu Kuai wrote:
->>>> Hi, Christian
->>>> Hi, Christoph
->>>> Hi, Jan
->>>>
->>>> Perhaps now is a good time to send a formal version of this set.
->>>> However, I'm not sure yet what branch should I rebase and send this set.
->>>> Should I send to the vfs tree?
->>>
->>> Nearly all of it is in fs/ so I'd say yes.
->>> .
->>
->> I see that you just create a new branch vfs.fixes, perhaps can I rebase
->> this set against this branch?
+On Mon, Mar 18, 2024 at 10:00:23PM +0000, Pavel Begunkov wrote:
+> io_uring_try_cancel_uring_cmd() is a part of the cmd handling so let's
+> move it closer to all cmd bits into uring_cmd.c
 > 
-> Please base it on vfs.super. I'll rebase it to v6.9-rc1 on Sunday.
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 
-Okay, I just see that vfs.super doesn't contain commit
-1cdeac6da33f("btrfs: pass btrfs_device to btrfs_scratch_superblocks()"),
-and you might need to fix the conflict at some point.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Thanks,
-Kuai
 
-> .
-> 
+Thanks
+Ming
 
 
