@@ -1,124 +1,79 @@
-Return-Path: <linux-block+bounces-4901-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4903-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 663CC8873C7
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 20:22:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6938887414
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 21:05:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 977271C2290D
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 19:22:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D3CD1F232C6
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 20:05:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EE5979955;
-	Fri, 22 Mar 2024 19:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D411C7F46B;
+	Fri, 22 Mar 2024 20:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RBf0ivVv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frhE7fUk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8438679924;
-	Fri, 22 Mar 2024 19:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB607EF10
+	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 20:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135366; cv=none; b=cpA1MGiGVNI+w6NC+W2rTlblHMn8y26BIyqjzaZtGyfeYKl3ocllALq7PXhx2EC0CW6M38FF8PRKNOzAGROgxhLDJhrQ6/jW6ch8z0QsnvfA70MR8Gv8eHTbnP+FLolqFzyVpDskE16+8H0Czdv6WGuRHAYm6OcGyraYjc4Oh2k=
+	t=1711137893; cv=none; b=W1R/Cc5KbAQ7jje7hyvRfBLiBHDjHNqtKMOjr8zpwRZoDBSKFvmTHk9kdQxrjkj/ysXClTbINsZyheMWWAuD5hEYQFyh+4W9i9RX+ZOpGdv23/SvnePcBYc60PbLX5q49Wba/I6xK3j5+I+omK8J0gLFng0gvAPJGRX91R+Yy3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135366; c=relaxed/simple;
-	bh=BUz5hK96G+jleUn15ldF4ameZxFw2z69VYrq+t9w4a4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pb6TN6gUJzJX3/4ku9CCD8ax/sVUOQFpA+IWFgfmGv+N6KFJjOZBV/ruOz6CJxM+LU3IovkuzdzhqoG5r1QrpGgNIro7/IyWglGwvwLZFNzbp2hk9q4kSpY7IpqRldRw11zz5wsmKCWeBzEUGchyJdfzAUHgoxymDfC7dT38wb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RBf0ivVv; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V1XKH5p80zlgVnF;
-	Fri, 22 Mar 2024 19:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1711135355; x=1713727356; bh=FI4Z6ZgHS15qtNLhRTTVJj5+
-	StHISvSkt2DHgw+Aldg=; b=RBf0ivVv7aAbjp3GUFo3+Fb23Fs8iMz79BTY+mUS
-	EarP+Luey+lgFSgqlWVpFMnI8934ZRjKGYBsQPV0/uDEF2I/ioeqPDiIvStU5EQy
-	YZy4csacStuJhxZhB+s2GHvbfAoqE3BlM720eGX2QDh6zyTAewKYwV7f5FHKF80Z
-	HtHD2I1z8V+3I7isZfr9IQkxE2RLv9bhUeo5VRAWnkbLZButB2Neg0khwa3NnKF+
-	nvkiPImFUpBkLDtJGfA1ADUzwaZVe0tU5craHZgAmX7UgaX6QOIzvePFsy66yZb7
-	rC6fXjyxw3vKuN3wV+nx5gx9Ax294Tdaam87uhfxQBAxuA==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id GAB01t24zNHL; Fri, 22 Mar 2024 19:22:35 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V1XK5106BzlgTGW;
-	Fri, 22 Mar 2024 19:22:33 +0000 (UTC)
-Message-ID: <192acb8f-47b8-426c-bcc9-ef214a797f26@acm.org>
-Date: Fri, 22 Mar 2024 12:22:32 -0700
+	s=arc-20240116; t=1711137893; c=relaxed/simple;
+	bh=cy27tsKHOEFBChfBvL7PbQZp0DI8giPW75N0aQE2vrw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KfZxq2RmjbeayulA7Pb6LARQOUs370br3UxOkkiTBSihbhSR/ARkM36dmg32bQlsfEfs6uB4fZgwR20z2cg15Jjan7OAj03DRe0mhC8n/BxUVA4lNVIM/FgsXSXBkQisaTxzmKt508d8BlocU+1UnhiwAXuNoZ9sQZMM5Q/X/aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frhE7fUk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B799C43394;
+	Fri, 22 Mar 2024 20:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711137893;
+	bh=cy27tsKHOEFBChfBvL7PbQZp0DI8giPW75N0aQE2vrw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=frhE7fUkQzLIIPhNd3AqzJDefso2uY/00cUWfhgMCXJHet3UWQh6BOnZOamwAZkTQ
+	 ko0ivH3fNYkmbrqFZzvzuLUuxecA0ZcRVLKtMP1l/CA3yna2JjN4CInfEERzTDBCuy
+	 pwI04SCvj8HUEWQ1vLv1vUi1kLJEpFXJNL5TkMu85pmqeOeZEoAAtQMVXJybk0ebqi
+	 n0jXJg/niumiuZFlTf4c5Jbl8ol1jL7Cc+wowL1zoi42nMfCXNgVRByrkNHxCiIsVP
+	 PTlcwqxGB4TCwwv2BJCRyRn720Hw2+jsfZHKwdCRQN3/hKl8x24MMzJIigERl60YoE
+	 JciHa2TuEJ+3A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 82F23D8BCE2;
+	Fri, 22 Mar 2024 20:04:53 +0000 (UTC)
+Subject: Re: [GIT PULL] Block fixes for 6.9-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <64206ee9-68fc-4ff4-8b28-a9fd0e09aad5@kernel.dk>
+References: <64206ee9-68fc-4ff4-8b28-a9fd0e09aad5@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <64206ee9-68fc-4ff4-8b28-a9fd0e09aad5@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.9-20240322
+X-PR-Tracked-Commit-Id: 07602678091c0096e79f04aea8a148b76eee0d7e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e3111d9c3f7250309f451cfbf55845a74e692d41
+Message-Id: <171113789353.14477.272322132352747422.pr-tracker-bot@kernel.org>
+Date: Fri, 22 Mar 2024 20:04:53 +0000
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] block: add new genhd flag GENHD_FL_NVMEM
-Content-Language: en-US
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Jens Axboe <axboe@kernel.dk>, Dave Chinner <dchinner@redhat.com>,
- Jan Kara <jack@suse.cz>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <linux@weissschuh.net>, Damien Le Moal <dlemoal@kernel.org>,
- Li Lingfeng <lilingfeng3@huawei.com>, Christian Brauner
- <brauner@kernel.org>, Christian Heusel <christian@heusel.eu>,
- Min Li <min15.li@samsung.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Avri Altman <avri.altman@wdc.com>, Hannes Reinecke <hare@suse.de>,
- Christian Loehle <CLoehle@hyperstone.com>, Bean Huo <beanhuo@micron.com>,
- Yeqi Fu <asuk4.q@gmail.com>, Victor Shih <victor.shih@genesyslogic.com.tw>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Dominique Martinet <dominique.martinet@atmark-techno.com>,
- "Ricardo B. Marliere" <ricardo@marliere.net>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-block@vger.kernel.org
-References: <cover.1711048433.git.daniel@makrotopia.org>
- <89abd9ab93783da0e8934ebc03d66559f78f6060.1711048433.git.daniel@makrotopia.org>
- <7027ccdc-878a-420e-a7ea-5156e1d67b8a@acm.org>
- <Zf3I6DDqqyd924Ks@makrotopia.org>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <Zf3I6DDqqyd924Ks@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 3/22/24 11:07, Daniel Golle wrote:
-> On Fri, Mar 22, 2024 at 10:49:48AM -0700, Bart Van Assche wrote:
->> On 3/21/24 12:33, Daniel Golle wrote:
->>>    enum {
->>>    	GENHD_FL_REMOVABLE			= 1 << 0,
->>>    	GENHD_FL_HIDDEN				= 1 << 1,
->>>    	GENHD_FL_NO_PART			= 1 << 2,
->>> +	GENHD_FL_NVMEM				= 1 << 3,
->>>    };
->>
->> What would break if this flag wouldn't exist?
-> 
-> As both, MTD and UBI already act as NVMEM providers themselves, once
-> the user creates a ubiblock device or got CONFIG_MTD_BLOCK=y set in their
-> kernel configuration, we would run into problems because both, the block
-> layer as well as MTD or UBI would try to be an NVMEM provider for the same
-> device tree node.
+The pull request you sent on Fri, 22 Mar 2024 11:09:10 -0600:
 
-Why would both MTD and UBI try to be an NVMEM provider for the same
-device tree node? Why can't this patch series be implemented such that
-a partition UUID occurs in the device tree and such that other code
-scans for that partition UUID?
+> git://git.kernel.dk/linux.git tags/block-6.9-20240322
 
-Thanks,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e3111d9c3f7250309f451cfbf55845a74e692d41
 
-Bart.
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
