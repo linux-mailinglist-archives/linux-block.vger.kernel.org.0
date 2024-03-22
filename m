@@ -1,249 +1,137 @@
-Return-Path: <linux-block+bounces-4898-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4900-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F79A88737F
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 19:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A29D8873C0
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 20:20:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CC4D1F21C8E
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 18:58:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 108471F2243B
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 19:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C1D768FB;
-	Fri, 22 Mar 2024 18:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157EF78B6E;
+	Fri, 22 Mar 2024 19:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Qbm6XYEM"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="XBx6eZgU"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9267D7690F
-	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 18:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BCA78B47;
+	Fri, 22 Mar 2024 19:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711133865; cv=none; b=Xtz3sUMmPUlJo80NdWy1oCR5TekSJCWV4vt2N+bNIV0tro24oCPAt+qfEqaaQyUY642miYwnDLml+TmHG/5IYHu/C58am2aMsDiYxkJ36Cw8BOAfPIUKpJwaLVMq7D76ohRJl8AiBm5ZTt2nRo47RlOB01DxTnZWbVllqVeJ+QE=
+	t=1711135205; cv=none; b=fUF+i2G0+lr5n5rdBSYNXBRMBVr21y6h5mGAaxMvGQ/ZlwXVsWA3yhdFmCHGWAMkBBkjoBhJf3ZMrEMwOHLdnd60mZ3N7Z3+zR1CcbDX2yktv/V6+E5CO1AkbMHMxzQ7SgzU6D4IWxs0evOmfrmryhpz6oQvRBXT4oT9tGIQYBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711133865; c=relaxed/simple;
-	bh=JL3MeFU+adshHszYv2h17eowSxBs6lNLRFzE98JHChY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=crm9XAYwcZkGZm65djuM03qB9MVwtXfuFynYqZ6wq+nMx73XsMdSYUj5rvnlO62Die8rtKlCw2xnA3rt0Nruv9YPVffYNyXXv7MJyEIYNresN1GHKz9u16z4SAQUAa0SI7xwSqzFhstzCz+Ba/8FEEw3vlsIBekK+5dFU0wIwqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Qbm6XYEM; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240322185741epoutp044918878ea7c57536f7822bb86eec686e~-Ky5hBpNa2069620696epoutp04a
-	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 18:57:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240322185741epoutp044918878ea7c57536f7822bb86eec686e~-Ky5hBpNa2069620696epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711133861;
-	bh=wHvTeaDpfgYiveEbszV3ymTJuM8INq7WUKPuWJ7ZLwE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qbm6XYEMsBWRcGaFxrlL1agt/tcjmvo/bI+EKQayIYwaFumZ9+5sVxSqC+zZamLbs
-	 L+6ryO+yVh5SjF/2YAuom0USUeulvqkrPbPhqEJ7BM3r0ATXjNHEjewkYl2ou5FY3T
-	 d416RERpgdpWY0bOCYXgyWLN207o+f8JoPLiH1x8=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240322185740epcas5p49c00b147191d2a8b43b191974276efe5~-Ky42eVVJ2613626136epcas5p45;
-	Fri, 22 Mar 2024 18:57:40 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4V1WmM1fkpz4x9Pp; Fri, 22 Mar
-	2024 18:57:39 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	19.F6.19431.3A4DDF56; Sat, 23 Mar 2024 03:57:39 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240322185738epcas5p20e5bd448ce83350eb9e79c929c4a9b2b~-Ky2zk4od0284402844epcas5p2I;
-	Fri, 22 Mar 2024 18:57:38 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240322185738epsmtrp28b4f072d32029456cca4c811de06c728~-Ky2yuB8G0597405974epsmtrp28;
-	Fri, 22 Mar 2024 18:57:38 +0000 (GMT)
-X-AuditID: b6c32a50-f57ff70000004be7-15-65fdd4a36e93
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	59.B3.19234.2A4DDF56; Sat, 23 Mar 2024 03:57:38 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240322185736epsmtip139deaba879c59af89b84af8413656577~-Ky0-Feiv1992619926epsmtip1g;
-	Fri, 22 Mar 2024 18:57:36 +0000 (GMT)
-From: Kanchan Joshi <joshi.k@samsung.com>
-To: martin.petersen@oracle.com, axboe@kernel.dk, kbusch@kernel.org,
-	hch@lst.de
-Cc: io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-	anuj1072538@gmail.com, Kanchan Joshi <joshi.k@samsung.com>, Anuj Gupta
-	<anuj20.g@samsung.com>
-Subject: [RFC PATCH 4/4] block: add support to pass the meta buffer
-Date: Sat, 23 Mar 2024 00:20:23 +0530
-Message-Id: <20240322185023.131697-5-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240322185023.131697-1-joshi.k@samsung.com>
+	s=arc-20240116; t=1711135205; c=relaxed/simple;
+	bh=Djvbgk8eOBHycf42hxOtBMANTsV5hvKlJFnxU1y09+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Td0mizmsc+VWXRslY3ErCgbQUGKOENn7tTeWazD7S75OEDYGc8nDsOlB21J9d7F2F/Yls8yTSYumcmZs28IoQILxhXZHkyHcEbVBubpi37m2P852a66C9SmFiItoOGCXiQ9dN9tAluHOBe3a7wSp4lfo3kakPLtR+orkdSmhQW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=XBx6eZgU; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V1XGB2MyVzlgVnF;
+	Fri, 22 Mar 2024 19:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1711135191; x=1713727192; bh=25gd1LQ6Hyviw81xPbwTGNqw
+	rAIn+WLE53FkTKTaE5Q=; b=XBx6eZgU3JSstw3QF+AJu+rKZ05Lqh4HGRUUSQeI
+	X68GeC6FZ7jEibaQuYEjMF8A5aTvsoySUdZXnjNtGsHi13xFW3X1FTewwtIIxP7F
+	NyM+AULWwWqL3Vk5lQnBMtkn2RWES5BKse1KSWtOuhnUGSuyimxCpfkfBVdU3UZr
+	76L0RRTR+U/i6BJ/Xg0ZAwruLOvOpAR0fgxL7mRPA9bSEryHrfVGK1E4oEjimN5e
+	rG/6Cjdu2fvBVoWdoW+XlifFZn00CfSO45xrgxy7IoSgN7odLpWblDz7BhD1AVTi
+	IOe5/zg20Dw+s3XcctoXnDQwDljdFLALYin39RWs44gUsw==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id RPnP1GeUiYtK; Fri, 22 Mar 2024 19:19:51 +0000 (UTC)
+Received: from [100.96.154.173] (unknown [104.132.1.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V1XFw69BpzlgTGW;
+	Fri, 22 Mar 2024 19:19:48 +0000 (UTC)
+Message-ID: <6a59ac6e-cc1f-46de-92d7-f017082d99d2@acm.org>
+Date: Fri, 22 Mar 2024 12:19:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGJsWRmVeSWpSXmKPExsWy7bCmlu7iK39TDd694rT4+PU3i0XThL/M
-	Fqvv9rNZrFx9lMniXes5Fouj/9+yWUw6dI3RYu8tbYvlx/8xOXB67Jx1l93j8tlSj02rOtk8
-	dt9sYPP4+PQWi0ffllWMHp83yQWwR2XbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpa
-	mCsp5CXmptoqufgE6Lpl5gAdpqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMCnQ
-	K07MLS7NS9fLSy2xMjQwMDIFKkzIztgwr5mlYIFsxaMjF5gaGN+JdzFyckgImEgcfTqXtYuR
-	i0NIYA+jxOH5x9ghnE+MEgsfPGaEc06tPMYM09KzdQcLRGIno8TDmyehqj4zSvxb8oSti5GD
-	g01AU+LC5FKQBhGBAImnv8+xgdQwC8xhlNi5rZcdpEZYwFli6st6kBoWAVWJJU0vWEFsXgFL
-	iV1dy5kglslLzLz0nR3E5hSwkrh+9ScLRI2gxMmZT8BsZqCa5q2zmUHmSwj8ZZeYfugiG0Sz
-	i0RLy0soW1ji1fEt7BC2lMTnd3uh4skSl2aeg1pWIvF4z0Eo216i9VQ/M8idzEC/rN+lD7GL
-	T6L39xMmkLCEAK9ER5sQRLWixL1JT1khbHGJhzOWQNkeEqdWN7FBgqeXUWLSwpnMExjlZyF5
-	YRaSF2YhbFvAyLyKUSq1oDg3PTXZtMBQNy+1HB6zyfm5mxjBCVQrYAfj6g1/9Q4xMnEwHmKU
-	4GBWEuHd8f9PqhBvSmJlVWpRfnxRaU5q8SFGU2AgT2SWEk3OB6bwvJJ4QxNLAxMzMzMTS2Mz
-	QyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamNa+Cvi3s+Zn5yPJ+Id/Dtpe+dgr0RbLF/gm
-	/9Dx1E19XJm7e60/P7H74D/PjfmFqO/UBRNDe35w7prru8d9Y/LTrWzPsztXHXQz27/jwxVL
-	q2kRuRfv2bro7+tyk7s0v/C92Kxnd3Q07xu2tl7f9KK5dBXLFanT1c/LrXcF3Ym+YJE4yUfv
-	/WyF2VP9LRfk7Zvcubj8vlZ5uJ1k9cf7nqcWMG7NK68Rm9xu81c/Wecjx2KvVyvVXPo57Tq3
-	9mjLXd9snP7yQZ3Q4f3c3/Zu/S+xruPVjBVm/F5rc5ZECE7clH7eetGsh1w/4g/NNWZ+NW/X
-	G6ap2bOEn/6Yv22THke64D42gZ4ka7WvP9pS531VYinOSDTUYi4qTgQAXsmCEykEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsWy7bCSnO6iK39TDc6vVLP4+PU3i0XThL/M
-	Fqvv9rNZrFx9lMniXes5Fouj/9+yWUw6dI3RYu8tbYvlx/8xOXB67Jx1l93j8tlSj02rOtk8
-	dt9sYPP4+PQWi0ffllWMHp83yQWwR3HZpKTmZJalFunbJXBlbJjXzFKwQLbi0ZELTA2M78S7
-	GDk5JARMJHq27mDpYuTiEBLYzijxenkjC0RCXKL52g92CFtYYuW/5+wQRR8ZJZZN/M7UxcjB
-	wSagKXFhcilIjYhAiMSy1gnMIDazwAJGiYUnrEFKhAWcJaa+rAcJswioSixpesEKYvMKWErs
-	6lrOBDFeXmLmpe9gqzgFrCSuX/0JdoIQUM3056uh6gUlTs58wgIxXl6ieets5gmMArOQpGYh
-	SS1gZFrFKJpaUJybnptcYKhXnJhbXJqXrpecn7uJERzuWkE7GJet/6t3iJGJg/EQowQHs5II
-	747/f1KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8yrndKYICaQnlqRmp6YWpBbBZJk4OKUamLoD
-	3Kx2NfOXt+9webM2a+7Fm+u/FW8+GZh2uuHfb9O1U1Onn5LYddEpuJvBvuYl13p1Kx+Jkudz
-	+579cdBIV5KeuHFVZGBVzvYFB9usWvN5D/ZKM4q23G4Iz3lW8G+TnmBBjpemQ/r8T9n5vxif
-	ft66U5xT6+6Lj3c/7CuPLYqa9OWqTHW+3JXQ5eWRX1l8eOL03xV1SLWsUuFqM57T96Gpwon5
-	tdzEV3z3hA+cXf7aWTIjQaHjyvYyoQ38PqZlcbKX/3Iq3zRLM1p3aHXciuASdj6zvBXbeoNe
-	9CpJRcXLqz2ceXeBVI7lXqV/Fmc4jC24uGzndDXtji5KEz+fM+XZBz4WH8bW458f2x5WYinO
-	SDTUYi4qTgQAthAiUeYCAAA=
-X-CMS-MailID: 20240322185738epcas5p20e5bd448ce83350eb9e79c929c4a9b2b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240322185738epcas5p20e5bd448ce83350eb9e79c929c4a9b2b
-References: <20240322185023.131697-1-joshi.k@samsung.com>
-	<CGME20240322185738epcas5p20e5bd448ce83350eb9e79c929c4a9b2b@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] block: implement NVMEM provider
+Content-Language: en-US
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Jens Axboe <axboe@kernel.dk>, Dave Chinner <dchinner@redhat.com>,
+ Jan Kara <jack@suse.cz>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Damien Le Moal <dlemoal@kernel.org>,
+ Li Lingfeng <lilingfeng3@huawei.com>, Christian Brauner
+ <brauner@kernel.org>, Christian Heusel <christian@heusel.eu>,
+ Min Li <min15.li@samsung.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Avri Altman <avri.altman@wdc.com>, Hannes Reinecke <hare@suse.de>,
+ Christian Loehle <CLoehle@hyperstone.com>, Bean Huo <beanhuo@micron.com>,
+ Yeqi Fu <asuk4.q@gmail.com>, Victor Shih <victor.shih@genesyslogic.com.tw>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Dominique Martinet <dominique.martinet@atmark-techno.com>,
+ "Ricardo B. Marliere" <ricardo@marliere.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-block@vger.kernel.org
+References: <cover.1711048433.git.daniel@makrotopia.org>
+ <e5fb3e70-8f3c-4dda-b642-401d9d047a03@acm.org>
+ <Zf3HylHNrrj20mBO@makrotopia.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <Zf3HylHNrrj20mBO@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If IOCB_USE_META flag is set, iocb->private points to iov_iter
-corresponding to the meta-buffer.
-Use it to prepare the bip and attach that to the bio that we send down.
+On 3/22/24 11:02, Daniel Golle wrote:
+> On Fri, Mar 22, 2024 at 10:52:17AM -0700, Bart Van Assche wrote:
+>> On 3/21/24 12:31, Daniel Golle wrote:
+>>> On embedded devices using an eMMC it is common that one or more (hw/sw)
+>>> partitions on the eMMC are used to store MAC addresses and Wi-Fi
+>>> calibration EEPROM data.
+>>>
+>>> Implement an NVMEM provider backed by a block device as typically the
+>>> NVMEM framework is used to have kernel drivers read and use binary data
+>>> from EEPROMs, efuses, flash memory (MTD), ...
+>>>
+>>> In order to be able to reference hardware partitions on an eMMC, add code
+>>> to bind each hardware partition to a specific firmware subnode.
+>>>
+>>> Overall, this enables uniform handling across practially all flash
+>>> storage types used for this purpose (MTD, UBI, and now also MMC).
+>>>
+>>> As part of this series it was necessary to define a device tree schema
+>>> for block devices and partitions on them, which (similar to how it now
+>>> works also for UBI volumes) can be matched by one or more properties.
+>>
+>> Since this patch series adds code that opens partitions and reads
+>> from partitions, can that part of the functionality be implemented in
+>> user space? There is already a mechanism for notifying user space about
+>> block device changes, namely udev.
+> 
+> No. Because it has to happen (e.g. for nfsroot to work) before
+> userland gets initiated: Without Ethernet MAC address (which if often
+> stored at some raw offset on a partition or hw-partition of an eMMC),
+> we don't have a way to use nfsroot (because that requires functional
+> Ethernet), hence userland won't come up. It's a circular dependency
+> problem which can only be addressed by making sure that everything
+> needed for Ethernet to come up is provided by the kernel **before**
+> rootfs (which can be nfsroot) is mounted.
 
-Make sure that block-integrity checks are skipped for this user-owned
-meta buffer.
+How about the initial RAM disk? I think that's where code should occur
+that reads calibration data from local storage.
 
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- block/bio-integrity.c | 13 +++++++++++++
- block/fops.c          |  9 +++++++++
- block/t10-pi.c        |  6 ++++++
- include/linux/bio.h   |  6 ++++++
- 4 files changed, 34 insertions(+)
+Thanks,
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index e340b5a03cdf..c46b70aff840 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -308,6 +308,19 @@ static unsigned int bvec_from_pages(struct bio_vec *bvec, struct page **pages,
- 	return nr_bvecs;
- }
- 
-+int bio_integrity_map_iter(struct bio *bio, struct iov_iter *iter)
-+{
-+	struct blk_integrity *bi = blk_get_integrity(bio->bi_bdev->bd_disk);
-+
-+	if (!bi)
-+		return -EINVAL;
-+
-+	if (iter->count < bio_integrity_bytes(bi, bio_sectors(bio)))
-+		return -EINVAL;
-+
-+	return bio_integrity_map_user(bio, iter, 0);
-+}
-+
- int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter,
- 			  u32 seed)
- {
-diff --git a/block/fops.c b/block/fops.c
-index 679d9b752fe8..e488fa66dd60 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -353,6 +353,15 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
- 		task_io_account_write(bio->bi_iter.bi_size);
- 	}
- 
-+	if (unlikely(iocb->ki_flags & IOCB_USE_META)) {
-+		ret = bio_integrity_map_iter(bio, iocb->private);
-+		WRITE_ONCE(iocb->private, NULL);
-+		if (unlikely(ret)) {
-+			bio_put(bio);
-+			return ret;
-+		}
-+	}
-+
- 	if (iocb->ki_flags & IOCB_NOWAIT)
- 		bio->bi_opf |= REQ_NOWAIT;
- 
-diff --git a/block/t10-pi.c b/block/t10-pi.c
-index d90892fd6f2a..72d1522417a1 100644
---- a/block/t10-pi.c
-+++ b/block/t10-pi.c
-@@ -156,6 +156,8 @@ static void t10_pi_type1_prepare(struct request *rq)
- 		/* Already remapped? */
- 		if (bip->bip_flags & BIP_MAPPED_INTEGRITY)
- 			break;
-+		if (bip->bip_flags & BIP_INTEGRITY_USER)
-+			break;
- 
- 		bip_for_each_vec(iv, bip, iter) {
- 			unsigned int j;
-@@ -205,6 +207,8 @@ static void t10_pi_type1_complete(struct request *rq, unsigned int nr_bytes)
- 		struct bio_vec iv;
- 		struct bvec_iter iter;
- 
-+		if (bip->bip_flags & BIP_INTEGRITY_USER)
-+			break;
- 		bip_for_each_vec(iv, bip, iter) {
- 			unsigned int j;
- 			void *p;
-@@ -408,6 +412,8 @@ static void ext_pi_type1_prepare(struct request *rq)
- 		/* Already remapped? */
- 		if (bip->bip_flags & BIP_MAPPED_INTEGRITY)
- 			break;
-+		if (bip->bip_flags & BIP_INTEGRITY_USER)
-+			break;
- 
- 		bip_for_each_vec(iv, bip, iter) {
- 			unsigned int j;
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 20cf47fc851f..34ea387dfc59 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -723,6 +723,7 @@ static inline bool bioset_initialized(struct bio_set *bs)
- 	for_each_bio(_bio)						\
- 		bip_for_each_vec(_bvl, _bio->bi_integrity, _iter)
- 
-+int bio_integrity_map_iter(struct bio *bio, struct iov_iter *iter);
- int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter, u32 seed);
- extern struct bio_integrity_payload *bio_integrity_alloc(struct bio *, gfp_t, unsigned int);
- extern int bio_integrity_add_page(struct bio *, struct page *, unsigned int, unsigned int);
-@@ -802,6 +803,11 @@ static inline int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter,
- 	return -EINVAL;
- }
- 
-+static inline int bio_integrity_map_iter(struct bio *bio, struct iov_iter *iter)
-+{
-+	return -EINVAL;
-+}
-+
- #endif /* CONFIG_BLK_DEV_INTEGRITY */
- 
- /*
--- 
-2.25.1
-
+Bart.
 
