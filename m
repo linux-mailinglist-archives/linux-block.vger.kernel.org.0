@@ -1,176 +1,195 @@
-Return-Path: <linux-block+bounces-4882-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4884-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F6328871A3
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 18:08:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B0B6887203
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 18:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CD9AB21A4F
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 17:08:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B4E41C22DEF
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 17:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6192D5FBB3;
-	Fri, 22 Mar 2024 17:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5613A59B5F;
+	Fri, 22 Mar 2024 17:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MEnJvbE7"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="3BUT3iqW"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D02D5DF3B
-	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 17:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805835FB86;
+	Fri, 22 Mar 2024 17:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711127298; cv=none; b=dRsVegqr4yJWeE5mzimU3cthEO4M2uV4O5z8PxY0qA/XU0tpu8WgLY8wubSGj4IxFiUuR/1/PgiPcg4H05fMl7szI5h55gwxLFe8MM2J7CYgs2WLvUB650jpFwJua0WL4b8zXunpz0cUobnY7bwBy/avtoXo3HDBapVOlcY36/E=
+	t=1711129260; cv=none; b=deoi59Tbnae4d0mpwMs/tRp9qe92gbPpLI2tLVPE6dWTSgNm4unhSIiRquq6LbVp9fpk9Y55xPe2EfhNh26Ym/ybzT6RnBTIO6DuHjOksEKfZwim3aRMu1UutpN5O9iOXH4R+iAEgTefGLnPFhl9mSZw8E2xuMjb7FLvzWsyPeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711127298; c=relaxed/simple;
-	bh=MStsiHuxKT7RzAYQDZAqC4Q6/q5satus9SSDaLkFTz4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaZa/aj6HGWoyAUctcouHJ1BNNPBe8UKuf6llJGHZfPLdbDX0br6N0UUSC8CJ2i50U5p82UsaIrQ5CPeFQSw9dl6xByGwGqIUvH1DoxhBQN2N+R0LBPfuDGHSw+nSsH02bGvA90z2l915jdwtcB8t940rCPYAqtsqg1izUugdUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MEnJvbE7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711127295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JFiXaqd6f1uWGUV0QRwS/e77pWnj3eGKo9DHtynberk=;
-	b=MEnJvbE7tWfANJd7uw3mOPw8tF4SOVAIEO3iZBnCUetPqABbZHA05kfNz7o8pJm48P4JLi
-	6i/q3GOH0+vLwSn9pAp/C5WihZzkV4ftcdn68vvZe3jHd+Iel/4PFjKguFpQuJPmU1tmv5
-	z0JY5CJUS9bUBUtu36K5CeZKkxfm5v4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-338-5t454_41PsGYDj4lteffZg-1; Fri,
- 22 Mar 2024 13:08:13 -0400
-X-MC-Unique: 5t454_41PsGYDj4lteffZg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	s=arc-20240116; t=1711129260; c=relaxed/simple;
+	bh=hUUZk0R0PklOcj1oYkJC2u/GzExzR1VpkkAZTNMFvYE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mhciXvWF8gWTzsBXwexrj4Pjj0v/Uu2S1b91Kih6KXR4hxXJbxBbLqKUftO1EZvRBF4MnJ5uSbzIoYkl8WleVOTHXN8ymhBi4Hxs0iLHr1TEeh+89GpJsvX9pPYpnBiyBJnsVATLHAV8GbIx9uJNQKAmH0vOzJDfX5SFu1NmwVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=3BUT3iqW; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4V1V3s5kJTz6Cnk95;
+	Fri, 22 Mar 2024 17:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from:received:received; s=mr01; t=
+	1711129251; x=1713721252; bh=Qqz9pnUZk4VENbBV5sZn2Phs3CDKV7Ml0ZC
+	g9USpZEg=; b=3BUT3iqWpS7rsVhRcht6YBVLhS4Yi7oDCH1Smci86A8PRCumJXM
+	euOzoMcWdDYKDbqiECNeNFnJXp44+YveZHXZhLv1xDzEqLpQIzCfKTkjBHAaQ6Dr
+	+sEesZHXz4rxHraOWJuNMApi8fGo4Cm7sHF4/d46ub0UXf/KSoVaMor/qj983yIC
+	dNSxCewKq6tvkkqAK2g7NMu5WTK8k9BDEUOdcZWZhKfVMg3TReOnTiJR3vXZb3rY
+	rIv4vDN/vOgSzWpXVDsW6loU1+bpPQ17veHxEA/wwrS3DB3YTCn3uh7btop0dH2L
+	IHc3aNTuubzv4jcoK9g7A8c7xocsc9gvAVw==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id tauoE5ubG2xo; Fri, 22 Mar 2024 17:40:51 +0000 (UTC)
+Received: from bvanassche-linux.mtv.corp.google.com (unknown [104.132.1.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E548329AC022
-	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 17:08:12 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C67ED404392A
-	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 17:08:12 +0000 (UTC)
-Date: Fri, 22 Mar 2024 13:09:51 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: linux-block@vger.kernel.org
-Subject: Re: pktcdvd ->open_mutex lockdep splat
-Message-ID: <Zf27X6ZNOwkXjc6A@bfoster>
-References: <Zf20dfwIdayItxsO@bfoster>
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4V1V3j3cbcz6Cnk94;
+	Fri, 22 Mar 2024 17:40:49 +0000 (UTC)
+From: Bart Van Assche <bvanassche@acm.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	stable@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	Chengming Zhou <zhouchengming@bytedance.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH] blk-mq: release scheduler resource when request completes
+Date: Fri, 22 Mar 2024 10:40:14 -0700
+Message-ID: <20240322174014.373323-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zf20dfwIdayItxsO@bfoster>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2024 at 12:40:21PM -0400, Brian Foster wrote:
-> Hi all,
-> 
-> I noticed the splat below on one of my test VMs when running latest
-> upstream with lockdep enabled. I'm not really sure why this occurs
-> because I'm not actually using this device for anything I'm aware of. I
-> suppose it's possible this has a busted userspace or kvm config, as this
-> is just one of a handful of scratch VMs I have around for development
-> purposes. I'm happy to try and dig further into it or just expunge it if
-> this is of little interest.
-> 
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-Ok, I guess the reason I was only seeing this in one particular VM is
-that for whatever reason, something happens to invoke pktsetup during
-boot on that guest. If I boot up a separate VM/distro and run 'pktsetup
-0 /dev/sr0,' I see the same splat..
+commit e5c0ca13659e9d18f53368d651ed7e6e433ec1cf upstream.
 
-Brian
+Chuck reported [1] an IO hang problem on NFS exports that reside on SATA
+devices and bisected to commit 615939a2ae73 ("blk-mq: defer to the normal
+submission path for post-flush requests").
 
-> FWIW, the splat itself reproduces back before ->open_mutex was created
-> from bd_mutex by commit a8698707a183 ("block: move bd_mutex to struct
-> gendisk"). I went as far back as v5.10 and still observed it.
-> 
-> Brian
-> 
-> --- 8< ---
-> 
-> [   11.667694] block (null): writer mapped to sr0
-> 
-> [   11.677407] ============================================
-> [   11.680650] WARNING: possible recursive locking detected
-> [   11.683581] 6.8.0+ #346 Tainted: G            E     
-> [   11.686246] --------------------------------------------
-> [   11.689075] systemd-udevd/1438 is trying to acquire lock:
-> [   11.690607] ffff8bb78f553cc8 (&disk->open_mutex){+.+.}-{3:3}, at: bdev_open+0x60/0x3e0
-> [   11.692504] 
->                but task is already holding lock:
-> [   11.693921] ffff8bb786b39cc8 (&disk->open_mutex){+.+.}-{3:3}, at: bdev_open+0x239/0x3e0
-> [   11.695806] 
->                other info that might help us debug this:
-> [   11.697362]  Possible unsafe locking scenario:
-> 
-> [   11.698779]        CPU0
-> [   11.699397]        ----
-> [   11.699994]   lock(&disk->open_mutex);
-> [   11.700923]   lock(&disk->open_mutex);
-> [   11.701849] 
->                 *** DEADLOCK ***
-> 
-> [   11.703273]  May be due to missing lock nesting notation
-> 
-> [   11.704878] 3 locks held by systemd-udevd/1438:
-> [   11.705967]  #0: ffff8bb786b39cc8 (&disk->open_mutex){+.+.}-{3:3}, at: bdev_open+0x239/0x3e0
-> [   11.707966]  #1: ffffffffc085c768 (pktcdvd_mutex){+.+.}-{3:3}, at: pkt_open+0x2b/0x630 [pktcdvd]
-> [   11.710080]  #2: ffffffffc085d868 (&ctl_mutex#2){+.+.}-{3:3}, at: pkt_open+0x39/0x630 [pktcdvd]
-> [   11.712164] 
->                stack backtrace:
-> [   11.713200] CPU: 3 PID: 1438 Comm: systemd-udevd Tainted: G            E      6.8.0+ #346
-> [   11.715122] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-> [   11.717123] Call Trace:
-> [   11.717741]  <TASK>
-> [   11.718271]  dump_stack_lvl+0x79/0xb0
-> [   11.719194]  __lock_acquire+0x1228/0x2170
-> [   11.720172]  lock_acquire+0xbb/0x2c0
-> [   11.721030]  ? bdev_open+0x60/0x3e0
-> [   11.721869]  __mutex_lock+0x77/0xd40
-> [   11.722724]  ? bdev_open+0x60/0x3e0
-> [   11.723558]  ? find_held_lock+0x2b/0x80
-> [   11.724470]  ? bdev_open+0x56/0x3e0
-> [   11.725324]  ? bdev_open+0x60/0x3e0
-> [   11.726173]  ? bdev_open+0x60/0x3e0
-> [   11.727031]  bdev_open+0x60/0x3e0
-> [   11.727844]  bdev_file_open_by_dev+0xbf/0x120
-> [   11.728909]  pkt_open+0x10e/0x630 [pktcdvd]
-> [   11.729944]  ? bdev_open+0x22f/0x3e0
-> [   11.730815]  ? lock_release+0xb8/0x270
-> [   11.731729]  ? bdev_open+0x239/0x3e0
-> [   11.732605]  blkdev_get_whole+0x25/0x90
-> [   11.733544]  bdev_open+0x29f/0x3e0
-> [   11.734380]  ? iput.part.0+0x34/0x260
-> [   11.735277]  ? __pfx_blkdev_open+0x10/0x10
-> [   11.736282]  blkdev_open+0x8b/0xc0
-> [   11.737090]  do_dentry_open+0x172/0x580
-> [   11.738002]  path_openat+0x3a9/0xa30
-> [   11.738864]  do_filp_open+0xa1/0x130
-> [   11.739731]  ? _raw_spin_unlock+0x23/0x40
-> [   11.740700]  do_sys_openat2+0x82/0xb0
-> [   11.741596]  __x64_sys_openat+0x49/0x80
-> [   11.742529]  do_syscall_64+0x7c/0x190
-> [   11.743406]  entry_SYSCALL_64_after_hwframe+0x6c/0x74
-> [   11.744599] RIP: 0033:0x7f30e4afd70b
-> [   11.745450] Code: 25 00 00 41 00 3d 00 00 41 00 74 4b 64 8b 04 25 18 00 00 00 85 c0 75 67 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 91 00 00 00 48 8b 54 24 28 64 48 2b 14 25
-> [   11.749817] RSP: 002b:00007ffdafd13250 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-> [   11.751633] RAX: ffffffffffffffda RBX: 0000000000006000 RCX: 00007f30e4afd70b
-> [   11.753306] RDX: 0000000000080900 RSI: 00007ffdafd132d0 RDI: 00000000ffffff9c
-> [   11.754966] RBP: 00007ffdafd132d0 R08: 0000000000000000 R09: 00007ffdafd13160
-> [   11.756624] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000080900
-> [   11.758311] R13: 0000000000080900 R14: 0000000000000006 R15: 00007ffdafd13470
-> [   11.760041]  </TASK>
-> 
-> 
+We analysed the IO hang problem, found there are two postflush requests
+waiting for each other.
 
+The first postflush request completed the REQ_FSEQ_DATA sequence, so go t=
+o
+the REQ_FSEQ_POSTFLUSH sequence and added in the flush pending list, but
+failed to blk_kick_flush() because of the second postflush request which
+is inflight waiting in scheduler queue.
+
+The second postflush waiting in scheduler queue can't be dispatched becau=
+se
+the first postflush hasn't released scheduler resource even though it has
+completed by itself.
+
+Fix it by releasing scheduler resource when the first postflush request
+completed, so the second postflush can be dispatched and completed, then
+make blk_kick_flush() succeed.
+
+While at it, remove the check for e->ops.finish_request, as all
+schedulers set that. Reaffirm this requirement by adding a WARN_ON_ONCE()
+at scheduler registration time, just like we do for insert_requests and
+dispatch_request.
+
+[1] https://lore.kernel.org/all/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@orac=
+le.com/
+
+Link: https://lore.kernel.org/linux-block/20230819031206.2744005-1-chengm=
+ing.zhou@linux.dev/
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202308172100.8ce4b853-oliver.sang@=
+intel.com
+Fixes: 615939a2ae73 ("blk-mq: defer to the normal submission path for pos=
+t-flush requests")
+Reported-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Tested-by: Chuck Lever <chuck.lever@oracle.com>
+Link: https://lore.kernel.org/r/20230813152325.3017343-1-chengming.zhou@l=
+inux.dev
+[axboe: folded in incremental fix and added tags]
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[bvanassche: changed RQF_USE_SCHED into RQF_ELVPRIV; restored the
+finish_request pointer check before calling finish_request and removed
+the new warning from the elevator code. This patch fixes an I/O hang
+when submitting a REQ_FUA request to a request queue for a zoned block
+device for which FUA has been disabled (QUEUE_FLAG_FUA is not set).]
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-mq.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 7ed6b9469f97..07610505c177 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -675,6 +675,22 @@ struct request *blk_mq_alloc_request_hctx(struct req=
+uest_queue *q,
+ }
+ EXPORT_SYMBOL_GPL(blk_mq_alloc_request_hctx);
+=20
++static void blk_mq_finish_request(struct request *rq)
++{
++	struct request_queue *q =3D rq->q;
++
++	if ((rq->rq_flags & RQF_ELVPRIV) &&
++	    q->elevator->type->ops.finish_request) {
++		q->elevator->type->ops.finish_request(rq);
++		/*
++		 * For postflush request that may need to be
++		 * completed twice, we should clear this flag
++		 * to avoid double finish_request() on the rq.
++		 */
++		rq->rq_flags &=3D ~RQF_ELVPRIV;
++	}
++}
++
+ static void __blk_mq_free_request(struct request *rq)
+ {
+ 	struct request_queue *q =3D rq->q;
+@@ -701,9 +717,7 @@ void blk_mq_free_request(struct request *rq)
+ {
+ 	struct request_queue *q =3D rq->q;
+=20
+-	if ((rq->rq_flags & RQF_ELVPRIV) &&
+-	    q->elevator->type->ops.finish_request)
+-		q->elevator->type->ops.finish_request(rq);
++	blk_mq_finish_request(rq);
+=20
+ 	if (unlikely(laptop_mode && !blk_rq_is_passthrough(rq)))
+ 		laptop_io_completion(q->disk->bdi);
+@@ -1025,6 +1039,8 @@ inline void __blk_mq_end_request(struct request *rq=
+, blk_status_t error)
+ 	if (blk_mq_need_time_stamp(rq))
+ 		__blk_mq_end_request_acct(rq, ktime_get_ns());
+=20
++	blk_mq_finish_request(rq);
++
+ 	if (rq->end_io) {
+ 		rq_qos_done(rq->q, rq);
+ 		if (rq->end_io(rq, error) =3D=3D RQ_END_IO_FREE)
+@@ -1079,6 +1095,8 @@ void blk_mq_end_request_batch(struct io_comp_batch =
+*iob)
+ 		if (iob->need_ts)
+ 			__blk_mq_end_request_acct(rq, now);
+=20
++		blk_mq_finish_request(rq);
++
+ 		rq_qos_done(rq->q, rq);
+=20
+ 		/*
 
