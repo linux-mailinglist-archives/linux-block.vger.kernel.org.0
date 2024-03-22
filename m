@@ -1,111 +1,85 @@
-Return-Path: <linux-block+bounces-4818-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4820-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 801088863DD
-	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 00:04:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B23A88645B
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 01:31:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 269131F2293A
-	for <lists+linux-block@lfdr.de>; Thu, 21 Mar 2024 23:04:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C0481C21DA4
+	for <lists+linux-block@lfdr.de>; Fri, 22 Mar 2024 00:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696D3566A;
-	Thu, 21 Mar 2024 23:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA225376;
+	Fri, 22 Mar 2024 00:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="hsAYp96V"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W8vfxg9/"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D74C53B8
-	for <linux-block@vger.kernel.org>; Thu, 21 Mar 2024 23:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC93383
+	for <linux-block@vger.kernel.org>; Fri, 22 Mar 2024 00:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711062244; cv=none; b=kCPIUIE0i/l3D9WWyvdjC1OWtw9CYEhWn5/Vctafxd0EXEP3jMUOZM08f0iwJSOMqUKcvNqb7ts7DGmPMKRNm9trTmlSiKQXuZPbpbgl7zRuW+FkOLL/fxsYyLesN00ZmygiZmf1Sqwsckih14QPNvbIMwK6zQmWdyD8yRbDsVU=
+	t=1711067509; cv=none; b=a7YKbeTkOY+TCFDHyPjR/xb163t6YLyHi5c9KRSVnyDDFbGk1cJgu/dCQSrpUXGuZMo9vmfMbYWXPXmsJEQVBBXfkRosLlm4WT2086bMvH5rO6TH0ftN04wJJBCIH4jvneK2kMBM8aDSgLL2gP9M9Ps7vOgVKe55+X9A2ItRJkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711062244; c=relaxed/simple;
-	bh=qUR7hWKRv+fhs6BHG/kYqfeZYc6epEJtHMByIKkvt0s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=naZMmz7LPeprCWKQOupP06YtnFE1nwAzk5AOpitHMZY1pwQ6zsQ5nudkQKrKYOGsGw3WVggt7Qb6rjutOyrGRUYdZCefLgXmSc57O9YvAoxE+H+JKVoIf0uO2Bn7SdQ7lUSZARClL9e2m9FDPpOcikb7oxE/6JbrhRocCxnOAVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=hsAYp96V; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4V11H56lpSz6Cnk8s;
-	Thu, 21 Mar 2024 23:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1711062239; x=1713654240; bh=qoljGiP4nxr0HS+IMXKvWWTy
-	vH9RfqX/5fOs8svAsV4=; b=hsAYp96VFp9hf5V0+8j6Tmk2OCItQ/HaJv77lZ9P
-	MtMSaglikTBenF7aeT7vp8ZCja7v+n41YYxPxT6ie37R1p3OtoCLzgjJWnAPqsra
-	POneZ64/fZZch2OMQr1aAogI3t2sXOVI7yCbTuJ4nfgdweogg3wx6LjoHt6I3McT
-	/SVKnVmd3oyELJ4JSepzissZupq7SovmDeHERxlQDzcwRWJKgSJPA5agK5HIDd5K
-	WJr+tMiwPVbKsLLLHFOUVZauNtYrtSpjuUVZ+G8DZmnYlc7HEsh7Sz4XAod94cli
-	BSSRkibhZU+fpRQauTxUgz+4VRJYobwFhM9EYZlrarfnWg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id CVTOQ99OBS3C; Thu, 21 Mar 2024 23:03:59 +0000 (UTC)
-Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4V11H11Ytjz6Cnk8m;
-	Thu, 21 Mar 2024 23:03:56 +0000 (UTC)
-Message-ID: <13f47d63-2140-4927-8933-009dae21f7e6@acm.org>
-Date: Thu, 21 Mar 2024 16:03:55 -0700
+	s=arc-20240116; t=1711067509; c=relaxed/simple;
+	bh=9PH63nFUIq/57ewGTluRtlDJkAbEOUBlk70jxwjkggk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKe9kfqKZZqXko3L5Z/nHXxf7P+O9ZQwTqZndMl60hjiFULallExjjPQssxsMhi03+3IfALBYTRnTdpQo8UfzmRgI/FTwqYkofE/HZIjSmEImVCZsMjAlIaalxORNUujZizZezagwdLl1MmKjaMg/p4HPOOJdZyU4leOANM85lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W8vfxg9/; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Z9KExEvarTqwFybJG/uUm/gGhgkeHBZ9ThipJLUJgdQ=; b=W8vfxg9/c6tMGKRDDv/hO4VP4C
+	4UNCNu7fUNupeGF6D0kTbHtARUrt0hT9yWN7aqSWyTZRxYr0pL2hdKm2iaUmKhZooMSj+RNsqH+Dm
+	Fk+4gx6jPX5NmZILOVej6UWkiU11HKz/UbcdUK7FLWONRFl1PqMZp++ADspfteOD1diTq/AiccW5P
+	R6ScfUfIAVHzyCMd1A1CVhyVMrox0WDMHKkAfk/oEdx/Or09R20pCBKGnFSe5B40YDrO/hmLMw3OX
+	+ODBQuYnu1S2ssKzIKQ8xTZorqug1Y5SzDi24AhGxdeVei4r45BYBvBcneKUK1XTFadUwyoFwdHhT
+	qHD7/MoQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rnSoz-00000005G5H-2Z1h;
+	Fri, 22 Mar 2024 00:31:45 +0000
+Date: Thu, 21 Mar 2024 17:31:45 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@infradead.org>, Ming Lei <ming.lei@redhat.com>,
+	linux-block@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>
+Subject: Re: [PATCH] block: fail unaligned bio from submit_bio_noacct()
+Message-ID: <ZfzRceN0-_ij6wcP@infradead.org>
+References: <20240321131634.1009972-1-ming.lei@redhat.com>
+ <979af2db-7482-4123-8a8b-e0354eb0bd45@kernel.dk>
+ <ZfywBU9IRHGdqVqo@infradead.org>
+ <1a0ac357-49e4-41fa-b0c3-f038ec995a00@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Improve IOPS by removing the fairness code
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
- Yu Kuai <yukuai3@huawei.com>
-References: <20240321224605.107783-1-bvanassche@acm.org>
- <20240321224814.GA23127@lst.de>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240321224814.GA23127@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a0ac357-49e4-41fa-b0c3-f038ec995a00@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 3/21/24 15:48, Christoph Hellwig wrote:
-> On Thu, Mar 21, 2024 at 03:46:05PM -0700, Bart Van Assche wrote:
->> There is an algorithm in the block layer for maintaining fairness
->> across queues that share a tag set. The sbitmap implementation has
->> improved so much that we don't need the block layer fairness algorithm
->> anymore and that we can rely on the sbitmap implementation to guarantee
->> fairness.
+On Thu, Mar 21, 2024 at 04:50:44PM -0600, Jens Axboe wrote:
+> On 3/21/24 4:09 PM, Christoph Hellwig wrote:
+> > On Thu, Mar 21, 2024 at 11:09:25AM -0600, Jens Axboe wrote:
+> >> Where is this IO coming from? The normal block level dio has checks. And
+> >> in fact they are expensive...
+> > 
+> > How is this expensive when we need the bio cache lines all the time
+> > during I/O submission which follows instantly?
 > 
-> IFF that was true it would be awesome.  But do you have proof for that
-> assertation?
+> This part isn't expensive, it's the general dio checks that are which
+> check memory alignment as well.
 
-Hi Christoph,
-
-Is the test in this pull request sufficient as evidence that we don't
-need the request queue fairness code anymore:
-https://github.com/osandov/blktests/pull/135?
-
-That test does the following:
-* Create two request queues with a shared tag set and with different
-   completion times (1 ms and 100 ms).
-* Submit I/O to both request queues simultaneously and set the queue
-   depth for both tests to the number of tags. This creates contention
-   on tag allocation.
-* After I/O finished, check that the fio job with the shortest
-   completion time submitted the most requests.
-
-Thanks,
-
-Bart.
+Well, the memory alignment has to walk over the whole iterator, so it
+definitively is way more expensive.
 
 
