@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-4956-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4945-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B4DF889619
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 09:46:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A62658896C5
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 09:57:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE08A1F31295
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 08:46:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0771E28BF93
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 08:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B7F187E68;
-	Mon, 25 Mar 2024 03:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2AEA186363;
+	Mon, 25 Mar 2024 01:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BfOP82s5"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EPwKA8vB"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626232A356A;
-	Sun, 24 Mar 2024 23:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F38D2A359D;
+	Sun, 24 Mar 2024 23:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324552; cv=none; b=COptuWWWGFl/OnSvP44DP5a37QY5i/TBfv1TDvujpHjhgfN9BEG+1pAzlDfamr8qkib6Jq4+hdv7fDQotbXInXPSa0iA2pfuk9xB3A6wXbC1SzSjH8HmX1pH/6ziyhbEpIfES11DTgfT+IO1Kok1hVPNTl7cZqUIExh0o7eCGTk=
+	t=1711324557; cv=none; b=YiXLJJNP3ALvxvyBXJ8XCw9ksJqCCGgSeSTRiNwU5Ig5s/MrPyOARNAbuprd1U5ILcbXgYjUJMbLwt2ljpyw7LT/QewxEzzolA4VSqzbSbjZp1OhdnTmKrPztz8+JJAo+9dCCUQVbRdsFxmaFydD80phkMUIgvaKbkK2gklTAHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324552; c=relaxed/simple;
-	bh=/miLi9ayeFDj/1m5b/DXrakCXRsVkLDPvQUTFUx9GtY=;
+	s=arc-20240116; t=1711324557; c=relaxed/simple;
+	bh=AhaBs1aHSv9qKb/7I2tJJuQYtkri22rZoTcelfmTa1M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LkeVhuRLnEuNFTIYDkpN5roTX4UoOfXkpWAJrW7AWIrVzQbjaJUcOjo8/ohliMYlV/a+fIc2sU8oDj/n+ILdWPSlP/H65qwcLKIRv/FFvWrIhCyb4oz9mcTrvgQ+N71K0TZINzWk2E72QG9KTBGPx3H+eAlVLqKLvGLYMG4Wi0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BfOP82s5; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=IgH1LZi3S6aQJopavpdFU4f/axOJITl+LIO5Mq+wl7zyeUWmsLAqJxXQCnWgJea6Yl0kvfCS9c5cCFppXQsgtHlthXfUpj1fKC4iC8CA+u+LCZ2GIGMxHu+IYe1u4QKs/O1gmnXtj7ZJ1ZWG0BJXZbDhRuZPC4z4AZl4Dt/q8zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EPwKA8vB; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=n/G3RdcsG/UHdocEiANoLj+Yss9HtHvu5C4t+MOMe/A=; b=BfOP82s54xwTY8QgOAJgTaoC7O
-	LmkOjwxOuRJMRjFtFHU4TinNu0wxPxF4U/M57S1gQrDkfztuwqAZ2E87LK1BgjcT0wzpa4Ytz0QTv
-	KfbVSC0cY8bAgzMUEXaJOPZN9G/ei1vehGdbaOIjwc52zsuDvxMuQlarYoAfvbS1pgLrK8MfrsHjm
-	FaLJCfafmiPwd9CDbGz8KHlJ4Y0ibqlhSLimylnaryMhzyf+OBe0zaqmmUj5cCLax+BdBEiIDLDtK
-	yvUTK2i66nI+OM7fNtVCK2ChU2mqgDWy07NfGTCQCmXR0C458RFI8xdt54wLnN1o/FuW9rlyd9+Gq
-	JxHrZvow==;
+	bh=qJi5WCtY1yhQ9UxhLc1APOVXudQDNK947ENHC/rdITw=; b=EPwKA8vBGvjGYpkkJfpCjZbApB
+	5foUKKW/zf2p+CFr1H96o1EnUY5k8fmsYQlezVfaycUCH9O9bpQUabVFFWkPBbhIWKsePOcmM2hZK
+	s+RhyiyTnd99mse1pqPEFfVB33L3NFuHVBAA2rESF7lq4fGhc3CRAyANv/cR4HanROVSpvO2IAGtS
+	AjeIZ1exxhb3GeiYEvb85Vd44fyUejHDugxGGlPHmMMOkf1PXYkruPtypkMwLPp9P5sLZWZLmmLZ+
+	mRWlfGO2X4yTW3VuqBKCa4QLJ3gUwwbShmhHOhvgxSnGDSHmGQ1UPAcxO3QECbN57kp0OcQxFFmUV
+	xqxJVPZg==;
 Received: from [210.13.83.2] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXgi-0000000Dzai-1gDh;
-	Sun, 24 Mar 2024 23:55:40 +0000
+	id 1roXgl-0000000DzcT-32yh;
+	Sun, 24 Mar 2024 23:55:44 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>
@@ -88,9 +88,9 @@ Cc: Damien Le Moal <dlemoal@kernel.org>,
 	linux-samsung-soc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	usb-storage@lists.one-eyed-alien.net
-Subject: [PATCH 10/23] scsi: add a device_configure method to the host template
-Date: Mon, 25 Mar 2024 07:54:35 +0800
-Message-Id: <20240324235448.2039074-11-hch@lst.de>
+Subject: [PATCH 11/23] megaraid_sas: switch to using ->device_configure
+Date: Mon, 25 Mar 2024 07:54:36 +0800
+Message-Id: <20240324235448.2039074-12-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240324235448.2039074-1-hch@lst.de>
 References: <20240324235448.2039074-1-hch@lst.de>
@@ -103,100 +103,142 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-This is a version of ->slave_configure that also takes a queue_limits
-structure that the caller applies, and thus allows drivers to reconfigure
-the queue using the atomic queue limits API.
-
-In the long run it should also replace ->slave_configure entirely as
-there is no need to have two different methods here, and the slave
-name in addition to being politically charged also has no basis in
-the SCSI standards or the kernel code.
+Switch to the ->device_configure method instead of ->slave_configure
+and update the block limits on the passed in queue_limits instead
+of using the per-limit accessors.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/scsi_scan.c | 33 +++++++++++++++++++--------------
- include/scsi/scsi_host.h |  4 ++++
- 2 files changed, 23 insertions(+), 14 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas.h        |  2 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c   | 29 ++++++++++++---------
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |  3 ++-
+ 3 files changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 699356d7d17545..8e05780f802523 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -227,7 +227,7 @@ static int scsi_realloc_sdev_budget_map(struct scsi_device *sdev,
- 
- 	/*
- 	 * realloc if new shift is calculated, which is caused by setting
--	 * up one new default queue depth after calling ->slave_configure
-+	 * up one new default queue depth after calling ->device_configure
- 	 */
- 	if (!need_alloc && new_shift != sdev->budget_map.shift)
- 		need_alloc = need_free = true;
-@@ -874,8 +874,9 @@ static int scsi_probe_lun(struct scsi_device *sdev, unsigned char *inq_result,
- static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 		blist_flags_t *bflags, int async)
+diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megaraid/megaraid_sas.h
+index 56624cbf7fa5e7..5680c6cdb22193 100644
+--- a/drivers/scsi/megaraid/megaraid_sas.h
++++ b/drivers/scsi/megaraid/megaraid_sas.h
+@@ -2701,7 +2701,7 @@ int megasas_get_ctrl_info(struct megasas_instance *instance);
+ int
+ megasas_sync_pd_seq_num(struct megasas_instance *instance, bool pend);
+ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
+-					   bool is_target_prop);
++		struct queue_limits *lim, bool is_target_prop);
+ int megasas_get_target_prop(struct megasas_instance *instance,
+ 			    struct scsi_device *sdev);
+ void megasas_get_snapdump_properties(struct megasas_instance *instance);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 3d4f13da1ae873..def0d905b6d9e3 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -1888,7 +1888,7 @@ static struct megasas_instance *megasas_lookup_instance(u16 host_no)
+ * Returns void
+ */
+ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
+-					   bool is_target_prop)
++		struct queue_limits *lim, bool is_target_prop)
  {
-+	const struct scsi_host_template *hostt = sdev->host->hostt;
- 	struct queue_limits lim;
--	int ret;
-+	int ret, ret2;
+ 	u16 pd_index = 0, ld;
+ 	u32 device_id;
+@@ -1915,8 +1915,10 @@ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
+ 			return;
+ 		raid = MR_LdRaidGet(ld, local_map_ptr);
  
- 	/*
- 	 * XXX do not save the inquiry, since it can change underneath us,
-@@ -1073,22 +1074,26 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 		lim.max_hw_sectors = 512;
- 	else if (*bflags & BLIST_MAX_1024)
- 		lim.max_hw_sectors = 1024;
--	ret = queue_limits_commit_update(sdev->request_queue, &lim);
-+
-+	if (hostt->device_configure)
-+		ret = hostt->device_configure(sdev, &lim);
-+	else if (hostt->slave_configure)
-+		ret = hostt->slave_configure(sdev);
-+
-+	ret2 = queue_limits_commit_update(sdev->request_queue, &lim);
-+	if (ret2 && !ret)
-+		ret = ret2;
- 	if (ret)
- 		goto fail;
+-		if (raid->capability.ldPiMode == MR_PROT_INFO_TYPE_CONTROLLER)
+-			blk_queue_update_dma_alignment(sdev->request_queue, 0x7);
++		if (raid->capability.ldPiMode == MR_PROT_INFO_TYPE_CONTROLLER) {
++			if (lim)
++				lim->dma_alignment = 0x7;
++		}
  
--	if (sdev->host->hostt->slave_configure) {
--		ret = sdev->host->hostt->slave_configure(sdev);
--		if (ret)
--			goto fail;
--
--		/*
--		 * The queue_depth is often changed in ->slave_configure.
--		 * Set up budget map again since memory consumption of
--		 * the map depends on actual queue depth.
--		 */
-+	/*
-+	 * The queue_depth is often changed in ->device_configure.
-+	 *
-+	 * Set up budget map again since memory consumption of the map depends
-+	 * on actual queue depth.
-+	 */
-+	if (hostt->device_configure || hostt->slave_configure)
- 		scsi_realloc_sdev_budget_map(sdev, sdev->queue_depth);
--	}
+ 		mr_device_priv_data->is_tm_capable =
+ 			raid->capability.tmCapable;
+@@ -1967,7 +1969,8 @@ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
+  *
+  */
+ static inline void
+-megasas_set_nvme_device_properties(struct scsi_device *sdev, u32 max_io_size)
++megasas_set_nvme_device_properties(struct scsi_device *sdev,
++		struct queue_limits *lim, u32 max_io_size)
+ {
+ 	struct megasas_instance *instance;
+ 	u32 mr_nvme_pg_size;
+@@ -1976,10 +1979,10 @@ megasas_set_nvme_device_properties(struct scsi_device *sdev, u32 max_io_size)
+ 	mr_nvme_pg_size = max_t(u32, instance->nvme_page_size,
+ 				MR_DEFAULT_NVME_PAGE_SIZE);
  
- 	if (sdev->scsi_level >= SCSI_3)
- 		scsi_attach_vpd(sdev);
-diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-index b0948ab69e0fa6..1959193d47e7f5 100644
---- a/include/scsi/scsi_host.h
-+++ b/include/scsi/scsi_host.h
-@@ -211,7 +211,11 @@ struct scsi_host_template {
- 	 *     up after yourself before returning non-0
- 	 *
- 	 * Status: OPTIONAL
-+	 *
-+	 * Note: slave_configure is the legacy version, use device_configure for
-+	 * all new code.
- 	 */
-+	int (* device_configure)(struct scsi_device *, struct queue_limits *lim);
- 	int (* slave_configure)(struct scsi_device *);
+-	blk_queue_max_hw_sectors(sdev->request_queue, (max_io_size / 512));
++	lim->max_hw_sectors = max_io_size / 512;
++	lim->virt_boundary_mask = mr_nvme_pg_size - 1;
  
- 	/*
+ 	blk_queue_flag_set(QUEUE_FLAG_NOMERGES, sdev->request_queue);
+-	blk_queue_virt_boundary(sdev->request_queue, mr_nvme_pg_size - 1);
+ }
+ 
+ /*
+@@ -2041,7 +2044,7 @@ static void megasas_set_fw_assisted_qd(struct scsi_device *sdev,
+  * @is_target_prop			true, if fw provided target properties.
+  */
+ static void megasas_set_static_target_properties(struct scsi_device *sdev,
+-						 bool is_target_prop)
++		struct queue_limits *lim, bool is_target_prop)
+ {
+ 	u32 max_io_size_kb = MR_DEFAULT_NVME_MDTS_KB;
+ 	struct megasas_instance *instance;
+@@ -2060,13 +2063,15 @@ static void megasas_set_static_target_properties(struct scsi_device *sdev,
+ 		max_io_size_kb = le32_to_cpu(instance->tgt_prop->max_io_size_kb);
+ 
+ 	if (instance->nvme_page_size && max_io_size_kb)
+-		megasas_set_nvme_device_properties(sdev, (max_io_size_kb << 10));
++		megasas_set_nvme_device_properties(sdev, lim,
++				max_io_size_kb << 10);
+ 
+ 	megasas_set_fw_assisted_qd(sdev, is_target_prop);
+ }
+ 
+ 
+-static int megasas_slave_configure(struct scsi_device *sdev)
++static int megasas_device_configure(struct scsi_device *sdev,
++		struct queue_limits *lim)
+ {
+ 	u16 pd_index = 0;
+ 	struct megasas_instance *instance;
+@@ -2096,10 +2101,10 @@ static int megasas_slave_configure(struct scsi_device *sdev)
+ 		ret_target_prop = megasas_get_target_prop(instance, sdev);
+ 
+ 	is_target_prop = (ret_target_prop == DCMD_SUCCESS) ? true : false;
+-	megasas_set_static_target_properties(sdev, is_target_prop);
++	megasas_set_static_target_properties(sdev, lim, is_target_prop);
+ 
+ 	/* This sdev property may change post OCR */
+-	megasas_set_dynamic_target_properties(sdev, is_target_prop);
++	megasas_set_dynamic_target_properties(sdev, lim, is_target_prop);
+ 
+ 	mutex_unlock(&instance->reset_mutex);
+ 
+@@ -3507,7 +3512,7 @@ static const struct scsi_host_template megasas_template = {
+ 	.module = THIS_MODULE,
+ 	.name = "Avago SAS based MegaRAID driver",
+ 	.proc_name = "megaraid_sas",
+-	.slave_configure = megasas_slave_configure,
++	.device_configure = megasas_device_configure,
+ 	.slave_alloc = megasas_slave_alloc,
+ 	.slave_destroy = megasas_slave_destroy,
+ 	.queuecommand = megasas_queue_command,
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index c60014e07b449e..6c1fb8149553a8 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -5119,7 +5119,8 @@ int megasas_reset_fusion(struct Scsi_Host *shost, int reason)
+ 					ret_target_prop = megasas_get_target_prop(instance, sdev);
+ 
+ 				is_target_prop = (ret_target_prop == DCMD_SUCCESS) ? true : false;
+-				megasas_set_dynamic_target_properties(sdev, is_target_prop);
++				megasas_set_dynamic_target_properties(sdev, NULL,
++						is_target_prop);
+ 			}
+ 
+ 			status_reg = instance->instancet->read_fw_status_reg
 -- 
 2.39.2
 
