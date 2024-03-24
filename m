@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-4946-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4948-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBA88889B4A
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 11:48:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27D1C889A6C
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 11:29:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F529B3AF6A
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 10:29:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A9B41C331DC
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 10:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B72188A67;
-	Mon, 25 Mar 2024 01:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE381CE6C4;
+	Mon, 25 Mar 2024 01:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EKuYXNlp"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XbCc2oME"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308F22A2B41;
-	Sun, 24 Mar 2024 23:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F2A2A2B5C;
+	Sun, 24 Mar 2024 23:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324546; cv=none; b=btei4dfYf94xuyqvuKTYYnswvYTHq/uU7nkw6Z7cl6By6Q8RZ/bRnHCFP+/jWUtWB94k7AOYdyMykXYI7ZS3qKH55igBWqB56QGE6GLBoeiATIEoj7+RK6hX8riX+RUt/iDhU7HxcRe0aMvznp0W5glARAK0tVJ96yyxfAPEj0g=
+	t=1711324549; cv=none; b=YgIw9aZa3fB/ElnKbOPyT2q3m9M0b/ZRZOoYzwDbY4GOovUXwyTSkrfLaWY5DB4UC9f0c+ySh7wZ/hFRj8zWzXSTRKu1PNP3zFmyADfDwqk8i60K17QNgJmRDh0aSZMO22dRuvdXGUCGVcfKtRhU2vtJBB/PvwXfHC61Yllauso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324546; c=relaxed/simple;
-	bh=1ux5EGgMI7mfjlWWdKU6y9GGYwk5n3iGe+Ja067XuGQ=;
+	s=arc-20240116; t=1711324549; c=relaxed/simple;
+	bh=LItSflsTIpc3oSfPFr0kTVKSf+cMF4KH1ptylwWgfXU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t7VDBe6S8Ud/9gx8p4P66B99sOPpYmoO8GD7uTalbXnffV5/uQigHjMPp4GeDDs8rMmkAJW3RvPUKaFnTHHrcfZExh3f0HahnoiNWyk6YPn5NDZdUj2EWWh/qO7/PiDciASYPBA9eoY/BuHKlXbM9qjwFDwfEPaLv5P9SK18+cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EKuYXNlp; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=nUGVqEafThUhRph9dadxB4VEO1xHOCLBQReJVEKHqf0d0lk4ieL6n0XviQVOyK3Fbmhau+XidPMim/PIOcujr2z/kkwb8zG6RjJG9bA8DlXj3BDwVmba70SkBEEIpnLfrwFjZEv1LH6rFkrmzKQ1d4iBEJxao8d6ll3m4n4tYGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XbCc2oME; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=QpEcu6br0nAm6nvHblhU5Wfkb8gpPkNvyq7w8yaKxUI=; b=EKuYXNlpKdXNfFKgx4BGUtUvLq
-	z/ZeBrzjCLmsiYFEpz0FNjKfi1mC/4rgk/rf5qm/j6jryZAI5ynHqmV0gHgWdsY3TmyufNfWUNU3C
-	/+566mnuYmdPVxCzRs4WPYckhOIhLPhlY3IFa/VWRf7VknxMpnDn3eLNSCJd5Y3a6Nj/bbPXEoGUQ
-	evRTAnn9WNST8fFWT4TI6pGyZ/2ZEVUTt9N4qL6B1mkjU69W3LpnaFazLrPN5vvXzG2eoFY+FD8+l
-	yRY+qmamIKJkFch+I+cYnMVGaRdO9UN4+Zy753trTPYKlalKrvcP8Zd1DTyuR64126FBa7EgIiYkS
-	e619Z5pA==;
+	bh=WXYhCbVwCEU0UHf+sQtOcxTHe5YrehjKDolUaK54+l0=; b=XbCc2oMEJQFyUJsRWtFJXJO4qk
+	Q679u+SL3f1+0VtHHT0u4U34Ha5HX9PqcEhZ+uptBoaUVApbXxL9mh6WM737csu9xD9oNZ0op6k9H
+	GHy8Bif+xRLkICRPQuw0+Smv14r2ujhknZWW/U5NpNgMHqPbpMWFUgM/oTpkI5/NCZiENSHU6NDnk
+	ZJ3ckaD59z2WfQXBw6cbcnzOHWqcEmAVqQrfdnIJGV5mgNm7OEQ/ngfmfu35GHB4xLSLgSZ7vktZ9
+	XGjnr6+B2sC5hO9DWYebAwdI/q6ma73tpgrSvZxFCw4+5Kx4tp8im1WQoVDOLzlTWotgnDafk+Qkd
+	haYOuUCw==;
 Received: from [210.13.83.2] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXga-0000000DzXo-2oPb;
-	Sun, 24 Mar 2024 23:55:33 +0000
+	id 1roXge-0000000DzZ6-3X9j;
+	Sun, 24 Mar 2024 23:55:37 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>
@@ -88,9 +88,9 @@ Cc: Damien Le Moal <dlemoal@kernel.org>,
 	linux-samsung-soc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	usb-storage@lists.one-eyed-alien.net
-Subject: [PATCH 08/23] ufs-exynos: move setting the the dma alignment to the init method
-Date: Mon, 25 Mar 2024 07:54:33 +0800
-Message-Id: <20240324235448.2039074-9-hch@lst.de>
+Subject: [PATCH 09/23] scsi: use the atomic queue limits API in scsi_add_lun
+Date: Mon, 25 Mar 2024 07:54:34 +0800
+Message-Id: <20240324235448.2039074-10-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240324235448.2039074-1-hch@lst.de>
 References: <20240324235448.2039074-1-hch@lst.de>
@@ -103,75 +103,98 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Use the SCSI host's dma_alignment field and set it in ->init and remove
-the now unused config_scsi_dev method.
+Switch scsi_add_lun to use the atomic queue limits API to update the
+max_hw_sectors for devices with quirks.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/ufs/core/ufshcd.c     | 3 ---
- drivers/ufs/host/ufs-exynos.c | 8 ++------
- include/ufs/ufshcd.h          | 1 -
- 3 files changed, 2 insertions(+), 10 deletions(-)
+ drivers/scsi/scsi_scan.c | 49 ++++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index e30fd125988d7a..7d593395aeff25 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -5262,9 +5262,6 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
- 	 */
- 	sdev->silence_suspend = 1;
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 205ab3b3ea89be..699356d7d17545 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -874,6 +874,7 @@ static int scsi_probe_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 		blist_flags_t *bflags, int async)
+ {
++	struct queue_limits lim;
+ 	int ret;
  
--	if (hba->vops && hba->vops->config_scsi_dev)
--		hba->vops->config_scsi_dev(sdev);
+ 	/*
+@@ -1004,19 +1005,6 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	if (*bflags & BLIST_SELECT_NO_ATN)
+ 		sdev->select_no_atn = 1;
+ 
+-	/*
+-	 * Maximum 512 sector transfer length
+-	 * broken RA4x00 Compaq Disk Array
+-	 */
+-	if (*bflags & BLIST_MAX_512)
+-		blk_queue_max_hw_sectors(sdev->request_queue, 512);
+-	/*
+-	 * Max 1024 sector transfer length for targets that report incorrect
+-	 * max/optimal lengths and relied on the old block layer safe default
+-	 */
+-	else if (*bflags & BLIST_MAX_1024)
+-		blk_queue_max_hw_sectors(sdev->request_queue, 1024);
 -
- 	ufshcd_crypto_register(hba, q);
+ 	/*
+ 	 * Some devices may not want to have a start command automatically
+ 	 * issued when a device is added.
+@@ -1077,19 +1065,22 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
  
- 	return 0;
-diff --git a/drivers/ufs/host/ufs-exynos.c b/drivers/ufs/host/ufs-exynos.c
-index 734d40f99e31e6..7ffc28e2278420 100644
---- a/drivers/ufs/host/ufs-exynos.c
-+++ b/drivers/ufs/host/ufs-exynos.c
-@@ -1187,6 +1187,8 @@ static int exynos_ufs_init(struct ufs_hba *hba)
- 		goto out;
- 	exynos_ufs_specify_phy_time_attr(ufs);
- 	exynos_ufs_config_smu(ufs);
+ 	transport_configure_device(&sdev->sdev_gendev);
+ 
++	/*
++	 * No need to freeze the queue as it isn't reachable to anyone else yet.
++	 */
++	lim = queue_limits_start_update(sdev->request_queue);
++	if (*bflags & BLIST_MAX_512)
++		lim.max_hw_sectors = 512;
++	else if (*bflags & BLIST_MAX_1024)
++		lim.max_hw_sectors = 1024;
++	ret = queue_limits_commit_update(sdev->request_queue, &lim);
++	if (ret)
++		goto fail;
 +
-+	hba->host->dma_alignment = SZ_4K - 1;
- 	return 0;
+ 	if (sdev->host->hostt->slave_configure) {
+ 		ret = sdev->host->hostt->slave_configure(sdev);
+-		if (ret) {
+-			/*
+-			 * if LLDD reports slave not present, don't clutter
+-			 * console with alloc failure messages
+-			 */
+-			if (ret != -ENXIO) {
+-				sdev_printk(KERN_ERR, sdev,
+-					"failed to configure device\n");
+-			}
+-			return SCSI_SCAN_NO_RESPONSE;
+-		}
++		if (ret)
++			goto fail;
  
- out:
-@@ -1510,11 +1512,6 @@ static int fsd_ufs_pre_link(struct exynos_ufs *ufs)
- 	return 0;
+ 		/*
+ 		 * The queue_depth is often changed in ->slave_configure.
+@@ -1115,8 +1106,16 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	if (!async && scsi_sysfs_add_sdev(sdev) != 0)
+ 		return SCSI_SCAN_NO_RESPONSE;
+-
+ 	return SCSI_SCAN_LUN_PRESENT;
++
++fail:
++	/*
++	 * If the LLDD reports LU not present, don't clutter the console with
++	 * alloc failure messages.
++	 */
++	if (ret != -ENXIO)
++		sdev_printk(KERN_ERR, sdev, "failed to configure device\n");
++	return SCSI_SCAN_NO_RESPONSE;
  }
  
--static void exynos_ufs_config_scsi_dev(struct scsi_device *sdev)
--{
--	blk_queue_update_dma_alignment(sdev->request_queue, SZ_4K - 1);
--}
--
- static int fsd_ufs_post_link(struct exynos_ufs *ufs)
- {
- 	int i;
-@@ -1583,7 +1580,6 @@ static const struct ufs_hba_variant_ops ufs_hba_exynos_ops = {
- 	.hibern8_notify			= exynos_ufs_hibern8_notify,
- 	.suspend			= exynos_ufs_suspend,
- 	.resume				= exynos_ufs_resume,
--	.config_scsi_dev		= exynos_ufs_config_scsi_dev,
- };
- 
- static struct ufs_hba_variant_ops ufs_hba_exynosauto_vh_ops = {
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index cb2afcebbdf514..061919448d3936 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -373,7 +373,6 @@ struct ufs_hba_variant_ops {
- 	int	(*get_outstanding_cqs)(struct ufs_hba *hba,
- 				       unsigned long *ocqs);
- 	int	(*config_esi)(struct ufs_hba *hba);
--	void	(*config_scsi_dev)(struct scsi_device *sdev);
- };
- 
- /* clock gating state  */
+ #ifdef CONFIG_SCSI_LOGGING
 -- 
 2.39.2
 
