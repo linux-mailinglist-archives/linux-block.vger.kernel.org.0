@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-4949-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4957-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F98889A6F
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 11:29:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB1B8889620
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 09:46:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B96511C33199
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 10:29:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D45D1F30419
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 08:46:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C527D86659;
-	Mon, 25 Mar 2024 01:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5918A187E8D;
+	Mon, 25 Mar 2024 03:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dzdtJUHE"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yaNYGNDq"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6922A4129;
-	Sun, 24 Mar 2024 23:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB18D2A4910;
+	Sun, 24 Mar 2024 23:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324564; cv=none; b=GGYfYmyylkqBJ4hFruIJoMZZldepmzlbINk4ewDR9xvQbbGYH5H4NbASpB3KRvtPvIFOwvsY71oyTupu/CtUFSk7JDXVfgbWYj67lJI9ZuOoCrVsn9WjwMXqNerw7n5W8lb00koC6FhV+u7Dxhz0eYPZc73h+qkWtM+X8/4/tqw=
+	t=1711324569; cv=none; b=eBOhVIxXpUgVts3OJEOthv/fK6gAd5Z4FxcfsfLSgM+n+yupe692BFJi6PEYE3jNHcfh2C7RXwr2TPKfOJX0Ea3WD6LaT8mT6GJxQA+sMIeS4D5HCzTjpcGTxHoWswzvz8o1BbqjxWK6NZlz9g8V7WI+1ZOvzDbIrFCYHaiprks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324564; c=relaxed/simple;
-	bh=zqEQ3p/379AWqmjKuTk0Sstv7hU3lNd0zxD+/K1ggl4=;
+	s=arc-20240116; t=1711324569; c=relaxed/simple;
+	bh=QkaP0e8Mes0ggr8tSjRKR1hnJDvnEOKjDSalc0xzATQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SpPpplMXg59kCD+/oWWXHUbBZjAgEvk5tVbTkGY/Dg7/Rm/srrv+Amp8YpdUJFxJq2DWTg7QLOkKENsrwizXMECSxm/mie9KRISHjvuPHXPUtBMEN8s1rsKseU/vBuabotJR97X74k7F5NmGTnzrAk1R0e2Qr/EQATH5yF0oQ3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dzdtJUHE; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=gy0YVvhZshgCxetGXTSrrn7f0ungxKwmj7c654WqPehVEt44iC8ViQC4xGVS5Nz3RAS2BYlTgd8L0UAnFVMzDpxWGisl9k/gnwgUIC+VzOOZhB/IIJphIz3uD6m1ryep1+YXS/xB8fUFgbppadZ6skpz0ELYhj1y8hhgJK2GTsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yaNYGNDq; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=RnCyo7qhwq23D9tFFvSbYwOoXaeTJSw56vcXA+xjGxw=; b=dzdtJUHEro2nBRzXIfEjsHiyvO
-	2HsG4MNu9TduruEZZ4pjEbbj1fNC61N9AujxytF+JZKTWiT8lpyMp5swakk/Jy+5pxINCMX1hhLu4
-	VaMmnyu6Yiy/MC0W/Pd1E78vOhfD20Hiy7CQdZACXXJ7wDBdXrRRFdfGCsdLsUPM0q3AGuTOO9uEe
-	b2HDIyzUHKoWLQQj7M4ccgf/n9tu1NiEgJyZOvtoDTlRRYQwcwoCh3wkgw4BLb2dp/qrFUknGlWiV
-	gSRKbLocgWuUVd2dZvHbCEmVuCZbvclZvztXWvZ7qtd4vzJ7m0j1FtyOWLepquc6Iq0llOgPCJq6S
-	Gd+Jugiw==;
+	bh=ouyfZJOprAivUD3pQoGhzFC7pBq223cKtZHCDHGO3TU=; b=yaNYGNDq75sSccoFdn2AV2nsme
+	3FWw3HqCcY9hlgmeZ0OAIU1iUEKf1570UJhQ/87GUC4ZlaKEkidBy/C/M78P3MAQ4Csx241lFn0oN
+	CA+GmTa0zo9TYcNosWT8dOKZANebHq18BOMi4disy08EnkqBRDzvZUV9FTQC2L0U3UXG6XSfKiCPd
+	gQAgdf7GNKiDHC7HGs4qPUXrB0OcCBDLQbl9g8T7p4GZkStzqsblT6BebaTW/9lKujDcMU9rqlz5f
+	cObpYrbGlO/Rhie/ztGrxo6qC2VLMM6ALfep4fXq5FCgA4/qkmfFVJQM5f6xIzRKogfDRB5CaPO/H
+	DVxo3EKg==;
 Received: from [210.13.83.2] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXgt-0000000Dzej-2z5n;
-	Sun, 24 Mar 2024 23:55:53 +0000
+	id 1roXgy-0000000Dzft-48tF;
+	Sun, 24 Mar 2024 23:55:57 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>
@@ -88,9 +88,9 @@ Cc: Damien Le Moal <dlemoal@kernel.org>,
 	linux-samsung-soc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	usb-storage@lists.one-eyed-alien.net
-Subject: [PATCH 13/23] sbp2: switch to using ->device_configure
-Date: Mon, 25 Mar 2024 07:54:38 +0800
-Message-Id: <20240324235448.2039074-14-hch@lst.de>
+Subject: [PATCH 14/23] hptiop: switch to using ->device_configure
+Date: Mon, 25 Mar 2024 07:54:39 +0800
+Message-Id: <20240324235448.2039074-15-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240324235448.2039074-1-hch@lst.de>
 References: <20240324235448.2039074-1-hch@lst.de>
@@ -109,41 +109,37 @@ of using the per-limit accessors.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/firewire/sbp2.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/scsi/hptiop.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firewire/sbp2.c b/drivers/firewire/sbp2.c
-index 8f7810b2a4c10f..827dee0f57dde2 100644
---- a/drivers/firewire/sbp2.c
-+++ b/drivers/firewire/sbp2.c
-@@ -1506,7 +1506,8 @@ static int sbp2_scsi_slave_alloc(struct scsi_device *sdev)
- 	return 0;
- }
+diff --git a/drivers/scsi/hptiop.c b/drivers/scsi/hptiop.c
+index f5334ccbf2cac3..e889f268601b4f 100644
+--- a/drivers/scsi/hptiop.c
++++ b/drivers/scsi/hptiop.c
+@@ -1151,11 +1151,11 @@ static struct attribute *hptiop_host_attrs[] = {
  
--static int sbp2_scsi_slave_configure(struct scsi_device *sdev)
-+static int sbp2_scsi_device_configure(struct scsi_device *sdev,
+ ATTRIBUTE_GROUPS(hptiop_host);
+ 
+-static int hptiop_slave_config(struct scsi_device *sdev)
++static int hptiop_device_configure(struct scsi_device *sdev,
 +		struct queue_limits *lim)
  {
- 	struct sbp2_logical_unit *lu = sdev->hostdata;
- 
-@@ -1532,7 +1533,7 @@ static int sbp2_scsi_slave_configure(struct scsi_device *sdev)
- 		sdev->start_stop_pwr_cond = 1;
- 
- 	if (lu->tgt->workarounds & SBP2_WORKAROUND_128K_MAX_TRANS)
--		blk_queue_max_hw_sectors(sdev->request_queue, 128 * 1024 / 512);
-+		lim->max_hw_sectors = 128 * 1024 / 512;
- 
+ 	if (sdev->type == TYPE_TAPE)
+-		blk_queue_max_hw_sectors(sdev->request_queue, 8192);
+-
++		lim->max_hw_sectors = 8192;
  	return 0;
  }
-@@ -1590,7 +1591,7 @@ static const struct scsi_host_template scsi_driver_template = {
- 	.proc_name		= "sbp2",
- 	.queuecommand		= sbp2_scsi_queuecommand,
- 	.slave_alloc		= sbp2_scsi_slave_alloc,
--	.slave_configure	= sbp2_scsi_slave_configure,
-+	.device_configure	= sbp2_scsi_device_configure,
- 	.eh_abort_handler	= sbp2_scsi_abort,
- 	.this_id		= -1,
- 	.sg_tablesize		= SG_ALL,
+ 
+@@ -1168,7 +1168,7 @@ static const struct scsi_host_template driver_template = {
+ 	.emulated                   = 0,
+ 	.proc_name                  = driver_name,
+ 	.shost_groups		    = hptiop_host_groups,
+-	.slave_configure            = hptiop_slave_config,
++	.device_configure	    = hptiop_device_configure,
+ 	.this_id                    = -1,
+ 	.change_queue_depth         = hptiop_adjust_disk_queue_depth,
+ 	.cmd_size		    = sizeof(struct hpt_cmd_priv),
 -- 
 2.39.2
 
