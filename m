@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-5018-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5020-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 767C488A208
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:32:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B07488A214
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:33:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 253F11F3BEA9
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:32:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E4AF1F3BD7B
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FEC317B4E4;
-	Mon, 25 Mar 2024 10:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C071292F1;
+	Mon, 25 Mar 2024 10:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdrhBYjw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhhgEdBC"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0698D12C803;
-	Mon, 25 Mar 2024 07:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B892012CD83;
+	Mon, 25 Mar 2024 07:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352552; cv=none; b=Y+2/AhImVefBJ+pB6nKu3ya9ZdamuUaujI/JuACWE6yvmZpnL0CwcRX37Kjgk2hDKuncTtmmzx1jyB0JvuFOx+cscCRsC6NNVe4kPaqHlJJxUBng82Lmkg8n9FsJCnGuRTjh3g7uF8gWlZuWdDkl2I2R8fPzMywwJ3PzXmUdY0k=
+	t=1711352578; cv=none; b=olNj+mXe0FT4NlQsccpkhs0MMBZ3JK3I0j8wFw7nkqhc3uA1Z6kPDE5Xsgw0HT1RvbQVJjX3Ln0v/5bEyqJYawFkzAeEWqo/KRnutEjBUIXXnwmjmaj8vbmxgCGQ1dBMWEtHMwjbpOgUCQy3uVwJ3V9BTSwtUuR+aytA+yNmW3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352552; c=relaxed/simple;
+	s=arc-20240116; t=1711352578; c=relaxed/simple;
 	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pp3e1vbvesJKO/tg6DLvPZOtazew3atXDPWz9aC53utFbhaJdc92y7pDFF6LKkLkyEgivQPItScXJ92WfOfthzajHpUbFrkTXrXy9ocKCTqfeF48WnDYauJ8Cj+K8lEEFUoIMGj9Fx6u5V9Wi2qgqhcYHln31GK8tMsxpacRzRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdrhBYjw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64E6DC433C7;
-	Mon, 25 Mar 2024 07:42:25 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=GrdfnqrJTLC18pFzGXtbblIXFxz3w7iD1uMg5SxpxPq5aOB5G6T6BiXTbCFYcG+xJnTdXEL0yaW0j0o98+E8JlmCftxP61watwgcUSY4mW84H2zT+yvPEk6DLhgdDvmSoCUqgOmGiSOc2OUFdwdg8AWcZoFnNNSmece7u0jSURs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhhgEdBC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331CCC433F1;
+	Mon, 25 Mar 2024 07:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711352551;
+	s=k20201202; t=1711352578;
 	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fdrhBYjw4ZVoAUM+x22ymswLZNuB+SbbktMfqfO2jFo9PIK80AEkOIyExpihGVFWU
-	 Odo3YBJ35G4cUg6YhtoN8ytWnhDUpPUsdDIVWr8T20kxA810Z/bM55neRmDF1sfDw+
-	 YiTzYI3rZmD3wwgBQanYwOvtDlVFfkaHkWxgxQ7TSF3Hhe+yunwsn44IlDENTaUgTV
-	 7V46nbOTHgr9oRkGSrJMSO3lZEC41ee5FCIy7NfU9cEAVzPD+Z52f7dPLvJJhjj2+f
-	 282g3aaOZL4fYVw+3cSJK90pPDz01OT3WTZOIYXkzvUhnAy7j3jZP0N+roxy0kuLx7
-	 a5/ZCCphW6ULw==
-Message-ID: <4f9b30f2-2351-4d58-b368-46c65288aef9@kernel.org>
-Date: Mon, 25 Mar 2024 16:42:24 +0900
+	b=AhhgEdBCOu3MIQl0o5wfZ2uhANFGx+8Vme9LJK3eVKSGuiDstzIoRjE9NjasvkdE9
+	 k3cbMldvsIxfkiLxs6AeE+gkaaKhZUKZii+qRQiwIbs6MO1mF0JD1UHy0XystdO+8j
+	 S5sSnGvkwLV2UrG5cSyg34pKPG0KRbABDHStY6RfXhSd/vpcMqiFqZ+fszD7rehWjQ
+	 gdO77dwU2tHj4P+ihfC39j6YLYI9/DNHbtkRq8cH0B/8cu6wtizXjDlIiPeqXpncHS
+	 qQC1XTdNzUm3flO714ztobrSaa+7jytQFF3M7loNa29ee9nLFMB/FhojTsaFMc76Uk
+	 F3ny+ROL7LJBw==
+Message-ID: <1890fdc9-41e4-415c-b210-f549e0b8436a@kernel.org>
+Date: Mon, 25 Mar 2024 16:42:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/23] hptiop: switch to using ->device_configure
+Subject: Re: [PATCH 15/23] ipr: switch to using ->device_configure
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -83,10 +83,10 @@ Cc: Niklas Cassel <cassel@kernel.org>,
  mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
  linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
 References: <20240324235448.2039074-1-hch@lst.de>
- <20240324235448.2039074-15-hch@lst.de>
+ <20240324235448.2039074-16-hch@lst.de>
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20240324235448.2039074-15-hch@lst.de>
+In-Reply-To: <20240324235448.2039074-16-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
