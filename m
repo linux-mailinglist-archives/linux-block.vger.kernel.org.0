@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-5019-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5016-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 344D688A203
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:32:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46BF488A1F5
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:31:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65A8A1C37C3F
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:32:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0E171F3BCE2
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A0607352B;
-	Mon, 25 Mar 2024 10:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD7212A17C;
+	Mon, 25 Mar 2024 10:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUQCtc4+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QD2XDsoQ"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F2D12BEB7;
-	Mon, 25 Mar 2024 07:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E272C12C7F5;
+	Mon, 25 Mar 2024 07:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352485; cv=none; b=a0VNcFbWTQKhMwcJGNrocA935XyTAtWIaa3lyi2TA0/WCE5LUJDa+6qtt77tToIIh7S4J9QYtvNKjm/XJJ4taZb1Dr14a+7p7bdEf+z5F3bg4AXlm/ugAdEC6dcyk86rVCd/G9k8QzNBCawXtAJtT3jwL3hpkNApTDxYlT+T3PM=
+	t=1711352522; cv=none; b=XsupVVtlkyVaKQbRmsDY/DGmNmo/dQ0Fdq7WAG1fBFWdEWYU6w9D7QZt0dBq6sD/3UVSyIzvoLKw+hGgxjYjbd30dtaLCMs8SxZKP8G5/dufs8XSEt4BcSy7WBt9AiBshLVGbztAM2RxqnoGwqo2StmHyI5w63nRMsVPwscPFrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352485; c=relaxed/simple;
+	s=arc-20240116; t=1711352522; c=relaxed/simple;
 	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AG2xB600jQlml+j3TEgcI8beBNZxdnaLYXuXP7U92ofElIHMrXZxCMmNVTYVzF+bJU1nTT8ozR6JkkccSmQ7DDItPJlJKNX5xI5cqW0vH6NaJS3k4IY+/7yFwB1rRTTyiy27OxUQJf5o26E11OIXXxpeaD5vN82nCpWNyzHpjA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUQCtc4+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D2DC433C7;
-	Mon, 25 Mar 2024 07:41:18 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=cPQJBboMCpy5VTGQxNjk/qwMQmZBwjQte92MFDoCqlIU3U3u2DTJBDmOIQLUoDJ/6+mOrSC2k7dNh8fepi1tPr71bQBIV+9gfUpJJEWL6gPN5mK9FP4yBJeIOqBY+4Urpt3+vsWb1+sgZUhO1iVNCEiYyEE58ddrFb/Dl4TmxuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QD2XDsoQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3A3C433C7;
+	Mon, 25 Mar 2024 07:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711352485;
+	s=k20201202; t=1711352521;
 	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jUQCtc4+99JJBf4KiYXqgHSnqGbKtWO2F3eDQObnbRVLVH3L6SA7JVXD8VuG4dPW+
-	 JG0oxQEoo+lFF0BIOqX9/txggXEueMRPhvBjTdhVmyqeK3FA3A0WMW2FgIdvb38+MW
-	 HGi9UXjAw/EvJHGsg9ctp+ksfDNwKK5wDkGTQoBR7qjP6+QCMPRdoII7HIuDVNv46B
-	 dLqz1Jv3D5d9yaAuCmopm+nWiRNFcSB//NYEfuRzyHg0IXw/Y+ZeAz6mzFeGK4Vt2y
-	 K7A8t7TTZquOBBWgJ2PYjBXWh+5kgOjMXy453NOxQitsLuWhRGLR8Kx//Xdtb6t7O/
-	 nazjXSK4iYNwQ==
-Message-ID: <b55b31ef-05ca-4487-ae7d-6d107c84f76c@kernel.org>
-Date: Mon, 25 Mar 2024 16:41:18 +0900
+	b=QD2XDsoQGpVuSTvv+e3Da8vgz8WLcdNZqyaoRkf0n0vdI9DUScnaVWCaBORHrx/ny
+	 J1r+ZAxqGdOGPxgcKv3CJ+TLReWTqfVVzFJKi9BU7C58D3kyPfagimqpeosT0+Qamy
+	 iI4ErhyjoKoDSSSsrii6bEyCpOP5VVqqECs77tOXJa1ojdVkmKuBWJSbLKRlPC9wwg
+	 bjMM6i80BomW1y877IGdPr2qC2c7aHaCOaTUSdoc4f4DzgkkxuoE5rXUbOwLVJMb5V
+	 FZvPvFSWqcd8Prx8z3kpg1fw7VvjSmplMVdvytHYyCn0+Eg/5FfWdJgqWMtinM0kF1
+	 LoWCsry9WouRg==
+Message-ID: <794533b4-19d7-4682-ad5f-9b19568420c3@kernel.org>
+Date: Mon, 25 Mar 2024 16:41:55 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/23] mpt3sas: switch to using ->device_configure
+Subject: Re: [PATCH 13/23] sbp2: switch to using ->device_configure
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -83,10 +83,10 @@ Cc: Niklas Cassel <cassel@kernel.org>,
  mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
  linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
 References: <20240324235448.2039074-1-hch@lst.de>
- <20240324235448.2039074-13-hch@lst.de>
+ <20240324235448.2039074-14-hch@lst.de>
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20240324235448.2039074-13-hch@lst.de>
+In-Reply-To: <20240324235448.2039074-14-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
