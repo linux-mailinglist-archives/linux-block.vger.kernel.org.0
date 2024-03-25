@@ -1,63 +1,60 @@
-Return-Path: <linux-block+bounces-5057-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5059-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14EF988B334
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 22:53:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BDA688B3A8
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 23:13:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1F71304F18
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 21:53:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D75E1C3DE42
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 22:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E5826F524;
-	Mon, 25 Mar 2024 21:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="c+Hk+wn+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 106297316D;
+	Mon, 25 Mar 2024 22:13:33 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018DB6F533;
-	Mon, 25 Mar 2024 21:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6C97350C;
+	Mon, 25 Mar 2024 22:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711403613; cv=none; b=UMbIBfS/g9XXIh33DqvNgjZvXGMF5cHqhTyf0yBs06ICF+4iPIlwTCKP7rKhTHwQfBigrhMPcy+SXVfaWpqV9BVmNZklQFB2yujJ5sH80vtj8HZQuwK+27sF37QiT1pTg+RV1PB46swrhlmAMcRUVTqCIF3yK+5/nWXxmjlIKKg=
+	t=1711404813; cv=none; b=BMaD4tZCFtSySwV3DQw7JPCZeV+szYFezoFJP5e6+NZ/JokslO/mCqmSqp9dO5Jz++35JitOZ7nQcakAjdWdPYwo/7RpAOHX4pIxA46bqOd41GWOSfUc3HtcODVSfCfRpXyv6dPNR3NTjNo/MhASR/98P2LdzgBk6O5AI9DIyFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711403613; c=relaxed/simple;
-	bh=Ie3epx9FMfV5IO1IjZ1R8esxCVWPB+w55HlChItVMGY=;
+	s=arc-20240116; t=1711404813; c=relaxed/simple;
+	bh=yq4DZOZpV+tgfo1VME0SGUbSt682+RvFZTbCx2WgCR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SXgeQMGo7Ff6WfVQsprAomq3zko4PuWMAbAQV7oUakPpaOdsxiIcFhZrh2uEH+WN/xd5Nv947LRACzsOCDR2wh+Xav7s3GJn/B7T8503YZOJnG3XUKk3JDpvIdZmdk9Ci27Zhwfbu/Xl66CuWl3dk3OPMxF9I7kyPWG9Zb+E6OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=c+Hk+wn+; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V3RWv3p6WzlgVnW;
-	Mon, 25 Mar 2024 21:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1711403609; x=1713995610; bh=yKqm8lQwdry1AL1X2ZSwasu3
-	7lQXGhDAX3yUxjjOOoI=; b=c+Hk+wn+zH2O80vc5PcbJTHAz1sV0uyi/bKYyUZn
-	Rh0TFqmH/ZVDW232Ggv/2SevRuMH7M8U7Wfpn2aOFuKazcFE+C8bMa98mwO2kxfQ
-	L8iFENzkmDPewmbnn1tnfsINbXPB6+HURp+vBnkHmLuOzGWh28BfAhUVnPcpQWr6
-	UmDsBz/yqTNyNe/VzG/uuESYcvqvdPFfutAEF5yUgUmCMhnw6guxTktamnIICYXU
-	qZ+4oV0uo6aGD//FoqQjgc7xu6i8qFya4SFHJJVbphLE4Qd7tD1pnLkWqx2aJHMF
-	si1kNGhcro9hpHtLF1i5l8QUgBncFNjF5CNejvivOFu69Q==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id PIeOHKoYi9Ov; Mon, 25 Mar 2024 21:53:29 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V3RWn3hBMzlgVnN;
-	Mon, 25 Mar 2024 21:53:25 +0000 (UTC)
-Message-ID: <641c122c-1dfa-4590-b908-68706721a2ef@acm.org>
-Date: Mon, 25 Mar 2024 14:53:24 -0700
+	 In-Reply-To:Content-Type; b=W6sO0IFX7r3LXImhNOx/oxny3yI992RcNolC418L4bopU79/BJyOaLSKjgGpubNHR1VDw5NiJBnYYSIX/BZkhuuL8jLaDzjdD/0GhS8+NjHEjswSsXi8JL6ohwoNNbay1jGQsw27h6UNX3EmFFgK3guJ5NYnNryLxu5Yv83wkII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e0d6356ce9so7001755ad.3;
+        Mon, 25 Mar 2024 15:13:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711404811; x=1712009611;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yq4DZOZpV+tgfo1VME0SGUbSt682+RvFZTbCx2WgCR4=;
+        b=bQH34Brtu8RGua08PrUxEMuYd1Vj4SXkEm2/PHgWG3yFJHfUj7hzTrDNCe9i44s2Dj
+         n2rnDnJiTqN1k9RBKNDicalabbZN8F+OqRo3i+TY9oALj+ua6a5thHM4nosaoj4l8RJG
+         P5V9Ji154SECUjKf1d0D8jsgM9tQf0w2ommhyW1A7bb9DrzB0nQNP0TBLFsgxtvdS7Sc
+         hs4bEFzZWJOh+DfYlPUTfQSMNUrq0fWsOT6zJumBF6fqxnONpIvxtxwh1Cb7Gz2bu8WD
+         np8R0Poy7h4bdI5nYb7KA7WGiTGQoXo674iqQU+lDOabcPZTG24ZXFiq008dB/vjdhWR
+         ZkVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMwRT0PlImX3H3bdaqpIsp8G+FYyf1WniCM3oWKRQDFhQNbp2D6IPQk+PBgODx+FLcyrPn8IYC30uCL+dERzZx+X9Ol/fnCZxuILbGjLKWuJY5ywjMUY6uKGaU6M/Wf6MDtTO7a+yoxk0vDpQi/dDD1xf3Btvw4WdWJEsrkg+5jET2qwkheZPvdZbqT/ely69jjWRYyuNgaO2VSMYnuN0Ryd+ggq77ymnyFOgVig+JkcTBEDZlYWFombO/cDe8jv8=
+X-Gm-Message-State: AOJu0YxXHeuaHEB4gwwYvVctx/W1nyc+/+1y9EqWkQ5y8du+j175poWz
+	cBpBhGRLcVkRYcdIgPan0cV/7+gC/2TOnfk32C72IXfQ4bMU49WJ
+X-Google-Smtp-Source: AGHT+IFaHJC+gMGwZBDS54U2xblKvH/ZQv/lUiX2ff21oMRk0HlwTXFQX07O58x1/aW2WPYfkb1oYQ==
+X-Received: by 2002:a17:902:784e:b0:1df:fda8:e0ea with SMTP id e14-20020a170902784e00b001dffda8e0eamr7291037pln.28.1711404810841;
+        Mon, 25 Mar 2024 15:13:30 -0700 (PDT)
+Received: from ?IPV6:2620:0:1000:8411:262:e41e:a4dd:81c6? ([2620:0:1000:8411:262:e41e:a4dd:81c6])
+        by smtp.gmail.com with ESMTPSA id s19-20020a170902989300b001dd67c8e108sm5195084plp.199.2024.03.25.15.13.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 15:13:29 -0700 (PDT)
+Message-ID: <bb3b5924-d266-49f5-944f-5e7ee3d3b5b7@acm.org>
+Date: Mon, 25 Mar 2024 15:13:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -65,38 +62,48 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/28] block: Remember zone capacity when revalidating
- zones
+Subject: Re: [PATCH 09/23] scsi: use the atomic queue limits API in
+ scsi_add_lun
 Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- dm-devel@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-References: <20240325044452.3125418-1-dlemoal@kernel.org>
- <20240325044452.3125418-7-dlemoal@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Sathya Prakash <sathya.prakash@broadcom.com>,
+ Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+ Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+ "Juergen E. Fischer" <fischer@norbit.de>,
+ Xiang Chen <chenxiang66@hisilicon.com>,
+ HighPoint Linux Team <linux@highpoint-tech.com>,
+ Tyrel Datwyler <tyreld@linux.ibm.com>, Brian King <brking@us.ibm.com>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ Jack Wang <jinpu.wang@cloud.ionos.com>, Nilesh Javali <njavali@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Alan Stern <stern@rowland.harvard.edu>, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+ MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ open-iscsi@googlegroups.com, megaraidlinux.pdl@broadcom.com,
+ mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
+ linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+References: <20240324235448.2039074-1-hch@lst.de>
+ <20240324235448.2039074-10-hch@lst.de>
 From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240325044452.3125418-7-dlemoal@kernel.org>
+In-Reply-To: <20240324235448.2039074-10-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/24/24 21:44, Damien Le Moal wrote:
-> +		/*
-> +		 * Remember the capacity of the first sequential zone and check
-> +		 * if it is constant for all zones.
-> +		 */
-> +		if (!args->zone_capacity)
-> +			args->zone_capacity = zone->capacity;
-> +		if (zone->capacity != args->zone_capacity) {
-> +			pr_warn("%s: Invalid variable zone capacity\n",
-> +				disk->disk_name);
-> +			return -ENODEV;
-> +		}
+On 3/24/24 16:54, Christoph Hellwig wrote:
+> Switch scsi_add_lun to use the atomic queue limits API to update the
+> max_hw_sectors for devices with quirks.
 
-The above code won't refuse devices for which the first few zones have 
-capacity zero. Shouldn't these be rejected?
-
-Thanks,
-
-Bart.
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
