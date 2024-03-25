@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-5015-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5017-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A2588A1EE
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:31:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FC3F88ACAD
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 18:57:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D37352C43B2
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:31:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB4B2BA80D1
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:32:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE89A12A17E;
-	Mon, 25 Mar 2024 10:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9941AF8A9;
+	Mon, 25 Mar 2024 10:21:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwMMElU2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYmnEvFb"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF9712A172;
-	Mon, 25 Mar 2024 07:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA487352B;
+	Mon, 25 Mar 2024 07:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352332; cv=none; b=lH/0cnq1C/fK1BemCdvpE4oyr03HkLRHLbwT9j3tpWmGCN8LtnY7tiXsPFvZRvkNJ66Prt5ZSVu5Gf+zicjIuV+nsmVDiNfKrud5KHSeNBlL9ctGcvMsWTAF1vJJiIdPKELCGFAfCVwh8XIIoMhDukot74UOgMLREulKQSgeCo0=
+	t=1711352441; cv=none; b=KamKX6Pxlayq0oxlRPW8hD/pUdzP3rH+RvtgvsLFQZyAxgMh3qIPydcdUcKoamadjdqd7sPcyFV0agi3xaNHS9kRexFi6MOi+QoPEuyoUE9Iv8fkYy4qCe2rWkNPZRzGK8VMud8pM6zjJn3CNLYfs51MiTofEk3tJqTwApcu+DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352332; c=relaxed/simple;
-	bh=GggQfJqWGV/Ctp7o7AkWVGsFya1/ymUgBfTjhhsT0r8=;
+	s=arc-20240116; t=1711352441; c=relaxed/simple;
+	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=id8oyF8+EeP4aH9NHbBxgwASLv1Bl82IJmGdUHjTeuGVzsfsPXAyH8MySa1VjWwqjYlkuLpleyqmZgQIgQB74sH2V7jrJNUM3B/AZSmZhVt2pNRi8AZ4SEshNglNkgJ7C9zJyQBqlQeqmFe01Q3ULowy7+EAgRapxwdcF+0+uiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwMMElU2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C484C433C7;
-	Mon, 25 Mar 2024 07:38:44 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=VlLRGzSEDV8PaEkqUh3IvXuathDa+e1VlUtLrKR6aCWhlWFG3pL7ZCq2eMVwvtd8aQVeEuQI9lklDGDvSuPnoqZ/xfchoKu9BrXUVCeOSMpuEWEhfDGCIy0nOtDYZJXKuZTvkrDkgFKq+Y+bRQ5oIPa1FDada0ZOYS7JOsx3AJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYmnEvFb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2407EC433C7;
+	Mon, 25 Mar 2024 07:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711352331;
-	bh=GggQfJqWGV/Ctp7o7AkWVGsFya1/ymUgBfTjhhsT0r8=;
+	s=k20201202; t=1711352441;
+	bh=PaOjeQTXUXH777uBTd4u+MGPOvH/o5CMLR9zmwwiBA4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lwMMElU28H9qxNX5S/CYy53BwULqnlTsVNm1C0ApIvl31LhkamaFy5z33+qhzA+5d
-	 CXbKAqbXYEr3jW9JjVYDKU6UQ2h3CvMRJsCJupqswWYKxGp33kSg8DStl5a4Yxjxhl
-	 yx0LBuJOfEIdO/DliKKH6kEeqBwr2I0iwlcc4bYrnN9QsVTUkazWuY4qKSZslvYLD5
-	 Ki/RIu2PZPB0d/FAuN2Hdwu5B31UFLEnYfMqFvnkTqX6S78Q+TvZNk0W0bvuvDZWs1
-	 Ptr2G8/fYJSlbc1ZkgsM329JWqSdL+IgnE9b7TJwM9IJyrkSlNNVhPVSbid/+7Rjmv
-	 uCbbaAFD9b5MQ==
-Message-ID: <6199c70e-f0a9-4756-b3fb-106985c41ebf@kernel.org>
-Date: Mon, 25 Mar 2024 16:38:43 +0900
+	b=tYmnEvFbRfDzJplAubEIqwgJ5cwuzlzYH0a5ACu2qG8KGZLWe+TTPBcr+4R5dmuFw
+	 14HUpfbPwX94WKqZXYJFCv8wj4kZNMAyif+s+uURmOklRUzZ1oaErC/6YkoMQxu4qB
+	 Oryito1BSK4+y6gEQ8EIrZMwsYyWLeBgjzI9Y+rp6zilkJWnnCPEAsSB31V6v5G4Cp
+	 bp7ezKq5l4bfOLT6lYPRWq1qlgVBiWvmLciQN0NnswZbbK1lYHkQhAoiWdOgZhpcHl
+	 eXafQbPWtDtNUkMR+MN1WERzv3iB7/1x5lmPAE5gTL7HCgYiMnpvMGRk8Hkq8UMwGY
+	 j096bSA1X7bYg==
+Message-ID: <004fec87-af1f-4a6a-aaa7-f57406bead41@kernel.org>
+Date: Mon, 25 Mar 2024 16:40:33 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/23] scsi: add a device_configure method to the host
- template
+Subject: Re: [PATCH 11/23] megaraid_sas: switch to using ->device_configure
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -84,90 +83,21 @@ Cc: Niklas Cassel <cassel@kernel.org>,
  mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
  linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
 References: <20240324235448.2039074-1-hch@lst.de>
- <20240324235448.2039074-11-hch@lst.de>
+ <20240324235448.2039074-12-hch@lst.de>
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20240324235448.2039074-11-hch@lst.de>
+In-Reply-To: <20240324235448.2039074-12-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 3/25/24 08:54, Christoph Hellwig wrote:
-> This is a version of ->slave_configure that also takes a queue_limits
-> structure that the caller applies, and thus allows drivers to reconfigure
-> the queue using the atomic queue limits API.
-> 
-> In the long run it should also replace ->slave_configure entirely as
-> there is no need to have two different methods here, and the slave
-> name in addition to being politically charged also has no basis in
-> the SCSI standards or the kernel code.
+> Switch to the ->device_configure method instead of ->slave_configure
+> and update the block limits on the passed in queue_limits instead
+> of using the per-limit accessors.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/scsi/scsi_scan.c | 33 +++++++++++++++++++--------------
->  include/scsi/scsi_host.h |  4 ++++
->  2 files changed, 23 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-> index 699356d7d17545..8e05780f802523 100644
-> --- a/drivers/scsi/scsi_scan.c
-> +++ b/drivers/scsi/scsi_scan.c
-> @@ -227,7 +227,7 @@ static int scsi_realloc_sdev_budget_map(struct scsi_device *sdev,
->  
->  	/*
->  	 * realloc if new shift is calculated, which is caused by setting
-> -	 * up one new default queue depth after calling ->slave_configure
-> +	 * up one new default queue depth after calling ->device_configure
->  	 */
->  	if (!need_alloc && new_shift != sdev->budget_map.shift)
->  		need_alloc = need_free = true;
-> @@ -874,8 +874,9 @@ static int scsi_probe_lun(struct scsi_device *sdev, unsigned char *inq_result,
->  static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
->  		blist_flags_t *bflags, int async)
->  {
-> +	const struct scsi_host_template *hostt = sdev->host->hostt;
->  	struct queue_limits lim;
-> -	int ret;
-> +	int ret, ret2;
->  
->  	/*
->  	 * XXX do not save the inquiry, since it can change underneath us,
-> @@ -1073,22 +1074,26 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
->  		lim.max_hw_sectors = 512;
->  	else if (*bflags & BLIST_MAX_1024)
->  		lim.max_hw_sectors = 1024;
-> -	ret = queue_limits_commit_update(sdev->request_queue, &lim);
-> +
-> +	if (hostt->device_configure)
-> +		ret = hostt->device_configure(sdev, &lim);
-> +	else if (hostt->slave_configure)
-> +		ret = hostt->slave_configure(sdev);
-> +
-> +	ret2 = queue_limits_commit_update(sdev->request_queue, &lim);
 
-Why do this if ->device_configure() or ->slave_configure() failed ?
-Shouldn't the "if (ret) goto fail" hunk be moved above this call ?
-
-> diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-> index b0948ab69e0fa6..1959193d47e7f5 100644
-> --- a/include/scsi/scsi_host.h
-> +++ b/include/scsi/scsi_host.h
-> @@ -211,7 +211,11 @@ struct scsi_host_template {
->  	 *     up after yourself before returning non-0
->  	 *
->  	 * Status: OPTIONAL
-> +	 *
-> +	 * Note: slave_configure is the legacy version, use device_configure for
-> +	 * all new code.
-
-Maybe explictly mention that both *cannot* be defined here ?
-
->  	 */
-> +	int (* device_configure)(struct scsi_device *, struct queue_limits *lim);
->  	int (* slave_configure)(struct scsi_device *);
->  
->  	/*
-
-With these 2 nits addressed, looks all goo to me. Feel free to add:
+Looks OK to me.
 
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
