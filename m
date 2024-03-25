@@ -1,102 +1,106 @@
-Return-Path: <linux-block+bounces-4975-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4971-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2114688A0F8
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:08:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A36D7889D55
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:42:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A34DBA500A
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:27:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5477D2916A5
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 11:42:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30F6135A4D;
-	Mon, 25 Mar 2024 07:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dcPvLP4N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8616018924E;
+	Mon, 25 Mar 2024 07:21:26 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BCA15E812
-	for <linux-block@vger.kernel.org>; Mon, 25 Mar 2024 03:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92943AF2E2
+	for <linux-block@vger.kernel.org>; Mon, 25 Mar 2024 03:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711338661; cv=none; b=F+PrOqZ0WfrVTd/kStO9LqcYkr5OyhH8ujT4BMFckXMSMVuTh9cuuOizhWlLrwyly/f6wjeWlk1b7nPOoVeM7pYotkwS5adtqrMo5J4YwtQ+2moilnYOyFdbEqLKq41GcMc/ZdbXnKcxunsSkGcENPa68y2lRCaIS41VcyRFO0E=
+	t=1711337536; cv=none; b=X8NTVn8gfVEMOIevX/HONetiUg0GDTcFbPCjLu35U6rBzu09Ut6VwRVWh1otNZrYbtk/WbA1usaqqUF917vCo8voVyIjAZQ2AWakUUyrrehgeVkIjxepkMNnJq6ksm01iv/kMCYsVBTu3S6DfIraKtaAQIKDOn+jUukAo74okLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711338661; c=relaxed/simple;
-	bh=JTl2GthtGeVE+TzWv4mL3q1IBZWCwFN1cvvndRbca1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=auJsn8pYMx5Fn6X2NvvuGTAMXaWTZ5tFVUarBFdzzLGYtlJt0sN9hxZQTf0RfpYtv9oLxgYTMkQ9IWex7+vOKaWhYnguFMeuwzW4NdOnAz9kEG4pxtye2yvqGL5BQSs4mxyReDlGHEUyJCyMkBtNtTlb693gQ/G8NaWeRNF9NNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dcPvLP4N; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711338658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afn8OOUI6B9CD/RsJZlQWcCmyXXiQNf58j5J5nr28n4=;
-	b=dcPvLP4Nq/AYp85Rdc/+fLKfMF7Fx0VLe5Atr83f8LUSqThg2Z4hHCePFb3JNJ1B2NIWIC
-	d5jnbOKmlKi9/wT84oho8uPMbaYWa8HvneXeF1YUwfOj8/ZzIJhWb/lqcRQfNJvBQaiv/2
-	aSpI6JrrvHVHBjyrSi2HhR5LCYogXvs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-119-t_tmNl7JO7qu2gWNkOJUSA-1; Sun, 24 Mar 2024 23:50:54 -0400
-X-MC-Unique: t_tmNl7JO7qu2gWNkOJUSA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C2CE2185A786;
-	Mon, 25 Mar 2024 03:50:53 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.37])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CD371121312;
-	Mon, 25 Mar 2024 03:50:49 +0000 (UTC)
-Date: Mon, 25 Mar 2024 11:50:41 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH V2] block: fail unaligned bio from submit_bio_noacct()
-Message-ID: <ZgD0kQCCQtu34q/D@fedora>
-References: <20240324133702.1328237-1-ming.lei@redhat.com>
- <ZgC2UPEBOSLW9Xdz@infradead.org>
- <ZgDpfW8HRHrZgQYv@fedora>
- <ZgDrgTymGnW3KGuk@infradead.org>
+	s=arc-20240116; t=1711337536; c=relaxed/simple;
+	bh=XIt5W1lDG/OYW9mBP/9gKBdaolxrEqGuDk835KRuYWg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WmQD5AiTMr+29kzjey4B87ENqwl4E8E8md07DzAQoFM1B2nKNkdtKWTYmEBs530AEwoiCf2alXgOXmt0nCr3f4bQOAEeOq95JYs3baxmhBCl+QaHCmj+39+2BwsUOa4ZXMyHcT198ejOga4fxQeKjRLm2WLnSGYjl9sOk+U5gxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V2z4T5kXMz1GCwy;
+	Mon, 25 Mar 2024 11:31:37 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2E947140153;
+	Mon, 25 Mar 2024 11:32:06 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 11:32:05 +0800
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+To: Jens Axboe <axboe@kernel.dk>, Dennis Zhou <dennis@kernel.org>
+CC: <linux-block@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] blk-cgroup: use group allocation/free of per-cpu counters API
+Date: Mon, 25 Mar 2024 11:59:55 +0800
+Message-ID: <20240325035955.50019-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgDrgTymGnW3KGuk@infradead.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-On Sun, Mar 24, 2024 at 08:12:01PM -0700, Christoph Hellwig wrote:
-> On Mon, Mar 25, 2024 at 11:03:25AM +0800, Ming Lei wrote:
-> > Also only q->limits.logical_block_size is fetched for small BS IO
-> > fast path, I think log(lbs) can be cached in request_queue for avoiding the
-> > extra fetch of q.limits. Especially, it could be easier to do so
-> > with your recent queue limit atomic update changes.
-> 
-> So.  One thing I've been thinking of for a while (and which Bart also
-> mentioned) is tht queue_limits currently is a bit of a mess between
-> the actual queue limits, and the gneidks configuration.   The logical
-> block size is firmly in the latter, and we should probably move it
+Use group allocation/free of per-cpu counters api to accelerate
+blkg_rwstat_init/exit() and simplify code.
 
-lbs and pbs belong to disk, but some others may not be very obvious.
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ block/blk-cgroup-rwstat.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-Strictly speaking elevator/blkcg belong to disk too, but still stay in
-request_queue, :-)
-
-Thanks, 
-Ming
+diff --git a/block/blk-cgroup-rwstat.c b/block/blk-cgroup-rwstat.c
+index 3304e841df7c..a55fb0c53558 100644
+--- a/block/blk-cgroup-rwstat.c
++++ b/block/blk-cgroup-rwstat.c
+@@ -9,25 +9,19 @@ int blkg_rwstat_init(struct blkg_rwstat *rwstat, gfp_t gfp)
+ {
+ 	int i, ret;
+ 
+-	for (i = 0; i < BLKG_RWSTAT_NR; i++) {
+-		ret = percpu_counter_init(&rwstat->cpu_cnt[i], 0, gfp);
+-		if (ret) {
+-			while (--i >= 0)
+-				percpu_counter_destroy(&rwstat->cpu_cnt[i]);
+-			return ret;
+-		}
++	ret = percpu_counter_init_many(rwstat->cpu_cnt, 0, gfp, BLKG_RWSTAT_NR);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < BLKG_RWSTAT_NR; i++)
+ 		atomic64_set(&rwstat->aux_cnt[i], 0);
+-	}
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(blkg_rwstat_init);
+ 
+ void blkg_rwstat_exit(struct blkg_rwstat *rwstat)
+ {
+-	int i;
+-
+-	for (i = 0; i < BLKG_RWSTAT_NR; i++)
+-		percpu_counter_destroy(&rwstat->cpu_cnt[i]);
++	percpu_counter_destroy_many(rwstat->cpu_cnt, BLKG_RWSTAT_NR);
+ }
+ EXPORT_SYMBOL_GPL(blkg_rwstat_exit);
+ 
+-- 
+2.41.0
 
 
