@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-5000-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4998-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55F7788A032
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:48:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A135D88A02E
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:48:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7808C1C36F9C
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:48:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A542F1C36F51
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:48:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24BBB13DDC9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12AC513DDBC;
 	Mon, 25 Mar 2024 07:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pC/Z63cb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOwZWFfb"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CE01C32A9;
-	Mon, 25 Mar 2024 04:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAF7181B91;
+	Mon, 25 Mar 2024 04:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341938; cv=none; b=peGhShU9adXrWco9E/TIVzwfgE9MhhomjXWmo1A8FjeaEnoSMbh9ZJoUZFJ+GHKqCKE3YGUYsaqhJ3qycWWNcrX0mK1T1aLeu12zVyDuFs9SdLwTWlPbn4fjAlpqGM0Mta/Ogw4aAsbsLG0x8NkcDfroA2ctOISb6TgHks63nL8=
+	t=1711341939; cv=none; b=rEvzG2qIdk6IYnLgOI/8iZUftxMZL/ZSWW3whkOq5zHkZSSbfPjT3up2ISgSh35dD0eWD4rCp0BllyfkFpK6sPPIcIRwRi/IkAbLeioraNxklD2QbG3cKP6IKrojGxOhYVM0tq5zoLGaFPgePmMMBB6Haq6Z1Z6kZ+NEWOUizN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711341938; c=relaxed/simple;
-	bh=q+XsDtYo/2/RZEgIqOxru5p8iCOQ4U+aEKwxrk47H/g=;
+	s=arc-20240116; t=1711341939; c=relaxed/simple;
+	bh=3ZvoBtiQeBGYm5zSAkkBddhfdz5kCTqejobXH5IUrKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VGKhZsA24JDOATBvpRlWYABjn3MyOp8wBxN7kKf1MzoF+9NMhzPG2ul0ZgXZuqRzu8LNx7OltVPQ2SECMuvunakG7VGqASX9XJRoyypKM3inWyz/Jp0yDamyD//e3A7cRhsGPrv1gRHPNQkzr3RVTEeTVuzeLlzn0nNF0B0sMt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pC/Z63cb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFCAC433F1;
-	Mon, 25 Mar 2024 04:45:36 +0000 (UTC)
+	 MIME-Version; b=gqe+Q4u9Gzb14JUm+sun4cIbBqbCEawQHwhT3Sm/hb2L9xyYnKFmb7WzejPTEDqkfwMexLdVeUiKQ+bJtz6OFyeGcHgBY58pt/aye99v74/jGsYp33T7c0TTi61uc0RQ5IlN8cAaL4qVUl/6YsSXo/PIj0796VxoDoOONoT0nro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOwZWFfb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A384C433C7;
+	Mon, 25 Mar 2024 04:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711341938;
-	bh=q+XsDtYo/2/RZEgIqOxru5p8iCOQ4U+aEKwxrk47H/g=;
+	s=k20201202; t=1711341939;
+	bh=3ZvoBtiQeBGYm5zSAkkBddhfdz5kCTqejobXH5IUrKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pC/Z63cb28uKhuEElYL6VeH7nZSMJTnsMuU/0lFUERJY56FPo4lTXqdGH8N0ROiRf
-	 Vk49s4Xdr6lWwTmacFP8ws6HbSWLACSj1D2g4a/uPUnb825nRFguRwnXEW5sJHC6Vh
-	 FL+6hzooKOtX96DM1VcHobl/ZuTut5YqIhTdsukrV1/lFlkZPE0CkY05bE6p490Ine
-	 HPYIrw84NlrR2Ww1okwEF4L3HoKObKY0e3UEqhghz4FX5zPyNa9xFJd6dD9U+42S+P
-	 wYccxdttChc/tPzgrJp8CvBbGy5ObkhRpEHZupbdnfzBnZxWud9eut3MM/B0/s9j26
-	 7JvzHO0et7k5A==
+	b=hOwZWFfb0BlNqR5qxznHoJ12UNjLdtdPCWX4rHkAU2SAcZzGzuXYgQDfnS9XOshZh
+	 FrXr5REHpUBEj1z08kYjOzeyAXGbAeD6qg9WCA8AGzsrfnsH2i3fY9IFvk34nHvDbQ
+	 gr0Fo55U19nET79AEjAAX6s4X4y5BxzQlS2TGCiy1CHBXIP6wz+kosCheyNnB1cr6M
+	 Gx8GxXo6q33BWZad9qBMc0cguO1NWIR98gfDweTonlN5i9Mc1dyGTQpY3hPNV/eFvG
+	 w5Ifl7h/dtmfqeYy2cKM1U156ey67JAjlmHAQGs6LXSy6i0Z2u59tkwKFUr79EHmAM
+	 jbxdmI1dfOTmw==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-block@vger.kernel.org,
 	Jens Axboe <axboe@kernel.dk>,
@@ -49,9 +49,9 @@ To: linux-block@vger.kernel.org,
 	dm-devel@lists.linux.dev,
 	Mike Snitzer <snitzer@redhat.com>
 Cc: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 23/28] block: Remove elevator required features
-Date: Mon, 25 Mar 2024 13:44:47 +0900
-Message-ID: <20240325044452.3125418-24-dlemoal@kernel.org>
+Subject: [PATCH v2 24/28] block: Do not check zone type in blk_check_zone_append()
+Date: Mon, 25 Mar 2024 13:44:48 +0900
+Message-ID: <20240325044452.3125418-25-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325044452.3125418-1-dlemoal@kernel.org>
 References: <20240325044452.3125418-1-dlemoal@kernel.org>
@@ -63,177 +63,41 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The only elevator feature ever implemented is ELEVATOR_F_ZBD_SEQ_WRITE
-for signaling that a scheduler implements zone write locking to tightly
-control the dispatching order of write operations to zoned block
-devices. With the removal of zone write locking support in mq-deadline
-and the reliance of all block device drivers on the block layer zone
-write plugging to control ordering of write operations to zones, the
-elevator feature ELEVATOR_F_ZBD_SEQ_WRITE is completely unused.
-Remove it, and also remove the now unused code for filtering the
-possible schedulers for a block device based on required features.
+Zone append operations are only allowed to target sequential write
+required zones. blk_check_zone_append() uses bio_zone_is_seq() to check
+this. However, this check is not necessary because:
+1) For NVMe ZNS namespace devices, only sequential write required zones
+   exist, making the zone type check useless.
+2) For null_blk, the driver will fail the request anyway, thus notifying
+   the user that a conventional zone was targeted.
+3) For all other zoned devices, zone append is now emulated using zone
+   write plugging, which checks that a zone append operation does not
+   target a conventional zone.
+
+In preparation for the removal of zone write locking and its
+conventional zone bitmap (used by bio_zone_is_seq()), remove the
+bio_zone_is_seq() call from blk_check_zone_append().
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/blk-settings.c   | 16 ---------------
- block/elevator.c       | 46 +++++-------------------------------------
- block/elevator.h       |  1 -
- include/linux/blkdev.h | 10 ---------
- 4 files changed, 5 insertions(+), 68 deletions(-)
+ block/blk-core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 82c61d2e4bb8..31d882ac72d4 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -1053,22 +1053,6 @@ void blk_queue_write_cache(struct request_queue *q, bool wc, bool fua)
- }
- EXPORT_SYMBOL_GPL(blk_queue_write_cache);
+diff --git a/block/blk-core.c b/block/blk-core.c
+index c6d41e1c7a0a..64eb135c7501 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -589,8 +589,7 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
+ 		return BLK_STS_NOTSUPP;
  
--/**
-- * blk_queue_required_elevator_features - Set a queue required elevator features
-- * @q:		the request queue for the target device
-- * @features:	Required elevator features OR'ed together
-- *
-- * Tell the block layer that for the device controlled through @q, only the
-- * only elevators that can be used are those that implement at least the set of
-- * features specified by @features.
-- */
--void blk_queue_required_elevator_features(struct request_queue *q,
--					  unsigned int features)
--{
--	q->required_elevator_features = features;
--}
--EXPORT_SYMBOL_GPL(blk_queue_required_elevator_features);
--
- /**
-  * blk_queue_can_use_dma_map_merging - configure queue for merging segments.
-  * @q:		the request queue for the device
-diff --git a/block/elevator.c b/block/elevator.c
-index 5ff093cb3cf8..f64ebd726e58 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -83,13 +83,6 @@ bool elv_bio_merge_ok(struct request *rq, struct bio *bio)
- }
- EXPORT_SYMBOL(elv_bio_merge_ok);
+ 	/* The bio sector must point to the start of a sequential zone */
+-	if (!bdev_is_zone_start(bio->bi_bdev, bio->bi_iter.bi_sector) ||
+-	    !bio_zone_is_seq(bio))
++	if (!bdev_is_zone_start(bio->bi_bdev, bio->bi_iter.bi_sector))
+ 		return BLK_STS_IOERR;
  
--static inline bool elv_support_features(struct request_queue *q,
--		const struct elevator_type *e)
--{
--	return (q->required_elevator_features & e->elevator_features) ==
--		q->required_elevator_features;
--}
--
- /**
-  * elevator_match - Check whether @e's name or alias matches @name
-  * @e: Scheduler to test
-@@ -120,7 +113,7 @@ static struct elevator_type *elevator_find_get(struct request_queue *q,
- 
- 	spin_lock(&elv_list_lock);
- 	e = __elevator_find(name);
--	if (e && (!elv_support_features(q, e) || !elevator_tryget(e)))
-+	if (e && (!elevator_tryget(e)))
- 		e = NULL;
- 	spin_unlock(&elv_list_lock);
- 	return e;
-@@ -580,34 +573,8 @@ static struct elevator_type *elevator_get_default(struct request_queue *q)
- }
- 
- /*
-- * Get the first elevator providing the features required by the request queue.
-- * Default to "none" if no matching elevator is found.
-- */
--static struct elevator_type *elevator_get_by_features(struct request_queue *q)
--{
--	struct elevator_type *e, *found = NULL;
--
--	spin_lock(&elv_list_lock);
--
--	list_for_each_entry(e, &elv_list, list) {
--		if (elv_support_features(q, e)) {
--			found = e;
--			break;
--		}
--	}
--
--	if (found && !elevator_tryget(found))
--		found = NULL;
--
--	spin_unlock(&elv_list_lock);
--	return found;
--}
--
--/*
-- * For a device queue that has no required features, use the default elevator
-- * settings. Otherwise, use the first elevator available matching the required
-- * features. If no suitable elevator is find or if the chosen elevator
-- * initialization fails, fall back to the "none" elevator (no elevator).
-+ * Use the default elevator settings. If the chosen elevator initialization
-+ * fails, fall back to the "none" elevator (no elevator).
-  */
- void elevator_init_mq(struct request_queue *q)
- {
-@@ -622,10 +589,7 @@ void elevator_init_mq(struct request_queue *q)
- 	if (unlikely(q->elevator))
- 		return;
- 
--	if (!q->required_elevator_features)
--		e = elevator_get_default(q);
--	else
--		e = elevator_get_by_features(q);
-+	e = elevator_get_default(q);
- 	if (!e)
- 		return;
- 
-@@ -781,7 +745,7 @@ ssize_t elv_iosched_show(struct request_queue *q, char *name)
- 	list_for_each_entry(e, &elv_list, list) {
- 		if (e == cur)
- 			len += sprintf(name+len, "[%s] ", e->elevator_name);
--		else if (elv_support_features(q, e))
-+		else
- 			len += sprintf(name+len, "%s ", e->elevator_name);
- 	}
- 	spin_unlock(&elv_list_lock);
-diff --git a/block/elevator.h b/block/elevator.h
-index 7ca3d7b6ed82..e9a050a96e53 100644
---- a/block/elevator.h
-+++ b/block/elevator.h
-@@ -74,7 +74,6 @@ struct elevator_type
- 	struct elv_fs_entry *elevator_attrs;
- 	const char *elevator_name;
- 	const char *elevator_alias;
--	const unsigned int elevator_features;
- 	struct module *elevator_owner;
- #ifdef CONFIG_BLK_DEBUG_FS
- 	const struct blk_mq_debugfs_attr *queue_debugfs_attrs;
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 2e0087b4c37d..82cda82e9891 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -456,8 +456,6 @@ struct request_queue {
- 
- 	atomic_t		nr_active_requests_shared_tags;
- 
--	unsigned int		required_elevator_features;
--
- 	struct blk_mq_tags	*sched_shared_tags;
- 
- 	struct list_head	icq_list;
-@@ -962,14 +960,6 @@ disk_alloc_independent_access_ranges(struct gendisk *disk, int nr_ia_ranges);
- void disk_set_independent_access_ranges(struct gendisk *disk,
- 				struct blk_independent_access_ranges *iars);
- 
--/*
-- * Elevator features for blk_queue_required_elevator_features:
-- */
--/* Supports zoned block devices sequential write constraint */
--#define ELEVATOR_F_ZBD_SEQ_WRITE	(1U << 0)
--
--extern void blk_queue_required_elevator_features(struct request_queue *q,
--						 unsigned int features);
- extern bool blk_queue_can_use_dma_map_merging(struct request_queue *q,
- 					      struct device *dev);
- 
+ 	/*
 -- 
 2.44.0
 
