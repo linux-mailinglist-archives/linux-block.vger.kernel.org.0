@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-4991-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-4994-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5C8788A01C
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:47:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A90C288A023
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:47:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 035E61C229A0
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:47:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3677F2A230E
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 12:47:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C74E13CC78;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E798A13A41E;
 	Mon, 25 Mar 2024 07:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4PBTt8f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkDWynDa"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15B61C323F;
-	Mon, 25 Mar 2024 04:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3488D1C32A2;
+	Mon, 25 Mar 2024 04:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341926; cv=none; b=qFFslc3PtH6eBxYwVm+xyPNogQ4YPPcBabd1PtWaEinjvWgwSl5q6c5E/dOj2twCbvDqy4VQjfjEFTX/JB0wd1pw3WVXw8sWko97PUZlBB9qeZEUuguRegMSQoIGDXSEz6XQ5+eHv9XgnIYctsvvkN3lKtirc5xu3KMiwHWnOkE=
+	t=1711341927; cv=none; b=V/FfkEt0Z2ytUDJZpOontyLCDYIAvweQ/uQDiM9CSj0aARzHbFiDFRkGEvxw5K2hUcoaPPNXBhvA90OaNLfFAhncdD6NB3MSRzw7NHJJDWcuksaU5yIlp5M8xbQun6Jfo/yttjZ5FlTnxijII8Ftt7KXMmRSlq+VaT4wQ+FpBw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711341926; c=relaxed/simple;
-	bh=ODVsC1HbJGQ0xy47J0sOpPmNReTkb8nd71OLgnXHrrE=;
+	s=arc-20240116; t=1711341927; c=relaxed/simple;
+	bh=qoEibzLZjgtTKtSOz/7gZtcAbueqRKkO2g10bjgbvI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ACaZ7KiPwQxbFY9UT1NAz+jOuF+PrHzrUfgnR0R3y3eWqvVX+68lAwmCOHIfls8H9vLIvjRx1hwGScNn1GZ2bGuPnF1BUIsx1ssV7kHlhJQ35Ij/aUXZ6FyJWGu3d2KM32ax3ZCMqJt90tttBv/3GqUOHrgGi3pfRSf7f1Bvc9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4PBTt8f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8189C433C7;
-	Mon, 25 Mar 2024 04:45:23 +0000 (UTC)
+	 MIME-Version; b=FcKY93Ez4XQgSjiNdzIBYPYt9ud9qZdd73SDlo9SyiQ8g1tphjnVi9CIWNAEZ6qB839HGJHTdt/LHecJHeVEgG0I1HHOq18fZGEUMY/fxOR/pLzKaySTt0TBUgsHVWsWE/D/Wz9S4hZR4MY/hM6YF5Nc5HjIZizgp2pN7/JB6N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkDWynDa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3607C433F1;
+	Mon, 25 Mar 2024 04:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711341925;
-	bh=ODVsC1HbJGQ0xy47J0sOpPmNReTkb8nd71OLgnXHrrE=;
+	s=k20201202; t=1711341927;
+	bh=qoEibzLZjgtTKtSOz/7gZtcAbueqRKkO2g10bjgbvI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s4PBTt8fOT4OcSqrgbuY3Lgpwf4fY7mx2przGOTa+NsHGNdIAwGS1mcYsbAIzN5vN
-	 +u/zbmgm4SGJDIcTt/RnCWn1zFG9UZuhsU0o0Yq4sEdTVQnuAkT3j5QNfKeprLgAqK
-	 tKm3HJdBru0JQGlAc8fnEX0V61nIiSG2az/Le8eNMJSD/2pbAd9t+qr5zQNlPIRMjE
-	 A152A+zsH6kV5KCzQBTfRwV4zGDNIKKgRG5ICuKBmZe8jWIrzo9q16YxCga6ygH+Cf
-	 L0+4pTtOeocpB66KnweWUYozKU41kexCWw23j9fqBoYpVVY0dPu85SrogBoTeuREhs
-	 otucYyQxMjxkA==
+	b=TkDWynDagp4tWvq/qsONeOgOoBKiQPUZA1vLGZDaY+MI5Tc2QMlPAthOAzNESio9J
+	 bmFAKmCgMEgzZOlfE9bcF14D9sCUahpb/xn5dmtaqRtRmFTNeHkLj2kOxDlOCa+jEA
+	 z+bjVlyQ697G44V4G9rYP0SqlxLx6a+O8nNsiWr359TLJpvGrLu2SCL1cNEXibY3FN
+	 x/4uW2b25C0wP9a0vNOLVAocOXUCXDGVxtdstpkaG3p3xae4N8XuCzHWicseOebQUU
+	 Dbj9ZLMWvderdqYPHveHEqq3LHY7RQQ86QC99Up10YuI3wAow3+jr7DVWN+lfym1Zv
+	 NKSdFuN6jEKVA==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-block@vger.kernel.org,
 	Jens Axboe <axboe@kernel.dk>,
@@ -49,9 +49,9 @@ To: linux-block@vger.kernel.org,
 	dm-devel@lists.linux.dev,
 	Mike Snitzer <snitzer@redhat.com>
 Cc: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 15/28] ublk_drv: Do not request ELEVATOR_F_ZBD_SEQ_WRITE elevator feature
-Date: Mon, 25 Mar 2024 13:44:39 +0900
-Message-ID: <20240325044452.3125418-16-dlemoal@kernel.org>
+Subject: [PATCH v2 16/28] null_blk: Do not request ELEVATOR_F_ZBD_SEQ_WRITE elevator feature
+Date: Mon, 25 Mar 2024 13:44:40 +0900
+Message-ID: <20240325044452.3125418-17-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325044452.3125418-1-dlemoal@kernel.org>
 References: <20240325044452.3125418-1-dlemoal@kernel.org>
@@ -67,29 +67,27 @@ With zone write plugging enabled at the block layer level, any zone
 device can only ever see at most a single write operation per zone.
 There is thus no need to request a block scheduler with strick per-zone
 sequential write ordering control through the ELEVATOR_F_ZBD_SEQ_WRITE
-feature. Removing this allows using a zoned ublk device with any
+feature. Removing this allows using a zoned null_blk device with any
 scheduler, including "none".
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/block/ublk_drv.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/null_blk/zoned.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index bea3d5cf8a83..ab6af84e327c 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -249,8 +249,7 @@ static int ublk_dev_param_zoned_validate(const struct ublk_device *ub)
- static void ublk_dev_param_zoned_apply(struct ublk_device *ub)
- {
- 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, ub->ub_disk->queue);
--	blk_queue_required_elevator_features(ub->ub_disk->queue,
--					     ELEVATOR_F_ZBD_SEQ_WRITE);
-+
- 	ub->ub_disk->nr_zones = ublk_get_nr_zones(ub);
- }
+diff --git a/drivers/block/null_blk/zoned.c b/drivers/block/null_blk/zoned.c
+index 1689e2584104..8e217f8fadcd 100644
+--- a/drivers/block/null_blk/zoned.c
++++ b/drivers/block/null_blk/zoned.c
+@@ -165,7 +165,6 @@ int null_register_zoned_dev(struct nullb *nullb)
+ 	struct request_queue *q = nullb->q;
  
+ 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
+-	blk_queue_required_elevator_features(q, ELEVATOR_F_ZBD_SEQ_WRITE);
+ 	nullb->disk->nr_zones = bdev_nr_zones(nullb->disk->part0);
+ 	return blk_revalidate_disk_zones(nullb->disk, NULL);
+ }
 -- 
 2.44.0
 
