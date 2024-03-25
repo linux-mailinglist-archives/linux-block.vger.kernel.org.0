@@ -1,165 +1,127 @@
-Return-Path: <linux-block+bounces-5034-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5036-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA7D488AD09
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 19:08:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F9EA88A872
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 17:10:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8978BCC311D
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 15:10:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85A5329EB77
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 16:06:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDB15B200;
-	Mon, 25 Mar 2024 12:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4E214A8E;
+	Mon, 25 Mar 2024 13:52:14 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C654A5A10E;
-	Mon, 25 Mar 2024 12:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742AE3DABFF
+	for <linux-block@vger.kernel.org>; Mon, 25 Mar 2024 13:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711369451; cv=none; b=IP9Cqcok2yKSLv9HmCqxF4KEDE49zGXx3aGeqvYzuNLREc8e05cZ3cC19HNLA8M17/zTYdgbstKEPRbV1YRPkzAa9n7fJsBPLIPLOHMtetijeTdlC04vCjcQ/9S4UjH3JEKWCie6O9z2LyQ8ywT2rN79Hl+13HzJTyyq+JwDAxw=
+	t=1711374734; cv=none; b=rFatrwdD+MIOXeZyh9K2OtV/86kagclG5ovbT4UOMA1yi1NXaqmpZ3NX8gi7zcv0xgWCDXRDZZrOZkbkNxnO8S3n0wKoXokckazQmR16sUK5hXRbY2hPQk9wnvK7H+o2oKfhGepx3C/WSFm2E7X7IJAOF7Bgh4acUVZkyzmRyTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711369451; c=relaxed/simple;
-	bh=WLZLZRzN8/OLDT6OPOMADL/GkziHijAZbwkxBipU9Is=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gM2dkmBJj/zT37+Mv9BgwZzy3AgLGXJjo+/EHJ1njkdzKL9MOroSYJ6THD4tTjnpSZjgcYJtFtD9MpC5Rbve8isuoLmwg7oUReqKEu3wYCESL9ZgFqvbOjeFAFKdBLvtVJnLnMRBdtFo9M8M4jZrQbWGzeliDHqht6wrCIc97ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2DD01FB;
-	Mon, 25 Mar 2024 05:24:41 -0700 (PDT)
-Received: from [10.1.25.33] (e133047.arm.com [10.1.25.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B245F3F67D;
-	Mon, 25 Mar 2024 05:24:04 -0700 (PDT)
-Message-ID: <92ecab7f-6e35-4e23-a8b7-097a9c26f551@arm.com>
-Date: Mon, 25 Mar 2024 12:24:02 +0000
+	s=arc-20240116; t=1711374734; c=relaxed/simple;
+	bh=tTaMjAy8VHExI+ugmEcOhE+W9MzDMvvUXxdC/E4G+r8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=j1GHk2L8jySaxzw2AUltm+/hmhnMhQj2cbkCKEGFBV/cjZS8oDPiAp0hpa5vO8dueiur00WIoogKSkFi5/rjSiepuPfkGWMGfqryXoBNRoCFbcRP6nTdVTmR1YGHc7IImzO6TVgnfcDWiVkeyzmJKTHjtMjBkMeTEq+0NXS+SiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V3DrK0lsKz4f3kj0
+	for <linux-block@vger.kernel.org>; Mon, 25 Mar 2024 21:52:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 43C311A0172
+	for <linux-block@vger.kernel.org>; Mon, 25 Mar 2024 21:52:07 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxCFgQFm3e8sIA--.28489S3;
+	Mon, 25 Mar 2024 21:52:07 +0800 (CST)
+Subject: Re: [PATCH 1/2] block: handle BLK_OPEN_RESTRICT_WRITES correctly
+To: Christian Brauner <brauner@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+ Jens Axboe <axboe@kernel.dk>, Matthew Wilcox <willy@infradead.org>,
+ linux-block@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240323-seide-erbrachten-5c60873fadc1@brauner>
+ <20240323-zielbereich-mittragen-6fdf14876c3e@brauner>
+ <3594bd44-4c6b-d079-1209-f069353ccd58@huaweicloud.com>
+ <20240325-ziehung-angetan-2703b0225ae5@brauner>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <3e3eaa23-f0e0-f377-5d7b-f5f5889d8c44@huaweicloud.com>
+Date: Mon, 25 Mar 2024 21:52:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
-Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org,
- juri.lelli@redhat.com, mingo@redhat.com, rafael@kernel.org,
- dietmar.eggemann@arm.com, vschneid@redhat.com, Johannes.Thumshirn@wdc.com,
- adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
- asml.silence@gmail.com, linux-pm@vger.kernel.org,
- linux-block@vger.kernel.org, io-uring@vger.kernel.org
-References: <20240304201625.100619-1-christian.loehle@arm.com>
- <CAKfTPtDcTXBosFpu6vYW_cXLGwnqJqYCUW19XyxRmAc233irqA@mail.gmail.com>
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <CAKfTPtDcTXBosFpu6vYW_cXLGwnqJqYCUW19XyxRmAc233irqA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20240325-ziehung-angetan-2703b0225ae5@brauner>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxCFgQFm3e8sIA--.28489S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kryrury7XFWxCFy8Ar1UWrg_yoW8Ar18p3
+	48WFs8Ar9xKrn7Kas7u3W8XFna9r4ktw45WFyqgrnrZ3y5AF97Xa12qw1q9FyDAr1xX3Wj
+	vayru34UJa4Fkw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
+	UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 22/03/2024 18:08, Vincent Guittot wrote:
-> Hi Christian,
-Hi Vincent,
-thanks for taking a look.
+Hi,
 
-> 
-> On Mon, 4 Mar 2024 at 21:17, Christian Loehle <christian.loehle@arm.com> wrote:
+在 2024/03/25 20:04, Christian Brauner 写道:
+> On Mon, Mar 25, 2024 at 07:51:27PM +0800, Yu Kuai wrote:
+>> Hi,
 >>
->> There is a feature inside of both schedutil and intel_pstate called
->> iowait boosting which tries to prevent selecting a low frequency
->> during IO workloads when it impacts throughput.
->> The feature is implemented by checking for task wakeups that have
->> the in_iowait flag set and boost the CPU of the rq accordingly
->> (implemented through cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT)).
+>> 在 2024/03/24 0:11, Christian Brauner 写道:
+>>> Last kernel release we introduce CONFIG_BLK_DEV_WRITE_MOUNTED. By
+>>> default this option is set. When it is set the long-standing behavior
+>>> of being able to write to mounted block devices is enabled.
+>>>
+>>> But in order to guard against unintended corruption by writing to the
+>>> block device buffer cache CONFIG_BLK_DEV_WRITE_MOUNTED can be turned
+>>> off. In that case it isn't possible to write to mounted block devices
+>>> anymore.
+>>>
+>>> A filesystem may open its block devices with BLK_OPEN_RESTRICT_WRITES
+>>> which disallows concurrent BLK_OPEN_WRITE access. When we still had the
+>>> bdev handle around we could recognize BLK_OPEN_RESTRICT_WRITES because
+>>> the mode was passed around. Since we managed to get rid of the bdev
+>>> handle we changed that logic to recognize BLK_OPEN_RESTRICT_WRITES based
+>>> on whether the file was opened writable and writes to that block device
+>>> are blocked. That logic doesn't work because we do allow
+>>> BLK_OPEN_RESTRICT_WRITES to be specified without BLK_OPEN_WRITE.
 >>
->> The necessity of the feature is argued with the potentially low
->> utilization of a task being frequently in_iowait (i.e. most of the
->> time not enqueued on any rq and cannot build up utilization).
->>
->> The RFC focuses on the schedutil implementation.
->> intel_pstate frequency selection isn't touched for now, suggestions are
->> very welcome.
->> Current schedutil iowait boosting has several issues:
->> 1. Boosting happens even in scenarios where it doesn't improve
->> throughput. [1]
->> 2. The boost is not accounted for in EAS: a) feec() will only consider
->>  the actual utilization for task placement, but another CPU might be
->>  more energy-efficient at that capacity than the boosted one.)
->>  b) When placing a non-IO task while a CPU is boosted compute_energy()
->>  will not consider the (potentially 'free') boosted capacity, but the
->>  one it would have without the boost (since the boost is only applied
->>  in sugov).
->> 3. Actual IO heavy workloads are hardly distinguished from infrequent
->> in_iowait wakeups.
->> 4. The boost isn't associated with a task, it therefore isn't considered
->> for task placement, potentially missing out on higher capacity CPUs on
->> heterogeneous CPU topologies.
->> 5. The boost isn't associated with a task, it therefore lingers on the
->> rq even after the responsible task has migrated / stopped.
->> 6. The boost isn't associated with a task, it therefore needs to ramp
->> up again when migrated.
->> 7. Since schedutil doesn't know which task is getting woken up,
->> multiple unrelated in_iowait tasks might lead to boosting.
->>
->> We attempt to mitigate all of the above by reworking the way the
->> iowait boosting (io boosting from here on) works in two major ways:
->> - Carry the boost in task_struct, so it is a per-task attribute and
->> behaves similar to utilization of the task in some ways.
->> - Employ a counting-based tracking strategy that only boosts as long
->> as it sees benefits and returns to no boosting dynamically.
+>> I don't get it here, looks like there are no such use case. All users
+>> passed in BLK_OPEN_RESTRICT_WRITES together with BLK_OPEN_WRITE.
 > 
-> Thanks for working on improving IO boosting. I have started to read
-> your patchset and have few comments about your proposal:
+> sb_open_mode() does
 > 
-> The main one is that the io boosting decision should remain a cpufreq
-> governor decision and so the io boosting value should be applied by
-> the governor like in sugov_effective_cpu_perf() as an example instead
-> of everywhere in the scheduler code
-Having it move into the scheduler is to enable it for EAS (e.g. boosting
-a LITTLE to it's highest OPP often being much less energy-efficient than
-having a higher cap CPU at a lower OPP) and to enable higher capacities
-reachable on other CPUs, too.
-I guess for you the first one is the more interesting one.
+> #define sb_open_mode(flags) \
+>          (BLK_OPEN_READ | BLK_OPEN_RESTRICT_WRITES | \
+>           (((flags) & SB_RDONLY) ? 0 : BLK_OPEN_WRITE))
 
+Yes, you're right, thanks for the notice. And the problem that I
+described should also exist.
+
+BTW, do you agree that using O_EXCL is not correct here?
+
+Thanks,
+Kuai
+> .
 > 
-> Then, the algorithm to track the right interval bucket and the mapping
-> of intervals into utilization really looks like a policy which has
-> been defined with heuristics and as a result further seems to be a
-> governor decision
 
-I did have a comparable thing as a governor decision, but the entire
-"Test if util boost increases iowaits seen per interval and only boost
-accordingly" really only works if the interval is long enough, my proposed
-starting length of 25ms really being the lower limit for the storage devices
-we want to cover (IO latency not being constant and therefore iowaits per
-interval being somewhat noisy).
-Given that the IO tasks will be enqueued/dequeued very frequently it just
-isn't credible to expect them to land on the same CPU for many intervals,
-unless your system is very bare-bones and idle, but even on an idle Android
-I see any interval above 50ms to be unusable and not provide any throughput
-improvement.
-The idea of tracking the iowaits I do find the best option in this vague and
-noisy environment of "iowait wakeups" and definitely worth having, so that's
-why I opted for it being in the scheduler code, but I'd love to hear your
-thoughts/alternatives.
-I'd also like an improvement on the definition of iowait or some more separate
-flag for boostable IO, the entire "boost on any iowait wakeup" is groping in
-the dark which I'm trying to combat, but it's somewhat out of scope here.
-
-> 
-> Finally adding some atomic operation in the fast path is not really desirable
-Agreed, I'll look into it, for now I wanted as much feedback on the two major
-changes:
-- iowait boost now per-task
-- boosting based upon iowaits seen per interval
-
-> 
-> I will continue to review your patchset
-
-Thank you, looking forward to seeing your review.
-
->>[snip]
-Kind Regards,
-Christian
 
