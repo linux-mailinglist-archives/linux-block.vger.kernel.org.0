@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-5026-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5028-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C85BD88A175
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:18:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB69388A26F
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 14:37:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830DB2C5C60
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:18:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18B971C38C16
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 13:37:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C14C1B52EB;
-	Mon, 25 Mar 2024 10:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6C01B5DC0;
+	Mon, 25 Mar 2024 10:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6pow1wt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRIyCw+R"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DF913DBBC;
-	Mon, 25 Mar 2024 07:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0ED1428FB;
+	Mon, 25 Mar 2024 07:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711353329; cv=none; b=GnkxmrziPzFRXOxP6NGTS4lQtZFwRNfDM4FojO7rBP/fzAjhSFmOAxounR4H7wJc2u3VQ0eRJ+PvMcm8ECqt+zqq3zCOsFhwovP5saTcmGCH5/h0PVzMFZPYq7b7N7qHMsin76DoVF4jYToxfBwmdjI1Rqi3WKQRlR6+jtPbRic=
+	t=1711353378; cv=none; b=nI8puqXf+XuREma696Eq9BG+8/PwH1gqsORsV8Ds9HrrHRKPF7ZtoMTlArjhu86tY8gTWKu6CUzvYhAgXfke9tfnQuD0mnsPsT3Dr6OIe1q13Zo8QQPGUizrZbt5XYhiOGOKCDUaje60x0lSEvy37pIuSwbPfj3T2jymN6clpa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711353329; c=relaxed/simple;
-	bh=wRfDMdaIn7grVH4v5DLJ7V9z90fDUtky1hLnubiKjdo=;
+	s=arc-20240116; t=1711353378; c=relaxed/simple;
+	bh=+z5n42jcDU1Q65n+MHR7wbB2WsqxNLtuNE+zdSE58go=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tXYqK553IBBnKn96WXs11Q/osVnu/ImaLA0D78rxILAdFx7ISy8b8JYnR75jIfoxYuVYFuGj1771eSiQf9ufvfCK682pjyjbVn5PDn4in0OotT/YP6LTyZVyi3mEM6UTaS8vjQl2BevfOKq32k9uASD4tNF0fOMSdET+CAon7hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6pow1wt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2865FC433C7;
-	Mon, 25 Mar 2024 07:55:22 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=eqhKGR1r2msdxkdKS6oz6Vbg+7ZqDZz14Na4Q4C+ZV89593q/EGBd5/WcjcZ1oAfRWZLJiZwuJKQhYGH2ql3JgG+PV8UezdSpeFH1qPxQsvNx7zFgVwNenHpIKX0hTXKAmh6wUDwH0FiKilD9tkrCchpM/wW/ECH3zA2BQfQ5fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRIyCw+R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8369DC433C7;
+	Mon, 25 Mar 2024 07:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711353328;
-	bh=wRfDMdaIn7grVH4v5DLJ7V9z90fDUtky1hLnubiKjdo=;
+	s=k20201202; t=1711353378;
+	bh=+z5n42jcDU1Q65n+MHR7wbB2WsqxNLtuNE+zdSE58go=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i6pow1wt+UgVCld5LOB9MtljCmSzY8fmuMpZI1C44NhZ2RVvWjChCw8ieb9rWm2IQ
-	 LW1O+4JXOrYFh9hib3Qhkq4H3PglIJWHSSDo6xuvDcQl1NdKXXcIt7AGn6qy58XYoZ
-	 oFzyPA9QYcAFzfjh2+mNuNYnZX9CSxYQ0KInyhT6CPtZIVm6G6uMKeQSEJ3pAa/cF8
-	 zdn8+gwrzWCrFOTKsP5s7VdVNhPzVTZY3/8vhIJdfMhQZnF1yslY0boLsvmKja4IcR
-	 yQdWhJjKnB6hW5V2eScRDk0ir21w4Z2I996HkhCWw2AH5AIhKNSXoXFoz2XznVTJ6I
-	 wFDPA4ncdqNuw==
-Message-ID: <43670f3c-b1cd-4732-9e0f-3cfb3ae9233a@kernel.org>
-Date: Mon, 25 Mar 2024 16:55:22 +0900
+	b=DRIyCw+Raq/vGzJ0dJqI9r/RqfobgkxAwTJe0q7r86S7sVHlxRfqfCeguJNxmT0IQ
+	 BB7G1F7G8oItcYfoOGv+Vk9cdINiBQ9buBhrCvxIEmQH+RXECl4Pt4pzMnQzyRMMdI
+	 xRU3VVC3OaIDw+iTMZXeT+uSPC584aanpCeKbuY72xI2ElQzycopkmWcwvq0vgjvOp
+	 8JQZo1gVo6qbPKuXMhhXtPvB1IxlauCcerYawjfiYkZwlxOO7rUWkq1+OLNMhxFxTX
+	 mhSfFOyPmw6W9Upanlj7BLcaT+nZTb4/0j8TwOw9qnsvgpo0zL1kFVUHf8swReWnTI
+	 jE1durxYfPgig==
+Message-ID: <bc4293a0-988d-42f3-a94a-b6715d72c204@kernel.org>
+Date: Mon, 25 Mar 2024 16:56:12 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 22/23] uas: switch to using ->device_configure to
- configure queue limits
+Subject: Re: [PATCH 23/23] block: remove now unused queue limits helpers
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -84,22 +83,14 @@ Cc: Niklas Cassel <cassel@kernel.org>,
  mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
  linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
 References: <20240324235448.2039074-1-hch@lst.de>
- <20240324235448.2039074-23-hch@lst.de>
+ <20240324235448.2039074-24-hch@lst.de>
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20240324235448.2039074-23-hch@lst.de>
+In-Reply-To: <20240324235448.2039074-24-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 3/25/24 08:54, Christoph Hellwig wrote:
-> Switch to the ->device_configure method instead of ->slave_alloc
-> and update the block limits on the passed in queue_limits instead
-> of using the per-limit accessors.
-> 
-> Note that uas was the only driver setting these size limits from
-> ->slave_alloc and not ->slave_configure and this makes it match
-> everyone else.
-> 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
 Looks OK to me.
