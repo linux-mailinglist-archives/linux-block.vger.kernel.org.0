@@ -1,60 +1,60 @@
-Return-Path: <linux-block+bounces-5058-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5060-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6689188B3A0
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 23:13:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB8C288B3AF
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 23:13:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2223C300E87
-	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 22:13:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDB8F1C3F662
+	for <lists+linux-block@lfdr.de>; Mon, 25 Mar 2024 22:13:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD5E5D737;
-	Mon, 25 Mar 2024 22:13:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C895D763E6;
+	Mon, 25 Mar 2024 22:13:36 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9107175F;
-	Mon, 25 Mar 2024 22:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6705E7350C;
+	Mon, 25 Mar 2024 22:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711404811; cv=none; b=NxGNo7K3HXRymOVg+hi5XQM8weeYpTiDtAjPTgJMflC0NSYYqV32c7YbRzpODrFJyHSw7dbJK3ll7+aUhdjraIXn3DoBS7PNqke9sVS/cdCeE2/qFr4hN/mELnO5rvHZ695h8ZgKu4My2E3qdP9OPTopT0S2OxC55OMRhjM+YQo=
+	t=1711404816; cv=none; b=aVGVnaHgBzYCMEmwaEoNqpigERg2oAvDFqGdTisy9qB4lB9utZJFpSWAMatUA7IYv8M1o9Vxd46gbF5I7jC+AbvKpGAE2WBSvZfuWcZ8LKEYbzoNctcL0aGejllDM7gZcqR5dlJa+2J1PIVbthjvUebAl9o3w51bnJ9YLwAGxKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711404811; c=relaxed/simple;
-	bh=hN55zRuf1wTWfhOuZ1Hsv78yTqllTTJ254BBca/qaQk=;
+	s=arc-20240116; t=1711404816; c=relaxed/simple;
+	bh=lY9FIntr0nkvHSL2c+KUE7nnc9/NyBweIhAGiFvlGMc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cG9XUdwnJupOtS/dlKlg+jwgrSekMBFcvavfscmNtDIkxN1+TPUf7/9zaNHsNzp721m2lMH1AekgtgTA7GjxqP30HbCHz0UA83dZaqsfHKmfqjm2RjP5wQ1b0+gmvqp9XFGyoHZh3cryyVmYaVsGQ1AOcGAY3hGtC7dR00fsbNo=
+	 In-Reply-To:Content-Type; b=eqoJYu1sbf7a3pRorJpk8Z0XYxHYYlXYVA9Y462rIhdm5EwV1LChyJlCZMdvcIZ1njVcP2buymsBuQJySN052rhSAe5LCEGV4/RH/93NLuy3u0eVhU4qL9QEJdvQTxbfoBJC3waseCusO/QrSiRi6RDlHL9nvISbuSLfh/mGwHA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1deffa23bb9so36284065ad.2;
-        Mon, 25 Mar 2024 15:13:30 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dde26f7e1dso35736375ad.1;
+        Mon, 25 Mar 2024 15:13:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711404809; x=1712009609;
+        d=1e100.net; s=20230601; t=1711404815; x=1712009615;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zuN0euwq54EZtcjYVhfgSHBS8X1ggoE7zpwJRA9IdAU=;
-        b=rLX24Fo4abfkAccK+MZQ/cDIIhb+/7adMYXFZwg+V9FN78aAIHPalx4870g7Eir8/O
-         lW72rCYi/ZwoajVurUHE27iad6yRn+XJgXwXilpkUbUPy735arRUpIN7fbLmyL4y0Wum
-         5ALsqkFv1uuYwhwq2BwxbszBrgyv285P1EfrFKgBSrYCl/T3DRAYx7kyZGq28eWqjA1d
-         Oji61b0FpDUUIqgFrzoVgZ38Nht6nqhX5uD3Tl7qR8PhcQ3JjEp65YiA3fUawoGDENTx
-         2vLsXYW3OcZUgtHZXx9C5rj9rDQL8nCoF0BBfJpBJtCeFQyCgdVgPIg9HoNqGPGcK7Gm
-         boSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXl50no4CLC18F5XrYIDtn7WIrw3Y1/JnAy1lZL5Xbpfy8I7VOUWslK6pcRO3p3UEQd7NumvFMP+a3CkkmCetTXHaCWElhj2sJT0oBuIRa5JF+lCMjSRbTYwwz8eU1SpJB9VfVOsFV/
-X-Gm-Message-State: AOJu0YyFqZaJWUxvdfT8w+DogKGqmZE35WH05+Ez+XAHFBQqi93mcB5E
-	tX6FmIeOKQDA3Ji2Z/5AEJBPBtY8Ooa+lSnd12AME+YiFUOjmVg7
-X-Google-Smtp-Source: AGHT+IH7D3A3vhycoJD9zsFoky6aAGhFXt3gON+zXNbmmnkac3mGgGxBCi5GcVNm1aUF9F0QqwqVXQ==
-X-Received: by 2002:a17:902:c3cd:b0:1df:f624:a542 with SMTP id j13-20020a170902c3cd00b001dff624a542mr8579974plj.16.1711404809365;
-        Mon, 25 Mar 2024 15:13:29 -0700 (PDT)
+        bh=lY9FIntr0nkvHSL2c+KUE7nnc9/NyBweIhAGiFvlGMc=;
+        b=R+n9wE3OHI5rWqdyN3O34fud5nOzq0D2Wc3zZmt/QVS5qG77qhnvUksxXTpI9Z4C9q
+         imfi9NIB0kLIPFtch7zQKLfX1KPMnF8iGe9ZI2GghbbMhG5qVaTC1PffURBs4YFDFDgs
+         lH1zmtNe1nDVYNJ8gUWHE4zv5uztzjtOfnBMvjvuwpC1ZQvA18u5sgtvMhYxaqAyBtGo
+         hiI6p0jH+Ne5NPLf0sEHC6ylszSPeDC51VNTtNmyy8IEtGlRWKOURbuB5ZYQ9/vNZlMz
+         7Iair6TTYdxfsucxNOuF/zdC6x3TqpQk20vd3oXHsX3yyHHnaSDzfL89dmZ+ByXV34g+
+         EmiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZrVtRl3evs6g+Z6MMkQzh0FhdRBx0whkw0EKkPdA0qKDIjWCY7+5EeQzesRBSOaLCrYp3hHcx1qXu5+Ge1VxF8ogQUyAimnl0RJbmIbYBavU7LeDK06CWeyS3HvmVyphDWxpiaL2ogfPZWLxhccuXY28wd/SvMfrEHtkxiUbZUgSzbfu+A/nrdRqRpmwkXNnrUkan4NagSsCxnbF4A7ffN5QfhQeRqpXqEewXaKFJ5TyeRaU/ki2s90r268rRbxw=
+X-Gm-Message-State: AOJu0YzaCo60s83nPCIf+Sud2QF3apmwrPfyEB42hvhCTkto+1SFYRBF
+	so6+oHWyo2Dav+jbScMEvOJ+MCgW5pmRl861WcQ0qWEDOxSUdpoA
+X-Google-Smtp-Source: AGHT+IFUGYd8Jam7bWvjJzPqP4kRsvvoGwSNPai1P4IrVGBzs7Jpyu8Rqw4R37V+qo7lwI2rThO4Hg==
+X-Received: by 2002:a17:903:26c9:b0:1e0:27c8:5c7e with SMTP id jg9-20020a17090326c900b001e027c85c7emr7288051plb.25.1711404814659;
+        Mon, 25 Mar 2024 15:13:34 -0700 (PDT)
 Received: from ?IPV6:2620:0:1000:8411:262:e41e:a4dd:81c6? ([2620:0:1000:8411:262:e41e:a4dd:81c6])
-        by smtp.gmail.com with ESMTPSA id s23-20020a170902a51700b001e0310bb84fsm5229183plq.289.2024.03.25.15.13.28
+        by smtp.gmail.com with ESMTPSA id v17-20020a170902d09100b001dcc18e1c10sm5273962plv.174.2024.03.25.15.13.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 15:13:28 -0700 (PDT)
-Message-ID: <df2e08d0-102e-4754-ad91-e50fa643d744@acm.org>
-Date: Mon, 25 Mar 2024 15:13:27 -0700
+        Mon, 25 Mar 2024 15:13:34 -0700 (PDT)
+Message-ID: <47028fba-7fb0-4eda-81a2-ccf439cfec6a@acm.org>
+Date: Mon, 25 Mar 2024 15:13:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -62,31 +62,48 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 22/28] block: mq-deadline: Remove support for zone
- write locking
+Subject: Re: [PATCH 07/23] scsi: add a dma_alignment field to the host and
+ host template
 Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- dm-devel@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-References: <20240325044452.3125418-1-dlemoal@kernel.org>
- <20240325044452.3125418-23-dlemoal@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Sathya Prakash <sathya.prakash@broadcom.com>,
+ Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+ Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+ "Juergen E. Fischer" <fischer@norbit.de>,
+ Xiang Chen <chenxiang66@hisilicon.com>,
+ HighPoint Linux Team <linux@highpoint-tech.com>,
+ Tyrel Datwyler <tyreld@linux.ibm.com>, Brian King <brking@us.ibm.com>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ Jack Wang <jinpu.wang@cloud.ionos.com>, Nilesh Javali <njavali@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Alan Stern <stern@rowland.harvard.edu>, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+ MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ open-iscsi@googlegroups.com, megaraidlinux.pdl@broadcom.com,
+ mpi3mr-linuxdrv.pdl@broadcom.com, linux-samsung-soc@vger.kernel.org,
+ linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+References: <20240324235448.2039074-1-hch@lst.de>
+ <20240324235448.2039074-8-hch@lst.de>
 From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240325044452.3125418-23-dlemoal@kernel.org>
+In-Reply-To: <20240324235448.2039074-8-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/24/24 21:44, Damien Le Moal wrote:
-> With the block layer generic plugging of write operations for zoned
-> block devices, mq-deadline, or any other scheduler, can only ever
-> see at most one write operation per zone at any time. There is thus no
-> sequentiality requirements for these writes and thus no need to tightly
-> control the dispatching of write requests using zone write locking.
-> 
-> Remove all the code that implement this control in the mq-deadline
-> scheduler and remove advertizing support for the
-> ELEVATOR_F_ZBD_SEQ_WRITE elevator feature.
+On 3/24/24 16:54, Christoph Hellwig wrote:
+> Get drivers out of the business of having to call the block layer
+> dma alignment limits helpers themselves.
 
 Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
