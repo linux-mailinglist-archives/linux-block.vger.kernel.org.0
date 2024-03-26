@@ -1,166 +1,117 @@
-Return-Path: <linux-block+bounces-5123-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5125-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AE3288C325
-	for <lists+linux-block@lfdr.de>; Tue, 26 Mar 2024 14:15:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F57B88C330
+	for <lists+linux-block@lfdr.de>; Tue, 26 Mar 2024 14:17:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A45B1F3B6B8
-	for <lists+linux-block@lfdr.de>; Tue, 26 Mar 2024 13:15:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5832B2326A
+	for <lists+linux-block@lfdr.de>; Tue, 26 Mar 2024 13:17:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 458857442C;
-	Tue, 26 Mar 2024 13:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8D86CDA1;
+	Tue, 26 Mar 2024 13:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="urmC2Y46";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NLWZuotC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="urmC2Y46";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NLWZuotC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPM4VmRl"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0E6757E4
-	for <linux-block@vger.kernel.org>; Tue, 26 Mar 2024 13:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D9B67A00
+	for <linux-block@vger.kernel.org>; Tue, 26 Mar 2024 13:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711458861; cv=none; b=V8H6rOrNXZ05qjqj0bBh7AdlYfbMypU7xGDVvnJ+6ER8BvXOkje6KPOyJnRodUOYJ/D9wKSlyRTwHl3DGUEoEI2LSaqt0+W7ZKzYbt/umNVvh5zNHzRHbpE27Ls7ilLWFE1cNKH21ZFoWQ74qIwksxmMsyV9LQwOeRIxz9N0QAA=
+	t=1711459045; cv=none; b=sN8iXraWSQ93dQuyBnn92fBUzkHh+bAUfKtd/Zs2uebONM/x82uaLkGS5fhPiMs9j43rMmczpaMEYMPw4NLQTer7ntPvdgNQLPfsDC3A7xf143aMPZ6eDIBT7TA1gLoG/Xch1Y1k8H+29Zg4yEaVYJf1ZWOyLuduvDPqVOgf5Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711458861; c=relaxed/simple;
-	bh=JqKE2N8SMV1Emk1mDNVMBkXmRjUMBJQkCJuJmbGqV9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RJN4H8hp7829RBr0+6Nhq8vMd3LBmCTmf0VVb8gd8iUaDKXvq6pjtYduanLbo4002ivJ+1QYFAwQgr/kfowb9MDESwR91+e4gkBdRi0qe1iVWKCUZNBJE5fD7F9S8bKmruKbdVF37O1CfjkGnj7LVoAK9Vo4GpYL9S+SrIvz5sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=urmC2Y46; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NLWZuotC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=urmC2Y46; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NLWZuotC; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 22FDF373CA;
-	Tue, 26 Mar 2024 13:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711458858; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a63muCPZYWeAQkA9FtpSeKqkvj6LphOGjlZs+vXd+mQ=;
-	b=urmC2Y463zI4LAuuayeqgr5nV3fFVV57tlaJDGEgthI5OIpFhnnk4phfamlpTgSA1HW1v+
-	wFTpsgYzvuyosxZ+ZtuLsmC5rugHFgQeGnmhdRmIbwtIsycQnO7FaLhTfhvIRRaFyYVNJC
-	ZhJh3fp+h3fX7cWjKf92Cv9fMBDhwWU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711458858;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a63muCPZYWeAQkA9FtpSeKqkvj6LphOGjlZs+vXd+mQ=;
-	b=NLWZuotC8NqNpY45q7SuIC/94cdKyyRHdCVyR/95128+QqX+UWSw97GWDliTHVwyiV2/1v
-	ZZSNkgYeU/vjZMCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711458858; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a63muCPZYWeAQkA9FtpSeKqkvj6LphOGjlZs+vXd+mQ=;
-	b=urmC2Y463zI4LAuuayeqgr5nV3fFVV57tlaJDGEgthI5OIpFhnnk4phfamlpTgSA1HW1v+
-	wFTpsgYzvuyosxZ+ZtuLsmC5rugHFgQeGnmhdRmIbwtIsycQnO7FaLhTfhvIRRaFyYVNJC
-	ZhJh3fp+h3fX7cWjKf92Cv9fMBDhwWU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711458858;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a63muCPZYWeAQkA9FtpSeKqkvj6LphOGjlZs+vXd+mQ=;
-	b=NLWZuotC8NqNpY45q7SuIC/94cdKyyRHdCVyR/95128+QqX+UWSw97GWDliTHVwyiV2/1v
-	ZZSNkgYeU/vjZMCw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0FDAD13587;
-	Tue, 26 Mar 2024 13:14:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id znFeAirKAmYqNwAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Tue, 26 Mar 2024 13:14:18 +0000
-From: Daniel Wagner <dwagner@suse.de>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH blktests v3 20/20] nvme/028: drop unused nvmedev
-Date: Tue, 26 Mar 2024 14:14:02 +0100
-Message-ID: <20240326131402.5092-21-dwagner@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240326131402.5092-1-dwagner@suse.de>
-References: <20240326131402.5092-1-dwagner@suse.de>
+	s=arc-20240116; t=1711459045; c=relaxed/simple;
+	bh=F2vJDYkBySdyAK8PyG6qvZcvb4vyN6atoboZazLr00w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iGSWSssbM12CeyaQT5peW/tZLymekWDVrh8vPpjE/qJhYtiPKKxsAL16XkBx9Zkxks4FZp0+i0ivcK7TfOirXQgHyUp8kH1aB5Y5owHXU2r1LnL55Qe5uxHy++PYOBvsXdkKrV2PtU3L5+/JWWN/hPkgBqb6pgaFFBQMnpqJVc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPM4VmRl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33EBFC43394;
+	Tue, 26 Mar 2024 13:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711459044;
+	bh=F2vJDYkBySdyAK8PyG6qvZcvb4vyN6atoboZazLr00w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vPM4VmRlJBSr4haOdVU0r7fOcYSuYcxGcfguMw6e/Ad4Ex0oJFpcAgno2ixSmcxHb
+	 kv1BvUJ4fD6egcl/WfrMlXwWs7zdfFzkgnWCchTBI73jeCMtVyUlGc1o83BwSGrm3W
+	 j7JkPDFxEp1Ay28ANNpTrSQQsa/KW1Pa2MyY9tVFLvVicXKrasySSmINy7RNCJCx5R
+	 sYn9JfS5Yw0lRWfSEFbJXoH124a8t/YD3rJybzxIBZMntg7Zoow+UKH/PjG35NF/Gw
+	 rw6aE6vCFj6EgHIKzHk0eDLRPsZKeZfcPju4VFeevDJdZYBJJla7qViMFWZ4yA+jTG
+	 xadULLzSIFzww==
+Date: Tue, 26 Mar 2024 14:17:20 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, 
+	Matthew Wilcox <willy@infradead.org>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/2] block: handle BLK_OPEN_RESTRICT_WRITES correctly
+Message-ID: <20240326-eidesstattlich-abwahl-ddfb1c75c05e@brauner>
+References: <20240323-seide-erbrachten-5c60873fadc1@brauner>
+ <20240323-zielbereich-mittragen-6fdf14876c3e@brauner>
+ <20240326125715.i23eo6sh5223tdmc@quack3>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: 0.74
-X-Spamd-Result: default: False [0.74 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.998];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.97)[99.85%]
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240326125715.i23eo6sh5223tdmc@quack3>
 
-Nothing uses nvmedev, so just remove it.
+On Tue, Mar 26, 2024 at 01:57:15PM +0100, Jan Kara wrote:
+> On Sat 23-03-24 17:11:19, Christian Brauner wrote:
+> > Last kernel release we introduce CONFIG_BLK_DEV_WRITE_MOUNTED. By
+> > default this option is set. When it is set the long-standing behavior
+> > of being able to write to mounted block devices is enabled.
+> > 
+> > But in order to guard against unintended corruption by writing to the
+> > block device buffer cache CONFIG_BLK_DEV_WRITE_MOUNTED can be turned
+> > off. In that case it isn't possible to write to mounted block devices
+> > anymore.
+> > 
+> > A filesystem may open its block devices with BLK_OPEN_RESTRICT_WRITES
+> > which disallows concurrent BLK_OPEN_WRITE access. When we still had the
+> > bdev handle around we could recognize BLK_OPEN_RESTRICT_WRITES because
+> > the mode was passed around. Since we managed to get rid of the bdev
+> > handle we changed that logic to recognize BLK_OPEN_RESTRICT_WRITES based
+> > on whether the file was opened writable and writes to that block device
+> > are blocked. That logic doesn't work because we do allow
+> > BLK_OPEN_RESTRICT_WRITES to be specified without BLK_OPEN_WRITE.
+> > 
+> > So fix the detection logic. Use O_EXCL as an indicator that
+> > BLK_OPEN_RESTRICT_WRITES has been requested. We do the exact same thing
+> > for pidfds where O_EXCL means that this is a pidfd that refers to a
+> > thread. For userspace open paths O_EXCL will never be retained but for
+> > internal opens where we open files that are never installed into a file
+> > descriptor table this is fine.
+> > 
+> > Note that BLK_OPEN_RESTRICT_WRITES is an internal only flag that cannot
+> > directly be raised by userspace. It is implicitly raised during
+> > mounting.
+> > 
+> > Passes xftests and blktests with CONFIG_BLK_DEV_WRITE_MOUNTED set and
+> > unset.
+> > 
+> > Fixes: 321de651fa56 ("block: don't rely on BLK_OPEN_RESTRICT_WRITES when yielding write access")
+> > Reported-by: Matthew Wilcox <willy@infradead.org>
+> > Link: https://lore.kernel.org/r/ZfyyEwu9Uq5Pgb94@casper.infradead.org
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> 
+> The fix looks correct but admittedly it looks a bit hacky. I'd prefer
+> storing the needed information in some other flag, preferably one that does
+> not already have a special meaning with block devices. But FMODE_ space is
+> exhausted and don't see another easy solution. So I guess:
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- tests/nvme/028 | 5 -----
- 1 file changed, 5 deletions(-)
+Admittedly, it's not pretty but we're abusing O_EXCL already for block
+devices. We do have FMODE_* available. We could add
+FMODE_WRITE_RESTRICTED because we have two bits left.
 
-diff --git a/tests/nvme/028 b/tests/nvme/028
-index 4710bba1f416..9f4a90581984 100755
---- a/tests/nvme/028
-+++ b/tests/nvme/028
-@@ -20,15 +20,10 @@ test() {
- 
- 	_setup_nvmet
- 
--	local nvmedev
--
- 	_nvmet_target_setup --blkdev file
- 
- 	_nvme_connect_subsys
- 
--	nvmedev=$(_find_nvme_dev "${def_subsysnqn}")
--	_check_uuid "${nvmedev}"
--
- 	if ! nvme list-subsys 2>> "$FULL" | grep -q "${nvme_trtype}"; then
- 		echo "ERROR: list-subsys"
- 	fi
--- 
-2.44.0
-
+One other solution apart from FMODE_* I had come up with was even
+nastier which would've been using the struct fd approach of using the
+two available bits in the pointer. But that doesn't work because we have
+stuff like dm that passes in strings which are byte aligned. And it's
+arguably uglier.
 
