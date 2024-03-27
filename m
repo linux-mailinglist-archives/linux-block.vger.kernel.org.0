@@ -1,48 +1,93 @@
-Return-Path: <linux-block+bounces-5164-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5166-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8E5E88D727
-	for <lists+linux-block@lfdr.de>; Wed, 27 Mar 2024 08:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3F8A88D73E
+	for <lists+linux-block@lfdr.de>; Wed, 27 Mar 2024 08:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 060A21C215AE
-	for <lists+linux-block@lfdr.de>; Wed, 27 Mar 2024 07:22:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 233B41C2382E
+	for <lists+linux-block@lfdr.de>; Wed, 27 Mar 2024 07:29:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67DE16427;
-	Wed, 27 Mar 2024 07:22:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72A682C1B5;
+	Wed, 27 Mar 2024 07:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQ+CGyt/"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rgqMSNjr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="glypdop/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rgqMSNjr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="glypdop/"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCB0652;
-	Wed, 27 Mar 2024 07:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A622C1AF;
+	Wed, 27 Mar 2024 07:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711524162; cv=none; b=kC/BKq5scxBOLQFJXerXdnwo+VyhXB+198+UX7aE0caJbTXQvuWeerk+A8Wop8SXXNX0rZJRruHPR4v3nD8OykqBHv2MDg19cGHm0t6NyUiqQf66fqRMTfUl9X0htscaBpxNuQ6c38Ks9Mv+Rd+RwfhhXZtCqtFooIPi6lRg8fk=
+	t=1711524534; cv=none; b=ZZl+p52cePyf9cXYFDLQxJ5cD6mzdI8xdlCD+KSocuh8H90QiA/3DEyYxfMaFiTH5+DhgXi0CqR9QCq/AHM9QM1NYyMiKpWTWL+E3RbRqTFxxfBc8N6X85DNQ3qyboTa7BImK0bliBRvvx2953rSa6+f8RasH2ap5rEMwyR1QRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711524162; c=relaxed/simple;
-	bh=LXzarL/VxvorhOvGRBzD/zTB++DSvtnl2GmSD7a9clk=;
+	s=arc-20240116; t=1711524534; c=relaxed/simple;
+	bh=Dc5ZqE3TXScMkyc9NcIsvu3KTupSo6+RW84glheLrss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jLs8OdMQKit+Xe6Esb3FuWylMCgT8sgUdse1XtXOJ8jXaAqFyGGGvT1CKBZiqYRqIukmE2PIYoinUPvwe6bJJldd/RnFRKazc+aDSOvczp5A07vph9TCeDNLi6G1ttW4D1QlhBSLMdRW9MpLjEjNHCApWQZoB+DrpHzkmdWuNfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQ+CGyt/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBAFC433F1;
-	Wed, 27 Mar 2024 07:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711524162;
-	bh=LXzarL/VxvorhOvGRBzD/zTB++DSvtnl2GmSD7a9clk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SQ+CGyt/zhZqFJFljhtENiX0bcgRRacBT012KMABYl/CMq8Ruvy/xVgYms5xQU/pd
-	 MAn2dO8jZQlwsxGf3N+ROYt5mP+ZzpzVZCYZXwmw/knmgBmqw1AdFq9gAuzevoNr8o
-	 zpUvR/DfuuSIVSHXNaEohiN2NtqHCK+3fjK1vr29P4jPALO143EayFjKLrbzOo5BS8
-	 FdTUZlR6uAOpqkFIgu4pqi2eSK3sc99OTXWPnJnOZMAidOneSiAAwUh42cTTnberx6
-	 aQK/6MzsCL82cQwrffPXEbK3P1LDmjXAU6prvvRrarTV212STLYUczlzlUJvJTgua4
-	 ucz9r2ePpEmJg==
-Message-ID: <de7d6ae9-c82d-408c-b5ab-a76d612a3519@kernel.org>
-Date: Wed, 27 Mar 2024 16:22:39 +0900
+	 In-Reply-To:Content-Type; b=AiYdOLCTbmLCqpsUaxtspxj8KuyUWFZXmmyrX8vtBs8dTztr+whXzo7y2HHJu9AlolR8zrN0abpfmTRBVk1oGpgsICmsH7YCRG+i+z/DKHv2HxVEnaOWrK6m0uEB7+vlJJExu+g4A3+HBW+KdfKUIcQu3CqU5uQo26D0HMRysSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rgqMSNjr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=glypdop/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rgqMSNjr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=glypdop/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 89F06386EE;
+	Wed, 27 Mar 2024 07:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711524527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GB9Hca2p0B5XcyWmXAEZGtwV274y6PiIwG4GTpkJ5FY=;
+	b=rgqMSNjrOEDzqHyciEi59OQ1w5quA36zoNSuGu+0X8czoe6u09vRxsTMXzg+8uqMllgpXI
+	osz5InudRcXP7qcQWb3QLoRFbDsJdYPbmPXD+YxHrTNg1ZNZ02zZIQIzB458uwnfJgulx9
+	NHcrCV5ThR6ewCq3Iv/kMo4qvPizLmw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711524527;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GB9Hca2p0B5XcyWmXAEZGtwV274y6PiIwG4GTpkJ5FY=;
+	b=glypdop/6+a/xeLdfmUuBtGjQ0lzIz06zsxS7rann0BLKYJFZ8ero4mvhTrDeLSRVKP1gh
+	/xXRjGQy/bWhcwCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711524527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GB9Hca2p0B5XcyWmXAEZGtwV274y6PiIwG4GTpkJ5FY=;
+	b=rgqMSNjrOEDzqHyciEi59OQ1w5quA36zoNSuGu+0X8czoe6u09vRxsTMXzg+8uqMllgpXI
+	osz5InudRcXP7qcQWb3QLoRFbDsJdYPbmPXD+YxHrTNg1ZNZ02zZIQIzB458uwnfJgulx9
+	NHcrCV5ThR6ewCq3Iv/kMo4qvPizLmw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711524527;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GB9Hca2p0B5XcyWmXAEZGtwV274y6PiIwG4GTpkJ5FY=;
+	b=glypdop/6+a/xeLdfmUuBtGjQ0lzIz06zsxS7rann0BLKYJFZ8ero4mvhTrDeLSRVKP1gh
+	/xXRjGQy/bWhcwCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3AC9113688;
+	Wed, 27 Mar 2024 07:28:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id f3zRDK/KA2ZKewAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 27 Mar 2024 07:28:47 +0000
+Message-ID: <64e0f9ef-1196-47ed-b191-1913f3e51253@suse.de>
+Date: Wed, 27 Mar 2024 08:28:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,60 +95,97 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/28] block: Use a mempool to allocate zone write
- plugs
+Subject: Re: [PATCH v2 11/28] block: Implement zone append emulation
 Content-Language: en-US
-To: Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
+To: Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
  Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
  "Martin K . Petersen" <martin.petersen@oracle.com>,
  dm-devel@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>
 Cc: Christoph Hellwig <hch@lst.de>
 References: <20240325044452.3125418-1-dlemoal@kernel.org>
- <20240325044452.3125418-9-dlemoal@kernel.org>
- <6b2aca56-9a0b-4caf-878b-3331dc938a90@suse.de>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <6b2aca56-9a0b-4caf-878b-3331dc938a90@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20240325044452.3125418-12-dlemoal@kernel.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240325044452.3125418-12-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -5.50
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-5.50 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rgqMSNjr;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="glypdop/"
+X-Rspamd-Queue-Id: 89F06386EE
 
-On 3/27/24 16:19, Hannes Reinecke wrote:
-> On 3/25/24 05:44, Damien Le Moal wrote:
->> Allocating zone write plugs using a struct kmem_cache does not guarantee
->> that enough write plugs can be allocated to simultaneously write up to
->> the maximum number of active zones of a zoned block device.
->>
->> Avoid any issue with memory allocation by using a mempool with a size
->> equal to the disk maximum number of open zones or maximum number of
->> active zones, whichever is larger. For zoned devices that do not have
->> open or active zone limits, the default 128 is used as the mempool size.
->> If a change to the zone limits is detected, the mempool is resized in
->> blk_revalidate_disk_zones().
->>
->> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->> ---
->>   block/blk-zoned.c      | 62 ++++++++++++++++++++++++++++++------------
->>   include/linux/blkdev.h |  3 ++
->>   2 files changed, 47 insertions(+), 18 deletions(-)
->>
-> Why isn't this part of the previous patch?
-
-I tried to reduce the patch size...
-
-> But that shouldn't hold off the patchset, so:
+On 3/25/24 05:44, Damien Le Moal wrote:
+> Given that zone write plugging manages all writes to zones of a zoned
+> block device and track the write pointer position of all zones,
+> emulating zone append operations using regular writes can be
+> implemented generically, without relying on the underlying device driver
+> to implement such emulation. This is needed for devices that do not
+> natively support the zone append command, e.g. SMR hard-disks.
 > 
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Thanks. But I am about to send V3 and I removed the mempool and replaced it with
-a simple free list...
-
+> A device may request zone append emulation by setting its
+> max_zone_append_sectors queue limit to 0. For such device, the function
+> blk_zone_wplug_prepare_bio() changes zone append BIOs into
+> non-mergeable regular write BIOs. Modified zone append BIOs are flagged
+> with the new BIO flag BIO_EMULATES_ZONE_APPEND. This flag is checked
+> on completion of the BIO in blk_zone_write_plug_bio_endio() to restore
+> the original REQ_OP_ZONE_APPEND operation code of the BIO.
 > 
-> Cheers,
+> The block layer internal inline helper function bio_is_zone_append() is
+> added to test if a BIO is either a native zone append operation
+> (REQ_OP_ZONE_APPEND operation code) or if it is flagged with
+> BIO_EMULATES_ZONE_APPEND. Given that both native and emulated zone
+> append BIO completion handling should be similar, The functions
+> blk_update_request() and blk_zone_complete_request_bio() are modified to
+> use bio_is_zone_append() to execute blk_zone_update_request_bio() for
+> both native and emulated zone append operations.
 > 
-> Hannes
+> This commit contains contributions from Christoph Hellwig <hch@lst.de>.
+> 
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>   block/blk-mq.c            |  2 +-
+>   block/blk-zoned.c         | 69 +++++++++++++++++++++++++++++++--------
+>   block/blk.h               | 14 ++++++--
+>   include/linux/blk_types.h |  1 +
+>   4 files changed, 69 insertions(+), 17 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
+Cheers,
+
+Hannes
 -- 
-Damien Le Moal
-Western Digital Research
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
 
