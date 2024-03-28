@@ -1,37 +1,37 @@
-Return-Path: <linux-block+bounces-5288-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5289-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D7D388F6E4
-	for <lists+linux-block@lfdr.de>; Thu, 28 Mar 2024 06:01:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6809D88F6EC
+	for <lists+linux-block@lfdr.de>; Thu, 28 Mar 2024 06:03:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89B8AB215D7
-	for <lists+linux-block@lfdr.de>; Thu, 28 Mar 2024 05:01:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 98AB61C21A90
+	for <lists+linux-block@lfdr.de>; Thu, 28 Mar 2024 05:03:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792AC376E0;
-	Thu, 28 Mar 2024 05:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 809673FBB0;
+	Thu, 28 Mar 2024 05:03:04 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029A418E3A;
-	Thu, 28 Mar 2024 05:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC892B9B4;
+	Thu, 28 Mar 2024 05:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711602094; cv=none; b=PuPDM2WZagefB67mjj7JYHniLYpVj/JOsrTpNJIIgm8eAT6Pfuaotw+wuomq8Ban9gwClFXhb4B3Je6nT4k2VU63ewGn3Uj8cvdjjvGn2UFU6zFWn3BhOvQdrP1VXIaIW5k9JiPFuGU/lzqqtcTePnoJwy4/WYLMDK0Hv0Zizs4=
+	t=1711602184; cv=none; b=XlDB7W3pi23g5j2eROdkH0ySo2OuNkvO17KTCuuHFRgUNZKO3Q5NLGRA/50XR9GTmaHxKnjqNbKGW7CgZbi/4RMMu3m2P4lxcU/iM9KQdAy+lI21BqJIh7UlkVdY6sVJvQSWloyoocaPP1K4JqpmbMICc2WqMsCDu8i/Ql0Cbos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711602094; c=relaxed/simple;
-	bh=QGOjoDyeWF3dA35WKaoPxT8+F2LMLEgxxVll4TwFRGI=;
+	s=arc-20240116; t=1711602184; c=relaxed/simple;
+	bh=FSuohLyFVycqsC8R8pS+M1lZc+cDDemK4lAv98Qy8ck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hX88JHp50RgSGTad3o6L2BG7UntVLNBolB8Ll3BHOPMbri/K6GsDlf8G/JkEzT2w52vkfRf4etN2OB5tNY1XyesdjwYDiPIhaTmBpFmfLjX8x3IEbnIfUswi3TkB6yG25Vww6kryBeaH4pRvElCCjOcpI7xeyTE6xfgt6+ugbAY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdhK40u4ZbbZnq6UcAAddservgkS3TSpYMXj6w+Lasv5+V8R940AIKCnKucph7U9WzWxLi6bNSJ1yN2/hfG6p85Sbaohf2aBJwcYtMRddTmEz251QjHqNgsAoXzuoEq8g5osTQNJuAJga/pr6X6UTZNgWperQOpzETo16A36sko=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 5852C68B05; Thu, 28 Mar 2024 06:01:21 +0100 (CET)
-Date: Thu, 28 Mar 2024 06:01:20 +0100
+	id EE41968B05; Thu, 28 Mar 2024 06:02:56 +0100 (CET)
+Date: Thu, 28 Mar 2024 06:02:55 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: John Garry <john.g.garry@oracle.com>
 Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
@@ -68,10 +68,10 @@ Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
 	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
 	linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org,
 	usb-storage@lists.one-eyed-alien.net
-Subject: Re: [PATCH 07/23] scsi: add a dma_alignment field to the host and
- host template
-Message-ID: <20240328050120.GB14655@lst.de>
-References: <20240324235448.2039074-1-hch@lst.de> <20240324235448.2039074-8-hch@lst.de> <1137e698-4376-4dc3-9bdf-886945787486@oracle.com>
+Subject: Re: [PATCH 09/23] scsi: use the atomic queue limits API in
+ scsi_add_lun
+Message-ID: <20240328050255.GC14655@lst.de>
+References: <20240324235448.2039074-1-hch@lst.de> <20240324235448.2039074-10-hch@lst.de> <eaaf6c1d-2a7d-4a67-94e3-bd5dc4a83045@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -80,18 +80,15 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1137e698-4376-4dc3-9bdf-886945787486@oracle.com>
+In-Reply-To: <eaaf6c1d-2a7d-4a67-94e3-bd5dc4a83045@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Mar 27, 2024 at 03:15:28PM +0000, John Garry wrote:
->>   	shost->max_cmd_len = SCSI_MAX_VARLEN_CDB_SIZE;
->> +	shost->dma_alignment = 0;
->>   
->
-> nit: I am not sure that we really need to zero this, but it also seems 
-> needless for max_channel also ...
+On Wed, Mar 27, 2024 at 03:39:25PM +0000, John Garry wrote:
+> Is there some reason to relocate this and have it included for other error 
+> paths, i.e. queue_limits_commit_update() call? It doesn't really tell us 
+> much to know the cause of the failure. At least previously it was in one 
+> location, so we knew the point of failure.
 
-In this case we need it (at least to keep the existing behavior), as
-the SCSI mid layer sets a default alignment, and iSCSI claims to have
-no alignment requirements at all.
+I assumed an error message might be useful, but maybe it should indeed
+be a different one.
 
