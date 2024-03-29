@@ -1,95 +1,104 @@
-Return-Path: <linux-block+bounces-5430-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5432-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E032891BAB
-	for <lists+linux-block@lfdr.de>; Fri, 29 Mar 2024 14:30:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5A45891E01
+	for <lists+linux-block@lfdr.de>; Fri, 29 Mar 2024 15:30:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F88B1C26892
-	for <lists+linux-block@lfdr.de>; Fri, 29 Mar 2024 13:30:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1315DB2E5E0
+	for <lists+linux-block@lfdr.de>; Fri, 29 Mar 2024 14:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 063C1136E20;
-	Fri, 29 Mar 2024 12:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 162551D2AAE;
+	Fri, 29 Mar 2024 12:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aIwAwshY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhKPv51E"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CE813664E;
-	Fri, 29 Mar 2024 12:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEB01D2AA9;
+	Fri, 29 Mar 2024 12:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715931; cv=none; b=hKyXHQ203bPVFeDCFalPnUK59cQ2+Vm4g9JV3uCiUcmUU1lk+mpvve4APMlj4PRsK0Sb1yzPRMU1sJbRmB0X/b0/abaV4szq39VRnwo3+WVKX+LdqjA4+cOejIETOcewXrz8AygxgBSP+5qJbCIqWlKfW14GBkRAGgKNRNorLzU=
+	t=1711716325; cv=none; b=UcCx8f4m8U+Q/96VXogP+73ESek9bKPWFpXFbBXxKC5p8QArCXX4KEekjmyu6q47lSVHX579hCfsoskl3eS/2//juNatL7tnP70Z9zx5mqp6+pQTsMImRTtERkPi83nwixJLMMFhd5TCIK/5lncUWHX+QTQb1V1RLtnc6eydyLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715931; c=relaxed/simple;
-	bh=7OCE6E+V/uRCmyJIcNCPSK5hYqaC8YBhEdwTeGxys3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UcnvqbLis9BVhgBtwhzKOPNr2KELtBeKKKPe/Pp1yRi6y7vrOwY50dqO9kbWf1U98NKdKzEgygC7wNsY6fBeBEFckNhyyqgi9w428QsS8orU6eyUPfeCxE1v7uJnGHBHDcpMPxPwkOzSR7WNUwyUHFVgoKpzexAZRTwSmgTNlQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aIwAwshY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5EFC433C7;
-	Fri, 29 Mar 2024 12:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711715931;
-	bh=7OCE6E+V/uRCmyJIcNCPSK5hYqaC8YBhEdwTeGxys3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aIwAwshYuhXNwu5+OKWbn6PPzRD2Q1fuTJPxJF5b6wNOFJ0B1iC69LpdDDWMfqi/Y
-	 OJkKAH3fz/dAmmchsiOtbPx9n6ux59ANT3v0YZHBVtbgCaH+N69RYgaXibPVb16NP/
-	 0NhzBe0hDWb3cT9OoO+gYoillLKprEn8qXLMNYxk=
-Date: Fri, 29 Mar 2024 13:38:48 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: genjian zhang <zhanggenjian@126.com>
-Cc: stable@vger.kernel.org, axboe@kernel.dk, stable@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	zhanggenjian123@gmail.com, Genjian Zhang <zhanggenjian@kylinos.cn>
-Subject: Re: Re: [PATCH 4.19.y 0/9] Fix the UAF issue caused by the loop
- driver
-Message-ID: <2024032938-preface-reassure-a1f4@gregkh>
-References: <20240301013028.2293831-1-zhanggenjian@126.com>
- <2024030421-obedient-unbalance-a728@gregkh>
- <1d74f009.2179.18e16c2d99f.Coremail.zhanggenjian@126.com>
+	s=arc-20240116; t=1711716325; c=relaxed/simple;
+	bh=0pqNxaLcbkQ7KCRmakADyDfAYk41/fLh/4lRyyT542Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c7k3fvpdMiEYJ9vozagacDodOzxrTPpa8Kf3XolpDpyXlEyNHUumJPYec0lh9MHgeVysFg2zvSH9fR0HbVWbhDH0xkofiwe79zKEFbvWXIwnmU6xpkUU9i03QR8OA+mUthm+UIRx2gchmklLAMLpoORLRbwt6PsBqNS0bKC4KXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VhKPv51E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D20C43394;
+	Fri, 29 Mar 2024 12:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711716324;
+	bh=0pqNxaLcbkQ7KCRmakADyDfAYk41/fLh/4lRyyT542Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VhKPv51E2XB7HVb8KRfp4OVJevmWD2r0uUl8C1lrxx7/DaCXzD33zu86fCFTg3iCG
+	 6qJUTIQXMNV5eeov2AqgftWk6i63VfTyRDyzFxy38nZrkPYHzaBAdY05A/Ept10hsC
+	 7CPnRAyEPengM+sdqtpDYdeqpRbPRDIeuzpUgzEgfJJY34HJ3Fs80rz3whuTTnsMhn
+	 nyXAVR+tDlF9J+4pF6b2NdA4iSBEK2gCjQm3F/qU3ZBsZjQc1iNTl6/iM3WKiv/tQu
+	 rw5KyuaEGOCHa64unGfHYw+i8dRsUvPZ4ECGmPOT/TokmYd5UrehCKPzoTcAbLaHL/
+	 5pOP5uqwr3CJg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Roman Smirnov <r.smirnov@omp.ru>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 64/75] block: prevent division by zero in blk_rq_stat_sum()
+Date: Fri, 29 Mar 2024 08:42:45 -0400
+Message-ID: <20240329124330.3089520-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329124330.3089520-1-sashal@kernel.org>
+References: <20240329124330.3089520-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.23
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d74f009.2179.18e16c2d99f.Coremail.zhanggenjian@126.com>
 
-On Thu, Mar 07, 2024 at 10:34:12AM +0800, genjian zhang wrote:
-> 
-> At 2024-03-04 21:31:20, "Greg KH" <gregkh@linuxfoundation.org> wrote:
-> >On Fri, Mar 01, 2024 at 09:30:19AM +0800, Genjian wrote:
-> >> From: Genjian Zhang <zhanggenjian@kylinos.cn>
-> >> 
-> >> Hello!
-> >> 
-> >> We found that 2035c770bfdb ("loop: Check for overflow while configuring loop") lost a unlock loop_ctl_mutex in loop_get_status(...).
-> >> which caused syzbot to report a UAF issue. However, the upstream patch does not have this issue.
-> >> So, we revert this patch and directly apply the unmodified upstream patch.
-> >> 
-> >> Risk use-after-free as reported by syzbot：
-> >
-> >This looks good, but you are backporting commits that are NOT in newer
-> >stable releases (i.e. from 5.8 but the commit is not in 5.4.y), is that
-> >intentional?
-> >
-> >Does 5.4.y also have this problem?  If so, can you send a series that
-> >fixes that up so I can take both of them at the same time?
-> >
-> >thanks,
-> >
-> >greg k-h
-> 
-> Thank you for your advice. This problem also exists in 5.4.y. 
-> I will send a series of patches for 5.4.y.
+From: Roman Smirnov <r.smirnov@omp.ru>
 
-All now queued up, thanks!
+[ Upstream commit 93f52fbeaf4b676b21acfe42a5152620e6770d02 ]
 
-greg k-h
+The expression dst->nr_samples + src->nr_samples may
+have zero value on overflow. It is necessary to add
+a check to avoid division by zero.
+
+Found by Linux Verification Center (linuxtesting.org) with Svace.
+
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Link: https://lore.kernel.org/r/20240305134509.23108-1-r.smirnov@omp.ru
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/blk-stat.c b/block/blk-stat.c
+index 7ff76ae6c76a9..e42c263e53fb9 100644
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -27,7 +27,7 @@ void blk_rq_stat_init(struct blk_rq_stat *stat)
+ /* src is a per-cpu stat, mean isn't initialized */
+ void blk_rq_stat_sum(struct blk_rq_stat *dst, struct blk_rq_stat *src)
+ {
+-	if (!src->nr_samples)
++	if (dst->nr_samples + src->nr_samples <= dst->nr_samples)
+ 		return;
+ 
+ 	dst->min = min(dst->min, src->min);
+-- 
+2.43.0
+
 
