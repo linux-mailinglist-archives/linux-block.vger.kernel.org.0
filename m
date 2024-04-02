@@ -1,248 +1,126 @@
-Return-Path: <linux-block+bounces-5561-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5563-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 209308953E3
-	for <lists+linux-block@lfdr.de>; Tue,  2 Apr 2024 14:53:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7507C89542B
+	for <lists+linux-block@lfdr.de>; Tue,  2 Apr 2024 15:05:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44CD41C223D8
-	for <lists+linux-block@lfdr.de>; Tue,  2 Apr 2024 12:53:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDE86B245FB
+	for <lists+linux-block@lfdr.de>; Tue,  2 Apr 2024 13:05:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 600557F7EF;
-	Tue,  2 Apr 2024 12:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFC77FBA2;
+	Tue,  2 Apr 2024 13:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="xsN/iSMT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ky4McLlu"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B11E2A8E5
-	for <linux-block@vger.kernel.org>; Tue,  2 Apr 2024 12:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E386A7F7E2
+	for <linux-block@vger.kernel.org>; Tue,  2 Apr 2024 13:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712062385; cv=none; b=Au7CMPWSi7CR9VEN+qF4x8/r+YFsR7gCaFFBRTvTvOp1QIHylTJbgZdsAgUxRdn6wdi030wMbAvBw/oQeHDKG4XXJEdHjmUsgTRttvCFnJ+XLbVNINj2JSEvronyCttH/ZJ8NreMGRx9xupmpHccJBc+gFQIMVEFmo0RMV3atEA=
+	t=1712063101; cv=none; b=iV5AyLBWGX8RCV/7TFZA2JfiXLdmlBbyFlUZSxzVPg1u2bgp//tT5oxr4RJJv8axFdB8J5R9tqbZZh1EqF+6VVjtw2a791LZC4F26t6H93oZmPpoOWfcO56gI1iH8GhlyBLju3rKg+1TEOpvLaNA8daWBZzeeu6v6LzVPdusiAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712062385; c=relaxed/simple;
-	bh=q2kPt6yjl30JqIa0seZEYYNUi+H5nFnRONvscP4kMok=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PQHUcO1qZ6tjnTb2WPTCbBgXNXMJmdDXgBSNUzFunp+PUxISwp3/oMhEZgqOzZAov5FR16VCLdQ5LgSRpVzec4efhn7L3W19FYJRmFTxnq1z2yl6bQqSp22JYYy5wZIOr203ueWHtHa/PQHzvmBkAycUaZ1TC3UsKZq/dmK1ehU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=xsN/iSMT; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4156e5c1c7eso6426845e9.1
-        for <linux-block@vger.kernel.org>; Tue, 02 Apr 2024 05:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1712062381; x=1712667181; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqmgY3xDOiui/wAdPFJWohuj9sT1khau6i6swSwlQYg=;
-        b=xsN/iSMTp1Fw4B3kEnTv+4/c5Mg8t2aHZZ2rBQZ716ZHggBOC4rwk7vqVbbCFuuCGV
-         VSqBfdMjHvowHhLNcM1OHSqyUDNQ98jycbzU/jb1kQm4TVuxF9ba40KIRv8L02DVJDqe
-         e3x40fSJbz4jnN+gr3vMN1BiM1dPq4g1oO6WlGDjH8B6Hmg8krrdsCrWsotgDhcXyu/W
-         gOQTKJNuQ1BIPU0jVhszdRCMAmOPtSATybE3ETVGZ41a+4OKtleKYPNbAUpOhIt2PHN+
-         wYoRjvMaybQnUotFdue/k9OJ+PseknpnrjhCfgRRP9TFblRF+NBRvaIUVgHFbHvIRwkw
-         eKow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712062381; x=1712667181;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cqmgY3xDOiui/wAdPFJWohuj9sT1khau6i6swSwlQYg=;
-        b=lKdpqhLDezkBmHN/xebkwZiR+OK/l8XwOPmMfpL961b+QzlnQ75Njke6x4Qa8YD1TH
-         Um05B1xS8vTw4LnSQWaLS+ykOooo0hskLJzXIPk3pnYel8wct50fXXUScnbXaQtr2lys
-         DUjov8KbCXHKxAi6qHzMqM2KnUPUA7EZvcMjivOGRkPMhNHFafnyN+f86lzenPbafG9E
-         UOZzDwIrDdvr0CrOWtJ5XlNj2lVjpvzOZRmF24NBT9we8PbVOqQuf7ivksyGnKkFiyoK
-         LFaQp9qOsNASxSV7pv7ua8vEoPSDDfZtaXvXP+0p8OVza3IUyTk49rRcL7rjGBH9qWz1
-         G9Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwi9tsggZyY5OOj980OhiVxWags66QPOUiifYp12QsJvWA0EImJbDir2VURZ0PjC69+9ZkMPfYyqduLBxgpxloJv+075R3ZmmtsB0=
-X-Gm-Message-State: AOJu0YwbTJn4VwaYZrRbFvE2+XoQPq/J9h1FtYN/Wk2F/Az4Ze+i+Et6
-	0ae0lae6lRgxGA3d262n70+g90gmpT78upPtDRmsv5pCP7tF/vbNOcUYJGZFIkE=
-X-Google-Smtp-Source: AGHT+IHxclVsDENAUON4rVhcSkQFjbXUsDazPWYbGOXYd0gI08wkjR8X6U1Z5rM/JUvg32AMwQso8g==
-X-Received: by 2002:a05:600c:5188:b0:415:6e79:91dc with SMTP id fa8-20020a05600c518800b004156e7991dcmr2655357wmb.15.1712062380823;
-        Tue, 02 Apr 2024 05:53:00 -0700 (PDT)
-Received: from localhost ([147.161.155.112])
-        by smtp.gmail.com with ESMTPSA id l13-20020a05600c4f0d00b004161af729f4sm2029727wmq.31.2024.04.02.05.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 05:53:00 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Jens Axboe <axboe@kernel.dk>,  Christoph Hellwig <hch@lst.de>,  Keith
- Busch <kbusch@kernel.org>,  Damien Le Moal <Damien.LeMoal@wdc.com>,  Bart
- Van Assche <bvanassche@acm.org>,  Hannes Reinecke <hare@suse.de>,
-  "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,  Andreas
- Hindborg <a.hindborg@samsung.com>,  Niklas Cassel <Niklas.Cassel@wdc.com>,
-  Greg KH <gregkh@linuxfoundation.org>,  Matthew Wilcox
- <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor
- <alex.gaynor@gmail.com>,  Wedson Almeida Filho <wedsonaf@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Alice Ryhl <aliceryhl@google.com>,
-  Chaitanya Kulkarni <chaitanyak@nvidia.com>,  Luis Chamberlain
- <mcgrof@kernel.org>,  Yexuan Yang <1182282462@bupt.edu.cn>,  Sergio
- =?utf-8?Q?Gonz=C3=A1lez?= Collado <sergio.collado@gmail.com>,  Joel
- Granados
- <j.granados@samsung.com>,  "Pankaj Raghav (Samsung)"
- <kernel@pankajraghav.com>,  Daniel Gomez <da.gomez@samsung.com>,  open
- list <linux-kernel@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>,  "lsf-pc@lists.linux-foundation.org"
- <lsf-pc@lists.linux-foundation.org>,  "gost.dev@samsung.com"
- <gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 4/5] rust: block: add rnull, Rust null_blk
- implementation
-In-Reply-To: <QqpNcEOxhslSB7-34znxmQK_prPJfe2GT0ejWLesj-Dlse1ueCacbzsJOM0LK3YmgQsUWAR58ZFPPh1MUCliionIXrvLNsOqTS_Ee3bXEuQ=@proton.me>
-	(Benno Lossin's message of "Sat, 23 Mar 2024 11:33:26 +0000")
-References: <20240313110515.70088-1-nmi@metaspace.dk>
-	<20240313110515.70088-5-nmi@metaspace.dk>
-	<QqpNcEOxhslSB7-34znxmQK_prPJfe2GT0ejWLesj-Dlse1ueCacbzsJOM0LK3YmgQsUWAR58ZFPPh1MUCliionIXrvLNsOqTS_Ee3bXEuQ=@proton.me>
-User-Agent: mu4e 1.12.0; emacs 29.2
-Date: Tue, 02 Apr 2024 14:52:49 +0200
-Message-ID: <87msqc3p0e.fsf@metaspace.dk>
+	s=arc-20240116; t=1712063101; c=relaxed/simple;
+	bh=7ah2VuBYWEmWHWPyFP68b6yoTO91npOyV7LilgwLJqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hzcdEtVCIG6KB+jhsVWM5UkTouKscbZSR9uaYCi4YsFyBVAtbDmaJbuHbd8919YaT3GPHPUEixmSrOmxiZSw4zfmSazX+GcCfZUzNeTBx3lJDcBxUtlNWItCEHf4FV5UiZf9BOvmnABbaK3k40QiTD7XcmOhrpedXPnpsESxFSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ky4McLlu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712063098;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OvSWXFalEF6OU22DUvBZWFYn2B7uDOAlKG6m5QBQYIk=;
+	b=Ky4McLlu1CegBZcflHdn/wM175LEb4xmNP12ttahkdri3+Ep8PRHIcv7+9XTuSVKA2nqXY
+	vHXRbp7sXpEovWexCYadq9cmdg/wOjVyqNZzHiJBkPvOlKlM3Si/yvaSqXpvM6mrWGUE1P
+	39qRGIgHvxuUE1EiuDK9Sc/ts/AY/HE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-682-NI3dA4XqNgaoiilj5Na5TA-1; Tue, 02 Apr 2024 09:04:54 -0400
+X-MC-Unique: NI3dA4XqNgaoiilj5Na5TA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 141C3101A520;
+	Tue,  2 Apr 2024 13:04:54 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2134E492BCD;
+	Tue,  2 Apr 2024 13:04:52 +0000 (UTC)
+Date: Tue, 2 Apr 2024 09:04:46 -0400
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	eblake@redhat.com, Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
+	David Teigland <teigland@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Joe Thornber <ejt@redhat.com>
+Subject: Re: [RFC 0/9] block: add llseek(SEEK_HOLE/SEEK_DATA) support
+Message-ID: <20240402130446.GA2496428@fedora>
+References: <20240328203910.2370087-1-stefanha@redhat.com>
+ <20240402122617.GA30720@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RDsvgnmIpxDRfcPA"
+Content-Disposition: inline
+In-Reply-To: <20240402122617.GA30720@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-Benno Lossin <benno.lossin@proton.me> writes:
 
-> On 3/13/24 12:05, Andreas Hindborg wrote:
->> +module! {
->> +    type: NullBlkModule,
->> +    name: "rnull_mod",
->> +    author: "Andreas Hindborg",
->> +    license: "GPL v2",
->> +    params: {
->> +        param_memory_backed: bool {
->> +            default: true,
->> +            permissions: 0,
->> +            description: "Use memory backing",
->> +        },
->> +        // Problems with pin_init when `irq_mode`
->
-> Can you elaborate?
+--RDsvgnmIpxDRfcPA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think we discussed this before, but I do not recall what you decided
-was the issue.
+On Tue, Apr 02, 2024 at 02:26:17PM +0200, Christoph Hellwig wrote:
+> On Thu, Mar 28, 2024 at 04:39:01PM -0400, Stefan Hajnoczi wrote:
+> > In the block device world there are similar concepts to holes:
+> > - SCSI has Logical Block Provisioning where the "mapped" state would be
+> >   considered data and other states would be considered holes.
+>=20
+> But for SCSI (and ATA and NVMe) unmapped/delallocated/etc blocks do
+> not have to return zeroes.  They could also return some other
+> initialization pattern pattern.  So they are (unfortunately) not a 1:1
+> mapping to holes in sparse files.
 
-It is probably easier if you can apply the patches and try to build with
-this on top:
+Hi Christoph,
+There is a 1:1 mapping when when the Logical Block Provisioning Read
+Zeroes (LBPRZ) field is set to xx1b in the Logical Block Provisioning
+VPD page.
 
-diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
-index 04bdb6668558..bd089c5e6e89 100644
---- a/drivers/block/rnull.rs
-+++ b/drivers/block/rnull.rs
-@@ -48,7 +48,7 @@
-             description: "Use memory backing",
-         },
-         // Problems with pin_init when `irq_mode`
--        param_irq_mode: u8 {
-+        irq_mode: u8 {
-             default: 0,
-             permissions: 0,
-             description: "IRQ Mode (0: None, 1: Soft, 2: Timer)",
-@@ -101,7 +101,7 @@ fn add_disk(tagset: Arc<TagSet<NullBlkDevice>>) -> Result<GenDisk<NullBlkDevice>
-         return Err(kernel::error::code::EINVAL);
-     }
- 
--    let irq_mode = (*param_irq_mode.read()).try_into()?;
-+    let irq_mode = (*irq_mode.read()).try_into()?;
- 
-     let queue_data = Box::pin_init(pin_init!(
-         QueueData {
+Otherwise SEEK_HOLE/SEEK_DATA has to treat the device as filled with
+data because it doesn't know where the holes are.
 
----
+Stefan
 
-There is some kind of name clash issue when using `pin_init!` in the expression on
-line 106:
+--RDsvgnmIpxDRfcPA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    let queue_data = Box::pin_init(pin_init!(
-        QueueData {
-            tree <- TreeContainer::new(),
-            completion_time_nsec: *param_completion_time_nsec.read(),
-            irq_mode,
-            memory_backed: *param_memory_backed.read(),
-            block_size,
-        }
-    ))?;
+-----BEGIN PGP SIGNATURE-----
 
-I cannot immediately decipher the error message:
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmYMAm4ACgkQnKSrs4Gr
+c8hVxQf6Ai3HCf81vk9Zfg0wnaREk8TJeBtQghYd36C8nr5bX1BpwXAQog0wnYbZ
+VK0zB5aL/xDtzp+Vs69+Dn7ouGRxk48H5h1Xk8o9UD2XWSoS4f+bb7b5nSKeF45y
+gQd/tdgI+ch4AqbpByYz6Cgc3ZqJ03Tcm+zm9Vj4xUiXw1Hhj1V/09vVzif9X5tw
+3/80Yd4JLU1W/7cznhTTAIrpz8L+NAclZkQFVtfbvV0aXQfAXGvV8Kl82ddmKBmL
++ovnir/EbVpxUcg4veYJCme1B8D6ALU4znM2krhnz6g5jBynLN+av88weJErNfox
+34X6JufpJpSZUzfyTIA6PB7z5eS3Lg==
+=cwzD
+-----END PGP SIGNATURE-----
 
-  RUSTC [M] drivers/block/rnull.o
-error[E0277]: the trait bound `__rnull_mod_irq_mode: From<u8>` is not satisfied
-   --> /home/aeh/src/linux-rust/linux/drivers/block/rnull.rs:104:39
-    |
-104 |     let irq_mode = (*irq_mode.read()).try_into()?;
-    |                                       ^^^^^^^^ the trait `From<u8>` is not implemented for `__rnull_mod_irq_mode`
-    |
-    = note: required for `u8` to implement `Into<__rnull_mod_irq_mode>`
-    = note: required for `__rnull_mod_irq_mode` to implement `TryFrom<u8>`
-    = note: required for `u8` to implement `TryInto<__rnull_mod_irq_mode>`
+--RDsvgnmIpxDRfcPA--
 
-error[E0308]: mismatched types
-    --> /home/aeh/src/linux-rust/linux/drivers/block/rnull.rs:106:36
-     |
-106  |       let queue_data = Box::pin_init(pin_init!(
-     |  ____________________________________^
-107  | |         QueueData {
-108  | |             tree <- TreeContainer::new(),
-109  | |             completion_time_nsec: *param_completion_time_nsec.read(),
-...    |
-113  | |         }
-114  | |     ))?;
-     | |     ^
-     | |     |
-     | |_____expected `IRQMode`, found `__rnull_mod_irq_mode`
-     |       arguments to this function are incorrect
-     |
-note: function defined here
-    --> /home/aeh/.rustup/toolchains/1.74.1-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/mod.rs:1365:21
-     |
-1365 | pub const unsafe fn write<T>(dst: *mut T, src: T) {
-     |                     ^^^^^
-     = note: this error originates in the macro `$crate::__init_internal` which comes from the expansion of the macro `pin_init` (in Nightly builds, run with -Z macro-backtrace for more info)
-
-error[E0308]: mismatched types
-   --> /home/aeh/src/linux-rust/linux/drivers/block/rnull.rs:106:36
-    |
-39  | / module! {
-40  | |     type: NullBlkModule,
-41  | |     name: "rnull_mod",
-42  | |     author: "Andreas Hindborg",
-...   |
-71  | |     },
-72  | | }
-    | |_- constant defined here
-...
-106 |       let queue_data = Box::pin_init(pin_init!(
-    |  ____________________________________^
-    | |____________________________________|
-    | |____________________________________|
-    | |____________________________________|
-    | |
-107 | |         QueueData {
-108 | |             tree <- TreeContainer::new(),
-109 | |             completion_time_nsec: *param_completion_time_nsec.read(),
-...   |
-113 | |         }
-114 | |     ))?;
-    | |     ^
-    | |_____|
-    | |_____expected `DropGuard<IRQMode>`, found `__rnull_mod_irq_mode`
-    | |_____this expression has type `DropGuard<IRQMode>`
-    | |_____`irq_mode` is interpreted as a constant, not a new binding
-    |       help: introduce a new binding instead: `other_irq_mode`
-    |
-    = note: expected struct `DropGuard<IRQMode>`
-               found struct `__rnull_mod_irq_mode`
-    = note: this error originates in the macro `$crate::__init_internal` which comes from the expansion of the macro `pin_init` (in Nightly builds, run with -Z macro-backtrace for more info)
-
-error: aborting due to 3 previous errors
-
-Some errors have detailed explanations: E0277, E0308.
-For more information about an error, try `rustc --explain E0277`.
-make[5]: *** [/home/aeh/src/linux-rust/linux/scripts/Makefile.build:293: drivers/block/rnull.o] Error 1
 
