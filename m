@@ -1,77 +1,77 @@
-Return-Path: <linux-block+bounces-5964-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-5966-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DF7389BCF5
-	for <lists+linux-block@lfdr.de>; Mon,  8 Apr 2024 12:24:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 789F889BD2F
+	for <lists+linux-block@lfdr.de>; Mon,  8 Apr 2024 12:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 048152840CC
-	for <lists+linux-block@lfdr.de>; Mon,  8 Apr 2024 10:24:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F7231C20B5F
+	for <lists+linux-block@lfdr.de>; Mon,  8 Apr 2024 10:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C3453813;
-	Mon,  8 Apr 2024 10:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A03E055E44;
+	Mon,  8 Apr 2024 10:31:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kaZjZVR6"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n5aZ3q91"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34AA53807
-	for <linux-block@vger.kernel.org>; Mon,  8 Apr 2024 10:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD93755C07
+	for <linux-block@vger.kernel.org>; Mon,  8 Apr 2024 10:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712571863; cv=none; b=ZWu1stoc6CwiRuUSddWga2v1jwJK1SIxIXjKs1dibzFjTe7vJQZt6E8LjmD8YJ90C3yHg5CT0YGVczwkDKCyFDAaxEfN/ryiZ6YnVm60zDeuCrlTUMxG5v1NQQF23EcjKgDXZQJ5LI16hqQd9mgR6nJAdLR0cwv4YTQNTlaC+qA=
+	t=1712572284; cv=none; b=IEsWxNsEc7odCquHzL50TtrQdJS2lwpWp+qEzd1lIIDW1bN87kuEdnS3sbzD5x2jogz/DjcbYiSIaYCQeTvSBj76lqWJWN3r5PBzZwmnu0nMQQ99z1ShGPqRSQJPVxPaOBpalF4nWlDJlxY5OOsRqCWwckTQQLO+cGT2HV5M4io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712571863; c=relaxed/simple;
-	bh=AA6NZcYbHPO0zHenWOgHSTgf3cju/SFBdmm93I+Ynhw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AJM0PW9Uxg1+W0dj+PDBgNxmGqfMFwexhi5hWh3faDjXQ9kn90qPcFKEWmNu71f+napGOnWwoFGhtRH0Ip/6LCa/h1nljWzTIs3HxUQsRwjGYbMpqBADsxsBKZIS/OZq+tbLpttOgAHJJ/p8G1vRJvmlpG1+f+q9ouo+sBpvzuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kaZjZVR6; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1712572284; c=relaxed/simple;
+	bh=GK0UC2dnWbJLH/bBaJQYK33x/tdTTgPCJaJ3N911K+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q+jnXshY4HdqMABpQVjuEdKQQo5dmVtxaMG/UDyY2PRI56qIHBLotVcqmrf9Pl45HCkSQN1T0X2djruLITaQaAECSVmypUR44c7vR2+ak6O5FSXfInsqS58SyidX1Ub1IPoMzdDpb4OfRFVTC1N5b56RyuMKQParHmF0bl6TwjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n5aZ3q91; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4389vIbL024144;
-	Mon, 8 Apr 2024 10:24:02 GMT
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4389tCTH028664;
+	Mon, 8 Apr 2024 10:31:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=9hT6Xo0zh893cHuYQsx0P8EYkjIztutvFofjNunbKl8=;
- b=kaZjZVR67bknRXJW1/+RG5MEwEA4kuu4D8wEzP9WR2JZzwEKkFJiFpFVVCPjpQ6Impwe
- uJChZ4tx0YYRoZBJDsjwcHXZ80ZPIJ3BWjepF9xXYi4BAHGUnwUA094uD39C0fAc/yN0
- HX8js9XMVo3whd4FBgSaPzxXhsTyeeHLt9lUbT0fwzXt86GinEhOIwLASJF6hvyXmayZ
- hmkQhSpZnn5ycvfkvCbuGn5netzWShF87NehFYW/xjYznM8/WyIMcnoBU2BMLLYPH/+G
- HhQLFbegc0GN8acqIprLyvwDShHUV4waQGVXVDjsqjOOP36eM294UlKa91Fy747m9ab4 BA== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xceda01sy-1
+ bh=M5pDYCzyy4wlFKA//uN4vmqtN66ksvh0eaQquzYrdAQ=;
+ b=n5aZ3q91iAliyZqQGAYLFs7rMdQf6z7Gek8boOT+dpxeCaw7TprHjoJ3HelzbYu7AHFM
+ HyGT4rDgFA+lZMgHr3SwCOV/IHOK6stRRpqvLPm+G0kihcQu1RxB/m4/xWx5QN0b2pub
+ vKQrEKRhc9SjpOuy9YNI1zfec+cOEWMhv6Acz/oW/6SXvL5wEBQcHolaYuPxldOtuCp/
+ J637tfDsD4+nG2mDGfd4j1mf/efa3F+hwrMoIi9QRh4pGHUyJCBONjkbhUY6X5IYBDgI
+ vdgLCy2y9mVbmPNwEG9bZwUkzbti0NeNvoodxYdhwK941XFv+UmN05OJW3ijHhZ5+Zbr Lg== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xcec5r2dh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 10:24:01 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4388H5Ts022573;
-	Mon, 8 Apr 2024 10:24:00 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbhqnqh9f-1
+	Mon, 08 Apr 2024 10:31:11 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4388s1US029907;
+	Mon, 8 Apr 2024 10:27:34 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbj7kye1p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 10:24:00 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 438ANugE35782996
+	Mon, 08 Apr 2024 10:27:34 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 438ARUV749283522
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Apr 2024 10:23:58 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 384CB20043;
-	Mon,  8 Apr 2024 10:23:56 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B21E2004B;
-	Mon,  8 Apr 2024 10:23:54 +0000 (GMT)
+	Mon, 8 Apr 2024 10:27:32 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A6C4420043;
+	Mon,  8 Apr 2024 10:27:30 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E54EC20040;
+	Mon,  8 Apr 2024 10:27:28 +0000 (GMT)
 Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.in.ibm.com (unknown [9.109.198.231])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  8 Apr 2024 10:23:54 +0000 (GMT)
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  8 Apr 2024 10:27:28 +0000 (GMT)
 From: Nilay Shroff <nilay@linux.ibm.com>
 To: kbusch@kernel.org
 Cc: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, axboe@fb.com,
         hch@lst.de, gjoyce@ibm.com, Nilay Shroff <nilay@linux.ibm.com>
-Subject: [PATCH] nvme-pci: Fix EEH failure on ppc after subsystem reset
-Date: Mon,  8 Apr 2024 15:53:07 +0530
-Message-ID: <20240408102329.442335-1-nilay@linux.ibm.com>
+Subject: [PATCHv2] nvme-pci: Fix EEH failure on ppc after subsystem reset
+Date: Mon,  8 Apr 2024 15:56:29 +0530
+Message-ID: <20240408102726.443206-1-nilay@linux.ibm.com>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -81,16 +81,16 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IsKYWhfj9_mCg8HgV8lswmaPCTLMYXIN
-X-Proofpoint-ORIG-GUID: IsKYWhfj9_mCg8HgV8lswmaPCTLMYXIN
+X-Proofpoint-ORIG-GUID: vNwklh-bpLM3hj7u5SzMirLLgCPdkfKW
+X-Proofpoint-GUID: vNwklh-bpLM3hj7u5SzMirLLgCPdkfKW
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-08_08,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 phishscore=0 impostorscore=0 clxscore=1015 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404080080
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404080080
 
 If the nvme subsyetm reset causes the loss of communication to the nvme
 adapter then EEH could potnetially recover the adapter. The detection of
@@ -129,9 +129,10 @@ Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
 ---
 Changes from v1:
   - Allow a controller to reset from a connecting state (Keith)
+
   - Fix race condition between reset work and pci error handler 
     code which may contain reset work and EEH recovery from 
-	forward progress (Keith)
+    forward progress (Keith)
 
  drivers/nvme/host/core.c |  1 +
  drivers/nvme/host/pci.c  | 19 ++++++++++++++++---
