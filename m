@@ -1,160 +1,148 @@
-Return-Path: <linux-block+bounces-6077-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6079-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21D318A0034
-	for <lists+linux-block@lfdr.de>; Wed, 10 Apr 2024 20:59:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E61FE8A00C2
+	for <lists+linux-block@lfdr.de>; Wed, 10 Apr 2024 21:40:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 708FCB28785
-	for <lists+linux-block@lfdr.de>; Wed, 10 Apr 2024 18:59:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 231741C23681
+	for <lists+linux-block@lfdr.de>; Wed, 10 Apr 2024 19:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69CDD180A60;
-	Wed, 10 Apr 2024 18:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EFDB181305;
+	Wed, 10 Apr 2024 19:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BCnb2Uh6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NA/6CZZe"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00F91802CA
-	for <linux-block@vger.kernel.org>; Wed, 10 Apr 2024 18:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD77181314
+	for <linux-block@vger.kernel.org>; Wed, 10 Apr 2024 19:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775550; cv=none; b=LdG/2PSew3yzEGyMDwR/Z8rADPOl68M2F+SymkR9YBdMkIFvcd/Kf83qmQM0AB6j4U1tfhPnR2USdnbV5UDO6fp9oWVLj5zwXEfsOaxtgMpscQkpFVtMPzfOe4FXLNQkTwcCYM3c616nX5MNwOc2TU6i45hAkZEejbTLvEVqqUc=
+	t=1712778038; cv=none; b=byNl+dsMagWUeypHMlTU7Inh2F6XVryJwK02l5HA+hY631xWuuGWQx9uW6ZNFE4uInkMg4fGio0TaMgOzenOYxJkqTQj3aSAEyKFO7iQWEkKpp/TSlCvuImLp91GZ8zCxIjUV8NWM4z6ENyAClln3CGYsUlgV95QA5REgdZCGM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775550; c=relaxed/simple;
-	bh=HcTvQPAA9NUPS2igJbqEH//WEl4aZTKvJGY0XkzAfiI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c4Aet3pJOIpQA87+HDT34QVKISnoNvJ1z37lVbPSkFPACGEIcDb/r2k4k2Kz1n2Z6M+w4JFYErk0XbJfXFfE7JdO86vzsJEuBZ+5N/w2yvOzSNW5O4lKhjVZUBh11YVxCzR5R3wy5ilH8Eb0/c3QXnwuM7GVZoOx6nsUAy+Xjhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BCnb2Uh6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712775547;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XxpkuxUnIrOWR5YmuW0AIjNYXGEKvHqlxiu3ZzXtRNg=;
-	b=BCnb2Uh6fMCJOejfHM8WLfYlscTvZuKzJiWVobfJv7cJVzxOuU9xRroooT0BKAQMEIlFXY
-	172KNU43Q6Ivr8DsnqSE7PPIvXn5G2idDfYIEHs6GVPNU733P6NEN9kked83FvjDp/8xg+
-	uv6pWy+/B+dPlDsOj5U0TlE8jlHKJu8=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-ECBE24yKMqiAGUTuF-aQGg-1; Wed, 10 Apr 2024 14:59:05 -0400
-X-MC-Unique: ECBE24yKMqiAGUTuF-aQGg-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-69b09fe4792so49841106d6.1
-        for <linux-block@vger.kernel.org>; Wed, 10 Apr 2024 11:59:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712775545; x=1713380345;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxpkuxUnIrOWR5YmuW0AIjNYXGEKvHqlxiu3ZzXtRNg=;
-        b=K0DTCg93w6ycNbZS0dDh6rlqJVwrNy7oEJC7nXB5bWeCL5BX6dXdjXZEYQj6liK9hO
-         U2VoKYp5799mXARHrISWnj09bZAMxvDhmUDmLCMd0jPwHe4SmGKbIkX7/Vpr27IVdrwM
-         y+BL5tF+y/WBu6igp1SK9eg8NUP2n16VdXeW0dz7bv4IedpLEWPeg1rBxaoXSqpICm/8
-         vSxZXOnuVqJKn+r9Xx5/aRRnphFNqKRXguWGFMbSqdeWpLYpLvBhNUr+7hXahqox6xAF
-         AKXT2FsT4LaxLJO3IzvIkKKNjKOEZCXBDUffCQJaiMzWTllofNhVu/NJXkji//vxUFyI
-         a8zw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/afybsR/WnH7zeFeiaL9Bbevd3GpLrlHWT2qbCd5dWyqd4TwBns3VWiruavY5BSDvxnVL97/jqBJZI4+xqeW5pj0cPbaAxPJua18=
-X-Gm-Message-State: AOJu0Yyb/x1ktSDeBS8KrcesbyRczR9VyiIw56gDcE+e0hjjTD0W/bDS
-	UZ0czQDllxH0N6L9TY9w+v1H25O6jf3fm9hirGJ2aD0Aroxj0fdr0Ros2zOdkmkZ1q8J9XTNPtZ
-	+anjHpHYnakNazWp98F4uC7E6/mkcCJxEwExK6clvmK48mXhJ06srysVe7WHg
-X-Received: by 2002:a05:6214:4111:b0:69b:1efb:9d42 with SMTP id kc17-20020a056214411100b0069b1efb9d42mr3445944qvb.6.1712775545301;
-        Wed, 10 Apr 2024 11:59:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1rZzHlFdlKErUaVzaIIBoz+uophffHDufiBosrVM2ScG6c79A0tsfU5q3lB5GUj4EtqyQxA==
-X-Received: by 2002:a05:6214:4111:b0:69b:1efb:9d42 with SMTP id kc17-20020a056214411100b0069b1efb9d42mr3445922qvb.6.1712775544953;
-        Wed, 10 Apr 2024 11:59:04 -0700 (PDT)
-Received: from [192.168.1.165] ([70.22.187.239])
-        by smtp.gmail.com with ESMTPSA id p20-20020a05621415d400b00698d06df322sm5418657qvz.122.2024.04.10.11.59.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 11:59:04 -0700 (PDT)
-Message-ID: <1e344d3b-1e30-6638-83c3-f743546374ec@redhat.com>
-Date: Wed, 10 Apr 2024 14:59:03 -0400
+	s=arc-20240116; t=1712778038; c=relaxed/simple;
+	bh=dVxNNyiSzc8E8XowZhEOkAqCqO9EkZxsLoTONMIIe+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=ewxxDXnzbzvIKASZIe9e+rXlx/ttMkZ1TChYtf7JDmmr2JK8or81zE2kzqz2b4gfaA2jrPq9lPT/+++xSTh8vKuFwDI/Vq8p4/CKwkpmVYkorK5+VM01mINHt8/vassT+jTb6K1m7pgi8yICfXfirslSFbrYpL8j89Ez0/E+cIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NA/6CZZe; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240410194032epoutp01edd24e877b81bbce1fd74315067920db~FAovaef3K3003930039epoutp01M
+	for <linux-block@vger.kernel.org>; Wed, 10 Apr 2024 19:40:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240410194032epoutp01edd24e877b81bbce1fd74315067920db~FAovaef3K3003930039epoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1712778033;
+	bh=dVxNNyiSzc8E8XowZhEOkAqCqO9EkZxsLoTONMIIe+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NA/6CZZezOS/R3r3Oqp9YpjBUkbZo20Z1veVjl3NftUryEfuWlLr3pD8sUKJlcFSv
+	 9uK2YVvXaDkmuGJo0uBn2SMAKd+wZTy6ffc3bYGRklUSz+SNjy9T6HeQcoKi4gxklb
+	 z9jSJLCtFVrLOmtldYt0pNir55XurXcZdT6Y9EvM=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240410194031epcas5p15759a46cf252a6fc74571f33bff37830~FAouV0biJ2649326493epcas5p1u;
+	Wed, 10 Apr 2024 19:40:31 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VFCq21R0Pz4x9Pt; Wed, 10 Apr
+	2024 19:40:30 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A7.E4.09666.E2BE6166; Thu, 11 Apr 2024 04:40:30 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240410192515epcas5p1360a731616fca3841c892be310afb109~FAbY8yBzE1911019110epcas5p1H;
+	Wed, 10 Apr 2024 19:25:15 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240410192515epsmtrp26727929e6e890145f149426ceaf426de~FAbY8PYOW2877028770epsmtrp2y;
+	Wed, 10 Apr 2024 19:25:15 +0000 (GMT)
+X-AuditID: b6c32a49-cefff700000025c2-ea-6616eb2e74c0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8E.A6.08390.B97E6166; Thu, 11 Apr 2024 04:25:15 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240410192514epsmtip204f3b35f27f1024b677f3175e2963344~FAbYU9ksV2303223032epsmtip2w;
+	Wed, 10 Apr 2024 19:25:14 +0000 (GMT)
+Date: Thu, 11 Apr 2024 00:48:20 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH] block: convert the debugfs interface to read/write
+ iterators
+Message-ID: <20240410191820.krjqmam76jde2j5i@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH vfs.all 19/26] dm-vdo: convert to use bdev_file
-Content-Language: en-US
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, jack@suse.cz, hch@lst.de,
- brauner@kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
- linux-block@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- yukuai3@huawei.com, dm-devel@lists.linux.dev
-References: <20240406090930.2252838-1-yukuai1@huaweicloud.com>
- <20240406090930.2252838-20-yukuai1@huaweicloud.com>
- <a8493592-2a9b-ac14-f914-c747aa4455f3@redhat.com>
- <20240410174022.GF2118490@ZenIV>
-From: Matthew Sakai <msakai@redhat.com>
-In-Reply-To: <20240410174022.GF2118490@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <dc58cf1e-cfbc-4771-80b8-4dfdf5d7f0d1@kernel.dk>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAKsWRmVeSWpSXmKPExsWy7bCmhq7ea7E0g3+7WSxW3+1ns9h7S9uB
+	yePy2VKPz5vkApiism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVc
+	fAJ03TJzgIYrKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSKE3OLS/PS9fJS
+	S6wMDQyMTIEKE7IzljV/Yy5oZa2YOPMtcwPjbpYuRk4OCQETif/HjzJ1MXJxCAnsZpTY/HoL
+	I4TziVFi26sJLBDON0aJ8zfXscO0TO95D9Wyl1Fifd99ZgjnGaPE6nl/2UCqWARUJS78mQk0
+	i4ODTUBb4vR/DpCwiICCRM/vlWAlzAL2Eme2T2UFKREWCJY4sbkcJMwrYCYx8+hhFghbUOLk
+	zCdgNqeArcS+j8/AbhAVkJGYsfQr2FoJgX3sEreWHGCGOM5F4uHWHihbWOLV8S1QR0tJfH63
+	lw3CLpdYOWUFG0RzC6PErOuzGCES9hKtp/qZQQ5iFsiQ+HwrHyIsKzH11DomiJv5JHp/P2GC
+	iPNK7JgHYytLrFm/AGq+pMS1741QtofE82sTWCHhM4FRonfeDqYJjPKzkDw3C2HdLLAVVhKd
+	H5pYIcLSEsv/cUCYmhLrd+kvYGRdxSiZWlCcm55abFpgmJdaDo/v5PzcTYzgpKfluYPx7oMP
+	eocYmTgYDzFKcDArifBKa4mmCfGmJFZWpRblxxeV5qQWH2I0BcbURGYp0eR8YNrNK4k3NLE0
+	MDEzMzOxNDYzVBLnfd06N0VIID2xJDU7NbUgtQimj4mDU6qBiftddNKGuplfpHmrtn1I3/Zu
+	4Z5/E3+9OO7Ve/+c65/0+W5XL7syhpk9maf41snixWyPZeW3ljXcenls+wmhpj2V1UILpt3P
+	/VrUcO+mQNIDbwP5lVbblmvMWP1x2h8BDv9FYXqXdjzPvv3+VqOpCPMSrX0G/f8S/k68si9s
+	sliVhvL3O0vP3rU/cKvadVbKqdL/WakFNr4dZiVRja3pqf8Zv9wSqNf59vidX55PUcOfG+4i
+	qlv/cGrevDtR/bHcgpX+xhH6nPElAlFrj12arGxV69i9zHFjwsd1Z3Li35oanLxzhn/lzRXM
+	h/esX395qfy6U9Y6Pr8FJYWFP6bdLvBUrElt5n60RjTLQlEhjkeJpTgj0VCLuag4EQDT0fYZ
+	AwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrILMWRmVeSWpSXmKPExsWy7bCSvO7s52JpBpN/S1qsvtvPZrH3lrYD
+	k8fls6UenzfJBTBFcdmkpOZklqUW6dslcGX8WjSBvWA7U8WaaT9YGhjbmboYOTkkBEwkpve8
+	B7K5OIQEdjNKTLzczAqRkJRY9vcIM4QtLLHy33N2iKInjBJ/T18F62YRUJW48GcmYxcjBweb
+	gLbE6f8cIGERAQWJnt8r2UBsZgF7iTPbp7KClAgLBEuc2FwOEuYVMJOYefQwC4gtJGAjcfPv
+	ZlaIuKDEyZlPWCBazSTmbX7IDNLKLCAtsfwf2HROAVuJfR+fsYPYogIyEjOWfmWewCg4C0n3
+	LCTdsxC6FzAyr2KUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECA5VLa0djHtWfdA7xMjE
+	wXiIUYKDWUmEV1pLNE2INyWxsiq1KD++qDQntfgQozQHi5I477fXvSlCAumJJanZqakFqUUw
+	WSYOTqkGpiJJu1V50hc+sb3iqWU6dfJu3PldYcdcLUNkriZ7fmj59r/wwtK2eS4Ptu3T3qcz
+	eU+dzCnPA3skLnUW6Z9+eyrz8esztxvEPH3+vjVdsLFRXWD9M8um19LFX419H6dPWxOV6B8f
+	yKbn3nVazk3u61vrd8s0rWYU19T+4T9enRykc7cmvKrD/vCkEj/Zjd/1Q9b4TKma6BAillMf
+	7RjwysO1XW/Fq7LXPjvlurb1Mr7fM8ks/EjT8jWeZxuX+qyZUbjs+sd8HU//7NITP13Dt/+4
+	7mXvoO9cOSs2Qsc/8MZsl9Ck98/WvK6c0NS+eYl88eSkCl7rExum/pu36UhjwosV6RpSgpZ/
+	nzypMBZ4osRSnJFoqMVcVJwIAFde7gjEAgAA
+X-CMS-MailID: 20240410192515epcas5p1360a731616fca3841c892be310afb109
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7248a_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240410192515epcas5p1360a731616fca3841c892be310afb109
+References: <dc58cf1e-cfbc-4771-80b8-4dfdf5d7f0d1@kernel.dk>
+	<CGME20240410192515epcas5p1360a731616fca3841c892be310afb109@epcas5p1.samsung.com>
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7248a_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 09/04/24 09:00AM, Jens Axboe wrote:
+>Convert the block debugfs interface to use read/write iterators rather
+>than the older style ->read()/->write().
+>
+>No intended functional changes in this patch.
+>
+>Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7248a_
+Content-Type: text/plain; charset="utf-8"
 
 
-
-On 4/10/24 13:40, Al Viro wrote:
-> On Wed, Apr 10, 2024 at 01:26:47PM -0400, Matthew Sakai wrote:
-> 
->>> 'dm_dev->bdev_file', it's ok to get inode from the file.
-> 
-> It can be done much easier, though -
-> 
-> [PATCH] dm-vdo: use bdev_nr_bytes(bdev) instead of i_size_read(bdev->bd_inode)
-> 
-> going to be faster, actually - shift is cheaper than dereference...
-
-This does look simpler. And doing this means there's no reason to switch 
-dm-vdo from using struct block_device * to using struct file *, so the 
-rest of the original patch is unnecessary.
-
-Reviewed-by: Matthew Sakai <msakai@redhat.com>
-
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
-> diff --git a/drivers/md/dm-vdo/dm-vdo-target.c b/drivers/md/dm-vdo/dm-vdo-target.c
-> index 5a4b0a927f56..b423bec6458b 100644
-> --- a/drivers/md/dm-vdo/dm-vdo-target.c
-> +++ b/drivers/md/dm-vdo/dm-vdo-target.c
-> @@ -878,7 +878,7 @@ static int parse_device_config(int argc, char **argv, struct dm_target *ti,
->   	}
->   
->   	if (config->version == 0) {
-> -		u64 device_size = i_size_read(config->owned_device->bdev->bd_inode);
-> +		u64 device_size = bdev_nr_bytes(config->owned_device->bdev);
->   
->   		config->physical_blocks = device_size / VDO_BLOCK_SIZE;
->   	}
-> @@ -1011,7 +1011,7 @@ static void vdo_status(struct dm_target *ti, status_type_t status_type,
->   
->   static block_count_t __must_check get_underlying_device_block_count(const struct vdo *vdo)
->   {
-> -	return i_size_read(vdo_get_backing_device(vdo)->bd_inode) / VDO_BLOCK_SIZE;
-> +	return bdev_nr_bytes(vdo_get_backing_device(vdo)) / VDO_BLOCK_SIZE;
->   }
->   
->   static int __must_check process_vdo_message_locked(struct vdo *vdo, unsigned int argc,
-> diff --git a/drivers/md/dm-vdo/indexer/io-factory.c b/drivers/md/dm-vdo/indexer/io-factory.c
-> index 515765d35794..1bee9d63dc0a 100644
-> --- a/drivers/md/dm-vdo/indexer/io-factory.c
-> +++ b/drivers/md/dm-vdo/indexer/io-factory.c
-> @@ -90,7 +90,7 @@ void uds_put_io_factory(struct io_factory *factory)
->   
->   size_t uds_get_writable_size(struct io_factory *factory)
->   {
-> -	return i_size_read(factory->bdev->bd_inode);
-> +	return bdev_nr_bytes(factory->bdev);
->   }
->   
->   /* Create a struct dm_bufio_client for an index region starting at offset. */
-> 
-
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7248a_--
 
