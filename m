@@ -1,106 +1,187 @@
-Return-Path: <linux-block+bounces-6127-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6164-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8D1A8A1592
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 15:33:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A29F98A2546
+	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 06:43:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7410928662C
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:33:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A509E1C23044
+	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 04:43:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A17914F9D8;
-	Thu, 11 Apr 2024 13:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599721BC20;
+	Fri, 12 Apr 2024 04:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O9/gfZ4F"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4D914F9C4;
-	Thu, 11 Apr 2024 13:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8F31B950
+	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842388; cv=none; b=kPVs2v2zHLbVM8d5iq/Oh+IwgTsheeneEzJkysY3wm1xs7yY+q2o/5migwcKvIsIdp+7eTcKKzIxeOrBbKY1Y+hcsNtxRoF7lvnmDChgPvSfuzck1GH1wDu5XK2OCB91nAQ35nVtfI1woDxab4ka/jUC+DK3xGtgMxlOeyTIkYY=
+	t=1712896990; cv=none; b=iJ4z6xOybWg8/KiYlSV3+C21tY8MLFLji0Qk1bYtH5F4+nbL0HTK8Gbfp6GYSzGiLq2ztTz9RhtdpTxRiVT2JT0vbHE+QvRH1cYi92sg4gwNOnadys3JKeJ8Wep0OTaGt9OIecdnjLsFkNfAw6M3e3uOfcafczKNhlR3IAJ15Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842388; c=relaxed/simple;
-	bh=Hu1xN2JiY9qMgKFHZgQq9iT0bgOzpOMrTuCFIleiTJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPWuSPXnqC29ZMS6bqTuWu2Gt8po9C7OUDZ0gCGtDHit64tsoDbz6DL3HEikCSxTuyjDQNbb6JFJ0bD0cUmTra10u3wtPsV6aFWVFbr6tlEVUPONxFYwG63OIQ0Mnz2p9Y7JnrZI925bzbIqLeo0TMwFfzAF1rqx5E93PFV0F9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d89346eb45so56129561fa.0;
-        Thu, 11 Apr 2024 06:33:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712842385; x=1713447185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VoFgjJ32tsxlVGtTa5gGB28oxhJFPr7M0nD6tH1rarM=;
-        b=PthL68uElizIUQwzTwjN6yt6Z+fgLYo2II/YyW9w9F7lZGndqBecamnVOqaAwcKrND
-         xBOqBXSL241mDE2ugZXfCuHH4FZ9Ddxq+Q3mGT4rvnskW7of55e+W5KvcpQ1YPJnom1I
-         0ssBBHGUf/zxrrrLGlnUJ/5qvPtwDL6tUQlEkGQw7zfqvefBcBlYLKROY/nVBMUJpmyv
-         lKx2n26T0tuqSBt/Sy/ASaxBcgp02s7lyXAjtroA942eVaMHt/C9WgKsfYwtGMGRX5CN
-         dpQ3QMQU46orcXTr5tMevtaJdlrj2InYYkBs421ZIEg76YtQpBhNJJpQ9whc46B1Dp03
-         HObg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUAFWStBALYBLNHU3G4xfitcdID/AgO2mDiYUQnRCXrpLNe5SHC1XIIOPT9PEyzigLnKXaeTm5G3ZDRzsVlARN5ugcPCVsFrMCwjh8KQABSbPzouYU2Pr8K1mmdHId/u05jvkbzGNPqW6hS4KYOfSPG0q83+QXdg7a7ZU4DlZBpQ+1
-X-Gm-Message-State: AOJu0YzUP/9fuTJSr3nvDR9kud+gnYG5VCHHOhgJgFVRtY+L6daVG5k8
-	vvwzMfHkJUxsQSoX1ktQs0qKgxdTH3zv7fUOKTnPgTx4khWI9dRf
-X-Google-Smtp-Source: AGHT+IFByJfC9hbYBeCLoTSUE6m3SAZ56TJRBSVxKGqApn7flbJoLNyy3Sp4kVZ3NmAPlJJgNRuidw==
-X-Received: by 2002:a2e:a9a6:0:b0:2d8:8633:ff70 with SMTP id x38-20020a2ea9a6000000b002d88633ff70mr6469091ljq.30.1712842385060;
-        Thu, 11 Apr 2024 06:33:05 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
-        by smtp.gmail.com with ESMTPSA id k11-20020a170906578b00b00a51be2b75f3sm760606ejq.35.2024.04.11.06.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 06:33:04 -0700 (PDT)
-Date: Thu, 11 Apr 2024 06:33:02 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-	leit@meta.com,
-	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <cgroups@vger.kernel.org>,
-	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <linux-block@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] blk-iocost: Fix shift-out-of-bounds in iocg_kick_delay()
-Message-ID: <Zhfmjoa2l04fXIVr@gmail.com>
-References: <20240410193642.1303741-1-leitao@debian.org>
- <ZhbuUKXQwBwye1_r@slm.duckdns.org>
+	s=arc-20240116; t=1712896990; c=relaxed/simple;
+	bh=d5HYiqnpT4PSlmypMIwoJY+BCgu4A7Q9gVs/N3xGYtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=dUlGEzUZ/8pcn5DIrrfh/Ro9dUooidLKROTwktFSdTcE77hFgZwgWjvzU9AoKEG7ri/YXCyEphkwQyv/2zYJ9Y0YCUT5GjXrNUESS92fxGxR2rzPMOSGf38crLH+S388VMG+KQOC6bEdV1N88X98sqzJs1sUKZOgnP/5fR8qynI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=O9/gfZ4F; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240412044305epoutp02b3f662277c570d55c37da07e2a458514~Fbruq6nGF2229022290epoutp02N
+	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:43:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240412044305epoutp02b3f662277c570d55c37da07e2a458514~Fbruq6nGF2229022290epoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1712896985;
+	bh=/G4gt6noquL1PxYFj5zy8i2+lfh6oDP/w0pBOtXUsTc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O9/gfZ4Fje8N77LWBKS/vLnYmC4BUoGMKdF/UZfrKyQNsKWg7TiT+Dm9RqJuyE3lX
+	 WUyfLvIrqps6IhMomoQJXtN1IFAL1SjbEVWA+F83zB9X7T4sluEVEmKKszmezT/pOm
+	 AZ/Sautipo0qdzsaWFMXxt60rdph3jbR8VfwXXdE=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240412044305epcas5p1518a9deb67d53474d35d97738bd1d642~FbruUjMYQ0531305313epcas5p1Z;
+	Fri, 12 Apr 2024 04:43:05 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4VG3pb70Dvz4x9QB; Fri, 12 Apr
+	2024 04:43:03 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	71.DE.08600.7DBB8166; Fri, 12 Apr 2024 13:43:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240411134129epcas5p3f28e625fc48b93a1f492547a6f4ff894~FPYhy0OhV0593305933epcas5p3Y;
+	Thu, 11 Apr 2024 13:41:29 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240411134129epsmtrp1047549bd92014c306fbb77900db94b4f~FPYhyP6Vx1026410264epsmtrp1Q;
+	Thu, 11 Apr 2024 13:41:29 +0000 (GMT)
+X-AuditID: b6c32a44-6c3ff70000002198-8b-6618bbd7ca9b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DA.36.07541.988E7166; Thu, 11 Apr 2024 22:41:29 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240411134128epsmtip2fdc3bef4ceebbbbea89bb6c9eddbccea~FPYg5avu_3124331243epsmtip2n;
+	Thu, 11 Apr 2024 13:41:28 +0000 (GMT)
+Date: Thu, 11 Apr 2024 19:04:33 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, Daniel
+	Wagner <dwagern@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH blktests 01/11] check: factor out _run_test()
+Message-ID: <20240411133433.gxtwr4l6wz3mk6gj@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20240411111228.2290407-2-shinichiro.kawasaki@wdc.com>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTU/f6bok0g+t7LCyuPljGZvH06iwm
+	i723tC3mL3vKbrFvlqcDq8fmJfUevc3v2Dw2n672+LxJzqP9QDdTAGtUtk1GamJKapFCal5y
+	fkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0GIlhbLEnFKgUEBicbGSvp1N
+	UX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGpoc/WQsW8FRcnDGV
+	sYFxA1cXIyeHhICJxMa1M9i7GLk4hAR2M0qcXvuWFcL5xCgx4XgzI4TzjVFi8q87zDAtS9Y+
+	ZoFI7GWU+D75HQtIQkjgGaPEldepIDaLgKrEk6bJQKM4ONgEtCVO/+cACYsImElcOfYGbB2z
+	QDujxIPFl8F6hQUcJW4t/80KYvMCFb1bcpUdwhaUODnzCVgNp4CzRP+JdrC4qICMxIylX5lB
+	BkkIvGSXmLhkMyvEdS4Slx4+ZoewhSVeHd8CZUtJvOxvg7LLJVZOWcEG0dzCKDHr+ixGiIS9
+	ROupfrA3mQUyJM7/3wc1VFZi6ql1TBBxPone30+YIOK8EjvmwdjKEmvWL2CDsCUlrn1vhLI9
+	JK6c3QwN4fOMEuun/mGewCg/C8l3s5Dsg7CtJDo/NAHZHEC2tMTyfxwQpqbE+l36CxhZVzFK
+	phYU56anJpsWGOallsOjPDk/dxMjOGVquexgvDH/n94hRiYOxkOMEhzMSiK80lqiaUK8KYmV
+	ValF+fFFpTmpxYcYTYGxNZFZSjQ5H5i080riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnN
+	Tk0tSC2C6WPi4JRqYIq47id0Sdsh6n7lh0fesW0P6h/t2bd7n3aFsZ1UwsKd4TpyIutWzS26
+	+P2h8LGN+t/El2yS4+bycZ0WmzZR6OT3vILiaec+R231LL65+XvxWnudB/+M169deSMtteTU
+	vIO553abyb8NrIjhLghZ8nSzxLY3887U8zfNdag2tVfsPxyUdFvN7lnPxhNPM9ccaCuY8UyU
+	4UjebWNDAz2DS1mdFhHiMxqXVlp+dn8UFb3VhPH8vI11uv9Koy+u+qm86Vlyx+uEJXO+SRvX
+	/71eMztSiCO94cuzjfb7nqjNknun6j1dTOVlAeesP2FbY8q/NPIta3zVJf5CPr8k+P2XBrP9
+	xkpqRpNX6qyZprz+7C0lluKMREMt5qLiRABMZpiYIgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWy7bCSvG7nC/E0g2nbJSyuPljGZvH06iwm
+	i723tC3mL3vKbrFvlqcDq8fmJfUevc3v2Dw2n672+LxJzqP9QDdTAGsUl01Kak5mWWqRvl0C
+	V8a64wtYCi5xVmyby9PA+Ie9i5GTQ0LARGLJ2scsXYxcHEICuxklji18wASRkJRY9vcIM4Qt
+	LLHy33N2iKInjBKN744xgiRYBFQlnjRNZu1i5OBgE9CWOP2fAyQsImAmceXYG7B6ZoFORok9
+	vTfZQBLCAo4St5b/ZgWxeYGK3i25CnaFkEC1xNU585kh4oISJ2c+YQGxmYFq5m1+yAwyn1lA
+	WmL5P7D5nALOEv0n2sFaRQVkJGYs/co8gVFwFpLuWUi6ZyF0L2BkXsUomVpQnJuem2xYYJiX
+	Wq5XnJhbXJqXrpecn7uJERzkWho7GO/N/6d3iJGJg/EQowQHs5IIr7SWaJoQb0piZVVqUX58
+	UWlOavEhRmkOFiVxXsMZs1OEBNITS1KzU1MLUotgskwcnFINTG8WLj5454LTBSH3ujOZP8/K
+	bJ3iKMc080qWqKas1yXlK877lvf+maiweetRtfW18/VTUmMzpzjdviutWCzImvrN6Yf6Y2Wf
+	z6uKbmnnHK05mGN2+Djzk3JWh53nO+60vdtub/szvaDNkt16ve0aN26+v+sEa2ovX7RZ1KTl
+	mJK9yGWPs2zthvwD05S//0gTmLpFoqDbVt/x1XfDTTn8W9fxXc8pONum1nOtqCx3Vi/TT303
+	o7vPJ9YzKnnLHIrO2R4a8nFXXVXZlxUeGy39re6c3mjIwTyx2j5uymINYVPedy6+wbW28Tqc
+	jc52T1Rmsid9vepqn/SrfcM7FvXeCQ+fzT+6R6I2TP1eJWeyEktxRqKhFnNRcSIARJ3EB+EC
+	AAA=
+X-CMS-MailID: 20240411134129epcas5p3f28e625fc48b93a1f492547a6f4ff894
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7665a_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240411134129epcas5p3f28e625fc48b93a1f492547a6f4ff894
+References: <20240411111228.2290407-1-shinichiro.kawasaki@wdc.com>
+	<20240411111228.2290407-2-shinichiro.kawasaki@wdc.com>
+	<CGME20240411134129epcas5p3f28e625fc48b93a1f492547a6f4ff894@epcas5p3.samsung.com>
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7665a_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-In-Reply-To: <ZhbuUKXQwBwye1_r@slm.duckdns.org>
 
-On Wed, Apr 10, 2024 at 09:53:52AM -1000, Tejun Heo wrote:
-> Hello, Breno.
-> 
-> On Wed, Apr 10, 2024 at 12:36:41PM -0700, Breno Leitao wrote:
-> > When running iocg_kick_delay(), iocg->delay_at could be way behind "now",
-> > which causes a huge tdelta difference.
-> > 
-> > The tdelta value is used to shift some bits around, raising the
-> > following UBSAN splat:
-> > 
-> > 	UBSAN: shift-out-of-bounds in block/blk-iocost.c:1366:23
-> > 
-> > Debugging this, these are some values I got in my machine with 6.9-rc3.
-> > 
-> >  now = 3626064295
-> >  iocg->delay_at = 3275794093
-> > 
-> > Fix this by validating that the shift if valid, otherwise bail out,
-> > similarly to commit 2a427b49d029 ("blk-iocost: Fix an UBSAN
-> > shift-out-of-bounds warning")
-> 
-> Rik alreaady sent a fix:
-> 
->   http://lkml.kernel.org/r/20240404123253.0f58010f@imladris.surriel.com
-> 
-> which got commited as beaa51b36012fad5a4d3c18b88a617aea7a9b96d.
+On 11/04/24 08:12PM, Shin'ichiro Kawasaki wrote:
+>The function _run_test() is rather complex and has deep nests. Before
+>modifying it for repeated test case runs, simplify it. Factor out some
+>part of the function to the new functions _check_and_call_test() and
+>_check_and_call_test_device().
+>
+>Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+>---
+> check | 90 +++++++++++++++++++++++++++++++++++------------------------
+> 1 file changed, 53 insertions(+), 37 deletions(-)
+>
+>diff --git a/check b/check
+>index 55871b0..b1f5212 100755
+>--- a/check
+>+++ b/check
+>@@ -463,6 +463,56 @@ _unload_modules() {
+> 	unset MODULES_TO_UNLOAD
+> }
+>
+>+_check_and_call_test() {
 
-Even easier then. Thanks!
+ret should be declared ret as local ?
+
+>+	if declare -fF requires >/dev/null; then
+>+		requires
+>+	fi
+>+
+>+	RESULTS_DIR="$OUTPUT/nodev"
+>+	_call_test test
+>+	ret=$?
+>+	if (( RUN_ZONED_TESTS && CAN_BE_ZONED )); then
+>+		RESULTS_DIR="$OUTPUT/nodev_zoned"
+>+		RUN_FOR_ZONED=1
+>+		_call_test test
+>+		ret=$(( ret || $? ))
+>+	fi
+>+
+>+	return $ret
+>+}
+>+
+>+_check_and_call_test_device() {
+>+	local unset_skip_reason
+
+Same here, ret should declared be local ?
+
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7665a_
+Content-Type: text/plain; charset="utf-8"
+
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_7665a_--
 
