@@ -1,321 +1,82 @@
-Return-Path: <linux-block+bounces-6125-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6118-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4425B8A12BD
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E2DD8A12B3
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:13:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 676061C21748
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 11:13:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5035A1C216AC
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 11:13:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B2FC147C80;
-	Thu, 11 Apr 2024 11:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 446B2147C7C;
+	Thu, 11 Apr 2024 11:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nLoNYZlg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKOO/H+r"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49973148312
-	for <linux-block@vger.kernel.org>; Thu, 11 Apr 2024 11:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194B91474C9;
+	Thu, 11 Apr 2024 11:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712834027; cv=none; b=SzBOe7cyReYVtC8QkFL01/FWmPazn3YCpuW6pNM9uBYEbxcw7ZBIjfKzttgQtQN34Ow56WcBK41qCRMJh+aajJ7XJIvD88NekL5COWjjGhLZ5C437nRBPRwATz9fFetwvBlbMd+Blu7Q1BeeiZtW55f6W5oJ0hTRd6/irpWaNFQ=
+	t=1712833978; cv=none; b=D3xMFYYLEaGgbaIWuPfPVweITJ2h8grP997KI903tyN94pjMFTj/LbEMocoRstdOYdwcvI10EQ/75X20fhXIT94cocAo9biHDECoP2chzaEr1c29KxkZcJTrh9By/5MJ5sOjtPV/0330FJROssdLRBjjMvoPhP4pemC/igdgVMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712834027; c=relaxed/simple;
-	bh=rzcMOsqH0Im5ddUaeNbwuyBxslay/s5Hc/qroNU+kX4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BuJWqYn/OxTVKXa73USR6ZNLF81V851mmxuj8y8DU8eGVW0Z96aq/pmBbKFKk48QgPHT+L4G1fGphnh6E6YtkzPs0HtXz228bdXc8QTtBDLV8rny8DWCVLUPvg0GhefZZ0mceggSF4+3+u6jbZ4lpZ1mrNMIzqSL0h9BzXSwMOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=nLoNYZlg; arc=none smtp.client-ip=216.71.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1712834025; x=1744370025;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rzcMOsqH0Im5ddUaeNbwuyBxslay/s5Hc/qroNU+kX4=;
-  b=nLoNYZlgJ3TaU8GOZWEtb6EcrWgpqJBsKM2n7mOa/qsxKxBLPWMy4Q7j
-   UCubBtRcxUvvN9SdsieFkDqTfpMxi8hDB1Pi7zvPG916H/bEGt+HW1lYv
-   xhJP8aTJ3VlNGrFXVymOKy9GbdruFGcizAbx5ll6TBYcGHZLKZUztN0M+
-   j8wAnxEydH9U+NDshzHdGJXNF7NmNlif2TDqrKjl8Z80sny7jT2g02lZs
-   VEp0EskOAswOLfAWWSxxhdNYiVHsQOHM7lTeQKCpeRJGt5xTssOcvwlTw
-   4cP8Km2sfcO9ci9QiwlO8JAFEagwKq2rybR+F6RX1mzPF3PwCdvgSIhmU
-   g==;
-X-CSE-ConnectionGUID: haL6C4d0RHGdZxJq5OzEoA==
-X-CSE-MsgGUID: SKsZGPQmTQ+tZbohNy0nCw==
-X-IronPort-AV: E=Sophos;i="6.07,193,1708358400"; 
-   d="scan'208";a="13579888"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Apr 2024 19:12:40 +0800
-IronPort-SDR: nwJtW3WXeQtOpPjpZqZXmhpHEEQvk+juyo3c0Kb+eX2VQBhAQlyd0eP5inrY7amgi0K2BJbhEL
- wWQE9USSbbpg==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 03:15:25 -0700
-IronPort-SDR: w/zvdokllRG3IQ/t8GLr6ZxyQmQjxVix1TTXCZZRY/OOWLRo0n26YBRIBTb5zpsf+XUxhPwPF7
- 2GVy72YuDStw==
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Apr 2024 04:12:39 -0700
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: linux-block@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org,
-	Daniel Wagner <dwagern@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH blktests 11/11] nvme/{021,022,025,026,027,028}: do not hard code target blkdev type
-Date: Thu, 11 Apr 2024 20:12:28 +0900
-Message-ID: <20240411111228.2290407-12-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240411111228.2290407-1-shinichiro.kawasaki@wdc.com>
-References: <20240411111228.2290407-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1712833978; c=relaxed/simple;
+	bh=bbEKjy+eSYUjL9yRB7zTbDHe8ycq4RK3pkzGPtkRb0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MhJJ4h16vPEHrZCUU50mo8eSECVtFoDswJP44jm1wOdiJoAd9yKC4EIsc5hNzw9dZwge+MvVf6qeyVJ5d0I+5vlKQrjjMF5uAbfyapLN29wY5D4XM43OO99OoU+8Nq8jGji0TMLZBhkN5nnd29xjLqLMAozv9gt3TMC38gWZ2YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKOO/H+r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EF4C43399;
+	Thu, 11 Apr 2024 11:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712833977;
+	bh=bbEKjy+eSYUjL9yRB7zTbDHe8ycq4RK3pkzGPtkRb0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hKOO/H+rXXxAnPdoIb9WMdIQOAqjOfwzm0oBY0anLEYIa2l46BFS5STObdd2UPOcM
+	 WU9fptb5n9M1AslEXQLcGFtNu680YB6/xkCjrYZXp/AlnfCObZTVi+rSF/VXGv2FBm
+	 l45buWGmeRbVZ3yoLrQz03ojHlAng+bTC8nWkv9P5PaeK3IhCUj7HXwDhw+kKn609y
+	 ZNl6HnUfPnvtt+caFcBuUEqzgxXyF07kox0gfNZooFQOP2+ByeBWmRodvRMhBvoePX
+	 Mhz4oS9F1ZuD/0yTJm1Iy4w6ukGX3OkheQ5tvm+OM9g1WTOru4XS8SzXKSDtYzNYzm
+	 F91z1+/RsMicg==
+Date: Thu, 11 Apr 2024 13:12:50 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Sakai <msakai@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, 
+	jack@suse.cz, hch@lst.de, axboe@kernel.dk, linux-fsdevel@vger.kernel.org, 
+	linux-block@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, yukuai3@huawei.com, 
+	dm-devel@lists.linux.dev
+Subject: Re: [PATCH vfs.all 19/26] dm-vdo: convert to use bdev_file
+Message-ID: <20240411-abwinken-gesehen-a8f038f147aa@brauner>
+References: <20240406090930.2252838-1-yukuai1@huaweicloud.com>
+ <20240406090930.2252838-20-yukuai1@huaweicloud.com>
+ <a8493592-2a9b-ac14-f914-c747aa4455f3@redhat.com>
+ <20240410174022.GF2118490@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240410174022.GF2118490@ZenIV>
 
-From: Daniel Wagner <dwagner@suse.de>
+On Wed, Apr 10, 2024 at 06:40:22PM +0100, Al Viro wrote:
+> On Wed, Apr 10, 2024 at 01:26:47PM -0400, Matthew Sakai wrote:
+> 
+> > > 'dm_dev->bdev_file', it's ok to get inode from the file.
+> 
+> It can be done much easier, though -
+> 
+> [PATCH] dm-vdo: use bdev_nr_bytes(bdev) instead of i_size_read(bdev->bd_inode)
+> 
+> going to be faster, actually - shift is cheaper than dereference...
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
 
-There is no need to hardcode the target blkdev type. This allows
-the user to select different blkdev types via the nvmet_blkdev_type
-environment variable. Also modify set_conditions() hooks to call
-_set_nvme_trtype_and_nvmet_blkdev_type() instead of _set_nvme_trtype(),
-so that the test cases are run for all blkdev types set in
-NVMET_BLKDEV_TYPES.
-
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-[Shin'ichiro: modify set_conditions()]
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- tests/nvme/021 | 8 ++++----
- tests/nvme/022 | 8 ++++----
- tests/nvme/025 | 8 ++++----
- tests/nvme/026 | 8 ++++----
- tests/nvme/027 | 8 ++++----
- tests/nvme/028 | 8 ++++----
- 6 files changed, 24 insertions(+), 24 deletions(-)
-
-diff --git a/tests/nvme/021 b/tests/nvme/021
-index 270d90e..d7add6f 100755
---- a/tests/nvme/021
-+++ b/tests/nvme/021
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe list command on NVMeOF with a file-backed ns.
-+# Test NVMe list command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe list command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe list command"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -26,7 +26,7 @@ test() {
- 
- 	local ns
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
-diff --git a/tests/nvme/022 b/tests/nvme/022
-index adaa765..0f2868c 100755
---- a/tests/nvme/022
-+++ b/tests/nvme/022
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe reset command on NVMeOF with a file-backed ns.
-+# Test NVMe reset command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe reset command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe reset command"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -26,7 +26,7 @@ test() {
- 
- 	local nvmedev
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
-diff --git a/tests/nvme/025 b/tests/nvme/025
-index 224492b..a171099 100755
---- a/tests/nvme/025
-+++ b/tests/nvme/025
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe effects-log command on NVMeOF with a file-backed ns.
-+# Test NVMe effects-log command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe effects-log command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe effects-log"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -26,7 +26,7 @@ test() {
- 
- 	local ns
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
-diff --git a/tests/nvme/026 b/tests/nvme/026
-index 6ee6a51..7196c60 100755
---- a/tests/nvme/026
-+++ b/tests/nvme/026
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe ns-descs command on NVMeOF with a file-backed ns.
-+# Test NVMe ns-descs command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe ns-descs command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe ns-descs"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -26,7 +26,7 @@ test() {
- 
- 	local ns
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
-diff --git a/tests/nvme/027 b/tests/nvme/027
-index a63e42b..b117cc1 100755
---- a/tests/nvme/027
-+++ b/tests/nvme/027
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe ns-rescan command on NVMeOF with a file-backed ns.
-+# Test NVMe ns-rescan command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe ns-rescan command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe ns-rescan command"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -26,7 +26,7 @@ test() {
- 
- 	local nvmedev
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
-diff --git a/tests/nvme/028 b/tests/nvme/028
-index 65c52a9..d6ffdd6 100755
---- a/tests/nvme/028
-+++ b/tests/nvme/028
-@@ -2,11 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (c) 2017-2018 Western Digital Corporation or its affiliates.
- #
--# Test NVMe list-subsys command on NVMeOF with a file-backed ns.
-+# Test NVMe list-subsys command.
- 
- . tests/nvme/rc
- 
--DESCRIPTION="test NVMe list-subsys command on NVMeOF file-backed ns"
-+DESCRIPTION="test NVMe list-subsys"
- QUICK=1
- 
- requires() {
-@@ -16,7 +16,7 @@ requires() {
- }
- 
- set_conditions() {
--	_set_nvme_trtype "$@"
-+	_set_nvme_trtype_and_nvmet_blkdev_type "$@"
- }
- 
- test() {
-@@ -24,7 +24,7 @@ test() {
- 
- 	_setup_nvmet
- 
--	_nvmet_target_setup --blkdev file
-+	_nvmet_target_setup
- 
- 	_nvme_connect_subsys
- 
--- 
-2.44.0
-
+I've used that patch instead of the original one.
 
