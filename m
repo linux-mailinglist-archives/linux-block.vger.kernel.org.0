@@ -1,110 +1,148 @@
-Return-Path: <linux-block+bounces-6126-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6163-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 614988A13B2
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:56:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE9218A2545
+	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 06:43:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9313B1C217B5
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 11:56:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 833DA2818F0
+	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 04:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD6C14C5AE;
-	Thu, 11 Apr 2024 11:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742D71B95B;
+	Fri, 12 Apr 2024 04:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLs/6PI8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="riX4f00v"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E79D14C5A4;
-	Thu, 11 Apr 2024 11:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AE31B946
+	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712836570; cv=none; b=dh1Dm4Ft+lqGk8/VWaIoCK8Fv6osU3Ij8x1u8pjDAs1zQRNONOQVoOrG4zcWtHcX68DnA3+1HyANntNRobACvHa0wP6kQk1ouT2luYkb79WiORJ5mR9RfitFJy6wCGhlUsa8GsDJbwbJ9qWQhzh6CKdm7W8sZVI443E2rDtBDh0=
+	t=1712896989; cv=none; b=B5/TcV1ZdXEXgs0HjtOqp7JUS+J/gmmWWtU4HNOqfRs6G/sKp8pTNDL1iOhMpTmPVp+XxKvJqgZSsgdlCYjHTAMAm8CKbejTrPcvod1mackuxqgVZANv12BDS1beru8GzCLN7NUdARlFmHNyR2H7OAaIVJCVT7VfSUv3gqdNSNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712836570; c=relaxed/simple;
-	bh=NHWm6/QuyChhlZB8R4yFfy0w7knNXtALJG38VFYUIoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=osU1G496f0yJ/JafUG3cDNVLYasm+LdWm2TIE0hZqaJM+7Hcn7oVb+VpozxOUJWkSGAEtcNwgMHiCmbELaNxj67FYnLwzkPVCZYhG1KYs50vJ1z+kYxzGyVN73S9pv5eHoMSDUgTvayhyfoOFPYlFoVHgo2qqXsklknx3u836RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLs/6PI8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A2BC433C7;
-	Thu, 11 Apr 2024 11:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712836570;
-	bh=NHWm6/QuyChhlZB8R4yFfy0w7knNXtALJG38VFYUIoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HLs/6PI8OburW1pE6HFFn+DvKJRXAdO1bAU6kYyJIsbdlo08puYJUlH8xlA6ok6Pb
-	 H1vHx8jfnRQ02CSXN5VXvKZVqbpVMzt5uu6S9YI5OCDUw7t7NzaPz9uMh0B8Zar6tb
-	 SeLXLBiUTh0P85ncHxZOFov/u5Df9M29JsGt4d/hSle+jeNJP0OowzMY1gTwgg+6Kk
-	 92SjotEqT05Kws/v9B6u41Cmi27yuhGttteixMcthqdt3a0jL2N/wOnTiJQSah9wru
-	 63M+bg3nHv6Ea1omFnJI6KkVScJvPgZJgajCqSL3LrDB/VXcsQ4T+pBjATUOK+DzSG
-	 SBaBpfuQJKTdA==
-Date: Thu, 11 Apr 2024 13:56:03 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, axboe@kernel.dk, 
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH vfs.all 22/26] block: stash a bdev_file to read/write raw
- blcok_device
-Message-ID: <20240411-logik-besorgen-b7d590d6c1e9@brauner>
-References: <20240406202947.GD538574@ZenIV>
- <3567de30-a7ce-b639-fa1f-805a8e043e18@huaweicloud.com>
- <20240407015149.GG538574@ZenIV>
- <21d1bfd6-76f7-7ffb-34a4-2a85644674fe@huaweicloud.com>
- <20240407030610.GI538574@ZenIV>
- <8f414bc5-44c6-fe71-4d04-6aef3de8c5e3@huaweicloud.com>
- <20240409042643.GP538574@ZenIV>
- <49f99e7b-3983-8074-bb09-4b093c1269d1@huaweicloud.com>
- <20240410105911.hfxz4qh3n5ekrpqg@quack3>
- <20240410223443.GG2118490@ZenIV>
+	s=arc-20240116; t=1712896989; c=relaxed/simple;
+	bh=ThOQ1iA0SZzxppMkdCwv7zhioP243OLB+CAxMQ/W/44=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=Cs/eKPVaU9N4fWyZ2Yop1EJvzxjxXYwe+E2BF0elFEebF9TvJBrI+aeSh+KSVE9vQ5MiwiKLcPg17Z4jcsI7gUdZ6ORfQ1BnNGnKiSivjzP3U/ZqLWjmnbg7aOgzpzsIFSDZWHKWpZjai20JSVEWLJeVTKjrC/W9RAki0uV+sxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=riX4f00v; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240412044258epoutp025710e254251315f770825543e7e5192f~FbroYCb1v1782817828epoutp02i
+	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:42:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240412044258epoutp025710e254251315f770825543e7e5192f~FbroYCb1v1782817828epoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1712896978;
+	bh=ThOQ1iA0SZzxppMkdCwv7zhioP243OLB+CAxMQ/W/44=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=riX4f00v/FfXbwBZzT6mX92MTJGSoxlFd2dxBResKEUSwaCSr/CUZ7tquan4i9T93
+	 IGrLtstkIDEsEldq/bsPfeZSGTtzo2UNpd0L9WMRjqkn/BiR5CbJYPmcap4QPyQ8vZ
+	 K5+Zen4Nw4n8xle7r9tS9TMDKeMiqcJYoOiFzLJY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240412044258epcas5p28a9f08e50f2e510994cd50147b07934c~FbroK5axT1071710717epcas5p27;
+	Fri, 12 Apr 2024 04:42:58 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VG3pS5LNDz4x9QK; Fri, 12 Apr
+	2024 04:42:56 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CD.CE.08600.0DBB8166; Fri, 12 Apr 2024 13:42:56 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1~FOnAhsgxG1241312413epcas5p3-;
+	Thu, 11 Apr 2024 12:44:46 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240411124446epsmtrp2503d735838bfa4187b6abe4c9c4d0d7f~FOnAhIPyK0446304463epsmtrp2I;
+	Thu, 11 Apr 2024 12:44:46 +0000 (GMT)
+X-AuditID: b6c32a44-921fa70000002198-72-6618bbd03961
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F7.CA.08924.E3BD7166; Thu, 11 Apr 2024 21:44:46 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240411124445epsmtip288d0d5f6b5ad90aedbbe3869cb0e92f0~FOm-pNNbt2124921249epsmtip2w;
+	Thu, 11 Apr 2024 12:44:45 +0000 (GMT)
+Date: Thu, 11 Apr 2024 18:07:50 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/3] null_blk: Have all null_handle_xxx() return a
+ blk_status_t
+Message-ID: <20240411123750.gwzouryerxwmqrjt@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20240411085502.728558-2-dlemoal@kernel.org>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFKsWRmVeSWpSXmKPExsWy7bCmuu6F3RJpBqt2almsvtvPZvFgv73F
+	3lvaDswel8+Wemxa1cnm8XmTXABzVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWF
+	uZJCXmJuqq2Si0+ArltmDtAWJYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BSYFe
+	cWJucWleul5eaomVoYGBkSlQYUJ2xrPmLraCE6wVb36/Z2lg/MbSxcjJISFgInFy8lMgm4tD
+	SGA3o8Src61MEM4nRomJOyZAOd8YJeb2bGWEaek/9YARIrGXUeLo3Ktgs4QEnjFKbJpnDmKz
+	CKhK/GpYyd7FyMHBJqAtcfo/B0hYREBdYurkPWBzmAVsJX4fOQrWKiwQKnFw2R1GkHJeATOJ
+	7UfLQMK8AoISJ2c+ASvhFLCU+NW8hwnEFhWQkZix9CszyAkSAqfYJTq3LWSHuM1FovvHVCYI
+	W1ji1fEtUHEpic/v9rJB2OUSK6esYINobmGUmHV9FtRj9hKtp/qZIY7LkPh9fCIrRFxWYuqp
+	dUwQcT6J3t9PoBbwSuyYB2MrS6xZvwBqgaTEte+NULaHxJkpj9nh4Xvh3BnWCYzys5B8NwvJ
+	PgjbSqLzQxOQzQFkS0ss/8cBYWpKrN+lv4CRdRWjZGpBcW56arJpgWFeajk8wpPzczcxghOh
+	lssOxhvz/+kdYmTiYDzEKMHBrCTCK60lmibEm5JYWZValB9fVJqTWnyI0RQYVxOZpUST84Gp
+	OK8k3tDE0sDEzMzMxNLYzFBJnPd169wUIYH0xJLU7NTUgtQimD4mDk6pBqbgzxsN3H11zyZ4
+	fC/k/VH8TfLgtIyND+qefD4V/FZmH0tfyEP2+dK3V+pO0o7YmMdYoPImce0bFv9HPYFFb7iD
+	y/gtDHwa7+VtjpcJrZlVfsDX6LVk6eZQSeff3WJVJSfZAvZOf1IeOpvx72aDWw4rtVjv3H+q
+	rNMakPp1e3cDT//KG7bCHZE8fHkNsUyl1wzzZm69ZFt0rSLA+HmxkMEDU9Xc1o0in31t9rjo
+	+S/RMOnmjROboXVe6feXNS+PtxX+mp4+VSL9q8w912WR3wUP71rPrcazTNL/t4/Lz601i1rO
+	5Zbc1vyWLTXpAHe208YHhTum5YbaNk9RP2Kz5OrJy21RsXMYry3Y/C5KWImlOCPRUIu5qDgR
+	AIVAn54NBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsWy7bCSvK7dbfE0g9+rJS1W3+1ns3iw395i
+	7y1tB2aPy2dLPTat6mTz+LxJLoA5issmJTUnsyy1SN8ugSujY38Le8Evpoq2eTdZGxgPMXUx
+	cnJICJhI9J96wNjFyMUhJLCbUeL8yUfMEAlJiWV/j0DZwhIr/z1nhyh6wijxa/didpAEi4Cq
+	xK+GlUA2BwebgLbE6f8cIGERAXWJqZP3MILYzAK2Er+PHGUBsYUFQiUOLrvDCFLOK2Amsf1o
+	GUhYSCBd4nV7JyuIzSsgKHFy5hMWiFYziXmbHzKDlDMLSEss/wc2nVPAUuJX8x6w80UFZCRm
+	LP3KPIFRcBaS7llIumchdC9gZF7FKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcvFqa
+	Oxi3r/qgd4iRiYPxEKMEB7OSCK+0lmiaEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQC8k
+	lqRmp6YWpBbBZJk4OKUamPhnyOSHulYd2xBfFHL2jGSnyIl3Z32kesN/6gXobmg7mWCzSlD9
+	8fULV2RzcybnX3vl6yCRVfXnRUflP4OaBv8Y9ftnX3iwF1T3qQe+fG3n8nWGuZLX3j7rpQr9
+	n4o1whY80ks89/H0XB+H7ZWf09+cesndGsXVKHzx4bons3mmCIQx9087lpV43j3lcWRt/7+T
+	yn0F0V0aWyf8EU755lnYti/gqfpOhrDrt6RKD37Jrz57RXXhjcYfHk0vHuxmX58XMeWA49wf
+	2xbPDF5jM2v9cpFjqZFs7pXvZO9or+Xw50hw1FnHw8mpolGcud5zVtSsVKlrN9ZvjTRcEc51
+	NlYoNCBKI3nKGyF/1X9WSizFGYmGWsxFxYkASZzXh80CAAA=
+X-CMS-MailID: 20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1
+References: <20240411085502.728558-1-dlemoal@kernel.org>
+	<20240411085502.728558-2-dlemoal@kernel.org>
+	<CGME20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1@epcas5p3.samsung.com>
+
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-In-Reply-To: <20240410223443.GG2118490@ZenIV>
 
-On Wed, Apr 10, 2024 at 11:34:43PM +0100, Al Viro wrote:
-> On Wed, Apr 10, 2024 at 12:59:11PM +0200, Jan Kara wrote:
-> 
-> > I agree with Christian and Al - and I think I've expressed that already in
-> > the previous version of the series [1] but I guess I was not explicit
-> > enough :). I think the initial part of the series (upto patch 21, perhaps
-> > excluding patch 20) is a nice cleanup but the latter part playing with
-> > stashing struct file is not an improvement and seems pointless to me. So
-> > I'd separate the initial part cleaning up the obvious places and let
-> > Christian merge it and then we can figure out what (if anything) to do with
-> > remaining bd_inode uses in fs/buffer.c etc. E.g. what Al suggests with
-> > bd_mapping makes sense to me but I didn't check what's left after your
-> > initial patches...
-> 
-> FWIW, experimental on top of -next:
+On 11/04/24 05:55PM, Damien Le Moal wrote:
+>Modify the null_handle_flush() and null_handle_rq() functions to return
+>a blk_status_t instead of an errno to simplify the call sites of these
+>functions and to be consistant with other null_handle_xxx() functions.
+>
+>Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>---
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
 
-Ok, let's move forward with this. I've applied the first 19 patches.
-Patch 20 is the start of what we all disliked. 21 is clearly a bugfix
-for current code so that'll go separately from the rest. I've replaced
-open-code f_mapping access with file_mapping(). The symmetry between
-file_inode() and file_mapping() is quite nice.
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_
+Content-Type: text/plain; charset="utf-8"
 
-Al, your idea to switch erofs away from buf->inode can go on top of what
-Yu did imho. There's no real reason to throw it away imho.
 
-I've exported bdev_mapping() because it really makes the btrfs change a
-lot slimmer and we don't need to care about messing with a lot of that
-code. I didn't care about making it static inline because that might've
-meant we need to move other stuff into the header as well. Imho, it's
-not that important but if it's a big deal to any of you just do the
-changes on top of it, please.
-
-Pushed to
-https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.super
-
-If I hear no objections that'll show up in -next tomorrow. Al, would be
-nice if you could do your changes on top of this, please.
+------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_--
 
