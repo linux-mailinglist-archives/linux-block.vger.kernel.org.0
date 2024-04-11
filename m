@@ -1,210 +1,116 @@
-Return-Path: <linux-block+bounces-6120-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6112-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AF6C8A12B9
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:13:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2335D8A12A8
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:12:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75646B24CED
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 11:13:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 966C0B23D84
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 11:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91373147C88;
-	Thu, 11 Apr 2024 11:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABEC147C7C;
+	Thu, 11 Apr 2024 11:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JxxAuZuI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOnePV1W"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01B3147C7C
-	for <linux-block@vger.kernel.org>; Thu, 11 Apr 2024 11:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3893147C69;
+	Thu, 11 Apr 2024 11:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712834023; cv=none; b=cb0lNr9AeZx1d1wjmP6p0EJETd6UmINtRmXQ/FUhTDWaP955SGSUmUfMO7NF0DQh6cfqSCt+AUZaH1j5wZSnswcL5Vxlppvh+we4ovg59U4DT49uqtsoIDlHyYdeW3CDpzjDYeoGSDc0zB2i+hapJ2b8VejeZd/KqiDuCOx6ny8=
+	t=1712833945; cv=none; b=h98LbVEam7xRgki4XttnTZT2Iz2c64+aqFbzIrTAx/sQV6X1Rj+WzJusI+td/uNHr8T22Pi6gI7I3CnbuhUGwgTascJ24LDXMV9bXVjYFY87Zs7oYgydwYCT+ops5AwKzDI4YAlFwrKXAE7W2TA4TpI76ILol+O2fwiqpVvb8oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712834023; c=relaxed/simple;
-	bh=9MjajHbnj6QVYHeGzTlH+Mn0XUl56AuvvOOv7c7MCeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mWakFo0CNPI0WpNCnwsDN+OEHSB/AAgL9S8E2YhWK+McJp34LzAxRfH6Pk8NMCe8fy5g3iGFeRsRE87i5RoMG7uYL+FA0C/2x8qEptJWRpUd1Fie/z+sh7vTzv361cxs68zd82re3vBdJtOVK/g0QHKAXY7fpyC5Q7q3tMrEG0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=JxxAuZuI; arc=none smtp.client-ip=216.71.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1712834022; x=1744370022;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9MjajHbnj6QVYHeGzTlH+Mn0XUl56AuvvOOv7c7MCeU=;
-  b=JxxAuZuIYrjmuxRHhSFHIUIk4HUGcAmF+QUoCMcH0DeC46IY8RUhkXUU
-   hBHJbqnOk5d42fNDRocEFOcICMHDxKr/9QYxqIVgG+ZMRMp1O2hK90MBg
-   R9Gfy194eXRfXchCttj0hULPYitGPmjQhls3juployHYQ1JwlEVizJQmi
-   dtCEUmXNowIDyjIwrAnNlVUBJgyqqb67tw/ZQWJcFOFLiF9Lb8kEx3bzV
-   twkLzaEHEsOQEKOOAwo9SF8jHAPA6NsEveiKAnC937hW5g/gPRBiYYJGf
-   loMN34gNLT749Ko7b3VEQZ5Fps/78QBm5G4B8K0+YNB5iAEnuFBKfY8M7
-   g==;
-X-CSE-ConnectionGUID: /htKG/aCSnKBnR4DCUugYQ==
-X-CSE-MsgGUID: eYQ740lLSsOOlO/MawA4kw==
-X-IronPort-AV: E=Sophos;i="6.07,193,1708358400"; 
-   d="scan'208";a="13579862"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Apr 2024 19:12:31 +0800
-IronPort-SDR: q/Jl1S9nLJtGSCnfEksW8WuoT2xCOt6X5Asn1G8kv8nzx/SBP6fycgPwmz8STlW0BMXYjvAScz
- Q8VlgPdNVVxA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 03:15:16 -0700
-IronPort-SDR: yAVqHJyiA8jRA1vbeHTk0EnaTBt/34S6e1Cjqkh9GpNtniVztoayhpuOaXrmvIspyDoUKISgUk
- rUhe9+G6GFnQ==
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Apr 2024 04:12:30 -0700
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: linux-block@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org,
-	Daniel Wagner <dwagern@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH blktests 01/11] check: factor out _run_test()
-Date: Thu, 11 Apr 2024 20:12:18 +0900
-Message-ID: <20240411111228.2290407-2-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240411111228.2290407-1-shinichiro.kawasaki@wdc.com>
-References: <20240411111228.2290407-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1712833945; c=relaxed/simple;
+	bh=2rQtShlTQeeKDYUdJtQPvdiMpsI9pPqx8aAJuE6cUiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4AfYUB/baMVBDQy77CUAoxws/SwnO1jrLcRLAmm4abJOHHfl0gpv5Q+mBm9iW2vYS6J8YW90z1d0tE1EeZEoE+Soi/zwb4ovqVR+fAOIggKFv4F9mEgF3VxAH8hTzqimxV9c28zc51hM41N3stlndR/aA68il8x4wvstmrl5Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOnePV1W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB41C433C7;
+	Thu, 11 Apr 2024 11:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712833945;
+	bh=2rQtShlTQeeKDYUdJtQPvdiMpsI9pPqx8aAJuE6cUiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jOnePV1WrI4jUhAwnGXmXNZFyh3Doqixw8cHtmaliwiwSRRxmhCiD08AEww2RJCJs
+	 DFANl/qE4/s9l4WNx3yncn7Gp49wil5GwcRNaSDLyZmzhs/J57pWv3kUQaxZsgOeW9
+	 x8D58thlDFq0vow4MwrVHAjDWrK/OMcf8hzHl2AHvOWm4LT9htdeiqvcSvuDWR8ids
+	 SE0X8WHtO7ypm13AAr72SShx3XiodeT+euvJvjKH5sDIdSl5+m95OkK++aGinAFhMd
+	 zLg4IZvPUrlu0g7O2K+54huuH68iPgtw8o82YzPpEgk4JTfCLxj4RbwAB6aIX5zHeo
+	 hpXHcAUeatuuA==
+Date: Thu, 11 Apr 2024 13:12:18 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, jack@suse.cz, hch@lst.de, 
+	axboe@kernel.dk, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH vfs.all 04/26] block: prevent direct access of bd_inode
+Message-ID: <20240411-periodisch-luchs-95fbe85c19f8@brauner>
+References: <20240406090930.2252838-1-yukuai1@huaweicloud.com>
+ <20240406090930.2252838-5-yukuai1@huaweicloud.com>
+ <20240407022250.GH538574@ZenIV>
+ <45c32706-b599-d968-4bff-4ad8f0768275@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <45c32706-b599-d968-4bff-4ad8f0768275@huaweicloud.com>
 
-The function _run_test() is rather complex and has deep nests. Before
-modifying it for repeated test case runs, simplify it. Factor out some
-part of the function to the new functions _check_and_call_test() and
-_check_and_call_test_device().
+On Sun, Apr 07, 2024 at 10:37:08AM +0800, Yu Kuai wrote:
+> Hi,
+> 
+> 在 2024/04/07 10:22, Al Viro 写道:
+> > On Sat, Apr 06, 2024 at 05:09:08PM +0800, Yu Kuai wrote:
+> > > @@ -669,7 +669,7 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> > >   {
+> > >   	struct file *file = iocb->ki_filp;
+> > >   	struct block_device *bdev = I_BDEV(file->f_mapping->host);
+> > > -	struct inode *bd_inode = bdev->bd_inode;
+> > > +	struct inode *bd_inode = bdev_inode(bdev);
+> > 
+> > What you want here is this:
+> > 
+> > 	struct inode *bd_inode = file->f_mapping->host;
+> > 	struct block_device *bdev = I_BDEV(bd_inode);
+> 
+> Yes, this way is better, logically.
+> > 
+> > 
+> > > --- a/block/ioctl.c
+> > > +++ b/block/ioctl.c
+> > > @@ -97,7 +97,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+> > >   {
+> > >   	uint64_t range[2];
+> > >   	uint64_t start, len;
+> > > -	struct inode *inode = bdev->bd_inode;
+> > > +	struct inode *inode = bdev_inode(bdev);
+> > >   	int err;
+> > 
+> > The uses of 'inode' in this function are
+> >          filemap_invalidate_lock(inode->i_mapping);
+> > and
+> >          filemap_invalidate_unlock(inode->i_mapping);
+> > 
+> > IOW, you want bdev_mapping(bdev), not bdev_inode(bdev).
+> > 
+> > > @@ -166,7 +166,7 @@ static int blk_ioctl_zeroout(struct block_device *bdev, blk_mode_t mode,
+> > >   {
+> > >   	uint64_t range[2];
+> > >   	uint64_t start, end, len;
+> > > -	struct inode *inode = bdev->bd_inode;
+> > > +	struct inode *inode = bdev_inode(bdev);
+> > 
+> > Same story.
+> 
+> Yes.
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- check | 90 +++++++++++++++++++++++++++++++++++------------------------
- 1 file changed, 53 insertions(+), 37 deletions(-)
-
-diff --git a/check b/check
-index 55871b0..b1f5212 100755
---- a/check
-+++ b/check
-@@ -463,6 +463,56 @@ _unload_modules() {
- 	unset MODULES_TO_UNLOAD
- }
- 
-+_check_and_call_test() {
-+	if declare -fF requires >/dev/null; then
-+		requires
-+	fi
-+
-+	RESULTS_DIR="$OUTPUT/nodev"
-+	_call_test test
-+	ret=$?
-+	if (( RUN_ZONED_TESTS && CAN_BE_ZONED )); then
-+		RESULTS_DIR="$OUTPUT/nodev_zoned"
-+		RUN_FOR_ZONED=1
-+		_call_test test
-+		ret=$(( ret || $? ))
-+	fi
-+
-+	return $ret
-+}
-+
-+_check_and_call_test_device() {
-+	local unset_skip_reason
-+
-+	if declare -fF requires >/dev/null; then
-+		requires
-+	fi
-+
-+	for TEST_DEV in "${TEST_DEVS[@]}"; do
-+		TEST_DEV_SYSFS="${TEST_DEV_SYSFS_DIRS["$TEST_DEV"]}"
-+		TEST_DEV_PART_SYSFS="${TEST_DEV_PART_SYSFS_DIRS["$TEST_DEV"]}"
-+
-+		unset_skip_reason=0
-+		if [[ ! -v SKIP_REASONS ]]; then
-+			unset_skip_reason=1
-+			if (( !CAN_BE_ZONED )) && _test_dev_is_zoned; then
-+				SKIP_REASONS+=("${TEST_DEV} is a zoned block device")
-+			elif declare -fF device_requires >/dev/null; then
-+				device_requires
-+			fi
-+		fi
-+		RESULTS_DIR="$OUTPUT/$(basename "$TEST_DEV")"
-+		if ! _call_test test_device; then
-+			ret=1
-+		fi
-+		if (( unset_skip_reason )); then
-+			unset SKIP_REASONS
-+		fi
-+	done
-+
-+	return $ret
-+}
-+
- _run_test() {
- 	TEST_NAME="$1"
- 	CAN_BE_ZONED=0
-@@ -482,19 +532,8 @@ _run_test() {
- 	. "tests/${TEST_NAME}"
- 
- 	if declare -fF test >/dev/null; then
--		if declare -fF requires >/dev/null; then
--			requires
--		fi
--
--		RESULTS_DIR="$OUTPUT/nodev"
--		_call_test test
-+		_check_and_call_test
- 		ret=$?
--		if (( RUN_ZONED_TESTS && CAN_BE_ZONED )); then
--			RESULTS_DIR="$OUTPUT/nodev_zoned"
--			RUN_FOR_ZONED=1
--			_call_test test
--			ret=$(( ret || $? ))
--		fi
- 	else
- 		if [[ ${#TEST_DEVS[@]} -eq 0 ]] && \
- 			declare -fF fallback_device >/dev/null; then
-@@ -516,31 +555,8 @@ _run_test() {
- 			return 0
- 		fi
- 
--		if declare -fF requires >/dev/null; then
--			requires
--		fi
--
--		for TEST_DEV in "${TEST_DEVS[@]}"; do
--			TEST_DEV_SYSFS="${TEST_DEV_SYSFS_DIRS["$TEST_DEV"]}"
--			TEST_DEV_PART_SYSFS="${TEST_DEV_PART_SYSFS_DIRS["$TEST_DEV"]}"
--
--			local unset_skip_reason=0
--			if [[ ! -v SKIP_REASONS ]]; then
--				unset_skip_reason=1
--				if (( !CAN_BE_ZONED )) && _test_dev_is_zoned; then
--					SKIP_REASONS+=("${TEST_DEV} is a zoned block device")
--				elif declare -fF device_requires >/dev/null; then
--					device_requires
--				fi
--			fi
--			RESULTS_DIR="$OUTPUT/$(basename "$TEST_DEV")"
--			if ! _call_test test_device; then
--				ret=1
--			fi
--			if (( unset_skip_reason )); then
--				unset SKIP_REASONS
--			fi
--		done
-+		_check_and_call_test_device
-+		ret=$?
- 
- 		if (( FALLBACK_DEVICE )); then
- 			cleanup_fallback_device
--- 
-2.44.0
-
+I've folded in those changes during applying.
 
