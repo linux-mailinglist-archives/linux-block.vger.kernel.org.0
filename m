@@ -1,139 +1,169 @@
-Return-Path: <linux-block+bounces-6097-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6099-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E13938A06BD
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 05:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4D8C8A06FF
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 06:14:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E45F1C22076
-	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 03:32:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DED251C216A8
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 04:14:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716F113BADC;
-	Thu, 11 Apr 2024 03:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D30F13BC05;
+	Thu, 11 Apr 2024 04:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eWTxqMJK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF513B5BC;
-	Thu, 11 Apr 2024 03:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455D13BC01
+	for <linux-block@vger.kernel.org>; Thu, 11 Apr 2024 04:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712806342; cv=none; b=AZnf4UzZi1ajl8zEZLk211rg175Lgsajuv+x7HkrMMaeoQeh/3Ag7+rE8JMRuwiud/qiafaHdlgjJ5jkwEOx37bmZOKYwwPJjSx/zutps/kpCsohjq9Va6ShWce2+OlTg/NHnfdtUo0nSo1K+Lt/MZxluuLaBP6Arw/NHhIuI1c=
+	t=1712808878; cv=none; b=YpdFu/RMX4sZ0Z/T6ArSQfx3Svatq5hTHM0h0q5Rlelklx40+uWTQWZDvhmB8lC1tOgRsiakpGggzi0f+bj/nD2C8oxSILy2VQriI607IcTUdI4+Lod+NqWKcBAoUsHPLtq7oMa/1bjhRYQREfWBjuumdqY9JrOlFTpN0j7Rs/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712806342; c=relaxed/simple;
-	bh=GheM9vxOJCWCBH+6+ieKL67ZOXjrV6PZ0d6G1co9brM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jMSjat/7QjjHiMwH7GideV273EZFbArR7Lvu3SQZNbyHWehClpnsGjejG+R8Va8/NWKpiZ0LWjaLq9z+fUk7QRXJZUrUiiSu/yQgzvl5HZNiCZNBFrnIB1zVp4BIuVdRUwHltCixVhKOUaFoFJNLhAMv1km/S6tVNaH0Dk2esXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VFQHJ2DSgz4f3k6V;
-	Thu, 11 Apr 2024 11:32:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B6CF21A0572;
-	Thu, 11 Apr 2024 11:32:16 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g6+WRdmbRutJg--.8020S6;
-	Thu, 11 Apr 2024 11:32:16 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	johannes.thumshirn@wdc.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 2/2] block: add plug while submitting IO
-Date: Thu, 11 Apr 2024 11:23:49 +0800
-Message-Id: <20240411032349.3051233-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240411032349.3051233-1-yukuai1@huaweicloud.com>
-References: <20240411032349.3051233-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1712808878; c=relaxed/simple;
+	bh=CE0muciGI0euYifqkEnr9r2ip4cvQe/XVjrbK70K+ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QePe14aOP7Cwvd1/6PrNzZN0dsvD4I05ovybFX1oz88y5f/t5E2Ov3V+UPJAzQOb/fhGnYKzwoFBUR0qpnx3yAOhI25ym4kF0gx2i/uSmWtwhcMhIq6FxDZ3YBzmOhX2VkeW1p6MTGkBglJPQ8maHquFhI/tMIfXV2rV3taic/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eWTxqMJK; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e2c725e234so3593925ad.1
+        for <linux-block@vger.kernel.org>; Wed, 10 Apr 2024 21:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712808876; x=1713413676; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QRpoNsjOK6j5XqQ61OspVBmQJ87V0XiHLogvxYX/tbU=;
+        b=eWTxqMJK3Tpv8DeBp0Ze0zWa4e/e15bpFGcsk1wmb+WkYqFMBIpthB+g12wob9cM6Z
+         CRMNT58Rrz46A2UgIVQeAoOFmARMlSgLZQjy7lkDzh24ytXBneamKl1zSNknYLH8oPZs
+         dh5dy5wOZpZ8fQ1pyL1sOOhcqXKAyRpOLnGYI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712808876; x=1713413676;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QRpoNsjOK6j5XqQ61OspVBmQJ87V0XiHLogvxYX/tbU=;
+        b=wQDOLMU5PsNn2jpK+L91NopWqLnzeM/D86rlaYwZLu4QTUHppdOk+eHCetGSWVWr+s
+         IPMzgRrrQlH8wpyJpA/hU9/DeRCPP6W+0lwHpHzzx1544PFoIvJ3yfmcoxAuOHN+nRAq
+         WyL8AHLLP6FBnwuXUBFxLwPfff4VMODlmX5c7G/Z1+4nbZXVyaUYA/46u103suPIXLdq
+         5ppmifCSVyX5jbxE3yRoxFDvfiIFRP5EyjMeP7hqCzJi9MlocOkjMzLc8vZtte0sVv4k
+         WNi+8tYK5/Ua/kcU0O+H4rX9AfSmoj/ItKHL4JgTVJrTjDQ6SNKC2SDnw9c1k3vSPkak
+         A2Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUx4xqybp7+/9b9SMDsjJmOxJgovkZLxJxPW3lreEIfeAgDEpu9tLYH3ligBVIQzVRH0LtdfPErYDRJumKX7a4I4afWB+f6/E5HhrM=
+X-Gm-Message-State: AOJu0Yy8X3+DjPLTV/xg9vV3Wj0Dz91D1ijpECc98of/yx2STLts7sQU
+	kmHDq6rrHo9k0NAk1XYB2mCECFtQXPkXj3NMkISZp9gJli7+ak+3xnltgfG2/A==
+X-Google-Smtp-Source: AGHT+IGoydN9224pn35l5jD63mMzmg3BIpFzF/YZMufBNif8aUBovCp+Y1xf/odqVVg4Olh9jDdbLg==
+X-Received: by 2002:a17:902:ea02:b0:1e3:f622:f21a with SMTP id s2-20020a170902ea0200b001e3f622f21amr2122851plg.24.1712808876099;
+        Wed, 10 Apr 2024 21:14:36 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:f30d:f29e:acb:4140])
+        by smtp.gmail.com with ESMTPSA id m7-20020a170902db0700b001e446490072sm350021plx.25.2024.04.10.21.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 21:14:35 -0700 (PDT)
+Date: Thu, 11 Apr 2024 13:14:29 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	akpm@linux-foundation.org, minchan@kernel.org,
+	linux-block@vger.kernel.org, axboe@kernel.dk, linux-mm@kvack.org,
+	terrelln@fb.com, chrisl@kernel.org, david@redhat.com,
+	kasong@tencent.com, yuzhao@google.com, yosryahmed@google.com,
+	nphamcs@gmail.com, willy@infradead.org, hannes@cmpxchg.org,
+	ying.huang@intel.com, surenb@google.com, wajdi.k.feghali@intel.com,
+	kanchana.p.sridhar@intel.com, corbet@lwn.net,
+	zhouchengming@bytedance.com,
+	Tangquan Zheng <zhengtangquan@oppo.com>,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH RFC 2/2] zram: support compression at the granularity of
+ multi-pages
+Message-ID: <20240411041429.GC8743@google.com>
+References: <20240327214816.31191-1-21cnbao@gmail.com>
+ <20240327214816.31191-3-21cnbao@gmail.com>
+ <20240411014237.GB8743@google.com>
+ <CAGsJ_4yKjfr1kgFKufM68yJoTysgT_gri4Dbg-aghj70F0Zf0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g6+WRdmbRutJg--.8020S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFW3Cw48Xr1DGr17AFW8JFb_yoW8XFy5pr
-	WY93ZxKFWUWrs2vw48XFy7GF1ftF1DWry7A3y5Canxtr1j9r4qqwn2v340va4Fkr48WrW3
-	Ar93Kr98Gw48CrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGsJ_4yKjfr1kgFKufM68yJoTysgT_gri4Dbg-aghj70F0Zf0Q@mail.gmail.com>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On (24/04/11 14:03), Barry Song wrote:
+> > [..]
+> >
+> > > +static int zram_bvec_write_multi_pages_partial(struct zram *zram, struct bio_vec *bvec,
+> > > +                                u32 index, int offset, struct bio *bio)
+> > > +{
+> > > +     struct page *page = alloc_pages(GFP_NOIO | __GFP_COMP, ZCOMP_MULTI_PAGES_ORDER);
+> > > +     int ret;
+> > > +     void *src, *dst;
+> > > +
+> > > +     if (!page)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     ret = zram_read_multi_pages(zram, page, index, bio);
+> > > +     if (!ret) {
+> > > +             src = kmap_local_page(bvec->bv_page);
+> > > +             dst = kmap_local_page(page);
+> > > +             memcpy(dst + offset, src + bvec->bv_offset, bvec->bv_len);
+> > > +             kunmap_local(dst);
+> > > +             kunmap_local(src);
+> > > +
+> > > +             atomic64_inc(&zram->stats.zram_bio_write_multi_pages_partial_count);
+> > > +             ret = zram_write_page(zram, page, index);
+> > > +     }
+> > > +     __free_pages(page, ZCOMP_MULTI_PAGES_ORDER);
+> > > +     return ret;
+> > > +}
+> >
+> > What type of testing you run on it? How often do you see partial
+> > reads and writes? Because this looks concerning - zsmalloc memory
+> > usage reduction is one metrics, but this also can be achieved via
+> > recompression, writeback, or even a different compression algorithm,
+> > but higher CPU/power usage/higher requirements for physically contig
+> > pages cannot be offset easily. (Another corner case, assume we have
+> > partial read requests on every CPU simultaneously.)
+> 
+> This question brings up an interesting observation. In our actual product,
+> we've noticed a success rate of over 90% when allocating large folios in
+> do_swap_page, but occasionally, we encounter failures. In such cases,
+> instead of resorting to partial reads, we opt to allocate 16 small folios and
+> request zram to fill them all. This strategy effectively minimizes partial reads
+> to nearly zero. However, integrating this into the upstream codebase seems
+> like a considerable task, and for now, it remains part of our
+> out-of-tree code[1],
+> which is also open-source.
+> We're gradually sending patches for the swap-in process, systematically
+> cleaning up the product's code.
 
-So that if caller didn't use plug, for example, __blkdev_direct_IO_simple()
-and __blkdev_direct_IO_async(), block layer can still benefit from caching
-nsec time in the plug. And if caller already use plug, then there should be
-no affect.
+I see, thanks for explanation.
+Does this sound like this series is ahead of its time?
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> To enhance the success rate of large folio allocation, we've reserved some
+> page blocks for mTHP. This approach is currently absent from the mainline
+> codebase as well (Yu Zhao is trying to provide TAO [2]). Consequently, we
+> anticipate that partial reads may reach 50% or more until this method is
+> incorporated upstream.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index e317d7bc0696..c833bc875a61 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -647,11 +647,13 @@ static void __submit_bio(struct bio *bio)
- static void __submit_bio_noacct(struct bio *bio)
- {
- 	struct bio_list bio_list_on_stack[2];
-+	struct blk_plug plug;
- 
- 	BUG_ON(bio->bi_next);
- 
- 	bio_list_init(&bio_list_on_stack[0]);
- 	current->bio_list = bio_list_on_stack;
-+	blk_start_plug(&plug);
- 
- 	do {
- 		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
-@@ -685,19 +687,23 @@ static void __submit_bio_noacct(struct bio *bio)
- 		bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
- 	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
- 
-+	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
- 
- static void __submit_bio_noacct_mq(struct bio *bio)
- {
- 	struct bio_list bio_list[2] = { };
-+	struct blk_plug plug;
- 
- 	current->bio_list = bio_list;
-+	blk_start_plug(&plug);
- 
- 	do {
- 		__submit_bio(bio);
- 	} while ((bio = bio_list_pop(&bio_list[0])));
- 
-+	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
- 
--- 
-2.39.2
+These partial reads/writes are difficult to justify - instead of doing
+comp_op(PAGE_SIZE) we, in the worst case, now can do ZCOMP_MULTI_PAGES_NR
+of comp_op(ZCOMP_MULTI_PAGES_ORDER) (assuming a access pattern that
+touches each of multi-pages individually). That is a potentially huge
+increase in CPU/power usage, which cannot be easily sacrificed. In fact,
+I'd probably say that power usage is more important here than zspool
+memory usage (that we have means to deal with).
 
+Have you evaluated power usage?
+
+I also wonder if it brings down the number of ZRAM_SAME pages. Suppose
+when several pages out of ZCOMP_MULTI_PAGES_ORDER are filled with zeroes
+(or some other recognizable pattern) which previously would have been
+stored using just unsigned long. Makes me even wonder if ZRAM_SAME test
+makes sense on multi-page at all, for that matter.
 
