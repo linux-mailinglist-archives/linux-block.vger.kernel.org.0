@@ -1,148 +1,106 @@
-Return-Path: <linux-block+bounces-6163-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6127-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9218A2545
-	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 06:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8D1A8A1592
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 15:33:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 833DA2818F0
-	for <lists+linux-block@lfdr.de>; Fri, 12 Apr 2024 04:43:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7410928662C
+	for <lists+linux-block@lfdr.de>; Thu, 11 Apr 2024 13:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742D71B95B;
-	Fri, 12 Apr 2024 04:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="riX4f00v"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A17914F9D8;
+	Thu, 11 Apr 2024 13:33:09 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AE31B946
-	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4D914F9C4;
+	Thu, 11 Apr 2024 13:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712896989; cv=none; b=B5/TcV1ZdXEXgs0HjtOqp7JUS+J/gmmWWtU4HNOqfRs6G/sKp8pTNDL1iOhMpTmPVp+XxKvJqgZSsgdlCYjHTAMAm8CKbejTrPcvod1mackuxqgVZANv12BDS1beru8GzCLN7NUdARlFmHNyR2H7OAaIVJCVT7VfSUv3gqdNSNA=
+	t=1712842388; cv=none; b=kPVs2v2zHLbVM8d5iq/Oh+IwgTsheeneEzJkysY3wm1xs7yY+q2o/5migwcKvIsIdp+7eTcKKzIxeOrBbKY1Y+hcsNtxRoF7lvnmDChgPvSfuzck1GH1wDu5XK2OCB91nAQ35nVtfI1woDxab4ka/jUC+DK3xGtgMxlOeyTIkYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712896989; c=relaxed/simple;
-	bh=ThOQ1iA0SZzxppMkdCwv7zhioP243OLB+CAxMQ/W/44=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=Cs/eKPVaU9N4fWyZ2Yop1EJvzxjxXYwe+E2BF0elFEebF9TvJBrI+aeSh+KSVE9vQ5MiwiKLcPg17Z4jcsI7gUdZ6ORfQ1BnNGnKiSivjzP3U/ZqLWjmnbg7aOgzpzsIFSDZWHKWpZjai20JSVEWLJeVTKjrC/W9RAki0uV+sxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=riX4f00v; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240412044258epoutp025710e254251315f770825543e7e5192f~FbroYCb1v1782817828epoutp02i
-	for <linux-block@vger.kernel.org>; Fri, 12 Apr 2024 04:42:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240412044258epoutp025710e254251315f770825543e7e5192f~FbroYCb1v1782817828epoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712896978;
-	bh=ThOQ1iA0SZzxppMkdCwv7zhioP243OLB+CAxMQ/W/44=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=riX4f00v/FfXbwBZzT6mX92MTJGSoxlFd2dxBResKEUSwaCSr/CUZ7tquan4i9T93
-	 IGrLtstkIDEsEldq/bsPfeZSGTtzo2UNpd0L9WMRjqkn/BiR5CbJYPmcap4QPyQ8vZ
-	 K5+Zen4Nw4n8xle7r9tS9TMDKeMiqcJYoOiFzLJY=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240412044258epcas5p28a9f08e50f2e510994cd50147b07934c~FbroK5axT1071710717epcas5p27;
-	Fri, 12 Apr 2024 04:42:58 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VG3pS5LNDz4x9QK; Fri, 12 Apr
-	2024 04:42:56 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CD.CE.08600.0DBB8166; Fri, 12 Apr 2024 13:42:56 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1~FOnAhsgxG1241312413epcas5p3-;
-	Thu, 11 Apr 2024 12:44:46 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240411124446epsmtrp2503d735838bfa4187b6abe4c9c4d0d7f~FOnAhIPyK0446304463epsmtrp2I;
-	Thu, 11 Apr 2024 12:44:46 +0000 (GMT)
-X-AuditID: b6c32a44-921fa70000002198-72-6618bbd03961
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F7.CA.08924.E3BD7166; Thu, 11 Apr 2024 21:44:46 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240411124445epsmtip288d0d5f6b5ad90aedbbe3869cb0e92f0~FOm-pNNbt2124921249epsmtip2w;
-	Thu, 11 Apr 2024 12:44:45 +0000 (GMT)
-Date: Thu, 11 Apr 2024 18:07:50 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/3] null_blk: Have all null_handle_xxx() return a
- blk_status_t
-Message-ID: <20240411123750.gwzouryerxwmqrjt@green245>
+	s=arc-20240116; t=1712842388; c=relaxed/simple;
+	bh=Hu1xN2JiY9qMgKFHZgQq9iT0bgOzpOMrTuCFIleiTJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPWuSPXnqC29ZMS6bqTuWu2Gt8po9C7OUDZ0gCGtDHit64tsoDbz6DL3HEikCSxTuyjDQNbb6JFJ0bD0cUmTra10u3wtPsV6aFWVFbr6tlEVUPONxFYwG63OIQ0Mnz2p9Y7JnrZI925bzbIqLeo0TMwFfzAF1rqx5E93PFV0F9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d89346eb45so56129561fa.0;
+        Thu, 11 Apr 2024 06:33:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712842385; x=1713447185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VoFgjJ32tsxlVGtTa5gGB28oxhJFPr7M0nD6tH1rarM=;
+        b=PthL68uElizIUQwzTwjN6yt6Z+fgLYo2II/YyW9w9F7lZGndqBecamnVOqaAwcKrND
+         xBOqBXSL241mDE2ugZXfCuHH4FZ9Ddxq+Q3mGT4rvnskW7of55e+W5KvcpQ1YPJnom1I
+         0ssBBHGUf/zxrrrLGlnUJ/5qvPtwDL6tUQlEkGQw7zfqvefBcBlYLKROY/nVBMUJpmyv
+         lKx2n26T0tuqSBt/Sy/ASaxBcgp02s7lyXAjtroA942eVaMHt/C9WgKsfYwtGMGRX5CN
+         dpQ3QMQU46orcXTr5tMevtaJdlrj2InYYkBs421ZIEg76YtQpBhNJJpQ9whc46B1Dp03
+         HObg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUAFWStBALYBLNHU3G4xfitcdID/AgO2mDiYUQnRCXrpLNe5SHC1XIIOPT9PEyzigLnKXaeTm5G3ZDRzsVlARN5ugcPCVsFrMCwjh8KQABSbPzouYU2Pr8K1mmdHId/u05jvkbzGNPqW6hS4KYOfSPG0q83+QXdg7a7ZU4DlZBpQ+1
+X-Gm-Message-State: AOJu0YzUP/9fuTJSr3nvDR9kud+gnYG5VCHHOhgJgFVRtY+L6daVG5k8
+	vvwzMfHkJUxsQSoX1ktQs0qKgxdTH3zv7fUOKTnPgTx4khWI9dRf
+X-Google-Smtp-Source: AGHT+IFByJfC9hbYBeCLoTSUE6m3SAZ56TJRBSVxKGqApn7flbJoLNyy3Sp4kVZ3NmAPlJJgNRuidw==
+X-Received: by 2002:a2e:a9a6:0:b0:2d8:8633:ff70 with SMTP id x38-20020a2ea9a6000000b002d88633ff70mr6469091ljq.30.1712842385060;
+        Thu, 11 Apr 2024 06:33:05 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
+        by smtp.gmail.com with ESMTPSA id k11-20020a170906578b00b00a51be2b75f3sm760606ejq.35.2024.04.11.06.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 06:33:04 -0700 (PDT)
+Date: Thu, 11 Apr 2024 06:33:02 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+	leit@meta.com,
+	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <cgroups@vger.kernel.org>,
+	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <linux-block@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] blk-iocost: Fix shift-out-of-bounds in iocg_kick_delay()
+Message-ID: <Zhfmjoa2l04fXIVr@gmail.com>
+References: <20240410193642.1303741-1-leitao@debian.org>
+ <ZhbuUKXQwBwye1_r@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240411085502.728558-2-dlemoal@kernel.org>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFKsWRmVeSWpSXmKPExsWy7bCmuu6F3RJpBqt2almsvtvPZvFgv73F
-	3lvaDswel8+Wemxa1cnm8XmTXABzVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWF
-	uZJCXmJuqq2Si0+ArltmDtAWJYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BSYFe
-	cWJucWleul5eaomVoYGBkSlQYUJ2xrPmLraCE6wVb36/Z2lg/MbSxcjJISFgInFy8lMgm4tD
-	SGA3o8Src61MEM4nRomJOyZAOd8YJeb2bGWEaek/9YARIrGXUeLo3Ktgs4QEnjFKbJpnDmKz
-	CKhK/GpYyd7FyMHBJqAtcfo/B0hYREBdYurkPWBzmAVsJX4fOQrWKiwQKnFw2R1GkHJeATOJ
-	7UfLQMK8AoISJ2c+ASvhFLCU+NW8hwnEFhWQkZix9CszyAkSAqfYJTq3LWSHuM1FovvHVCYI
-	W1ji1fEtUHEpic/v9rJB2OUSK6esYINobmGUmHV9FtRj9hKtp/qZIY7LkPh9fCIrRFxWYuqp
-	dUwQcT6J3t9PoBbwSuyYB2MrS6xZvwBqgaTEte+NULaHxJkpj9nh4Xvh3BnWCYzys5B8NwvJ
-	PgjbSqLzQxOQzQFkS0ss/8cBYWpKrN+lv4CRdRWjZGpBcW56arJpgWFeajk8wpPzczcxghOh
-	lssOxhvz/+kdYmTiYDzEKMHBrCTCK60lmibEm5JYWZValB9fVJqTWnyI0RQYVxOZpUST84Gp
-	OK8k3tDE0sDEzMzMxNLYzFBJnPd169wUIYH0xJLU7NTUgtQimD4mDk6pBqbgzxsN3H11zyZ4
-	fC/k/VH8TfLgtIyND+qefD4V/FZmH0tfyEP2+dK3V+pO0o7YmMdYoPImce0bFv9HPYFFb7iD
-	y/gtDHwa7+VtjpcJrZlVfsDX6LVk6eZQSeff3WJVJSfZAvZOf1IeOpvx72aDWw4rtVjv3H+q
-	rNMakPp1e3cDT//KG7bCHZE8fHkNsUyl1wzzZm69ZFt0rSLA+HmxkMEDU9Xc1o0in31t9rjo
-	+S/RMOnmjROboXVe6feXNS+PtxX+mp4+VSL9q8w912WR3wUP71rPrcazTNL/t4/Lz601i1rO
-	5Zbc1vyWLTXpAHe208YHhTum5YbaNk9RP2Kz5OrJy21RsXMYry3Y/C5KWImlOCPRUIu5qDgR
-	AIVAn54NBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsWy7bCSvK7dbfE0g9+rJS1W3+1ns3iw395i
-	7y1tB2aPy2dLPTat6mTz+LxJLoA5issmJTUnsyy1SN8ugSujY38Le8Evpoq2eTdZGxgPMXUx
-	cnJICJhI9J96wNjFyMUhJLCbUeL8yUfMEAlJiWV/j0DZwhIr/z1nhyh6wijxa/didpAEi4Cq
-	xK+GlUA2BwebgLbE6f8cIGERAXWJqZP3MILYzAK2Er+PHGUBsYUFQiUOLrvDCFLOK2Amsf1o
-	GUhYSCBd4nV7JyuIzSsgKHFy5hMWiFYziXmbHzKDlDMLSEss/wc2nVPAUuJX8x6w80UFZCRm
-	LP3KPIFRcBaS7llIumchdC9gZF7FKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcvFqa
-	Oxi3r/qgd4iRiYPxEKMEB7OSCK+0lmiaEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQC8k
-	lqRmp6YWpBbBZJk4OKUamPhnyOSHulYd2xBfFHL2jGSnyIl3Z32kesN/6gXobmg7mWCzSlD9
-	8fULV2RzcybnX3vl6yCRVfXnRUflP4OaBv8Y9ftnX3iwF1T3qQe+fG3n8nWGuZLX3j7rpQr9
-	n4o1whY80ks89/H0XB+H7ZWf09+cesndGsXVKHzx4bons3mmCIQx9087lpV43j3lcWRt/7+T
-	yn0F0V0aWyf8EU755lnYti/gqfpOhrDrt6RKD37Jrz57RXXhjcYfHk0vHuxmX58XMeWA49wf
-	2xbPDF5jM2v9cpFjqZFs7pXvZO9or+Xw50hw1FnHw8mpolGcud5zVtSsVKlrN9ZvjTRcEc51
-	NlYoNCBKI3nKGyF/1X9WSizFGYmGWsxFxYkASZzXh80CAAA=
-X-CMS-MailID: 20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1
-References: <20240411085502.728558-1-dlemoal@kernel.org>
-	<20240411085502.728558-2-dlemoal@kernel.org>
-	<CGME20240411124446epcas5p3cac3d5d19a67f7711ea9cb2b751b8cf1@epcas5p3.samsung.com>
-
-------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ZhbuUKXQwBwye1_r@slm.duckdns.org>
 
-On 11/04/24 05:55PM, Damien Le Moal wrote:
->Modify the null_handle_flush() and null_handle_rq() functions to return
->a blk_status_t instead of an errno to simplify the call sites of these
->functions and to be consistant with other null_handle_xxx() functions.
->
->Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->---
-Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+On Wed, Apr 10, 2024 at 09:53:52AM -1000, Tejun Heo wrote:
+> Hello, Breno.
+> 
+> On Wed, Apr 10, 2024 at 12:36:41PM -0700, Breno Leitao wrote:
+> > When running iocg_kick_delay(), iocg->delay_at could be way behind "now",
+> > which causes a huge tdelta difference.
+> > 
+> > The tdelta value is used to shift some bits around, raising the
+> > following UBSAN splat:
+> > 
+> > 	UBSAN: shift-out-of-bounds in block/blk-iocost.c:1366:23
+> > 
+> > Debugging this, these are some values I got in my machine with 6.9-rc3.
+> > 
+> >  now = 3626064295
+> >  iocg->delay_at = 3275794093
+> > 
+> > Fix this by validating that the shift if valid, otherwise bail out,
+> > similarly to commit 2a427b49d029 ("blk-iocost: Fix an UBSAN
+> > shift-out-of-bounds warning")
+> 
+> Rik alreaady sent a fix:
+> 
+>   http://lkml.kernel.org/r/20240404123253.0f58010f@imladris.surriel.com
+> 
+> which got commited as beaa51b36012fad5a4d3c18b88a617aea7a9b96d.
 
-------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_
-Content-Type: text/plain; charset="utf-8"
-
-
-------vz81d6m7j.py-bGO0GPJ08-4LvSGVDQp9Yqo3MxnNZXK7Ax7=_76cb3_--
+Even easier then. Thanks!
 
