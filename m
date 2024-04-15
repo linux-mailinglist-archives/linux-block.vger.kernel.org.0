@@ -1,118 +1,113 @@
-Return-Path: <linux-block+bounces-6220-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6224-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDA2A8A4B67
-	for <lists+linux-block@lfdr.de>; Mon, 15 Apr 2024 11:26:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3614E8A4FA5
+	for <lists+linux-block@lfdr.de>; Mon, 15 Apr 2024 14:52:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 795C5281421
-	for <lists+linux-block@lfdr.de>; Mon, 15 Apr 2024 09:26:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6147284178
+	for <lists+linux-block@lfdr.de>; Mon, 15 Apr 2024 12:52:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E4A1BF2B;
-	Mon, 15 Apr 2024 09:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F221E78B4E;
+	Mon, 15 Apr 2024 12:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WOeUNduA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tu1F0hva"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B553CF6A
-	for <linux-block@vger.kernel.org>; Mon, 15 Apr 2024 09:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D08762DC;
+	Mon, 15 Apr 2024 12:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713173213; cv=none; b=L7uo/rbdjnqmB0MZxyCUK1LW32bJCtMtuxr3lcSCN53nX8/bFJ5HtReP3mXE8h4pIkvlRwojQ961XehMcy9XGTW2znOxGIlEOuWI6taHk5J3sg/fo0lSmKPB5SegVYgsltlLeu4y1b+nWBYnKpOcDA6mOOfpQO1UeV7wtJAq9XI=
+	t=1713185368; cv=none; b=Ym/gvIKUCeuKlxPgmPl+vncVhtZUOivYfrh7T1t0VQ4E+tSh7dFJJozb020zR1IVNvTEMiDXW3BQegDo509cz5AnLj2+SZyxp20floskbPIgo685PEZxjyE71mMdkz54nqfePYr/pXHqQKhUQebFVxmSVi26ahiM66eNHmFtVGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713173213; c=relaxed/simple;
-	bh=sA5fgX9HWhMU42nF38m0dAA/l+qdQMZG3Q8ualuuI4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CG1jkXAgyuSFeUq8UckmZsaerbbNMWx5HoTpCqTxsISeSbFcpzCUBzJKjSyHUAQmcCqzwq1MlS+8zpYare6uZ5zCHYk5fVynPBSKZp0vkM/qjpo0EqPu11nQwuxI8AwDSUzmfY3Cf2VDVN18zoMWzDiPcbL88IjdG4tRe03sRMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WOeUNduA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713173210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JKW7sMkNKvCDKzXl0a+7+sB/76+8oNdGXWP00zBOyoM=;
-	b=WOeUNduAba37TYATWA/+avi5APj1z6oA771jcfBrCIbUK8mqTf04/MzSXpLc1zPxuKsmFq
-	0QJ4VnET3h7Uz7BQ1Twnwkx3MmOcv3I5QfqIimLZPMMEtOf3+FZkSZQOvkEEPJCybd+th6
-	tsDOHzaUcpKQ5o3J56cBzOcwfwFnx9I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-208-b4_-Er1KM7i5HB7d0PL9cw-1; Mon, 15 Apr 2024 05:26:49 -0400
-X-MC-Unique: b4_-Er1KM7i5HB7d0PL9cw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9C35830E77;
-	Mon, 15 Apr 2024 09:26:48 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.13])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 774E92BA;
-	Mon, 15 Apr 2024 09:26:43 +0000 (UTC)
-Date: Mon, 15 Apr 2024 17:26:19 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>, "Darrick J. Wong" <djwong@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
-	Mikulas Patocka <mpatocka@redhat.com>
-Subject: Re: [PATCH v2 04/34] md: port block device access to file
-Message-ID: <Zhzyu6pQYkSNgvuh@fedora>
-References: <20240123-vfs-bdev-file-v2-0-adbd023e19cc@kernel.org>
- <20240123-vfs-bdev-file-v2-4-adbd023e19cc@kernel.org>
+	s=arc-20240116; t=1713185368; c=relaxed/simple;
+	bh=k3ZZMuQVFwRl1gMlxSorEaL5Mxk0oRTuF99ryI1nZrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ILW/AtMi4ZMtNgesnfbiDxNL/GEpIshszYQQBBCi0llc+1vP7wIrHomf8mMV2s129EGSfOXI20qlUyqvlkFJxBKFF8DHYX2OfBGBLDS2KcqwjRavWYlNKnKO40m+OZx4SieNTxS/58gVPmYgvNw32gBni90vU7p/7M3RDo+7IeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tu1F0hva; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79F0C2BD10;
+	Mon, 15 Apr 2024 12:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185368;
+	bh=k3ZZMuQVFwRl1gMlxSorEaL5Mxk0oRTuF99ryI1nZrc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tu1F0hvaUkX3tjq0qjmq5z8oshVhxYfV0VGH/pnRXlrIpT1SWFUBZo52Dg/31XFLz
+	 4qqfUbPPhICQ4ySljdg8G2yLrMtvIZ+0+2r5zmJ9R3sRs3ah3NqXTOI0RHDvmEBgfJ
+	 yhx+Antyo85Ldj/IeTtRTx2GZpacd1Vyr0pW1h2EIdAH9KIEVJozbQi1lPTDiCp9vj
+	 T0++4TpO844pgAYvqmBecOUcvTpEoyi50WAkKFhNL9k2J95p2T/mAx1WAo4MhxQkzc
+	 BBcFai/d71jt80+nwPdSvGvyn3a9j45DCI8h5wlEcgAGncZHB5soOFFys+7/oX/eeu
+	 NhrnntWYszJuQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Li Nan <linan122@huawei.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 09/15] block: fix overflow in blk_ioctl_discard()
+Date: Mon, 15 Apr 2024 06:02:49 -0400
+Message-ID: <20240415100311.3126785-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
+References: <20240415100311.3126785-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123-vfs-bdev-file-v2-4-adbd023e19cc@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.6
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Li Nan <linan122@huawei.com>
 
-On Tue, Jan 23, 2024 at 02:26:21PM +0100, Christian Brauner wrote:
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  drivers/md/dm.c               | 23 +++++++++++++----------
->  drivers/md/md.c               | 12 ++++++------
->  drivers/md/md.h               |  2 +-
->  include/linux/device-mapper.h |  2 +-
->  4 files changed, 21 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> index 8dcabf84d866..87de5b5682ad 100644
-> --- a/drivers/md/dm.c
-> +++ b/drivers/md/dm.c
+[ Upstream commit 22d24a544b0d49bbcbd61c8c0eaf77d3c9297155 ]
 
-...
+There is no check for overflow of 'start + len' in blk_ioctl_discard().
+Hung task occurs if submit an discard ioctl with the following param:
+  start = 0x80000000000ff000, len = 0x8000000000fff000;
+Add the overflow validation now.
 
-> @@ -775,7 +778,7 @@ static void close_table_device(struct table_device *td, struct mapped_device *md
->  {
->  	if (md->disk->slave_dir)
->  		bd_unlink_disk_holder(td->dm_dev.bdev, md->disk);
-> -	bdev_release(td->dm_dev.bdev_handle);
-> +	fput(td->dm_dev.bdev_file);
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20240329012319.2034550-1-linan666@huaweicloud.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/ioctl.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-The above change caused regression on 'dmsetup remove_all'.
-
-blkdev_release() is delayed because of fput(), so dm_lock_for_deletion
-returns -EBUSY, then this dm disk is skipped in remove_all().
-
-Force to mark DMF_DEFERRED_REMOVE might solve it, but need our device
-mapper guys to check if it is safe.
-
-Or other better solution?
-
-thanks,
-Ming
+diff --git a/block/ioctl.c b/block/ioctl.c
+index 438f79c564cfc..24246465e39b6 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -89,7 +89,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 		unsigned long arg)
+ {
+ 	uint64_t range[2];
+-	uint64_t start, len;
++	uint64_t start, len, end;
+ 	struct inode *inode = bdev->bd_inode;
+ 	int err;
+ 
+@@ -110,7 +110,8 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 	if (len & 511)
+ 		return -EINVAL;
+ 
+-	if (start + len > bdev_nr_bytes(bdev))
++	if (check_add_overflow(start, len, &end) ||
++	    end > bdev_nr_bytes(bdev))
+ 		return -EINVAL;
+ 
+ 	filemap_invalidate_lock(inode->i_mapping);
+-- 
+2.43.0
 
 
