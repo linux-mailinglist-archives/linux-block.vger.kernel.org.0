@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-6250-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6248-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D8548A60B4
-	for <lists+linux-block@lfdr.de>; Tue, 16 Apr 2024 04:09:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A69EF8A60B3
+	for <lists+linux-block@lfdr.de>; Tue, 16 Apr 2024 04:09:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A3AC2824EE
-	for <lists+linux-block@lfdr.de>; Tue, 16 Apr 2024 02:09:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D70C21C20C45
+	for <lists+linux-block@lfdr.de>; Tue, 16 Apr 2024 02:09:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8469410A1C;
-	Tue, 16 Apr 2024 02:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A3E10795;
+	Tue, 16 Apr 2024 02:09:38 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F754101E2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CFB101F7
 	for <linux-block@vger.kernel.org>; Tue, 16 Apr 2024 02:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713233379; cv=none; b=mtJYAeCKd6iuka+FBTBAm/1Z/Ww0BfS1X4NM3glkR0ZOivKciAW4stkcYYZnZXO2nLUXNXaygOYeDkEGtMcLmKlECWmRI5llwNFj4kC9o8aTvu9/s/yp5OQAGJ36Q7hJWJnfVmtVpB7x+oFZZGLiEmtlXx5Mndjqw2a0AXf3m2o=
+	t=1713233378; cv=none; b=K1mSNChD+VaVv2vNi7PGiYlTYvnmXhaErXM//JNt29+g89zLWeHV4mkG82EGGQ3Lx5aWQfHQigsuSHupi/t26ed2NFmxfgZpzh6TUpW0Bi6SiiNxUZrJT0hN6aurzCS6FU9u/pyJoEd2rdQ3aW+LUU+rLY2R1AgbNOHk0bkNoFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713233379; c=relaxed/simple;
-	bh=5R5XIlFRSueQFPENVDXwCkXhhyDD4OCbFLx1d1JaQe0=;
+	s=arc-20240116; t=1713233378; c=relaxed/simple;
+	bh=+VXmHkl213wIRecrSZqEMt4BydB/UNzEFVl5mcTm5IQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SDxZz4q+fGXT+220DXCngrdpB46TJpG7H9Ev9QBsqPZA+sRzoVvkLq6w66HKGsh5dkNW7G0IIFOFGQP0v+ozf+tRexLU7K51P88qmtfqfHuEA/hG6i2jE7Vd68XOnlNvMOM2xwHhFhnR0mwrKIWHAViTFcqJq5q82HU3US0ITzQ=
+	 MIME-Version; b=qFuLxJtXdZSFBYNbl3oksbFJBXjsR5w6Si2HNgsfnM4Qt9JvI6+D44sN4hLnP/K8HXvk9KVc5j9cTXFidqDUjVQIywFB9JHErpVz1MHbvicJrmlvcuwct8gM7zq7ANZJ7jqXqjR6dZb7pwmdcwbMhmh1YdM2CSGm2cdJDLJbpFE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VJSCM12QPz4f3nVC
-	for <linux-block@vger.kernel.org>; Tue, 16 Apr 2024 10:09:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VJSCR5LBsz4f3lXl
+	for <linux-block@vger.kernel.org>; Tue, 16 Apr 2024 10:09:23 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 05B3F1A0568
+	by mail.maildlp.com (Postfix) with ESMTP id 57D241A10BA
 	for <linux-block@vger.kernel.org>; Tue, 16 Apr 2024 10:09:28 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g7U3R1mMNVnKA--.11112S8;
-	Tue, 16 Apr 2024 10:09:27 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7U3R1mMNVnKA--.11112S9;
+	Tue, 16 Apr 2024 10:09:28 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: linux-block@vger.kernel.org,
 	saranyamohan@google.com,
@@ -46,9 +46,9 @@ To: linux-block@vger.kernel.org,
 Cc: yukuai3@huawei.com,
 	yukuai1@huaweicloud.com,
 	yangerkun@huawei.com
-Subject: [PATCH blktests 4/5] tests/throtl: add a new test 004
-Date: Tue, 16 Apr 2024 10:00:41 +0800
-Message-Id: <20240416020042.509291-5-yukuai1@huaweicloud.com>
+Subject: [PATCH blktests 5/5] tests/throtl: add a new test 005
+Date: Tue, 16 Apr 2024 10:00:42 +0800
+Message-Id: <20240416020042.509291-6-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240416020042.509291-1-yukuai1@huaweicloud.com>
 References: <20240416020042.509291-1-yukuai1@huaweicloud.com>
@@ -59,10 +59,10 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g7U3R1mMNVnKA--.11112S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7ur43Zw4xKw1xtFW5ArWfuFg_yoW5JF1xpr
-	WUGa1Fyr4xCFnIqr13KanrZayrZws5Zr4Sy3srJr1SyFyjq34UJr1Ikr1SvFZ5CF9xWryr
-	ZF48XrWfK3W8GrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgAX5g7U3R1mMNVnKA--.11112S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw13KryrJr48CF4rtryftFb_yoW8KFy7pa
+	y7CF4rKw48WFsxtr43Ka17WFWfXws5Ar4xA3srGr1FyF12q34UKr1Iyw1xtF93tFnxuryr
+	Za4rXFWkKF18urDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -73,43 +73,41 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7ur43Zw4xKw1xtFW5ArWfuFg_yoW5JF1xpr
 	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrw
 	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
 	14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+	IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
 	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
 	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQSdkUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Test delete the disk while IO is throttled, regerssion test for:
+Test change config while IO is throttled, regression test for:
 
-commit 884f0e84f1e3 ("blk-throttle: fix UAF by deleteing timer in blk_throtl_exit()")
-commit 8f9e7b65f833 ("block: cancel all throttled bios in del_gendisk()")
+commit a880ae93e5b5 ("blk-throttle: fix io hung due to configuration updates")
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- tests/throtl/004     | 79 ++++++++++++++++++++++++++++++++++++++++++++
- tests/throtl/004.out |  4 +++
- 2 files changed, 83 insertions(+)
- create mode 100755 tests/throtl/004
- create mode 100644 tests/throtl/004.out
+ tests/throtl/005     | 83 ++++++++++++++++++++++++++++++++++++++++++++
+ tests/throtl/005.out |  3 ++
+ 2 files changed, 86 insertions(+)
+ create mode 100755 tests/throtl/005
+ create mode 100644 tests/throtl/005.out
 
-diff --git a/tests/throtl/004 b/tests/throtl/004
+diff --git a/tests/throtl/005 b/tests/throtl/005
 new file mode 100755
-index 0000000..d07f9d5
+index 0000000..6caac99
 --- /dev/null
-+++ b/tests/throtl/004
-@@ -0,0 +1,79 @@
++++ b/tests/throtl/005
+@@ -0,0 +1,83 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
 +# Copyright (C) 2024 Yu Kuai
 +#
-+# Test delete the disk while IO is throttled, regerssion test for
-+# commit 884f0e84f1e3 ("blk-throttle: fix UAF by deleteing timer in blk_throtl_exit()")
-+# commit 8f9e7b65f833 ("block: cancel all throttled bios in del_gendisk()")
++# Test change config while IO is throttled, regression test for
++# commit a880ae93e5b5 ("blk-throttle: fix io hung due to configuration updates")
 +
 +. tests/throtl/rc
 +
-+DESCRIPTION="delete disk while IO is throttled"
++DESCRIPTION="change config with throttled IO"
 +QUICK=1
 +
 +CG=/sys/fs/cgroup
@@ -118,11 +116,7 @@ index 0000000..d07f9d5
 +dev=""
 +
 +set_up_test() {
-+	if ! _init_null_blk nr_devices=0; then
-+		return 1;
-+	fi
-+
-+	if ! _configure_null_blk $devname power=1; then
++	if ! _init_null_blk max_sectors=8; then
 +		return 1;
 +	fi
 +
@@ -140,19 +134,25 @@ index 0000000..d07f9d5
 +}
 +
 +config_throtl() {
-+	limit=$((1024 * 1024))
-+	echo "$dev wbps=$limit" > $TEST_DIR/io.max
++	echo "$dev $*" > $TEST_DIR/io.max
++}
++
++remove_config() {
++	echo "$dev rbps=max wbps=max riops=max wiops=max" > $TEST_DIR/io.max
 +}
 +
 +test_io() {
-+	config_throtl
++	limit=$((512 * 1024))
++	config_throtl wbps=$limit
 +
 +	{
 +		sleep 0.1
 +		start_time=$(date +%s.%N)
 +
-+		dd of=/dev/$devname if=/dev/zero bs=10M count=1 oflag=direct status=none
++		dd of=/dev/$devname if=/dev/zero bs=1M count=1 oflag=direct status=none
 +
++		# old limit is 512k, issue 1M IO, swith to new limit 215k after 1s
++		# expected wait time is 3s
 +		end_time=$(date +%s.%N)
 +		elapsed=$(echo "$end_time - $start_time" | bc)
 +		printf "%.0f\n" "$elapsed"
@@ -162,8 +162,11 @@ index 0000000..d07f9d5
 +	echo $! > $TEST_DIR/cgroup.procs
 +
 +	sleep 1
-+	echo 0 > /sys/kernel/config/nullb/$devname/power
++	limit=$((256 * 1024))
++	config_throtl wbps=$limit
 +	wait $pid
++
++	remove_config
 +}
 +
 +test() {
@@ -178,15 +181,14 @@ index 0000000..d07f9d5
 +	clean_up_test
 +	echo "Test complete"
 +}
-diff --git a/tests/throtl/004.out b/tests/throtl/004.out
+diff --git a/tests/throtl/005.out b/tests/throtl/005.out
 new file mode 100644
-index 0000000..03331fe
+index 0000000..1d23210
 --- /dev/null
-+++ b/tests/throtl/004.out
-@@ -0,0 +1,4 @@
-+Running throtl/004
-+dd: error writing '/dev/nullb0': Input/output error
-+1
++++ b/tests/throtl/005.out
+@@ -0,0 +1,3 @@
++Running throtl/005
++3
 +Test complete
 -- 
 2.39.2
