@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-6408-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6405-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6313E8ABA61
-	for <lists+linux-block@lfdr.de>; Sat, 20 Apr 2024 10:54:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 029348ABA5F
+	for <lists+linux-block@lfdr.de>; Sat, 20 Apr 2024 10:54:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9425C1C2133C
-	for <lists+linux-block@lfdr.de>; Sat, 20 Apr 2024 08:54:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F7C2B21980
+	for <lists+linux-block@lfdr.de>; Sat, 20 Apr 2024 08:54:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B7E168DD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7BB14F64;
 	Sat, 20 Apr 2024 08:54:09 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3755C14A83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907AAF9DF
 	for <linux-block@vger.kernel.org>; Sat, 20 Apr 2024 08:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713603249; cv=none; b=rAAirem/NPW40iGam3LVsYGOpLJ4FfvLSIbrl1Z1910lNWtEfFwJI1yNHDW31PljIWIfeoEDZY+lxKzt8QoymaTfLoo1QI9wNZTMfGpJ7tp0jRsWImCVGsBzT/reW4mt3F0fV+CxbJlhiQjTb9hnRjehq4plwE+7/mGiBlSEfJE=
+	t=1713603249; cv=none; b=cwGZY9MEJvWZRQinBttc9akyGwK6TVYjpxgkCsI/lJvDPt53hkzNbrKPjd5MWs99/ZOuGALKWHXh9pZzdAmjA4NiWQONk4KGN34Cwn4Qdi9ZGo9qVDRb1QFN6ht0YDSYhvaVMcskGAFHpe3nbJR1GoJCYmuVel9l2rdgdciOIIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713603249; c=relaxed/simple;
-	bh=6VofsT0Owod0SwNu1JDal8Ks16T7IBAuM6dwAj6s3Ko=;
+	bh=3kZshLD7u9/MfOH3AKlJZe6uQ7/2EfOz7EVdqWcKpaU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jyB3+3nCn8WxdObH04iSYzmAYmBEeBmDxTX8vwa/Zf6eqSf+xyATj0ZWCVrIubJmYJRnvLbfjrndR2VpWlKnJ4nTTCsaEE7seZzoIfj+lvZ9T6DlaA0q1wtYGKMWJli/k0PkyWG+f/euStld1jyPZzuH32CUhzdEf9O1Cwt9mJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=qpiyPfEzhVVq62CuTaFOKYSULV11RmFgJbVfiAD7uysjYGbBeNK5MZvgfT1stOEhWKQ0mduOTPJk8Emou1pVJiXRasEPps2MoAZsuYEHXvBQKzvWtHnEzF/pwRdfiiRhv6fAu2ua4/uxc9z5hBsfiDWKpjI9VDfTnbVPhGp5DZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VM50N61tVz4f3khn
-	for <linux-block@vger.kernel.org>; Sat, 20 Apr 2024 16:53:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VM50R5RYbz4f3jkd
+	for <linux-block@vger.kernel.org>; Sat, 20 Apr 2024 16:53:59 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 2F5191A0175
+	by mail.maildlp.com (Postfix) with ESMTP id 7DBBD1A0C47
 	for <linux-block@vger.kernel.org>; Sat, 20 Apr 2024 16:54:04 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBGqgiNmW_HiKQ--.35908S6;
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBGqgiNmW_HiKQ--.35908S7;
 	Sat, 20 Apr 2024 16:54:04 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: saranyamohan@google.com,
@@ -46,9 +46,9 @@ Cc: linux-block@vger.kernel.org,
 	yukuai3@huawei.com,
 	yukuai1@huaweicloud.com,
 	yangerkun@huawei.com
-Subject: [PATCH v3 blktests 2/5] tests/throtl: add a new test 002
-Date: Sat, 20 Apr 2024 16:45:02 +0800
-Message-Id: <20240420084505.3624763-3-yukuai1@huaweicloud.com>
+Subject: [PATCH v3 blktests 3/5] tests/throtl: add a new test 003
+Date: Sat, 20 Apr 2024 16:45:03 +0800
+Message-Id: <20240420084505.3624763-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240420084505.3624763-1-yukuai1@huaweicloud.com>
 References: <20240420084505.3624763-1-yukuai1@huaweicloud.com>
@@ -59,13 +59,13 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBGqgiNmW_HiKQ--.35908S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DZw1DXF1fuw4UurWUXFb_yoW8Xr1Up3
-	y7Ka1rKF4IgF9rJry3G3W7uayFyws3Zr47Aw13Xr15Zr1qqw17KF1Ivr1SyFWfJFZrur1F
-	93WvqFWrGF4DJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgBHGBGqgiNmW_HiKQ--.35908S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr4DJFW3CFyxAw1UtF1kKrg_yoW8Xr43pa
+	y2kayrKr4IgFnrAr4fGa17WayfAws3Zr17Aw13Wr13uFW2q3y5WF1Ivr1YvFWfJFsFqr1r
+	Z3WUZF95CF1DJrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
 	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
 	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
@@ -75,40 +75,40 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DZw1DXF1fuw4UurWUXFb_yoW8Xr1Up3
 	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
 	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
 	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU29aPUUUUU
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHOJ5UUUUU
 	=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Test iops limit over IO split, regression tests for:
+Test bps limit over IO split, regression tests for:
 
-commit 9f5ede3c01f9 ("block: throttle split bio in case of iops limit")
+commit 111be8839817 ("block-throttle: avoid double charge")
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- tests/throtl/002     | 30 ++++++++++++++++++++++++++++++
- tests/throtl/002.out |  4 ++++
- 2 files changed, 34 insertions(+)
- create mode 100755 tests/throtl/002
- create mode 100644 tests/throtl/002.out
+ tests/throtl/003     | 32 ++++++++++++++++++++++++++++++++
+ tests/throtl/003.out |  4 ++++
+ 2 files changed, 36 insertions(+)
+ create mode 100755 tests/throtl/003
+ create mode 100644 tests/throtl/003.out
 
-diff --git a/tests/throtl/002 b/tests/throtl/002
+diff --git a/tests/throtl/003 b/tests/throtl/003
 new file mode 100755
-index 0000000..8bbe18b
+index 0000000..da4342e
 --- /dev/null
-+++ b/tests/throtl/002
-@@ -0,0 +1,30 @@
++++ b/tests/throtl/003
+@@ -0,0 +1,32 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
 +# Copyright (C) 2024 Yu Kuai
 +#
-+# Test iops limit work correctly for big IO of blk-throttle, regression test
-+# for commit 9f5ede3c01f9 ("block: throttle split bio in case of iops limit")
++# Test bps limit work correctly for big IO of blk-throttle, regression test for
++# commit 111be8839817 ("block-throttle: avoid double charge")
 +
 +. tests/throtl/rc
 +
-+DESCRIPTION="iops limit over IO split"
++DESCRIPTION="bps limit over IO split"
 +QUICK=1
 +
 +test() {
@@ -118,24 +118,26 @@ index 0000000..8bbe18b
 +		return 1;
 +	fi
 +
-+	_throtl_set_limits wiops=256
++	local limit=$((1024 * 1024))
++
++	_throtl_set_limits wbps=$limit
 +	_throtl_test_io write 1M 1
 +	_throtl_remove_limits
 +
-+	_throtl_set_limits riops=256
++	_throtl_set_limits rbps=$limit
 +	_throtl_test_io read 1M 1
 +	_throtl_remove_limits
 +
 +	_clean_up_throtl
 +	echo "Test complete"
 +}
-diff --git a/tests/throtl/002.out b/tests/throtl/002.out
+diff --git a/tests/throtl/003.out b/tests/throtl/003.out
 new file mode 100644
-index 0000000..7e1ae85
+index 0000000..07a80b3
 --- /dev/null
-+++ b/tests/throtl/002.out
++++ b/tests/throtl/003.out
 @@ -0,0 +1,4 @@
-+Running throtl/002
++Running throtl/003
 +1
 +1
 +Test complete
