@@ -1,180 +1,114 @@
-Return-Path: <linux-block+bounces-6435-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6438-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C1118ACB31
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 12:47:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D82E8ACB75
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 12:57:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96AF71F20CAC
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 10:47:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58E5A2844F6
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 10:57:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6141448D8;
-	Mon, 22 Apr 2024 10:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C05F146581;
+	Mon, 22 Apr 2024 10:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8T6PrCT"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57AD14A8B
-	for <linux-block@vger.kernel.org>; Mon, 22 Apr 2024 10:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F28146006;
+	Mon, 22 Apr 2024 10:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782767; cv=none; b=PyaQDvTFB38+SaLAshB2inY/D/EAq9zgVJ2omwfgWQnwNLy7kdq9zxpsuY3d+nK4XZWtmzH1GoEQi4Iak50H7vRQlyqTKw5iJLTRki/Be0DXLIlhJdaziGBAajdZP6qPjrq/bl47+ryhHIZ4GfxJRtWdEPyRQKBfZgbEt9o29cI=
+	t=1713783269; cv=none; b=h3RHn5GU7i8odmU7L/uNSyIPDIICRxxPAy+PFoQM3GpIvs4xhLpp2T6hTBZOxOdn2y17ax/G/L3BzlaKpDqDY66uumzN1II3c0PGg3gL5TjLZa2Yl2f/roXakzvqeUEDYOTJHpNJCIm6O9RfXNUdwASH6PlW3mDPO0atRGkCULo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713782767; c=relaxed/simple;
-	bh=kIAjzPhBsy5dVmAWTT9xmEBHAh3C00ouOaMeMjDyoOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EQanSZzuGx415+bkZjd1UCP4L1XSAP6aQAZX8BaIGIFx214zN+yBDLCf43K+MLVWOCCFtcW8igzrib8oxhwGBob61M1bDYUJ3BNM1aRsmCUNmbqXUcUc1lpfkTGEWLk9yRCZLV2nZnB47oEaNe3iR9vlTcz02+1cNoqQ/w2qUyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-346407b8c9aso1166576f8f.0
-        for <linux-block@vger.kernel.org>; Mon, 22 Apr 2024 03:46:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713782764; x=1714387564;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ss5beKZTHht2vaLBTc6HYCogExwfAkEZk+V+c9HgkFw=;
-        b=p9JGYkAaWbrH2HpArY+U2QqOLo2Ex+iFjY825vTtJApWnEUDEj/96XmkRMB3G77idl
-         1fHllIkO75nT4HoTygcp5nrERYWVTyCjvRLtCNirI1Q5givyTC1ei+Vpyt2Q6pTvkvYu
-         GEZcBEsOgO3THeE8E8juXCwWw/sWdISfhPakbzGWBi3wY47wz8kS8dz7yUNLfjQKHxDV
-         A+pYTpIIqBys0znw+foy+wYd4qzVT3FAAPXxe5eMzNQ3yOCF6CHBY7aoo037zRkscTHb
-         ewSs6wYHI+7rp051F9u/iFCWKJPcYXXt8rydUUYxvuNK9K1baJQmhFLol+IRs0C6b3bB
-         k8LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8HQJtjT8Fn6YVKYm0abJo83qqBvheXtv9aEAVxGN0LY4UBG+xeIt0LB6BqbNnAx8qkWGYb3c50FTOijA7YcTo4d1Vt5IxIf2yO2I=
-X-Gm-Message-State: AOJu0YyYxtHE0hiwCxM69XBe4Ck5ZOFzSZP/29LNyZCRTeB38SxN/OWt
-	ZS32oAy7DFsgxRSJ8dGerY2vkmqwAVkQt5UDWdfJoYp/AJoViSkYQKonow==
-X-Google-Smtp-Source: AGHT+IHxzDoUkIFLa0ivqbj6YgwpYzzSYZkL37RYWvKY4Zi82lkd/iEbQi2NHw+Hq/vE/UNJMynxSw==
-X-Received: by 2002:a05:600c:1d10:b0:418:3d9b:b38e with SMTP id l16-20020a05600c1d1000b004183d9bb38emr6638369wms.4.1713782763863;
-        Mon, 22 Apr 2024 03:46:03 -0700 (PDT)
-Received: from [10.100.102.74] (85.65.192.64.dynamic.barak-online.net. [85.65.192.64])
-        by smtp.gmail.com with ESMTPSA id p6-20020a05600c468600b0041563096e15sm20224057wmo.5.2024.04.22.03.46.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 03:46:03 -0700 (PDT)
-Message-ID: <54666822-4e7f-4ec2-982b-541380cec154@grimberg.me>
-Date: Mon, 22 Apr 2024 13:46:02 +0300
+	s=arc-20240116; t=1713783269; c=relaxed/simple;
+	bh=Y8oWTGmW1mp+gUweWdjbgRIr3XR+PFMgE5gNzpaFnfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVcqX+TBHDVskIxSJWdCQz7CM1yCEVhVjqL+zCO0af4WAjpueCDFj2gTryfGTjOmfCjoJHUplW3hLyCXynCCoottCIdSKbHPRSu1B/LxDjdG57COJ47+fTJ64gaDRDnyaf3RUAyecDima2jyWe2l9p61TNYx5fadn+N7mcn2Rk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m8T6PrCT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=oZEeguo2b2jtBnPbKaY5/9sstm18yBWC6j46f2+Lpkw=; b=m8T6PrCTf/zqyGaoLOTNGzy+Cm
+	BjDM4Ul2VP01WHEvLTKqhdrBlax+GYn4vTGhvO/BHQUeGHHZrVOajZThjO8CsMQNh4fVzSGfCxFK+
+	R9ccetuloSu+3l6D/Fsej1NG2GAkS/mM8lI5rHhqvIHtampPbCN8+XnSrFuzHSZYeuRgSJqyEWJHY
+	KJxg+cx/WLfR4+68zVs/LDlJOtnmaIm+JNUtkG0JpEtzN/5LsO/xHqm3wKm3Rgklq2Izu+AD3mPoR
+	JRO4ew/AOaKz9OvtyEvtaL8212VPHOHaFVapFAP2ruyQqDStecdvNLOrtf2C011TEBDJdassVVFKS
+	ZH1SJDMg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ryrJY-0000000DdIE-2YmC;
+	Mon, 22 Apr 2024 10:54:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 436B430045D; Mon, 22 Apr 2024 12:54:24 +0200 (CEST)
+Date: Mon, 22 Apr 2024 12:54:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Mike Snitzer <msnitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Damien Le Moal <dlemoal@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Guangwu Zhang <guazhang@redhat.com>, dm-devel@lists.linux.dev,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] completion: move blk_wait_io to
+ kernel/sched/completion.c
+Message-ID: <20240422105424.GM30852@noisy.programming.kicks-ass.net>
+References: <31b118f3-bc8d-b18b-c4b9-e57d74a73f@redhat.com>
+ <20240417175538.GP40213@noisy.programming.kicks-ass.net>
+ <546473fd-ca4b-3c64-349d-cc739088b748@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] kmemleak observed with blktests nvme/tcp
-To: Yi Zhang <yi.zhang@redhat.com>
-Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>, Jens Axboe <axboe@kernel.dk>,
- linux-block <linux-block@vger.kernel.org>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-References: <CAHj4cs8xbBXm1_SKpNpeB5_bbD28YwhorikQ-OYRtt9-Mf+vsQ@mail.gmail.com>
- <923a9363-f51b-4fa1-8a0b-003ff46845a2@nvidia.com>
- <ede49e66-7a0a-472d-a44c-0c60763ddce0@grimberg.me>
- <CAHj4cs9UN_pV_raSL2+wNRP9yBeJWkx0_GtHSQ0QoC3jYxhfQA@mail.gmail.com>
-Content-Language: he-IL, en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <CAHj4cs9UN_pV_raSL2+wNRP9yBeJWkx0_GtHSQ0QoC3jYxhfQA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <546473fd-ca4b-3c64-349d-cc739088b748@redhat.com>
 
+On Wed, Apr 17, 2024 at 08:00:22PM +0200, Mikulas Patocka wrote:
+> 
+> 
+> On Wed, 17 Apr 2024, Peter Zijlstra wrote:
+> 
+> > On Wed, Apr 17, 2024 at 07:49:17PM +0200, Mikulas Patocka wrote:
+> > > Index: linux-2.6/kernel/sched/completion.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/kernel/sched/completion.c	2024-04-17 19:41:14.000000000 +0200
+> > > +++ linux-2.6/kernel/sched/completion.c	2024-04-17 19:41:14.000000000 +0200
+> > > @@ -290,6 +290,26 @@ wait_for_completion_killable_timeout(str
+> > >  EXPORT_SYMBOL(wait_for_completion_killable_timeout);
+> > >  
+> > >  /**
+> > > + * wait_for_completion_long_io - waits for completion of a task
+> > > + * @x:  holds the state of this particular completion
+> > > + *
+> > > + * This is like wait_for_completion_io, but it doesn't warn if the wait takes
+> > > + * too long.
+> > > + */
+> > > +void wait_for_completion_long_io(struct completion *x)
+> > > +{
+> > > +	/* Prevent hang_check timer from firing at us during very long I/O */
+> > > +	unsigned long timeout = sysctl_hung_task_timeout_secs * HZ / 2;
+> > > +
+> > > +	if (timeout)
+> > > +		while (!wait_for_completion_io_timeout(x, timeout))
+> > > +			;
+> > > +	else
+> > > +		wait_for_completion_io(x);
+> > > +}
+> > > +EXPORT_SYMBOL(wait_for_completion_long_io);
+> > 
+> > Urgh, why is it a sane thing to circumvent the hang check timer? 
+> 
+> The block layer already does it - the bios can have arbitrary size, so 
+> waiting for them takes arbitrary time.
 
-
-On 22/04/2024 7:59, Yi Zhang wrote:
-> On Sun, Apr 21, 2024 at 6:31 PM Sagi Grimberg <sagi@grimberg.me> wrote:
->>
->>
->> On 16/04/2024 6:19, Chaitanya Kulkarni wrote:
->>> +linux-nvme list for awareness ...
->>>
->>> -ck
->>>
->>>
->>> On 4/6/24 17:38, Yi Zhang wrote:
->>>> Hello
->>>>
->>>> I found the kmemleak issue after blktests nvme/tcp tests on the latest
->>>> linux-block/for-next, please help check it and let me know if you need
->>>> any info/testing for it, thanks.
->>> it will help others to specify which testcase you are using ...
->>>
->>>> # dmesg | grep kmemleak
->>>> [ 2580.572467] kmemleak: 92 new suspected memory leaks (see
->>>> /sys/kernel/debug/kmemleak)
->>>>
->>>> # cat kmemleak.log
->>>> unreferenced object 0xffff8885a1abe740 (size 32):
->>>>      comm "kworker/40:1H", pid 799, jiffies 4296062986
->>>>      hex dump (first 32 bytes):
->>>>        c2 4a 4a 04 00 ea ff ff 00 00 00 00 00 10 00 00  .JJ.............
->>>>        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>>>      backtrace (crc 6328eade):
->>>>        [<ffffffffa7f2657c>] __kmalloc+0x37c/0x480
->>>>        [<ffffffffa86a9b1f>] sgl_alloc_order+0x7f/0x360
->>>>        [<ffffffffc261f6c5>] lo_read_simple+0x1d5/0x5b0 [loop]
->>>>        [<ffffffffc26287ef>] 0xffffffffc26287ef
->>>>        [<ffffffffc262a2c4>] 0xffffffffc262a2c4
->>>>        [<ffffffffc262a881>] 0xffffffffc262a881
->>>>        [<ffffffffa76adf3c>] process_one_work+0x89c/0x19f0
->>>>        [<ffffffffa76b0813>] worker_thread+0x583/0xd20
->>>>        [<ffffffffa76ce2a3>] kthread+0x2f3/0x3e0
->>>>        [<ffffffffa74a804d>] ret_from_fork+0x2d/0x70
->>>>        [<ffffffffa7406e4a>] ret_from_fork_asm+0x1a/0x30
->>>> unreferenced object 0xffff88a8b03647c0 (size 16):
->>>>      comm "kworker/40:1H", pid 799, jiffies 4296062986
->>>>      hex dump (first 16 bytes):
->>>>        c0 4a 4a 04 00 ea ff ff 00 10 00 00 00 00 00 00  .JJ.............
->>>>      backtrace (crc 860ce62b):
->>>>        [<ffffffffa7f2657c>] __kmalloc+0x37c/0x480
->>>>        [<ffffffffc261f805>] lo_read_simple+0x315/0x5b0 [loop]
->>>>        [<ffffffffc26287ef>] 0xffffffffc26287ef
->>>>        [<ffffffffc262a2c4>] 0xffffffffc262a2c4
->>>>        [<ffffffffc262a881>] 0xffffffffc262a881
->>>>        [<ffffffffa76adf3c>] process_one_work+0x89c/0x19f0
->>>>        [<ffffffffa76b0813>] worker_thread+0x583/0xd20
->>>>        [<ffffffffa76ce2a3>] kthread+0x2f3/0x3e0
->>>>        [<ffffffffa74a804d>] ret_from_fork+0x2d/0x70
->>>>        [<ffffffffa7406e4a>] ret_from_fork_asm+0x1a/0x30
->> kmemleak suggest that the leakage is coming from lo_read_simple() Is
->> this a regression that can be bisected?
->>
-> It's not one regression issue, I tried 6.7 and it also can be reproduced.
-
-Its strange that the stack makes it look like lo_read_simple is allocating
-the sgl, it is probably nvmet-tcp though.
-
-Can you try with the patch below:
---
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index a5422e2c979a..bfd1cf7cc1c2 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -348,6 +348,7 @@ static int nvmet_tcp_check_ddgst(struct 
-nvmet_tcp_queue *queue, void *pdu)
-         return 0;
-  }
-
-+/* safe to call multiple times */
-  static void nvmet_tcp_free_cmd_buffers(struct nvmet_tcp_cmd *cmd)
-  {
-         kfree(cmd->iov);
-@@ -1581,13 +1582,9 @@ static void 
-nvmet_tcp_free_cmd_data_in_buffers(struct nvmet_tcp_queue *queue)
-         struct nvmet_tcp_cmd *cmd = queue->cmds;
-         int i;
-
--       for (i = 0; i < queue->nr_cmds; i++, cmd++) {
--               if (nvmet_tcp_need_data_in(cmd))
--                       nvmet_tcp_free_cmd_buffers(cmd);
--       }
--
--       if (!queue->nr_cmds && nvmet_tcp_need_data_in(&queue->connect))
--               nvmet_tcp_free_cmd_buffers(&queue->connect);
-+       for (i = 0; i < queue->nr_cmds; i++, cmd++)
-+               nvmet_tcp_free_cmd_buffers(cmd);
-+       nvmet_tcp_free_cmd_buffers(&queue->connect);
-  }
-
-  static void nvmet_tcp_release_queue_work(struct work_struct *w)
---
+Yeah, but now you make it generic and your comment doesn't warn people
+away, it makes them think this is a sane thing to do.
 
