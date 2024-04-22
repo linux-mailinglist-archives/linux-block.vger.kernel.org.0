@@ -1,50 +1,49 @@
-Return-Path: <linux-block+bounces-6425-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6430-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 745288AC54D
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 09:22:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8689A8AC692
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 10:18:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 778D91C20BA7
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 07:22:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9341C1C20DBE
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 08:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 623434CE1F;
-	Mon, 22 Apr 2024 07:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2A550241;
+	Mon, 22 Apr 2024 08:18:12 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-m3293.qiye.163.com (mail-m3293.qiye.163.com [220.197.32.93])
+Received: from mail-m127105.qiye.163.com (mail-m127105.qiye.163.com [115.236.127.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D09252F9A;
-	Mon, 22 Apr 2024 07:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256FB4E1CE;
+	Mon, 22 Apr 2024 08:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770206; cv=none; b=X09yOVSe4UroAE1C6lcybbD6V68ucmbUtrNSxHZy/wWAf7Y774VdUlUAGUQW+LfGs2BP4yhauGAw+OCEhMroLKz1bsOH+gI6RdOGiRN0LybQ2ytYbUFgQctcEx3oQzm5QZMLQlO7u0dPvpU1Atm+hZkP/Nmovr1wXD1UBKowtCw=
+	t=1713773892; cv=none; b=gRWqPgWDuUpVwBtOz5N/ktBh4MloBojK2/6Z96jPuBLBAJeZawYjBJz0RJIgCPdYv0DKEB4ju7ctHFKoy+jOoAGUBCY8CfagygAvE6LZD0qlP33o6x7NJlV5IyFrOLXQ+yN/bjqLToKvVNAbSHrsPCyh1QGJqELK4oCW641cinc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770206; c=relaxed/simple;
-	bh=TUHE9KihomjQT+4gHHlt9TTtEQswCTrpD973kNSu7jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kmY89WGkZUTsF/pjh3AFCZjfmxPUafqp+s8dkWFI4uoIH5jibg2pqep2bl4E7rl7RrSBqhoRG6UgSL5sIrV1uzr123OgXQyQp4PE5jpVykgqWXEcqMqKATZcd4On2qEKYMB5MbyTEt6R7jDWBvHWAL22CS11PTEOYsROFEqoKXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.93
+	s=arc-20240116; t=1713773892; c=relaxed/simple;
+	bh=GSkHPZSUPFTzOCXW4eKUe6wm5+EVnEO+EwIHJH3hpCE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uqnmt+ut+oupRwUki4dsUa/iM92dnZAWx3s0N06OUvu68AYIrFSREye5JG+JHjAVfbEx+x07wu3Zj7FwS+BZnmL9hyVn3LvcsJ6RjIfR8bR69RmASu+D5Tdcvc1+ttSsAy0rjohRA+IXbau+U9K8NJeydZ6xzJXbep6gKRYA6uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=115.236.127.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
 Received: from ubuntu-22-04.. (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id C5801860221;
-	Mon, 22 Apr 2024 15:16:15 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 1D103860262;
+	Mon, 22 Apr 2024 15:01:31 +0800 (CST)
 From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 To: dan.j.williams@intel.com,
 	axboe@kernel.dk
 Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-Subject: [PATCH 7/7] cbd: add related sysfs files in transport register
-Date: Mon, 22 Apr 2024 07:16:06 +0000
-Message-Id: <20240422071606.52637-8-dongsheng.yang@easystack.cn>
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 1/3] cxl/memdev: Improve sanitize ABI descriptions
+Date: Mon, 22 Apr 2024 07:01:21 +0000
+Message-Id: <20240422070125.52519-1-dongsheng.yang@easystack.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -53,169 +52,58 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUseVk5LSUMdSEtCTUMYTlUZERMWGhIXJBQOD1
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGEpDVktOGUpOTR4ZGhlLT1UZERMWGhIXJBQOD1
 	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f04a99e1c023ckunmc5801860221
+X-HM-Tid: 0a8f049c1e81023ckunm1d103860262
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NiI6Mhw4Lzc0ShwQITYRCy0j
-	CDUKCjlVSlVKTEpITExLSkxNTk5DVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTUlLQjcG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MQg6LAw*GTc9HRw9IhFCGQI9
+	AxxPCh1VSlVKTEpITE1CSUJKQkJLVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBSEtOSzcG
 
-From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+From: Davidlohr Bueso <dave@stgolabs.net>
 
-When a transport is registered, a corresponding file is created for each
-area within the transport in the sysfs, including "cbd_hosts",
-"cbd_backends", "cbd_blkdevs", and "cbd_channels".
+Be more detailed about the CPU cache management situation. The same
+goes for both sanitize and secure erase.
 
-Through these sysfs files, we can examine the information of each entity
-and thereby understand the relationships between them. This allows us to
-further understand the current operational status of the transport.
-
-For example, by examining "cbd_hosts", we can find all the hosts
-currently using the transport. We can also determine which host each
-backend is running on by looking at the "host_id" in "cbd_backends".
-Similarly, by examining "cbd_blkdevs", we can determine which host each
-blkdev is running on, and through the "mapped_id", we can know the name
-of the cbd device to which the blkdev is mapped. Additionally, by
-looking at "cbd_channels", we can determine which blkdev and backend are
-connected through each channel by examining the "blkdev_id" and
-"backend_id".
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Link: https://lore.kernel.org/r/20230726051940.3570-2-dave@stgolabs.net
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- drivers/block/cbd/cbd_transport.c | 101 +++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/cbd/cbd_transport.c b/drivers/block/cbd/cbd_transport.c
-index 75b9d34218fc..0e917d72b209 100644
---- a/drivers/block/cbd/cbd_transport.c
-+++ b/drivers/block/cbd/cbd_transport.c
-@@ -1,8 +1,91 @@
- #include <linux/pfn_t.h>
--
- #include "cbd_internal.h"
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 6350dd82b9a9..c4c4acb1f3b3 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -82,7 +82,11 @@ Description:
+ 		whether it resides in persistent capacity, volatile capacity,
+ 		or the LSA, is made permanently unavailable by whatever means
+ 		is appropriate for the media type. This functionality requires
+-		the device to be not be actively decoding any HPA ranges.
++		the device to be disabled, that is, not actively decoding any
++		HPA ranges. This permits avoiding explicit global CPU cache
++		management, relying instead for it to be done when a region
++		transitions between software programmed and hardware committed
++		states.
  
- #define CBDT_OBJ(OBJ, OBJ_SIZE)							\
-+extern struct device_type cbd_##OBJ##_type;					\
-+extern struct device_type cbd_##OBJ##s_type;					\
-+										\
-+static int cbd_##OBJ##s_init(struct cbd_transport *cbdt) 			\
-+{ 										\
-+	struct cbd_##OBJ##s_device *devs; 					\
-+	struct cbd_##OBJ##_device *cbd_dev;					\
-+	struct device *dev;							\
-+	int i; 									\
-+	int ret;								\
-+										\
-+	u32 memsize = struct_size(devs, OBJ##_devs,				\
-+			cbdt->transport_info->OBJ##_num);			\
-+	devs = kzalloc(memsize, GFP_KERNEL);					\
-+	if (!devs) {								\
-+	    return -ENOMEM;							\
-+	}									\
-+										\
-+	dev = &devs->OBJ##s_dev;						\
-+	device_initialize(dev);							\
-+	device_set_pm_not_required(dev);					\
-+	dev_set_name(dev, "cbd_" #OBJ "s");					\
-+	dev->parent = &cbdt->device;						\
-+	dev->type = &cbd_##OBJ##s_type;						\
-+	ret = device_add(dev);							\
-+	if (ret) {								\
-+		goto devs_free;							\
-+	}									\
-+										\
-+	for (i = 0; i < cbdt->transport_info->OBJ##_num; i++) {			\
-+		cbd_dev = &devs->OBJ##_devs[i];					\
-+		dev = &cbd_dev->dev;						\
-+										\
-+		cbd_dev->cbdt = cbdt;						\
-+		cbd_dev->OBJ##_info = cbdt_get_##OBJ##_info(cbdt, i);		\
-+		device_initialize(dev);						\
-+		device_set_pm_not_required(dev);				\
-+		dev_set_name(dev, #OBJ "%u", i);				\
-+		dev->parent = &devs->OBJ##s_dev;				\
-+		dev->type = &cbd_##OBJ##_type;					\
-+										\
-+		ret = device_add(dev);						\
-+		if (ret) {							\
-+			i--;							\
-+			goto del_device;					\
-+		}								\
-+	}									\
-+	cbdt->cbd_##OBJ##s_dev = devs;						\
-+										\
-+    	return 0;								\
-+del_device:									\
-+	for (; i >= 0; i--) {							\
-+		cbd_dev = &devs->OBJ##_devs[i];					\
-+		dev = &cbd_dev->dev;						\
-+		device_del(dev);						\
-+	}									\
-+devs_free:									\
-+	kfree(devs);								\
-+	return ret;								\
-+}										\
-+										\
-+static void cbd_##OBJ##s_exit(struct cbd_transport *cbdt)			\
-+{										\
-+	struct cbd_##OBJ##s_device *devs = cbdt->cbd_##OBJ##s_dev;		\
-+	struct device *dev;							\
-+	int i;									\
-+										\
-+	if (!devs)								\
-+		return;								\
-+										\
-+	for (i = 0; i < cbdt->transport_info->OBJ##_num; i++) {			\
-+		struct cbd_##OBJ##_device *cbd_dev = &devs->OBJ##_devs[i];	\
-+		dev = &cbd_dev->dev;						\
-+										\
-+		device_del(dev);						\
-+	}									\
-+										\
-+	device_del(&devs->OBJ##s_dev);						\
-+										\
-+	kfree(devs);								\
-+	cbdt->cbd_##OBJ##s_dev = NULL;						\
-+										\
-+	return;									\
-+}										\
- 										\
- static inline struct cbd_##OBJ##_info						\
- *__get_##OBJ##_info(struct cbd_transport *cbdt, u32 id)				\
-@@ -588,6 +671,11 @@ int cbdt_unregister(u32 tid)
- 	}
- 	mutex_unlock(&cbdt->lock);
  
-+	cbd_blkdevs_exit(cbdt);
-+	cbd_channels_exit(cbdt);
-+	cbd_backends_exit(cbdt);
-+	cbd_hosts_exit(cbdt);
-+
- 	cbd_host_unregister(cbdt);
- 	device_unregister(&cbdt->device);
- 	cbdt_dax_release(cbdt);
-@@ -647,9 +735,20 @@ int cbdt_register(struct cbdt_register_options *opts)
- 		goto dev_unregister;
- 	}
+ What            /sys/bus/cxl/devices/memX/security/erase
+@@ -92,7 +96,12 @@ Contact:        linux-cxl@vger.kernel.org
+ Description:
+ 		(WO) Write a boolean 'true' string value to this attribute to
+ 		secure erase user data by changing the media encryption keys for
+-		all user data areas of the device.
++		all user data areas of the device. This functionality requires
++		the device to be disabled, that is, not actively decoding any
++		HPA ranges. This permits avoiding explicit global CPU cache
++		management, relying instead for it to be done when a region
++		transitions between software programmed and hardware committed
++		states.
  
-+	if (cbd_hosts_init(cbdt) || cbd_backends_init(cbdt) ||
-+	    cbd_channels_init(cbdt) || cbd_blkdevs_init(cbdt)) {
-+		ret = -ENOMEM;
-+		goto devs_exit;
-+	}
-+
- 	return 0;
  
- devs_exit:
-+	cbd_blkdevs_exit(cbdt);
-+	cbd_channels_exit(cbdt);
-+	cbd_backends_exit(cbdt);
-+	cbd_hosts_exit(cbdt);
-+
- 	cbd_host_unregister(cbdt);
- dev_unregister:
- 	device_unregister(&cbdt->device);
+ What:		/sys/bus/cxl/devices/memX/firmware/
 -- 
 2.34.1
 
