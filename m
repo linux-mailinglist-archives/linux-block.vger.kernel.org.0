@@ -1,52 +1,50 @@
-Return-Path: <linux-block+bounces-6424-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6428-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1AA68AC4BA
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 09:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 759A38AC60A
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 09:55:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A68AE1F21E1B
-	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 07:08:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE9A31F216AD
+	for <lists+linux-block@lfdr.de>; Mon, 22 Apr 2024 07:54:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ACE948781;
-	Mon, 22 Apr 2024 07:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D970752F74;
+	Mon, 22 Apr 2024 07:53:21 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-m17240.xmail.ntesmail.com (mail-m17240.xmail.ntesmail.com [45.195.17.240])
+Received: from mail-m17218.xmail.ntesmail.com (mail-m17218.xmail.ntesmail.com [45.195.17.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37779482D7;
-	Mon, 22 Apr 2024 07:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70BE4DA14;
+	Mon, 22 Apr 2024 07:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769713; cv=none; b=GfqWcyx/08OQH5XTzc2usxxNF7JvfQ2QfTWUy1wauVYep+LeodyRUUR1tSus4zoieH/GdKtWCGVhTMyZvfGtU/wCeAts/1q0ElvEZFgdGI98sB3nc+H4Q7DFrvnp+PVgq6E/Y7E26q9XpFsSHQH9p6JGJEQVyWeR5hQkED/a9nk=
+	t=1713772401; cv=none; b=YR32zP0ltcLmL780Eq2y3AHnPTALyNbhgaa61H/x4RcEd+OewZwKxuLdMtKduj2R8QuZNneI20/R/1WI+DZTCoRPT1xPMFjAlZZGmMGUYHLOGml4df9kpdVaE3sjaLBx/7ir2mFJ4A7VENBVHUdBZbfiIlzOA7dHMs0LO+shTpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769713; c=relaxed/simple;
-	bh=rO9wuLUfiR4E6XZ84kDSGhF4Q7qepug3oReICZiQTPs=;
+	s=arc-20240116; t=1713772401; c=relaxed/simple;
+	bh=mectESsIlJ26RxC8NLPWMGVcVNas5N+4+6uR3ITP7Y0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aGpzXxb51xeiyrjT0sB/DFez3FPufAxJHSV+cbACJWMtceCY52ex9WdpZ98I/s0y1tp51KTlGHK9ZZebnKxUMDhF5W3aKm+N1rrnntlVPjE3vSx/5THEUxkQ8vTaA5mgp/ud7lZjCGlEOP2KkrqpwWA9wPOomKyawzskf18iaAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+	 MIME-Version; b=UPb4dQ6oHVqGQHV6N/XdEdGEfkRMD5sXDc9kKtFO6WFPoSW0DcnxxOUXAIlyzxpoXX27J/w1AAR/l7W2AOd4FQKEelWH4k+pW9NgzYjb9b+LMFtA4633ag5X3TH/alkpjevjxFuyExyKcGX6zq/dChNlu1I3VFgWJtjiV2T6OrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
 Received: from ubuntu-22-04.. (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 12BB186026B;
-	Mon, 22 Apr 2024 15:01:33 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 16E42860157;
+	Mon, 22 Apr 2024 15:16:12 +0800 (CST)
 From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 To: dan.j.williams@intel.com,
 	axboe@kernel.dk
 Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	David Gow <davidgow@google.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] drivers: base: Free devm resources when unregistering a device
-Date: Mon, 22 Apr 2024 07:01:23 +0000
-Message-Id: <20240422070125.52519-3-dongsheng.yang@easystack.cn>
+	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+Subject: [PATCH 3/7] cbd: introduce cbd_channel
+Date: Mon, 22 Apr 2024 07:16:02 +0000
+Message-Id: <20240422071606.52637-4-dongsheng.yang@easystack.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422070125.52519-1-dongsheng.yang@easystack.cn>
-References: <20240422070125.52519-1-dongsheng.yang@easystack.cn>
+In-Reply-To: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -55,95 +53,229 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGkhKVkgeGUseSkpJGUIdSlUZERMWGhIXJBQOD1
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDThlIVktCHR5PGk0ZTUoaT1UZERMWGhIXJBQOD1
 	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f049c2630023ckunm12bb186026b
+X-HM-Tid: 0a8f04a98f99023ckunm16e42860157
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mgw6Tgw*Czc9LxwBMhELGU8O
-	NygKCQ5VSlVKTEpITE1CSUJIQ01MVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0NPQjcG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Oj46Djo6ITc#CRwtMStKCykC
+	CDwaC0xVSlVKTEpITExLSkxJQkJPVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTEpCSDcG
 
-From: David Gow <davidgow@google.com>
+From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
 
-In the current code, devres_release_all() only gets called if the device
-has a bus and has been probed.
+The "cbd_channel" is the component responsible for the interaction
+between the blkdev and the backend. It mainly provides the functions
+"cbdc_copy_to_bio" and "cbdc_copy_from_bio".
 
-This leads to issues when using bus-less or driver-less devices where
-the device might never get freed if a managed resource holds a reference
-to the device. This is happening in the DRM framework for example.
+The "cbdc_copy_to_bio" function copies data from the specified area of
+the channel to the bio. Before copying, it flushes the dcache to ensure
+that the data read from the channel is the latest.
 
-We should thus call devres_release_all() in the device_del() function to
-make sure that the device-managed actions are properly executed when the
-device is unregistered, even if it has neither a bus nor a driver.
+The "cbdc_copy_from_bio" function copies data from the bio to the
+specified area of the channel. After copying, it flushes the dcache to
+ensure that other parties can see the latest data.
 
-This is effectively the same change than commit 2f8d16a996da ("devres:
-release resources on device_del()") that got reverted by commit
-a525a3ddeaca ("driver core: free devres in device_release") over
-memory leaks concerns.
-
-This patch effectively combines the two commits mentioned above to
-release the resources both on device_del() and device_release() and get
-the best of both worlds.
-
-Fixes: a525a3ddeaca ("driver core: free devres in device_release")
-Signed-off-by: David Gow <davidgow@google.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
-Link: https://lore.kernel.org/r/20230720-kunit-devm-inconsistencies-test-v3-3-6aa7e074f373@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
 ---
- drivers/base/core.c                      | 11 +++++++++++
- drivers/base/test/platform-device-test.c |  2 --
- drivers/base/test/root-device-test.c     |  2 --
- 3 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/block/cbd/Makefile      |   2 +-
+ drivers/block/cbd/cbd_channel.c | 179 ++++++++++++++++++++++++++++++++
+ 2 files changed, 180 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/block/cbd/cbd_channel.c
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 3dff5037943e..6ceaf50f5a67 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3817,6 +3817,17 @@ void device_del(struct device *dev)
- 	device_platform_notify_remove(dev);
- 	device_links_purge(dev);
+diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
+index a22796bfa7db..c581ae96732b 100644
+--- a/drivers/block/cbd/Makefile
++++ b/drivers/block/cbd/Makefile
+@@ -1,3 +1,3 @@
+-cbd-y := cbd_main.o cbd_transport.o
++cbd-y := cbd_main.o cbd_transport.o cbd_channel.o
  
-+	/*
-+	 * If a device does not have a driver attached, we need to clean
-+	 * up any managed resources. We do this in device_release(), but
-+	 * it's never called (and we leak the device) if a managed
-+	 * resource holds a reference to the device. So release all
-+	 * managed resources here, like we do in driver_detach(). We
-+	 * still need to do so again in device_release() in case someone
-+	 * adds a new resource after this point, though.
-+	 */
-+	devres_release_all(dev);
+ obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
+diff --git a/drivers/block/cbd/cbd_channel.c b/drivers/block/cbd/cbd_channel.c
+new file mode 100644
+index 000000000000..7253523bea3c
+--- /dev/null
++++ b/drivers/block/cbd/cbd_channel.c
+@@ -0,0 +1,179 @@
++#include "cbd_internal.h"
 +
- 	bus_notify(dev, BUS_NOTIFY_REMOVED_DEVICE);
- 	kobject_uevent(&dev->kobj, KOBJ_REMOVE);
- 	glue_dir = get_glue_dir(dev);
-diff --git a/drivers/base/test/platform-device-test.c b/drivers/base/test/platform-device-test.c
-index b6ebf1dcdffb..1ae5ce8bd366 100644
---- a/drivers/base/test/platform-device-test.c
-+++ b/drivers/base/test/platform-device-test.c
-@@ -87,8 +87,6 @@ static void platform_device_devm_register_get_unregister_with_devm_test(struct k
- 	struct test_priv *priv = test->priv;
- 	int ret;
- 
--	kunit_skip(test, "This needs to be fixed in the core.");
--
- 	pdev = platform_device_alloc(DEVICE_NAME, PLATFORM_DEVID_NONE);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
- 
-diff --git a/drivers/base/test/root-device-test.c b/drivers/base/test/root-device-test.c
-index 9a3e6cccae13..780d07455f57 100644
---- a/drivers/base/test/root-device-test.c
-+++ b/drivers/base/test/root-device-test.c
-@@ -78,8 +78,6 @@ static void root_device_devm_register_get_unregister_with_devm_test(struct kunit
- 	struct test_priv *priv = test->priv;
- 	int ret;
- 
--	kunit_skip(test, "This needs to be fixed in the core.");
--
- 	priv->dev = root_device_register(DEVICE_NAME);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv->dev);
- 
++static ssize_t cbd_backend_id_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct cbd_channel_device *channel;
++	struct cbd_channel_info *channel_info;
++
++	channel = container_of(dev, struct cbd_channel_device, dev);
++	channel_info = channel->channel_info;
++
++	if (channel_info->backend_state == cbdc_backend_state_none)
++		return 0;
++
++	return sprintf(buf, "%u\n", channel_info->backend_id);
++}
++
++static ssize_t cbd_blkdev_id_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct cbd_channel_device *channel;
++	struct cbd_channel_info *channel_info;
++
++	channel = container_of(dev, struct cbd_channel_device, dev);
++	channel_info = channel->channel_info;
++
++	if (channel_info->blkdev_state == cbdc_blkdev_state_none)
++		return 0;
++
++	return sprintf(buf, "%u\n", channel_info->blkdev_id);
++}
++
++static DEVICE_ATTR(backend_id, 0400, cbd_backend_id_show, NULL);
++static DEVICE_ATTR(blkdev_id, 0400, cbd_blkdev_id_show, NULL);
++
++static struct attribute *cbd_channel_attrs[] = {
++	&dev_attr_backend_id.attr,
++	&dev_attr_blkdev_id.attr,
++	NULL
++};
++
++static struct attribute_group cbd_channel_attr_group = {
++	.attrs = cbd_channel_attrs,
++};
++
++static const struct attribute_group *cbd_channel_attr_groups[] = {
++	&cbd_channel_attr_group,
++	NULL
++};
++
++static void cbd_channel_release(struct device *dev)
++{
++}
++
++struct device_type cbd_channel_type = {
++	.name		= "cbd_channel",
++	.groups		= cbd_channel_attr_groups,
++	.release	= cbd_channel_release,
++};
++
++struct device_type cbd_channels_type = {
++	.name		= "cbd_channels",
++	.release	= cbd_channel_release,
++};
++
++void cbdc_copy_to_bio(struct cbd_channel *channel,
++		u32 data_off, u32 data_len, struct bio *bio)
++{
++	struct bio_vec bv;
++	struct bvec_iter iter;
++	void *src, *dst;
++	u32 data_head = data_off;
++	u32 to_copy, page_off = 0;
++
++	cbdt_flush_range(channel->cbdt, channel->data + data_off, data_len);
++next:
++	bio_for_each_segment(bv, bio, iter) {
++		dst = kmap_atomic(bv.bv_page);
++		page_off = bv.bv_offset;
++again:
++		if (data_head >= CBDC_DATA_SIZE) {
++			data_head &= CBDC_DATA_MASK;
++		}
++
++		src = channel->data + data_head;
++		to_copy = min(bv.bv_offset + bv.bv_len - page_off,
++			      CBDC_DATA_SIZE - data_head);
++		memcpy_flushcache(dst + page_off, src, to_copy);
++
++		/* advance */
++		data_head += to_copy;
++		page_off += to_copy;
++
++		/* more data in this bv page */
++		if (page_off < bv.bv_offset + bv.bv_len) {
++			goto again;
++		}
++		kunmap_atomic(dst);
++		flush_dcache_page(bv.bv_page);
++	}
++
++	if (bio->bi_next) {
++		bio = bio->bi_next;
++		goto next;
++	}
++
++	return;
++}
++
++void cbdc_copy_from_bio(struct cbd_channel *channel,
++		u32 data_off, u32 data_len, struct bio *bio)
++{
++	struct bio_vec bv;
++	struct bvec_iter iter;
++	void *src, *dst;
++	u32 data_head = data_off;
++	u32 to_copy, page_off = 0;
++
++next:
++	bio_for_each_segment(bv, bio, iter) {
++		flush_dcache_page(bv.bv_page);
++
++		src = kmap_atomic(bv.bv_page);
++		page_off = bv.bv_offset;
++again:
++		if (data_head >= CBDC_DATA_SIZE) {
++			data_head &= CBDC_DATA_MASK;
++		}
++
++		dst = channel->data + data_head;
++		to_copy = min(bv.bv_offset + bv.bv_len - page_off,
++			      CBDC_DATA_SIZE - data_head);
++
++		memcpy_flushcache(dst, src + page_off, to_copy);
++
++		/* advance */
++		data_head += to_copy;
++		page_off += to_copy;
++
++		/* more data in this bv page */
++		if (page_off < bv.bv_offset + bv.bv_len) {
++			goto again;
++		}
++		kunmap_atomic(src);
++	}
++
++	if (bio->bi_next) {
++		bio = bio->bi_next;
++		goto next;
++	}
++
++	cbdt_flush_range(channel->cbdt, channel->data + data_off, data_len);
++
++	return;
++}
++
++void cbdc_flush_ctrl(struct cbd_channel *channel)
++{
++	flush_dcache_page(channel->ctrl_page);
++}
++
++void cbd_channel_init(struct cbd_channel *channel, struct cbd_transport *cbdt, u32 channel_id)
++{
++	struct cbd_channel_info *channel_info = cbdt_get_channel_info(cbdt, channel_id);
++
++	channel->cbdt = cbdt;
++	channel->channel_info = channel_info;
++	channel->channel_id = channel_id;
++	channel->cmdr = (void *)channel_info + CBDC_CMDR_OFF;
++	channel->compr = (void *)channel_info + CBDC_COMPR_OFF;
++	channel->data = (void *)channel_info + CBDC_DATA_OFF;
++	channel->data_size = CBDC_DATA_SIZE;
++	channel->ctrl_page = cbdt_page(cbdt, (void *)channel_info - (void *)cbdt->transport_info);
++
++	spin_lock_init(&channel->cmdr_lock);
++	spin_lock_init(&channel->compr_lock);
++}
 -- 
 2.34.1
 
