@@ -1,79 +1,79 @@
-Return-Path: <linux-block+bounces-6510-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6512-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36ECD8B03C5
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:01:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 814BA8B03C7
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:01:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFF5F2821DF
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:01:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D2BC282618
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:01:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73CB158DA6;
-	Wed, 24 Apr 2024 08:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25EB158DAF;
+	Wed, 24 Apr 2024 08:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mihci5OP"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IjdluCOy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7E2158D9F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05531158DA4
 	for <linux-block@vger.kernel.org>; Wed, 24 Apr 2024 08:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945614; cv=none; b=plnC8CDW+L6bpL9UYD+aObCUiN1eqxMXuHebtB4Fh6P5vcp1RFBrCrw3CNBiiMcoN+SlOMPgSwkhQs2GZzR/+3r4mVygkWJO8zud93ehETglBQgY340oSUwJLkpEZRGsUiUHV0nI0o6760xOf9nXkSLPlUun5ddCKnIwxFXv0ZM=
+	t=1713945615; cv=none; b=pvH8af5BDb0RWrKrBsVDQEYgz1frZUUjyffRwa/NvvWsSnshlfAUevi/Pw7H9ZqjcuEnvDxiFxpLdFG4zGBIxdFNVweasIQURlghh63Lu+zQ+6msmifMIpy1rwx6qmSSiNc8FBg6uec5aQtS6Z3YgJereFc2kqV6bR2srIOI+xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945614; c=relaxed/simple;
-	bh=IIzLHZ0xDcoXvdTGBnbL9BdlXaLVUODqXivyreG6OI8=;
+	s=arc-20240116; t=1713945615; c=relaxed/simple;
+	bh=wEETruXenXXhFB3ZAUX4lMN5f17bmvYtqaqOJwjBWaU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BU29whOMP3pmf6ouHWR18l00bCewEvcGY5ierM4XtGCdeudcG+XSfByK+ug3yrXemepUxw+tO5DjVMCUgOHxxauUfT6RT5iBxUMkF3q/reNufexFGEnivmlPsfyqh2t94KWNaxBBco0MJ+O0CtxTQDrRmhADXU0q/DeT1Xo2NtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=mihci5OP; arc=none smtp.client-ip=216.71.153.141
+	 MIME-Version; b=YIJFlojsGhHIJfeAXYiXBwFt2PoWkbsM/pIROVCWEYkAqixFMh1kBnEpTZC5gB3LWHaZosExi1PN7/PJgI1KyO+HB6QPvJuywEBKid7AFpPr5xMHrTqvpWU+93QpIKUOPx3Y5Q22bdZpULQVwKFL3j3oPboOO/HdTvpZWvaZQ8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=IjdluCOy; arc=none smtp.client-ip=216.71.153.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1713945612; x=1745481612;
+  t=1713945613; x=1745481613;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IIzLHZ0xDcoXvdTGBnbL9BdlXaLVUODqXivyreG6OI8=;
-  b=mihci5OPeyyDJKt7WoKDOfcjHqb1FzLVBDGAm8nfKz9PrZ1Vtab+KsnJ
-   Dp0RDF0vyKtZ3xJjAhxJ09CazgFLceiCscB5smBzIwwmmAsWTRamEqiVf
-   4V7YcElSWi88m9QlNWUFQnrNK/uxM8TFFRTtZBCbtKESoDqB53fQ1x4X8
-   c5AlHQ7t29cRgJKBd08xA3nFcz9VCYmo6PJsDoyaJrQJAt3bHL4qulM2e
-   P083baD+JKSqHb2TpKVyYslA1q66Yv6JmTbqAMQAEpkFIVARQFVgprsNE
-   NENAVNEl92dBvVx2SwhqTqs3IfoONOrIf/MpICgCv78jtorwlEsW8UF/a
-   w==;
-X-CSE-ConnectionGUID: I3nlnyBpTRKSKfHY7oXRlQ==
-X-CSE-MsgGUID: pqEzyPo1Q+S7e1MSoKcdNQ==
+  bh=wEETruXenXXhFB3ZAUX4lMN5f17bmvYtqaqOJwjBWaU=;
+  b=IjdluCOyKdZ3+U0KzdcA1taN9y7D30xkwVnOtxSE03xFwhnAQv9hiQRN
+   /JNio+sPeEVeWh3PIiRe+nXUUZA/doILijVBClfXbIezk/50jiAYXuWPe
+   j7NBLc27jkzN6rljfvbpQyqFbc3wVCUSkZtOLoaXocN/jwOSk3fZz+O8j
+   D9dx9fGLH5M7Y35ktKZcsdahTO37+IQHuOQKPAB5iAzOTjbYvMEykzR08
+   Gr7kWdHgPz+DZW+FqVRSOKr5YeKYyJGh6lURBgKyNcY2/lUBh/vnGGTQo
+   IgtDo58LVrI9wsZjdYRUsnSIScXi0e887GO2aEOkLuy/7kbp0CBOHQdWI
+   g==;
+X-CSE-ConnectionGUID: RjtxjSCZTuy7v0DKgxasCw==
+X-CSE-MsgGUID: LKzjQYnbRyuR9kFwOSANhA==
 X-IronPort-AV: E=Sophos;i="6.07,225,1708358400"; 
-   d="scan'208";a="14515728"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+   d="scan'208";a="15465320"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2024 16:00:11 +0800
-IronPort-SDR: +obAjQXrWwZGMB7TsdWSom/VQhEtc2CiB633t4Jfiq9zOjxvIam5UxBTMjwoCGGTvAYr8tnAC2
- APfNNX3bilu7l/Z8rvmDM9lFvK9ogfz1KMlcrBRlZ1ASluwiiiZtjbqM8yL8t9kOi8wtCTYQue
- nm4pm6sC6H6GgkeaeT80PdcI8j010PDphL8AG9FriSrBrK/mJD2N+TprUDDmBwrqv3Tmmw1Sf9
- CR7FsRj9Me7F0J8iFGLVxSR5fkNdPjlsQdsb70Ai3tutx79T0WPnPlqJfYYs3uR7ciwUKGeUA1
- WpA=
+IronPort-SDR: 2Pn4QhDTn2NjbsLHGgavQV/4G3mslQ7Xb+HallPsLFdaxTc0WN1nmfJRs+een3r006LOrH1djp
+ IU4UPIixYxltBrHWYFP1bxN2URhybgOeHjpiRIUfOgdpDSiReyR0HfPo8np7mDFJ3PYK1ZqWht
+ c53DyRDBf8F9rXdJxrrchvLQzUb4qsgmLPRTuJIl7Wif/LBsmv0sQ+1a9hdM8xN6IhjmgTc9I5
+ /TVp+B8m3KhCYjuRiZIKV3uXlOIFCB7aM9g4J4ZDFGSwlg1mkNjo7s+7zpW1jY6s5SgVbxV7Ot
+ NS0=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2024 00:08:21 -0700
-IronPort-SDR: drLCxtdu3hJwEHv0XteFNIZlY1I6rN2e2b597kyjjIysvolujINHLNprofLK3WAJldGVKsP0BY
- ggrlJZWswyoMZwJNaySMCUxCHqDJygx7st0JWIZfzeLzoF5I9mqX4D/f7f5B/qYOG846fGd/5h
- wmIyJkgvmxXuL6ox8gpKnZzhHLd30N88bhB2i6fsH5NDb9EljUAOz+lJdtu8EPH/Z6BC5DHCd+
- zPBK6l7xX6dfU+iDYBvwI4MQsR+lAGVv/QXeU1xIezc8jrIDtlJJuuAwajVnjru+ZYq7ukcp/M
- DAQ=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2024 00:02:41 -0700
+IronPort-SDR: GAVsd/wV3laXdCWYehhnAAsAtGEkkIXAGIRDibzbicOA019uihWuMZDXpGFqAk666VQLCvH6bf
+ bImMlth5HdUwcWsvQynflBAwz5IORorxAS6K+ZVS3ep/wonY6WSgDGV3syf5XFLJBHynsCyxVP
+ 8ibwMfL/VmQfJc/cW2ltEtBXxQ76nRhMEoc3QChCiTcmCFJNMdDnFJ5aAeBeeCfahLXvD28W9m
+ KGkHl603Xr+ZMRyBp4wQ4dpe7pEnDl+1Z4tyUupuvu37P3ejOZH7zWIgnwihI2VUUC1EW7x+9Y
+ 6WM=
 WDCIronportException: Internal
 Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2024 01:00:09 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2024 01:00:11 -0700
 From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To: linux-block@vger.kernel.org
 Cc: linux-nvme@lists.infradead.org,
 	Daniel Wagner <dwagern@suse.de>,
 	Chaitanya Kulkarni <kch@nvidia.com>,
 	Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH blktests v3 13/15] nvme/{rc,010,017,031,034,035}: rename nvme_img_size to NVME_IMG_SIZE
-Date: Wed, 24 Apr 2024 16:59:53 +0900
-Message-ID: <20240424075955.3604997-14-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests v3 14/15] nvme/{rc,016,017}: rename nvme_num_iter to NVME_NUM_ITER
+Date: Wed, 24 Apr 2024 16:59:54 +0900
+Message-ID: <20240424075955.3604997-15-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
 References: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
@@ -86,146 +86,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 To follow uppercase letter guide of environment variables, rename
-nvme_img_size to NVME_IMG_SIZE.
+nvme_num_iter to NVME_NUM_ITER.
 
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- Documentation/running-tests.md | 7 ++++---
- tests/nvme/010                 | 2 +-
+ Documentation/running-tests.md | 5 +++--
+ tests/nvme/016                 | 2 +-
  tests/nvme/017                 | 2 +-
- tests/nvme/031                 | 2 +-
- tests/nvme/034                 | 2 +-
- tests/nvme/035                 | 4 ++--
- tests/nvme/rc                  | 8 ++++----
- 7 files changed, 14 insertions(+), 13 deletions(-)
+ tests/nvme/rc                  | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-index 64aff7c..736ab48 100644
+index 736ab48..7bd0885 100644
 --- a/Documentation/running-tests.md
 +++ b/Documentation/running-tests.md
-@@ -113,9 +113,10 @@ The NVMe tests can be additionally parameterized via environment variables.
-   block device types can be listed with separating spaces. In this case, the
-   tests are repeated to cover all of the block device types specified. Default
-   value is "device file".
--- nvme_img_size: '1G' (default)
--  Run the tests with given image size in bytes. 'm', 'M', 'g'
--	and 'G' postfix are supported.
-+- NVME_IMG_SIZE: '1G' (default)
-+  Run the tests with given image size in bytes. 'm', 'M', 'g' and 'G' postfix
-+  are supported. This parameter had an old name 'nvme_img_size'. The old name
-+  is still usable, but not recommended.
- - nvme_num_iter: 1000 (default)
-   The number of iterations a test should do.
+@@ -117,8 +117,9 @@ The NVMe tests can be additionally parameterized via environment variables.
+   Run the tests with given image size in bytes. 'm', 'M', 'g' and 'G' postfix
+   are supported. This parameter had an old name 'nvme_img_size'. The old name
+   is still usable, but not recommended.
+-- nvme_num_iter: 1000 (default)
+-  The number of iterations a test should do.
++- NVME_NUM_ITER: 1000 (default)
++  The number of iterations a test should do. This parameter had an old name
++  'nvme_num_iter'. The old name is still usable, but not recommended.
  
-diff --git a/tests/nvme/010 b/tests/nvme/010
-index 9ea2561..d99067a 100755
---- a/tests/nvme/010
-+++ b/tests/nvme/010
-@@ -32,7 +32,7 @@ test() {
+ ### Running nvme-rdma and SRP tests
  
- 	ns=$(_find_nvme_ns "${def_subsys_uuid}")
+diff --git a/tests/nvme/016 b/tests/nvme/016
+index a65cffd..d1fdb35 100755
+--- a/tests/nvme/016
++++ b/tests/nvme/016
+@@ -23,7 +23,7 @@ test() {
+ 	_setup_nvmet
  
--	_run_fio_verify_io --size="${nvme_img_size}" \
-+	_run_fio_verify_io --size="${NVME_IMG_SIZE}" \
- 		--filename="/dev/${ns}"
+ 	local port
+-	local iterations="${nvme_num_iter}"
++	local iterations="${NVME_NUM_ITER}"
+ 	local loop_dev
  
- 	_nvme_disconnect_subsys
+ 	loop_dev="$(losetup -f)"
 diff --git a/tests/nvme/017 b/tests/nvme/017
-index 9410cdc..4f14471 100755
+index 4f14471..114be60 100755
 --- a/tests/nvme/017
 +++ b/tests/nvme/017
-@@ -25,7 +25,7 @@ test() {
+@@ -23,7 +23,7 @@ test() {
+ 	_setup_nvmet
+ 
  	local port
- 	local iterations="${nvme_num_iter}"
+-	local iterations="${nvme_num_iter}"
++	local iterations="${NVME_NUM_ITER}"
  
--	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
-+	truncate -s "${NVME_IMG_SIZE}" "$(_nvme_def_file_path)"
- 
- 	local genctr=1
- 
-diff --git a/tests/nvme/031 b/tests/nvme/031
-index b98630a..00d3d18 100755
---- a/tests/nvme/031
-+++ b/tests/nvme/031
-@@ -37,7 +37,7 @@ test() {
- 	local loop_dev
- 	local port
- 
--	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
-+	truncate -s "${NVME_IMG_SIZE}" "$(_nvme_def_file_path)"
- 
- 	loop_dev="$(losetup -f --show "$(_nvme_def_file_path)")"
- 
-diff --git a/tests/nvme/034 b/tests/nvme/034
-index 522ffe3..239757c 100755
---- a/tests/nvme/034
-+++ b/tests/nvme/034
-@@ -29,7 +29,7 @@ test_device() {
- 	_nvmet_passthru_target_setup
- 	nsdev=$(_nvmet_passthru_target_connect)
- 
--	_run_fio_verify_io --size="${nvme_img_size}" --filename="${nsdev}"
-+	_run_fio_verify_io --size="${NVME_IMG_SIZE}" --filename="${nsdev}"
- 
- 	_nvme_disconnect_subsys
- 	_nvmet_passthru_target_cleanup
-diff --git a/tests/nvme/035 b/tests/nvme/035
-index cfca5fd..8286178 100755
---- a/tests/nvme/035
-+++ b/tests/nvme/035
-@@ -17,7 +17,7 @@ requires() {
- }
- 
- device_requires() {
--	_require_test_dev_size "${nvme_img_size}"
-+	_require_test_dev_size "${NVME_IMG_SIZE}"
- }
- 
- set_conditions() {
-@@ -35,7 +35,7 @@ test_device() {
- 	_nvmet_passthru_target_setup
- 	nsdev=$(_nvmet_passthru_target_connect)
- 
--	if ! _xfs_run_fio_verify_io "${nsdev}" "${nvme_img_size}"; then
-+	if ! _xfs_run_fio_verify_io "${nsdev}" "${NVME_IMG_SIZE}"; then
- 		echo "FAIL: fio verify failed"
- 	fi
+ 	truncate -s "${NVME_IMG_SIZE}" "$(_nvme_def_file_path)"
  
 diff --git a/tests/nvme/rc b/tests/nvme/rc
-index a31690d..c018f7f 100644
+index c018f7f..8762a56 100644
 --- a/tests/nvme/rc
 +++ b/tests/nvme/rc
-@@ -19,7 +19,7 @@ def_hostnqn="nqn.2014-08.org.nvmexpress:uuid:${def_hostid}"
- export def_subsysnqn="blktests-subsystem-1"
+@@ -20,7 +20,7 @@ export def_subsysnqn="blktests-subsystem-1"
  export def_subsys_uuid="91fdba0d-f87b-4c25-b80f-db7be1418b9e"
  _check_conflict_and_set_default NVMET_TRTYPES nvme_trtype "loop"
--nvme_img_size=${nvme_img_size:-"1G"}
-+_check_conflict_and_set_default NVME_IMG_SIZE nvme_img_size 1G
- nvme_num_iter=${nvme_num_iter:-"1000"}
+ _check_conflict_and_set_default NVME_IMG_SIZE nvme_img_size 1G
+-nvme_num_iter=${nvme_num_iter:-"1000"}
++_check_conflict_and_set_default NVME_NUM_ITER nvme_num_iter 1000
  nvmet_blkdev_type=${nvmet_blkdev_type:-"device"}
  NVMET_BLKDEV_TYPES=${NVMET_BLKDEV_TYPES:-"device file"}
-@@ -165,10 +165,10 @@ _require_nvme_test_img_size() {
- 	local nvme_img_size_mb
  
- 	require_sz_mb="$(convert_to_mb "$1")"
--	nvme_img_size_mb="$(convert_to_mb "${nvme_img_size}")"
-+	nvme_img_size_mb="$(convert_to_mb "${NVME_IMG_SIZE}")"
- 
- 	if ((nvme_img_size_mb < require_sz_mb)); then
--		SKIP_REASONS+=("nvme_img_size must be at least ${require_sz_mb}m")
-+		SKIP_REASONS+=("NVME_IMG_SIZE must be at least ${require_sz_mb}m")
- 		return 1
- 	fi
- 	return 0
-@@ -915,7 +915,7 @@ _nvmet_target_setup() {
- 		esac
- 	done
- 
--	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
-+	truncate -s "${NVME_IMG_SIZE}" "$(_nvme_def_file_path)"
- 	if [[ "${blkdev_type}" == "device" ]]; then
- 		blkdev="$(losetup -f --show "$(_nvme_def_file_path)")"
- 	else
 -- 
 2.44.0
 
