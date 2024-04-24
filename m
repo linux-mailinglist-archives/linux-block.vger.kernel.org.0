@@ -1,34 +1,34 @@
-Return-Path: <linux-block+bounces-6500-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6502-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FC7C8B03BA
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D7878B03BC
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:01:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D4061F2458E
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:01:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 024EC1F23457
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:01:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A408A158200;
-	Wed, 24 Apr 2024 08:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4365A1586FB;
+	Wed, 24 Apr 2024 08:00:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Jk6CMth9"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BU+uXQq9"
 X-Original-To: linux-block@vger.kernel.org
 Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046911586FB
-	for <linux-block@vger.kernel.org>; Wed, 24 Apr 2024 08:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588F158A35
+	for <linux-block@vger.kernel.org>; Wed, 24 Apr 2024 08:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945609; cv=none; b=OJIHq/ENRrPTtDI3x2DfXFF/qFf/3msBw1Ap9QYc9fRWqhT9hQlwvumNMa8OT/ACOPUZacYY6dn3rHFtK7CDgQBzyGula0jUS4lpB2cQdFBV/0QTAVC2SB8xqdZPkJvTS3WtLq7JDs2vyzX1iCWUCjtWr+WE2c3tbLMxxbGBeGE=
+	t=1713945610; cv=none; b=iOzOj3p6tiusvxtATL1YAL7WLc8b78/3BWBgEEBwEQIegnfa7hAJt0rM9GTSeQIE3mRNi/8lwOI5aSbTSbCM+EBmLQ2esbw6QXCXSU0Up8qe7L1j31zDuD2cvHUoTFTGXLV5CX2psntqOII5/7sMHUiQO35jhehraMFnaTlEdyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945609; c=relaxed/simple;
-	bh=lG5GYMuyEZNZtr3PgzkOH8KI6EYXvgXm7PdLubwRkjs=;
+	s=arc-20240116; t=1713945610; c=relaxed/simple;
+	bh=3dx9il75eOILsBu5G1//4p+1/FA3YyekAV1bi+io5+Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fI5/lcV4qEQcG/1fLU1aQq9xFqVoTe7kdUhCZNF5KiCv8AXEpTqa1OwxoKxPtsfQkFtQoWo6J0PdB9d64gvZmGZVw+yZWTUbgbEdx4Vvs64poUCcBIpQGTl+otA36BAqRBt9KAf7AJkDUYH4iT11+KKTK66MByHKmfOmT1TfXWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=Jk6CMth9; arc=none smtp.client-ip=216.71.153.141
+	 MIME-Version; b=CUl100uGEBe29mIWUbqjyZOLdA03Tmw11mKdV3tTp3jbCZa+vRMrOwHzVs/nhpHOv4JcdfvxgxaZO0ojDxOp6gaz3dkmqqQSNdos77sNAGi56i0Dvydm+2c+SktPEXwB5gSlpjpjge73l7jUAuCoyWLMTnKdQP218z89UT+/z28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=BU+uXQq9; arc=none smtp.client-ip=216.71.153.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
@@ -36,44 +36,44 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1713945606; x=1745481606;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lG5GYMuyEZNZtr3PgzkOH8KI6EYXvgXm7PdLubwRkjs=;
-  b=Jk6CMth9jWD2blK8ulklfwIkz80ViDU5cyskahdgr2xLibssSett1RjR
-   z8AKV4j7G6MqmgYsM/sXSpv/fVKDkLxwfAY5InVlEju7zIai7SWJVidRw
-   c83pz23AHQsMp7MdJPw9FG+TxC0dLCtI7TKINqdPTo8mtKNLBO/hJicsO
-   Z7dtGQs7WnwOwl67RxPH0LgHgFTHls+lnBEUw6qm0iCDT2PDomU4SG+6j
-   zCOe0Jj3Qhann8UqBcqGwMfjxQ89Y7xH5wHbXSA0GLF3n/cyqhXLzkYJ3
-   dLK/6cwiZKyXMPX5QfkPkG/O/qVMtMOtGU0JGIv7xQx3KLlhHnImvjnvG
-   w==;
-X-CSE-ConnectionGUID: wG140JrvQJqiyUoL626xmA==
-X-CSE-MsgGUID: u3knHSk8SxKTXw3wc+sDAg==
+  bh=3dx9il75eOILsBu5G1//4p+1/FA3YyekAV1bi+io5+Q=;
+  b=BU+uXQq9eMo3ugAKi4xeQPEiTdsCUwQM7feB6SO2IY9wDHS+gmCJNMSP
+   zQoDtqT/GmxzD8LAi4hildHk+Cye1I/MK5FNTVE9H2chdMX2pPCApx/eU
+   NtKIyCzuW9gVTbOa/r4YaSECg3K+80LY+wDIOb8vlho6DYUIRK6bS/ZRm
+   NpJjjUhTQyeVz30yhd4HDXuPiADyaof2gIAdXI3WBobVB+KI5yY5AD1SP
+   SscaBb0Max/HhxlCYXf8/Yd9B5s90tfy43HU1x4yd4TTvUz7a/Sx87Ds5
+   MdDMyBto0GPip5PA0GeGnuRSvbJRPDo3SoW5dRUhwKaSxL69TtKAFTKYx
+   A==;
+X-CSE-ConnectionGUID: K7qNyQZtTtmqpwPUtEihIQ==
+X-CSE-MsgGUID: TZPjq2FGRhmO/OfQq015JA==
 X-IronPort-AV: E=Sophos;i="6.07,225,1708358400"; 
-   d="scan'208";a="14515675"
+   d="scan'208";a="14515679"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2024 15:59:59 +0800
-IronPort-SDR: MN8+eeGloKnfdxKlXprGphog65THY4AXf7y1g3Q+ZWgfcU/Nt0VerzIP01L1msGN5JYbyMeATN
- E10IwSScVnE+pXphwgMY5p1ZO6jlxAaSRyDYmmb9dAE86sZ9pkIGydnPJ5mlTUWyWz4FH9mvWt
- /nnroghjNBDPawPoXVAqcs37+ikll+jsnDaqUOCLFPUjj6r7fpDCabSs0//37ywI1zbRq9WGmw
- UieAhRS0USQ6lAHjzst7H5rrwxOy8ZMTpCElXN/cx4k27uHKp/pZIj1s1/AnJGYvAf8ojqiLbY
- wGQ=
+  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2024 16:00:01 +0800
+IronPort-SDR: t2ByMtkuTT7HiRvhOPp9OJr9B5wK5d0A90oGv39U3ONgA/jweTmWJQnC0smnT+AOqw3fyeV2bw
+ 0C1BfZ5wHESBm2/l73V/zsimm3aF1EaMcwpAzn+RAhaaq171SdgQ9qVvldIkM6mZ9RemGhD82Z
+ wYW6eSiop6ICuoKM6w/e6I5gXevQqvOALzeNYs7rah8LInA6286Dt5OQDkAv1dhuuBPvONogOn
+ AXy098K1kE08txoaHe4IhGpaDxOYrOk2zsq1Yh3x384kWU8wlxOLuEqd1CAUAF7+dj80XetCbS
+ 7x8=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2024 00:08:09 -0700
-IronPort-SDR: 7ZI83bO/6w3h1mphMJLq9putUiGHtXW82tRutl7d8uisL7r1SW7JsxGSx8qtfxXtCRl1zscLAR
- gA0+Q+4lua/hXXIYu2WVcyHD/ROKUBFLO1GNTCHrcVEMODcHdJS8i4oS0+YAs1SLyTrYnVFGfB
- WJJ7aMHPcstomIYQSj3AInQNbskfAbaOBKxqjB5kgtfNKafRh5N/KHoFeSCF04kCxdz/5A9Evy
- PBjo+7dTeuESjCmE9WtHL5y3Grm23RKr8VcwnLQgs+PVig9urxfczxfI7ridHoGHRsVcxVCs3/
- DCg=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2024 00:08:11 -0700
+IronPort-SDR: 5eQpFKT9/T8nkJ8Clm2XKneTWPatvF+Rgcfg581snZinkRIpgrPpuomMpDtXGoKWr0AVyG6Q4O
+ PULOvIqEsLQ+9RnttqUkUAEPcFgGe+dEXoyluVIlsy7m7hMkEUBdgO6oXLRqjYoN++GBznP5sK
+ jMA9c4TLoYTASJY7OVK6Jd3dB53wVWm7SQPdvZ3lmzePFENpUzwwOGO3odrI+5i/5bMg4Phbqg
+ AJm44hIFtLTgPuoEt1KMhMdE+KJ2m/pgkQomKLoC4TNDesqwHWwx+npsd8itwLdkjbafHFs9Q9
+ IU0=
 WDCIronportException: Internal
 Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2024 00:59:59 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2024 01:00:00 -0700
 From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To: linux-block@vger.kernel.org
 Cc: linux-nvme@lists.infradead.org,
 	Daniel Wagner <dwagern@suse.de>,
 	Chaitanya Kulkarni <kch@nvidia.com>,
 	Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH blktests v3 03/15] check: use set_conditions() for the CAN_BE_ZONED test cases
-Date: Wed, 24 Apr 2024 16:59:43 +0900
-Message-ID: <20240424075955.3604997-4-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests v3 04/15] meta/{016,017}: add test cases to check repeated test case runs
+Date: Wed, 24 Apr 2024 16:59:44 +0900
+Message-ID: <20240424075955.3604997-5-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
 References: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
@@ -85,95 +85,42 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the test case with test() function is marked as CAN_BE_ZONED,
-blktests runs the test case twice: once for non-zoned device, and the
-second for zoned device. This is now implemented as a special logic in
-the check script.
-
-To simplify the implementation, use the feature to repeat test cases
-with different conditions. Use set_conditions() and move out the special
-logic from the check script to the common/zoned script file.
+Add test cases to confirm the feature to repeat test case runs with
+different conditions is working.
 
 Reviewed-by: Daniel Wagner <dwagner@suse.de>
 Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 Acked-by: Nitesh Shetty <nj.shetty@samsung.com>
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- check        | 19 ++++++++-----------
- common/zoned | 22 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 11 deletions(-)
- create mode 100644 common/zoned
+ tests/meta/016     | 29 +++++++++++++++++++++++++++++
+ tests/meta/016.out |  2 ++
+ tests/meta/017     | 29 +++++++++++++++++++++++++++++
+ tests/meta/017.out |  2 ++
+ 4 files changed, 62 insertions(+)
+ create mode 100755 tests/meta/016
+ create mode 100644 tests/meta/016.out
+ create mode 100755 tests/meta/017
+ create mode 100644 tests/meta/017.out
 
-diff --git a/check b/check
-index edc421d..3ed4510 100755
---- a/check
-+++ b/check
-@@ -56,6 +56,11 @@ _found_test() {
- 		return 1
- 	fi
- 
-+	if [[ -n $CAN_BE_ZONED ]] && declare -fF test >/dev/null && declare -fF set_conditions >/dev/null; then
-+		_warning "${test_name} defines both CAN_BE_ZONED and set_conditions()"
-+		return 1
-+	fi
-+
- 	if (( QUICK && TIMED )); then
- 		_warning "${test_name} cannot be both QUICK and TIMED"
- 		return 1
-@@ -194,7 +199,6 @@ _output_status() {
- 	local status="$2"
- 	local str="${test} "
- 
--	(( RUN_FOR_ZONED )) && str="$str(zoned) "
- 	[[ ${COND_DESC:-} ]] && str="$str(${COND_DESC}) "
- 	[[ ${DESCRIPTION:-} ]] && str="$str(${DESCRIPTION})"
- 	printf '%-60s' "${str}"
-@@ -464,7 +468,6 @@ _unload_modules() {
- 
- _check_and_call_test() {
- 	local postfix
--	local ret
- 
- 	if declare -fF requires >/dev/null; then
- 		requires
-@@ -473,15 +476,6 @@ _check_and_call_test() {
- 	[[ -n $COND_DESC ]] && postfix=_${COND_DESC//[ =]/_}
- 	RESULTS_DIR="$OUTPUT/nodev${postfix}"
- 	_call_test test
--	ret=$?
--	if (( RUN_ZONED_TESTS && CAN_BE_ZONED )); then
--		RESULTS_DIR="$OUTPUT/nodev_zoned${postfix}"
--		RUN_FOR_ZONED=1
--		_call_test test
--		ret=$(( ret || $? ))
--	fi
--
--	return $ret
- }
- 
- _check_and_call_test_device() {
-@@ -540,6 +534,9 @@ _run_test() {
- 	. "tests/${TEST_NAME}"
- 
- 	if declare -fF test >/dev/null; then
-+		if ((RUN_ZONED_TESTS && CAN_BE_ZONED)); then
-+			. "common/zoned"
-+		fi
- 		if declare -fF set_conditions >/dev/null; then
- 			nr_conds=$(set_conditions)
- 			for ((cond_i = 0; cond_i < nr_conds; cond_i++)); do
-diff --git a/common/zoned b/common/zoned
-new file mode 100644
-index 0000000..6a8f1e5
+diff --git a/tests/meta/016 b/tests/meta/016
+new file mode 100755
+index 0000000..caf876d
 --- /dev/null
-+++ b/common/zoned
-@@ -0,0 +1,22 @@
++++ b/tests/meta/016
+@@ -0,0 +1,29 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
 +# Copyright (C) 2024 Western Digital Corporation or its affiliates.
++#
++# Test repeated test() run with set_conditions()
 +
-+# The helper function for test cases with CAN_BE_ZONED flag and test()
-+# function. Run the test case twice for non-zoned and zoned conditions.
++. tests/meta/rc
++
++DESCRIPTION="repeat test()"
++
++declare cond_set_index
++
 +set_conditions() {
 +	local index=$1
 +
@@ -182,14 +129,66 @@ index 0000000..6a8f1e5
 +		return
 +	fi
 +
-+	if ((index == 0)); then
-+		export RUN_FOR_ZONED=0
-+		export COND_DESC=
-+	elif ((index == 1)); then
-+		export RUN_FOR_ZONED=1
-+		export COND_DESC="zoned"
-+	fi
++	cond_set_index=$index
++	COND_DESC="condition set $index"
 +}
++
++test() {
++	echo "Running ${TEST_NAME}"
++	echo "condition set $cond_set_index" >> "$FULL"
++	echo "Test complete"
++}
+diff --git a/tests/meta/016.out b/tests/meta/016.out
+new file mode 100644
+index 0000000..cccfec4
+--- /dev/null
++++ b/tests/meta/016.out
+@@ -0,0 +1,2 @@
++Running meta/016
++Test complete
+diff --git a/tests/meta/017 b/tests/meta/017
+new file mode 100755
+index 0000000..03f92d6
+--- /dev/null
++++ b/tests/meta/017
+@@ -0,0 +1,29 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-3.0+
++# Copyright (C) 2024 Western Digital Corporation or its affiliates.
++#
++# Test repeated test_device() run with set_conditions()
++
++. tests/meta/rc
++
++DESCRIPTION="repeat test_device()"
++
++declare cond_set_index
++
++set_conditions() {
++	local index=$1
++
++	if [[ -z $index ]]; then
++		echo 2
++		return
++	fi
++
++	cond_set_index=$index
++	COND_DESC="condition set $index"
++}
++
++test_device() {
++	echo "Running ${TEST_NAME}"
++	echo "condition set $cond_set_index" >> "$FULL"
++	echo "Test complete"
++}
+diff --git a/tests/meta/017.out b/tests/meta/017.out
+new file mode 100644
+index 0000000..7fc55ff
+--- /dev/null
++++ b/tests/meta/017.out
+@@ -0,0 +1,2 @@
++Running meta/017
++Test complete
 -- 
 2.44.0
 
