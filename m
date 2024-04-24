@@ -1,174 +1,126 @@
-Return-Path: <linux-block+bounces-6511-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6513-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DE278B03C6
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:01:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7B448B03E3
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 10:09:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 039CE1F23C9C
-	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:01:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24E3F1C231F1
+	for <lists+linux-block@lfdr.de>; Wed, 24 Apr 2024 08:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E504158D9F;
-	Wed, 24 Apr 2024 08:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBF2158212;
+	Wed, 24 Apr 2024 08:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JJQN7GQs"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pVAmmGFp"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001DB158DA2
-	for <linux-block@vger.kernel.org>; Wed, 24 Apr 2024 08:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749AB36D;
+	Wed, 24 Apr 2024 08:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945615; cv=none; b=LzJzItg/ed6aW0hy8/4FttfpJ8gvDDWtFT1fnUV9krjIj83H16+mS3fE6AklBtBV5aGYejvQevOOxrVV6nf/xB5+ucwlUHJYBcdAjyswYZfR2EM4sidK4ISpNzpj971nJA78uXD6LgVDB+/brXyrQhWgALGWHzAWoBt9tMAmJjQ=
+	t=1713946180; cv=none; b=angnFDT+vhtbWCbRGkGEZ8WjcOHs+XR4/rDNVv1DxxVnTAaOWCHxN3Pe+muzThSvDph7/ii30/Pv1oR1rgJOH74pzH8AX3wMQDcN1jMYJgkSz+ZygXWiDBhuYnSqy6B3xeRVM7iliclmGz4z6gtRXtd4staLTXNDfuI6YHU8rT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945615; c=relaxed/simple;
-	bh=sSC9duX72FifCTm3ELiWm9Q8X/xeNDFYZA8WyilwbPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aIBWrRhDJXDnvi1kRrYL0fHEaLkH/0aVgLRZZt5oWlehk7ExxZvLewVZLKwL2yHLDZp68xUAa5JRapQgDCQs8pQWf9lCu0OEcQFtFUyNVFTMnAZulcIlRLQKVRLEy3Omwf8Xu0hi1aihWP3IoKYya+VYJU7nyLY46uwBFJATPiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=JJQN7GQs; arc=none smtp.client-ip=216.71.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1713945613; x=1745481613;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sSC9duX72FifCTm3ELiWm9Q8X/xeNDFYZA8WyilwbPA=;
-  b=JJQN7GQs5uxiQZXRgiOPllUFw7PZVVZYK6QPSh9Jy9Q2g7z5+nICByGi
-   3zp0wFXkXFI1RD2PIg41Bjyf9vuXnZ5XfPRQOaJkik1p1iEsTO9POYMbs
-   fUAjiPtiblyfs5FJsPZtkGHhOTaCODkpijEi5ZKkXzdLkE2UzC6hi4NuL
-   eOTmkFFqFXP8Zkdykd1dKuiCdbwqLXiTIoUgiYiFrVDO9WUNHPpYg1dcV
-   oPHrAln6W7zBGRVZ5lpZV2unyPuKXPe6wsi2cOgILJXPuEhc++FIW5Dk2
-   tN3lNkbaPVkJHM+FZwzSgsCgpJxxB1PWvC9b06e1A8xnQU2Jpvv/UNIyh
-   w==;
-X-CSE-ConnectionGUID: 5Nfehy6+QgaMZ9CrMn4SqQ==
-X-CSE-MsgGUID: Hdr/MklGS1iGnf0rmubhrA==
-X-IronPort-AV: E=Sophos;i="6.07,225,1708358400"; 
-   d="scan'208";a="14515732"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2024 16:00:12 +0800
-IronPort-SDR: X/fAv3dqSlQrJ0HuUGAt6teCIFZQBNfgmtbvcT5uQNaITbzIFXFVXbbh0olqoUmBHEmgREO8cM
- 8rAQvhzKyVs+p1mQV+9ZNs7qMjin5psBmxCUBgd3SQXuVJLVF7rCjpMr7xUC+0Xzpt2wA6ns3D
- h1Z5JmCncvgkk7cuI6g6rtxG+sPxBJzjU9ng/uBpzlfD/AL+VDSKG6XiYmnPeAKOhJhO4zILyY
- RU3mno4t1mF2TJjdqCUZe7Rpo9/jZw66QJovgUzFzIKzfx1/KTX2ioZe1JImWou9OH6Zlt/VKk
- 9vA=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2024 00:08:22 -0700
-IronPort-SDR: MlOKba1Lp9hfmyqNfUobT2+/JTJBQNiAdMH4tJM+WV86fNGZqX2T0vMBObHYNN46iS1ZdaTs0t
- 9lAM/msyFXlje5E8D1IWkgHXjhyFUEs3fZIeWtoxuBJeEnLZqu/RMC8ij8YThpUz/Lm60cn+st
- dJUcb3ZdaKSF0+Gv2cYyVXovUJLK+EuKHR8sr0wOdy0vSE+u8iJ1NZH0Obv8ClXv5CxEVl7mfw
- GsIHV/OnCpQRyR6IUi97M9i8VwYDvNK+3Povc/hBPOildynX6Tx/TUGebQRigDIi3PfFGiQKsw
- zEk=
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2024 01:00:12 -0700
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: linux-block@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org,
-	Daniel Wagner <dwagern@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH blktests v3 15/15] nvme/rc,srp/rc,common/multipath-over-rdma: rename use_rxe to USE_RXE
-Date: Wed, 24 Apr 2024 16:59:55 +0900
-Message-ID: <20240424075955.3604997-16-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
-References: <20240424075955.3604997-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1713946180; c=relaxed/simple;
+	bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=idQzWFlyEKhaK9Iec/9LKC8Us8PEpW4ykKkOGqiAJp2xno9dwnUX7bsrAb2ZmazhvEaDFof3wGsKVVd/JkN0Ae8qc/lXvw+TXOPqOnTPDAMz6QFPZdQ5VPx7eYYkP/I5yp031erPnmQwgibpIcEAP9vjibyK9nc8b0QeORi0lYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pVAmmGFp; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
+	t=1713946178; x=1714378178; b=pVAmmGFpGTWDOzC3+COv2MCZpsvGXNLElvxY5cJN+hdVrMc
+	/ujogRIuor/zod0mOkCh6u02jr4YdwV96/ppUg6sQ4+PmFTSP5pMs1QJ092oXJKFuscrrjb9rs5l8
+	//CqTvGMGpYdT6mjMvmS9WkMO7WGCDarnc8aVQfZgTwwPcqilQ/Cp9cV7SvWv1ymWdVou26gB2OUA
+	f8mx51QmhiPJswFIKfLYo2+vBhTNPvjHDxLlkXika4TNpe/W3xouhhtOlZgOzG04gCSr7fals1oOi
+	RtyoVymK4zviNmevXqfsp0kp3Omde2Pjm1X3sS6dwiaqEOY1CiSaGJch8Ptj11UQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rzXh9-0002qV-QH; Wed, 24 Apr 2024 10:09:35 +0200
+Message-ID: <5ef0ac71-21dd-46d7-a0c1-1b1b391e51a8@leemhuis.info>
+Date: Wed, 24 Apr 2024 10:09:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: API break, sysfs "capability" file
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Lennart Poettering <mzxreary@0pointer.de>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+ <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
+ <Zh6IpqnSfGHXMjVa@gardel-login>
+ <b74f99e8-5a50-4e93-987f-0bcfc0c27959@kernel.dk>
+ <Zh6KZ7ynHuOd0mgQ@gardel-login>
+ <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713946178;73e32188;
+X-HE-SMSGID: 1rzXh9-0002qV-QH
 
-To follow uppercase letter guide of environment variables, rename
-use_rxe to USE_RXE.
+On 16.04.24 16:33, Jens Axboe wrote:
+> On 4/16/24 8:25 AM, Lennart Poettering wrote:
+>> On Di, 16.04.24 08:22, Jens Axboe (axboe@kernel.dk) wrote:
+>>> On 4/16/24 8:18 AM, Lennart Poettering wrote:
+>>>> On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
+>>>>
+>>>>> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
+>>>>>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+>>>>>>> All I am looking for is a very simple test that returns me a boolean:
+>>>>>>> is there kernel-level partition scanning enabled on this device or
+>>>>>>> not.
+>>>>>> And we can add a trivial sysfs attribute for that.
+>>>>>
+>>>>> And I think we should. I don't know what was being smoked adding a sysfs
+>>>>> interface that exposed internal flag values - and honestly what was
+>>>>> being smoked to rely on that, but I think it's fair to say that the
+>>>>> majority of the fuckup here is on the kernel side.
+> [...]
+> Doesn't really change my conclusion from earlier. As mentioned, this is
+> clearly a kernel fuckup, and honestly since it's being presented as ABI,
+> we definitely need to rectify this and provide an alternative. Even
+> though I'm not a huge fan of it, might just be best to re-introduce
+> 'capability' and just have conversions of the flags so we retain the
+> user side of it the same. That can then also go into stable, so we'll
+> end up with something that at least looks cohesive on the user side.
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- Documentation/running-tests.md | 6 ++++--
- common/multipath-over-rdma     | 5 +++--
- tests/nvme/rc                  | 2 +-
- tests/srp/rc                   | 2 +-
- 4 files changed, 9 insertions(+), 6 deletions(-)
+Jens, quick question: what's the plan forward here and who will realize
+what you outlined?
 
-diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-index 7bd0885..968702e 100644
---- a/Documentation/running-tests.md
-+++ b/Documentation/running-tests.md
-@@ -132,9 +132,11 @@ NVMET_TRTYPES=rdma ./check nvme/
- ./check srp/
- 
- To use the rdma_rxe driver:
--use_rxe=1 NVMET_TRTYPES=rdma ./check nvme/
--use_rxe=1 ./check srp/
-+USE_RXE=1 NVMET_TRTYPES=rdma ./check nvme/
-+USE_RXE=1 ./check srp/
- ```
-+'USE_RXE' had the old name 'use_rxe'. The old name is still usable but not
-+recommended.
- 
- ### Normal user
- 
-diff --git a/common/multipath-over-rdma b/common/multipath-over-rdma
-index ee05100..d0f4d26 100644
---- a/common/multipath-over-rdma
-+++ b/common/multipath-over-rdma
-@@ -12,12 +12,13 @@ filesystem_type=ext4
- fio_aux_path=/tmp/fio-state-files
- memtotal=$(sed -n 's/^MemTotal:[[:blank:]]*\([0-9]*\)[[:blank:]]*kB$/\1/p' /proc/meminfo)
- max_ramdisk_size=$((1<<25))
--use_rxe=${use_rxe:-""}
- ramdisk_size=$((memtotal*(1024/16)))  # in bytes
- if [ $ramdisk_size -gt $max_ramdisk_size ]; then
- 	ramdisk_size=$max_ramdisk_size
- fi
- 
-+_check_conflict_and_set_default USE_RXE use_rxe ""
-+
- _have_legacy_dm() {
- 	_have_kernel_config_file || return
- 	if ! _check_kernel_option DM_MQ_DEFAULT; then
-@@ -396,7 +397,7 @@ start_soft_rdma() {
- 	local type
- 
- 	{
--	if [ -z "$use_rxe" ]; then
-+	if [ -z "$USE_RXE" ]; then
- 		modprobe siw || return $?
- 		type=siw
- 	else
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 8762a56..24eafd2 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -103,7 +103,7 @@ _nvme_requires() {
- 		_have_driver nvmet-rdma
- 		_have_configfs
- 		_have_program rdma
--		if [ -n "$use_rxe" ]; then
-+		if [ -n "$USE_RXE" ]; then
- 			_have_driver rdma_rxe
- 		else
- 			_have_driver siw
-diff --git a/tests/srp/rc b/tests/srp/rc
-index c77ef6c..85bd1dd 100755
---- a/tests/srp/rc
-+++ b/tests/srp/rc
-@@ -51,7 +51,7 @@ group_requires() {
- 	_have_module ib_uverbs
- 	_have_module null_blk
- 	_have_module rdma_cm
--	if [ -n "$use_rxe" ]; then
-+	if [ -n "$USE_RXE" ]; then
- 		_have_module rdma_rxe
- 	else
- 		_have_module siw
--- 
-2.44.0
+I'm asking, as afaics nothing happened for a week (hope I didn't miss
+anything!). Sure, it's not a regression from the last cycle or so, so
+it's not that urgent. But hch's "It is not a regression at all" last
+week made me worry that this in the end might not be solved unless
+somebody has it on the todo list. Normally I would have CCed Linus at
+that point anyway to get his stance, but from your statements it sounds
+like this is unnecessary here.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
