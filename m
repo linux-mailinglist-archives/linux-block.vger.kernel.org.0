@@ -1,111 +1,125 @@
-Return-Path: <linux-block+bounces-6869-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6872-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4DFB8BA5AF
-	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 05:24:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA78B8BA5F2
+	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 06:16:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B0F41F24776
-	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 03:24:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 293C5B2205B
+	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 04:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C9962D04E;
-	Fri,  3 May 2024 03:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C47314F62;
+	Fri,  3 May 2024 04:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vQxxp3bQ"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="NBx+4+Ox"
 X-Original-To: linux-block@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C301B299;
-	Fri,  3 May 2024 03:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC16282E5;
+	Fri,  3 May 2024 04:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714706622; cv=none; b=QxC5lIOimlPryjH9ZSIvuavBgpYYNXYjaZRrkvVCOrt84hJIX6JgWwE4o7hwUH+bLnhlUF3beH6hnBlt6RsyzD3L2x3WISVlobws1wAk/oyrfSeWDwDQoXVazObQLLPqhLdkEtE9+G43NSwxIOsDR0VOwupGcM4nWRZY+FuEPEY=
+	t=1714709760; cv=none; b=AOvbwGigY5My+r9leqe0Hx5XZsMqs9Az+NTPM8HXhC5kDDGV1ae8ucf5qQxHZZjDcRpGh7J8cUn2YSb4O1ObWXy2J29dsd9ZvBi6fSTfRynZ2Yz5fFJFGXzxuJWulf0z795J8yzmkZRu8s66sh0JnuBfkWaOqVQpECIga0bQ6Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714706622; c=relaxed/simple;
-	bh=T22JrpafRjR0cPiRd37OY+3r5BzgSapXYKLtL7I1f1g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N4x+6Oo5Jn9ZBiUIZEI7kJrssqsgJQoXwBOY63L1+8GQJPbltGaMTU8BqFGggXi3C7qCOtvmm45TxLCKnIWqiCiBX3HlcIGLzElc+pr1Ubz6vExeTpFLxwdzGPPGEBL3BvCNoE80R/PMshdDZfsF32gHln0S7Wlob2c1hugoaF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=vQxxp3bQ; arc=none smtp.client-ip=62.89.141.173
+	s=arc-20240116; t=1714709760; c=relaxed/simple;
+	bh=JHozc1lJLorkZUnXT/A9NtPj/VKyF38FLBswt3L8pdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GyRyfy+jIcHNZC4iHAdlapFZgGL558YA5+nHcJWiNjm4wg/l2nriacUhRFG2XyA5bNlJfYbQ2F4PxYQjpTBxwQ91vbdqs+Vhc27yo+loscotSUzRcl0/szR34RvH7SUFwLYHP7nAkrH4sWIpCbBxY05W0axnJR/ZOYx9OevIRL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=NBx+4+Ox; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=zwCOMy2NEj3BPtx134SFdJYS70Xwr8CQmU8M48tauxc=; b=vQxxp3bQsUGSpNF0seAOsviYP4
-	KJuxYmU9WWHgqbug2UkvbfQuqUqy/3mRFSZDXr5a0kLXlv5/LhgE55N/NK0fg62uO5SlwGrA7lSd5
-	lJ+jLPXj1/Vq0imGW4PcTzoRQud9Zi0OWOtm4tzzO2gCCtxl8nYKM/f5l1oK3FC6cQse6DsuyXHi9
-	aryull+gkzdB9rS32Bfv17kkMLfB49QtBIVAfhXe6hvhvIjG+hNaosAtk4PBjVf+mt9ysL9RVpFF7
-	YOJXqJKJNpN8/bFleTTnAyI65ZaKrPX9QXjJlTuntfduTREeAxh4ubmt2A0H2aEQYMSeQ72s4hzKH
-	Wdhuk4IQ==;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KYL496NDtJ3Cfi5LpjPPAG/fu2r2wgakNsf4z3OY2l0=; b=NBx+4+Ox6BbjuUU9X4O948ttH5
+	Bp7V+35CAqOGkTMymDBLcUezlMleSWCFMg/e3lOE9RqqE6pwO0fm6EPNb+/Gu0wRBhLCWtYqCnTa2
+	j6TaTJkdZy725KkbSdwNJ5u5STrUuQq7lurmOJOBSQ989+03Y4y8CKCiIbB1lIMZQj8h+MnZtjaC4
+	Bzo8MLJ3tKKYK+7YZ69+NJoOEGH+RpIe576KtNgblc9iOwczkBPDKJRv6dK1+3RUyDs7H0D2g/Zcv
+	wuZ6Yjfe+JjBkcXDhseCilBXr33F2dANxwLJSVdmeWED6yUfZrSoONxU36Gfq5J3Co4ohjJvy+lgk
+	g6uORDYg==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1s2jWF-00A2W8-08;
-	Fri, 03 May 2024 03:23:31 +0000
+	id 1s2kKk-00A5MU-0F;
+	Fri, 03 May 2024 04:15:42 +0000
+Date: Fri, 3 May 2024 05:15:42 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
-To: linux-fsdevel@vger.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	linux-block@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	linux-btrfs@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 9/9] make set_blocksize() fail unless block device is opened exclusive
-Date: Fri,  3 May 2024 04:23:29 +0100
-Message-Id: <20240503032329.2392931-9-viro@zeniv.linux.org.uk>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240503032329.2392931-1-viro@zeniv.linux.org.uk>
-References: <20240503031833.GU2118490@ZenIV>
- <20240503032329.2392931-1-viro@zeniv.linux.org.uk>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, jack@suse.cz, hch@lst.de,
+	brauner@kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH 6/6] z_erofs_pcluster_begin(): don't bother with rounding
+ position down
+Message-ID: <20240503041542.GV2118490@ZenIV>
+References: <20240406090930.2252838-1-yukuai1@huaweicloud.com>
+ <20240406090930.2252838-9-yukuai1@huaweicloud.com>
+ <20240407040531.GA1791215@ZenIV>
+ <a660a238-2b7e-423f-b5aa-6f5777259f4d@linux.alibaba.com>
+ <20240425195641.GJ2118490@ZenIV>
+ <20240425200017.GF1031757@ZenIV>
+ <7ba8c1a3-be59-4a2f-b88a-23b6ab23e1c8@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ba8c1a3-be59-4a2f-b88a-23b6ab23e1c8@linux.alibaba.com>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- Documentation/filesystems/porting.rst | 7 +++++++
- block/bdev.c                          | 3 +++
- 2 files changed, 10 insertions(+)
+On Fri, Apr 26, 2024 at 01:32:04PM +0800, Gao Xiang wrote:
+> Hi Al,
 
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index 1be76ef117b3..5503d5c614a7 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -1134,3 +1134,10 @@ superblock of the main block device, i.e., the one stored in sb->s_bdev. Block
- device freezing now works for any block device owned by a given superblock, not
- just the main block device. The get_active_super() helper and bd_fsfreeze_sb
- pointer are gone.
-+
-+---
-+
-+**mandatory**
-+
-+set_blocksize() takes opened struct file instead of struct block_device now
-+and it *must* be opened exclusive.
-diff --git a/block/bdev.c b/block/bdev.c
-index a329ff9be11d..a89bce368b64 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -157,6 +157,9 @@ int set_blocksize(struct file *file, int size)
- 	if (size < bdev_logical_block_size(bdev))
- 		return -EINVAL;
- 
-+	if (!file->private_data)
-+		return -EINVAL;
-+
- 	/* Don't change the size if it is same as current */
- 	if (inode->i_blkbits != blksize_bits(size)) {
- 		sync_blockdev(bdev);
--- 
-2.39.2
+> This patch caused some corrupted failure, since
+> here erofs_read_metabuf() is EROFS_NO_KMAP and
+> it's no needed to get a maped-address since only
+> a page reference is needed.
+> 
+> >   		if (IS_ERR(mptr)) {
+> >   			ret = PTR_ERR(mptr);
+> >   			erofs_err(sb, "failed to get inline data %d", ret);
+> > @@ -876,7 +876,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
+> >   		}
+> >   		get_page(map->buf.page);
+> >   		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page, map->buf.page);
+> > -		fe->pcl->pageofs_in = map->m_pa & ~PAGE_MASK;
+> > +		fe->pcl->pageofs_in = offset_in_page(mptr);
+> 
+> So it's unnecessary to change this line IMHO.
 
+*nod*
+
+thanks for catching that.
+
+> BTW, would you mind routing this series through erofs tree
+> with other erofs patches for -next (as long as this series
+> isn't twisted with vfs and block stuffs...)?  Since I may
+> need to test more to ensure they don't break anything and
+> could fix them immediately by hand...
+
+FWIW, my immediate interest here is the first couple of patches.
+
+How about the following variant:
+
+#misc.erofs (the first two commits) is put into never-rebased mode;
+you pull it into your tree and do whatever's convenient with the rest.
+I merge the same branch into block_device work; that way it doesn't
+cause conflicts whatever else happens in our trees.
+
+Are you OK with that?  At the moment I have
+; git shortlog v6.9-rc2^..misc.erofs 
+Al Viro (2):
+      erofs: switch erofs_bread() to passing offset instead of block number
+      erofs_buf: store address_space instead of inode
+
+Linus Torvalds (1):
+      Linux 6.9-rc2
+
+IOW, it's those two commits, based at -rc2.  I can rebase that to other
+starting point if that'd be more convenient for you.
 
