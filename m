@@ -1,82 +1,71 @@
-Return-Path: <linux-block+bounces-6894-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6906-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3700E8BA9CB
-	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 11:22:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C15DE8BAA52
+	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 11:55:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E17621F25A66
-	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 09:22:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4ACC1C22164
+	for <lists+linux-block@lfdr.de>; Fri,  3 May 2024 09:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0280E153BFE;
-	Fri,  3 May 2024 09:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 108F1152524;
+	Fri,  3 May 2024 09:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IHOz0KbR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TPBco6Nw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871FA153BF6
-	for <linux-block@vger.kernel.org>; Fri,  3 May 2024 09:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D511F14F9DC;
+	Fri,  3 May 2024 09:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714727950; cv=none; b=erj9Zhh1nPQob/3jNDk5xtF/E7njA8VfAxfg2GMxiSVBGZTbStPu936ssr+WkpIqlfUDUCi48ZrfYUsIII06NyYvi1QXz/4HteOWtt3Qp+yCqo17G5BCFgXrnzFwAtO8iWXSoJmsDXFByrx+s6u+tnWXsdpHFAn5efm+2uqjgIo=
+	t=1714730046; cv=none; b=Ghg2Ro9VjeBLv8M3XzhsBePSZhAIaqC2EFV5IhBGM5Y1mc2u3B75rW0ZZLSWM+96EFvnONLQ5y26HK5HDmaSduFNYHRBRMrqMoydaLLMplKP8RGD+GfaZyr3kNi4DEptkXhZsKtSxXAVwkAU6lzShKimgxidYB3Gf0U993WoOqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714727950; c=relaxed/simple;
-	bh=0QKD/VRLqE4UJhTMThwx4W0GPaxzgatlvvK+3EE9Gd0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ElMue4yRihoYqS/RqVtelBCaaWL9yJrtsj2McOWIk0a60MLntmGFvKMCQPnAxlnvRqgVTjiru8ydHbINWxSngK+Kfr/4Rr1e9dfSBYk+L0DiO52wl8vuxSjmPeicHm9q/Vy4kiuXraAz2FK1gg6t2seyPtNd6wPbdVf2vJSj5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IHOz0KbR; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-23e7f487ca6so100979fac.0
-        for <linux-block@vger.kernel.org>; Fri, 03 May 2024 02:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714727948; x=1715332748; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ow2rUHFnrcYhlTotFbBj4Gwxyq4hSnuB9nn9e+mMxIY=;
-        b=IHOz0KbRsCWDmyk62A8DSzaWNbCFkXUEHz7oF0LP+WFTA/3tZYHrLdsPPsQZE3T3DJ
-         RqpuzC4c/zAin4Jdd5j4mTZi0AZyVWEOcRynU0KWu6zjVlw1S6d8KXOMxHoUZzbmX3ap
-         FaeyM8UlIekF3evU/I46w9C+sTX631q4Jto8s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714727948; x=1715332748;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ow2rUHFnrcYhlTotFbBj4Gwxyq4hSnuB9nn9e+mMxIY=;
-        b=J01ROut+tCL9jX/w3rIX5GSjX6R6bAjSL37rsffee1jAONZA6w5+PWCaL7gJ1dCcog
-         of5iX9S0q+esCUg3H9qYNR0SCwbUtYOVy/WTYqcOv04S2XFIjeBEVC6MaDs1aclUfTn/
-         nJvvcx5u8G/BPIWQxbVR0q+3Yzyt99rMA1G8bz91T8yK5TqOpVROF2cbQ/7e7arlWMWW
-         dZ3ycYz4qGPDLmdOq5PjQCWwj6lcdYDYXW/c/7TvTzsWazFhoVWJ8RLOnTr60ebzQkZE
-         raqBQE8oSNIK7+HB/s5pzrBa1pDDhRnIK3+JFblJF/TzknPxUj53fYxzqbNHvK9aWPDO
-         rncg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxYSk0KZ7MZzhmHKAxk9WQUydiiZD/PU5OwBn/OI5BT6M44QKvU7g9m8Txm6+Jut1GqQDSNAqO9Ulgt3wTYdkLDLi88N17PxMtSdg=
-X-Gm-Message-State: AOJu0YwhK7nOJDzvP1Qf4BJ8KLhu95ozCzxTbkTlB4FIhFonTxPQyc4b
-	TtUAfSeXbLku3/pJibdZLQNndjPg/IHIIOTaRqNeE7QaQsy5TToVYws9mZJGB775CTuAMhJdWlw
-	=
-X-Google-Smtp-Source: AGHT+IFh54usQd29tLvgBlBuW5xhaTflCGP1cxkIKo9T2fan/lx76Q1QQ5HqlGXP71ctFVnUWzGFvA==
-X-Received: by 2002:a05:6871:7821:b0:22e:d0e3:925f with SMTP id oy33-20020a056871782100b0022ed0e3925fmr2523349oac.1.1714727948591;
-        Fri, 03 May 2024 02:19:08 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:dc60:24a3:e365:f27c])
-        by smtp.gmail.com with ESMTPSA id j6-20020aa78d06000000b006ecec1f4b08sm2621938pfe.118.2024.05.03.02.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 02:19:08 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1714730046; c=relaxed/simple;
+	bh=pu9F0zR23Dd+IeBMpmXkhzvgqox3np2XcF6nNsTxb9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PnI7nrZJT73Uwr1aNi+V1VbQxF2XMXd0zzJzVaX/EjOuMALmUjQx/V2F+0aBrc/hcJJFBjnlWZi58Db4B5Yx24YIcXzVmcCqDuRng8yAKVQjRX+P+vVNBz6FlnZGlAIbk0qBCVb7Wd2zAs3YrrMWbo5Ras6KL9tNiy9tR7DUI/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TPBco6Nw; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=tXICgLDlPt9x6LyrrWFPrPPbantK/kpg/WVZcyA0J9Y=; b=TPBco6NwOG01vvbhxTM9YpTwNz
+	Ts/4OKTR96oWhFG9iI0NxLctIXyBHrsBnvRF/O4c9zc7GZ5qVi5vEib/fh8BB9bzXn/JUqsvOs+5i
+	nMmiVM6S9z+TeyoLQ9Zg86YuzfPWMu1V9U0aA8gYbXqhxWHGV88wo2EWXmp6wySW0XlmntDpxkoJi
+	g61EgLRDXBIgbmJ+djGYd/zbulnGpNEFdQAvKZClOmoip3KNKbE2x8NUuZ375gi63lcuajfMN02Jx
+	MpPQ3kTvz1Ck0Ti/pc0f5utZGO+H4/e/jXsPh1bxEDYiOOprrbFwhESBdscaR1bLP1pkC+huP1/xi
+	v/kFNmMQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2pc2-0000000Fw3K-3Q2M;
+	Fri, 03 May 2024 09:53:54 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	djwong@kernel.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	chandan.babu@oracle.com
+Cc: hare@suse.de,
+	ritesh.list@gmail.com,
+	john.g.garry@oracle.com,
+	ziy@nvidia.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH 14/14] Documentation/zram: add documentation for algorithm parameters
-Date: Fri,  3 May 2024 18:17:39 +0900
-Message-ID: <20240503091823.3616962-15-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240503091823.3616962-1-senozhatsky@chromium.org>
-References: <20240503091823.3616962-1-senozhatsky@chromium.org>
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [PATCH v5 00/11] enable bs > ps in XFS
+Date: Fri,  3 May 2024 02:53:42 -0700
+Message-ID: <20240503095353.3798063-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -84,72 +73,162 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Document brief description of compression algorithms' parameters:
-compression level and pre-trained dictionary.
+[ I was asked by Pankaj to post this v5 as he's out right now. ]
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- Documentation/admin-guide/blockdev/zram.rst | 38 ++++++++++++++++-----
- 1 file changed, 29 insertions(+), 9 deletions(-)
+This is the fifth version of the series that enables block size > page size
+(Large Block Size) in XFS. The context and motivation can be seen in cover
+letter of the RFC v1 [0]. We also recorded a talk about this effort at LPC [1],
+if someone would like more context on this effort.
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index 091e8bb38887..58d79f9099e3 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -102,15 +102,26 @@ Examples::
- 	#select lzo compression algorithm
- 	echo lzo > /sys/block/zram0/comp_algorithm
- 
--For the time being, the `comp_algorithm` content does not necessarily
--show every compression algorithm supported by the kernel. We keep this
--list primarily to simplify device configuration and one can configure
--a new device with a compression algorithm that is not listed in
--`comp_algorithm`. The thing is that, internally, ZRAM uses Crypto API
--and, if some of the algorithms were built as modules, it's impossible
--to list all of them using, for instance, /proc/crypto or any other
--method. This, however, has an advantage of permitting the usage of
--custom crypto compression modules (implementing S/W or H/W compression).
-+For the time being, the `comp_algorithm` content shows only compression
-+algorithms that are supported by zram.
-+
-+It is also possible to pass algorithm specific configuration parameters::
-+
-+	#set compression level to 8
-+	echo "zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Note that `comp_algorithm` also supports `algo=name` format::
-+
-+	#set compression level to 8
-+	echo "algo=zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Certain compression algorithms support pre-trained dictionaries, which
-+significantly change algorithms' characteristics. In order to configure
-+compression algorithm to use external pre-trained dictionary, pass full
-+path to the dictionary along with other parameters::
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zram0/comp_algorithm
- 
- 4) Set Disksize
- ===============
-@@ -442,6 +453,15 @@ configuration:::
- 	#select deflate recompression algorithm, priority 2
- 	echo "algo=deflate priority=2" > /sys/block/zramX/recomp_algorithm
- 
-+The `recomp_algorithm` also supports algorithm configuration parameters, e.g.
-+compression level and pre-trained dircionary::
-+
-+	#pass compression level
-+	echo "algo=zstd level=8" > /sys/block/zramX/recomp_algorithm
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zramX/recomp_algorithm
-+
- Another device attribute that CONFIG_ZRAM_MULTI_COMP enables is recompress,
- which controls recompression.
- 
+The major change on this v5 is truncation to min order now included and has been
+tested. The main issue which was observed was root cuased, and Matthew was able
+to identify a fix for it in xarray, that fix is now queued up on
+mm-hotfixes-unstable [2].
+
+A lot of emphasis has been put on testing using kdevops, starting with an XFS
+baseline [3]. The testing has been split into regression and progression.
+
+Regression testing:
+In regression testing, we ran the whole test suite to check for regressions on
+existing profiles due to the page cache changes.
+
+No regressions were found with these patches added on top.
+
+Progression testing:
+For progression testing, we tested for 8k, 16k, 32k and 64k block sizes.  To
+compare it with existing support, an ARM VM with 64k base page system (without
+our patches) was used as a reference to check for actual failures due to LBS
+support in a 4k base page size system.
+
+There are some tests that assumes block size < page size that needs to be fixed.
+We have a tree with fixes for xfstests [4], most of the changes have been posted
+already, and only a few minor changes need to be posted. Already part of these
+changes has been upstreamed to fstests, and new tests have also been written and
+are out for review, namely for mmap zeroing-around corner cases, compaction
+and fsstress races on mm, and stress testing folio truncation on file mapped
+folios.
+
+No new failures were found with the LBS support.
+
+We've done some preliminary performance tests with fio on XFS on 4k block size
+against pmem and NVMe with buffered IO and Direct IO on vanilla Vs + these
+patches applied, and detected no regressions.
+
+We also wrote an eBPF tool called blkalgn [5] to see if IO sent to the device
+is aligned and at least filesystem block size in length.
+
+For those who want this in a git tree we have this up on a kdevops
+20240503-large-block-minorder branch [6].
+
+[0] https://lore.kernel.org/lkml/20230915183848.1018717-1-kernel@pankajraghav.com/
+[1] https://www.youtube.com/watch?v=ar72r5Xf7x4
+[2] https://lkml.kernel.org/r/20240501153120.4094530-1-willy@infradead.org
+[3] https://github.com/linux-kdevops/kdevops/blob/master/docs/xfs-bugs.md
+489 non-critical issues and 55 critical issues. We've determined and reported
+that the 55 critical issues have all fall into 5 common  XFS asserts or hung
+tasks  and 2 memory management asserts.
+[4] https://github.com/linux-kdevops/fstests/tree/lbs-fixes
+[5] https://github.com/iovisor/bcc/pull/4813
+[7] https://github.com/linux-kdevops/linux/tree/20240503-large-block-minorder
+
+Changes since v4:
+- Added new Reviewed-by tags
+- Truncation is now enabled, this depends on Matthew Wilcox xarray fix
+  being merged and its already on its way
+- filemap_map_pages() simplification as suggested by Matthew Wilcox
+- minor variable forward declration ordering as suggested by Matthew Wilcox
+
+Changes since v3:
+- Cap the PTE range to i_size for LBS configuration in folio_map_range()
+- Added Chinners kvmalloc xattr patches
+- Moved Hannes patches before adding the minorder patches to avoid confusion.
+- Added mapping_set_folio_order_range().
+- Return EINVAL instead EAGAIN in split_huge_page_to_list_to_order()
+
+Changes since v2:
+- Simplified the filemap and readahead changes. (Thanks willy)
+- Removed DEFINE_READAHEAD_ALIGN.
+- Added minorder support to readahead_expand().
+
+Changes since v1:
+- Round up to nearest min nr pages in ra_init
+- Calculate index in filemap_create instead of doing in filemap_get_pages
+- Remove unnecessary BUG_ONs in the delete path
+- Use check_shl_overflow instead of check_mul_overflow
+- Cast to uint32_t instead of unsigned long in xfs_stat_blksize
+
+Changes since RFC v2:
+- Move order 1 patch above the 1st patch
+- Remove order == 1 conditional in `fs: Allow fine-grained control of
+folio sizes`. This fixed generic/630 that was reported in the previous version.
+- Hide the max order and expose `mapping_set_folio_min_order` instead.
+- Add new helper mapping_start_index_align and DEFINE_READAHEAD_ALIGN
+- don't call `page_cache_ra_order` with min order in do_mmap_sync_readahead
+- simplify ondemand readahead with only aligning the start index at the end
+- Don't cap ra_pages based on bdi->io_pages
+- use `checked_mul_overflow` while calculating bytes in validate_fsb
+- Remove config lbs option
+- Add a warning while mounting a LBS kernel
+- Add Acked-by and Reviewed-by from Hannes and Darrick.
+
+Changes since RFC v1:
+- Added willy's patch to enable order-1 folios.
+- Unified common page cache effort from Hannes LBS work.
+- Added a new helper min_nrpages and added CONFIG_THP for enabling
+  mapping_large_folio_support
+- Don't split a folio if it has minorder set. Remove the old code where we
+  set extra pins if it has that requirement.
+- Split the code in XFS between the validation of mapping count. Put the
+  icache code changes with enabling bs > ps.
+- Added CONFIG_XFS_LBS option
+- align the index in do_read_cache_folio()
+- Removed truncate changes
+- Fixed generic/091 with iomap changes to iomap_dio_zero function.
+- Took care of folio truncation scenario in page_cache_ra_unbounded()
+  that happens after read_pages if a folio was found.
+- Sqaushed and moved commits around
+- Rebased on top of v6.8-rc4
+
+Dave Chinner (1):
+  xfs: use kvmalloc for xattr buffers
+
+Hannes Reinecke (1):
+  readahead: rework loop in page_cache_ra_unbounded()
+
+Luis Chamberlain (2):
+  filemap: allocate mapping_min_order folios in the page cache
+  mm: split a folio in minimum folio order chunks
+
+Matthew Wilcox (Oracle) (1):
+  fs: Allow fine-grained control of folio sizes
+
+Pankaj Raghav (6):
+  readahead: allocate folios with mapping_min_order in readahead
+  filemap: cap PTE range to be created to allowed zero fill in
+    folio_map_range()
+  iomap: fix iomap_dio_zero() for fs bs > system page size
+  xfs: expose block size in stat
+  xfs: make the calculation generic in xfs_sb_validate_fsb_count()
+  xfs: enable block size larger than page size support
+
+ fs/iomap/direct-io.c          |  13 +++-
+ fs/xfs/libxfs/xfs_attr_leaf.c |  15 ++---
+ fs/xfs/libxfs/xfs_ialloc.c    |   5 ++
+ fs/xfs/libxfs/xfs_shared.h    |   3 +
+ fs/xfs/xfs_icache.c           |   6 +-
+ fs/xfs/xfs_iops.c             |   2 +-
+ fs/xfs/xfs_mount.c            |  10 ++-
+ fs/xfs/xfs_super.c            |  10 +--
+ include/linux/huge_mm.h       |  12 ++--
+ include/linux/pagemap.h       | 116 ++++++++++++++++++++++++++++------
+ mm/filemap.c                  |  31 ++++++---
+ mm/huge_memory.c              |  50 ++++++++++++++-
+ mm/readahead.c                |  94 +++++++++++++++++++++------
+ 13 files changed, 290 insertions(+), 77 deletions(-)
+
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.43.0
 
 
