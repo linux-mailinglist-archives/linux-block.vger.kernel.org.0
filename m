@@ -1,58 +1,58 @@
-Return-Path: <linux-block+bounces-6989-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-6990-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 554538BC684
-	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 06:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ADDC48BC685
+	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 06:20:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B26692819B1
-	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 04:20:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62498281DC7
+	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 04:20:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49EC943ACD;
-	Mon,  6 May 2024 04:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E03446AC;
+	Mon,  6 May 2024 04:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a263W0XM"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dcumZn/2"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198343ABC
-	for <linux-block@vger.kernel.org>; Mon,  6 May 2024 04:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F48443ABC
+	for <linux-block@vger.kernel.org>; Mon,  6 May 2024 04:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714969234; cv=none; b=k/f/sG8X4c6rpo3clCIlyDcawEtNwall0nMfVDy+H790WskVRxI2Y+ztpfoX+77kJOYjNgk/IYn3EiStda4Lqn4NIXa2pG9xVixRlJPa/6xg9WVmB20fXCLKHT4zp6Oriv5aVRDPOxd8lJhQBw4IcJc4HYpiraRtfo66+siU0Qs=
+	t=1714969236; cv=none; b=NEHuoVF5WutxQXZ3QCZqlXcZFCw5zg1BYMMR36IvBOVUlE2lMRMqoKdENQBVZZa290u6t+HpgjCaXxd1eoldq+i4l3Xjv6ZJDtSyU2KwjknxLwtiwBJ4w9ZpShyZq6Ic2lQQVD6I2O/Zmm0nfn+kFpHSTaJfsJN1T6K9LCMYpPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714969234; c=relaxed/simple;
-	bh=N6P/wm3g0Yu0jltiR1vPEFbEyZaGCar5+1H0lFL0rGc=;
+	s=arc-20240116; t=1714969236; c=relaxed/simple;
+	bh=E0DYUDG4l9aEK60M12y3MAsyF1oy8ZxKY/5Si+eyptU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i1/JliCXUu+j9HLTLePwIABjNPMbA+4ua0OGHox9/4UlEdzVxLtREv/xzZk+pBaRhZamnaE2w6XAhS+LTEkhVEbXVs+9J/iP0cYtCKLzinqUNzlDA/jE6C5tvbqENF2gvt6ond/H+ts1+2UmRktULNS5LLQWsco8vnsPrd1Lf2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a263W0XM; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=pr2mbsjoysNCQX71Vqm9nhMMmVOjpYBZgg9MFvockUi82GakXuRZzFf8zEKnjYMEGvA7mCriryPa8bMRnpAzgt63cNv9E0bcYrQbAZqttraJRC0275IDZRIdeMt4MQw1mg4kyeY8ZMxTnK7kEJo28VXV2MyhgZlpM16lBuZBG9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dcumZn/2; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=D3pqLzp++9XFe0fVDALJJy2muOH3yk6YApG4Yk4oZio=; b=a263W0XM1itMweZB1pF/S0dgz3
-	18zEfXSlRc00uqn8q6VruU0jVwW4h4Ca/T5T5BQht1t2JIals9wnCOPXY8lXs1yRIVW/csY9AIyik
-	Bzj4rGXqQn5AlGO41V/fHg1EapVjgGX1DYHIM5Ed4ZGWxJ+O1npfx9mlN4vufePFYkDU7vLbF7C1q
-	N/Z6k6+ZVclKI81O+FKo9P4qp51mXTHD32eXWLtCqLtUzjEPYm4/klCLGJsQ98xPpbIbPb8nMnB7y
-	Zy2lYrLyUfdJJe2qu4SwMu3plsf+GrvKw7n6kn4inHuDd1OBNlbxxhGNV37RZH02HSNfXKfGrVz8k
-	gA6hRWRg==;
+	bh=R9xSF1MXch23RfbVp2uK3KxJeMtGVod4GHpDLdUAsLI=; b=dcumZn/2q0+oS7omkOnNRuH3vq
+	ZzQU7rmXIawHnDFYu98HL9taGzk40PH1D0HNEEQ3EEdlVEKBpbMjepPD8JPYyi6nSejdt6Mn32eLS
+	/k50IkuAw/Yy2Zf4scRM2WlGkf6wPx5eeGiVsq8u/OU77ViXVWQWluq3l1VEuK3f3P0Ho7hWr4UrF
+	0QgVjpqkVALLyik1djY+n9/+Hq3/W6BrS+9tTN30wfitswz+Ju1qObUGYkh6dfPPXu7Lu921VX/JN
+	Y1OdOWtwfCKCgzE+uPSwow9v7medFZn83u8M5+ClIHAlMhb64HGmAPa1Mq439Vigk+MwTS0BFaA9s
+	BEVue0uw==;
 Received: from [2001:4bb8:188:7ba8:c70:4a89:bc61:3] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s3pq3-000000060KE-3rgc;
-	Mon, 06 May 2024 04:20:32 +0000
+	id 1s3pq6-000000060KQ-1bTG;
+	Mon, 06 May 2024 04:20:34 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: Keith Busch <kbusch@kernel.org>,
 	Conrad Meyer <conradmeyer@meta.com>,
 	linux-block@vger.kernel.org
-Subject: [PATCH 1/6] block: remove the discard_granularity check in __blkdev_issue_discard
-Date: Mon,  6 May 2024 06:20:22 +0200
-Message-Id: <20240506042027.2289826-2-hch@lst.de>
+Subject: [PATCH 2/6] block: move discard checks into the ioctl handler
+Date: Mon,  6 May 2024 06:20:23 +0200
+Message-Id: <20240506042027.2289826-3-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240506042027.2289826-1-hch@lst.de>
 References: <20240506042027.2289826-1-hch@lst.de>
@@ -65,32 +65,86 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-We now set a default granularity in the queue limits API, so don't
-bother with this extra check.
+Most bio operations get basic sanity checking in submit_bio and anything
+more complicated than that is done in the callers.  Discards are a bit
+different from that in that a lot of checking is done in
+__blkdev_issue_discard, and the specific errnos for that are returned
+to userspace.  Move the checks that require specific errnos to the ioctl
+handler instead, and just leave the basic sanity checking in submit_bio
+for the other handlers.  This introduces two changes in behavior:
+
+ 1) the logical block size alignment check of the start and len is lost
+    for non-ioctl callers.
+    This matches what is done for other operations including reads and
+    writes.  We should probably verify this for all bios, but for now
+    make discards match the normal flow.
+ 2) for non-ioctl callers all errors are reported on I/O completion now
+    instead of synchronously.  Callers in general mostly ignore or log
+    errors so this will actually simplify the code once cleaned up
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-lib.c | 7 -------
- 1 file changed, 7 deletions(-)
+ block/blk-lib.c | 13 -------------
+ block/ioctl.c   |  7 +++++--
+ 2 files changed, 5 insertions(+), 15 deletions(-)
 
 diff --git a/block/blk-lib.c b/block/blk-lib.c
-index a6954eafb8c8af..7ec3e170e7f629 100644
+index 7ec3e170e7f629..6e54ef140bab12 100644
 --- a/block/blk-lib.c
 +++ b/block/blk-lib.c
-@@ -46,13 +46,6 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+@@ -39,19 +39,6 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+ 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop)
+ {
+ 	struct bio *bio = *biop;
+-	sector_t bs_mask;
+-
+-	if (bdev_read_only(bdev))
+-		return -EPERM;
+-	if (!bdev_max_discard_sectors(bdev))
+-		return -EOPNOTSUPP;
+-
+-	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+-	if ((sector | nr_sects) & bs_mask)
+-		return -EINVAL;
+-
+-	if (!nr_sects)
+-		return -EINVAL;
+ 
+ 	while (nr_sects) {
+ 		sector_t req_sects =
+diff --git a/block/ioctl.c b/block/ioctl.c
+index 0c76137adcaaa5..03bcdf2783b508 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -95,6 +95,7 @@ static int compat_blkpg_ioctl(struct block_device *bdev,
+ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 		unsigned long arg)
+ {
++	unsigned int bs_mask = bdev_logical_block_size(bdev) - 1;
+ 	uint64_t range[2];
+ 	uint64_t start, len;
+ 	struct inode *inode = bdev->bd_inode;
+@@ -105,6 +106,8 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 
  	if (!bdev_max_discard_sectors(bdev))
  		return -EOPNOTSUPP;
++	if (bdev_read_only(bdev))
++		return -EPERM;
  
--	/* In case the discard granularity isn't set by buggy device driver */
--	if (WARN_ON_ONCE(!bdev_discard_granularity(bdev))) {
--		pr_err_ratelimited("%pg: Error: discard_granularity is 0.\n",
--				   bdev);
--		return -EOPNOTSUPP;
--	}
--
- 	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
- 	if ((sector | nr_sects) & bs_mask)
+ 	if (copy_from_user(range, (void __user *)arg, sizeof(range)))
+ 		return -EFAULT;
+@@ -112,9 +115,9 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 	start = range[0];
+ 	len = range[1];
+ 
+-	if (start & 511)
++	if (!len)
  		return -EINVAL;
+-	if (len & 511)
++	if ((start | len) & bs_mask)
+ 		return -EINVAL;
+ 
+ 	if (start + len > bdev_nr_bytes(bdev))
 -- 
 2.39.2
 
