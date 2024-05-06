@@ -1,78 +1,78 @@
-Return-Path: <linux-block+bounces-7013-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7009-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEA1E8BC8E8
-	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 10:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E4AD8BC8D8
+	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 10:01:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CDDE1C214A9
-	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 08:01:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ECD81C21522
+	for <lists+linux-block@lfdr.de>; Mon,  6 May 2024 08:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2EA143C4D;
-	Mon,  6 May 2024 07:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A18142E88;
+	Mon,  6 May 2024 07:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XkbjsdWa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KgTsJZdP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8F8142E68
-	for <linux-block@vger.kernel.org>; Mon,  6 May 2024 07:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1887142E79
+	for <linux-block@vger.kernel.org>; Mon,  6 May 2024 07:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714982356; cv=none; b=bAYi2v06HU2rl9Pm2tOg3BpvKtwvlU1nAz7fqIfN/MRXFZga9zTLF0TBq/xrEHdflPyItVCZGWcPl07ANaSJc/sDEcn6p0Wqu0C1d2Nn3/kVjrAOVpqWc987aU+WgMqAsEp61paXgsARrSUhpjfDHgB+rZhnB7YS/ZvXfgvC4E0=
+	t=1714982349; cv=none; b=sVi9lPAfDPnLLTQhycU4rfGLd5912JkTBRk/qe5iH9xpuirjVmTBAoK3Fd0AxKUkaAOI+AXgaSlRretNtIe4ZMNugI6/ZkbFLsiaLRyq3qmF/haOslWJieLGXDhM4GMsa01tGn3Jfp+3siEXGoNTnygaJiRQKCd1Ycs0Hvypd4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714982356; c=relaxed/simple;
-	bh=kNJbXxfK8zdnskpjgM5oyiiq8zq2KQp2aiK9qKIm8Jk=;
+	s=arc-20240116; t=1714982349; c=relaxed/simple;
+	bh=fkmGnp5H4sYk5AcEucbfVYS4PjNz7ma3EYQ0ecKZnDQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LaLLN45x8uix/18/wrM/0ZmcjjyoLd7h+LP8rBuCzYrgfny+RutjzjECD8tUncvex555LeilwmgidmzRKKBIb0g70SuMQDp924BF0wBz6c8akCIFpkDI4v2ykLwgcv9pHq0ycLC0wiAXs93GdovgWHBSOpkPOsiF0R8/ytY2dYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XkbjsdWa; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=g1pIKuS8eKOcaZYezOUe+ZZ2B1BE84XvarMNMbIeeIaBy17mK4SHZW8NIdsUaQTa8TR2+lq4BdaPv+mvshGoTQXMDVqLiQAfOAK3QfkXYJ1qC9L5ZGOWjyLBDtatAUxvyMbQJguHXRBE2PlFScvRDGERJ/EzFQ/iVnaIFi3Y6ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KgTsJZdP; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so15914065ad.1
-        for <linux-block@vger.kernel.org>; Mon, 06 May 2024 00:59:04 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ec69e3dbcfso9766205ad.0
+        for <linux-block@vger.kernel.org>; Mon, 06 May 2024 00:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714982344; x=1715587144; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714982347; x=1715587147; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EEH83ikFWbHDBUUzWu4h4KsSObV7EItvgFziqF5bCxw=;
-        b=XkbjsdWaI5kxkxIsPYMcVSotFcCqJRHDQuhAsAM1zhvrp6SiZxgh41SgUFPjD+8fOb
-         lbWN4drWqJTZLsUt7PX62p51vTsDJqO5JjVZwCGTNQjKTwbXPyitoNSVcrIxgjx141vW
-         ywzSZayTzvkYpIlAyWCDUxYuObsxDMPx9RXb4=
+        bh=0eIYrOQ3BkMXJCk6zuaDE2ECawMW63bMTlaOVOjCrZU=;
+        b=KgTsJZdPOGCHNeKMRY/ASsztQuJA1aHxZewpKIpaBMEVQZ1Hm6lxgvK24JJZrSxOIW
+         L0pEPc6ulksi6lrBLU49vCe2e87GK9ZggRWa6c1S/Xqmnjzec9ZcqKHx5vFUa0/mgRoG
+         9rJN4wsRT/yU2pVjGYU//JDekkVQ2yNxVQLik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714982344; x=1715587144;
+        d=1e100.net; s=20230601; t=1714982347; x=1715587147;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EEH83ikFWbHDBUUzWu4h4KsSObV7EItvgFziqF5bCxw=;
-        b=aO8JsHIeiGKWPXr2mQhwKwkiXuYmg6YWp5W6shilA/95luZyCwFyYlKn8ggEVpO0pr
-         vyN2GoJuRyUn6WQDaN4VRim/Ggs+ta+dhzIsiQp+4n5WVbW5Ji1pZynW49Uzjz0QXoC8
-         kPrURV4Ph5jZIyZcy+rz/CJU4a9/1Wgavk5nwmVF2JkjBXSUBSWzBXPcRayeNFKkN/FY
-         jfJPNILd39RwBTKYAZiAFZq0zm8yOhXrKFF39w+iKDgslPQtrmaweVLCkWydO3dtiBEp
-         6HxvguycWzOSeVpo9tCsuCT5u3gnDZvuU6BmhYKd5ze7TdDpocjty197Nkkfg9a715O/
-         C1kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCOYf+28KyFHywrhwcrDn9AeLwHPM31MKMP6wcG+6eAzHhS/RMYvFfyVvxi4UuH3u+npHpvpEJxxYeitC6I1aZYvjs+bC64OP0wL0=
-X-Gm-Message-State: AOJu0Yzl26hL+AnetTSHNR57UMy+M+UY2hsnMMjFA1vQlAXAyY2nmpvk
-	CRRXtu1gDhjk8tAAuqpy3V+47tEfHVuwQ/88rNxHXagHG9o2mSx4g/Ehem3Dlg==
-X-Google-Smtp-Source: AGHT+IFvtTM7Cp4XRi4ugjU8maUmX0Y1BJMBzeXwG4uz5NGaWtdCrHH1ePjQEmZ/XZrKEMZrCdrJng==
-X-Received: by 2002:a17:902:d2cd:b0:1e3:e1d5:c680 with SMTP id n13-20020a170902d2cd00b001e3e1d5c680mr13775583plc.63.1714982344547;
-        Mon, 06 May 2024 00:59:04 -0700 (PDT)
+        bh=0eIYrOQ3BkMXJCk6zuaDE2ECawMW63bMTlaOVOjCrZU=;
+        b=NvHjTUNIjOeCx+Hoq4KLEF1G+mSnwrUdvt21O7L4aZtUgPPK8YWT8p/4rm+uKUp9dh
+         M+hZuq1N7QmvNl+uC8qubQEscwV3BDJrgx1IA2R/+qIEXivFCDH4De8EGympCgHns5Cw
+         dnM+Vq9Fkf0mmlYXY2JfwjLM+OGyAOprq5OTkhanMGrw9AfUv9wIC7pdaHRaahpdTK+c
+         mJpTv5YJv/j8AS//QQsCKWpti/0Py+i/tA7ZQtgmigqOGVa7euwVKrIwnvcuE4R28A6X
+         m3XdKNE4ORKtntQslOoKL8MggGLJQ14ouVfceAWsnTb1UgMxL8VHuWUwviWYsVLuYP7h
+         oX9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUL/G8+cHI6H4U7UD4xczrOUbVsyVc660DIVTpHEdolCeFV5vp6guC9J1I2+8QbmHcabskPxecxtmyvLplCy9yCvY0RkNcCshDvG7U=
+X-Gm-Message-State: AOJu0YxT9HgHlH2Oe1zG1vEiRpS0WsGHlopSCaGVS5Vt1sFxJduXhl60
+	eBHiEqSCcsZMAUWmcJ+uDWaycTvWab641dzW3v+5kdZNNft0yIFQURv2ABlXKw==
+X-Google-Smtp-Source: AGHT+IGhUbnM5L19HjkMQe7zz6msC494kghrBWv74m5MtSoX20PhtNuMEWFgOVS6HchTjkbJ745/Dw==
+X-Received: by 2002:a17:902:ea06:b0:1ec:28e4:691f with SMTP id s6-20020a170902ea0600b001ec28e4691fmr10804968plg.63.1714982346998;
+        Mon, 06 May 2024 00:59:06 -0700 (PDT)
 Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:4e24:10c3:4b65:e126])
-        by smtp.gmail.com with ESMTPSA id h6-20020a170902f54600b001ec64b128dasm7633772plf.129.2024.05.06.00.59.02
+        by smtp.gmail.com with ESMTPSA id h6-20020a170902f54600b001ec64b128dasm7633772plf.129.2024.05.06.00.59.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 00:59:04 -0700 (PDT)
+        Mon, 06 May 2024 00:59:06 -0700 (PDT)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Minchan Kim <minchan@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-block@vger.kernel.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv2 08/17] zram: add 842 compression backend support
-Date: Mon,  6 May 2024 16:58:21 +0900
-Message-ID: <20240506075834.302472-9-senozhatsky@chromium.org>
+Subject: [PATCHv2 09/17] zram: check that backends array has at least one backend
+Date: Mon,  6 May 2024 16:58:22 +0900
+Message-ID: <20240506075834.302472-10-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 In-Reply-To: <20240506075834.302472-1-senozhatsky@chromium.org>
 References: <20240506075834.302472-1-senozhatsky@chromium.org>
@@ -84,177 +84,73 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Make sure that backends array has anything apart from the
+sentinel NULL value.
+
+We also select LZO_BACKEND if none backends were selected.
+
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/block/zram/Kconfig       | 11 ++++++
- drivers/block/zram/Makefile      |  1 +
- drivers/block/zram/backend_842.c | 68 ++++++++++++++++++++++++++++++++
- drivers/block/zram/backend_842.h | 10 +++++
- drivers/block/zram/zcomp.c       |  4 ++
- 5 files changed, 94 insertions(+)
- create mode 100644 drivers/block/zram/backend_842.c
- create mode 100644 drivers/block/zram/backend_842.h
+ drivers/block/zram/Kconfig | 19 +++++++++++++------
+ drivers/block/zram/zcomp.c |  8 ++++++++
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-index 9dedd2edfb28..1e0e7e5910b8 100644
+index 1e0e7e5910b8..6aea609b795c 100644
 --- a/drivers/block/zram/Kconfig
 +++ b/drivers/block/zram/Kconfig
-@@ -44,6 +44,12 @@ config ZRAM_BACKEND_DEFLATE
- 	select ZLIB_DEFLATE
- 	select ZLIB_INFLATE
+@@ -14,12 +14,6 @@ config ZRAM
  
-+config ZRAM_BACKEND_842
-+	bool "842 compression support"
+ 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
+ 
+-config ZRAM_BACKEND_LZO
+-	bool "lzo and lzo-rle compression support"
+-	depends on ZRAM
+-	select LZO_COMPRESS
+-	select LZO_DECOMPRESS
+-
+ config ZRAM_BACKEND_LZ4
+ 	bool "lz4 compression support"
+ 	depends on ZRAM
+@@ -50,6 +44,19 @@ config ZRAM_BACKEND_842
+ 	select 842_COMPRESS
+ 	select 842_DECOMPRESS
+ 
++config ZRAM_BACKEND_FORCE_LZO
 +	depends on ZRAM
-+	select 842_COMPRESS
-+	select 842_DECOMPRESS
++	def_bool !ZRAM_BACKEND_LZ4 && !ZRAM_BACKEND_LZ4HC && \
++		!ZRAM_BACKEND_ZSTD && !ZRAM_BACKEND_DEFLATE && \
++		!ZRAM_BACKEND_842
++
++config ZRAM_BACKEND_LZO
++	bool "lzo and lzo-rle compression support" if !ZRAM_BACKEND_FORCE_LZO
++	depends on ZRAM
++	default ZRAM_BACKEND_FORCE_LZO
++	select LZO_COMPRESS
++	select LZO_DECOMPRESS
 +
  choice
  	prompt "Default zram compressor"
  	default ZRAM_DEF_COMP_LZORLE
-@@ -73,6 +79,10 @@ config ZRAM_DEF_COMP_DEFLATE
- 	bool "deflate"
- 	depends on ZRAM_BACKEND_DEFLATE
- 
-+config ZRAM_DEF_COMP_842
-+	bool "842"
-+	depends on ZRAM_BACKEND_842
-+
- endchoice
- 
- config ZRAM_DEF_COMP
-@@ -83,6 +93,7 @@ config ZRAM_DEF_COMP
- 	default "lz4hc" if ZRAM_DEF_COMP_LZ4HC
- 	default "zstd" if ZRAM_DEF_COMP_ZSTD
- 	default "deflate" if ZRAM_DEF_COMP_DEFLATE
-+	default "842" if ZRAM_DEF_COMP_842
- 	default "unset-value"
- 
- config ZRAM_WRITEBACK
-diff --git a/drivers/block/zram/Makefile b/drivers/block/zram/Makefile
-index 91c07595d8b4..029827a6ddac 100644
---- a/drivers/block/zram/Makefile
-+++ b/drivers/block/zram/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_ZRAM_BACKEND_LZ4)			+= backend_lz4.o
- obj-$(CONFIG_ZRAM_BACKEND_LZ4HC)		+= backend_lz4hc.o
- obj-$(CONFIG_ZRAM_BACKEND_ZSTD)			+= backend_zstd.o
- obj-$(CONFIG_ZRAM_BACKEND_DEFLATE)		+= backend_deflate.o
-+obj-$(CONFIG_ZRAM_BACKEND_842)			+= backend_842.o
- 
- zram-y	:=	zcomp.o zram_drv.o
- 
-diff --git a/drivers/block/zram/backend_842.c b/drivers/block/zram/backend_842.c
-new file mode 100644
-index 000000000000..8ea7a230b890
---- /dev/null
-+++ b/drivers/block/zram/backend_842.c
-@@ -0,0 +1,68 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/sw842.h>
-+#include <linux/vmalloc.h>
-+
-+#include "backend_842.h"
-+
-+struct sw842_ctx {
-+	void *mem;
-+};
-+
-+static void destroy_842(void *ctx)
-+{
-+	struct sw842_ctx *zctx = ctx;
-+
-+	kfree(zctx->mem);
-+	kfree(zctx);
-+}
-+
-+static void *create_842(void)
-+{
-+	struct sw842_ctx *ctx;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return NULL;
-+
-+	ctx->mem = kmalloc(SW842_MEM_COMPRESS, GFP_KERNEL);
-+	if (!ctx->mem)
-+		goto error;
-+
-+	return ctx;
-+
-+error:
-+	destroy_842(ctx);
-+	return NULL;
-+}
-+
-+static int compress_842(void *ctx, const unsigned char *src,
-+			unsigned char *dst, size_t *dst_len)
-+{
-+	struct sw842_ctx *zctx = ctx;
-+	unsigned int dlen = *dst_len;
-+	int ret;
-+
-+	ret = sw842_compress(src, PAGE_SIZE, dst, &dlen, zctx->mem);
-+	if (ret == 0)
-+		*dst_len = dlen;
-+	return ret;
-+}
-+
-+static int decompress_842(void *ctx, const unsigned char *src, size_t src_len,
-+			  unsigned char *dst)
-+{
-+	unsigned int dlen = PAGE_SIZE;
-+
-+	return sw842_decompress(src, src_len, dst, &dlen);
-+}
-+
-+struct zcomp_backend backend_842 = {
-+	.compress	= compress_842,
-+	.decompress	= decompress_842,
-+	.create_ctx	= create_842,
-+	.destroy_ctx	= destroy_842,
-+	.name		= "842",
-+};
-diff --git a/drivers/block/zram/backend_842.h b/drivers/block/zram/backend_842.h
-new file mode 100644
-index 000000000000..c03a2396d7b2
---- /dev/null
-+++ b/drivers/block/zram/backend_842.h
-@@ -0,0 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#ifndef __BACKEND_842_H__
-+#define __BACKEND_842_H__
-+
-+#include "zcomp.h"
-+
-+extern struct zcomp_backend backend_842;
-+
-+#endif /* __BACKEND_842_H__ */
 diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 9fc5477a6259..2a38126f4da3 100644
+index 2a38126f4da3..d49791f724e9 100644
 --- a/drivers/block/zram/zcomp.c
 +++ b/drivers/block/zram/zcomp.c
-@@ -21,6 +21,7 @@
- #include "backend_lz4hc.h"
- #include "backend_zstd.h"
- #include "backend_deflate.h"
-+#include "backend_842.h"
+@@ -209,6 +209,14 @@ struct zcomp *zcomp_create(const char *alg)
+ 	struct zcomp *comp;
+ 	int error;
  
- static struct zcomp_backend *backends[] = {
- #if IS_ENABLED(CONFIG_ZRAM_BACKEND_LZO)
-@@ -38,6 +39,9 @@ static struct zcomp_backend *backends[] = {
- #endif
- #if IS_ENABLED(CONFIG_ZRAM_BACKEND_DEFLATE)
- 	&backend_deflate,
-+#endif
-+#if IS_ENABLED(CONFIG_ZRAM_BACKEND_842)
-+	&backend_842,
- #endif
- 	NULL
- };
++	/*
++	 * The backends array has a sentinel NULL value, so the minimum
++	 * size is 1. In order to be valid the array, apart from the
++	 * sentinel NULL element, should have at least one compression
++	 * backend selected.
++	 */
++	BUILD_BUG_ON(ARRAY_SIZE(backends) <= 1);
++
+ 	comp = kzalloc(sizeof(struct zcomp), GFP_KERNEL);
+ 	if (!comp)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
