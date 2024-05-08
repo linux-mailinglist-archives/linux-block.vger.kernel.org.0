@@ -1,32 +1,32 @@
-Return-Path: <linux-block+bounces-7130-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7119-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1361C8BFA77
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 12:08:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2FCA8BFA39
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 12:05:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35A6E1C213FC
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 10:08:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12A7AB23F8B
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 10:05:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F18C85C7D;
-	Wed,  8 May 2024 10:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51A98286F;
+	Wed,  8 May 2024 10:03:05 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 697457E774;
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE237E798;
 	Wed,  8 May 2024 10:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162587; cv=none; b=Zg8bd1BLHsvsnF9z27TRTZqWd08YXKvKfC1//6eYpSlEJzwN5CiCxyfAyz99f+qM7U3rI0XOIRfykktVQNVHdtEkPYsHkQHCqkC/kY6MfGJflyRpVSmkC5dA+y1jheD6O7zHdqIjiNSo9kfUfP3Cv9yQrWsydH4lABJJJvKBXEI=
+	t=1715162585; cv=none; b=dP40uGGjHnAG9+WWDoVE8FD6i/nm1CUFDFp1I+ov4j7IFuog8eq2JT+yc04tg0ulxqhsZDspMj34fUjgHBIRJpKZmNieW4Zgx7qsCMMWB3s+vh7W08DiQjwHm/RZj+tuLfY4gh6iFDuVxfqSlnjksjrLFv9bA4PfMZD9nu4Ox7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162587; c=relaxed/simple;
-	bh=ul/wiSzDZit7bOUs1eKkFyN45Ghg8m4Ni94/4VNQ6UQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=J8TSC71o/c8cd4zaPQQHvTyXJbjYrg5GzIUTFgV2P7UsOMZk3j9hrvSxNLYA3bq/rspbHsYqvr/r5gT2Q7J1XI9qN2BXQgaGhBs8wyR1sZD+GOY3XKbBD6ORBNa6eTMRE3Y9gijoXhdxcrifpeGLWnyscho7+nw7V1anLB2ElIw=
+	s=arc-20240116; t=1715162585; c=relaxed/simple;
+	bh=ILOiGypKonBszEM01cavkBhnNff7lLqOK+UDeJBRKwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eS2SVNf9L06G5r0Lo1KQ/t1JMY19dmgZWNe4HvCdc2+AOz6d36EvJW0H+OIIeBNL1bGDgSYNp6vmzaEjplH9U1Y3mluR4q0r4KJqPB7LGhfINkHHCC+7KksI2zh6QCxncPVTW93EqVaQHMGcCHKZfhtmWZrYdchOCJJrJJo/Wb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-99-663b4a3bcedb
+X-AuditID: a67dfc5b-d85ff70000001748-d9-663b4a3c0e6c
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -86,44 +86,43 @@ Cc: kernel_team@skhynix.com,
 	longman@redhat.com,
 	hdanton@sina.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v14 24/28] dept: Print event context requestor's stacktrace on report
-Date: Wed,  8 May 2024 18:47:21 +0900
-Message-Id: <20240508094726.35754-25-byungchul@sk.com>
+Subject: [PATCH v14 28/28] dept: Add documentation for Dept's APIs
+Date: Wed,  8 May 2024 18:47:25 +0900
+Message-Id: <20240508094726.35754-29-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240508094726.35754-1-byungchul@sk.com>
 References: <20240508094726.35754-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSfUzMcRwHcN/v77Hj+O0wP8XizGwMeag+JPOHh+8sw8ws/uCm3+noLruS
-	srX1cCp6GLUeVOwqTrsirjYPFSeKq0nSKBJapLqrFZdSpKv557PX3p/P3n99eEpRwbjzGl24
-	pNepQpSsjJY5ZhWs9tvtp/ZKSfaGyyle4PyZREN+WSkLTbdLEJRWxGLoqd0F74btCMZevqIg
-	O7MJQcGXjxRU1HUgqC6OY+FN12xocQ6wYMtMZiG+qIyF133jGNqz0jGUWPZAw6VCDNbRbhqy
-	e1jIy47Hk+M7hlGTmQNTzHLoLM7lYPzLOrB1vGWg+v0quHKtnYWqahsNdfc7Mbx5mM9CR+kE
-	Aw11L2houpzKwK3+Qhb6hk0UmJwDHDRbjRjuGCaLEn78ZeB5qhVDwvW7GFraKhE8SvqMwVL6
-	loWnTjuGcksmBb9v1iLoTHNwcD5llIO82DQEyeezaDC0e8PYSD67bRN5ah+giKH8LKkeNtKk
-	vlAkD3I/csTw6D1HjJYzpLx4JSmq6sGkYMjJEIv5AkssQ+kcuehowaS/sZEjL3LGaNLVko33
-	uR+WbQmSQjQRkn7t1mOyYNtVB3X6wo7Irz1VdAzK8b2I3HhR2Ciamj9R//2hfgC5zAorxNbW
-	0al8nrBELE/9xrhMCXaZeL1xp8tzhYPijbgO2mVaWC4WPOjGLssFH7H+cx+e7vQUS+5Yp3rc
-	JvO27v6pfoXgLVbG53LTNxO8OGYm014oPilupS8huRHNMCOFRhehVWlCNq4JjtJpItccD9Va
-	0OQvmaLHj9xHQ00HapDAI+UsuXXBZrWCUUWERWlrkMhTynny2kRftUIepIo6J+lDj+rPhEhh
-	NciDp5UL5OuHzwYphBOqcOmUJJ2W9P+3mHdzj0F5AQJzEnv2egQeIjv8062n4nY/n+nza7Fw
-	lV9RcWjR76DGhsG9umZNoqTe75sxGD2iSLJkhBqsRTb/kg32oeD85GW9Ktw2R5tQGfg48AnX
-	u7T16GPH3Ej14u05xwKy/vob7p3b5pkRy4UatVfMXn8eBqSF+xysfLYsb35v2W3bHyUdFqxa
-	t5LSh6n+AWH2omZHAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSeUiTcRjA8X6/95qj2esyejGiGEhg92E9teiAypfsIiihe+VrrnTWVqbR
-	oW5maYoWc6VWnkvUrmllpbYUrSnZTEkrM7XDhsc6nLUUzRX98/DheeD71yMipAbKS6RUHRHU
-	KkWIjBaT4g1y7Uz5WnnQHHvdZEg5Pwcc/WdJyLhVRIP1ZiGCopJoDLZqP2ge6EEw+PwFAQa9
-	FUFWxzsCSmraEJTnx9DQ+NEdmhx2Giz6BBq0ObdoaOgewtCaegFDoWk91CVnYzA7u0gw2GhI
-	N2jx6PiCwWksYMAY5Q2d+WkMDHXMBUvbKwqqrlgoKH8zHS5fbaWhrNxCQk1pJ4bGhxk0tBWN
-	UFBX84wEa0oiBTf6smnoHjASYHTYGXhpzsRwWzdaO/NjmIKniWYMZ3LvYGh6/QhBxdl2DKai
-	VzRUOXowFJv0BPy+Xo2gM6mXgdjzTgbSo5MQJMSmkqBr9YXBXxn0iiV8VY+d4HXFx/jygUyS
-	r83m+Adp7xheV/GG4TNNR/nifB8+p8yG+azvDoo3FZyjedP3Cwwf39uE+b76eoZ/dmmQ5D82
-	GfCmSdvESwOFEGW4oJ69bI842HKllzh0bnXEJ1sZGYUuLYpHbiKOXcC9rbUjl2l2GtfS4iRc
-	9mSncsWJnymXCbZHzOXWr3F5PLuFy4tpI10mWW8u60EXdlnCLuRq27vxv+YUrvC2+W/HbXT/
-	uqvvb1/K+nKPtGlMMhJnojEFyFOpCg9VKEN8Z2kOBkeqlBGz9oWFmtDouxhPDqWUov5Gv0rE
-	ipBsrMRKy4OklCJcExlaiTgRIfOUVMctCpJKAhWRxwV12G710RBBU4kmiUjZRMnaAGGPlN2v
-	OCIcFIRDgvr/FYvcvKJQanKkh9/pGytjWLviVHtiXMq4dEnpcrW+15brLz/BWfrSCl5otjqf
-	z/CYUNqsauhoGAoLWPxB4ti6KvDajjz/kth74bq9EfF3R7RrWuq3w8XruRWcj9c894Zv6x4n
-	HTaN2exhHn7/ZF9OnPXmAePL5o26mLf6b1minJ9f78+fvmvnVxmpCVbM9SHUGsUf8asK1SoD
-	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0iTYRTHe97rXK5eltCrkdUggsLKyDqVRBTYUxEUXakPNdprG02TmbdA
+	0rxU3khDV9NELdbS1Wzbhy5qa+F0hTbLcuaFNMssLzSbaNplKn45/Pif8/99OiJSaqWDRKro
+	C4ImWq6WMWJKPORfHhK+d1vkemtXMOTnrAfvr6sUlJiMDLgeViEwWlMJGKjfDW1jgwgmm96Q
+	oC10ISjv6SLB6uhGUGu4zMC7vgXQ6h1hwFmYzUDaHRMDLT+mCOgsKiCgyrwfXl+vIMA20U+B
+	doCBYm0a4RvfCJjQV7KgT1kJvQYdC1M9oeDs/kBD7cc1cKu0k4GaWicFjse9BLx7WsJAt/Ef
+	Da8djRS48nNpeDBcwcCPMT0Jeu8IC29tZQRUp/tEmaN/aWjItRGQefcRAa3tzxDUXf1EgNn4
+	gYGX3kECLOZCEn7fq0fQmzfEQkbOBAvFqXkIsjOKKEjvDIPJ8RJmxxb8cnCExOmWBFw7Vkbh
+	VxU8fqLrYnF63UcWl5njsMWwGt+pGSBwucdLY3PlNQabPQUszhpqJfBwczOLG29OUrivVUsc
+	CDohDlcIalW8oFm3/bRYmeFsYGNKZYnVTXEpKH9JFvIT8dxG/vZvDzXHn0tHZ5jhVvFu9wQ5
+	zQHcct6S+5WeZpIbFPN3myOmeRG3k3eMvkfTTHEr+Uxny0xXwm3ibxQ40KxzGV9VbZvx+Pny
+	9v7hmVzKhfHP0nRsFhL7bsZFfNv7Unq2EMi/MLip60hShuZVIqkqOj5KrlJvXKtMilYlrj1z
+	PsqMfL+kT546+Rh5XIfsiBMhmb/EtnhrpJSWx8cmRdkRLyJlAZL6K5sjpRKFPOmioDl/ShOn
+	FmLtaImIki2WbBhLUEi5s/ILwjlBiBE0c1tC5BeUghbWdeh0l1YcW3E4yjQQY+l4eON5VlNa
+	oNq41G21NR9pbDsuDrbYU/ECuX2n64i/OnENV4PF24wJ88e/7/H2L/t1tNPzpd2rLtocv+5+
+	Y9fPlojiP3/CziWHK4cK9yqGtR2mE3k5+9zKgIN1ZGVoiJX793RX7iVTgMKQ3XD/SYhURsUq
+	5aGrSU2s/D9L025kRwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSf0yMcRzH+36fX9ets2dX41nZ4qYh82sTHw4zjEfGzGxt/UGH53TrKu4q
+	Yua4fqhkLurIlZOcVofcxUJnt9LltE6UiLRKQ6SsuubU0GX+ee+192ef119vESEtokJFqqQU
+	QZOkUMtoMSneKdcvlkfLlct6ateC4dwy8I6dJcF010pD650qBNaa0xgGGrfCm/FBBBMtLwgw
+	FrYiuN77gYAaVzcCR8UZGtr6Z0C7d5gGd2EeDfobd2l4+W0SQ1dRAYYq2w5ovlCGwen7TIJx
+	gIarRj2eii8YfJZKBiy6COirKGZgsnc5uLs7KGgocVPgeLcIrpR20VDncJPgqu3D0PbIREO3
+	9Q8Fza5nJLQa8im4PVRGw7dxCwEW7zADr5xmDNUZU7as0d8UNOU7MWSV38PQ3vkYwZOzPRhs
+	1g4aGryDGOy2QgJ+3WpE0Hf+OwOZ53wMXD19HkFeZhEJGV1RMPHTRG9YwzcMDhN8hv0o7xg3
+	k/zzMo5/WPyB4TOevGN4sy2Vt1dE8jfqBjB/fcRL8bbKHJq3jRQwfO73dswPeTwM/+zyBMn3
+	txvxrrBY8dqDglqVJmiWro8Tx2e6m5jDpbJj1S2pOmQIy0WBIo5dwX0sHSX9TLPzubdvfYSf
+	Q9g5nD3/E+Vngh0Uc+WeLX4OZjdyrtHXyM8kG8FluV9O/0rYldzFAhf65wznqqqd057Aqb7z
+	89B0L2WjuMf6YuYCEptRQCUKUSWlJSpU6qgl2oT49CTVsSUHkhNtaGotlpOThlo01ra1HrEi
+	JAuStNJypZRSpGnTE+sRJyJkIZLG7FVKqeSgIv24oEnep0lVC9p6FCYiZbMk0TFCnJQ9pEgR
+	EgThsKD5f8WiwFAduo+jT62brDPFlji/apqRY6ZhZPX28pBkpUd35URTV9jCH+qle/eXa3cH
+	xW3y3Nx81O7bWLvN2p+84dFs/dwOpTEgRnvtgfip0hTckmBeMOxInRP1/ogqeN7TyEvyrEs1
+	KfNMtj1ljLM6r8cVtG/Px/zeJnN2drhWt+tAjmyd/EyJjNTGK5ZHEhqt4i/zXmBuKQMAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -131,297 +130,137 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 
-Currently, print nothing in place of [S] in report, which means
-stacktrace of event context's start if the event is not an unlock thing
-by typical lock but general event because it's not easy to specify the
-point in a general way, where the event context has started from.
-
-However, unfortunately it makes hard to interpret dept's report in that
-case. So made it print the event requestor's stacktrace instead of the
-event context's start, in place of [S] in report.
+This document describes the APIs of Dept.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/dept.h     | 13 +++++++
- kernel/dependency/dept.c | 83 ++++++++++++++++++++++++++++++++--------
- 2 files changed, 80 insertions(+), 16 deletions(-)
+ Documentation/dependency/dept_api.txt | 117 ++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 Documentation/dependency/dept_api.txt
 
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index dea53ad5b356..6db23d77905e 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -145,6 +145,11 @@ struct dept_map {
- 	 */
- 	unsigned int			wgen;
- 
-+	/*
-+	 * requestor for the event context to run
-+	 */
-+	struct dept_stack		*req_stack;
+diff --git a/Documentation/dependency/dept_api.txt b/Documentation/dependency/dept_api.txt
+new file mode 100644
+index 000000000000..8e0d5a118a46
+--- /dev/null
++++ b/Documentation/dependency/dept_api.txt
+@@ -0,0 +1,117 @@
++DEPT(DEPendency Tracker) APIs
++=============================
 +
- 	/*
- 	 * whether this map should be going to be checked or not
- 	 */
-@@ -486,7 +491,15 @@ struct dept_task {
-  * for subsystems that requires compact use of memory e.g. struct page
-  */
- struct dept_ext_wgen{
-+	/*
-+	 * wait timestamp associated to this map
-+	 */
- 	unsigned int wgen;
++Started by Byungchul Park <max.byungchul.park@sk.com>
 +
-+	/*
-+	 * requestor for the event context to run
-+	 */
-+	struct dept_stack		*req_stack;
- };
- 
- #define DEPT_TASK_INITIALIZER(t)				\
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index fb33c3758c25..abf1cdab0615 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -129,6 +129,7 @@ static int dept_per_cpu_ready;
- #define DEPT_INFO(s...)		pr_warn("DEPT_INFO: " s)
- 
- static arch_spinlock_t dept_spin = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-+static arch_spinlock_t dept_req_spin = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
- static arch_spinlock_t dept_pool_spin = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
- 
- /*
-@@ -1669,7 +1670,8 @@ static void add_wait(struct dept_class *c, unsigned long ip,
- 
- static bool add_ecxt(struct dept_map *m, struct dept_class *c,
- 		     unsigned long ip, const char *c_fn,
--		     const char *e_fn, int sub_l)
-+		     const char *e_fn, int sub_l,
-+		     struct dept_stack *req_stack)
- {
- 	struct dept_task *dt = dept_task();
- 	struct dept_ecxt_held *eh;
-@@ -1700,10 +1702,16 @@ static bool add_ecxt(struct dept_map *m, struct dept_class *c,
- 
- 	e->class = get_class(c);
- 	e->ecxt_ip = ip;
--	e->ecxt_stack = ip && rich_stack ? get_current_stack() : NULL;
- 	e->event_fn = e_fn;
- 	e->ecxt_fn = c_fn;
- 
-+	if (req_stack)
-+		e->ecxt_stack = get_stack(req_stack);
-+	else if (ip && rich_stack)
-+		e->ecxt_stack = get_current_stack();
-+	else
-+		e->ecxt_stack = NULL;
++SDT(Single-event Dependency Tracker) APIs
++-----------------------------------------
++Use these APIs to annotate on either wait or event.  These have been
++already applied into the existing synchronization primitives e.g.
++waitqueue, swait, wait_for_completion(), dma fence and so on.  The basic
++APIs of SDT are:
 +
- 	eh = dt->ecxt_held + (dt->ecxt_held_pos++);
- 	eh->ecxt = get_ecxt(e);
- 	eh->map = m;
-@@ -2147,6 +2155,7 @@ void dept_map_init(struct dept_map *m, struct dept_key *k, int sub_u,
- 	m->sub_u = sub_u;
- 	m->name = n;
- 	m->wgen = 0U;
-+	m->req_stack = NULL;
- 	m->nocheck = !valid_key(k);
- 
- 	dept_exit_recursive(flags);
-@@ -2181,6 +2190,7 @@ void dept_map_reinit(struct dept_map *m, struct dept_key *k, int sub_u,
- 		m->name = n;
- 
- 	m->wgen = 0U;
-+	m->req_stack = NULL;
- 
- 	dept_exit_recursive(flags);
- }
-@@ -2189,6 +2199,7 @@ EXPORT_SYMBOL_GPL(dept_map_reinit);
- void dept_ext_wgen_init(struct dept_ext_wgen *ewg)
- {
- 	ewg->wgen = 0U;
-+	ewg->req_stack = NULL;
- }
- 
- void dept_map_copy(struct dept_map *to, struct dept_map *from)
-@@ -2376,7 +2387,8 @@ static void __dept_wait(struct dept_map *m, unsigned long w_f,
-  */
- static void __dept_event(struct dept_map *m, unsigned long e_f,
- 			 unsigned long ip, const char *e_fn,
--			 bool sched_map, unsigned int wg)
-+			 bool sched_map, unsigned int wg,
-+			 struct dept_stack *req_stack)
- {
- 	struct dept_class *c;
- 	struct dept_key *k;
-@@ -2397,7 +2409,7 @@ static void __dept_event(struct dept_map *m, unsigned long e_f,
- 	k = m->keys ?: &m->map_key;
- 	c = check_new_class(&m->map_key, k, sub_id(m, e), m->name, sched_map);
- 
--	if (c && add_ecxt(m, c, 0UL, NULL, e_fn, 0)) {
-+	if (c && add_ecxt(m, c, 0UL, "(event requestor)", e_fn, 0, req_stack)) {
- 		do_event(m, c, wg, ip);
- 		pop_ecxt(m, c);
- 	}
-@@ -2506,6 +2518,8 @@ EXPORT_SYMBOL_GPL(dept_stage_wait);
- 
- static void __dept_clean_stage(struct dept_task *dt)
- {
-+	if (dt->stage_m.req_stack)
-+		put_stack(dt->stage_m.req_stack);
- 	memset(&dt->stage_m, 0x0, sizeof(struct dept_map));
- 	dt->stage_sched_map = false;
- 	dt->stage_w_fn = NULL;
-@@ -2571,6 +2585,7 @@ void dept_request_event_wait_commit(void)
- 	 */
- 	wg = atomic_inc_return(&wgen) ?: atomic_inc_return(&wgen);
- 	WRITE_ONCE(dt->stage_m.wgen, wg);
-+	dt->stage_m.req_stack = get_current_stack();
- 
- 	__dept_wait(&dt->stage_m, 1UL, ip, w_fn, 0, true, sched_map, timeout);
- exit:
-@@ -2602,6 +2617,8 @@ void dept_stage_event(struct task_struct *requestor, unsigned long ip)
- 	 */
- 	m = dt_req->stage_m;
- 	sched_map = dt_req->stage_sched_map;
-+	if (m.req_stack)
-+		get_stack(m.req_stack);
- 	__dept_clean_stage(dt_req);
- 
- 	/*
-@@ -2611,8 +2628,12 @@ void dept_stage_event(struct task_struct *requestor, unsigned long ip)
- 	if (!m.keys)
- 		goto exit;
- 
--	__dept_event(&m, 1UL, ip, "try_to_wake_up", sched_map, m.wgen);
-+	__dept_event(&m, 1UL, ip, "try_to_wake_up", sched_map, m.wgen,
-+		     m.req_stack);
- exit:
-+	if (m.req_stack)
-+		put_stack(m.req_stack);
++   /*
++    * After defining 'struct dept_map map', initialize the instance.
++    */
++   sdt_map_init(map);
 +
- 	dept_exit(flags);
- }
- 
-@@ -2692,7 +2713,7 @@ void dept_map_ecxt_modify(struct dept_map *m, unsigned long e_f,
- 	k = m->keys ?: &m->map_key;
- 	c = check_new_class(&m->map_key, k, sub_id(m, new_e), m->name, false);
- 
--	if (c && add_ecxt(m, c, new_ip, new_c_fn, new_e_fn, new_sub_l))
-+	if (c && add_ecxt(m, c, new_ip, new_c_fn, new_e_fn, new_sub_l, NULL))
- 		goto exit;
- 
- 	/*
-@@ -2744,7 +2765,7 @@ void dept_ecxt_enter(struct dept_map *m, unsigned long e_f, unsigned long ip,
- 	k = m->keys ?: &m->map_key;
- 	c = check_new_class(&m->map_key, k, sub_id(m, e), m->name, false);
- 
--	if (c && add_ecxt(m, c, ip, c_fn, e_fn, sub_l))
-+	if (c && add_ecxt(m, c, ip, c_fn, e_fn, sub_l, NULL))
- 		goto exit;
- missing_ecxt:
- 	dt->missing_ecxt++;
-@@ -2792,9 +2813,11 @@ EXPORT_SYMBOL_GPL(dept_ecxt_holding);
- 
- void dept_request_event(struct dept_map *m, struct dept_ext_wgen *ewg)
- {
-+	struct dept_task *dt = dept_task();
- 	unsigned long flags;
- 	unsigned int wg;
- 	unsigned int *wg_p;
-+	struct dept_stack **req_stack_p;
- 
- 	if (unlikely(!dept_working()))
- 		return;
-@@ -2802,12 +2825,18 @@ void dept_request_event(struct dept_map *m, struct dept_ext_wgen *ewg)
- 	if (m->nocheck)
- 		return;
- 
--	/*
--	 * Allow recursive entrance.
--	 */
--	flags = dept_enter_recursive();
-+	if (dt->recursive)
-+		return;
- 
--	wg_p = ewg ? &ewg->wgen : &m->wgen;
-+	flags = dept_enter();
++   /*
++    * Place just before the interesting wait.
++    */
++   sdt_wait(map);
 +
-+	if (ewg) {
-+		wg_p = &ewg->wgen;
-+		req_stack_p = &ewg->req_stack;
-+	} else {
-+		wg_p = &m->wgen;
-+		req_stack_p = &m->req_stack;
-+	}
- 
- 	/*
- 	 * Avoid zero wgen.
-@@ -2815,7 +2844,13 @@ void dept_request_event(struct dept_map *m, struct dept_ext_wgen *ewg)
- 	wg = atomic_inc_return(&wgen) ?: atomic_inc_return(&wgen);
- 	WRITE_ONCE(*wg_p, wg);
- 
--	dept_exit_recursive(flags);
-+	arch_spin_lock(&dept_req_spin);
-+	if (*req_stack_p)
-+		put_stack(*req_stack_p);
-+	*req_stack_p = get_current_stack();
-+	arch_spin_unlock(&dept_req_spin);
++   /*
++    * Place just before the interesting event.
++    */
++   sdt_event(map);
 +
-+	dept_exit(flags);
- }
- EXPORT_SYMBOL_GPL(dept_request_event);
- 
-@@ -2826,6 +2861,8 @@ void dept_event(struct dept_map *m, unsigned long e_f,
- 	struct dept_task *dt = dept_task();
- 	unsigned long flags;
- 	unsigned int *wg_p;
-+	struct dept_stack **req_stack_p;
-+	struct dept_stack *req_stack;
- 
- 	if (unlikely(!dept_working()))
- 		return;
-@@ -2833,7 +2870,18 @@ void dept_event(struct dept_map *m, unsigned long e_f,
- 	if (m->nocheck)
- 		return;
- 
--	wg_p = ewg ? &ewg->wgen : &m->wgen;
-+	if (ewg) {
-+		wg_p = &ewg->wgen;
-+		req_stack_p = &ewg->req_stack;
-+	} else {
-+		wg_p = &m->wgen;
-+		req_stack_p = &m->req_stack;
-+	}
++The advanced APIs of SDT are:
 +
-+	arch_spin_lock(&dept_req_spin);
-+	req_stack = *req_stack_p;
-+	*req_stack_p = NULL;
-+	arch_spin_unlock(&dept_req_spin);
- 
- 	if (dt->recursive) {
- 		/*
-@@ -2842,17 +2890,20 @@ void dept_event(struct dept_map *m, unsigned long e_f,
- 		 * handling the event. Disable it until the next.
- 		 */
- 		WRITE_ONCE(*wg_p, 0U);
-+		if (req_stack)
-+			put_stack(req_stack);
- 		return;
- 	}
- 
- 	flags = dept_enter();
--
--	__dept_event(m, e_f, ip, e_fn, false, READ_ONCE(*wg_p));
-+	__dept_event(m, e_f, ip, e_fn, false, READ_ONCE(*wg_p), req_stack);
- 
- 	/*
- 	 * Keep the map diabled until the next sleep.
- 	 */
- 	WRITE_ONCE(*wg_p, 0U);
-+	if (req_stack)
-+		put_stack(req_stack);
- 
- 	dept_exit(flags);
- }
++   /*
++    * After defining 'struct dept_map map', initialize the instance
++    * using an external key.
++    */
++   sdt_map_init_key(map, key);
++
++   /*
++    * Place just before the interesting timeout wait.
++    */
++   sdt_wait_timeout(map, time);
++
++   /*
++    * Use sdt_might_sleep_start() and sdt_might_sleep_end() in pair.
++    * Place at the start of the interesting section that might enter
++    * schedule() or its family that needs to be woken up by
++    * try_to_wake_up().
++    */
++   sdt_might_sleep_start(map);
++
++   /*
++    * Use sdt_might_sleep_start_timeout() and sdt_might_sleep_end() in
++    * pair.  Place at the start of the interesting section that might
++    * enter schedule_timeout() or its family that needs to be woken up
++    * by try_to_wake_up().
++    */
++   sdt_might_sleep_start_timeout(map, time);
++
++   /*
++    * Use sdt_might_sleep_start() and sdt_might_sleep_end() in pair.
++    * Place at the end of the interesting section that might enter
++    * schedule(), schedule_timeout() or its family that needs to be
++    * woken up by try_to_wake_up().
++    */
++   sdt_might_sleep_end();
++
++   /*
++    * Use sdt_ecxt_enter() and sdt_ecxt_exit() in pair.  Place at the
++    * start of the interesting section where the interesting event might
++    * be triggered.
++    */
++   sdt_ecxt_enter(map);
++
++   /*
++    * Use sdt_ecxt_enter() and sdt_ecxt_exit() in pair.  Place at the
++    * end of the interesting section where the interesting event might
++    * be triggered.
++    */
++   sdt_ecxt_exit(map);
++
++
++LDT(Lock Dependency Tracker) APIs
++---------------------------------
++Do not use these APIs directly.  These are the wrappers for typical
++locks, that have been already applied into major locks internally e.g.
++spin lock, mutex, rwlock and so on.  The APIs of LDT are:
++
++   ldt_init(map, key, sub, name);
++   ldt_lock(map, sub_local, try, nest, ip);
++   ldt_rlock(map, sub_local, try, nest, ip, queued);
++   ldt_wlock(map, sub_local, try, nest, ip);
++   ldt_unlock(map, ip);
++   ldt_downgrade(map, ip);
++   ldt_set_class(map, name, key, sub_local, ip);
++
++
++Raw APIs
++--------
++Do not use these APIs directly.  The raw APIs of dept are:
++
++   dept_free_range(start, size);
++   dept_map_init(map, key, sub, name);
++   dept_map_reinit(map, key, sub, name);
++   dept_ext_wgen_init(ext_wgen);
++   dept_map_copy(map_to, map_from);
++   dept_wait(map, wait_flags, ip, wait_func, sub_local, time);
++   dept_stage_wait(map, key, ip, wait_func, time);
++   dept_request_event_wait_commit();
++   dept_clean_stage();
++   dept_stage_event(task, ip);
++   dept_ecxt_enter(map, evt_flags, ip, ecxt_func, evt_func, sub_local);
++   dept_ecxt_holding(map, evt_flags);
++   dept_request_event(map, ext_wgen);
++   dept_event(map, evt_flags, ip, evt_func, ext_wgen);
++   dept_ecxt_exit(map, evt_flags, ip);
++   dept_ecxt_enter_nokeep(map);
++   dept_key_init(key);
++   dept_key_destroy(key);
++   dept_map_ecxt_modify(map, cur_evt_flags, key, evt_flags, ip, ecxt_func, evt_func, sub_local);
 -- 
 2.17.1
 
