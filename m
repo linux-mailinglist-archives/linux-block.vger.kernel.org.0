@@ -1,32 +1,32 @@
-Return-Path: <linux-block+bounces-7107-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7118-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B6A18BFA18
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 12:03:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EFA18BFA36
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 12:04:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDD1E1C215B4
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 10:03:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 802401C2171F
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 10:04:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3576A7F495;
-	Wed,  8 May 2024 10:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDEF0824B0;
+	Wed,  8 May 2024 10:03:05 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597707E57C;
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D8817E794;
 	Wed,  8 May 2024 10:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162582; cv=none; b=cJFHO0nJfDLJAgSzIWFbPGBmfLGwAMmn00+Tyq09YVCDOAhgbM1hvtLab98EJQ1+lMZV8dS2KgvbcydUB88SPNCYYEE32DRuIeYw8KPmopAIT8LJIs0Q59/jlhYsPdSu/VJyA2cToXcwp9vVqUrAIFZFklQ7SCLJOCycfoEIiPE=
+	t=1715162584; cv=none; b=ryyxGPiCIr3mkH72mIbuqI5UBHprYgEVTwV0jSgOdl6X7bWWQ5IHXjTx8cDpAqNfyxZh7LVxIJRVzQZeOc1O/atS7QPFUQLxM0ILalmsGaS0u3vcV+Xhx4TrkKsugb8IvAEdbDoAkhmHBJK7B0ZJ3QorsUdWw/bwo5HusvNBwuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162582; c=relaxed/simple;
-	bh=9o9SI0ONdb1WbiIWXrCSb5nX53qir4UGX5Gt0IQgpYM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=O09DQzIyBfQnzDHXmskR6qPmZfE/oGKzirAsbzBOTj68voDNmB6NGTtSeim6JaKPkj6gAS9btekjvPGF1KMeBUMPpEqCSL4ejyYPD5JEcr2g8uopv6K74fNOvwTeX9Lu2KHTp2gvBhG75SEhhvNb8/YF41N2vCjTFzQn2/1rjE4=
+	s=arc-20240116; t=1715162584; c=relaxed/simple;
+	bh=cVjts9SZXZ4NmM7fBk0URrytFXU4oROO3YR0wv1o+Nc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Scj2Eq9yFOTMu+zM0x/q1NiQybbPmtcAsrC99J3WEZFDJhJQVEEp/7lB7ghk6QKnbRKg071cElc4/ri96rsYo3PEQlMPUezqcLDUV0OS8Clk7vwXJzjNNPfzbPTvfkL8nA39B2PW3RwgUaZoIp6+/749Ef3qobFMULbLeW7kzOE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-38-663b4a3a04a0
+X-AuditID: a67dfc5b-d85ff70000001748-a9-663b4a3b9061
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -86,43 +86,43 @@ Cc: kernel_team@skhynix.com,
 	longman@redhat.com,
 	hdanton@sina.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v14 18/28] dept: Apply timeout consideration to swait
-Date: Wed,  8 May 2024 18:47:15 +0900
-Message-Id: <20240508094726.35754-19-byungchul@sk.com>
+Subject: [PATCH v14 25/28] cpu/hotplug: Use a weaker annotation in AP thread
+Date: Wed,  8 May 2024 18:47:22 +0900
+Message-Id: <20240508094726.35754-26-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240508094726.35754-1-byungchul@sk.com>
 References: <20240508094726.35754-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0hTcRTH+93H715Hi8sMd5uFNYhKKS2sTg8iguoSFEVBLypHXnM0LeY7
-	qDTnKkszQ1emMR8tUUvdIiwfLcU32apRFmplZklOYbXV0rSt6J/Dh/M9389fhyVlFlrBqmPj
-	RW2sSqPEEkrimFm8dN22dVFhmbU0XL0cBq7vFygorK7CYLtXiaDqfhoBI61b4bV7FMHE02ck
-	GPJsCIo/9JNwv20AQWP5OQwvh2aB3TWOoTPvEob00moMz79OEtCXn0tApXk7dOeUEGD1fKbA
-	MILhpiGd8I4vBHhMFQyYUhfCYHkBA5MflkPnwCsaGt+GwI1bfRgaGjspaKsbJODlo0IMA1XT
-	NHS3dVBgu5pFw92xEgxf3SYSTK5xBl5YjQTU6Lwi/bcpGtqzrAToy2oJsL+pR9B04T0B5qpX
-	GFpcowRYzHkk/LrTimAw28FAxmUPAzfTshFcysinQNe3EiZ+FuKNa4SW0XFS0FmShEa3kRK6
-	SnjhYUE/I+ia3jKC0ZwgWMqDhdKGEUIodrpowVxxEQtmZy4jZDrshDDW08MIHdcnKGHIbiB2
-	Kg5I1keKGnWiqA3dECGJrh5KQye/4WRDaxmdirroTMSyPBfOX7txNhP5/cWxB0+wjzG3iO/t
-	9ZA+ns3N5y1Zw7SPSW5Uwpf1bPGxP7eZ1/82Mz6muIV83zk98iml3CrecS3inzKIr6yx/tX4
-	eddvPo8hH8u4lXx9eoG3KvHe/GT5K7VW/K8wh39S3kvlIKkRzahAMnVsYoxKrQlfFp0Sq05e
-	dvREjBl5X8l0evJgHXLadjcjjkXKmVKrfG2UjFYlxqXENCOeJZWzpa3nV0fJpJGqlFOi9sQR
-	bYJGjGtGgSyllEtXuJMiZdwxVbx4XBRPitr/KcH6KVLRXkd9x9S8oIC2jw1Yv2R6j/8h/x+F
-	zhXy/sXZ85uMcpOyPX5HSX5gfbdNHxo0d1I90qXYUBTY3rL/h9O9JOhU6D6m1L67Z+B8Z8Vh
-	9sz06Zze5E8ft3Wr3w3f3sVq1mp+p4QpXeGVAUUBLlnHguE6T35Lul2hk2fUhuUGhmyaeqyk
-	4qJVy4NJbZzqD+MpKRhGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0hTcRjG+5/L/xxHi8MUOtWHaiCB3RRcvWS3L9VBSkqiO+SqY47mkq0s
-	I0GbmrmMVHRqs7y1RC3rWGHqbDm2UslWmllMM5FM8tJtpmkXV/Tl5cfzPPw+vSypyKPnsxrd
-	CVGvU2uVWEbJIsKMy9eEh0UHf24LgqyLweD9lk6BpaYag/tWFYLqu8kEDDm3wKvxYQRTT5+R
-	YM51Iyh510PCXVcvAlvFOQwdA3Og0zuGoSXXhMFYVoPh+cdpAjx52QRUSdug7XIpAfbJQQrM
-	QxiumI3EzPlAwKS1kgFrUiD0VxQyMP0uBFp6u2hwFLXQYHuzFAquejA02loocNX1E9BRb8HQ
-	W/2bhjbXEwrcWZk03BwtxfBx3EqC1TvGwAt7MQG3U2ZsaV9/0fA4005AWvkdAjpfNyBoSu8j
-	QKruwuDwDhNQK+WS8OOGE0H/pREGUi9OMnAl+RICU2oeBSkeFUxNWPDGNYJjeIwUUmpPCbbx
-	YkpoLeWFB4U9jJDS9IYRiqWTQm1FkFDWOEQIJV+8tCBVXsCC9CWbETJGOglhtL2dEZ7kT1HC
-	QKeZ2L5gn2ztEVGriRf1K9dHyWJqBpJR3Fd82uwsp5NQK52B/FieC+VH7z/CPsbcEr67e5L0
-	cQC3iK/NfP93Q3LDMr68fbOP/blNfNpPifExxQXynnNpKAOxrJxbxY/kRP1TLuSrbtv/avxm
-	4teDo8jHCk7FNxgLmctIVoxmVaIAjS4+Vq3RqlYYjsUk6DSnVxw+HiuhmW+xJk5n1aFvHVua
-	Ecci5Wy5G4dFK2h1vCEhthnxLKkMkDvPr45WyI+oE86I+uMH9Se1oqEZLWAp5Vx5+G4xSsEd
-	VZ8Qj4linKj/3xKs3/wkZCpIDPsRGnjPPhBRsa13YiXvGryefqNn3lmrbjq7qwjfi4vsa6xL
-	3aXdsde8zHHIKFetY6XDiSGefJO79KV8/8YRJyN2601NZVmK+ri94d8jI8/WG3YfKLu2s+Ch
-	a09AnmUhMvjbcuasXvZ2bkFrvkq2uGhig8nhb9na9/RTfbCSMsSoQ4JIvUH9ByryI5cpAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbVBMYRTHPc+9e+/dtWvurEy3fMBizHjXiEMGX+RhNON1zPCBHd20VMyW
+	khmjN7VKiKklTWplrUrYXeOtzVpKiYRFmoQySG2Z2J2ykW3x5cxv/ud/fp8ORymvS4I5TVyC
+	qI1Tx6gYGS1zyUtnha0Oi5r70rQY8o7OBfcPHQ1FVyoZaK6qQFBpTcXQVbsSXnt6EHifPKVA
+	n9+MoPTDWwqsde0IbKY0Bl58HANOdx8DDfk5DKSfv8LAs+4hDG0FJzFUmCOg8YQBg33wMw36
+	LgbO6tOxb3zBMGgsZ8GYMhU6TIUsDH2YBw3tryRga50BZ4rbGKi2NdBQd7MDw4vbRQy0Vw5L
+	oLGunobmvFwJXO41MNDtMVJgdPex8NxeguFqhk+U+f23BB7m2jFkll3D4HxzB0GN7j0Gc+Ur
+	Bu67ezBYzPkU/LxYi6DjmIuFw0cHWTibegxBzuECGjLaQsE7UMQsX0Tu9/RRJMOSRGyeEpo8
+	MgjkVuFblmTUtLKkxLyPWEzTyfnqLkxK+90SYi4/whBz/0mWZLucmPQ2NbGk/rSXJh+derw2
+	eItsSaQYo0kUtXOWbpdF92e1or3vpPtrsr1MChpms5GUE/j5Qn3LKeo/N146hUaY4acJLS2D
+	/jyAnyhYcj9JRpjie2RCWVP4CI/l1wjv2nP8HpqfKngv3fV3FPwCoawz759/glBx1e73SH35
+	m8+9fr+SDxXupBf6OjJfZ4ATfgwU4L8HQcI9Uwt9AilK0KhypNTEJcaqNTHzZ0cnx2n2z96x
+	J9aMfM9kPDi09Sbqb97gQDyHVHKFPXBxlFKiToxPjnUggaNUAYrarIVRSkWkOvmAqN2zTbsv
+	Rox3oPEcrQpUhHiSIpX8TnWCuFsU94ra/1vMSYNT0KbOtI0/6YigZSG24tDGzOGIx8/bdiyX
+	V+mWrV8S2ek1GF0PP1kLNsPT0bppRn3qzO5zo29/zc3TVWfJJ4WseuzkHNvXSNOG17mORyGT
+	Y8r1RRsm6wOO5BgsF60bEw5FVNmsqlhj+AUi/3ZuV4D9WfiKcb/GesKSxqzfeSMwiMx8oKLj
+	o9XzplPaePUf16XCT0gDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzHfX+P183Zbyf8ls3DbQ0ZahyfqWGz6TvP/irm6dIv3XSn3ZFi
+	tnKXhx5MqCPVrgcndZE7DymllYs0OYpIRYmkuibu5tyRavzz2Wvvz+f9+usjIqUG2k+kVB8S
+	NGpFjIwRU+LNwbpFweuDowILC/whIy0QnD9OU5Bz08yA/UYpAvPtJAL6baHQ5hpE4Hn2nARD
+	ph1BfncnCbcbuhBUF59goKV3CrQ6hxlozExlQFd4k4EXA14COrLOE1Bq2QRN5woIqHX3UWDo
+	Z+CKQUeMjS8EuE0lLJgS/aGnOJsFb3cQNHa9pqE+t5GG6vaFcDmvg4EH1Y0UNFT0ENBSmcNA
+	l3mUhqaGJxTYM9JpKHMUMDDgMpFgcg6z8LLWSEC5fsx28vsfGh6n1xJwsugWAa1vqxDUnP5A
+	gMX8moF65yABVksmCb+u2RD0nB1iITnNzcKVpLMIUpOzKNB3yMHzM4dZsxLXDw6TWG89gqtd
+	Rgo/LeDx/exOFutr2llstBzG1uIAXPign8D5I04aW0rOMNgycp7FKUOtBHY0N7P4ySUPhXtb
+	DcTWmTvEIZFCjDJO0CxZtVccPXKqHcW+94mvSfEwiWiUTUE+Ip5bxjddv4DGmeHm8W/euMlx
+	9uXm8Nb0z/Q4k9ygmC9qXjfOU7mN/Puu1IkuxfnznusPJ24k3HK+6GPGP+dsvrS8dsLjM5a/
+	7XNM+KWcnK/SZbPnkNiIJpUgX6U6TqVQxsgXaw9EJ6iV8Yv3HVRZ0Ni7mI57MyrQj5bQOsSJ
+	kGyyxM4ER0lpRZw2QVWHeBEp85XYTq2IkkoiFQlHBc3BPZrDMYK2Ds0UUbIZkvVhwl4pt19x
+	SDggCLGC5v+WEPn4JaLNtPrODoelpMN/+86HLvfa+S+Kpya1lc+aMVT6bbXqq6NnabL1ovnu
+	usextmnJ21TxfRt0fZ2fbtizwjRTorfkelPyNzyafsxbl51XdiQifJJ0ztVl99ZWBNhGExdE
+	yObqYp2B8ULQu4FXvyvDQR4S1l/W5qKLIhSRlN6+y7NbjmWUNloRFEBqtIq/MqLSeSoDAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -130,28 +130,41 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 
-Now that CONFIG_DEPT_AGGRESSIVE_TIMEOUT_WAIT was introduced, apply the
-consideration to swait, assuming an input 'ret' in ___swait_event()
-macro is used as a timeout value.
+cb92173d1f0 ("locking/lockdep, cpu/hotplug: Annotate AP thread") was
+introduced to make lockdep_assert_cpus_held() work in AP thread.
+
+However, the annotation is too strong for that purpose. We don't have to
+use more than try lock annotation for that.
+
+rwsem_acquire() implies:
+
+   1. might be a waiter on contention of the lock.
+   2. enter to the critical section of the lock.
+
+All we need in here is to act 2, not 1. So trylock version of annotation
+is sufficient for that purpose. Now that dept partially relies on
+lockdep annotaions, dept interpets rwsem_acquire() as a potential wait
+and might report a deadlock by the wait. So replaced it with trylock
+version of annotation.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/swait.h | 2 +-
+ kernel/cpu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/swait.h b/include/linux/swait.h
-index 277ac74f61c3..233acdf55e9b 100644
---- a/include/linux/swait.h
-+++ b/include/linux/swait.h
-@@ -162,7 +162,7 @@ extern void finish_swait(struct swait_queue_head *q, struct swait_queue *wait);
- 	struct swait_queue __wait;					\
- 	long __ret = ret;						\
- 									\
--	sdt_might_sleep_start(NULL);					\
-+	sdt_might_sleep_start_timeout(NULL, __ret);			\
- 	INIT_LIST_HEAD(&__wait.task_list);				\
- 	for (;;) {							\
- 		long __int = prepare_to_swait_event(&wq, &__wait, state);\
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 63447eb85dab..da969f7269b5 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -534,7 +534,7 @@ int lockdep_is_cpus_held(void)
+ 
+ static void lockdep_acquire_cpus_lock(void)
+ {
+-	rwsem_acquire(&cpu_hotplug_lock.dep_map, 0, 0, _THIS_IP_);
++	rwsem_acquire(&cpu_hotplug_lock.dep_map, 0, 1, _THIS_IP_);
+ }
+ 
+ static void lockdep_release_cpus_lock(void)
 -- 
 2.17.1
 
