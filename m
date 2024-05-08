@@ -1,100 +1,113 @@
-Return-Path: <linux-block+bounces-7077-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7082-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508698BF555
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 06:52:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E47C8BF73D
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 09:41:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF1C22848C5
-	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 04:52:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFDE91F232DC
+	for <lists+linux-block@lfdr.de>; Wed,  8 May 2024 07:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2377710A1B;
-	Wed,  8 May 2024 04:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70D72C861;
+	Wed,  8 May 2024 07:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="xx0wHX5I"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jXEgbqkf"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F57D8F54
-	for <linux-block@vger.kernel.org>; Wed,  8 May 2024 04:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC762C856
+	for <linux-block@vger.kernel.org>; Wed,  8 May 2024 07:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715143950; cv=none; b=lTLMoNXk0KDtt9eIPmsDgwB9Ucb4VthYC99AwpDiNYaaiSJGyhsqTatEMPm03GgbqTQIr5u5Wx1B9HZ2WtjtCxrwqLn7exGgN5DSuqgolqZOmTIplOg+M6gTFDD/dusxDezpg0be9zwbGRxKEgxnIva+qqrCNC6PGgRDsQODOnA=
+	t=1715154094; cv=none; b=mI/VyC8OsfuZGyXP46xLgVDAMqn+Ayu0N2gJCJGcyljEmmJJkO5J8wBxRO4BK9V22WwoiXZuu9DGpug1FxEkcdz0sIrr2LEcpuigYGT31Cg4rMxk/OBYzfli/hsE2qbGCLIEOHFg9/2ssxP1eOHl3V9cUOb9+thtN+Y64WzEhJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715143950; c=relaxed/simple;
-	bh=qrLj293+Rk0RAFVzgKtFinVNCEr1oMUiml9wkOCVhYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mSj+rLEDpyJ7PSWlXYkthV2+oa5XPqAUxLPSvllVmfKVHk//Mep3dCRXBq0QVWsOTSZC0yI50ToRhc1iOxxPQ0yKpG1mv2YGuDC4df6zqyFNxlfE2pY+jwo3F76S4A6zLrAYspZ/wUyGa4YHR26Hv+o05Pj+ypoRKDHFIE2de3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=xx0wHX5I; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4VZ2nR5D79zlgVnf;
-	Wed,  8 May 2024 04:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1715143945; x=1717735946; bh=6fx7WPvaLByVsTiFrKVzdUit
-	9Wqw/vDq4Z6Ij7axRUc=; b=xx0wHX5IhCLfo4QuT4kHriJEWE9vao/68W+rwSuA
-	eKRh1d6MtKbxx59KCnNghiBCMtiLsA0YfyGqtu5zM7wekGaU9E2RV3d03Srzpw/N
-	KdCGVhbAdc+j6NSolCeGwLD5/f12ufr6rWsy0mc3DITe08B1TdvC3c7zHLfIesi/
-	GokkUS/Wo28QxCe03ZOsmYAsW2tSIQKLjKXpwRUY1gt9xneeBtY+f0LHIanuvbHZ
-	GQ8aKT1J6Sybqz4yQzB4tACtUF5ZgFx+vxaVfljFFmaFshU5sDARwPcaTaLkfJEo
-	6X6kmXJ5zCvHeKa/uuqNusun/+EuI5LlwNeYg7n4Sw91jA==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 2gfSmXuQi3st; Wed,  8 May 2024 04:52:25 +0000 (UTC)
-Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4VZ2nN3MXMzlgVnW;
-	Wed,  8 May 2024 04:52:24 +0000 (UTC)
-Message-ID: <b2de558e-5d2b-4e13-b43f-f0aabf99b29e@acm.org>
-Date: Tue, 7 May 2024 21:52:22 -0700
+	s=arc-20240116; t=1715154094; c=relaxed/simple;
+	bh=gbESP1QETSXIHhn8KYELBw6pMRCJ9N4ypoUb0Pxk4MQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUG8uKMboLbvk1TyUR+PM/4SYurc0LqovayQe8KapbsjFJ59m0JUiMdS2S2Qt0ZglXNy6qYSrwIGbgzx7+Vby5NH11ALlw+NFyAqrv310Z3uflSv4dPURYeWk+xcGCexcyXB1P/Wy0GGsib5u0RqmopAflC/avslf6hyZZQRlCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jXEgbqkf; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f457853950so410742b3a.0
+        for <linux-block@vger.kernel.org>; Wed, 08 May 2024 00:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715154092; x=1715758892; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E0r3IrBqTHQaJKbAMA6Mm9iZI63fDx9y82yERkqABZI=;
+        b=jXEgbqkfltTRwy8AQ7Sd8GC0jxl8g9vpCIuxCSgL/hWeNEKmSQxyfwi/GgmNzGWWBU
+         hddxQ8eolzUqemwOgD9To4sTqSp7EH4wbvClYh2bZzEdtN3QfYdyH5wpCiyfPfm7QJXi
+         6CZsXKovyLuTEJRNL5W08ZVbZWI+FVamsgLIM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715154092; x=1715758892;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E0r3IrBqTHQaJKbAMA6Mm9iZI63fDx9y82yERkqABZI=;
+        b=lMJorlo3jO6cvBUAGQ/QpL+EJMC//uD4UR43FSbFcrdbzZ6RPQMsu2FVxUBm2dKeE3
+         U/DsPTG6vW5/TAnX9ByEjVJPlYpZZ7Cw/qI1/CigXE0trCw5Lwuj+BxRSoo8wI1NpM+F
+         PUN6rhOcF+xe19YqC6BxUAzhnbAJzifdShk/zJGOpocaZ6ZnjUNSDi4TpFCpVcsR2O2z
+         UowqkU2FViRnrGmp7e+bLSz61ao3rw1NxH5Nx76zUoYD6NqUt42Fk6VpIfz+dSD4hjn8
+         XEvXvz6zUV75KyxaU7/kwF+Q7C0ZfZsBlIkeG3ndXyvzkkL4ytWNVMy9zd6BZDsEPelJ
+         GH4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWR503q4NYUiaqEncJd9K7jNXF75WmIrDD3RyR+JT3jUyMRQG2XJsrcQ2EEHs/MD+mShvEtPNpY9KnWbho+TEf8dRIS1g9bO+pkR+I=
+X-Gm-Message-State: AOJu0YxVDYevir3sDYshD8KywUB5Q0pzjJymuZqrUeixQ7Ks5ZeXIRe7
+	wGP3ElNJCM01+k1MIUGS08cfQY0uCrAF0AX6KfsESTuk2a0wgcBf0djyaXbZHnORhgmEqtHWcR4
+	=
+X-Google-Smtp-Source: AGHT+IGGJTY/PIGzQdtKKuV5fOUdLeYQsPqQYivASH6U4VOoA/T0QIDsMdiekFLUtNsr9TSBWXVJ8A==
+X-Received: by 2002:a17:902:d4c2:b0:1ea:657f:318f with SMTP id d9443c01a7336-1ee6235c6f3mr77503315ad.0.1715154092630;
+        Wed, 08 May 2024 00:41:32 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:ad4d:5f6c:6699:2da4])
+        by smtp.gmail.com with ESMTPSA id q9-20020a17090311c900b001e944fc9248sm11130369plh.194.2024.05.08.00.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 00:41:31 -0700 (PDT)
+Date: Wed, 8 May 2024 16:41:28 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCHv2 00/17] zram: convert to custom comp API and allow
+ algorithms configuration
+Message-ID: <20240508074128.GG8623@google.com>
+References: <20240506075834.302472-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIIDEvMl0gYmxvY2s6IENhbGwgLmxpbWl0?=
- =?UTF-8?Q?=5Fdepth=28=29_after_=2Ehctx_has_been_set?=
-To: =?UTF-8?B?54mb5b+X5Zu9IChaaGlndW8gTml1KQ==?= <Zhiguo.Niu@unisoc.com>,
- Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Damien Le Moal <dlemoal@kernel.org>, =?UTF-8?B?546L56eRIChLZSBXYW5nKQ==?=
- <Ke.Wang@unisoc.com>
-References: <20240403212354.523925-1-bvanassche@acm.org>
- <20240403212354.523925-2-bvanassche@acm.org> <20240405084640.GA12705@lst.de>
- <a712785d-9441-45c6-a57b-6a35d802028b@acm.org>
- <8fe8624ac50d49ef9a8aea9de92e93af@BJMBX02.spreadtrum.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <8fe8624ac50d49ef9a8aea9de92e93af@BJMBX02.spreadtrum.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506075834.302472-1-senozhatsky@chromium.org>
 
-On 5/7/24 19:28, =E7=89=9B=E5=BF=97=E5=9B=BD (Zhiguo Niu) wrote:
-> Excuse me, do you have any comments about this patch set from Bart
-> Van Assche, We meet this  "warning issue" about async_depth, more
-> detail info is in:=20
-> https://lore.kernel.org/all/CAHJ8P3KEOC_DXQmZK3u7PHgZFmWpMVzPa6pgkOgpyo=
-H7wgT5nw@mail.gmail.com/
- > please help consider it and it can solve the above warning issue.
+On (24/05/06 16:58), Sergey Senozhatsky wrote:
+> 	This patch set moves zram from crypto API to a custom compression
+> API which allows us to tune and configure compression algorithms,
+> something that crypto API, unfortunately, doesn't support. Basically,
+> this seroes brings back the bits of comp "backend" code that we had
+> many years ago. This means that if we want zram to support new
+> compression algorithms we need to implement corresponding backends.
+> 
+>         Currently, zram supports a pretty decent number of comp backends:
+> lzo, lzorle, lz4, lz4hc, 842, deflate, zstd
+> 
+>         At this point we handle 2 parameters: a compression level and
+> a pre-trained compression dictionary. Which seems like a good enough
+> start. The list will be extended in the future.
+> 
+> Examples:
+> 
+> - changes default compression level
+>         echo "algo=zstd level=11" > /sys/block/zram0/comp_algorithm
+> 
+> - passes path to a pre-trained dictionary
+>         echo "algo=zstd dict=/etc/dictionary" > /sys/block/zram0/comp_algorithm
 
-Since Christoph posted a comment I think it's up to me to address his
-comment. I plan to repost this patch series next week. I'm currently OoO.
-
-Thanks,
-
-Bart.
+I'll send v3 shortly, which adds pre-trained dictionary support to
+lz4 and lz4hc compression backends. Apparently lz4/lz4hc can use
+dictionaries pre-trained with zstd --init, just like zstd.
 
