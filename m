@@ -1,99 +1,100 @@
-Return-Path: <linux-block+bounces-7167-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7172-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 607F48C0FA4
-	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 14:31:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CBE88C0FE6
+	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 14:47:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C68D628265A
-	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 12:31:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E4AA1C22479
+	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 12:47:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98023611A;
-	Thu,  9 May 2024 12:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ENoWDIlM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5460613B29F;
+	Thu,  9 May 2024 12:47:29 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85281DA4D;
-	Thu,  9 May 2024 12:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07216146D7B;
+	Thu,  9 May 2024 12:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715257885; cv=none; b=m18pxgywvVySW5w59gHLsnihwZIVwNRPy1nM+rPK1YmDq5yTlNt4ScSfs3Ft7UpJKxzb9+PsoMxUX4vmuFRSyvI/SDs/ir6+fYzbjihrQAG5H+5lIJHVYh4y8+uM6bCBuUfUU/OErFzptUnD43ypLeRlZvfpviE8H1wTPeT9vAM=
+	t=1715258849; cv=none; b=tchuUoTZ2ebTpLTBR3BxGQMe+OI1e5aMGVwITM0GUBvXcA+Z8bz7oypZjzz5LBVhC8IghD4ixgPaOPpv53UyIp/WdyaTDNvLlJAvTus+j1hmm11ml37uTKWqB21EcuNT73sOM8KPZg+ZKxLJOYgO1jGp1yo4d7zzYBgUHo0jWSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715257885; c=relaxed/simple;
-	bh=TrIT4sozvI5rvBSMIRgj1iOqe27OC70E6GfMShUnt7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUb4f7NmSGtH4MUmrNIpkNVTR0AwDzj8bfikMbn35aBjCi1UP0bKJM0x6qxrkA2VPJsESME3mzxDr72qqzaHJW64QEUKvj0as67dJndpbcdywki4SeGmyJSVdcsRMJW8aZBo8lF4eE9k6InsYutmGQrvFElcwlp5f82uHiXdIWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ENoWDIlM; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VZrwL2LXfz9sr9;
-	Thu,  9 May 2024 14:31:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1715257874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=syRYsn5YkWqtDoVOn9NFuMpVM6WQHaccjb1P8o4QWJk=;
-	b=ENoWDIlMdBwQF+JZTxrddQuXCrXDJ+v2SKC5XavGOjx+KmlSGRIwmfCuaoeWSfFnH8+wHA
-	StaYVY4Kr7IGwafjdTi4Qkgqj37BX4BeZ3HOoI++h/IiaTr1oWCJjEU2QBjcMpaVzUYZfb
-	UAVH5b+3A0WyHilnOL9AM109fpZ+FqCVqtqfuyHVBAoocTrTgdz1mGISKjvxHYGV7Lrorf
-	d0C6EFvJI+FOS+M8rmeinVfSc9mhtp1qXE1Ubol1xItY2EZcip0kIwoErd61IGMOVVmOJT
-	zgKDepUg03xCT9crOatZUxzBLG/fS2p9Kef8nGb150xtT6w4l01r6fm8UPXVgA==
-Date: Thu, 9 May 2024 12:31:07 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: hch@lst.de, willy@infradead.org, mcgrof@kernel.org,
-	akpm@linux-foundation.org, brauner@kernel.org,
-	chandan.babu@oracle.com, david@fromorbit.com, djwong@kernel.org,
-	gost.dev@samsung.com, hare@suse.de, john.g.garry@oracle.com,
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org, p.raghav@samsung.com,
-	ritesh.list@gmail.com, ziy@nvidia.com
-Subject: Re: [RFC] iomap: use huge zero folio in iomap_dio_zero
-Message-ID: <20240509123107.hhi3lzjcn5svejvk@quentin>
-References: <20240503095353.3798063-8-mcgrof@kernel.org>
- <20240507145811.52987-1-kernel@pankajraghav.com>
- <ZjpSx7SBvzQI4oRV@infradead.org>
- <20240508113949.pwyeavrc2rrwsxw2@quentin>
- <Zjtlep7rySFJFcik@infradead.org>
+	s=arc-20240116; t=1715258849; c=relaxed/simple;
+	bh=94OTiQNVw96KBqdSWjcw8KSMyl7GYa6XYujHM5DDG3U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iaRG9cSCCYxJSNzfO19DuZwNPYjui8Hts7cVTNWWUkiHbMT+lV3Yem5qXx7NN0d2+V6ptTcYipRviJeT1p1eJp95o9YlqQUWxUbFiaaTy/Z45hLE+6sp1D6hp6Ymw7V+wZZ7RRGEvkXf9N9pToQPe4xvLLTIPMUvSaqtvZDUa8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VZsGq26byz4f3knp;
+	Thu,  9 May 2024 20:47:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id A20071A0568;
+	Thu,  9 May 2024 20:47:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7ZxTxm7wHDMA--.34199S4;
+	Thu, 09 May 2024 20:47:23 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	ming.lei@redhat.com,
+	hch@infradead.org,
+	mpatocka@redhat.com,
+	snitzer@redhat.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 for-6.10/block 0/2] block: fix user-aware inaccurate util
+Date: Thu,  9 May 2024 20:37:15 +0800
+Message-Id: <20240509123717.3223892-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zjtlep7rySFJFcik@infradead.org>
-X-Rspamd-Queue-Id: 4VZrwL2LXfz9sr9
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g7ZxTxm7wHDMA--.34199S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYx7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l
+	IxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, May 08, 2024 at 04:43:54AM -0700, Christoph Hellwig wrote:
-> On Wed, May 08, 2024 at 11:39:49AM +0000, Pankaj Raghav (Samsung) wrote:
-> > At the moment, we can get a reference to the huge zero folio only through
-> > the mm interface. 
-> > 
-> > Even if change the lower level interface to return THP, it can still fail
-> > at the mount time and we will need the fallback right?
-> 
-> Well, that's why I suggest doing it at mount time.  Asking for it deep
-> down in the write code is certainly going to be a bit problematic.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Makes sense. But failing to mount because we can't get a huge zero folio
-seems wrong as we still can't guarantee it even at mount time.
+Changes in v2:
+ - just replace blk_mq_in_flight() with part_in_flight() for
+ diskstats_show() and part_stat_show() in patch 2;
 
-With the current infrastructure I don't see anyway of geting a huge zero
-folio that is guaranteed so that we don't need any fallback.
+Yu Kuai (2):
+  block: support to account io_ticks precisely
+  block: fix that util can be greater than 100%
 
-Let me know what you think.
+ block/blk-core.c  |  9 +++++----
+ block/blk-merge.c |  2 ++
+ block/blk-mq.c    |  4 ++++
+ block/blk.h       |  1 +
+ block/genhd.c     | 14 +++-----------
+ 5 files changed, 15 insertions(+), 15 deletions(-)
+
 -- 
-Pankaj Raghav
+2.39.2
+
 
