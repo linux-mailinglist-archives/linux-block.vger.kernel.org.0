@@ -1,123 +1,138 @@
-Return-Path: <linux-block+bounces-7233-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7235-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0E9C8C25FB
-	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 15:45:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBCE48C263D
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 16:02:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E1141C20891
-	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 13:45:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B9821F211D8
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 14:02:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DDD212C47D;
-	Fri, 10 May 2024 13:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4C64C7D;
+	Fri, 10 May 2024 14:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="HfJKkiBe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9WUhkr3"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A1312B176
-	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 13:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17AF127B69
+	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 14:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715348739; cv=none; b=k9bkmtREcMB3Q0+pe5jQea5AZ2dX33oFNGb+3Yey0vu6dRh+bf5fuDPRXBNhtGmkVOO9r/X5ZLeS7Salf03akSabVdoI2nbRe8fINIwE2AnS+qD/JuH/Q/kD4gHWGKHYlMv0he5dc2o7DRbG8qTa3dViQKfHMvN/1yVhiu9pw8I=
+	t=1715349745; cv=none; b=PZmEFwvNNWnR4Ov3qG1/Ki5lYWvneC8towGRAvCDfIfqIA21AbktqOxnE6+ymyYb95B1rMA/w1jxnVaos3IJ8R1sMNWV3mpE7DKzDPcVz2i+GIR0+xuUBEjnAynZYStVH/e5Qk4vqpEMNGSI+2Hm76k2OXRfSDVNMRe1RRv3VR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715348739; c=relaxed/simple;
-	bh=CPf52H3oFQLAqdeaDGBPN020rXRzE7tC02wGHs5u8vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GgZxwbGB3gqJlwxwNEiNkYom22PVXECGCeNT8xCERvEA36Q81vkutPOeRdgenL5mMEeMsxDkR+reCoD7p/ZSzl/thVRUUfbAies4B7/FIg0mtEIye16oj8wjJHnbSU2SgazVeI0NHBVcEQWaiCKyJcf41/X09f7JMzTfR2QFgJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=HfJKkiBe; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36c0d2b0fdeso1810845ab.1
-        for <linux-block@vger.kernel.org>; Fri, 10 May 2024 06:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715348735; x=1715953535; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SmsizxDlh8VGIxvKa46Kni5rgHbXmAGCqkr6DBGwWCA=;
-        b=HfJKkiBeDAOgfFg11fO4anOTHfDSzGgbec6SstOuKvzoMQ/AAPOC9Pbl/k5xEiRbHh
-         pOdDQ3mLXd+JHCww9zniJvPsD6KkJTx+o2HbJC7sZpF2jvQoo/conVCVndLxUcVl33TG
-         xCr1Lb0QJ8YOn2DBZk/WdP04VEmgjwx7a9ywzyggvEQ+x1+VfOtpTrLXPhY7Jdhw9sEF
-         cRI/5QcuAnu5VROAGDjYzyEq+x7BR9hXP1+QTrtKlDymcUfLSYgqPyckGMymYHW5wtjt
-         5q+ejrmyO8xhdhAYoeQM8VWvBWpnaAObPtweDIzJcxjaNmZRK3ur3F2svCgqHIRuPgAN
-         +LOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715348735; x=1715953535;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SmsizxDlh8VGIxvKa46Kni5rgHbXmAGCqkr6DBGwWCA=;
-        b=kzibYSoW6FDJ43mSxx6qUbpNd7X3oxLV3IeyqX1aRFPzdZt3s7XxxFoeX4ksq6D0dW
-         lzqwny9PYbnRsCTaJpRwREQ+4cyUgZlYCVV3XFQSGk72x8yrJ+1UbII67tv16zigguFr
-         WyjID4RjmiOivBCgt3sKYgHUICKzONQ8joTS+uc3QUmMSZtTSV3TV7TeaGjLmpzak+1l
-         SpJ3y5JKRWtaEWMsOwOe7ZYlOI+dAFE7Cs3f2ZJAPF7ggmP28LDUl/VnjB/ieeZEg+Rs
-         pUdSfZKjSTuZ1eownWZXTXaEhjdP9+7LcOBrA6NRjn4J6RYPRJ1VzG/d7V+OuwuueUVK
-         XRyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYMk9RHuC8/CAGHNK9H8oygpttQ39Oqek2YgXFLaRqp4p0yTC3gQEqYwsxSGHO7SVf8EC0mtHyjcZDMVOjaOtkmx7IqltMM16ztbo=
-X-Gm-Message-State: AOJu0Yy8Fi93sJfVNS62aonF6rErreKd3fHsXsBX2Z9HlkGlnTIiQ50Q
-	CvEttzgQoBraFIXHsgw3yGioB1Fj/2Xg4LoZ/B6yBjnwhYDrgOLdT7uvZJPJSUI=
-X-Google-Smtp-Source: AGHT+IG3qVDOspiQrCoZTdejYIWXEmeEyT0LSNue3i8UNQAJpOHdd6gPSJvkuIltbiGydLBUGu3InQ==
-X-Received: by 2002:a92:ddcd:0:b0:36c:d76:cf5c with SMTP id e9e14a558f8ab-36cc14cf8f7mr27922825ab.3.1715348734919;
-        Fri, 10 May 2024 06:45:34 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-36cb9e22041sm7913375ab.83.2024.05.10.06.45.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 06:45:34 -0700 (PDT)
-Message-ID: <6936aab2-a8b1-42a8-a9e5-6df1e212df7f@kernel.dk>
-Date: Fri, 10 May 2024 07:45:33 -0600
+	s=arc-20240116; t=1715349745; c=relaxed/simple;
+	bh=qNrQblarQm/eAKeHXbimZo9JwH2CpESovcKUE0JuP/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sGAfEg7XzLCeZoxaAWxxqN9yUfVSkI3KLDzIeBfARAs/AuRKATjjupMqqHhtS5Jccz1ua5GZ5Lf4wn/KX5jAg8SRg6NXmQSWHMbB5QfsQ6tz62pI6jqka3e36Ax9GueyGuSvgFBr726jQZw0jo1rEVeCv23rjxymHxNgqthZnHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S9WUhkr3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715349742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D1dqZxcbBRaFgQ3CYFJI1laffgSrUenXWyya9D4bc6s=;
+	b=S9WUhkr3DhNm3tM1MxXz0WoBai+gYBeUESm9VBoieXKNQyPjNQJ3jCMW/Yp8kagzDGNX2Z
+	WNAZKwgbd7pYqG07DsGuY62RTTdNeHNC4/xHxGC5TmbG1qMi/hw5bt05RroH41dPyEfKVs
+	YrtuE5pLjf7Nof5omfCbItLiAGvx/xY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-112-_mDPlR_MNkaHfJKcasvu6w-1; Fri, 10 May 2024 10:02:19 -0400
+X-MC-Unique: _mDPlR_MNkaHfJKcasvu6w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3BD578016FA;
+	Fri, 10 May 2024 14:02:19 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.93])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A1641D6946B;
+	Fri, 10 May 2024 14:02:15 +0000 (UTC)
+Date: Fri, 10 May 2024 22:02:12 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
+Cc: linux-block@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+	Kevin Wolf <kwolf@redhat.com>
+Subject: Re: [RFC PATCH V2 0/9] io_uring: support sqe group and provide group
+ kbuf
+Message-ID: <Zj4o5LjuLo6fGeDd@fedora>
+References: <20240506162251.3853781-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: unmap and free user mapped integrity via submitter
-To: Anuj Gupta <anuj20.g@samsung.com>, hch@lst.de, kbusch@kernel.org
-Cc: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
- martin.petersen@oracle.com, Kanchan Joshi <joshi.k@samsung.com>
-References: <CGME20240510095142epcas5p4fde65328020139931417f83ccedbce90@epcas5p4.samsung.com>
- <20240510094429.2489-1-anuj20.g@samsung.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240510094429.2489-1-anuj20.g@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506162251.3853781-1-ming.lei@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On 5/10/24 3:44 AM, Anuj Gupta wrote:
-> +/**
-> + * bio_integrity_unmap_free_user - Unmap and free bio user integrity payload
-> + * @bio:	bio containing bip to be unmapped and freed
-> + *
-> + * Description: Used to unmap and free the user mapped integrity portion of a
-> + * bio. Submitter attaching the user integrity buffer is responsible for
-> + * unmapping and freeing it during completion.
-> + */
-> +void bio_integrity_unmap_free_user(struct bio *bio)
-> +{
-> +	struct bio_integrity_payload *bip = bio_integrity(bio);
-> +	struct bio_set *bs = bio->bi_pool;
-> +
-> +	WARN_ON(!(bip->bip_flags & BIP_INTEGRITY_USER));
-> +	bio_integrity_unmap_user(bip);
-> +	__bio_integrity_free(bs, bip);
-> +	bio->bi_integrity = NULL;
-> +	bio->bi_opf &= ~REQ_INTEGRITY;
-> +}
-> +EXPORT_SYMBOL(bio_integrity_unmap_free_user);
+On Tue, May 07, 2024 at 12:22:36AM +0800, Ming Lei wrote:
+> Hello,
+> 
+> The 1st 4 patches are cleanup, and prepare for adding sqe group.
+> 
+> The 5th patch supports generic sqe group which is like link chain, but
+> allows each sqe in group to be issued in parallel, so N:M dependency can be
+> supported with sqe group & io link together.
+> 
+> The 6th patch supports one variant of sqe group: allow members to depend
+> on group leader, so that kernel resource lifetime can be aligned with
+> group leader or group, then any kernel resource can be shared in this
+> sqe group, and can be used in generic device zero copy.
+> 
+> The 7th & 8th patches supports providing sqe group buffer via the sqe
+> group variant.
+> 
+> The 9th patch supports ublk zero copy based on io_uring providing sqe
+> group buffer.
+> 
+> Tests:
+> 
+> 1) pass liburing test
+> - make runtests
+> 
+> 2) write/pass two sqe group test cases:
+> 
+> https://github.com/axboe/liburing/compare/master...ming1:liburing:sqe_group_v2
+> 
+> covers related sqe flags combination and linking groups, both nop and
+> one multi-destination file copy.
+> 
+> 3) ublksrv zero copy:
+> 
+> ublksrv userspace implements zero copy by sqe group & provide group
+> kbuf:
+> 
+> 	git clone https://github.com/ublk-org/ublksrv.git -b group-provide-buf_v2
+> 	make test T=loop/009:nbd/061:nbd/062	#ublk zc tests
+> 
+> When running 64KB block size test on ublk-loop('ublk add -t loop --buffered_io -f $backing'),
+> it is observed that perf can be doubled.
+> 
+> Any comments are welcome!
+> 
+> V2:
+> 	- add generic sqe group, suggested by Kevin Wolf
+> 	- add REQ_F_SQE_GROUP_DEP which is based on IOSQE_SQE_GROUP, for sharing
+> 	  kernel resource in group wide, suggested by Kevin Wolf
+> 	- remove sqe ext flag, and use the last bit for IOSQE_SQE_GROUP(Pavel),
+> 	in future we still can extend sqe flags with one uring context flag
+> 	- initialize group requests via submit state pattern, suggested by Pavel
+> 	- all kinds of cleanup & bug fixes
 
-Should this be a
+Please ignore V2, and will send V3 with simplification & cleanup, and
+many fixes on error handling code path.
 
-	if (WARN_ON_ONCE(!(bip->bip_flags & BIP_INTEGRITY_USER)))
-		return;
 
-?
-
--- 
-Jens Axboe
+Thanks,
+Ming
 
 
