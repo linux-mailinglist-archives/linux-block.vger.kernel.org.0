@@ -1,313 +1,346 @@
-Return-Path: <linux-block+bounces-7231-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7234-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE0DB8C2514
-	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 14:50:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0186C8C2606
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 15:48:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C666285AB7
-	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 12:50:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 258581C20891
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 13:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4AE376;
-	Fri, 10 May 2024 12:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B6912C49C;
+	Fri, 10 May 2024 13:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="pR54pSJ/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uqIT4v2D"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C53FB87
-	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 12:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DA012C48F
+	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 13:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715345413; cv=none; b=drxna7A4jBQopahsPcD39539uA3kAGklNIFmhuZhlJ4Q3R6S8iA0cjKwe0pQg+9s7I1oWW9Xapre3BvpIbHwqSWdyaFLXhGZNUzbXbRWt+6Scm4SWHqie3MdUDryDOyz8I57iwBWl4l58zt5nuzpgre3xTT7nbhLdfQxB3PhyKU=
+	t=1715348875; cv=none; b=hCxQnV8P2iqufblVaPHRbnwkOz9NHGFTErYD3vauT0ybTSiU7tFk7Q0q0grb7GtKXlOk19mPT85UT+Zm1aqeJGVCMGt4gFV/lFeCSsPy/sO1U4zSOdW5TELsKMlh/fdXWZZ4Ag53T60yd9Oh0tLUFptzY85fE5lxoz+nrPr+TY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715345413; c=relaxed/simple;
-	bh=ggrYuwlgCarwQnYRuL7tIa5X65L+zve3xC8tKGZwF7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=tTOrtAtfC2e4c3Mr0VdqjPcVxm6EVb83YZ4jBKZtBQD6bwxyrAhPeUmEediu+vwU7wQHlUIVrdb01xyr2HBdVHasl12q7NSdsrBwJtvFD9aUW+5cqLKZn9iBVyWthR8LB3P0h1KC6lWlOvSZ2V6dCs016h1NdwSZvZnIU3FKU8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=pR54pSJ/; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2b27e960016so521563a91.1
-        for <linux-block@vger.kernel.org>; Fri, 10 May 2024 05:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715345408; x=1715950208; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:cc:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yw3dJdRppyDYpM0rx8UkQ2xS97nkJirNCbbU1HCC0Gw=;
-        b=pR54pSJ/LBoUu1PO3/BqilDPB+1YOop1JWIU5mztOFwd1LkXQk10fcIzFycG2ibytp
-         3LMVgQ3D/w/8p1BlItA+FlXDp8YbG4lcgXuvNRtkPW9x0TC6ar1VDsfe1nOSSPm1Pg4R
-         C5UWMWYa6qvSPITbgfJhZq16k6i3/E+MAoPfu5DVbJ1PsnckpGc13LHSRpq8JcSjzIDh
-         BHr8RL4JubJvh8hlnTrtelfwJ8QbGFC2o2w/a0dz19I6JcYEhG58SZJK5w7lNLMlBtzA
-         OGpVfyl2oeXVBeK2dylY0gZoz02sUNNVH79kRVPHVWQVvejs3u+oaXqd8N1o1TpwceD1
-         KLjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715345408; x=1715950208;
-        h=content-transfer-encoding:in-reply-to:cc:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yw3dJdRppyDYpM0rx8UkQ2xS97nkJirNCbbU1HCC0Gw=;
-        b=QnIw6lw5rj6dmGx7WgEwfoc1SHeLIHVx2nu7ws2bkUHfDMppuDSTHpuuJ9Zp/YLT3x
-         h0NxHgF3Xk6eR0fSmhwMVhr1LfkHazsdhsyre4b2eDLi1bAn5Im8YH86SHByBTJIg2Qm
-         xNT6b7YEfKOdUXHAmeBk3JwJUWmdUHtwNBFPhmLENme0DWvVNo6Z4CYDt7iBc9Udvrhg
-         JTVqXH8EQq0x2ICOcQ8zIRa93wR31012jz5GKlmYUyh+xoJKY1SoippyuyBmdT4ElpoL
-         jLbdVJgVbsl4qVT0EYdhbbztpvUpHTh1X23IpUvYtEFcE5gZu3hcfRUhAp0L3liayIMU
-         z+cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjL/xbrf40qNBVhC7xGjqI2OG/L+ztdCPyE8YyMvIrIpSXqfMu8UumXaI8kTH20neGwHpfznDIIxA4tvbfEwSunt3aVgr2k9KmV6c=
-X-Gm-Message-State: AOJu0YynhC5dhOZvuW2ODZubhw4bwhWjh/2umJDuTdCXlEDSFoTpLdFF
-	PzYCLRp2u2in0AiqeG/zt879hDpWUzxEK3ODq7LzXEmvJcc1o3oJWe8KVtMTiX8E2eZmFm+sR/8
-	P
-X-Google-Smtp-Source: AGHT+IEy/TexzHzsa9weI3JCvgAYumDJCUi+Ly1LO3ON1doWdMkl3jyhLqzlbpwatr5lvNIMNQrrpw==
-X-Received: by 2002:a17:902:da90:b0:1de:ddc6:27a6 with SMTP id d9443c01a7336-1ef43d1388fmr28460045ad.2.1715345408114;
-        Fri, 10 May 2024 05:50:08 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d177asm31181415ad.23.2024.05.10.05.50.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 05:50:07 -0700 (PDT)
-Message-ID: <bc01417a-be59-4686-af88-3eef2e0a955d@kernel.dk>
-Date: Fri, 10 May 2024 06:50:06 -0600
+	s=arc-20240116; t=1715348875; c=relaxed/simple;
+	bh=fCY8RdSita7Wzec+OVmDbIW+QKuuAQsdD3wT5ovbvt0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=fJAdnVW53iw5agARI2PXVhlbkMF/Ga9c/V91MkDCEK3U46g7MpLvkpM6QMRo0fqA2/WQ+APFaOlfFfR+yDBvo6Ss0bxKT64Ho6CxSz6DTsrk+jhx0q602PXYW0AEQ3eqIiyy6RRzuWC931ln845A4bv+79JLOs1fegdID/phPsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uqIT4v2D; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240510134743epoutp039d5ba661d72b6a2ae05df1500d991578~OJLQAUc112877828778epoutp03w
+	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 13:47:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240510134743epoutp039d5ba661d72b6a2ae05df1500d991578~OJLQAUc112877828778epoutp03w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1715348863;
+	bh=2uqy5c3cXO+FBejMvjh5tS4H8j3VD4n0/AUG7aIY4I8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=uqIT4v2DaIGSK56Kd9s2UbTOE+aF0niljCN61HoHue7XyMgDhbkwZldH9NKkwZ192
+	 1e5y/Fq8bY2KKrIXoIzQXEmpbvCkhgs7YD/G8bMdo4+cn8N3XdAbrJ/LkuGGbB8Mi/
+	 FGROWsQ9RRKaWSgvyCG5yCgx2Gy80oTfR3bDbwwg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20240510134743epcas5p443098c2f5128f5a6692a5c483f4e8e6e~OJLPhwOSr0394803948epcas5p44;
+	Fri, 10 May 2024 13:47:43 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4VbVZ56QBjz4x9Pp; Fri, 10 May
+	2024 13:47:41 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DF.59.09665.D752E366; Fri, 10 May 2024 22:47:41 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41~OJLNIWKZB0383303833epcas5p26;
+	Fri, 10 May 2024 13:47:40 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240510134740epsmtrp197c7b75541e85f37a0c995b847c819ca~OJLNHiKrN2682726827epsmtrp1T;
+	Fri, 10 May 2024 13:47:40 +0000 (GMT)
+X-AuditID: b6c32a4b-829fa700000025c1-6b-663e257d7a3a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CB.3D.08390.C752E366; Fri, 10 May 2024 22:47:40 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240510134738epsmtip18d16323614d1dcf26ce66e1ab75b4257~OJLLNwann2890228902epsmtip1E;
+	Fri, 10 May 2024 13:47:38 +0000 (GMT)
+From: Kanchan Joshi <joshi.k@samsung.com>
+To: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de
+Cc: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+	javier.gonz@samsung.com, bvanassche@acm.org, david@fromorbit.com,
+	slava@dubeyko.com, gost.dev@samsung.com, Kanchan Joshi
+	<joshi.k@samsung.com>, Hui Qi <hui81.qi@samsung.com>, Nitesh Shetty
+	<nj.shetty@samsung.com>
+Subject: [PATCH] nvme: enable FDP support
+Date: Fri, 10 May 2024 19:10:15 +0530
+Message-Id: <20240510134015.29717-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] block nbd0: Unexpected reply (15) 000000009c07859b
-To: Vincent Chen <vincent.chen@sifive.com>, linux-block@vger.kernel.org
-References: <CABvJ_xhxR22i4_xfuFjf9PQxJHVUmW-Xr8dut_1F4Ys7gxW5pw@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <CABvJ_xhxR22i4_xfuFjf9PQxJHVUmW-Xr8dut_1F4Ys7gxW5pw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmum6tql2awbYfuhar7/azWUz78JPZ
+	Ysuxe4wWNw/sZLJYufook8XOZWvZLR7f+cxucfT/WzaLSYeuMVrsvaVtMX/ZU3aLbb/nM1t8
+	2jKbyYHX4/IVb4+D69+weJxaJOFx+Wypx6ZVnWwem5fUe+y+2cDm0bdlFaPH501yAZxR2TYZ
+	qYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QDcrKZQl5pQC
+	hQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSKE3OLS/PS9fJSS6wMDQyMTIEKE7Izbrxv
+	ZCm4bVgxfeYmxgbG+RpdjJwcEgImEssuv2fqYuTiEBLYzSixe91rVgjnE6NE49EGdpAqIYFv
+	jBLb++xhOi4+PsYMUbSXUeJf3wWojs+MEp/+nwKaxcHBJqApcWFyKUiDiICRxM6/r9lAapgF
+	5jJJTJzygRkkIQxUs3PxIzCbRUBVYs7N7WDbeAUsJM6dus0OsU1eYual71BxQYmTM5+wgNjM
+	QPHmrbPBrpAQmMghcXbrFqgGF4l9pyCGSggIS7w6DhOXknjZ3wZlJ0tcmnmOCcIukXi85yCU
+	bS/ReqqfGeQBZqDj1u/Sh9jFJ9H7+wnYXxICvBIdbUIQ1YoS9yY9ZYWwxSUezlgCZXtILJrQ
+	zAhSLiQQK9H1OXECo9wsJA/MQvLALIRdCxiZVzFKphYU56anFpsWGOellsOjMjk/dxMjOLFq
+	ee9gfPTgg94hRiYOxkOMEhzMSiK8VTXWaUK8KYmVValF+fFFpTmpxYcYTYGhOpFZSjQ5H5ja
+	80riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnNTk0tSC2C6WPi4JRqYOrbkp39veOCKP/b
+	Bv+HKxn12uQ3Z8QFsphus5YIFVnruevr4wuvt/j8cXJ5/G7z8z62R2YtEezz07rMdjxJmmcq
+	oDppo6Vw+4smyVkWxYtFlC66ajOp6cRfydpY7yF7bo/Q3ccSf7p5F/EV7r2822czs3fVzds/
+	9/9Usntt/LWhMDCndVXG/M3ts+T4lXoVmUtm6HrrM8zKfGbndSDd//AEm+pe9oWKH7bbeizQ
+	fNBit/V8/MZD98q5Q4WeX05dVZUwf1pR80u5f+bXeeysFfuMtT6eEm+xNVxsEbn/270vAc/4
+	+ZJXWDywuOPTymSkIGF17UFvt81/sQZth/1q0+K75JhL3ygFPVW11zmoxFKckWioxVxUnAgA
+	u1PgvTUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsWy7bCSnG6Nql2awYx1khar7/azWUz78JPZ
+	Ysuxe4wWNw/sZLJYufook8XOZWvZLR7f+cxucfT/WzaLSYeuMVrsvaVtMX/ZU3aLbb/nM1t8
+	2jKbyYHX4/IVb4+D69+weJxaJOFx+Wypx6ZVnWwem5fUe+y+2cDm0bdlFaPH501yAZxRXDYp
+	qTmZZalF+nYJXBk33jeyFNw2rJg+cxNjA+N8jS5GTg4JAROJi4+PMXcxcnEICexmlHg6q4EJ
+	IiEu0XztBzuELSyx8t9zdoiij4wSXZf6WbsYOTjYBDQlLkwuBakRETCT2H9uI9ggZoHlTBJb
+	Zu9nBUkIA9XsXPyIGcRmEVCVmHNzO9hQXgELiXOnbkMtkJeYeek7VFxQ4uTMJywgNjNQvHnr
+	bOYJjHyzkKRmIUktYGRaxSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHAFaWjsY96z6
+	oHeIkYmD8RCjBAezkghvVY11mhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeb697U4QE0hNLUrNT
+	UwtSi2CyTBycUg1MAvWy+ZcN9vZrLMpZPfnnm8deavv722993hivknZqkXd0CQtLZO/+lthF
+	bXeLX2XKFGncvj1x+XtpsRPsRplBB3Kuttt8VDl56uGNutUbvv/jSNb3srJkecm5ul41Y/6P
+	J2JPZx153OF8c4lkVnPBLvaCQ2c2hZtUPJd/9pClVtfope2nnHPrG8ra58z3Vn+S7XPd2F1d
+	KTm95pnrz+g1t/qY7H86eT9jmOd+NdgnIV66oe7Liu0CvIZ/q0+UX79duuNIRvwVzc7aoshb
+	743OJbssucL0bMGr5msXm1bFhh1Mfnv/Bvecw7KfjjCeWhQne2vPoxTuqw9W+/HaRqfdO1ge
+	LXXz7qeLLroX4gLrlFiKMxINtZiLihMBhKlfse8CAAA=
+X-CMS-MailID: 20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41
+References: <CGME20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41@epcas5p2.samsung.com>
 
-Adding Bart
+Flexible Data Placement (FDP), as ratified in TP 4146a, allows the host
+to control the placement of logical blocks so as to reduce the SSD WAF.
 
+Userspace can send the data lifetime information using the write hints.
+The SCSI driver (sd) can already pass this information to the SCSI
+devices. This patch does the same for NVMe.
 
-On 5/9/24 11:04 PM, Vincent Chen wrote:
-> Hi,
-> I occasionally encountered this NBD error on the Linux 6.9.0-rc7
-> (commit hash: dd5a440a31fae) arm64 kernel when I executed the
-> stress-ng HDD test on NBD. The failure rate is approximately 40% in my
-> testing environment. Since this test case can consistently pass on
-> Linux 6.2 kernel, I performed a bisect to find the problematic commit.
-> Finally, I discovered that this NBD issue might be caused by this
-> commit 65a558f66c30 ("block: Improve performance for BLK_MQ_F_BLOCKING
-> drivers"). After reverting this commit, I didn't encounter any NBD
-> issues when executing this test case. Unfortunately, I was unable to
-> determine the root cause of the problem. I hope that experts in this
-> area can help clarify this issue. I have posted the execution log and
-> all relevant experimental information below for further analysis.
-> 
->  ==== Execution log and error message ====
-> # udhcpc
-> udhcpc: started, v1.36.1
-> udhcpc: broadcasting discover
-> udhcpc: broadcasting select for 10.0.2.15, server 10.0.2.2
-> udhcpc: lease of 10.0.2.15 obtained from 10.0.2.2, lease time 86400
-> deleting routers
-> adding dns 10.0.2.3
-> # nbd-client 192.168.10.169 -N arm64-new-poky 10809 /dev/nbd0
-> Negotiation: ..size = 385MB
-> bs=512, sz=404463616 bytes
-> # [  114.228171] nbd0: detected capacity change from 0 to 789968
-> mount /dev/nbd0 /mnt && \
->> cd /mnt && \
->> mount -t proc /proc proc/ && \
->> mount --rbind /sys sys/ && \
->> mount --rbind /dev dev/ && \
->> cd - && \
->> chroot /mnt
-> [  119.563027] EXT4-fs (nbd0): recovery complete
-> [  119.566381] EXT4-fs (nbd0): mounted filesystem
-> 153d936d-5294-4c41-8c7d-e0a6df246e30 r/w with ordered data mode. Quota
-> mode: none.
-> /
-> # stress-ng --seq 0 -t 60 --pathological --verbose --times --tz
-> --metrics --hdd 4
-> stress-ng: debug: [230] invoked with 'stress-ng --seq 0 -t 60
-> --pathological --verbose --times --tz --metrics --hdd 4' by user 0
-> 'root'
-> stress-ng: debug: [230] stress-ng 0.17.07 g519151f46073
-> stress-ng: debug: [230] system: Linux buildroot 6.9.0-rc7 #20 SMP
-> PREEMPT Fri May 10 11:40:17 CST 2024 aarch64, gcc 13.2.0, glibc 2.39,
-> little endian
-> stress-ng: debug: [230] RAM total: 1.9G, RAM free: 1.9G, swap free: 0.0
-> stress-ng: debug: [230] temporary file path: '/', filesystem type:
-> ext2 (158058 blocks available)
-> stress-ng: debug: [230] 4 processors online, 4 processors configured
-> stress-ng: info:  [230] setting to a 1 min, 0 secs run per stressor
-> stress-ng: debug: [230] cache allocate: using defaults, cannot
-> determine cache level details
-> stress-ng: debug: [230] cache allocate: shared cache buffer size: 2048K
-> stress-ng: info:  [230] dispatching hogs: 4 hdd
-> stress-ng: debug: [230] starting stressors
-> stress-ng: debug: [231] hdd: [231] started (instance 0 on CPU 3)
-> stress-ng: debug: [232] hdd: [232] started (instance 1 on CPU 0)
-> stress-ng: debug: [230] 4 stressors started
-> stress-ng: debug: [233] hdd: [233] started (instance 2 on CPU 1)
-> stress-ng: debug: [234] hdd: [234] started (instance 3 on CPU 2)
-> stress-ng: debug: [233] hdd: [233] exited (instance 2 on CPU 3)
-> stress-ng: debug: [232] hdd: [232] exited (instance 1 on CPU 2)
-> [  196.497492] block nbd0: Unexpected reply (15) 000000009c07859b
-> [  196.539765] block nbd0: Dead connection, failed to find a fallback
-> [  196.540442] block nbd0: shutting down sockets
-> [  196.540787] I/O error, dev nbd0, sector 594178 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 2 prio class 0
-> [  196.540871] I/O error, dev nbd0, sector 591362 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 1 prio class 0
-> [  196.541976] I/O error, dev nbd0, sector 594690 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 2 prio class 0
-> [  196.542335] I/O error, dev nbd0, sector 591618 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 2 prio class 0
-> [  196.542821] I/O error, dev nbd0, sector 594946 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 1 prio class 0
-> [  196.544018] I/O error, dev nbd0, sector 594434 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 1 prio class 0
-> [  196.544786] I/O error, dev nbd0, sector 591874 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 1 prio class 0
-> [  196.545507] I/O error, dev nbd0, sector 592130 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 2 prio class 0
-> [  196.546175] I/O error, dev nbd0, sector 592386 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 1 prio class 0
-> [  196.546829] I/O error, dev nbd0, sector 592642 op 0x1:(WRITE) flags
-> 0x4000 phys_seg 2 prio class 0
-> [  196.570813] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 317313)
-> [  196.572501] Buffer I/O error on device nbd0, logical block 315393
-> [  196.573011] Buffer I/O error on device nbd0, logical block 315394
-> [  196.573478] Buffer I/O error on device nbd0, logical block 315395
-> [  196.573949] Buffer I/O error on device nbd0, logical block 315396
-> [  196.574475] Buffer I/O error on device nbd0, logical block 315397
-> [  196.574974] Buffer I/O error on device nbd0, logical block 315398
-> [  196.575420] Buffer I/O error on device nbd0, logical block 315399
-> [  196.575411] EXT4-fs (nbd0): shut down requested (2)
-> [  196.576081] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 319361)
-> [  196.576243] Buffer I/O error on device nbd0, logical block 315400
-> [  196.577125] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 296833)
-> [  196.578172] Buffer I/O error on device nbd0, logical block 315401
-> [  196.578713] Buffer I/O error on device nbd0, logical block 315402
-> [  196.579861] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 298881)
-> [  196.582001] Aborting journal on device nbd0-8.
-> [  196.582146] EXT4-fs (nbd0): ext4_do_writepages: jbd2_start:
-> 9223372036854772702 pages, ino 64522; err -5
-> [  196.582192] EXT4-fs (nbd0): ext4_do_writepages: jbd2_start:
-> 9223372036854772768 pages, ino 64522; err -5
-> [  196.582940] Buffer I/O error on dev nbd0, logical block 139265,
-> lost sync page write
-> [  196.584172] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 385021)
-> [  196.584626] JBD2: I/O error when updating journal superblock for nbd0-8.
-> [  196.585291] EXT4-fs warning (device nbd0): ext4_end_bio:343: I/O
-> error 10 writing to inode 64522 starting block 302849)
-> stress-ng: fail:  [231] hdd: rmdir './tmp-stress-ng-hdd-231-0' failed,
-> errno=5 (Input/output error)
-> stress-ng: debug: [231] hdd: [231] exited (instance 0 on CPU 1)
-> stress-ng: debug: [230] hdd: [231] terminated (success)
-> stress-ng: debug: [230] hdd: removing temporary files in
-> ./tmp-stress-ng-hdd-231-0
-> stress-ng: debug: [230] hdd: [232] terminated (success)
-> stress-ng: debug: [230] hdd: [233] terminated (success)
-> stress-ng: fail:  [234] hdd: rmdir './tmp-stress-ng-hdd-234-3' failed,
-> errno=5 (Input/output error)
-> stress-ng: debug: [234] hdd: [234] exited (instance 3 on CPU 3)
-> stress-ng: debug: [230] hdd: [234] terminated (success)
-> stress-ng: debug: [230] hdd: removing temporary files in
-> ./tmp-stress-ng-hdd-234-3
-> stress-ng: metrc: [230] stressor       bogo ops real time  usr time
-> sys time   bogo ops/s     bogo ops/s CPU used per       RSS Max
-> stress-ng: metrc: [230]                           (secs)    (secs)
-> (secs)   (real time) (usr+sys time) instance (%)          (KB)
-> stress-ng: metrc: [230] hdd               10839     61.51      2.14
->  94.28       176.20         112.41        39.19          2124
-> stress-ng: metrc: [230] miscellaneous metrics:
-> stress-ng: metrc: [230] hdd                    0.00 MB/sec read rate
-> (harmonic mean of 4 instances)
-> stress-ng: metrc: [230] hdd                    2.96 MB/sec write rate
-> (harmonic mean of 4 instances)
-> stress-ng: metrc: [230] hdd                    2.96 MB/sec read/write
-> combined rate (harmonic mean of 4 instances)
-> stress-ng: debug: [230] metrics-check: all stressor metrics validated and sane
-> stress-ng: info:  [230] thermal zone temperatures not available
-> stress-ng: info:  [230] for a 62.50s run time:
-> stress-ng: info:  [230]     250.00s available CPU time
-> stress-ng: info:  [230]       2.13s user time   (  0.85%)
-> stress-ng: info:  [230]      94.32s system time ( 37.73%)
-> stress-ng: info:  [230]      96.45s total time  ( 38.58%)
-> stress-ng: info:  [230] load average: 3.75 1.12 0.39
-> stress-ng: info:  [230] skipped: 0
-> stress-ng: info:  [230] passed: 4: hdd (4)
-> stress-ng: info:  [230] failed: 0
-> stress-ng: info:  [230] metrics untrustworthy: 0
-> stress-ng: info:  [230] successful run completed in 1 min, 2.50 secs
-> Bus error
-> #
-> 
-> ==== Kernel information ====
-> The git tag of the testing kernel is 6.9-rc7 (commit hash: dd5a440a31fae).
-> The configuration of this arm64 kernel is based on the arm64
-> defconfig. I only change the CONFIG_BLK_DEV_NBD from m to y and
-> specify a rootfs.cpio via CONFIG_INITRAMFS_SOURCE.
-> 
-> ==== Platform information ====
-> The platform I used is the virt machine of ARM64 qemu (git tag: v9.0.0
-> ). Below is the QEMU command.
-> 
-> $qemu_img \
->         -M virt -cpu max -m 2G \
->         -machine virtualization=true \
->         -kernel $IMAGE \
->         -netdev type=user,id=net0,hostfwd=tcp::7171-:22,hostfwd=tcp::7070-:23 \
->         -device e1000e,netdev=net0,mac=52:54:00:12:35:03,bus=pcie.0 \
->         -gdb tcp::1234 \
->         -nographic \
->         -device virtio-iommu-pci \
->         -smp 4
-> 
-> ==== Disk content information ====
-> I used Yocto poky (commit 13078ea23ffea) to generate all the contents
-> of the disk. I refer this website
-> https://learn.arm.com/learning-paths/embedded-systems/yocto_qemu/yocto_build/
-> to build it.
-> 
-> Because the default setting of poky does not include stress-ng, I made
-> the following changes to include stress-ng.
-> diff --git a/meta/recipes-extended/images/core-image-full-cmdline.bb
-> b/meta/recipes-extended/images/core-image-full-cmdline.bb
-> index b034cd0aeb..4b92dbfbb9 100644
-> --- a/meta/recipes-extended/images/core-image-full-cmdline.bb
-> +++ b/meta/recipes-extended/images/core-image-full-cmdline.bb
-> @@ -7,6 +7,7 @@ IMAGE_INSTALL = "\
->      packagegroup-core-boot \
->      packagegroup-core-full-cmdline \
->      ${CORE_IMAGE_EXTRA_INSTALL} \
-> +    stress-ng \
->      "
-> 
-> I also placed this disk image I used here
-> https://github.com/VincentZWC/HDD_NBD_issue/blob/main/core-image-full-cmdline-qemuarm64.rootfs-20240510025944.ext4.
-> 
-> ==== stress-ng command ====
->  stress-ng --seq 0 -t 60 --pathological --verbose --times --tz --metrics --hdd 4
-> 
-> 
-> 
-> Please let me know if you need more information about this bug. Thanks.
-> 
-> Best regards,
-> Vincent
-> 
+Fetches the placement-identifiers (plids) if the device supports FDP.
+And map the incoming write-hints to plids.
 
+Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+Signed-off-by: Hui Qi <hui81.qi@samsung.com>
+Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+---
+ drivers/nvme/host/core.c | 67 ++++++++++++++++++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h |  4 +++
+ include/linux/nvme.h     | 19 ++++++++++++
+ 3 files changed, 90 insertions(+)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 8ae0a2dc5eda..c3de06cff12f 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -42,6 +42,20 @@ struct nvme_ns_info {
+ 	bool is_removed;
+ };
+ 
++struct nvme_fdp_ruh_status_desc {
++	u16 pid;
++	u16 ruhid;
++	u32 earutr;
++	u64 ruamw;
++	u8  rsvd16[16];
++};
++
++struct nvme_fdp_ruh_status {
++	u8  rsvd0[14];
++	u16 nruhsd;
++	struct nvme_fdp_ruh_status_desc ruhsd[];
++};
++
+ unsigned int admin_timeout = 60;
+ module_param(admin_timeout, uint, 0644);
+ MODULE_PARM_DESC(admin_timeout, "timeout in seconds for admin commands");
+@@ -943,6 +957,16 @@ static inline blk_status_t nvme_setup_write_zeroes(struct nvme_ns *ns,
+ 	return BLK_STS_OK;
+ }
+ 
++static inline void nvme_assign_placement_id(struct nvme_ns *ns,
++					struct request *req,
++					struct nvme_command *cmd)
++{
++	enum rw_hint h = min(ns->head->nr_plids, req->write_hint);
++
++	cmd->rw.control |= cpu_to_le16(NVME_RW_DTYPE_DPLCMT);
++	cmd->rw.dsmgmt |= cpu_to_le32(ns->head->plids[h] << 16);
++}
++
+ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
+ 		struct request *req, struct nvme_command *cmnd,
+ 		enum nvme_opcode op)
+@@ -1058,6 +1082,8 @@ blk_status_t nvme_setup_cmd(struct nvme_ns *ns, struct request *req)
+ 		break;
+ 	case REQ_OP_WRITE:
+ 		ret = nvme_setup_rw(ns, req, cmd, nvme_cmd_write);
++		if (!ret && ns->head->nr_plids)
++			nvme_assign_placement_id(ns, req, cmd);
+ 		break;
+ 	case REQ_OP_ZONE_APPEND:
+ 		ret = nvme_setup_rw(ns, req, cmd, nvme_cmd_zone_append);
+@@ -2070,6 +2096,40 @@ static int nvme_update_ns_info_generic(struct nvme_ns *ns,
+ 	return ret;
+ }
+ 
++static int nvme_fetch_fdp_plids(struct nvme_ns *ns, u32 nsid)
++{
++	struct nvme_command c = {};
++	struct nvme_fdp_ruh_status *ruhs;
++	struct nvme_fdp_ruh_status_desc *ruhsd;
++	int size, ret, i;
++
++	size = sizeof(*ruhs) + NVME_MAX_PLIDS * sizeof(*ruhsd);
++	ruhs = kzalloc(size, GFP_KERNEL);
++	if (!ruhs)
++		return -ENOMEM;
++
++	c.imr.opcode = nvme_cmd_io_mgmt_recv;
++	c.imr.nsid = cpu_to_le32(nsid);
++	c.imr.mo = 0x1;
++	c.imr.numd =  cpu_to_le32((size >> 2) - 1);
++
++	ret = nvme_submit_sync_cmd(ns->queue, &c, ruhs, size);
++	if (ret)
++		goto out;
++
++	ns->head->nr_plids = le16_to_cpu(ruhs->nruhsd);
++	ns->head->nr_plids =
++		min_t(u16, ns->head->nr_plids, NVME_MAX_PLIDS);
++
++	for (i = 0; i < ns->head->nr_plids; i++) {
++		ruhsd = &ruhs->ruhsd[i];
++		ns->head->plids[i] = le16_to_cpu(ruhsd->pid);
++	}
++out:
++	kfree(ruhs);
++	return ret;
++}
++
+ static int nvme_update_ns_info_block(struct nvme_ns *ns,
+ 		struct nvme_ns_info *info)
+ {
+@@ -2157,6 +2217,13 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
+ 		if (ret && !nvme_first_scan(ns->disk))
+ 			goto out;
+ 	}
++	if (ns->ctrl->ctratt & NVME_CTRL_ATTR_FDPS) {
++		ret = nvme_fetch_fdp_plids(ns, info->nsid);
++		if (ret)
++			dev_warn(ns->ctrl->device,
++				"FDP failure status:0x%x\n", ret);
++	}
++
+ 
+ 	ret = 0;
+ out:
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index d0ed64dc7380..67dad29fe289 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -440,6 +440,8 @@ struct nvme_ns_ids {
+ 	u8	csi;
+ };
+ 
++#define NVME_MAX_PLIDS   (128)
++
+ /*
+  * Anchor structure for namespaces.  There is one for each namespace in a
+  * NVMe subsystem that any of our controllers can see, and the namespace
+@@ -457,6 +459,8 @@ struct nvme_ns_head {
+ 	bool			shared;
+ 	bool			passthru_err_log_enabled;
+ 	int			instance;
++	u16			nr_plids;
++	u16			plids[NVME_MAX_PLIDS];
+ 	struct nvme_effects_log *effects;
+ 	u64			nuse;
+ 	unsigned		ns_id;
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 425573202295..fc07ba1b5ec5 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -270,6 +270,7 @@ enum nvme_ctrl_attr {
+ 	NVME_CTRL_ATTR_HID_128_BIT	= (1 << 0),
+ 	NVME_CTRL_ATTR_TBKAS		= (1 << 6),
+ 	NVME_CTRL_ATTR_ELBAS		= (1 << 15),
++	NVME_CTRL_ATTR_FDPS		= (1 << 19),
+ };
+ 
+ struct nvme_id_ctrl {
+@@ -829,6 +830,7 @@ enum nvme_opcode {
+ 	nvme_cmd_resv_register	= 0x0d,
+ 	nvme_cmd_resv_report	= 0x0e,
+ 	nvme_cmd_resv_acquire	= 0x11,
++	nvme_cmd_io_mgmt_recv	= 0x12,
+ 	nvme_cmd_resv_release	= 0x15,
+ 	nvme_cmd_zone_mgmt_send	= 0x79,
+ 	nvme_cmd_zone_mgmt_recv	= 0x7a,
+@@ -850,6 +852,7 @@ enum nvme_opcode {
+ 		nvme_opcode_name(nvme_cmd_resv_register),	\
+ 		nvme_opcode_name(nvme_cmd_resv_report),		\
+ 		nvme_opcode_name(nvme_cmd_resv_acquire),	\
++		nvme_opcode_name(nvme_cmd_io_mgmt_recv),	\
+ 		nvme_opcode_name(nvme_cmd_resv_release),	\
+ 		nvme_opcode_name(nvme_cmd_zone_mgmt_send),	\
+ 		nvme_opcode_name(nvme_cmd_zone_mgmt_recv),	\
+@@ -1001,6 +1004,7 @@ enum {
+ 	NVME_RW_PRINFO_PRCHK_GUARD	= 1 << 12,
+ 	NVME_RW_PRINFO_PRACT		= 1 << 13,
+ 	NVME_RW_DTYPE_STREAMS		= 1 << 4,
++	NVME_RW_DTYPE_DPLCMT		= 2 << 4,
+ 	NVME_WZ_DEAC			= 1 << 9,
+ };
+ 
+@@ -1088,6 +1092,20 @@ struct nvme_zone_mgmt_recv_cmd {
+ 	__le32			cdw14[2];
+ };
+ 
++struct nvme_io_mgmt_recv_cmd {
++	__u8			opcode;
++	__u8			flags;
++	__u16			command_id;
++	__le32			nsid;
++	__le64			rsvd2[2];
++	union nvme_data_ptr	dptr;
++	__u8			mo;
++	__u8			rsvd11;
++	__u16			mos;
++	__le32			numd;
++	__le32			cdw12[4];
++};
++
+ enum {
+ 	NVME_ZRA_ZONE_REPORT		= 0,
+ 	NVME_ZRASF_ZONE_REPORT_ALL	= 0,
+@@ -1808,6 +1826,7 @@ struct nvme_command {
+ 		struct nvmf_auth_receive_command auth_receive;
+ 		struct nvme_dbbuf dbbuf;
+ 		struct nvme_directive_cmd directive;
++		struct nvme_io_mgmt_recv_cmd imr;
+ 	};
+ };
+ 
 -- 
-Jens Axboe
+2.25.1
 
 
