@@ -1,138 +1,126 @@
-Return-Path: <linux-block+bounces-7198-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7200-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 809EF8C17C4
-	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 22:43:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 342F08C1C29
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 03:40:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B29B21C21888
-	for <lists+linux-block@lfdr.de>; Thu,  9 May 2024 20:43:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67DEB1C2182A
+	for <lists+linux-block@lfdr.de>; Fri, 10 May 2024 01:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C485D84DF6;
-	Thu,  9 May 2024 20:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B5D7137C23;
+	Fri, 10 May 2024 01:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ESTfc/VT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="feUmQhcg"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D707F7F5
-	for <linux-block@vger.kernel.org>; Thu,  9 May 2024 20:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF3E137928
+	for <linux-block@vger.kernel.org>; Fri, 10 May 2024 01:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715287417; cv=none; b=o2vCv3zIqQwBnXg0LyPq4JzCdhml4x2NWY8Z7/6uoa4+W7olnDsc5/FMiH+MIrP18j9EMIzpfmBR+C/9JYy6CJua9RVWZtMI6947LWMirWCuoZEveRvCtCCsMz4jwMXsRYp9BVkA52MAJzx9D8M+IVRU8CZNlMDB1tURsVdX61k=
+	t=1715305240; cv=none; b=FGwm7q/uwMIfK/UWwkrqoISi86vifcpGIc9Kd2QI6bem9gKCFawwKZRQBajJQ2XTz6UgUJ4YLhdtEnds+fVpEuI3W+jK/JzHauc73p64/eToGzURnweyk33VK6ixqVlIwWF7YV2Zy6AzWvmLb8rblzOAstHrQanKcMWIGSeXBMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715287417; c=relaxed/simple;
-	bh=29Ogzu8HUgDu3PF9FKvjcGb+SavKhmrv7g+xDkNBUkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=E10iaTqYGhbdWwQEaRv33herpOAJCwvuGaHMflxtjd6mxJUWiWD9RLg2NPXM4zssomIrovqB1BwyKtJbu1STcOC3aGGYk8INfNZAq+lhv6Tygc1nsqVqvGYKjK+GRpoLK+Fi/61Gy8GcyzbFG6oVWp1wyj/i9TFMYG6j7xtiF8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ESTfc/VT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715287415;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J8WReQiv4GBqlDuegj32JcgtpHrEsWG68ox5pprOL3Y=;
-	b=ESTfc/VTM4T1hMcDXtzPAcndfKQbefLQYZb0z948lMverVqZ/Ptq2KWpU25I1OfO7tebEe
-	1LrEnFUcFmebEwvVN5Jbjs1/Zmk7Ejp/WRAxqcoqa9OB/vJehJp1TcpDmjKrh0axHi49sl
-	rR1EF8PmTPvhp2u4As+PRrd1+FvSgR4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-139-MVAV1Q_mOD-RwikX89Y0GA-1; Thu,
- 09 May 2024 16:43:30 -0400
-X-MC-Unique: MVAV1Q_mOD-RwikX89Y0GA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9FE3829AA389;
-	Thu,  9 May 2024 20:43:29 +0000 (UTC)
-Received: from jmeneghi.bos.com (unknown [10.22.16.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F25061C4DB56;
-	Thu,  9 May 2024 20:43:28 +0000 (UTC)
-From: John Meneghini <jmeneghi@redhat.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk,
-	kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me,
-	emilne@redhat.com,
-	hare@kernel.org
-Cc: linux-block@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	jrani@purestorage.com,
-	randyj@purestorage.com,
-	aviv.coro@ibm.com
-Subject: [PATCH v3 3/3] nvme: multipath: pr_notice when iopolicy changes
-Date: Thu,  9 May 2024 16:43:24 -0400
-Message-Id: <20240509204324.832846-4-jmeneghi@redhat.com>
-In-Reply-To: <20240403141756.88233-1-hare@kernel.org>
-References: <20240403141756.88233-1-hare@kernel.org>
+	s=arc-20240116; t=1715305240; c=relaxed/simple;
+	bh=tmWEnz9UjIow/kUQIQ2LrnMH8Og8DugePVyTmK8VGGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OUwwpJEnhJ7JBysS+cv69MIb1SJatcDlME6+daPM+8gcNhaTaUcZv45bVxai2UbNUgFTQ6BFwSyIJ9SNnKPl0GJxHnxJ/4pIfzqllqSL3hEKudtw/CaGov2CFihwadCDycw0Ov4GuNA4rgl6xgyc84zVyQrGvmue9Tc3YLz0POQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=feUmQhcg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EE7C116B1;
+	Fri, 10 May 2024 01:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715305239;
+	bh=tmWEnz9UjIow/kUQIQ2LrnMH8Og8DugePVyTmK8VGGA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=feUmQhcgZUnMWQZsH9uGY4zcSfLyAQ7DJsFnaCxwQ7GLrI/0ApN/8PfVNPnmtNyqZ
+	 JjZKmvfvi1Ujh5cVsZKD/oGSIn02iNcdSQG7bW9Z1LXhzZ6M8OCGqMjDAXC0T8A3gW
+	 Fgqu3mfZ1uh4WaSEE75fvKuUuSDf418f4gO3N5s7K8nnFSTyej2xLFwToX+NPihs78
+	 KhVd06Oflz18J58wknZLoVVuuRKakZHeZUyI3ug8aHpUC0HjMX/kSxktaTtdLroti2
+	 E0jz5fysqXCOYAfWihEdEBIA7Xp0NQdM8a8xJSm1CfBmnDbd6n7XXLoaoe9wt/ws+u
+	 Q+Qrt4x2AQTLg==
+Message-ID: <c9e43ba8-616a-4c60-9cf9-c99c5b7a4979@kernel.org>
+Date: Fri, 10 May 2024 10:40:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: work around sparse in queue_limits_commit_update
+To: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org
+References: <20240405085018.243260-1-hch@lst.de>
+ <65a7c6b1-ad4e-4b27-b8b1-44d94a66bf7a@oracle.com>
+ <20240405143856.GA6008@lst.de>
+ <343cc769-b318-4c2d-b08a-0bc752f41f78@oracle.com>
+ <20240405171330.GA16914@lst.de>
+ <293dbd7b-9955-48f4-9eb4-87db1ec9335a@oracle.com>
+ <20240509125856.GB12191@lst.de>
+ <4bc6ab52-31b0-4e1c-96d1-2568a43af7b5@oracle.com>
+ <e2181429-3f0b-4999-87b7-8fbc8aea3765@kernel.dk>
+ <65430500-14bc-4e71-ba40-024ef293bc4a@oracle.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <65430500-14bc-4e71-ba40-024ef293bc4a@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Send a pr_notice when ever the iopolicy on a subsystem
-is changed. This is important for support reasons. It
-is fully expected that users will be changing the iopolicy
-with active IO in progress.
+On 5/10/24 00:04, John Garry wrote:
+> On 09/05/2024 15:00, Jens Axboe wrote:
+>>> But, uggh, now I see more C=1 warnings on Jens' 6.9 branch. It's quite
+>>> late to be sending fixes for those (for 6.9)...
+>>>
+>>> I'll send then anyway.
+>> Send it for 6.10.
+> 
+> ok, fine.
+> 
+> JFYI, Here's what I found on the 6.10 queue in block/:
+> 
+> block/bdev.c:377:17: warning: symbol 'blockdev_mnt' was not declared.
+> Should it be static?
+> block/blk-settings.c:263:9: warning: context imbalance in
+> 'queue_limits_commit_update' - wrong count at exit
+> block/blk-cgroup.c:811:5: warning: context imbalance in
+> 'blkg_conf_prep' - wrong count at exit
+> block/blk-cgroup.c:941:9: warning: context imbalance in
+> 'blkg_conf_exit' - different lock contexts for basic block
+> block/blk-iocost.c:732:9: warning: context imbalance in 'iocg_lock' -
+> wrong count at exit
+> block/blk-iocost.c:743:28: warning: context imbalance in 'iocg_unlock'
+> - unexpected unlock
+> block/blk-zoned.c:576:30: warning: context imbalance in
+> 'disk_get_and_lock_zone_wplug' - wrong count at exit
+> block/blk-zoned.c: note: in included file (through include/linux/blkdev.h):
+> ./include/linux/bio.h:592:9: warning: context imbalance in
+> 'blk_zone_wplug_handle_write' - unexpected unlock
+> block/blk-zoned.c:1721:31: warning: context imbalance in
+> 'blk_revalidate_seq_zone' - unexpected unlock
+> block/bfq-iosched.c:5498:9: warning: context imbalance in
+> 'bfq_exit_icq' - different lock contexts for basic block
+> 
+> Actually most pre-date v6.9 anyway, apart from the zoned stuff. And the 
+> bdev.c static warning is an outstanding patch, which I replied to.
 
-Signed-off-by: John Meneghini <jmeneghi@redhat.com>
----
- drivers/nvme/host/multipath.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I will have a look at the zone stuff. This is all from the new addition of zone
+write plugging, so all my bad (I did run with lockdep but did not compile test
+with sparse).
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e9330bb1990b..0286e44a081f 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -67,6 +67,10 @@ static int nvme_activate_iopolicy(struct nvme_subsystem *subsys, int iopolicy)
- 		}
- 	}
- 	mutex_unlock(&subsys->lock);
-+
-+	pr_notice("%s: %s enable %d status %d for subsysnqn %s\n", __func__,
-+			nvme_iopolicy_names[iopolicy], enable, ret, subsys->subnqn);
-+
- 	return ret;
- }
- 
-@@ -890,6 +894,8 @@ void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
- {
- 	struct nvme_ctrl *ctrl;
- 
-+	int old_iopolicy = READ_ONCE(subsys->iopolicy);
-+
- 	WRITE_ONCE(subsys->iopolicy, iopolicy);
- 
- 	mutex_lock(&nvme_subsystems_lock);
-@@ -898,6 +904,10 @@ void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
- 		nvme_mpath_clear_ctrl_paths(ctrl);
- 	}
- 	mutex_unlock(&nvme_subsystems_lock);
-+
-+	pr_notice("%s: changed from %s to %s for subsysnqn %s\n", __func__,
-+			nvme_iopolicy_names[old_iopolicy], nvme_iopolicy_names[iopolicy],
-+			subsys->subnqn);
- }
- 
- static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
+> 
+> At a glance, some of those pre-v6.9 issues looks non-trivial to fix, 
+> which may be the reason that they have not been fixed...
+
+Yeah. The context imbalance warnings are sometimes hard to address depending on
+the code. Let's see.
+
 -- 
-2.39.3
+Damien Le Moal
+Western Digital Research
 
 
