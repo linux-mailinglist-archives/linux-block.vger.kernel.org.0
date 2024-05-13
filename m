@@ -1,176 +1,150 @@
-Return-Path: <linux-block+bounces-7312-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7314-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F392D8C4092
-	for <lists+linux-block@lfdr.de>; Mon, 13 May 2024 14:19:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A18D28C40A3
+	for <lists+linux-block@lfdr.de>; Mon, 13 May 2024 14:23:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92CE31F219B2
-	for <lists+linux-block@lfdr.de>; Mon, 13 May 2024 12:19:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56E3D2866A2
+	for <lists+linux-block@lfdr.de>; Mon, 13 May 2024 12:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E553B14F12E;
-	Mon, 13 May 2024 12:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EBD714F120;
+	Mon, 13 May 2024 12:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="jzT6xeI3"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1592314D2BF;
-	Mon, 13 May 2024 12:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BE114EC5E;
+	Mon, 13 May 2024 12:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715602759; cv=none; b=g+IX9AyHIsItsdh07nEWCJvBuW9eqkxRvItiElbBIy2wYfMuugzYit2EElmdxYEtGCjFpPYGlXgM7t/zGMtqpFMYrIVvUoXlqd7qhocq9hyy5FiPeTbg9leeKi+Zf2lUx30i03a37KgiXdkRwoyAJkqNpv2oWR0aMhq/Xyz/y5s=
+	t=1715602986; cv=none; b=aEpvjtEbFh0kOLECbCUiC2PeZlwIMeyySqCEEdtxJAdhXR8UCY1t9SjKKU1j1OBsWeOZvbTIkTj7LCmRM+kJjQwFff8z2tx7uxBZqOCDBUUHRXaVxlm7R79OCYGnw+2CLiCxJJn4jKKHXIwHLXnv1E7yxrqLNTLsiJYwpPmaJd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715602759; c=relaxed/simple;
-	bh=qn0QvlNJNTgRfoeiDuTPG0CLGGWtTC/IQU2gxVE4PAs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LYSEmtW4zEnTyDucA8cy0bHk79SobNIgvPEbfzZyhA2W99Z6hqd2mnyyBrwD5imSREavBl9GoawtOCnFbTgV+Fj987xy8MMKtJARIjnN+kNt+BKLkfILLn13nOu7VOkqh5gGKe1DL4raOaFgLe+YdhenkSC5/y7rY8pXT4cMt1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VdJSM2NKKz4f3n6Z;
-	Mon, 13 May 2024 20:18:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 698CD1A01D2;
-	Mon, 13 May 2024 20:19:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g46BUJm8iY0Mg--.57325S6;
-	Mon, 13 May 2024 20:19:09 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 2/2] blk-throttle: fix lower control under super low iops limit
-Date: Mon, 13 May 2024 20:08:48 +0800
-Message-Id: <20240513120848.2828797-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240513120848.2828797-1-yukuai1@huaweicloud.com>
-References: <20240513120848.2828797-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1715602986; c=relaxed/simple;
+	bh=GMpp0dPFuIFfvEUduPyIjFcKlLnBpiSg9daDEDmMREo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lTbCEDmoImQbPZtEd015bqs/NgWxm3yrLzT7C+QzanKiRLejU3OtGamWaxEWDKeM6eTVRvEBCx6+FkmU/xp0G47gBpZ4xAXM6PbkDp0fEHvEFhTgpqWWzAcCV0qGG7uZ2jWU/Dd1JHPnLM5xGIpC08b5n+47Ujf2tPKkW6IYkbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=jzT6xeI3; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VdJXy1tR4z6Cnk90;
+	Mon, 13 May 2024 12:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1715602962; x=1718194963; bh=7Ih71/Watz1cdPTWlkmWtBwl
+	P9ZcU5ZJPsGWDZOPS0Y=; b=jzT6xeI3w+cBrbZgW+L7A5crY0hWa6Q4mx/1MHQE
+	B8JU1uAtmpxRvcx8kY5GQZBcuGgyo2OONYgKdIgmhlAvT6oKhREKiOFVCBfTCmHA
+	a3JXZoC1XANZmc9Z/saTfeC99ouZ0tuRaxaafBSKRBySDS3d6wwcjB+VOxYoJYuG
+	Kshui5g5ctx5ZcnXxJ/HO/HaeHSThdryHdvqM/b3bwdcbQkcR27Z6D6ISOpRZDCi
+	6N1JwHxIu+EMOmqRUAf+7TGxu6V+wD0lNfW+An2y4fbLVOVBDm6pCyNoR80qHnHM
+	9X88dvEGxU9nWcY+IUWLez3lumEp7uNOlnogIavx0EP7hg==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 6kRT-qnGtJMv; Mon, 13 May 2024 12:22:42 +0000 (UTC)
+Received: from [172.20.0.79] (unknown [8.9.45.205])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VdJXV0Dx6z6Cnk8s;
+	Mon, 13 May 2024 12:22:33 +0000 (UTC)
+Message-ID: <1b618942-a0fe-45d9-90de-eede429e7284@acm.org>
+Date: Mon, 13 May 2024 06:22:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g46BUJm8iY0Mg--.57325S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrWrGrW3KryfXF1xZFyUGFg_yoW5XFWfpr
-	W3ur43KF1qqFZFkF43ArZxtFWY9ws7Zry5J343Wr4fAr12gFnrWr1DZr4YkFW8AF93ua1x
-	AFn8JryDGF4UZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU
-	=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] rust: block: introduce `kernel::block::mq` module
+To: Andreas Hindborg <nmi@metaspace.dk>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Damien Le Moal <Damien.LeMoal@wdc.com>, Hannes Reinecke <hare@suse.de>,
+ Ming Lei <ming.lei@redhat.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>,
+ Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>,
+ =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>,
+ Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>,
+ Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+ =?UTF-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>,
+ open list <linux-kernel@vger.kernel.org>,
+ "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+ "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+ "gost.dev@samsung.com" <gost.dev@samsung.com>
+References: <20240512183950.1982353-1-nmi@metaspace.dk>
+ <20240512183950.1982353-2-nmi@metaspace.dk>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240512183950.1982353-2-nmi@metaspace.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-From: Yu Kuai <yukuai3@huawei.com>
+On 5/12/24 11:39, Andreas Hindborg wrote:
+> +    /// Set the logical block size of the device.
+> +    ///
+> +    /// This is the smallest unit the storage device can address. It i=
+s
+> +    /// typically 512 bytes.
 
-User will configure allowed iops limit in 1s, and calculate_io_allowed()
-will calculate allowed iops in the slice by:
+Hmm ... all block devices that I have encountered recently have a
+logical block size of 4096 bytes. Isn't this the preferred logical
+block size for SSDs and for SMR hard disks?
 
-limit * HZ / throtl_slice
+> +    /// Set the physical block size of the device.
+> +    ///
+> +    /// This is the smallest unit a physical storage device can write
+> +    /// atomically. It is usually the same as the logical block size b=
+ut may be
+> +    /// bigger. One example is SATA drives with 4KB sectors that expos=
+e a
+> +    /// 512-byte logical block size to the operating system.
 
-However, if limit is quite low, the result can be 0, then
-allowed IO in the slice is 0, this will cause missing dispatch and
-control will be lower than limit.
+Please be consistent and change "4 KB sectors" into "4 KB physical block
+size".
 
-For example, set iops_limit to 5 with HD disk, and test will found that
-iops will be 3.
+I think that the physical block size can also be smaller than the
+logical block size. From the SCSI SBC standard:
 
-This is usually not a big deal, because user will unlikely to configure
-such low iops limit, however, this is still a problem in the extreme
-scene.
+Table 91 =E2=80=94 LOGICAL BLOCKS PER PHYSICAL BLOCK EXPONENT field
+-----  ------------------------------------------------------------
+Code   Description
+-----  ------------------------------------------------------------
+0      One or more physical blocks per logical block (the number of
+        physical blocks per logical block is not reported).
+n > 0  2**n logical blocks per physical block
+-----  ------------------------------------------------------------
 
-Fix the problem by using MAX_THROTL_SLICE in this case, so that
-calculate_io_allowed() is guaranteed not to return 0, since we don't care
-about more smoother control effect in this case.
+> +impl<T: Operations, S: GenDiskState> GenDisk<T, S> {
+> +    /// Call to tell the block layer the capacity of the device in sec=
+tors (512B).
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 18 ++++++++++++++++++
- block/blk-throttle.h |  6 ++++++
- 2 files changed, 24 insertions(+)
+Why to use any other unit than bytes in Rust block::mq APIs? sector_t
+was introduced before 64-bit CPUs became available to reduce the number
+of bytes required to represent offsets. I don't think that this is still
+a concern today. Hence my proposal to be consistent in the Rust=20
+block::mq API and to use bytes as the unit in all APIs.
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 69f1bb91ea78..69429288b50b 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -491,6 +491,8 @@ static bool throtl_schedule_next_dispatch(struct throtl_service_queue *sq,
- 
- static unsigned int tg_throtl_slice(struct throtl_grp *tg, int rw)
- {
-+	if (tg->throtl_slice[rw])
-+		return tg->throtl_slice[rw];
- 	return tg->td->throtl_slice;
- }
- 
-@@ -1169,6 +1171,21 @@ static int tg_print_conf_uint(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
-+static void tg_set_throtl_slice(struct throtl_grp *tg)
-+{
-+	int rw;
-+
-+	for (rw = READ; rw <= WRITE; rw++) {
-+		u32 limit = tg_iops_limit(tg, rw);
-+
-+		if (limit == UINT_MAX ||
-+		    calculate_io_allowed(limit, tg->td->throtl_slice) != 0)
-+			tg->throtl_slice[rw] = tg->td->throtl_slice;
-+		else
-+			tg->throtl_slice[rw] = MAX_THROTL_SLICE;
-+	}
-+}
-+
- static void tg_conf_updated(struct throtl_grp *tg, bool global)
- {
- 	struct throtl_service_queue *sq = &tg->service_queue;
-@@ -1200,6 +1217,7 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 	}
- 	rcu_read_unlock();
- 
-+	tg_set_throtl_slice(tg);
- 	/*
- 	 * We're already holding queue_lock and know @tg is valid.  Let's
- 	 * apply the new config directly.
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 393c3d134b96..0424d2be90ff 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -126,6 +126,12 @@ struct throtl_grp {
- 
- 	unsigned long last_check_time;
- 
-+	/*
-+	 * This is usually td->throtl_slice, however, if iops limit is quite
-+	 * low that allowed io in that slice is 0, throtl_slice in this tg will
-+	 * be set to MAX_THROTL_SLICE.
-+	 */
-+	unsigned int throtl_slice[2];
- 	/* When did we start a new slice */
- 	unsigned long slice_start[2];
- 	unsigned long slice_end[2];
--- 
-2.39.2
+Thanks,
 
+Bart.
 
