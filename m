@@ -1,137 +1,119 @@
-Return-Path: <linux-block+bounces-7355-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7359-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 206968C5A9D
-	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 19:54:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93ACB8C5B57
+	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 20:48:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA33E1F21C00
-	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 17:54:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9F10282A06
+	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 18:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B604A1802B8;
-	Tue, 14 May 2024 17:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CB61E88D;
+	Tue, 14 May 2024 18:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sew1WT7y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmKmaPHd"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAC4180A82
-	for <linux-block@vger.kernel.org>; Tue, 14 May 2024 17:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8431E536
+	for <linux-block@vger.kernel.org>; Tue, 14 May 2024 18:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715709220; cv=none; b=SSR88cLbAnlMG0nUJOom+RFKR3RKfkDJtuZW8PsoD4tqweoF5koGDVynzi5aopir47K4SbnqYumZJe8RruVBi795adIQZShfVEhIGA7c+H2mPdOGOpk5v4SOeP+gEUSe2YwMt+dmRZxDJq6tRc/2jbfe27Lr0y1x33FJFA0aIQ4=
+	t=1715712506; cv=none; b=aGVYOlY/w3sgC6FXACOr1/BNcVXxlkhEjgemGqWXYx5aY659pSDcQADLqADUFMFzvEmbUz6VgiHSmFFVJLA/lnFYKhHtSzWHudZPxjyXBqNEX6sGKIpqS+Eq3Jdz2rsiQ+MIsaItfKJQT/Yz+hZD3zUWbBZJXyR8DzXIKprhzGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715709220; c=relaxed/simple;
-	bh=29Ogzu8HUgDu3PF9FKvjcGb+SavKhmrv7g+xDkNBUkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=MdarC48kB8nyZ4sTaH76a4LntSkGxldBM9MWXGC+6A8je5pvoCaedsS1CEbn/3Js8SJd1Tw4QdWVU9awFshJt+JlLxwAr1C6Ohx0UDnm7gUCU4j7Cx/rHxbxxVFFks//Q9NY41XVlKioFqhNk0n0DSfw6ZEPVatzXgsETpJfu5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sew1WT7y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715709218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J8WReQiv4GBqlDuegj32JcgtpHrEsWG68ox5pprOL3Y=;
-	b=Sew1WT7yiOh2vPcsJDlGAGs3xgizlgirXMK1d3I2h1vdH9plY1JqoaykACpEsuzaVGz58r
-	WopuoK+c8OKfU3zTDa+MLmNRyd8OYZqQ+Jc9+M03cEVtJaRvT3VI4nkqMEawUUCYfnJZq5
-	a+A7dasqPB1RrKf6Z86+Xkm8vmCw6DM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-qrfXvdWFNuuPCZl6fv1CTg-1; Tue,
- 14 May 2024 13:53:36 -0400
-X-MC-Unique: qrfXvdWFNuuPCZl6fv1CTg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2D1229AA2C9;
-	Tue, 14 May 2024 17:53:35 +0000 (UTC)
-Received: from jmeneghi.bos.com (unknown [10.2.17.24])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A433A400057;
-	Tue, 14 May 2024 17:53:34 +0000 (UTC)
-From: John Meneghini <jmeneghi@redhat.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk,
-	kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me,
-	emilne@redhat.com,
-	hare@kernel.org
-Cc: linux-block@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	jrani@purestorage.com,
-	randyj@purestorage.com
-Subject: [PATCH v4 6/6] nvme: multipath: pr_notice when iopolicy changes
-Date: Tue, 14 May 2024 13:53:22 -0400
-Message-Id: <20240514175322.19073-7-jmeneghi@redhat.com>
-In-Reply-To: <20240514175322.19073-1-jmeneghi@redhat.com>
-References: <20240514175322.19073-1-jmeneghi@redhat.com>
+	s=arc-20240116; t=1715712506; c=relaxed/simple;
+	bh=C0Cvf2cgFTZ2g2ohjesNm08j/GKLNg1KUc+rfT8Dr5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e7P+4I04GZ8hgiCNyCn9hOawnBZkdADhUQR2YcNMrYOFscyzO7PQ9SQnWAycw5xhuuTTiz/mE3roxtVfmWnr5MMrFB1BO2/st2D1DEdSBAr50OAH2d7QjVVxtnFCofsSxuVgQPaJ981HxGlHgvhZNH4ZikWpbq/ZiKKYJHlgzm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FmKmaPHd; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-23ee34c33ceso3764886fac.3
+        for <linux-block@vger.kernel.org>; Tue, 14 May 2024 11:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715712504; x=1716317304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9vm7+VMJI/p0xhaVdX07ViEoUrsc6h67q1AxKlBgBZ8=;
+        b=FmKmaPHdnTje/yi9EeYDywxJtIidXsNQtYr+4RmZQkI2P8OrUUZ7t88n+W7gY5DsDL
+         8FhMQbh0s9h+agUoxJDNMoZtZKNpTpLjhJ0dDoZbXty6s5u40LAx3EuFXzjC8lbz4eKT
+         ZxIulMffLK6PRak1o2shXqElL4rfM3fTdOjsXHNX1fk3vvN/AhrWSyCDiLXVY+lyo838
+         X577/Eth/7NyP5fjsLLtYJV5bd2XF92EegUK+wB95B80LVWQD/dQ44/6QjKTzPYu+faS
+         paT1duDsmdf9FQVJ2LslvMN5QRY54avTBCo/4BmzoKMVZ2gzb2+8CEmM1RlW3bjm2sjm
+         qReA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715712504; x=1716317304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9vm7+VMJI/p0xhaVdX07ViEoUrsc6h67q1AxKlBgBZ8=;
+        b=kFvEVWrTVFncqk+KjLN7P51j/LN7DHvvJdXahCjWaLxYvF1OMeCCNFwm6oOKnFnLlX
+         yJhC5/Tr/NDhuZbqzrASIrE+XsrJHP13L97y5XZOwBCaDC5rGn78l3R2AOExjugkQOie
+         HNGYJIhwe3vwOdiJpSqUe3Q7yb4OvHeqK+ZzG1ZYhleSVtpNIsWgxftvu8Ljp+KoI9xU
+         3QwtQD+Y7eP53S8F8L3l5dxNFsfdT7sBMLUvXUaQV1RIOQRkYCOoYk1ITSxQzqIa1XxW
+         b/PpTk+uXb4T//bmvUGLxvZ94ymRGdJlC4bDvxdWb5gWStf/d7zMCbvE5gYkXKAIcWhW
+         DRmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqz3eh7fkxOf6Qs5GCPwx2ILEWkEA3x5V+2tlrbzOmgijpi2y5BwhuS6IBMf2qIaQfR1YGa3o6ugZhUm2cJ2H7duKDSmK/tKSXO04=
+X-Gm-Message-State: AOJu0YwrSWAyDilYSfGG1+5SITz2donuh28dq3Jo/vsnXFs8wcp+G7Ab
+	UVw3L3fVYMoTfnVOW+Q5rUeqyeBJ3dOOolwizTKdF5Ws9MwNv16tkhK3k7w0pv4YJP8e1ySapju
+	3iZJkz+VjgWCKwI/6R0wKJvzFFL4=
+X-Google-Smtp-Source: AGHT+IFTQ7WgnbVLfRh0vq9jLeG2jKiPAvDtPHj0qMEaP/Z4591SQ00dylSYeDQjDQGRWtYT5tsDRKs6U0EZSj2FSxw=
+X-Received: by 2002:a05:6870:c0c8:b0:233:b5ef:3bab with SMTP id
+ 586e51a60fabf-24172a3d9famr14795380fac.3.1715712503908; Tue, 14 May 2024
+ 11:48:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+References: <CGME20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41@epcas5p2.samsung.com>
+ <20240510134015.29717-1-joshi.k@samsung.com> <CB17E82F-C649-4D13-8813-1A6F2D621C51@dubeyko.com>
+In-Reply-To: <CB17E82F-C649-4D13-8813-1A6F2D621C51@dubeyko.com>
+From: Kanchan Joshi <joshiiitr@gmail.com>
+Date: Tue, 14 May 2024 12:47:57 -0600
+Message-ID: <CA+1E3rLxUnuv9E_BxCFj1aodOTp3yrOEh7cFYt_j-Yz+_0q29g@mail.gmail.com>
+Subject: Re: [PATCH] nvme: enable FDP support
+To: Viacheslav Dubeyko <slava@dubeyko.com>
+Cc: Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org, 
+	linux-block@vger.kernel.org, =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>, 
+	Bart Van Assche <bvanassche@acm.org>, david@fromorbit.com, gost.dev@samsung.com, 
+	Hui Qi <hui81.qi@samsung.com>, Nitesh Shetty <nj.shetty@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Send a pr_notice when ever the iopolicy on a subsystem
-is changed. This is important for support reasons. It
-is fully expected that users will be changing the iopolicy
-with active IO in progress.
+On Mon, May 13, 2024 at 2:04=E2=80=AFAM Viacheslav Dubeyko <slava@dubeyko.c=
+om> wrote:
+>
+>
+>
+> > On May 10, 2024, at 4:40 PM, Kanchan Joshi <joshi.k@samsung.com> wrote:
+> >
+> > Flexible Data Placement (FDP), as ratified in TP 4146a, allows the host
+> > to control the placement of logical blocks so as to reduce the SSD WAF.
+> >
+> > Userspace can send the data lifetime information using the write hints.
+> > The SCSI driver (sd) can already pass this information to the SCSI
+> > devices. This patch does the same for NVMe.
+> >
+> > Fetches the placement-identifiers (plids) if the device supports FDP.
+> > And map the incoming write-hints to plids.
+> >
+>
+>
+> Great! Thanks for sharing  the patch.
+>
+> Do  we have documentation that explains how, for example, kernel-space
+> file system can work with block layer to employ FDP?
 
-Signed-off-by: John Meneghini <jmeneghi@redhat.com>
----
- drivers/nvme/host/multipath.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e9330bb1990b..0286e44a081f 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -67,6 +67,10 @@ static int nvme_activate_iopolicy(struct nvme_subsystem *subsys, int iopolicy)
- 		}
- 	}
- 	mutex_unlock(&subsys->lock);
-+
-+	pr_notice("%s: %s enable %d status %d for subsysnqn %s\n", __func__,
-+			nvme_iopolicy_names[iopolicy], enable, ret, subsys->subnqn);
-+
- 	return ret;
- }
- 
-@@ -890,6 +894,8 @@ void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
- {
- 	struct nvme_ctrl *ctrl;
- 
-+	int old_iopolicy = READ_ONCE(subsys->iopolicy);
-+
- 	WRITE_ONCE(subsys->iopolicy, iopolicy);
- 
- 	mutex_lock(&nvme_subsystems_lock);
-@@ -898,6 +904,10 @@ void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
- 		nvme_mpath_clear_ctrl_paths(ctrl);
- 	}
- 	mutex_unlock(&nvme_subsystems_lock);
-+
-+	pr_notice("%s: changed from %s to %s for subsysnqn %s\n", __func__,
-+			nvme_iopolicy_names[old_iopolicy], nvme_iopolicy_names[iopolicy],
-+			subsys->subnqn);
- }
- 
- static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
--- 
-2.39.3
-
+This is primarily for user driven/exposed hints. For file system
+driven hints, the scheme is really file system specific and therefore,
+will vary from one to another.
+F2FS is one (and only at the moment) example. Its 'fs-based' policy
+can act as a reference for one way to go about it.
 
