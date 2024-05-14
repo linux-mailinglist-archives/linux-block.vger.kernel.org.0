@@ -1,193 +1,175 @@
-Return-Path: <linux-block+bounces-7364-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7366-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 135DE8C5C02
-	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 22:00:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C34A18C5CFC
+	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 23:40:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 050BA1C21C54
-	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 20:00:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AEAD281185
+	for <lists+linux-block@lfdr.de>; Tue, 14 May 2024 21:40:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDAA18131A;
-	Tue, 14 May 2024 20:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EC11181BB0;
+	Tue, 14 May 2024 21:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uZQHp6bg"
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="wQA7+PK8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C702818131E
-	for <linux-block@vger.kernel.org>; Tue, 14 May 2024 20:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E930D181BA9
+	for <linux-block@vger.kernel.org>; Tue, 14 May 2024 21:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715716833; cv=none; b=TMEGdlpQKgbK+ty3J9ckjBmO2CQTLzPG4B6k5hvzlb93sD0cYsfptqGZa9idkjoxlZe32eEeO0OQmopwHCKLhSE5jGLLQaIzGE3zP9424ap3N1fLJRvEQOHnJPQzDzFe+6KOYY6tAgfLuvEF9DOdG2JmGIKe/2QBqWI6FoljAdI=
+	t=1715722810; cv=none; b=FsmRm9PY/YspZDuRLjAX5BBbONpRSSHji1CG8PoRiWTm3N8XELbF8MNZEPph4RQs3FRTUFZ+tOrUvTso08eYcz1UJG7CBh66dLLZbRXy3MYPimonK7VXHafQ57HFfGpmyTtv1DW6vSB5ZdMjsHJo+WxPc10LjUZXHqHdadVK2B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715716833; c=relaxed/simple;
-	bh=F1BCusWVnox0inKiwWulDDxeUYd5ETJQa5nYC/mUo7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YL5Mj5lMOVNpsUgaaOAFpsQTHfnZ2LEp2ywgBUfqefy5/KVx3gfudpwnb47JdvIJnmbJI2J1pfS+4RGtnY0/CepWH7Q2CBqL3MZ18cxKa8OjNnvVvMFcWfOeAp224kmRebe8yY234ki1NKT8RGI4GOf38n3lTmZaCVkz26ftf7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uZQHp6bg; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2b8efd5ee5dso703235a91.3
-        for <linux-block@vger.kernel.org>; Tue, 14 May 2024 13:00:30 -0700 (PDT)
+	s=arc-20240116; t=1715722810; c=relaxed/simple;
+	bh=EbVISRVWTpGwhW+AztODaoguU9xS274FQMB4Blc32Ow=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=JRGK9v2pPZBI9/Y3Qs5JF2caAJQZOnqVLFxAMMreM29wHIFdoo96m2S/LPE6qyY+ddP70wql6niOwb8vDnYjnQogHaz0mUzbYm3NSI0+K1tKcyiwDEahF6FdxAjrxN5L/2re1TmCpVWq8a+5wOgtAAUY8YFvUFr9WJzXe8AploM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=wQA7+PK8; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f45104ef0so6689189e87.3
+        for <linux-block@vger.kernel.org>; Tue, 14 May 2024 14:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715716830; x=1716321630; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ll8ePMooaLJ++vSB+9syazdtLkK7b8/0TCj36hEfQbQ=;
-        b=uZQHp6bgXhVNv4WSPqVQvAiYLV3mF+NBc0Eiac6OZ/inaPjDmRqjOVmAbgvGCcbWSP
-         wTuX6JI/oeiW4Cgx5TrwyzkEEJwM962DpZ6X0Cwvxr0gzzTtPJeBStI754dEytgUv3BC
-         H5mvPBBnrmdkXJkr0XDJAyB23Xe1bAl1Ki6nc2kIziDDpmjsD2xvKnU9xYKD6XgjuHg9
-         WgKIkzJlskrafMzooda8nvLhVk3zOlFZinKclt/cjSO8fjjrVlIDtI+rpi5BkvInw/hw
-         I0KM7xMLpzbgS+ddFCk8X0zxdrlMD8S4jes6PhYm1lCIUueR2dK++Uncmmj3REjvKKPU
-         Vgvw==
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1715722807; x=1716327607; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PrziG9n2X44unPcKHLDimt60QjyvFXSxnAYMGkXTekg=;
+        b=wQA7+PK8GQqoBBYfZMqBfL8ADWIYWoV0EDH1ZY3GcTKaIT3m/5J3wpfsTQca2EfOL6
+         uifCeQEIpQvSXieaS/WdhjqHsdYC8L6n0IIQM2ibWW1/EsC+wg10JJ+hTmzvfeLjksQN
+         WuhYSvlSeMvSGw1Z2TR/Ouc5bgA6qJIAiPW2VvXvgHbM0Ta4Y7QrBiiohalJb++BcGs0
+         0OOCUcego2j76jDXTHSV9PPqG1Iocr4GlS8EU1lKaZ5V22EcfqpMTttYvW/TsHs9rC5V
+         3pBh6ON7SWVOfGUYLyYcIaH+CCInPa4PkA09VQBzQiZvwwEbk42r+o5ZbuOT1LgPbOpw
+         mSZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715716830; x=1716321630;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ll8ePMooaLJ++vSB+9syazdtLkK7b8/0TCj36hEfQbQ=;
-        b=Sm61T5MrUio/G31rbfu/edrW7mESQ+i4UiCC/acmwi26W2lHtfSQaww2LAgWm32/l8
-         KfQ2KSMsBt1ZEF5UAIOokeYsMbCXpP3nUpcxYf9bhXbZ89D7afBWh8Y1yC/zfyTaGbZo
-         nv5vEqlnE8QbeSSojZrh93N9RNHXad6KmJvFPSeQNbqzcyLwAbfy0MIbUTKqzMgSHX04
-         WBa2CV143z0tI7uMt6EBj00u+Nt97si8L/SgqxrJdPV2lK5y1q7h4t/dSP7zY7tpNfM4
-         reeDYk/QeopQp741Fm03vTRgh2vmKwlKCZ3dBg6dScppwDUD4t2j1ssoBJbeDR3u6AMC
-         otvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjeOYNgyjIShC+vE5fToU2ByDtap0LjH6HBfuVJH0ZBMRF+rbmXFWeGUh35V4Q55OZHXcgDnwtFmAXFhhAaAaxT87d/DAVW3fz2TA=
-X-Gm-Message-State: AOJu0YwZpXDUCD1ICRvhuCG10L+uvuB0BkStW8/bWx3BUA3usrFuqISL
-	A5W1bfxz5lNcwwf59qzi11mo2lbdB/L4JKY/O6J8iG2ftzl82g7C0dpk/u3NPcA=
-X-Google-Smtp-Source: AGHT+IFnBHUUmMWtiYG9e/YiHxcQJT/qNVtzttvhR+ZqrEmfm+gaRsCol3BlyeJlD0TCv2qEnJ75gA==
-X-Received: by 2002:a05:6a00:8986:b0:6ec:ee44:17bb with SMTP id d2e1a72fcca58-6f4e0343824mr14250305b3a.2.1715716829950;
-        Tue, 14 May 2024 13:00:29 -0700 (PDT)
-Received: from [172.21.2.105] ([50.204.89.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a819e7sm9572850b3a.56.2024.05.14.13.00.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 13:00:29 -0700 (PDT)
-Message-ID: <593a98c9-baaa-496b-a9a7-c886463722e1@kernel.dk>
-Date: Tue, 14 May 2024 14:00:20 -0600
+        d=1e100.net; s=20230601; t=1715722807; x=1716327607;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PrziG9n2X44unPcKHLDimt60QjyvFXSxnAYMGkXTekg=;
+        b=M5OGLT8t+d3zc7YltQzFZIZBNbKk3+fKeoaJ0roF9ilNVMrizMWdlAdXzHxhT/QeQV
+         tFvfmX0BmIx3fgyKH8adOTc7N+5KmZ6nTnxU/KRfM3sF/I4Rc1gaW5Vb6Abtt4wPZYEp
+         KJrW6fVto0GCkzkX+JuvDyib4aBPPL5/X6b4mdFsjap3QXX5nMe9p7utpd/MbzkDQTEC
+         4lMObKIE6ntvOLO+o3H5at+VLZYxdQBfEsZ1xa2yyBvQVbcyehM55K6ZTwV2n6728yz/
+         TmsP1ncJYHmDiipPy0eelwQUJUXebnmOW00/K3F/TmjOH/5DiZfiMLitMeWEOnWNrem4
+         kY/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV9PuwBb8h3YjtPhUoRz/x1439IAv0V1/W+Q9eAKtfGTgMF32Kxj5nME1IwDavGYnPmTS4CV0B5yDhCX2Nswzu8TG/W4lNYb5Gwrw4=
+X-Gm-Message-State: AOJu0Yx6mbZcF7l/Mk8piUlosRM+re7DXeLhB+tZgNQkkRoDaCGVXhO4
+	Os3eiL3Sh0iDcSNoqC8dh67jb1t/Aq776R85AoAjEKQ0Icbat5pqWKqtgxV69Yw=
+X-Google-Smtp-Source: AGHT+IFGSTaDocCTelgf45mS4akR4/F1HUdr9D0HIeSNCHWfG9nxMysqTGBM6ywDHE34trO1bftJhQ==
+X-Received: by 2002:ac2:4c4e:0:b0:523:6a08:1c91 with SMTP id 2adb3069b0e04-5236a081d53mr2435710e87.26.1715722806864;
+        Tue, 14 May 2024 14:40:06 -0700 (PDT)
+Received: from smtpclient.apple ([2a00:1370:81a4:8e0a:7881:38ef:d13d:5d35])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5238a36c718sm100571e87.245.2024.05.14.14.40.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2024 14:40:05 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Rust block device driver API and null block driver
-To: Andreas Hindborg <nmi@metaspace.dk>, Christoph Hellwig <hch@lst.de>,
- Keith Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>,
- Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>,
- Ming Lei <ming.lei@redhat.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>,
- Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>,
- Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>,
- =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
- Joel Granados <j.granados@samsung.com>,
- "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>,
- Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>,
- Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
- =?UTF-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>,
- open list <linux-kernel@vger.kernel.org>,
- "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
- "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
- "gost.dev@samsung.com" <gost.dev@samsung.com>
-References: <20240512183950.1982353-1-nmi@metaspace.dk>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240512183950.1982353-1-nmi@metaspace.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.8\))
+Subject: Re: [PATCH] nvme: enable FDP support
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+In-Reply-To: <CA+1E3rJtJpxk3EmTmtJWDFwP8km0xqRPt2QeQTRar7sTHtdD2Q@mail.gmail.com>
+Date: Wed, 15 May 2024 00:40:01 +0300
+Cc: Kanchan Joshi <joshi.k@samsung.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>,
+ linux-nvme@lists.infradead.org,
+ linux-block@vger.kernel.org,
+ =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>,
+ Bart Van Assche <bvanassche@acm.org>,
+ david@fromorbit.com,
+ gost.dev@samsung.com,
+ Hui Qi <hui81.qi@samsung.com>,
+ Nitesh Shetty <nj.shetty@samsung.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6078F029-A2ED-4B11-AC3B-B0E54D1BEB97@dubeyko.com>
+References: <CGME20240510134740epcas5p24ef1c2d6e8934c1c79b01c849e7ccb41@epcas5p2.samsung.com>
+ <20240510134015.29717-1-joshi.k@samsung.com>
+ <CB17E82F-C649-4D13-8813-1A6F2D621C51@dubeyko.com>
+ <CA+1E3rLxUnuv9E_BxCFj1aodOTp3yrOEh7cFYt_j-Yz+_0q29g@mail.gmail.com>
+ <88421397-1B95-4B2A-A302-55A919BCE98E@dubeyko.com>
+ <CA+1E3rJtJpxk3EmTmtJWDFwP8km0xqRPt2QeQTRar7sTHtdD2Q@mail.gmail.com>
+To: Kanchan Joshi <joshiiitr@gmail.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.8)
 
-On 5/12/24 12:39 PM, Andreas Hindborg wrote:
-> From: Andreas Hindborg <a.hindborg@samsung.com>
-> 
-> Hi All!
-> 
-> I am happy to finally send the first _non_ RFC patches for the Rust
-> block device API.
-> 
-> This series provides an initial Rust block layer device driver API,
-> and a very minimal null block driver to exercise the API. The driver
-> has only one mode of operation and cannot be configured.
-> 
-> These patches are an updated and trimmed down version of the v2 RFC
-> [1]. One of the requests for the v2 RFC was to split the abstractions
-> into smaller pieces that are easier to review. This is the first part
-> of the split patches.
-> 
-> A notable change in this patch set is that they no longer use the
-> `ref` field of the C `struct request` to manage lifetime of the
-> request structure.
-> 
-> The removed features will be sent later, as their dependencies land
-> upstream.
-> 
-> As mentioned before, I will gladly maintain this code if required.
 
-With the following stipulations (and the kernel test bot issues sorted),
-I think we should give this a go. We already covered this today at
-LSFMM, but for the sake of others, here's how I see the rust support for
-the block side of things:
 
-I see rust support for the block layer as a two stage kind of thing.
-Stage 1 would be including this patchset. In stage 1, all fallout from
-block layer changes fall upon Andreas and group to fix. Under no
-circumstance will changes from other contributors be held up, or
-contributors be held accountable, for breakages of the block rust code.
-Should contributors wish to sort out these issues themselves, then they
-are of course free to do so, but it won't be something that gatekeeps
-other changes.
+> On May 15, 2024, at 6:30 AM, Kanchan Joshi <joshiiitr@gmail.com> =
+wrote:
+>=20
+> On Tue, May 14, 2024 at 1:00=E2=80=AFPM Viacheslav Dubeyko =
+<slava@dubeyko.com> wrote:
+>>> On May 14, 2024, at 9:47 PM, Kanchan Joshi <joshiiitr@gmail.com> =
+wrote:
+>>>=20
+>>> On Mon, May 13, 2024 at 2:04=E2=80=AFAM Viacheslav Dubeyko =
+<slava@dubeyko.com> wrote:
+>>>>=20
+>>>>=20
+>>>>=20
+>>>>> On May 10, 2024, at 4:40 PM, Kanchan Joshi <joshi.k@samsung.com> =
+wrote:
+>>>>>=20
+>>>>> Flexible Data Placement (FDP), as ratified in TP 4146a, allows the =
+host
+>>>>> to control the placement of logical blocks so as to reduce the SSD =
+WAF.
+>>>>>=20
+>>>>> Userspace can send the data lifetime information using the write =
+hints.
+>>>>> The SCSI driver (sd) can already pass this information to the SCSI
+>>>>> devices. This patch does the same for NVMe.
+>>>>>=20
+>>>>> Fetches the placement-identifiers (plids) if the device supports =
+FDP.
+>>>>> And map the incoming write-hints to plids.
+>>>>>=20
+>>>>=20
+>>>>=20
+>>>> Great! Thanks for sharing  the patch.
+>>>>=20
+>>>> Do  we have documentation that explains how, for example, =
+kernel-space
+>>>> file system can work with block layer to employ FDP?
+>>>=20
+>>> This is primarily for user driven/exposed hints. For file system
+>>> driven hints, the scheme is really file system specific and =
+therefore,
+>>> will vary from one to another.
+>>> F2FS is one (and only at the moment) example. Its 'fs-based' policy
+>>> can act as a reference for one way to go about it.
+>>=20
+>> Yes, I completely see the point. I would like to employ the FDP in my
+>> kernel-space file system (SSDFS). And I have a vision how I can do =
+it.
+>> But I simply would like to see some documentation with the =
+explanation of
+>> API and limitations of FDP for the case of kernel-space file systems.
+>=20
+> Nothing complicated for early experimentation.
+> Once FS has determined the hint value, it can put that into
+> bio->bi_write_hint and send bio down.
+>=20
+> If SSDFS cares about user-exposed hints too, it can choose different
+> hint values than what is exposed to user-space.
+> Or it can do what F2FS does - use the mount option as a toggle to
+> reuse the same values either for user-hints or fs-defined hints.
 
-This leaves existing contributors free to go about their usual business.
-Kernels that don't enable rust (which won't happen unless you're setup
-for it anyway) won't even see build breakages. We will see some noise
-from the kernel test bot on the list, which does worry me a little bit.
-Not because it'll mark the rust side as being broken, but because it'll
-cause more noise which may make us miss breakages that are ultimately
-more important. I don't think this is a big risk, just highlighting that
-it is indeed a risk and will cause some potential annoyances.
+How many hint values file system can use? Any limitations here?
 
-In stage 1, block rust is just there to enable people to experiment and
-play with it, and continue to develop it. Right now Andreas has a very
-(VERY) basic null_blk driver, I think we should move towards a fully
-fledged implementation of that so we at least have _something_ to test.
-We really need to full API to be used and exposed, this is generic
-kernel requirement - we just don't merge code that has no users, ever.
-Since a more complete rust null blk driver does exist out of tree,
-perhaps we can get something more complete for v2 of this patchset? I
-would highly recommend that.
+And how file system can detect that it=E2=80=99s FDP-based device?
 
-We may never exit stage 1, and I think during this particular stage, if
-things don't work out for whatever reason, the code can be removed
-again. As we have no critical drivers being rust exclusive at that
-point, it won't cause any issues yanking the code again. Moving into a
-stage 2 for block rust would mean that the rest of the kernel has fully
-adopted rust anyway, and being able (and willing) to write rust is just
-another part of the developer arsenal.
-
-I'd love to see the rust code moved to eg block/rust/, as I would
-greatly prefer to have it closer to the actual block code rather than
-sitting off in rust/kernel/block instead. I see this as a similar
-problem to having documentation away fro the actual code, it inevitably
-causes a drift between them. I understand from Andreas that this is
-actually something that is being worked on, and we can probably expect
-to see that in a cycle or two.
-
-tldr - as long as this doesn't encumer existing contributors, then I see
-absolutely no reason not to enable a rust playground for block drivers.
-
--- 
-Jens Axboe
+Thanks,
+Slava.
 
 
