@@ -1,61 +1,67 @@
-Return-Path: <linux-block+bounces-7373-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7377-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50DE88C5EBC
-	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 03:24:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CCF58C5ECC
+	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 03:32:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 821D71C20966
-	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 01:24:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAFEF2822FF
+	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 01:32:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B750863B9;
-	Wed, 15 May 2024 01:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02005A21;
+	Wed, 15 May 2024 01:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6e7D/6E"
 X-Original-To: linux-block@vger.kernel.org
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3805CAC
-	for <linux-block@vger.kernel.org>; Wed, 15 May 2024 01:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF2DA2A
+	for <linux-block@vger.kernel.org>; Wed, 15 May 2024 01:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715736266; cv=none; b=FH1bQQilWSsc3pmappvV2W5VgBElVL6dXYHUkhjMw/xzeAnD7BeF1gfg2UEkyj7fVpL5SKgQCPW0+WZNV8kvS2W//ox7ij1eaHKvccizMzRLECDiqBkIwiihJOAjD3HKgnhsh2g+CJ14KP++a8kNF5LwZtaXivvrY6x0diTBXM8=
+	t=1715736749; cv=none; b=kIIqURKyTuINZpWa3w8Ngyshrd3vA6AF0xAFrCAfoHCQ2kFjfQQKudEM/vF2Fcyw801rAbRT96WWZ5GHAyWccU3fY6HykiOm+vEZuoHMsyurqqcSups1gm4OPYNQvuNWfVfhvR6We1I1pvMsqGOIpdnrl7Z9qLZEkGL5yPSN5wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715736266; c=relaxed/simple;
-	bh=yMMIUz7DubXFQXYpZ3HCVv1OQrz7GVWdZJEPrbTdrZU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hEv8u0dE90Wsu1mVwLJocuYNpojbQidtnBxILkGCCgVg8Nn38XLGutNlNcbTxvV+ij6ujyhlnD+nSpV7LdWshlibGKDE+WF710AFhsPt2+MPlgDevxANzlonmRN+P53IPHvoTL//9/Vr+NyI9wAt7OOjrCzgj6CkPSF8nQuSgpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 44F1O7LZ051706;
-	Wed, 15 May 2024 09:24:07 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VfFm04QmWz2PDtZH;
-	Wed, 15 May 2024 09:20:48 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 15 May 2024 09:24:05 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox
-	<willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo
-	<tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>, <linux-mm@kvack.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cgroups@vger.kernel.org>, Zhaoyang Huang <huangzhaoyang@gmail.com>,
-        <steve.kang@unisoc.com>
-Subject: [RFC PATCH 2/2] mm: introduce budgt control in readahead
-Date: Wed, 15 May 2024 09:23:50 +0800
-Message-ID: <20240515012350.1166350-3-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240515012350.1166350-1-zhaoyang.huang@unisoc.com>
-References: <20240515012350.1166350-1-zhaoyang.huang@unisoc.com>
+	s=arc-20240116; t=1715736749; c=relaxed/simple;
+	bh=KQsKaeabrKdboRHfx6hU3HkugUjk2mJbKjID2UQfhJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bOT/CaG2+7LH1vczhPp83IiCgBRLBOrh1OdDT3rfWsXtYMetA+ENnlFwKuBG/ZJc6ZzbjhRTvh7RRdvOH4rsIZbH6+Pja9CvCrB2xFb6g03xVjZA/BN1xz+xXlYVszvKWf1AntmGzhTcrPXg2DMBxnz2XhQ/RGNsEGFhOpIrkSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E6e7D/6E; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715736747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A5lc/yJVWR2p2x1Hi5f6Xdfhu5OJrGe1x6bCuD6KXNg=;
+	b=E6e7D/6EFvTZNC1F+vyUaWYBI6HaX//V3LPCsWSgLoP+Pcx3e2wUdoslfMmTEZck4EMlhL
+	AgXZlTJfb2qPqArDGIhnLRWgKr2V+DJvFfn+6nyruqVn8R79v6MpdRs9m/BY9GX8wLDGrm
+	afdkTPTkcvXDeh6V+i5xEMOQ9FQoot8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-TZADKGc2NZWGI6CkFvGA6Q-1; Tue, 14 May 2024 21:32:09 -0400
+X-MC-Unique: TZADKGc2NZWGI6CkFvGA6Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E463085A58C;
+	Wed, 15 May 2024 01:32:08 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.11])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A9EF7C15BB9;
+	Wed, 15 May 2024 01:32:07 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/2] blk-cgroup: two fixes on list corruption
+Date: Wed, 15 May 2024 09:31:55 +0800
+Message-ID: <20240515013157.443672-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -63,130 +69,25 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 44F1O7LZ051706
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Hello,
 
-Currently, readahead's size is decided mainly by page cache's status
-like hit/miss or hole size which could lead to suspension of following
-bio which is over the size of blk-throttle allowed size when
-BLK_THROTTLING is on. Introduce the budgt value here to have the bio's
-size be within the legal size.
+The 1st patch fixes list corruption when running reset_iostat(cgroup
+v1).
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
- mm/readahead.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+The 2nd patch fixes potential list corruption when reordering of
+writting to ->lqueued and reading from iostat instance.
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 130c0e7df99f..2b6120ced6f9 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -128,6 +128,7 @@
- #include <linux/blk-cgroup.h>
- #include <linux/fadvise.h>
- #include <linux/sched/mm.h>
-+#include <linux/minmax.h>
- 
- #include "internal.h"
- 
-@@ -358,16 +359,23 @@ static unsigned long get_init_ra_size(unsigned long size, unsigned long max)
-  *  Get the previous window size, ramp it up, and
-  *  return it as the new window size.
-  */
--static unsigned long get_next_ra_size(struct file_ra_state *ra,
-+static unsigned long get_next_ra_size(struct readahead_control *ractl,
- 				      unsigned long max)
- {
--	unsigned long cur = ra->size;
-+	unsigned long cur = ractl->ra->size;
-+	struct inode *inode = ractl->mapping->host;
-+	unsigned long budgt = inode->i_sb->s_bdev ?
-+			blk_throttle_budgt(inode->i_sb->s_bdev) : 0;
-+	unsigned long val = max;
- 
- 	if (cur < max / 16)
--		return 4 * cur;
-+		val = 4 * cur;
- 	if (cur <= max / 2)
--		return 2 * cur;
--	return max;
-+		val = 2 * cur;
-+
-+	val = budgt ? min(budgt / PAGE_SIZE, val) : val;
-+
-+	return val;
- }
- 
- /*
-@@ -437,6 +445,8 @@ static int try_context_readahead(struct address_space *mapping,
- 				 unsigned long max)
- {
- 	pgoff_t size;
-+	unsigned long budgt = mapping->host->i_sb->s_bdev ?
-+		blk_throttle_budgt(mapping->host->i_sb->s_bdev) : 0;
- 
- 	size = count_history_pages(mapping, index, max);
- 
-@@ -455,7 +465,7 @@ static int try_context_readahead(struct address_space *mapping,
- 		size *= 2;
- 
- 	ra->start = index;
--	ra->size = min(size + req_size, max);
-+	ra->size = min3(budgt / PAGE_SIZE, size + req_size, max);
- 	ra->async_size = 1;
- 
- 	return 1;
-@@ -552,6 +562,8 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 	pgoff_t index = readahead_index(ractl);
- 	pgoff_t expected, prev_index;
- 	unsigned int order = folio ? folio_order(folio) : 0;
-+	unsigned long budgt = ractl->mapping->host->i_sb->s_bdev ?
-+		blk_throttle_budgt(ractl->mapping->host->i_sb->s_bdev) : 0;
- 
- 	/*
- 	 * If the request exceeds the readahead window, allow the read to
-@@ -574,7 +586,7 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 			1UL << order);
- 	if (index == expected || index == (ra->start + ra->size)) {
- 		ra->start += ra->size;
--		ra->size = get_next_ra_size(ra, max_pages);
-+		ra->size = get_next_ra_size(ractl, max_pages);
- 		ra->async_size = ra->size;
- 		goto readit;
- 	}
-@@ -599,7 +611,7 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 		ra->start = start;
- 		ra->size = start - index;	/* old async_size */
- 		ra->size += req_size;
--		ra->size = get_next_ra_size(ra, max_pages);
-+		ra->size = get_next_ra_size(ractl, max_pages);
- 		ra->async_size = ra->size;
- 		goto readit;
- 	}
-@@ -631,6 +643,9 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 	 * standalone, small random read
- 	 * Read as is, and do not pollute the readahead state.
- 	 */
-+	if (budgt)
-+		req_size = min(budgt / PAGE_SIZE, req_size);
-+
- 	do_page_cache_ra(ractl, req_size, 0);
- 	return;
- 
-@@ -647,7 +662,7 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 	 * Take care of maximum IO pages as above.
- 	 */
- 	if (index == ra->start && ra->size == ra->async_size) {
--		add_pages = get_next_ra_size(ra, max_pages);
-+		add_pages = get_next_ra_size(ractl, max_pages);
- 		if (ra->size + add_pages <= max_pages) {
- 			ra->async_size = add_pages;
- 			ra->size += add_pages;
+
+Ming Lei (2):
+  blk-cgroup: fix list corruption from resetting io stat
+  blk-cgroup: fix list corruption from reorder of WRITE ->lqueued
+
+ block/blk-cgroup.c | 68 ++++++++++++++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 23 deletions(-)
+
 -- 
-2.25.1
+2.44.0
 
 
