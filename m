@@ -1,120 +1,79 @@
-Return-Path: <linux-block+bounces-7376-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7378-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00DB38C5ECB
-	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 03:32:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44EE08C5EFC
+	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 03:50:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78A2C282321
-	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 01:32:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC83E1F2115F
+	for <lists+linux-block@lfdr.de>; Wed, 15 May 2024 01:50:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354401C17;
-	Wed, 15 May 2024 01:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB685337A;
+	Wed, 15 May 2024 01:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OClMtqv9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjQW9gct"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710731109
-	for <linux-block@vger.kernel.org>; Wed, 15 May 2024 01:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7323B293;
+	Wed, 15 May 2024 01:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715736743; cv=none; b=cOPNJzEFSpTXyOPqYXkPQwXBxXctCEsKXc3KiZs0bxhpkkU7mlGEjFaBfHFgiyySTiWxS3ga+CAcjPtAXA2+nZ0sWuKKLO5ezX4Pychl1kz9UvnBbsDcXa/WsgIJYjABQHLOGCxGJo60hQOG69ccg6JjMRYN05rmz+k55ZeZvJM=
+	t=1715737758; cv=none; b=ldTCn2fFpBs6nMzUlx2UYuHRW1zP2Armealtrg6SiVs9HP8+IDLqBeXKByUDIbjrhY3j7DxOrtnAuuA/fw84BOFNG4hR5nK88dVjeA1Pd/F+tOj6KM+hvQcC94nnqqafdCpwaqTRaYULZa/Jb6Dr9alRLxclt5aYW+6K/73yBNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715736743; c=relaxed/simple;
-	bh=VBX1anXVuOXZFWWxBr/zt1N80yDcketIpljCmGY2oDI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDgqhUIcBVd0oYLDCoHHB1nPUTkheqIj56WSDHwWmc0Xfrz1dMhc4F5YiMOUezk891E/+TFBxLjzMfM2onNzg6V8Itqm8SJKCf09oYRSeDeky8aXhKihBZCGRcZ1B4EC8nMG75IgCwtJCoTTPm3U1NcC+IxbzT2LCosZfqEiGvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OClMtqv9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715736740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ha7OIQ40eQh3TqHw+pOAQNbUtsXQFI7nGwiHJZy1RnA=;
-	b=OClMtqv9fQdLrjQn3PsCREbvQ40PhX2ns+MYYYLWKC8JaMMSQA6z7IvSOiNXpZ6BEo2SEb
-	zj5wcOSbUShioO2FyjytxjyIhqPJR5GTLCe2esp5A4rnFNtf/iTpH/h5MRX0gvNHHZB0Zx
-	1HyRh17FrvNBTvtVDWbo+epYP2GMeLQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-qYHDQumyPyijQ7lLpRqa9Q-1; Tue,
- 14 May 2024 21:32:16 -0400
-X-MC-Unique: qYHDQumyPyijQ7lLpRqa9Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 052461C01500;
-	Wed, 15 May 2024 01:32:16 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.11])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C13E021EE56B;
-	Wed, 15 May 2024 01:32:14 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 2/2] blk-cgroup: fix list corruption from reorder of WRITE ->lqueued
-Date: Wed, 15 May 2024 09:31:57 +0800
-Message-ID: <20240515013157.443672-3-ming.lei@redhat.com>
-In-Reply-To: <20240515013157.443672-1-ming.lei@redhat.com>
-References: <20240515013157.443672-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1715737758; c=relaxed/simple;
+	bh=hQMAZFhf7ihzw2VJOzuaSpN4197wZEIt0nPmaxcihHc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Hx3Atd0AhhTCB94aSbE6AHiRuNssj8qWsUSDr8LO6fzLIJBmRYwEvw8z0MZmal+yA8LSL1UobKaYaTxueZvLWyZFW1BQUxU7vTPTnsjYpbx36ZBq0l//bOYArSf1oj1Ke2YhfHG74g0wFw75A+dV7O4MqXtlhLxV02S8Nml0JTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjQW9gct; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 927F2C2BD10;
+	Wed, 15 May 2024 01:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715737757;
+	bh=hQMAZFhf7ihzw2VJOzuaSpN4197wZEIt0nPmaxcihHc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=hjQW9gct65g3C+g8BfuMl6emUgmYwelx1DVd+XbT3M8li0k7Pdo2+dCsyG9xl7C3d
+	 r+gVILn+LJkIL/bba7KEHzHIRrjRiBwTWrhabw3HHLO9i8xoYmNByOywUsRwqJrCJr
+	 ZDhz4lN0UmbXobn/tH9OzFnsSR/V+mieailgChFPvxlgGbyTeWToezVNEE2rVXc+iD
+	 hRFzUsF8CEcSzkb9zo4GHORHPXGfr4aJjuVccoBDcmBuKeVpP/4TaviKvdOacTeXT0
+	 lJKrDgl1xFIUxwKW1QJ4Les+4LM3zBQx2GgH+aJpb1nnmNGBnQkNP+RqoX/sxA2KKI
+	 eF42yUvBqtrXg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 88B94C1614E;
+	Wed, 15 May 2024 01:49:17 +0000 (UTC)
+Subject: Re: [git pull] device mapper changes for 6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZkOMczEgGuPBOCrr@redhat.com>
+References: <ZkOMczEgGuPBOCrr@redhat.com>
+X-PR-Tracked-List-Id: <dm-devel.lists.linux.dev>
+X-PR-Tracked-Message-Id: <ZkOMczEgGuPBOCrr@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.10/dm-changes
+X-PR-Tracked-Commit-Id: 8b21ac87d550acc4f6207764fed0cf6f0e3966cd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4f8b6f25eb1e51febd426da764a0b0ea652ad238
+Message-Id: <171573775755.23667.11330689717464782357.pr-tracker-bot@kernel.org>
+Date: Wed, 15 May 2024 01:49:17 +0000
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, dm-devel@lists.linux.dev, linux-block@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, Benjamin Marzinski <bmarzins@redhat.com>, Christoph Hellwig <hch@lst.de>, Joel Colledge <joel.colledge@linbit.com>, yangerkun <yangerkun@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-__blkcg_rstat_flush() can be run anytime, especially when blk_cgroup_bio_start
-is being executed.
+The pull request you sent on Tue, 14 May 2024 12:08:19 -0400:
 
-If WRITE of `->lqueued` is re-ordered with READ of 'bisc->lnode.next' in
-the loop of __blkcg_rstat_flush(), `next_bisc` can be assigned with one
-stat instance being added in blk_cgroup_bio_start(), then the local
-list in __blkcg_rstat_flush() could be corrupted.
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.10/dm-changes
 
-Fix the issue by adding one barrier.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4f8b6f25eb1e51febd426da764a0b0ea652ad238
 
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Fixes: 3b8cc6298724 ("blk-cgroup: Optimize blkcg_rstat_flush()")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-cgroup.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thank you!
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 86752b1652b5..b36ba1d40ba1 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1036,6 +1036,16 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 		struct blkg_iostat cur;
- 		unsigned int seq;
- 
-+		/*
-+		 * Order assignment of `next_bisc` from `bisc->lnode.next` in
-+		 * llist_for_each_entry_safe and clearing `bisc->lqueued` for
-+		 * avoiding to assign `next_bisc` with new next pointer added
-+		 * in blk_cgroup_bio_start() in case of re-ordering.
-+		 *
-+		 * The pair barrier is implied in llist_add() in blk_cgroup_bio_start().
-+		 */
-+		smp_mb();
-+
- 		WRITE_ONCE(bisc->lqueued, false);
- 
- 		/* fetch the current per-cpu values */
 -- 
-2.44.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
