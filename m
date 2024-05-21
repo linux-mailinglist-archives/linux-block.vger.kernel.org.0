@@ -1,191 +1,231 @@
-Return-Path: <linux-block+bounces-7573-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7575-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA19A8CADC6
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 13:58:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A77048CAEFF
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 15:08:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B25F1F2144C
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 11:58:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E07228408D
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 13:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A100A763E2;
-	Tue, 21 May 2024 11:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDD1178C8B;
+	Tue, 21 May 2024 13:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ETuRVkyS"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB42770E6;
-	Tue, 21 May 2024 11:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAC678C7E
+	for <linux-block@vger.kernel.org>; Tue, 21 May 2024 13:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292681; cv=none; b=eX3dPAuVPA4ep7pNUOMLLoZX1dksJ4/w63rc9Pw+ooiVgTuTd3z3ED2M4MHNdJUE8s3n11chSUeAgPn/Ck6SdpOKF5C5LrB3KUgTRVUkomVj7bOZ6BhAJm2sto2M94bd7iIRg3s6vYtyNicr46XnajkATC+18T7AjQwSC91PSd4=
+	t=1716296895; cv=none; b=e65LxRaAWwWrg1G1F4bwBruK9tWPSAVsWx7TScDcr8HlIiywN9is6mzgIgDi+K+G+DathJHTQzlPaPiACAGnVW4r5Xt/ZL401AMgnzjM4SK4gYYzvnpt2NM0/Ivn3A1CuCVS5ODzrucrMqKhFIER7hsFCokKNv8LRD+vmUovvu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292681; c=relaxed/simple;
-	bh=lN9IaRF3VqP0kObfDCQoK5SLkIrja9k2S3g6HRZrlHU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=mX97apoLM93SSqb7pBVFMjdlJj7V2eFHZ8AMLS6kBISGyNWbdi/wwn1uOCS6jj6uQEGQmK+bPLrhi47JWJW6YEZrdGxgIBthDhlPnr35+CyT7Uo4eajK4L99IrHJDaVO35LxYcNiPyrHlzo83MPs1rtNEd8a5zHvEKbG716vsRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VkCc96KdHz4f3jXK;
-	Tue, 21 May 2024 19:57:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id C572A1A0568;
-	Tue, 21 May 2024 19:57:54 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgBXfA8_jExmnptoNg--.34714S3;
-	Tue, 21 May 2024 19:57:53 +0800 (CST)
-Subject: Re: [bug report] Internal error isnullstartblock(got.br_startblock) a
- t line 6005 of file fs/xfs/libxfs/xfs_bmap.c.
-To: Guangwu Zhang <guazhang@redhat.com>
-Cc: linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
- fstests@vger.kernel.org
-References: <CAGS2=Ypq9_X23syZw8tpybjc_hPk7dQGqdYNbpw0KKN1A1wbNA@mail.gmail.com>
- <ae36c333-29fe-1bfd-9558-894b614e916d@huaweicloud.com>
- <CAGS2=YrG7+k7ufEcX5NY2GFy69A7QQwq6BCku2biLHXVEOxWow@mail.gmail.com>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <a053e948-791c-3233-3791-83bf9ea90bde@huaweicloud.com>
-Date: Tue, 21 May 2024 19:57:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1716296895; c=relaxed/simple;
+	bh=9zPFf0Squvi1mogXdW3GaYX5jzlFVa4hNNRrNLBWF0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=SAGXseUl2hmhMNgomX+PG8rs7Nx1AGdODORK4HIxAQZ21pSYAF9tdlZUhgGIIEuItmcDzTmNMFB/QpILXD6alxg6rIa07AmTyIq/MMwl3/q/yzVFTXqgOk088CNafHwYagITh+WZTyW/2Zk6BLBvh3NqVWuRaxNH9ug2mIK+PXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ETuRVkyS; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240521130809epoutp015ecde1964fa28c3d80af06949148220f~Rgu18g7LZ1938319383epoutp01R
+	for <linux-block@vger.kernel.org>; Tue, 21 May 2024 13:08:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240521130809epoutp015ecde1964fa28c3d80af06949148220f~Rgu18g7LZ1938319383epoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716296889;
+	bh=68M8UQdBQ84meqytW018nu4+AHUsAxOzbElXzqhsHvM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ETuRVkySJlalDf75vQvztLjWmhXg9wimNdvuJKwVGRm6eXZHU46lN/F7Ts83lcBxQ
+	 Xhij3mw3Aa3mdM+oukSyrGDGbxwoBbI7VhmxX6MJL/NbN+CYwNenlnkvfIXzySiDtE
+	 VKYeyWxX/sXDu48YL25++zDo58X7TenbnIiuidio=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240521130808epcas5p339c7e9e25274e9e8056c6fae9f3fb3b6~Rgu1Tc04o1587915879epcas5p3m;
+	Tue, 21 May 2024 13:08:08 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4VkF9M0B8dz4x9Pp; Tue, 21 May
+	2024 13:08:07 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D0.32.08600.6BC9C466; Tue, 21 May 2024 22:08:06 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240521112458epcas5p2bb85b9c58a58dc4eaecf66adc74872bd~RfUweDbmn2405124051epcas5p27;
+	Tue, 21 May 2024 11:24:58 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240521112458epsmtrp1d2bcb3f0c350e3b251bfb770bdcdeb76~RfUwdFIUi3228932289epsmtrp1-;
+	Tue, 21 May 2024 11:24:58 +0000 (GMT)
+X-AuditID: b6c32a44-921fa70000002198-d1-664c9cb627b4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E7.3E.19234.A848C466; Tue, 21 May 2024 20:24:58 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240521112454epsmtip22650eeb9186dbced84f491fa532014b1~RfUsmvBOT0276702767epsmtip2G;
+	Tue, 21 May 2024 11:24:54 +0000 (GMT)
+Date: Tue, 21 May 2024 16:47:56 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
+	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
+	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
+	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+Message-ID: <20240521111756.w4xckwbecfyjtez7@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGS2=YrG7+k7ufEcX5NY2GFy69A7QQwq6BCku2biLHXVEOxWow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXfA8_jExmnptoNg--.34714S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrWDZr1fCFWrGrWxGw1DAwb_yoWrWr1UpF
-	yjka1YkrW0qw18Xw12y3WYg3WYqan0k3Wxu34Yqr1IyasxXr92v3s2vF1UWw1UKw15Zryj
-	vayqqr9rK3WYkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+In-Reply-To: <086804a4-daa4-48a3-a7db-1d38385df0c1@acm.org>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TezBcZxTvd++6u2Q2vZaMDymyeRNiPTafCO0M07kSndGmMtNMM5sde1nF
+	7s4+SkRbETRMEY80zWa9tkSCUrJVr5RSBE1NZkuRoDU2LUYkJogI6a4lk/9+53fO73y/75w5
+	LJxTy3RgRUuUtFwijOUSVoyGzoP73Rs0oZGeaU+9UG1fN45SLq/hqGosh0CznQsAfftkBUdT
+	7V8DtHpvAEe67nGASrSFDDTS3oShVm0ehm5VdWHo+tWLGOp6NUegvI4hgAyDagzdGXVDpell
+	DNR6p5eB9M0aAhXfMDBRRc86hnIvDWKoceoCQDWz8wx0d9QRDaz1WLznSOn/PEH1aSHVpB5j
+	UgPjdQxKf09F1VdmENTtsq+o/25fA1TLSDJBfZ+db0FlXXxMUE1pExbUU8Mog5r/ZZCgsnWV
+	gPq95DdmmM3pmGNiWiii5S60JEIqipZEBXBPnBQECXz5njx3nh86wnWRCOPoAG5waJj7+9Gx
+	xuFwXT4XxqqMVJhQoeAeDjwml6qUtItYqlAGcGmZKFbmI/NQCOMUKkmUh4RWHuV5enr5GgvP
+	xogb0rWY7IVtwlJzLpYMdNaZwJIFSR84cv8HPBOwWByyBUDtvkxgZYQLANbq9eB10J9TwdwS
+	PLs0yTAnmgAcXL5JmINHAD6sS96oYpB7YftLjYWpLUG6wf5XLBNtSx6AS39XbIhxspSAD4ef
+	46aEDXkWzvXlbtSzST7MNahMNJu0hr3XphgmbEn6w67Gn4AJ7yB3wu/KF3FTH0iOW8LyuVXM
+	pIVkMKwYcjUbtYEzPbpN0w5wOid9E8fDWwVmz5BMBVD9lxqYE+/CtL6cDT84KYbLdSWbgnfg
+	lb4azMxvh1mrU5iZZ8PGoi28G1bXlhBmbA+Hli8QZj8UfFDtbJ7PYwDTim7gl4Gz+o2/qd94
+	zoyPwownKRZqoxwnHWHFOssMD8La5sMlwKIS2NMyRVwUHeEr40no+NfrjpDG1YONy3ENbgTD
+	xeseHQBjgQ4AWTjXll2vC4nksEXCc4m0XCqQq2JpRQfwNa4qF3fYESE1np5EKeD5+Hn68Pl8
+	Hz9vPo9rx55NKxRxyCihko6haRkt39JhLEuHZIzfvFqlSSp0qVyDqdVlnCqmR37U6b2tgfuP
+	g+lsg2/3yc/KLBuV4SvlTG+Ok/dKzJ7yL/91cPfek/dHz+6iTu1L6uf56qQZ5WrWoYKF/n/a
+	4lKqEiWfVEhSd82keHzoE6wN+TEkoqAlQbUsU3zTGx1PT1x1WqHFtpM1utKMR0vDxasfV2k8
+	u88ovzhklxb9YNyvXLr4UV3g9HDm5M0sgRNbwFfqE069uPLMP9+yfx+9bSTcOYgnKr3+/NOA
+	SEmQ1+DOzhr13U4rx8Vx+wNvjYlweGpb5PnQ44lM2bm2wdld1vftDL/KGIY8/xwP/7dnRUma
+	I7LzArh9wi2cZLatcz44w2UoxEKeKy5XCP8HvMe4lsIEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsWy7bCSvG5Xi0+aQe99PYv1p44xWzRN+Mts
+	sfpuP5vF68OfGC2mffjJbPHkQDujxe+z55ktthy7x2ixYNFcFoubB3YyWexZNInJYuXqo0wW
+	s6c3M1kc/f+WzWLSoWuMFk+vzmKy2HtL22Jh2xIWiz17T7JYXN41h81i/rKn7BbLj/9jspjY
+	cZXJYseTRkaLda/fs1icuCVtcf7vcVYHaY/LV7w9Ti2S8Ng56y67x/l7G1k8Lp8t9di0qpPN
+	Y/OSeo8Xm2cyeuy+2cDmsbhvMqtHb/M7No+drfdZPT4+vcXi8X7fVTaPvi2rGD3OLDjCHiAc
+	xWWTkpqTWZZapG+XwJXxseE7a8EaoYoF83ayNDA28HcxcnJICJhIfOl4xNLFyMUhJLCdUaLx
+	ehsTREJSYtnfI8wQtrDEyn/P2SGKnjBK3F7RC1bEIqAqceDPHNYuRg4ONgFtidP/OUDCIgIa
+	Et8eLAcbyiywlE3i4v7f7CAJYYEEibenJoLV8wqYSUx8Wgox8x2jxIy929hAangFBCVOznzC
+	AmIzA9XM2/yQGaSeWUBaYvk/sPmcAtYSR3dsZQSxRQVkJGYs/co8gVFwFpLuWUi6ZyF0L2Bk
+	XsUomlpQnJuem1xgqFecmFtcmpeul5yfu4kRnCa0gnYwLlv/V+8QIxMH4yFGCQ5mJRHeTVs8
+	04R4UxIrq1KL8uOLSnNSiw8xSnOwKInzKud0pggJpCeWpGanphakFsFkmTg4pRqY4o5ummdb
+	u4zl7uk9GxfpLt/u4eenaWH692rU6sXfVOfMV9/PMevXmWXLD/NKVaZ3estc1qyIVDrzZfWG
+	qVP8DoWvUnCfdkfkyJwDJ/NOi2dt39r8U+E0X/L1478Xcpnk1R05H67zaDmT9oKl3DXfLWe0
+	WBrYvTq4U+W4SnD1t0Xbl7rIfTwswL69fWH16oeuj6avbOo7q5hevHr3wfQ3kf+yMjl3sD+8
+	pf9YKv/sO/XukDUu8+flTy9zMw/+Yt+ler5R0Ku7e973iKl63a+OlC68Ot98WZDyxX195u83
+	Ol0XObgi1ov5zvmsn89c3Y8WGHYx7CvdqL1YXFJvUfuCtQ+lN8dOvhes067T+pSn6oQSS3FG
+	oqEWc1FxIgCBWrltggMAAA==
+X-CMS-MailID: 20240521112458epcas5p2bb85b9c58a58dc4eaecf66adc74872bd
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_15778_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240520102842epcas5p4949334c2587a15b8adab2c913daa622f
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+	<CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
+	<20240520102033.9361-3-nj.shetty@samsung.com>
+	<086804a4-daa4-48a3-a7db-1d38385df0c1@acm.org>
 
-On 2024/5/21 18:06, Guangwu Zhang wrote:
-> Hi,
-> I use the below script reproduce the error.
-> 
->         mkdir -p /media/xfs
->         mkdir -p /media/scratch
->         dev0=$(losetup --find)
->         dd if=/dev/zero of=1.tar bs=1G count=1
->         dd if=/dev/zero of=2.tar bs=1G count=1
->         losetup $dev0 1.tar
->         dev1=$(losetup --find)
->         losetup $dev1 2.tar
->         mkfs.xfs -f $dev0
->         mkfs.xfs -f $dev1
->         mount $dev0 /media/xfs
->         mount $dev1 /media/scratch
->         export TEST_DEV="$(mount | grep '/media/xfs' | awk '{ print $1 }')"
->         export TEST_DIR="/media/xfs"
->         export SCRATCH_DEV="$(mount | grep '/media/scratch' | awk '{
-> print $1 }')"
->         export SCRATCH_MNT="/media/scratch"
-> 
->         git clone git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
->         cd xfstests-dev
->         make
->         for i in $(seq 20);do
->             ./check generic/461
->         done
-> 
-> @YI,  Could you list your 4 patch links here ?  the kernel don't work
-> well after apply the patch [1]
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5ce5674187c345dc31534d2024c09ad8ef29b7ba
-> 
+------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_15778_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Please try:
+On 20/05/24 04:00PM, Bart Van Assche wrote:
+>On 5/20/24 03:20, Nitesh Shetty wrote:
+>>Upon arrival of source bio we merge these two bio's and send
+>>corresponding request down to device driver.
+>
+>bios with different operation types must not be merged.
+>
+Copy is a composite operation which has two operation read and
+write combined, so we chose two operation types which reflects that.
 
-5ce5674187c3 ("xfs: convert delayed extents to unwritten when zeroing post eof blocks")
-2e08371a83f1 ("xfs: make xfs_bmapi_convert_delalloc() to allocate the target offset")
-fc8d0ba0ff5f ("xfs: make the seq argument to xfs_bmapi_convert_delalloc() optional")
-bb712842a85d ("xfs: match lock mode in xfs_buffered_write_iomap_begin()")
+>>+static enum bio_merge_status bio_attempt_copy_offload_merge(struct request *req,
+>>+							    struct bio *bio)
+>>+{
+>>+	if (req->__data_len != bio->bi_iter.bi_size)
+>>+		return BIO_MERGE_FAILED;
+>>+
+>>+	req->biotail->bi_next = bio;
+>>+	req->biotail = bio;
+>>+	req->nr_phys_segments++;
+>>+	req->__data_len += bio->bi_iter.bi_size;
+>>+
+>>+	return BIO_MERGE_OK;
+>>+}
+>
+>This function appends a bio to a request. Hence, the name of this function is
+>wrong.
+>
+We followed the naming convention from discard(bio_attempt_discard_merge)
+which does similar thing.
+But we are open to renaming, if overall community also feels the same.
 
-Yi.
+>>@@ -1085,6 +1124,8 @@ static enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
+>>  		break;
+>>  	case ELEVATOR_DISCARD_MERGE:
+>>  		return bio_attempt_discard_merge(q, rq, bio);
+>>+	case ELEVATOR_COPY_OFFLOAD_MERGE:
+>>+		return bio_attempt_copy_offload_merge(rq, bio);
+>>  	default:
+>>  		return BIO_MERGE_NONE;
+>>  	}
+>
+>Is any code added in this patch series that causes an I/O scheduler to return
+>ELEVATOR_COPY_OFFLOAD_MERGE?
+>
+yes, blk_try_merge returns ELEVATOR_COPY_OFFLOAD_MERGE.
 
-> 
-> Zhang Yi <yi.zhang@huaweicloud.com> 于2024年5月21日周二 13:05写道：
-> 
->>
->> On 2024/5/20 19:48, Guangwu Zhang wrote:
->>> Hi,
->>> I get a xfs error when run xfstests  generic/461 testing with
->>> linux-block for-next branch.
->>> looks it easy to reproduce with s390x arch.
->>>
->>> kernel info :
->>> commit 04d3822ddfd11fa2c9b449c977f340b57996ef3d
->>> 6.9.0+
->>> reproducer
->>> git clone xfstests
->>>  ./check generic/461
->>>
->>>
->>
->> I guess this issue should be fixed by 5ce5674187c3 ("xfs: convert delayed
->> extents to unwritten when zeroing post eof blocks"), please merge this commit
->> series (include 4 patches) and try again.
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5ce5674187c345dc31534d2024c09ad8ef29b7ba
->>
->> Yi.
->>
->>> [ 5322.046654] XFS (loop1): Internal error isnullstartblock(got.br_startblock) a
->>> t line 6005 of file fs/xfs/libxfs/xfs_bmap.c.  Caller xfs_bmap_insert_extents+0x
->>> 2ee/0x420 [xfs]
->>> [ 5322.046859] CPU: 0 PID: 157526 Comm: fsstress Kdump: loaded Not tainted 6.9.0
->>> + #1
->>> [ 5322.046863] Hardware name: IBM 8561 LT1 400 (z/VM 7.2.0)
->>> [ 5322.046864] Call Trace:
->>> [ 5322.046866]  [<0000022f504d8fc4>] dump_stack_lvl+0x8c/0xb0
->>> [ 5322.046876]  [<0000022ed00fc308>] xfs_corruption_error+0x70/0xa0 [xfs]
->>> [ 5322.046955]  [<0000022ed00b7206>] xfs_bmap_insert_extents+0x3fe/0x420 [xfs]
->>> [ 5322.047024]  [<0000022ed00f55a6>] xfs_insert_file_space+0x1be/0x248 [xfs]
->>> [ 5322.047105]  [<0000022ed00ff1dc>] xfs_file_fallocate+0x244/0x400 [xfs]
->>> [ 5322.047186]  [<0000022f4fe90000>] vfs_fallocate+0x218/0x338
->>> [ 5322.047190]  [<0000022f4fe9112e>] ksys_fallocate+0x56/0x98
->>> [ 5322.047193]  [<0000022f4fe911aa>] __s390x_sys_fallocate+0x3a/0x48
->>> [ 5322.047196]  [<0000022f505019d2>] __do_syscall+0x23a/0x2c0
->>> [ 5322.047200]  [<0000022f50511d20>] system_call+0x70/0x98
->>> [ 5322.054644] XFS (loop1): Corruption detected. Unmount and run xfs_repair
->>> [ 5322.977488] XFS (loop1): User initiated shutdown received.
->>> [ 5322.977505] XFS (loop1): Log I/O Error (0x6) detected at xfs_fs_goingdown+0xb
->>> 4/0xf8 [xfs] (fs/xfs/xfs_fsops.c:458).  Shutting down filesystem.
->>> [ 5322.977772] XFS (loop1): Please unmount the filesystem and rectify the proble
->>> m(s)
->>> [ 5322.977877] loop1: writeback error on inode 755831, offset 32768, sector 1804
->>> 712
->>> 00:00:00
->>>
->>>
->>> .
->>>
->>
->>
-> 
-> 
-> --
-> Guangwu Zhang
-> Thanks
-> 
+>>+static inline bool blk_copy_offload_mergable(struct request *req,
+>>+					     struct bio *bio)
+>>+{
+>>+	return (req_op(req) == REQ_OP_COPY_DST &&
+>>+		bio_op(bio) == REQ_OP_COPY_SRC);
+>>+}
+>
+>bios with different operation types must not be merged. Please rename this function.
+>
+As described above we need two different opcodes.
+As far as function renaming, we followed discard's naming. But open to
+any suggestion.
 
+>>+static inline bool op_is_copy(blk_opf_t op)
+>>+{
+>>+	return ((op & REQ_OP_MASK) == REQ_OP_COPY_SRC ||
+>>+		(op & REQ_OP_MASK) == REQ_OP_COPY_DST);
+>>+}
+>
+>The above function is not used in this patch. Please introduce new functions in the
+>patch in which these are used for the first time.
+>
+Acked
+
+Thank You
+Nitesh Shetty
+
+------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_15778_
+Content-Type: text/plain; charset="utf-8"
+
+
+------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_15778_--
 
