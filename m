@@ -1,271 +1,357 @@
-Return-Path: <linux-block+bounces-7598-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7604-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E24568CBA5F
-	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 06:40:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E7F58CBB18
+	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 08:21:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60F5C1F2273D
-	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 04:40:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFF62281C5F
+	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 06:21:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E113E5644E;
-	Wed, 22 May 2024 04:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3104478C9B;
+	Wed, 22 May 2024 06:20:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKHxUi0T"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kZ2utzrq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E272837144
-	for <linux-block@vger.kernel.org>; Wed, 22 May 2024 04:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B21278C75
+	for <linux-block@vger.kernel.org>; Wed, 22 May 2024 06:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716352848; cv=none; b=VDNAWbLchWYUPzgsWoQ0fowwaktHlgOINcZ1MAmasf4pkqtErk98IweANdnkHSpeolARhQId2Ve+6ObF3C0zK7pTc9vKUjRwvkgUxwQ717ed2LN8FQCrNU8+cIdBg26UpBXJs8Ab0sWoqzn5F0sgDTCRKqIFzUGHDIKRLwd8/EQ=
+	t=1716358854; cv=none; b=a8NTSttM92LmN6xlO7v/gNjF5qbSL/TRqzKdk3OBXJA7LhmWbOxrJO9yN9C75Lwazbgr4gnCCalW2K8qFPGJlqLhjlpduXJyvd2c5oYzTR5zm9rczJ9XGyDS7VX2KUCBj7g5GDNi/4dURS7DDJZVURbEVVMxgBq/8nSYKui+k1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716352848; c=relaxed/simple;
-	bh=sxV0jvu7FgOKrK2uIwSVad+e7CNT3+8g9HE6z90zlDw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q9KVvpmX6Bp0UBtjIunAeYncpYWiRwKU5KGmm+a3YQoFqbSvMgJXMBu6rJWGQdHGu0K2M+dleES6xasEn0+USzuXfhBAev6JD3C20wBiUWU6TJfQDawIQ+wHiLTVT85POgz0jEIb9aGlNQMGXUGJkcpkUXCfGJY4H/DAMQzkqpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bKHxUi0T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716352845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iI6N3IogeYy6i9V5xofPFS322yv6z3Gl6XncK4yQfxY=;
-	b=bKHxUi0TEjlPhxLsL6wHYzZoMpsrGVDhav0sLuoor4f/0J/KXDvwqW7oGdJunMxcm909Uz
-	K1gqVHmSobXQkx9ikW6aL04wyY+v2eGWGgsMETYT+9wifExtuPSqLU0B59BEABJuHVEyPH
-	CVwQ8Oe5c2NODHvAKivutIJjt9kv684=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-569-Uqp7Ut5FNxCWnUhCk0MPng-1; Wed, 22 May 2024 00:40:43 -0400
-X-MC-Unique: Uqp7Ut5FNxCWnUhCk0MPng-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2b2a648f23dso11550518a91.3
-        for <linux-block@vger.kernel.org>; Tue, 21 May 2024 21:40:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716352841; x=1716957641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iI6N3IogeYy6i9V5xofPFS322yv6z3Gl6XncK4yQfxY=;
-        b=uXztx6779NHsRo2ItqQMmkfqCQfoRTYPjRjgvtS437xm0AreZzlD8ruAPxp2aeheiH
-         J3SfNvbwS4C5sW95fNKnm3wyX6NURNWNrBEWI6JhDixJKWOPgBdCwEMc0qApnXASqU7d
-         LR55qa1uYd/F8gQlVv2o1q3++5pKNQT+OVUGVykacCT6fgOhiyMm4OIJKk9/qt1NOwDh
-         XdQasU0j0tM5QMI5hH28kT+euTF6f8ExgoNR7sXFdgcsmgi7xtYL51/PY/OtZ7dqsRfp
-         FkdM2DTVqhbnZhGwLn61wcHwlIv/e5XvjzXE1zuoTxnp0Q/b9AUHHtfls9sa5i2VqqxH
-         KC1A==
-X-Gm-Message-State: AOJu0Yz+GgMuZZcCL+ZvGD5oAiYq+2kjCIy32NhIWPL/3EAhkMwy/RAf
-	Kz7mCFZ5i56cJWYeDTevnMnnIplXO3pp2SFqwtBaT+/WK0TJBiQtakpXsDEF4DTQI5Re4+PH8d1
-	bGDjbQ30MXhbzOoC8aLp/OkSFlvpuB3hhHnh7stfH0ikKQipusaGMk11HE92ctUhPTXpeQpXKfn
-	l57Hs3JMjMgKdJzUg9KVPibHnABM7FL1W+98FZeBg5uWnGlTVW
-X-Received: by 2002:a17:90a:a506:b0:2ad:6294:7112 with SMTP id 98e67ed59e1d1-2bd9f456c77mr1135755a91.14.1716352840782;
-        Tue, 21 May 2024 21:40:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8OCwlJqD4p6aUDjNyxsTdVTggWRIpaGaMaWa1clgJ2zXzxb6+vlGwd0PEVsubO9/GGIRNsTo8ye0JdL8FofM=
-X-Received: by 2002:a17:90a:a506:b0:2ad:6294:7112 with SMTP id
- 98e67ed59e1d1-2bd9f456c77mr1135742a91.14.1716352840371; Tue, 21 May 2024
- 21:40:40 -0700 (PDT)
+	s=arc-20240116; t=1716358854; c=relaxed/simple;
+	bh=JQGfFka2gc6MqoiCaoTwU0i2lfFMAhKUkq974SM9rFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=gVnps0V61dthbaDycATeO9Cf32+w3Rsp/qvnrbNXW3Br3DTES+38Sj8RyefCH8IW4KpSLjhhdI+RjnOYQuKIbtu2LurdYxIFLr+dBOKD8UnYYAL8g8clg2DpUIxO4tgC7l0zRflAVxUfJgh2zC/OtUqjSETEG4cvmNHWkPEAcBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kZ2utzrq; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240522062046epoutp04090f39ee2f48392ccddf9ad90245ca90~Ru0cRsUcX3004830048epoutp04w
+	for <linux-block@vger.kernel.org>; Wed, 22 May 2024 06:20:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240522062046epoutp04090f39ee2f48392ccddf9ad90245ca90~Ru0cRsUcX3004830048epoutp04w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716358846;
+	bh=GE9xNl5h7Gni8ZU02Gpsaa26vJXObmgtTpzWLJiAi9I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kZ2utzrq5hmItasccX5Z4vVEqkzsSbrpgj89hJocgrVQuwIRFb07uv3ufCx9NuMHQ
+	 H+HdQkxzqkUS2vdFYhbj+Mr3jIEa6mju3jkeuG/h8Ib2aL+ha+eZRhZKnlFwWKWs9y
+	 UR33j3OTp8WqQAL6+bePXGjGkHtviyeBTBLIoE9w=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240522062046epcas5p27fdddf32b52fdd92905e56d93836e634~Ru0bopxgA2089020890epcas5p2S;
+	Wed, 22 May 2024 06:20:46 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Vkh4r2KVfz4x9Q2; Wed, 22 May
+	2024 06:20:44 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D2.B0.19431.CBE8D466; Wed, 22 May 2024 15:20:44 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240521082243epcas5p47990dcc3e3825847cba5512aa0f9a1fd~Rc1oXt2Uq1609416094epcas5p4O;
+	Tue, 21 May 2024 08:22:43 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240521082243epsmtrp1615c124d853e5a21a8d962be681a2f63~Rc1oQ_mMT2514125141epsmtrp1W;
+	Tue, 21 May 2024 08:22:43 +0000 (GMT)
+X-AuditID: b6c32a50-ccbff70000004be7-00-664d8ebc8f4f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	15.D2.09238.3D95C466; Tue, 21 May 2024 17:22:43 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240521082239epsmtip1cf08c34c43d1f1fad60542f584456f55~Rc1kkDSmX2492124921epsmtip1p;
+	Tue, 21 May 2024 08:22:39 +0000 (GMT)
+Date: Tue, 21 May 2024 13:45:41 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
+	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	martin.petersen@oracle.com, bvanassche@acm.org, david@fromorbit.com,
+	hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
+	joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v20 01/12] block: Introduce queue limits and sysfs for
+ copy-offload support
+Message-ID: <20240521081541.whboo4m4ybe2lzhx@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Yi Zhang <yi.zhang@redhat.com>
-Date: Wed, 22 May 2024 12:40:28 +0800
-Message-ID: <CAHj4cs9LgsHLnjg8z06LQ3Pr5cax-+Ps+xT7AP7TPnEjStuwZA@mail.gmail.com>
-Subject: [bug report] kernel panic with concurrent power on/off operation for null-blk
-To: linux-block <linux-block@vger.kernel.org>
-Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, Ming Lei <ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c31f663f-36c0-4db2-8bf6-8e3c699073ca@kernel.org>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TezBcVxzHe+69e/cyQ25J6nTJlG3VhHqssDlSj7TRunl0xqSjY6pT2XKD
+	sdZmH4nS1FsS8QiJJlnEI0SQoRFN0CVKQmnxh66iKPEMaclGYzKp6HLp5L/P+Z7f9/c75/eb
+	H4WbNfIFVIRMxSpkEqmQNCbutO+yc9RmfXLMZWTWCNV2d+Ao6fwqjqpHs0m00K4H6Lul5zia
+	aj0N0IuePhzVd4wBNH7PBxWXFhJoqLURQ9rSXAxVVj/AUP6lZAw9WPuLRLltAwBN6zQYah52
+	QCVpZQTSNncRqL+pgERF16f5qKLzJYZyzugw1DCVCFDNwiKBfh62RH2rnbx9Vkz/b4eY7lLI
+	NGpG+Uzf2C2C6e9RM3VVZ0nmdlk8M3f7CmB+HEogmWtZF3hMZvLfJNOY+iePeTI9TDCLLTqS
+	yaqvAsyvxff5/uafR3qGs5JQVmHNykKiQyNkYV7CQ58G7w92F7uIHEUeaI/QWiaJYr2Evof9
+	HT+OkBoaJLQ+IZGqDZK/RKkUOnt7KqLVKtY6PFqp8hKy8lCp3E3upJREKdWyMCcZq9orcnFx
+	dTcEHo0M70vvx+TNnjFzugoiAVx2TQdGFKTdYGXbJEgHxpQZrQWwvGaAzx30ABZ06Qnu8AzA
+	xfwWcsuiS6zlcRfNAI5W9W5aZgBMvp9ErEcRtC3UP0/A0wFFkbQD/GWNWpe303Yw74J2ox5O
+	/0DCq8vZvPULc1oCK4aawTqb0GKof5TJ5/h12HVlaiOnEe0N52f+2IjZQVvBy+X/4OuJIP3Q
+	CF78dxLnnucLa1aeAo7N4XxnPZ9jAXyUnbbJJ2HlxRskZ04BUPO7ZtPgA1O7szcS4XQ41Dcs
+	8zh9J8zrrsE43RRmvpjCON0ENlzd4rfhzdrizR69CQdWEjeZgfnT7RjXoieGYo8reefBW5pX
+	fqd5pR7He+HZpSQDUwa2hBUvKQ53wdom52LAqwICVq6MCmND3OUiRxl78v+hh0RH1YGNHbL3
+	bwDV3686tQGMAm0AUrhwu0ld/YFjZiahkq9jWUV0sEItZZVtwN0wrhxcsCMk2rCEMlWwyM3D
+	xU0sFrt57BaLhBYmC6mFoWZ0mETFRrKsnFVs+TDKSJCAbaOCnk6+5zuk71M7rUgD7EvNP3wj
+	vd5lYGLCCroPlrTckeV9OXjrod2gl5eydaJ9hGcaLjxisRCTq7OfTZn7bC7g3I27cffGRDH7
+	Z8bfjbI4HheY77bkL7UrVo/zfXi9Xmzet4FHjl7LLftmWLtmm9Dh2H5XVrDnsXPN7CLqWjx9
+	qsbSpsl+tfDMByOxduYtxmaDX5V+tBP+lDGf7X6isYE6+I71db9LI/7PviC2xe0u6YmXrvaW
+	+9n4HNxXVe166oBmGOsJsPVwUPHP4VOefvF92sPe7V0VGeOmMP+1uKKgSso3TZCRsGQlmIpL
+	OR7b834Oa1M0NnfTlQwMWU4O0iUWCwlluERkjyuUkv8AvcauLMwEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxjHfc85nB7qmhxa1LfiJikxEnAoCc7XuKEJiXnJ5iXGLuqM0smR
+	axFbLhsftjJgYzgZ4AVoBTtk1lKVWOom12JFsEXECDUrhnqhFQS5yETTGOps2TK//fP8/pcv
+	D0MKX1PLmZSMLE6RIUuX0HzqjxuSjz4e2PvF4XU1f4eiRls3iX4omyeRYfhXGk3cmAXo9IyH
+	RK7OnwB609dPIlO3E6BH5s1IW1dDIUdnM4Ha6ioIpDfcJJCmsoBAN99O0qjCch8gt11NoPah
+	SPTbj/UUamu3Umig5QyNzp5385Cux0ug8mI7ga658gG6PDFNoVtDIah/vidgywo8MPg5ttVB
+	3Kwe5uF+5xUKD/RlY2PDzzRuqv8ejzVVA9zqUNH4XOmJAHy8YIrGzUUPA/AL9xCFpzvsNC41
+	NQB8W9vF2ynax/80kUtPyeEUa2MT+MmOznWZ0xu/KTC7SRVwrS0BgQxkY6A9vzGgBPAZIdsK
+	4KvxTrAAxPD8fBe5oEVQ7x3lLZhcAB7reEL7AMWugrMe1TsTw9BsJOx9y/jOwexqeOpEG/D5
+	SbaVhm88vTwfELEyqHO0+wcE7Cdw9tnxf0tfADieX85bAEHQWu2ifJp8Z6pteuwfINkQqPP6
+	BwLZWDj+9IG/Zwm7Alb9PkeWgSD1e2n1e2n1/2ktIBuAmMtUypPkh6IzozO43CilTK7MzkiK
+	OnREbgT+34gIvwacZ71RFkAwwAIgQ0qCBUZT/GGhIFH2bR6nOHJQkZ3OKS0ghKEkywTRVZpE
+	IZsky+LSOC6TU/xHCSZwuYqYHI2qj9yh3/6g5cNWw+usPWONbKHDOLjp5eInniLvl0XW0BH7
+	oKBvF6oka8Wa3JV30sJsqWsem+Smi7lXubTkiD8re8Y9ewd1nxnS+KIYcagtYWvHaOroAenT
+	GMOz5/eau7Qyqesr3UhtfrlJYBYQVv3cvvWiXDfQ2qe+e3g3BH+tqZiMUznJpWFxJcZj6caT
+	Bs+F4rziuIM8sbAl/OTwhqOM0calFE5sy9E05jyXjrFiRd7uvyz67l7pTPkv+69vNEaCrWUV
+	L7WxcFHyyvCZOadlS3vQBYVr6UhVasL9D2IaLotnLrUVN+2Jry66XmiQ3ptyOMwTVusBc0Gw
+	hFImy6IjSIVS9g8nPpMSigMAAA==
+X-CMS-MailID: 20240521082243epcas5p47990dcc3e3825847cba5512aa0f9a1fd
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----NniuWcEa.zZVU-iq4JS_ZFjyXsesTFtE.O7X-O5.k3Ud19D7=_14c0f_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240520102830epcas5p27274901f3d0c2738c515709890b1dec4
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+	<CGME20240520102830epcas5p27274901f3d0c2738c515709890b1dec4@epcas5p2.samsung.com>
+	<20240520102033.9361-2-nj.shetty@samsung.com>
+	<c31f663f-36c0-4db2-8bf6-8e3c699073ca@kernel.org>
 
-Hello
-With Sagi's new blktests case scenario[1], I tried the concurrent
-power on/off for null-blk[2] and found it will lead to kernel
-panic[3],  please help check it and let me know if you need any
-info/testing for it, thanks.
-BTW, I will submit one blktests case for it later.
+------NniuWcEa.zZVU-iq4JS_ZFjyXsesTFtE.O7X-O5.k3Ud19D7=_14c0f_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-[1] https://lore.kernel.org/linux-nvme/20240521085623.87681-1-sagi@grimberg=
-.me/
+On 20/05/24 04:33PM, Damien Le Moal wrote:
+>On 2024/05/20 12:20, Nitesh Shetty wrote:
+>> @@ -231,10 +237,11 @@ int blk_set_default_limits(struct queue_limits *lim)
+>>  {
+>>  	/*
+>>  	 * Most defaults are set by capping the bounds in blk_validate_limits,
+>> -	 * but max_user_discard_sectors is special and needs an explicit
+>> -	 * initialization to the max value here.
+>> +	 * but max_user_discard_sectors and max_user_copy_sectors are special
+>> +	 * and needs an explicit initialization to the max value here.
+>
+>s/needs/need
 
-[2]Reproducer:
-nullb1=3D"/sys/kernel/config/nullb/nullb1"
-modprobe null-blk nr_devices=3D0
-mkdir $nullb1
-echo 1024 > $nullb1/size
-echo 1 > $nullb1/memory_backed
-null_blk_power_loop() {
-       local iterations=3D10
-       for ((i =3D 1; i <=3D ${iterations}; i++)); do
-               echo 0 > $nullb1/power
-               echo 1 > $nullb1/power
-       done
-}
-null_blk_power_loop &
-null_blk_power_loop &
-wait
+acked
+>
+>>  	 */
+>>  	lim->max_user_discard_sectors = UINT_MAX;
+>> +	lim->max_user_copy_sectors = UINT_MAX;
+>>  	return blk_validate_limits(lim);
+>>  }
+>>
+>> @@ -316,6 +323,25 @@ void blk_queue_max_discard_sectors(struct request_queue *q,
+>>  }
+>>  EXPORT_SYMBOL(blk_queue_max_discard_sectors);
+>>
+>> +/*
+>> + * blk_queue_max_copy_hw_sectors - set max sectors for a single copy payload
+>> + * @q:	the request queue for the device
+>> + * @max_copy_sectors: maximum number of sectors to copy
+>> + */
+>> +void blk_queue_max_copy_hw_sectors(struct request_queue *q,
+>> +				   unsigned int max_copy_sectors)
+>> +{
+>> +	struct queue_limits *lim = &q->limits;
+>> +
+>> +	if (max_copy_sectors > (BLK_COPY_MAX_BYTES >> SECTOR_SHIFT))
+>> +		max_copy_sectors = BLK_COPY_MAX_BYTES >> SECTOR_SHIFT;
+>> +
+>> +	lim->max_copy_hw_sectors = max_copy_sectors;
+>> +	lim->max_copy_sectors =
+>> +		min(max_copy_sectors, lim->max_user_copy_sectors);
+>> +}
+>> +EXPORT_SYMBOL_GPL(blk_queue_max_copy_hw_sectors);
+>
+>Hmm... Such helper seems to not fit with Christoph's changes of the limits
+>initialization as that is not necessarily done using &q->limits but depending on
+>the driver, a different limit structure. So shouldn't this function be passed a
+>queue_limits struct pointer instead of the request queue pointer ?
+>
+Acked, we made a mistake, we are no longer using this function after moving
+to atomic limits change. We will remove this function in next version.
 
-[3]
-[ 1200.017939] null_blk: disk nullb1 created
-[ 1200.043860] BUG: kernel NULL pointer dereference, address: 0000000000000=
-130
-[ 1200.051627] #PF: supervisor write access in kernel mode
-[ 1200.057458] #PF: error_code(0x0002) - not-present page
-[ 1200.063192] PGD 0 P4D 0
-[ 1200.066021] Oops: 0002 [#1] PREEMPT SMP PTI
-[ 1200.070691] CPU: 0 PID: 1724 Comm: sh Not tainted 6.9.0-64.eln136.x86_64=
- #1
-[ 1200.078462] Hardware name: Dell Inc. PowerEdge R730xd/=C9=B2=EF=BF=BDPow=
-, BIOS
-2.19.0 12/12/2023
-[ 1200.087105] RIP: 0010:_raw_spin_lock_irq+0x18/0x30
-[ 1200.092459] Code: 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-90 90 f3 0f 1e fa 0f 1f 44 00 00 fa 65 ff 05 47 28 26 7c 31 c0 ba 01
-00 00 00 <f0> 0f b1 17 75 05 c3 cc cc cc cc 89 c6 e8 46 01 00 00 90 c3
-cc cc
-[ 1200.113416] RSP: 0018:ffffb973431e7420 EFLAGS: 00010046
-[ 1200.119249] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000000=
-00008
-[ 1200.127212] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000000=
-00130
-[ 1200.135175] RBP: 0000000000000008 R08: ffff9645c44e4400 R09: 00000000000=
-00000
-[ 1200.143140] R10: 0000000000000014 R11: 0000000000000000 R12: ffff964743a=
-2d800
-[ 1200.151103] R13: 0000000000000130 R14: ffff9645d05580f8 R15: 00000000000=
-00001
-[ 1200.159067] FS:  00007f67cea3b740(0000) GS:ffff964737a00000(0000)
-knlGS:0000000000000000
-[ 1200.168099] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1200.174511] CR2: 0000000000000130 CR3: 00000002819c4001 CR4: 00000000001=
-706f0
-[ 1200.182473] Call Trace:
-[ 1200.185200]  <TASK>
-[ 1200.187541]  ? show_trace_log_lvl+0x1b0/0x2f0
-[ 1200.192406]  ? show_trace_log_lvl+0x1b0/0x2f0
-[ 1200.197272]  ? null_handle_rq+0x3f/0x500 [null_blk]
-[ 1200.202735]  ? __die_body.cold+0x8/0x12
-[ 1200.207008]  ? page_fault_oops+0x146/0x160
-[ 1200.211583]  ? exc_page_fault+0x73/0x160
-[ 1200.215963]  ? asm_exc_page_fault+0x26/0x30
-[ 1200.220634]  ? _raw_spin_lock_irq+0x18/0x30
-[ 1200.225303]  null_handle_rq+0x3f/0x500 [null_blk]
-[ 1200.230567]  ? pcpu_alloc+0x369/0x900
-[ 1200.234654]  ? lock_timer_base+0x76/0xa0
-[ 1200.239035]  null_process_cmd+0xb4/0x100 [null_blk]
-[ 1200.244490]  null_handle_cmd+0x36/0x130 [null_blk]
-[ 1200.249849]  null_queue_rq+0x130/0x200 [null_blk]
-[ 1200.255110]  ? __pfx_autoremove_wake_function+0x10/0x10
-[ 1200.260948]  __blk_mq_issue_directly+0x4b/0xc0
-[ 1200.265911]  blk_mq_try_issue_directly+0x88/0x110
-[ 1200.271155]  blk_mq_submit_bio+0x596/0x690
-[ 1200.275720]  submit_bio_noacct_nocheck+0x162/0x240
-[ 1200.281071]  ? submit_bio_noacct+0x24/0x540
-[ 1200.285740]  block_read_full_folio+0x1f8/0x300
-[ 1200.290702]  ? __pfx_blkdev_get_block+0x10/0x10
-[ 1200.295760]  ? __pfx_blkdev_read_folio+0x10/0x10
-[ 1200.300913]  ? __pfx_blkdev_read_folio+0x10/0x10
-[ 1200.306064]  filemap_read_folio+0x43/0xe0
-[ 1200.310542]  ? __pfx_blkdev_read_folio+0x10/0x10
-[ 1200.315693]  do_read_cache_folio+0x7c/0x190
-[ 1200.320365]  read_part_sector+0x33/0xb0
-[ 1200.324650]  read_lba+0xc1/0x180
-[ 1200.328256]  find_valid_gpt.constprop.0+0xe1/0x520
-[ 1200.333609]  efi_partition+0x7c/0x3a0
-[ 1200.337699]  ? snprintf+0x53/0x70
-[ 1200.341401]  ? __pfx_efi_partition+0x10/0x10
-[ 1200.346170]  check_partition+0x101/0x1c0
-[ 1200.350550]  bdev_disk_changed+0x193/0x330
-[ 1200.355121]  ? security_file_alloc+0x61/0xf0
-[ 1200.359889]  blkdev_get_whole+0x5f/0xa0
-[ 1200.364170]  bdev_open+0x205/0x3c0
-[ 1200.367966]  bdev_file_open_by_dev+0xbd/0x110
-[ 1200.372829]  disk_scan_partitions+0x6e/0x100
-[ 1200.377594]  device_add_disk+0x3bb/0x3c0
-[ 1200.381972]  null_add_dev+0x479/0x650 [null_blk]
-[ 1200.387139]  nullb_device_power_store+0x7c/0x120 [null_blk]
-[ 1200.393370]  configfs_write_iter+0xbc/0x120
-[ 1200.398042]  vfs_write+0x296/0x460
-[ 1200.401841]  ksys_write+0x6d/0xf0
-[ 1200.405543]  do_syscall_64+0x7e/0x160
-[ 1200.409634]  ? syscall_exit_work+0xf3/0x120
-[ 1200.414302]  ? syscall_exit_to_user_mode+0x71/0x1f0
-[ 1200.419740]  ? do_syscall_64+0x8a/0x160
-[ 1200.424019]  ? syscall_exit_work+0xf3/0x120
-[ 1200.428686]  ? syscall_exit_to_user_mode+0x71/0x1f0
-[ 1200.434131]  ? do_syscall_64+0x8a/0x160
-[ 1200.438413]  ? syscall_exit_work+0xf3/0x120
-[ 1200.443081]  ? syscall_exit_to_user_mode+0x71/0x1f0
-[ 1200.448525]  ? do_syscall_64+0x8a/0x160
-[ 1200.452807]  ? syscall_exit_work+0xf3/0x120
-[ 1200.457475]  ? syscall_exit_to_user_mode+0x71/0x1f0
-[ 1200.462921]  ? do_syscall_64+0x8a/0x160
-[ 1200.467202]  ? syscall_exit_to_user_mode+0x71/0x1f0
-[ 1200.472638]  ? do_syscall_64+0x8a/0x160
-[ 1200.476918]  ? exc_page_fault+0x73/0x160
-[ 1200.481296]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[ 1200.486933] RIP: 0033:0x7f67ce8fda57
-[ 1200.490931] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
-0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
-00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
-74 24
-[ 1200.511886] RSP: 002b:00007ffd30172638 EFLAGS: 00000246 ORIG_RAX:
-0000000000000001
-[ 1200.520335] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f67ce8=
-fda57
-[ 1200.528297] RDX: 0000000000000002 RSI: 0000557fdb881c90 RDI: 00000000000=
-00001
-[ 1200.536258] RBP: 0000557fdb881c90 R08: 0000000000000000 R09: 00007f67ce9=
-b14e0
-[ 1200.544219] R10: 00007f67ce9b13e0 R11: 0000000000000246 R12: 00000000000=
-00002
-[ 1200.552181] R13: 00007f67ce9fb780 R14: 0000000000000002 R15: 00007f67ce9=
-f69e0
-[ 1200.560145]  </TASK>
-[ 1200.562581] Modules linked in: null_blk sunrpc vfat fat
-intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal
-intel_powerclamp coretemp dell_wmi_descriptor kvm_intel sparse_keymap
-cdc_ether rfkill ipmi_ssif usbnet video kvm mei_me iTCO_wdt dcdbas mii
-iTCO_vendor_support mei ipmi_si rapl mgag200 mxm_wmi pcspkr
-intel_cstate ipmi_devintf acpi_power_meter ipmi_msghandler
-intel_uncore i2c_algo_bit lpc_ich fuse xfs sd_mod sg nvme ahci libahci
-crct10dif_pclmul crc32_pclmul crc32c_intel libata ghash_clmulni_intel
-nvme_core tg3 megaraid_sas nvme_auth t10_pi wmi dm_mirror
-dm_region_hash dm_log dm_mod [last unloaded: null_blk]
-[ 1200.624314] CR2: 0000000000000130
-[ 1200.628012] ---[ end trace 0000000000000000 ]---
-[ 1200.688370] RIP: 0010:_raw_spin_lock_irq+0x18/0x30
-[ 1200.693747] Code: 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-90 90 f3 0f 1e fa 0f 1f 44 00 00 fa 65 ff 05 47 28 26 7c 31 c0 ba 01
-00 00 00 <f0> 0f b1 17 75 05 c3 cc cc cc cc 89 c6 e8 46 01 00 00 90 c3
-cc cc
-[ 1200.714704] RSP: 0018:ffffb973431e7420 EFLAGS: 00010046
-[ 1200.720535] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000000=
-00008
-[ 1200.728498] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000000=
-00130
-[ 1200.736461] RBP: 0000000000000008 R08: ffff9645c44e4400 R09: 00000000000=
-00000
-[ 1200.744423] R10: 0000000000000014 R11: 0000000000000000 R12: ffff964743a=
-2d800
-[ 1200.752384] R13: 0000000000000130 R14: ffff9645d05580f8 R15: 00000000000=
-00001
-[ 1200.760348] FS:  00007f67cea3b740(0000) GS:ffff964737a00000(0000)
-knlGS:0000000000000000
-[ 1200.769378] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1200.775789] CR2: 0000000000000130 CR3: 00000002819c4001 CR4: 00000000001=
-706f0
-[ 1200.783754] Kernel panic - not syncing: Fatal exception
-[ 1200.789636] Kernel Offset: 0x2000000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[ 1200.856453] ---[ end Kernel panic - not syncing: Fatal exception ]---
+>> +
+>>  /**
+>>   * blk_queue_max_secure_erase_sectors - set max sectors for a secure erase
+>>   * @q:  the request queue for the device
+>> @@ -633,6 +659,10 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+>>  	t->max_segment_size = min_not_zero(t->max_segment_size,
+>>  					   b->max_segment_size);
+>>
+>> +	t->max_copy_sectors = min(t->max_copy_sectors, b->max_copy_sectors);
+>> +	t->max_copy_hw_sectors = min(t->max_copy_hw_sectors,
+>> +				     b->max_copy_hw_sectors);
+>> +
+>>  	t->misaligned |= b->misaligned;
+>>
+>>  	alignment = queue_limit_alignment_offset(b, start);
+>> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+>> index f0f9314ab65c..805c2b6b0393 100644
+>> --- a/block/blk-sysfs.c
+>> +++ b/block/blk-sysfs.c
+>> @@ -205,6 +205,44 @@ static ssize_t queue_discard_zeroes_data_show(struct request_queue *q, char *pag
+>>  	return queue_var_show(0, page);
+>>  }
+>>
+>> +static ssize_t queue_copy_hw_max_show(struct request_queue *q, char *page)
+>> +{
+>> +	return sprintf(page, "%llu\n", (unsigned long long)
+>> +		       q->limits.max_copy_hw_sectors << SECTOR_SHIFT);
+>> +}
+>> +
+>> +static ssize_t queue_copy_max_show(struct request_queue *q, char *page)
+>> +{
+>> +	return sprintf(page, "%llu\n", (unsigned long long)
+>> +		       q->limits.max_copy_sectors << SECTOR_SHIFT);
+>> +}
+>
+>Given that you repeat the same pattern twice, may be add a queue_var64_show()
+>helper ? (naming can be changed).
+>
+Acked
 
-Best Regards,
-  Yi Zhang
+>> +
+>> +static ssize_t queue_copy_max_store(struct request_queue *q, const char *page,
+>> +				    size_t count)
+>> +{
+>> +	unsigned long max_copy_bytes;
+>> +	struct queue_limits lim;
+>> +	ssize_t ret;
+>> +	int err;
+>> +
+>> +	ret = queue_var_store(&max_copy_bytes, page, count);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (max_copy_bytes & (queue_logical_block_size(q) - 1))
+>> +		return -EINVAL;
+>> +
+>> +	blk_mq_freeze_queue(q);
+>> +	lim = queue_limits_start_update(q);
+>> +	lim.max_user_copy_sectors = max_copy_bytes >> SECTOR_SHIFT;
+>
+>max_copy_bytes is an unsigned long, so 64 bits on 64-bit arch and
+>max_user_copy_sectors is an unsigned int, so 32-bits. There are thus no
+>guarantees that this will not overflow. A check is needed.
+>
+Acked
 
+>> +	err = queue_limits_commit_update(q, &lim);
+>> +	blk_mq_unfreeze_queue(q);
+>> +
+>> +	if (err)
+>
+>You can reuse ret here. No need for adding the err variable.
+Acked
+
+>
+>> +		return err;
+>> +	return count;
+>> +}
+>> +
+>>  static ssize_t queue_write_same_max_show(struct request_queue *q, char *page)
+>>  {
+>>  	return queue_var_show(0, page);
+>> @@ -505,6 +543,9 @@ QUEUE_RO_ENTRY(queue_nr_zones, "nr_zones");
+>>  QUEUE_RO_ENTRY(queue_max_open_zones, "max_open_zones");
+>>  QUEUE_RO_ENTRY(queue_max_active_zones, "max_active_zones");
+>>
+>> +QUEUE_RO_ENTRY(queue_copy_hw_max, "copy_max_hw_bytes");
+>> +QUEUE_RW_ENTRY(queue_copy_max, "copy_max_bytes");
+>> +
+>>  QUEUE_RW_ENTRY(queue_nomerges, "nomerges");
+>>  QUEUE_RW_ENTRY(queue_rq_affinity, "rq_affinity");
+>>  QUEUE_RW_ENTRY(queue_poll, "io_poll");
+>> @@ -618,6 +659,8 @@ static struct attribute *queue_attrs[] = {
+>>  	&queue_discard_max_entry.attr,
+>>  	&queue_discard_max_hw_entry.attr,
+>>  	&queue_discard_zeroes_data_entry.attr,
+>> +	&queue_copy_hw_max_entry.attr,
+>> +	&queue_copy_max_entry.attr,
+>>  	&queue_write_same_max_entry.attr,
+>>  	&queue_write_zeroes_max_entry.attr,
+>>  	&queue_zone_append_max_entry.attr,
+>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>> index aefdda9f4ec7..109d9f905c3c 100644
+>> --- a/include/linux/blkdev.h
+>> +++ b/include/linux/blkdev.h
+>> @@ -309,6 +309,10 @@ struct queue_limits {
+>>  	unsigned int		discard_alignment;
+>>  	unsigned int		zone_write_granularity;
+>>
+>> +	unsigned int		max_copy_hw_sectors;
+>> +	unsigned int		max_copy_sectors;
+>> +	unsigned int		max_user_copy_sectors;
+>> +
+>>  	unsigned short		max_segments;
+>>  	unsigned short		max_integrity_segments;
+>>  	unsigned short		max_discard_segments;
+>> @@ -933,6 +937,8 @@ void blk_queue_max_secure_erase_sectors(struct request_queue *q,
+>>  		unsigned int max_sectors);
+>>  extern void blk_queue_max_discard_sectors(struct request_queue *q,
+>>  		unsigned int max_discard_sectors);
+>> +extern void blk_queue_max_copy_hw_sectors(struct request_queue *q,
+>> +					  unsigned int max_copy_sectors);
+>>  extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
+>>  		unsigned int max_write_same_sectors);
+>>  extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+>> @@ -1271,6 +1277,14 @@ static inline unsigned int bdev_discard_granularity(struct block_device *bdev)
+>>  	return bdev_get_queue(bdev)->limits.discard_granularity;
+>>  }
+>>
+>> +/* maximum copy offload length, this is set to 128MB based on current testing */
+>
+>Current testing will not be current in a while... So may be simply say
+>"arbitrary" or something. Also please capitalize the first letter of the
+>comment. So something like:
+>
+>/* Arbitrary absolute limit of 128 MB for copy offload. */
+>
+>> +#define BLK_COPY_MAX_BYTES		(1 << 27)
+>
+>Also, it is not clear from the name if this is a soft limit or a cap on the
+>hardware limit... So at least please adjust the comment to say which one it is.
+>
+Acked, it is a soft limit.
+
+Thank You,
+Nitesh Shetty
+
+------NniuWcEa.zZVU-iq4JS_ZFjyXsesTFtE.O7X-O5.k3Ud19D7=_14c0f_
+Content-Type: text/plain; charset="utf-8"
+
+
+------NniuWcEa.zZVU-iq4JS_ZFjyXsesTFtE.O7X-O5.k3Ud19D7=_14c0f_--
 
