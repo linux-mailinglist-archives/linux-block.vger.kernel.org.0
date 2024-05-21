@@ -1,114 +1,59 @@
-Return-Path: <linux-block+bounces-7580-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7574-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AACF8CAFE0
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 16:02:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB8798CADE3
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 14:10:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FC1EB22B11
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 14:02:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 639E21F2358E
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 12:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E003F7F7FF;
-	Tue, 21 May 2024 14:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="v3FN9nio"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04B075803;
+	Tue, 21 May 2024 12:09:57 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0427E788
-	for <linux-block@vger.kernel.org>; Tue, 21 May 2024 14:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D5554913;
+	Tue, 21 May 2024 12:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716300126; cv=none; b=JgfWhafLNKwEoXr9btLV6UdVUBFj8Qj3ZIIXYQk22Cq2uZLIjgbWdMzsFFae5WJfZPlI7rbFvmA1sjuBR0mIrh4JcvWIReQyaNSDyf39JNMAxurRGSYmBwUyJlhj13+S/Vvn6Ns13/lw5mOd08mmFBNTDro3z+LUaICwYXxGjOo=
+	t=1716293397; cv=none; b=dI3WPAy6H/OmIbv3YZfjemIwaMvfzAjWIqwV/456gJqVkNGcYwdXINX3aUDl5DQD+HlQefDu9gVQgvFMbGlSnfKn3vtSo8tB1MydRcyrWiJFoNlvU2QIpiQWq81gMFs7DUQBTo3ffLlozgI1bSdFsMGMCdhFPgU29MPz+kUXWfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716300126; c=relaxed/simple;
-	bh=IRC2K7YZ6ze42KPSczBsuz2TVR6aN2+8yYeRSYMoCrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SWhaB2oMnJzWUYWU7lFTlfhi36XwfKC7+TQytTzbYhPJ+rvpNuESah5BrAoEC2mpQLENEfaB2keMfua/CzE5Sw9YyT676VdfYI3jZ49fwsE6iEBV6WaKVfC97JLvDQntFIha6O/SC/BAxkDfXrjRH9Sg/SKjtTz1CtLom+Fek+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=v3FN9nio; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a61b70394c0so245579366b.1
-        for <linux-block@vger.kernel.org>; Tue, 21 May 2024 07:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1716300122; x=1716904922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+GtHX6XKY9tFUoyMK9bmqW3d4RhtWji6/gwmQ8MUq8=;
-        b=v3FN9nio3UnjYk5B7EbKOgCjPVeVJtkwv9gtNDLz7w0aY6q5jsi+aczqqpiPSZ6q30
-         P7evKu5Ox0fzGNdS+u09rYYxAIuZ3lcPVSdmNv83jLbLNYn6g39t1z83UG0GzBzPZYAd
-         L/DbompP7OPgH8Uf/yIi7kNc9/28+m9oWCkAmamnAS2vd96eZMVG5oiqza/szec3+0QU
-         ItFoMmsRrHbSO0brr3z+BI/ZYkIC4us6n9UviQoBzeEX5mDS/rCKok2A/0xrhccsiDq/
-         g0QNh6gUDVmyV1R4OE0jXFfCgDc9TwQ8wJ6kWC9vmn3lSC6uI98bkc3H4A4NbA9ubRMc
-         fe5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716300122; x=1716904922;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H+GtHX6XKY9tFUoyMK9bmqW3d4RhtWji6/gwmQ8MUq8=;
-        b=A4uhoy0daqBcODgrKftrMvoGIVcCHATO3nYnBBaD8MW7hZ7Jpr56xMozg6tH+jVoc+
-         m1AIGmO9Unej9t1qvLPH/8HGGQXvSY4K+Pyy7T89Zq+Vk6dNDpV7ZUikZ5WRmPFEOZ7e
-         zqJBBJyAtpSAFWahVlxggpgu6bIQtMCp6UwP5MDyF5HLPA0zpgH1i7TLxBIuJkEF/QjX
-         OV/2azlpvgXajBOlfFEgAr+hDOqlHplHkCr6WH5y35oTxTlRbC+jObMlOHJxQX/JbDQO
-         ABnzHqhSag24b1kLlce2+Qr4LGRvqH+KuHqkmHPKXarTxIcOpTlC4WUimti/GFNEvY18
-         QK3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW1hn8XSqO0aYEV2UcnNKFuL1IuaMWcTlgId3pGfT9K2ULty+y8+I7XIf8J0b0HVpdHPjSWotZn+upG5qP2OG2G1NZ6sIcdww8RdEE=
-X-Gm-Message-State: AOJu0Yye/6JO/oiYSI497HT/1jnsu4acD8cfAAQO/0UuvKALbSUODBmE
-	F6kzHZSzd8z6rlhrDT2Np5N8NbzWR9r98AceSQVahAq0maD/n+kd2/qg0/WFnnI=
-X-Google-Smtp-Source: AGHT+IFmX7dJz+Qrv6+evrNe0L8CcN1Dd6QT6viHDT0Ot6ljSfJ/JUI7PcLoYlK0Avc/f7E/crLbLA==
-X-Received: by 2002:a17:906:b0ca:b0:a59:9c58:763a with SMTP id a640c23a62f3a-a5a2d5ccb27mr2044629166b.46.1716300121938;
-        Tue, 21 May 2024 07:02:01 -0700 (PDT)
-Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b18110sm1614766266b.225.2024.05.21.07.02.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 07:02:01 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Ming Lei <ming.lei@redhat.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yexuan Yang <1182282462@bupt.edu.cn>,
-	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
-	Joel Granados <j.granados@samsung.com>,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Niklas Cassel <Niklas.Cassel@wdc.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Conor Dooley <conor@kernel.org>,
-	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
-	open list <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: add entry for Rust block device driver API
-Date: Tue, 21 May 2024 16:03:22 +0200
-Message-ID: <20240521140323.2960069-4-nmi@metaspace.dk>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240521140323.2960069-1-nmi@metaspace.dk>
-References: <20240521140323.2960069-1-nmi@metaspace.dk>
+	s=arc-20240116; t=1716293397; c=relaxed/simple;
+	bh=dVsOdFQiVBeglDIVdK3rYbYBYaDLeM7asWAWgTWT+kY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TJfKrUrxvhFCKvzufljQIK/wOwK4BEWoMVruRGP/B6nQrBGwteuqNmaubq+MCsoGHwM2OkKsabLAo3KUqow1lHqgxDVnNGTb0JDHvKqOkU6XL7sbP41rYVnAZ4mLOD7PkgBNeOXuWH6199hTdWfLEHxaLirMLY9HszP221PM9HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VkCt12btrz4f3jkk;
+	Tue, 21 May 2024 20:09:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 215331A0568;
+	Tue, 21 May 2024 20:09:51 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RELj0xmeyEbNQ--.4945S4;
+	Tue, 21 May 2024 20:09:49 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: czhong@redhat.com,
+	xni@redhat.com,
+	axboe@kernel.dk,
+	yukuai3@huawei.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH -next] block: fix bio lost for plug enabeld bio based device
+Date: Wed, 22 May 2024 04:03:08 +0800
+Message-Id: <20240521200308.983986-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAGVVp+UZ4stcktsHw0r8ks8LCfXvYJyT+zv93wEfGuuLswArnw@mail.gmail.com>
+References: <CAGVVp+UZ4stcktsHw0r8ks8LCfXvYJyT+zv93wEfGuuLswArnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -116,42 +61,143 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn+RELj0xmeyEbNQ--.4945S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW5Xw4DWr13Cr4DJFW5Wrg_yoW5uF4DpF
+	Z8K3ZxKFWUGF4Igw48XFy7G3WrKFyDWry7JFW5Ca9xJr1jvr4jqw1kJ34FqFWrCrWkWrW3
+	Ar93KryDGw4xCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
+	YI8I648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0p
+	RQo7tUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Andreas Hindborg <a.hindborg@samsung.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Add an entry for the Rust block device driver abstractions.
+With the following two conditions, bio will be lost:
 
-Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+1) blk plug is not enabled, for example, __blkdev_direct_IO_simple() and
+__blkdev_direct_IO_async();
+2) bio plug is enabled, for example write IO for raid1/raid10 while
+bitmap is enabled;
+
+Root cause is that blk_finish_plug() will add the bio to
+curent->bio_list, while such bio will not be handled:
+
+__submit_bio_noacct
+ current->bio_list = bio_list_on_stack;
+ blk_start_plug
+
+ do {
+  dm_submit_bio
+   md_handle_request
+    raid10_write_request
+     -> generate new bio for underlying disks
+     raid1_add_bio_to_plug -> bio is added to plug
+ } while ((bio = bio_list_pop(&bio_list_on_stack[0])))
+ -> previous bio are all handled
+
+ blk_finish_plug
+  raid10_unplug
+   raid1_submit_write
+    submit_bio_noacct
+     if (current->bio_list)
+      bio_list_add(&current->bio_list[0], bio)
+      -> add new bio
+
+ current->bio_list = NULL
+ -> new bio is lost
+
+Fix the problem by moving plug into the while loop, so that
+current->bio_list will still be handled after blk_finish_plug().
+
+By the way, enable plug for raid1/raid10 in this case will also prevent
+delay IO handling into daemon thread, which should also improve IO
+performance.
+
+Fixes: 060406c61c7c ("block: add plug while submitting IO")
+Reported-by: Changhui Zhong <czhong@redhat.com>
+Closes: https://lore.kernel.org/all/CAGVVp+Xsmzy2G9YuEatfMT6qv1M--YdOCQ0g7z7OVmcTbBxQAg@mail.gmail.com/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ block/blk-core.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa3b947fb080..62a13736e569 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3657,6 +3657,20 @@ F:	include/linux/blk*
- F:	kernel/trace/blktrace.c
- F:	lib/sbitmap.c
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 01186333c88e..dd29d5465af6 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -613,9 +613,14 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
  
-+BLOCK LAYER DEVICE DRIVER API [RUST]
-+M:	Andreas Hindborg <a.hindborg@samsung.com>
-+R:	Boqun Feng <boqun.feng@gmail.com>
-+L:	linux-block@vger.kernel.org
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+W:	https://rust-for-linux.com
-+B:	https://github.com/Rust-for-Linux/linux/issues
-+C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
-+F:	drivers/block/rnull.rs
-+F:	rust/kernel/block.rs
-+F:	rust/kernel/block/
+ static void __submit_bio(struct bio *bio)
+ {
++	/* If plug is not used, add new plug here to cache nsecs time. */
++	struct blk_plug plug;
 +
- BLOCK2MTD DRIVER
- M:	Joern Engel <joern@lazybastard.org>
- L:	linux-mtd@lists.infradead.org
+ 	if (unlikely(!blk_crypto_bio_prep(&bio)))
+ 		return;
+ 
++	blk_start_plug(&plug);
++
+ 	if (!bio->bi_bdev->bd_has_submit_bio) {
+ 		blk_mq_submit_bio(bio);
+ 	} else if (likely(bio_queue_enter(bio) == 0)) {
+@@ -624,6 +629,8 @@ static void __submit_bio(struct bio *bio)
+ 		disk->fops->submit_bio(bio);
+ 		blk_queue_exit(disk->queue);
+ 	}
++
++	blk_finish_plug(&plug);
+ }
+ 
+ /*
+@@ -648,13 +655,11 @@ static void __submit_bio(struct bio *bio)
+ static void __submit_bio_noacct(struct bio *bio)
+ {
+ 	struct bio_list bio_list_on_stack[2];
+-	struct blk_plug plug;
+ 
+ 	BUG_ON(bio->bi_next);
+ 
+ 	bio_list_init(&bio_list_on_stack[0]);
+ 	current->bio_list = bio_list_on_stack;
+-	blk_start_plug(&plug);
+ 
+ 	do {
+ 		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+@@ -688,23 +693,19 @@ static void __submit_bio_noacct(struct bio *bio)
+ 		bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
+ 	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
+ 
+-	blk_finish_plug(&plug);
+ 	current->bio_list = NULL;
+ }
+ 
+ static void __submit_bio_noacct_mq(struct bio *bio)
+ {
+ 	struct bio_list bio_list[2] = { };
+-	struct blk_plug plug;
+ 
+ 	current->bio_list = bio_list;
+-	blk_start_plug(&plug);
+ 
+ 	do {
+ 		__submit_bio(bio);
+ 	} while ((bio = bio_list_pop(&bio_list[0])));
+ 
+-	blk_finish_plug(&plug);
+ 	current->bio_list = NULL;
+ }
+ 
 -- 
-2.44.0
+2.39.2
 
 
