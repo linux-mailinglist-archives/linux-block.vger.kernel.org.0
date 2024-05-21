@@ -1,203 +1,147 @@
-Return-Path: <linux-block+bounces-7574-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7581-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB8798CADE3
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 14:10:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5729A8CB15E
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 17:29:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 639E21F2358E
-	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 12:10:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C1AF281779
+	for <lists+linux-block@lfdr.de>; Tue, 21 May 2024 15:29:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04B075803;
-	Tue, 21 May 2024 12:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04981442F6;
+	Tue, 21 May 2024 15:29:47 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D5554913;
-	Tue, 21 May 2024 12:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEBF7352B
+	for <linux-block@vger.kernel.org>; Tue, 21 May 2024 15:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716293397; cv=none; b=dI3WPAy6H/OmIbv3YZfjemIwaMvfzAjWIqwV/456gJqVkNGcYwdXINX3aUDl5DQD+HlQefDu9gVQgvFMbGlSnfKn3vtSo8tB1MydRcyrWiJFoNlvU2QIpiQWq81gMFs7DUQBTo3ffLlozgI1bSdFsMGMCdhFPgU29MPz+kUXWfk=
+	t=1716305387; cv=none; b=lr3XwR1y9iZ+gEQ0TJjfTUpK5gEWsfuxPs3G/eWvgcUq7OWsYYrNtHB6Z/4FgaxgrgleM/Xz3SMMMh/fn3X/mAZ0Ci3j3bpKNrcK5f+w90yh3jJLZ9gj34flsOCDPz2p3fxYiVf1qdK64ZmuPqph3Gf45R1CGWqI3TRU/GDHgZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716293397; c=relaxed/simple;
-	bh=dVsOdFQiVBeglDIVdK3rYbYBYaDLeM7asWAWgTWT+kY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TJfKrUrxvhFCKvzufljQIK/wOwK4BEWoMVruRGP/B6nQrBGwteuqNmaubq+MCsoGHwM2OkKsabLAo3KUqow1lHqgxDVnNGTb0JDHvKqOkU6XL7sbP41rYVnAZ4mLOD7PkgBNeOXuWH6199hTdWfLEHxaLirMLY9HszP221PM9HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VkCt12btrz4f3jkk;
-	Tue, 21 May 2024 20:09:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 215331A0568;
-	Tue, 21 May 2024 20:09:51 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn+RELj0xmeyEbNQ--.4945S4;
-	Tue, 21 May 2024 20:09:49 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: czhong@redhat.com,
-	xni@redhat.com,
-	axboe@kernel.dk,
-	yukuai3@huawei.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next] block: fix bio lost for plug enabeld bio based device
-Date: Wed, 22 May 2024 04:03:08 +0800
-Message-Id: <20240521200308.983986-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <CAGVVp+UZ4stcktsHw0r8ks8LCfXvYJyT+zv93wEfGuuLswArnw@mail.gmail.com>
-References: <CAGVVp+UZ4stcktsHw0r8ks8LCfXvYJyT+zv93wEfGuuLswArnw@mail.gmail.com>
+	s=arc-20240116; t=1716305387; c=relaxed/simple;
+	bh=UvH4ktnL1tc7jDTG/u5fqTldApC2eZfE4ZdoJUo2544=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEFoztgrmFk2MclZdbEYJ5jOoTruqrljGdURS9G/YlU3mpJwdhF4S+oirzCZI1QjM8R641onLGVNQRufGldg2qU6RkjlRy/SO3xmIeEV5frJ7h3uBNjwELEtJHn/FY923+TUHaFTI6bASu1i8TUMlEsAVcd+2HF8j6PMsDlrugk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-792ba098eccso333429985a.2
+        for <linux-block@vger.kernel.org>; Tue, 21 May 2024 08:29:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716305385; x=1716910185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3+XPV7zuv4ms1R7vIYpXPZzY3GXErYi4LFqsxLAG47I=;
+        b=UPIPylm/nx9SmdzfQfvzGWgyPfgQx2UPz+W1E6AtRZtpd7VT78iPcC4NvbayBMFdlv
+         bXLH1vv+UbzE8norditSJLEMf0qSvvdycWUIkQbiL8L++El0wwOGB8xQ+CjxHYmjXixs
+         AGGJbuugOZIsQpRZ4x7/vvQWt3C8edA9qPqwWQkBca3NqjxTpbzYFic2iCXPHCuMKREI
+         dFt/QQ+Qhb9LaD44bhL/OV0CPmx+5ynQIlibZ87fWvFMRUtnOcA+9Wq8aufXUtRJLgYy
+         7iwQUFog8qwJCF968oJSN31rDi1oJrkpfola1yItt8hv0dX4YhlUHAXB/v36P2yNJjF6
+         WFjw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Swy8Fz+kUrUG1TUnsC/queVWtHDrtRem7LqVtgzr6cpQufZ9Khz8RNjrtC5uAh8iV8DBNYPV340rtwrQQvTfj7wcgTxwf0V4z6M=
+X-Gm-Message-State: AOJu0YzWDPJ8527xxIQN7s2Ms+zeJKYG1LcGtMAntoruUISwOcQtxzFj
+	so1iLoA5v3tfyuLoO3tgBEPgYmEU2T6JZzCGgubQBS8QjffBKZ2yRPewEaEMKBU=
+X-Google-Smtp-Source: AGHT+IF8uzIllLEK1FILZCyeg/sSMiPh8GED2VV5AYcL1qdc3iolbJlLULo4eghby1CQfxaYqUkGog==
+X-Received: by 2002:a05:620a:244a:b0:790:797d:2c4a with SMTP id af79cd13be357-792c75763e2mr3967911485a.14.1716305385299;
+        Tue, 21 May 2024 08:29:45 -0700 (PDT)
+Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2fc789sm1291554285a.93.2024.05.21.08.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 08:29:44 -0700 (PDT)
+Date: Tue, 21 May 2024 11:29:43 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>
+Cc: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
+	linux-block@vger.kernel.org
+Subject: Re: dm: use queue_limits_set
+Message-ID: <Zky951XVqcqI48P3@kernel.org>
+References: <ZkmIpCRaZE0237OH@kernel.org>
+ <ZkmRKPfPeX3c138f@kernel.org>
+ <20240520150653.GA32461@lst.de>
+ <ZktuojMrQWH9MQJO@kernel.org>
+ <20240520154425.GB1104@lst.de>
+ <ZktyTYKySaauFcQT@kernel.org>
+ <ZkuFuqo3dNw8bOA2@kernel.org>
+ <20240520201237.GA6235@lst.de>
+ <ZkvIn73jAqz94LjI@kernel.org>
+ <ZkvuqNXaNOMe6Gfj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn+RELj0xmeyEbNQ--.4945S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrW5Xw4DWr13Cr4DJFW5Wrg_yoW5uF4DpF
-	Z8K3ZxKFWUGF4Igw48XFy7G3WrKFyDWry7JFW5Ca9xJr1jvr4jqw1kJ34FqFWrCrWkWrW3
-	Ar93KryDGw4xCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
-	YI8I648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0p
-	RQo7tUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkvuqNXaNOMe6Gfj@kernel.org>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Mon, May 20, 2024 at 08:45:28PM -0400, Mike Snitzer wrote:
+> On Mon, May 20, 2024 at 06:03:11PM -0400, Mike Snitzer wrote:
+> > On Mon, May 20, 2024 at 10:12:37PM +0200, Christoph Hellwig wrote:
+> > > On Mon, May 20, 2024 at 01:17:46PM -0400, Mike Snitzer wrote:
+> > > > Doubt there was anything in fstests setting max discard user limit
+> > > > (max_user_discard_sectors) in Ted's case. blk_set_stacking_limits()
+> > > > sets max_user_discard_sectors to UINT_MAX, so given the use of
+> > > > min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors) I
+> > > > suspect blk_stack_limits() stacks up max_discard_sectors to match the
+> > > > underlying storage's max_hw_discard_sectors.
+> > > > 
+> > > > And max_hw_discard_sectors exceeds BIO_PRISON_MAX_RANGE, resulting in
+> > > > dm_cell_key_has_valid_range() triggering on:
+> > > > WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
+> > > 
+> > > Oh, that makes more sense.
+> > > 
+> > > I think you just want to set the max_hw_discard_sectors limit before
+> > > stacking in the lower device limits so that they can only lower it.
+> > > 
+> > > (and in the long run we should just stop stacking the limits except
+> > > for request based dm which really needs it)
+> > 
+> > This is what I staged, I cannot send a patch out right now.. 
+> > 
+> > Ted if you need the patch in email (rather than from linux-dm.git) I
+> > can send it later tonight.  Please see:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-6.10&id=825d8bbd2f32cb229c3b6653bd454832c3c20acb
+> 
+> From: Mike Snitzer <snitzer@kernel.org>
+> Date: Mon, 20 May 2024 13:34:06 -0400
+> Subject: [PATCH] dm: always manage discard support in terms of max_hw_discard_sectors
+> 
+> Commit 4f563a64732d ("block: add a max_user_discard_sectors queue
+> limit") changed block core to set max_discard_sectors to:
+>  min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors)
+> 
+> Since commit 1c0e720228ad ("dm: use queue_limits_set") it was reported
+> dm-thinp was failing in a few fstests (generic/347 and generic/405)
+> with the first WARN_ON_ONCE in dm_cell_key_has_valid_range() being
+> reported, e.g.:
+> WARNING: CPU: 1 PID: 30 at drivers/md/dm-bio-prison-v1.c:128 dm_cell_key_has_valid_range+0x3d/0x50
+> 
+> blk_set_stacking_limits() sets max_user_discard_sectors to UINT_MAX,
+> so given how block core now sets max_discard_sectors (detailed above)
+> it follows that blk_stack_limits() stacks up the underlying device's
+> max_hw_discard_sectors and max_discard_sectors is set to match it. If
+> max_hw_discard_sectors exceeds dm's BIO_PRISON_MAX_RANGE, then
+> dm_cell_key_has_valid_range() will trigger the warning with:
+> WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
+> 
+> Aside from this warning, the discard will fail.  Fix this and other DM
+> issues by governing discard support in terms of max_hw_discard_sectors
+> instead of max_discard_sectors.
+> 
+> Reported-by: Theodore Ts'o <tytso@mit.edu>
+> Fixes: 1c0e720228ad ("dm: use queue_limits_set")
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 
-With the following two conditions, bio will be lost:
-
-1) blk plug is not enabled, for example, __blkdev_direct_IO_simple() and
-__blkdev_direct_IO_async();
-2) bio plug is enabled, for example write IO for raid1/raid10 while
-bitmap is enabled;
-
-Root cause is that blk_finish_plug() will add the bio to
-curent->bio_list, while such bio will not be handled:
-
-__submit_bio_noacct
- current->bio_list = bio_list_on_stack;
- blk_start_plug
-
- do {
-  dm_submit_bio
-   md_handle_request
-    raid10_write_request
-     -> generate new bio for underlying disks
-     raid1_add_bio_to_plug -> bio is added to plug
- } while ((bio = bio_list_pop(&bio_list_on_stack[0])))
- -> previous bio are all handled
-
- blk_finish_plug
-  raid10_unplug
-   raid1_submit_write
-    submit_bio_noacct
-     if (current->bio_list)
-      bio_list_add(&current->bio_list[0], bio)
-      -> add new bio
-
- current->bio_list = NULL
- -> new bio is lost
-
-Fix the problem by moving plug into the while loop, so that
-current->bio_list will still be handled after blk_finish_plug().
-
-By the way, enable plug for raid1/raid10 in this case will also prevent
-delay IO handling into daemon thread, which should also improve IO
-performance.
-
-Fixes: 060406c61c7c ("block: add plug while submitting IO")
-Reported-by: Changhui Zhong <czhong@redhat.com>
-Closes: https://lore.kernel.org/all/CAGVVp+Xsmzy2G9YuEatfMT6qv1M--YdOCQ0g7z7OVmcTbBxQAg@mail.gmail.com/
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 01186333c88e..dd29d5465af6 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -613,9 +613,14 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
- 
- static void __submit_bio(struct bio *bio)
- {
-+	/* If plug is not used, add new plug here to cache nsecs time. */
-+	struct blk_plug plug;
-+
- 	if (unlikely(!blk_crypto_bio_prep(&bio)))
- 		return;
- 
-+	blk_start_plug(&plug);
-+
- 	if (!bio->bi_bdev->bd_has_submit_bio) {
- 		blk_mq_submit_bio(bio);
- 	} else if (likely(bio_queue_enter(bio) == 0)) {
-@@ -624,6 +629,8 @@ static void __submit_bio(struct bio *bio)
- 		disk->fops->submit_bio(bio);
- 		blk_queue_exit(disk->queue);
- 	}
-+
-+	blk_finish_plug(&plug);
- }
- 
- /*
-@@ -648,13 +655,11 @@ static void __submit_bio(struct bio *bio)
- static void __submit_bio_noacct(struct bio *bio)
- {
- 	struct bio_list bio_list_on_stack[2];
--	struct blk_plug plug;
- 
- 	BUG_ON(bio->bi_next);
- 
- 	bio_list_init(&bio_list_on_stack[0]);
- 	current->bio_list = bio_list_on_stack;
--	blk_start_plug(&plug);
- 
- 	do {
- 		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
-@@ -688,23 +693,19 @@ static void __submit_bio_noacct(struct bio *bio)
- 		bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
- 	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
- 
--	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
- 
- static void __submit_bio_noacct_mq(struct bio *bio)
- {
- 	struct bio_list bio_list[2] = { };
--	struct blk_plug plug;
- 
- 	current->bio_list = bio_list;
--	blk_start_plug(&plug);
- 
- 	do {
- 		__submit_bio(bio);
- 	} while ((bio = bio_list_pop(&bio_list[0])));
- 
--	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
- 
--- 
-2.39.2
-
+With this patch applied, I verified xfstests generic/347 and
+generic/405 no longer trigger the dm_cell_key_has_valid_range
+WARN_ON_ONCE.  I'm sending the fix to Linus now.
 
