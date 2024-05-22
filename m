@@ -1,125 +1,131 @@
-Return-Path: <linux-block+bounces-7612-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7608-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBAEC8CBDAF
-	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 11:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 685F88CBCCE
+	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 10:20:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09E401C21D59
-	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 09:23:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96DA11C22044
+	for <lists+linux-block@lfdr.de>; Wed, 22 May 2024 08:20:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC74B8060D;
-	Wed, 22 May 2024 09:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D727A15B;
+	Wed, 22 May 2024 08:20:09 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-m17224.xmail.ntesmail.com (mail-m17224.xmail.ntesmail.com [45.195.17.224])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87082D047;
-	Wed, 22 May 2024 09:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAAA524D7;
+	Wed, 22 May 2024 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716369776; cv=none; b=Avy070/wz7rrgsgmrKH6GA+dPUVb3jgRlVdAeFROf8appbmk38iYb+5Fy5qPcpKZTochADR2GbTU5FDh5OVGotjXaUtuTi2373Shyf/3K/lpb/9iIoCqb3c5IZ6sT0DaM3uUhEfeWjHrewRKo2We+NPTL2loZ5K/eEXwRaC2/18=
+	t=1716366008; cv=none; b=WnA8eopRnmozFoKNGWieHG4Q0CIczyU1+onNXe0O65btowEpACc9EC1zg3xrrAj7t0tpjx02ngSCk8pgSm/cRSRnjYKSGJxe2esCuKenAmBWUMTaXVbCrJleyFOrhF9WbwrqfntSACN4MUPE3DxnVLTEMQ2lfc0GqxoMpsE6+to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716369776; c=relaxed/simple;
-	bh=WmJQo640ZQb8OrummdMPWB3IkXWYN23+eVltn+PnS9g=;
-	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Fj8dfTYuyzo2fI+xLdzn1BCv+8isZSUbf6s5DkHsKzPqiQOWpUg67shEHI9YGlUH8o6F+yi3m/SP5hq813IfuZm9X+OmNywcq2I/3ZqQ0BgybbduAzLm9RfUQolxPJJLFyetnQXCIul7vqAhdqPGtc7Rjn22/FrZRSSRToWNm/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 536F18602E0;
-	Wed, 22 May 2024 14:17:39 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <John@groves.net>, Gregory Price
- <gregory.price@memverge.com>, axboe@kernel.dk, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
- <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
- <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
- <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
- <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Message-ID: <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
-Date: Wed, 22 May 2024 14:17:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1716366008; c=relaxed/simple;
+	bh=O9Sp924WkGSr0BtgRunOXnOH4VOLkaCkXQizxmQia+g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PllNhzFB5aQm/99x/9KWx0Hb5FPJbPrOD6BmuJdLcWh6thWBKCGPIaK5xs7lQpCNmW7eiLN8zg2lCDV30grqZvt4b1FbtcpT3KwqUhaLU2PzMkn5KipGCLsO3zqTduCv8vI3Yq7CpHJl7eVSpQfgW8bXM6lYZyMnw8dOBXN5GqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 44M7n0Jw013913;
+	Wed, 22 May 2024 15:49:00 +0800 (+08)
+	(envelope-from Yunlong.Xing@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44M7maIC012784;
+	Wed, 22 May 2024 15:48:36 +0800 (+08)
+	(envelope-from Yunlong.Xing@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vkjy76cltz2Pp6xc;
+	Wed, 22 May 2024 15:45:03 +0800 (CST)
+Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 22 May 2024 15:48:34 +0800
+From: Yunlong Xing <yunlong.xing@unisoc.com>
+To: <axboe@kernel.dk>, <yunlongxing23@gmail.com>, <niuzhiguo84@gmail.com>,
+        <Hao_hao.Wang@unisoc.com>
+CC: <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] loop: inherit the ioprio in loop woker thread
+Date: Wed, 22 May 2024 15:48:29 +0800
+Message-ID: <20240522074829.1750204-1-yunlong.xing@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGkoYVk5ITE1ITR5MSEJPHlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f9ef2be66023ckunm536f18602e0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OS46PRw6GDctHDMrDRoLDBoQ
-	OTMKC0JVSlVKTEpNSE5DTU1LS0hPVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JPSjcG
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 44M7maIC012784
 
+The loop worker thread only inherit the blkcg of original request,
+but does not inherit it's ioprio. So, when a task with the high
+ioprio but in root blkcg accesses the loop device, the worker
+thread handle this cmd with a normal ioprio. This results in the
+request of high ioprio task doesn't be prioritized.
 
+Signed-off-by: Yunlong Xing <yunlong.xing@unisoc.com>
+---
+ drivers/block/loop.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-在 2024/5/22 星期三 上午 2:41, Dan Williams 写道:
-> Dongsheng Yang wrote:
->> 在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
-> [..]
->>>> If we check and find that the "No clean writeback" bit in both CSDS and
->>>> DVSEC is set, can we then assume that software cache-coherency is
->>>> feasible, as outlined below:
->>>>
->>>> (1) Both the writer and reader ensure cache flushes. Since there are no
->>>> clean writebacks, there will be no background data writes.
->>>>
->>>> (2) The writer writes data to shared memory and then executes a cache
->>>> flush. If we trust the "No clean writeback" bit, we can assume that the
->>>> data in shared memory is coherent.
->>>>
->>>> (3) Before reading the data, the reader performs cache invalidation.
->>>> Since there are no clean writebacks, this invalidation operation will
->>>> not destroy the data written by the writer. Therefore, the data read by
->>>> the reader should be the data written by the writer, and since the
->>>> writer's cache is clean, it will not write data to shared memory during
->>>> the reader's reading process. Additionally, data integrity can be ensured.
-> 
-> What guarantees this property? How does the reader know that its local
-> cache invalidation is sufficient for reading data that has only reached
-> global visibility on the remote peer? As far as I can see, there is
-> nothing that guarantees that local global visibility translates to
-> remote visibility. In fact, the GPF feature is counter-evidence of the
-> fact that writes can be pending in buffers that are only flushed on a
-> GPF event.
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 28a95fd366fe..404ac113c71b 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -442,7 +442,6 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+ 	cmd->iocb.ki_filp = file;
+ 	cmd->iocb.ki_complete = lo_rw_aio_complete;
+ 	cmd->iocb.ki_flags = IOCB_DIRECT;
+-	cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
+ 
+ 	if (rw == ITER_SOURCE)
+ 		ret = call_write_iter(file, &cmd->iocb, &iter);
+@@ -1856,6 +1855,9 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		break;
+ 	}
+ 
++	/* get request's ioprio */
++	cmd->iocb.ki_ioprio = rq->ioprio;
++
+ 	/* always use the first bio's css */
+ 	cmd->blkcg_css = NULL;
+ 	cmd->memcg_css = NULL;
+@@ -1886,12 +1888,18 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+ 	int ret = 0;
+ 	struct mem_cgroup *old_memcg = NULL;
+ 	const bool use_aio = cmd->use_aio;
++	int ori_ioprio = 0;
++	int cmd_ioprio = cmd->iocb.ki_ioprio;
+ 
+ 	if (write && (lo->lo_flags & LO_FLAGS_READ_ONLY)) {
+ 		ret = -EIO;
+ 		goto failed;
+ 	}
+ 
++	ori_ioprio = get_current_ioprio();
++	if (ori_ioprio != cmd_ioprio)
++		set_task_ioprio(current, cmd_ioprio);
++
+ 	if (cmd_blkcg_css)
+ 		kthread_associate_blkcg(cmd_blkcg_css);
+ 	if (cmd_memcg_css)
+@@ -1913,6 +1921,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+ 		set_active_memcg(old_memcg);
+ 		css_put(cmd_memcg_css);
+ 	}
++
++	if (ori_ioprio != cmd_ioprio)
++		set_task_ioprio(current, ori_ioprio);
++
+  failed:
+ 	/* complete non-aio request */
+ 	if (!use_aio || ret) {
+-- 
+2.25.1
 
-Sounds correct. From what I learned from GPF, ADR, and eADR, there would 
-still be data in WPQ even though we perform a CPU cache line flush in 
-the OS.
-
-This means we don't have a explicit method to make data puncture all 
-caches and land in the media after writing. also it seems there isn't a 
-explicit method to invalidate all caches along the entire path.
-
-> 
-> I remain skeptical that a software managed inter-host cache-coherency
-> scheme can be made reliable with current CXL defined mechanisms.
-
-
-I got your point now, acorrding current CXL Spec, it seems software 
-managed cache-coherency for inter-host shared memory is not working. 
-Will the next version of CXL spec consider it?
-> 
 
