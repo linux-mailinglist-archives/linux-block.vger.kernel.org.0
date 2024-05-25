@@ -1,119 +1,120 @@
-Return-Path: <linux-block+bounces-7726-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7736-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0327E8CEB40
-	for <lists+linux-block@lfdr.de>; Fri, 24 May 2024 22:49:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDE238CEE22
+	for <lists+linux-block@lfdr.de>; Sat, 25 May 2024 09:19:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9583E1F22649
-	for <lists+linux-block@lfdr.de>; Fri, 24 May 2024 20:49:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A3562815A4
+	for <lists+linux-block@lfdr.de>; Sat, 25 May 2024 07:19:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22AAD130E4F;
-	Fri, 24 May 2024 20:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Og3njbcH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D64AB660;
+	Sat, 25 May 2024 07:19:50 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F97130A42;
-	Fri, 24 May 2024 20:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F588BE4B;
+	Sat, 25 May 2024 07:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716583625; cv=none; b=HbN82VvNdZj/u4jqt7HtCkHpOnqPObTMUo13olVDFwZlBbPn+0Fio1u+FhTf3H1lQf5czE48yS3RpdiO1/iACRa598tDt8tgRsRRR6Cqzb1xnSpwYcof8+vk7pxACinJnDNSll67rprlyu8/B8Q9vKjiTwvPkdjRMPCeCOS/LMg=
+	t=1716621589; cv=none; b=mc4ybfVcDX/b7RghOyxwwqwQwMz6q8Xy/YcfyfYXCp2LxbSeenzqDWGbtqYO9lY163Gu8RYQMU8P4VYwlknaVshPIvXHdXdroOLlZGePQ+Izkx2MyeyQelqXEPGnDwqeS1uHrE61fPd0WhCk40XJJlaraWk7Nz154CGX7eQ/peY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716583625; c=relaxed/simple;
-	bh=GizpAfm1IpenhhFafNhib8CpRwvRdfoMJkdr5Y8ekEc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Ln22WTd+oVFjT7i5UshUx8hg3grK4F+zBmwsY6Nc5er+n6jTxpanHEcWH5eJOsySU3G8iCfig61mZgNnyK5tcfdww5M8mkA6n4DkBtZ2kj1+BFLpaellMjiimNUFU/+tl0Nyd6+J0ZIZZ4NgReF+qjGXCdbk8qFlxyYrXj4MkS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Og3njbcH; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 3F0BB20BE5BA; Fri, 24 May 2024 13:46:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F0BB20BE5BA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1716583612;
-	bh=xupUS2KScsLMukfv7xMJ85Oj64bo6lAeojCZyO6+ito=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Og3njbcHpWNB41xLjNmIdrwkSdnPYoyX/8TBUzaGynjxaaS8Xcv7QTh0MIGTjXY8S
-	 0KI5F0QEMn/fHJdxeUAqUGeFM9dwmVC7oMelNTOnzLbsLLUFE/ebHznm/SNT65aaEo
-	 GzpG3yrdXoKSLyyCrqXgoGuvPBBFRpRKr1cz9rOU=
-From: Fan Wu <wufan@linux.microsoft.com>
-To: corbet@lwn.net,
-	zohar@linux.ibm.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	tytso@mit.edu,
-	ebiggers@kernel.org,
-	axboe@kernel.dk,
-	agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	eparis@redhat.com,
-	paul@paul-moore.com
-Cc: linux-doc@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	fsverity@lists.linux.dev,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	audit@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Fan Wu <wufan@linux.microsoft.com>
-Subject: [PATCH v19 20/20] MAINTAINERS: ipe: add ipe maintainer information
-Date: Fri, 24 May 2024 13:46:49 -0700
-Message-Id: <1716583609-21790-21-git-send-email-wufan@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1716583609-21790-1-git-send-email-wufan@linux.microsoft.com>
-References: <1716583609-21790-1-git-send-email-wufan@linux.microsoft.com>
+	s=arc-20240116; t=1716621589; c=relaxed/simple;
+	bh=CTdedY+T4JhD8LfJ6OWl9f//J0RVuh/3fU0nBq+skOo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rzBGJ4DrAjuYSXwPdhcTXC9h1bD5yt0Fa+vqGB8otAS6Y/reLSukhyd2HiPDreajsFgPj0BcHPyWYXrSHNUvwhbpjAYqK01TTEK+fc3BXJfX3aaDeLBRpmEXjqR9r/Qz1I1fn+ZvuU28ry6RyWciYhrBG3qqYmlH468LabgXKwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VmYFN5dlPz4f3jZ6;
+	Sat, 25 May 2024 15:19:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id A9B141A0181;
+	Sat, 25 May 2024 15:19:42 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgAXPA8KkVFmxtTUNw--.12309S3;
+	Sat, 25 May 2024 15:19:42 +0800 (CST)
+Message-ID: <9bb4beb1-06d4-2127-31aa-003c555653d4@huaweicloud.com>
+Date: Sat, 25 May 2024 15:19:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [bug report] WARNING: CPU: 2 PID: 3445306 at
+ drivers/block/ublk_drv.c:2633 ublk_ctrl_start_recovery.constprop.0+0x74/0x180
+From: Li Nan <linan666@huaweicloud.com>
+To: Changhui Zhong <czhong@redhat.com>,
+ Linux Block Devices <linux-block@vger.kernel.org>, io-uring@vger.kernel.org
+Cc: Ming Lei <ming.lei@redhat.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>,
+ "yukuai (C)" <yukuai3@huawei.com>, "houtao1@huawei.com"
+ <houtao1@huawei.com>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+References: <CAGVVp+UvLiS+bhNXV-h2icwX1dyybbYHeQUuH7RYqUvMQf6N3w@mail.gmail.com>
+ <4b9986cf-003b-0ad2-75be-5745e979d36d@huaweicloud.com>
+In-Reply-To: <4b9986cf-003b-0ad2-75be-5745e979d36d@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAXPA8KkVFmxtTUNw--.12309S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFyUKFykWFykJFyrAr1rCrg_yoWfAwc_uF
+	1vyr9rJwsrCF1Fkw42k3W3JrWq9F4jqryxWFWavFZIvry7XFnrX3srZ3srCa1kGayrAFn8
+	Ar1Dtw48Jr1rGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4AYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	x4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14
+	v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE
+	67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1VOJ7
+	UUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Update MAINTAINERS to include ipe maintainer information.
 
-Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 
---
-v1-v16:
-  + Not present
+在 2024/5/24 17:45, Li Nan 写道:
+> 
+> 
+> 在 2024/5/24 11:49, Changhui Zhong 写道:
+>> Hello,
+>>
+>> I hit the kernel panic when running test ubdsrv  generic/005，
+>> please help check it and let me know if you need any info/testing for
+>> it, thanks.
+>>
 
-v17:
-  + Introduced
+Can you test the following patch? WARN will still be triggered, but the
+NULL pointer dereference will be fixed.
 
-v18:
-  + No changes
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 4e159948c912..99b621b2d40f 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -2630,7 +2630,8 @@ static void ublk_queue_reinit(struct ublk_device *ub, 
+struct ublk_queue *ubq)
+  {
+  	int i;
 
-v19:
-  + No changes
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+-	WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
++	if (WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq))))
++		return;
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 27367ad339ea..1479783a6841 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10934,6 +10934,16 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
- F:	security/integrity/
- F:	security/integrity/ima/
- 
-+INTEGRITY POLICY ENFORCEMENT (IPE)
-+M:	Fan Wu <wufan@linux.microsoft.com>
-+L:	linux-security-module@vger.kernel.org
-+S:	Supported
-+T:	git https://github.com/microsoft/ipe.git
-+F:	Documentation/admin-guide/LSM/ipe.rst
-+F:	Documentation/security/ipe.rst
-+F:	scripts/ipe/
-+F:	security/ipe/
-+
- INTEL 810/815 FRAMEBUFFER DRIVER
- M:	Antonino Daplas <adaplas@gmail.com>
- L:	linux-fbdev@vger.kernel.org
+  	/* All old ioucmds have to be completed */
+  	ubq->nr_io_ready = 0;
+
 -- 
-2.44.0
+Thanks,
+Nan
 
 
