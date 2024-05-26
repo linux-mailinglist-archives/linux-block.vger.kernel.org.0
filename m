@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-7749-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7750-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36E8F8CF3AF
-	for <lists+linux-block@lfdr.de>; Sun, 26 May 2024 11:52:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBAC68CF3C2
+	for <lists+linux-block@lfdr.de>; Sun, 26 May 2024 11:54:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 746171F21B7A
-	for <lists+linux-block@lfdr.de>; Sun, 26 May 2024 09:52:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C115B22B8C
+	for <lists+linux-block@lfdr.de>; Sun, 26 May 2024 09:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C52D812F590;
-	Sun, 26 May 2024 09:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD88130E4F;
+	Sun, 26 May 2024 09:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSukhc76"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9nOsDBk"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF5912F58A;
-	Sun, 26 May 2024 09:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E1A130E46;
+	Sun, 26 May 2024 09:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716716607; cv=none; b=goZDcML1i12gFQDdDny+x07d6rkRbot5WX5msQa15HzN6e4jrphklGYT61mrPSXT3V6N5M2xdrM8YkeZZBX+VD8zWNoLeSY7snhnti/nSqhtZ288g5M8NZDYqYg0/fhxywijfqno5QthfJ7blIs6uhny3lAHHvttgkBLXwecQZc=
+	t=1716716621; cv=none; b=uC8dMjnwK3PTVZTh5q1RBmF02aDkroeGAR1AJlkLtFPg2YHz7oqLPAbHDwXZffYzT7+/QWZniHiRAbFZTdKJ1XPGcSzHrwsEZhbp7K89zEcsPYdnEfTWvuMMME+6JMYNQ0US0f6nW/gyBHT2ruYKeVpgZ0EB/NFeNJPYGaioIQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716716607; c=relaxed/simple;
-	bh=3zGo9WOPGlqGax7+dFHaeHTftQyTAVZYdngRlCtixFs=;
+	s=arc-20240116; t=1716716621; c=relaxed/simple;
+	bh=ZYm2C7mWJ2gAoDgYChnVbEiePdJi4ggRSDKbaUQgY6c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H6kywTBPCXL6Em/eplEQxu35NYeHw5OmqPKSHIRM5Sdo9KGuCt1uAma3Z+Cx3OrdJe1BQEJXM8mjOUL0a+jhTwLwlV2YWAx1UjeXr/Lxf6Cq6bSUYgdxNOR1zjTunX+Us9ygOHbAzvhEoOoalcJW5lt3MxTqxmdAqN44EvwCk8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSukhc76; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34BCAC2BD10;
-	Sun, 26 May 2024 09:43:26 +0000 (UTC)
+	 MIME-Version; b=QAOAvkEceClZ0I0GwI1oQAkV5p+1qTQi2RcpL4ecBa7a/FxiEAcUgQWfVb+DMxpTZBR4Eu7MeOFECUIkfbggUZxAxKH5p8yRqFaWRaJ8lhN7RIavfWvZta8VoSq8yBQsytmAA23egGD1ELBimG6zRPmYMF9/A1LAHHCwmtBSxWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9nOsDBk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B8CC32789;
+	Sun, 26 May 2024 09:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716716607;
-	bh=3zGo9WOPGlqGax7+dFHaeHTftQyTAVZYdngRlCtixFs=;
+	s=k20201202; t=1716716621;
+	bh=ZYm2C7mWJ2gAoDgYChnVbEiePdJi4ggRSDKbaUQgY6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lSukhc76f3Bu9oO4Klc/0DJamIgjes75HrG5K6JGI3KFTzvEFVUQ05GBUcm4OkO9n
-	 oC+db1aeURYyYPIXkb0C179TxkjgMprQcWI9DcAgnCrhcfJfvRDGR29Dpzk0aLEdwu
-	 88xfOTKGNxIu3x4a4pbEoHeYGdJJ4ZorAM2PP6zFwi2PrFj9z7jfQ45+D+LgLZQ5Fh
-	 GT3YBWPdNjweRKoBC9aDpS3v1LBcTdW/X+nttwh7UEcdw0w9OcH8z92wfejEiIi/8S
-	 lcKtDCQhV76SffyC5QrMnZm7nDyhJeySincjHZgdceG67GrD9DhZuJfdLmlIYAHvf9
-	 Mijtev/THcbVw==
+	b=S9nOsDBks0SKZXtcLZg+fICxjzMSmLvBbelb+xznVOsBP/BXP0zGAUDdH43/DNMAm
+	 ZQi9BL4wrCZ3p/XYao6A6VIMLAmicdlaKpeulR68W3qWF0Xq/CYolx4LmHPRnFa8TF
+	 y326QcIq7sQvAehlhfdrvnjuk4y1YboscZrUedNxamHr8Z8815eS/XcY5uUO2Mvqwq
+	 Zzur9l7FefKNGbyUrULzrK4PRsUfX1etJ+w+1+BFBtrVN+AzkpUEjYW7nUACI5MRWP
+	 lQfkTFxTz4TDi/XtOp4Wy+YIGrrHF3Sbu6DRMKyUbkvBa4CB8KVXUv1Sk1FrYsYbKC
+	 aScKchnqR4MQw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -51,12 +51,12 @@ Cc: Justin Stitt <justinstitt@google.com>,
 	nathan@kernel.org,
 	linux-block@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 9/9] block/ioctl: prefer different overflow check
-Date: Sun, 26 May 2024 05:43:10 -0400
-Message-ID: <20240526094312.3413460-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 7/7] block/ioctl: prefer different overflow check
+Date: Sun, 26 May 2024 05:43:27 -0400
+Message-ID: <20240526094329.3413652-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240526094312.3413460-1-sashal@kernel.org>
-References: <20240526094312.3413460-1-sashal@kernel.org>
+In-Reply-To: <20240526094329.3413652-1-sashal@kernel.org>
+References: <20240526094329.3413652-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.91
+X-stable-base: Linux 5.15.159
 Content-Transfer-Encoding: 8bit
 
 From: Justin Stitt <justinstitt@google.com>
@@ -136,7 +136,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/block/ioctl.c b/block/ioctl.c
-index 47567ba1185a6..f19fbe12d19b5 100644
+index 7a939c178660f..a260e39e56a48 100644
 --- a/block/ioctl.c
 +++ b/block/ioctl.c
 @@ -33,7 +33,7 @@ static int blkpg_do_ioctl(struct block_device *bdev,
