@@ -1,153 +1,257 @@
-Return-Path: <linux-block+bounces-7759-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7756-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5434D8CF8B1
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 07:22:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C26748CF861
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 06:28:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA476B20B29
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 05:22:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AFDD281318
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 04:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1C7107B6;
-	Mon, 27 May 2024 05:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26A4BC132;
+	Mon, 27 May 2024 04:28:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fDpBrjaN"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="m1UlnANq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2041.outbound.protection.outlook.com [40.107.117.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F70FBFD
-	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716787345; cv=none; b=hTIay39k2gKk98643nObr1fIHL0O21QJi5D7dc0LSBtuchkuHUdQkJ/DKSL/ZIkNNophZqWq+EuOGuXZzi0nBGRtjKXV19KsqJwhN0Jtaj/fVjYRl5tAYoDYQpDKlUg5ikqSrBhdsWmBAk5VSAX3fXNjiV6RPwuUw7YlKGO2oSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716787345; c=relaxed/simple;
-	bh=GzrNcN+pMuO3nMQV17c8CbPgA62GGIKJYjsQXEmkLWs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=ZCyLSHoAjyoSVZYJ75lDH/bXyCYKO6kI/+IkG5AH4SHAwi04Q+kvqJ+jGrYD4eNxH2WiTP5gIu3ia4laUy7yYg2R5HIKWmCFOaWn9xmprDG5LA2uOYdVYupD0lPgYKO4GgU3g6S+3GKPJFogvew0Qnc11Lw9fF+TEOueZeasGow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fDpBrjaN; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240527052219epoutp014c1adb291c06be5e4532fee68484cf84~TQP0-ABXV0230702307epoutp012
-	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:22:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240527052219epoutp014c1adb291c06be5e4532fee68484cf84~TQP0-ABXV0230702307epoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716787339;
-	bh=awyLAV62P7hclJArbyXEX4hZ9QRa3kG0YZKRWaBh8rM=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=fDpBrjaNjg4RKsrS4C0oJtJFyNp/bvCVdxDG5FKvRW/UfSd43KHJEtQhQmpvTQUrg
-	 Rw9AEA2M1CT7o12K3lUQYfRVNJ+x3SnGodpziV5t+snfDjo5c6PKiR0msWKi8iocDM
-	 kWSingxhDf+qmlb8Rb4Fe3IcuZXBe9CwtF54smgc=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240527052219epcas5p38280c9e2b3301ec637ac6245fc76132d~TQP0o7-Yw1654916549epcas5p3_;
-	Mon, 27 May 2024 05:22:19 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VnkY518LWz4x9QB; Mon, 27 May
-	2024 05:22:17 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	00.3B.10035.78814566; Mon, 27 May 2024 14:22:15 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2~TN5JPSfcD2621326213epcas5p1T;
-	Mon, 27 May 2024 02:29:44 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240527022944epsmtrp1dd3ed2e22fd8d71d7c406b471dd523f4~TN5JOc0VH2915229152epsmtrp16;
-	Mon, 27 May 2024 02:29:44 +0000 (GMT)
-X-AuditID: b6c32a4b-8afff70000002733-02-6654188746a9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	39.BD.07412.810F3566; Mon, 27 May 2024 11:29:44 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240527022943epsmtip122daa5729b4c5b2cbf3e1d7f6cc27ffd~TN5IYsvNE2193421934epsmtip1r;
-	Mon, 27 May 2024 02:29:43 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	peiwei.li@samsung.com, ruyi.zhang@samsung.com, Xue He <xue01.he@samsung.com>
-Subject: [PATCH] block: delete redundant function declarations
-Date: Mon, 27 May 2024 10:29:26 +0800
-Message-Id: <20240527022926.1331950-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434DEC121;
+	Mon, 27 May 2024 04:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716784117; cv=fail; b=dQjymtAg+CFLougzOVnFezg5XOEts+OhuTbTmhSgzenzXQ8SgJIEKtwebhhtR6wlobbDdpsMJRYKGkf0yFOXvNZFA9Hu975f5KS8/C7TfIQ5I5165+WZ6lJaT1fQsjaYPXMMbmT4UtbKIqAw7d4qXNIyBrLlSsIBnJCKiZv8mSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716784117; c=relaxed/simple;
+	bh=5FP5RDoQhJq2Haj00n9Se++ZKC+WxuYgsDqO329IxSw=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=abTXpY/snxE/LmD/DtTX78b02w97f7Yr4D4bFfx1+F3ykxPSW3sAT52hlJ5j91NFrMmgOsJrJydMw0VcBJ/afX8O1i3ZXYSr5tR9QarM5Y6aSqFy+h6OOSx4MOKB5b7JT0phHgyY/0lOFCRkkg8kA+mvEHDkDQKYsZfi11lXzYE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=m1UlnANq; arc=fail smtp.client-ip=40.107.117.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Esvrrs2Qimu+GmtSkgM6drIf5i6pByxMICdn0SIXUbhvc34/fgPFWCvcIFq7Qjj/q6LBuOffgd07EJyBFMfXMXYuhHdoraB6PrO+qOK4pKD0kSotWDVMQK4H9SGvlUOyIGz/pSdBZbwnnTuZSeLXUp46nw+WQE5Agenwqp3lZP4TykYUzUMGEflsk66sNe5om77jIw40ElHzdip3A1Wbc5fjLgSjs+3slhgutvdfcHNXrL41Cc/j2QzC536jj1UsFXH7luvjHMtfN7waJeUrxO+XRNB9XwWdbQ1xLQL83CAvVQJ8V6g+xkfHdgeikjLTJdS5KQBzJ9hSz2AjEMPtcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GEIiGxgT2VsLXHlbaIrmTjEr3/QjJo5Qh5YNhcNb/s4=;
+ b=Fau+qYLvgj6915o1ssStcgAEu/TI8NaC6Sfk4sHpFOWno7eAnPSQpUU4ul6d8cfJcIHPU+eiEur804qQ+GAGEHGiGV/3TEeM/WwCZQXeOkvUFQLLHsU+cHscDy418/KMeaR5SdTbUbCLjtu6VRIZ15XI5J1dfMbXq5007cuX95cEeIf26S5pe8XwMQA69i00CILpZskMpCkqAE23rr71WzS3qpuKWL+1n7KDZXjuP1T9UH2VxDFgnxxEk4j2xKp715yswuJvVzJ1CorqoPs4Tsv801nh5Z1hGY3s6p8PKlvc5KpoV9fh33l+ZVzSkjR2WftqL9kQE7sZExIKjodC0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GEIiGxgT2VsLXHlbaIrmTjEr3/QjJo5Qh5YNhcNb/s4=;
+ b=m1UlnANqC3JAcKl6vr/yEdnbIqXayQMgLu4KHshSruC76ttwzpe145MuMAfVOl5ykGNRluA56hLtF6jbG7o+iedS7HMDkIPy86721JTasNcFqM6EyTDhHXanPJv2Nf5Vg+icrOXdfTCIVt1tOjvgGZFVykeYDFGq+bid63Wetmb6RplJjDmtkblegqDwr1+VqxmDWvJRG4/Bo/8ZvakV23z1RPBnBSMGomCHsFf3GU0GnvGn/aPew+rv3omMUnrPE24FJQ4wu1M4/11W+NTV7Cyww4sclthu7yeBVbvup59TLpDGvM5LfLn9o1b3VLb8C+kZMpL2VFv/D7Pge/BNjQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com (2603:1096:820:146::12)
+ by SEZPR06MB5504.apcprd06.prod.outlook.com (2603:1096:101:a4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
+ 2024 04:28:32 +0000
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e]) by KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e%4]) with mapi id 15.20.7611.025; Mon, 27 May 2024
+ 04:28:32 +0000
+From: Yang Yang <yang.yang@vivo.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Yang Yang <yang.yang@vivo.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: [RFC PATCH] sbitmap: fix io hung due to race on sbitmap_word::cleared
+Date: Mon, 27 May 2024 12:26:50 +0800
+Message-Id: <20240527042654.2404-1-yang.yang@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR0101CA0025.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::11) To KL1PR06MB7401.apcprd06.prod.outlook.com
+ (2603:1096:820:146::12)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmpm67REiawdP5xhar7/azWfzqvsto
-	sfeWtsXlXXPYLJ7t5bT4cvg7u8XZCR9YLbounGJz4PC4fLbUo2/LKkaPz5vkApijsm0yUhNT
-	UosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgNYrKZQl5pQChQIS
-	i4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSKE3OLS/PS9fJSS6wMDQyMTIEKE7IzVnx4x15w
-	hrXi4swrLA2MV1m6GDk5JARMJI5cf83axcjFISSwm1Hi7+5HzCAJIYFPjBI/V8lCJL4xSqzr
-	/sgG07H02iOojr2MEq8W9zBBOD8YJX7s72IEqWITUJLYv+UDmC0iICyxv6OVBaSIWaCXUWLj
-	tLXsIAlhATuJBRu2gRWxCKhKvH0yFewoXgFriaVT1kKtk5e42bWfGSIuKHFy5hOwGmagePPW
-	2cwgQyUEDrFLtDy4DvWRi8T1P3OZIWxhiVfHt7BD2FISL/vboOx8icnf1zNC2DUS6za/g+q1
-	lvh3ZQ+QzQG0QFNi/S59iLCsxNRT65gg9vJJ9P5+wgQR55XYMQ/GVpJYcmQF1EgJid8TFrGC
-	jJEQ8JD4+s0ZEqSxEtfWP2GfwCg/C8k3s5B8Mwth8QJG5lWMkqkFxbnpqcWmBcZ5qeXwiE3O
-	z93ECE6FWt47GB89+KB3iJGJg/EQowQHs5IIr8i8wDQh3pTEyqrUovz4otKc1OJDjKbAIJ7I
-	LCWanA9Mxnkl8YYmlgYmZmZmJpbGZoZK4ryvW+emCAmkJ5akZqemFqQWwfQxcXBKNTDZnfqd
-	9a716/6Z8Vl1bVe75ufNPPRC2P/eNPcn8aZnY2R2xR1cOC3O+fuzd8e5VPguuN07uivx897S
-	ooDEVxcP7DZpMmfn2Nd3LctNsGHPtadr9GSy3V+Vhx25a7jwY2XkJC3h+ZNqNcrC61/e/P1m
-	e/akyjKvMykZ4Qksmi0r+RcxnpslvixPftERyQuzejbXNbLZ3L/Fekb9I/shfd09whYdnuY+
-	75NvT3mwTtF8ofCPyFqL6qWiOx6t2ibX+biyqDfiUq5bw85KXtst+y4o+x5ssjkZXHHxU8EH
-	eWbTdywsnR/esKgsytxw+Ek0v6et1C0lG0Uj5p/5T/9YKOtl/2lQ+3osW69EPZo7K1OJpTgj
-	0VCLuag4EQD5B1ZTDgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsWy7bCSnK7Eh+A0g5bjEhar7/azWfzqvsto
-	sfeWtsXlXXPYLJ7t5bT4cvg7u8XZCR9YLbounGJz4PC4fLbUo2/LKkaPz5vkApijuGxSUnMy
-	y1KL9O0SuDJWfHjHXnCGteLizCssDYxXWboYOTkkBEwkll57xNrFyMUhJLCbUWJJx1xGiISE
-	xI5Hf1ghbGGJlf+es0MUfWOU2L1lETtIgk1ASWL/lg9gDSJARfs7WllAipgFJjNKnN+4Hywh
-	LGAnsWDDNjCbRUBV4u2TqWCreQWsJZZOWcsGsUFe4mbXfmaIuKDEyZlPwGqYgeLNW2czT2Dk
-	m4UkNQtJagEj0ypGydSC4tz03GTDAsO81HK94sTc4tK8dL3k/NxNjODA1NLYwXhv/j+9Q4xM
-	HIyHGCU4mJVEeEXmBaYJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zWcMTtFSCA9sSQ1OzW1ILUI
-	JsvEwSnVwPSYi/fvBhnVL5V7tv69z8VvX7rU+HX70U9ZK7dzvKv72T130pf3PxKly2POXLTN
-	Y4/RtbwmO8F+Ubi30tOVxSpX4p+tCCyaYnjT7c7ySbKvK1UWv99uF3YrY2Pc2vbLn3SEu5aa
-	WjUb3mBYXKEn8Hqa7hdL6yUb7y87F/7W/QnDoj081R+N/t1cUFKivd9BeZ7PNRUnwTjx8NVO
-	1xO1uq24BPQnPl8/b47AnJsnQkqTjqi4O94+xb9qQWyVemPdk3fb5GfP0RdoDFy5J9Tu7c68
-	kkPPnUOn79D26t2qmKZ1NM1s+5/Z2dMN2N3/+L37kxL/6uRrdb/P7PfPWLVMXHzleLl6i5Xl
-	1PWyi+NiD/kosRRnJBpqMRcVJwIAr3KfubsCAAA=
-X-CMS-MailID: 20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2
-References: <CGME20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2@epcas5p1.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB7401:EE_|SEZPR06MB5504:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63bae6fa-45e8-466e-cf83-08dc7e05773c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|1800799015|366007|376005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0AT5aFtfpClkhr3HQWeBp30O1ZjHyYSsPZvsPYLGIXbN+yk/kmv+xE+uG/sq?=
+ =?us-ascii?Q?6Cujomc+JZKEYBwxIcBdNDnZBU0rYwldDR44pMf7mR5wukg7iFmtaOmhJbM2?=
+ =?us-ascii?Q?5zwY+CqubYYy9vrkBL4QI9Pmj+c5SNQUysDv9u5XZrRAhkalnobIjOQm0V5a?=
+ =?us-ascii?Q?i3bfZTPT5N8yq/Y8PTedCIWPatXby0bpzI5C2ID6+Up+fcWihArUSZnB89Gy?=
+ =?us-ascii?Q?RDA4Hx8HFfwDynLn+roCGZQT7N2TC7yAMefMbltmkDxB/fAUQqD2PgzV+Jhu?=
+ =?us-ascii?Q?WYGaMVGMYCdfiRsJDFSSzOItY04sFCGtCvv1o/EwrjkhYKlIrHx6qcvUzmHp?=
+ =?us-ascii?Q?SJYG1pqklMx5wGtg9u05YEkUPf7CVTHNnNuKL7EFATXsYpjxx9RbsVY6YT37?=
+ =?us-ascii?Q?8v2TTElw4AugN3GbQBBA4j10/tAg6brUC4OU16kMYZrwQCQ7NAUJibU3hRUB?=
+ =?us-ascii?Q?qQz8OgLZcYIVx4kNyRTF82S3PqxshVqUHOAvwX/+C8VM8JZorKLU7VxQFijR?=
+ =?us-ascii?Q?p8my5wYWir8yBRWjUSixDMXyAwDfXhCPF4sLKUres7GL+ZkAE/la1Zv+WUXu?=
+ =?us-ascii?Q?CAh+oVIYsMl6kAdWnnee/+iRnKKzoJNXmGQA/F1RKPOqNdmYahJRzqD9m6dh?=
+ =?us-ascii?Q?/ElWRUF0pWBWKmJelJaVUO8Y5PeuScS/UyCR54WWjBPnZCZdWqFuZjA4/X1u?=
+ =?us-ascii?Q?YD8UGLf9w8xrWiluBe+fomK1i8f1RV2K0+cO9GdjTC4lAC6LUCNG3tX4fFKO?=
+ =?us-ascii?Q?oZVUMB1y0Lj9MeizQ9137jI2oHllwva3xMork2ge8bI89NChUmeYtM3h8XMg?=
+ =?us-ascii?Q?4CSaXOqRiExQXNUARQ6VLTo4WJcwbu+yqXU8iUOBw1cMq7o/m6DQSENcwaUm?=
+ =?us-ascii?Q?uWOpUeZENuQBZrUf+BynGrLDbwfzIDE7RBFVdSaq4XdBk2D0+QlVlbVKdXmd?=
+ =?us-ascii?Q?u6lJzsCkz6+DdcMEhbKKUdxmP0ZeVOLdBCaObg6jR+NnZOLz5WazzJREpPkC?=
+ =?us-ascii?Q?CJ3qYVT2YZvWRP6sFedNdN7ZdtoYsO9Jf7O0+dQI5zsINT03KjPR8boas+l2?=
+ =?us-ascii?Q?B6iqYaTxRGv8QbNxEHSwP9vbgQ9YPpiB+KgghGS3gaFwq8+lby+XroGxhkYJ?=
+ =?us-ascii?Q?C73p8UExHWnUk+uuhurS62hrmcC1WtM6YqfazFVeoVmM8LfBKcCkh0UX/MN+?=
+ =?us-ascii?Q?w3gE7REoKQrfviZLs/q5JWlw9C+pHq/McDU2It/1YqIgtnlhH5U2qhWq4FJe?=
+ =?us-ascii?Q?oDc9hwSBVYQPXvmLlibeBODWe57DiyJXYQ8BQn9LIkcfbkEDikqUlB7xNWa/?=
+ =?us-ascii?Q?1jKc8WMhn99AmvNpMoEtpHeYS3kt65EWDPrrm4bkU+4THA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB7401.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(366007)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?chODXHFHATKDubhwM272/6ETJ12MDn7uj46RTKW0k+iQ2XhdMr4wbM0iaUZZ?=
+ =?us-ascii?Q?jML+rN8xPiK5rG1IBxqQ3T32tSkT61VVoNxcmyQuZDJjGHvolLidG1efCGYP?=
+ =?us-ascii?Q?CUhSB6eLKN9g/wOd5oq68ZVs3/McvtGRK+K62QB+MXiUqlTo6egza7Wub85G?=
+ =?us-ascii?Q?GCScfRPpZWkdzZE+6Bwaeg/ZOI7xdTyBsa718pQFsxc7X51KL2VTAU2AgoX4?=
+ =?us-ascii?Q?paKs4pYqshrNp4moaZqLyq//mQhQiJnFaDLnnK6ZlVfje5qPat3C80F1UhRp?=
+ =?us-ascii?Q?pqWPXyJ4e+Bk8uEFEhtBqmkMWgarESmpZmXXoUQsRk4MFKKAwbNGbk+dTZI9?=
+ =?us-ascii?Q?JQaV/JHXp4lKwWzurIBJUykcXHi0jEDM1WgZBry2gKKzEnK/Bt+Ex6NwXprE?=
+ =?us-ascii?Q?w6zMR3T9+56aasU27XoA8I9Cafkr31q6c3xUiNA0czSi4xjvhJz+Fo4BRE6A?=
+ =?us-ascii?Q?T7Xgp5ouXNUsbA5LN8t3OhvClll4Y9mHbnZG4DLtjkCXV+rUBgurKyy0oCQV?=
+ =?us-ascii?Q?n3eUsKz01YP9Xa+CEX2fpxwKlySm2Ln9+sG6fIxSNUAhgN9NzKTUSQMiKAnY?=
+ =?us-ascii?Q?V5qtOBZ7KmcDI4Kvg2F8z9r0ap/wiamfGPpou/Hf7jZtqP086wc4iFNSMzNy?=
+ =?us-ascii?Q?+PMqYERs6YKsrIMz+RjsXOwDZh4xv7jg9xdcCHMg6EY68pOmNdEBBIcdI6hZ?=
+ =?us-ascii?Q?Id16v5kFbH8KXMEQhpKaADzEhuZoqntuabBFOHsbuavJIybtvEpWlLcBdHa1?=
+ =?us-ascii?Q?t2nAgOLISIOGhEaySl/3UKP2GD22bf9X06ihTf+oTxDqapRlAeNoB85EzcQM?=
+ =?us-ascii?Q?HRSacX8aLNaQD8Y49Nb0qOtaoCBifmGhnZ5NdFAPMgED52k3QLX1CiMSR17C?=
+ =?us-ascii?Q?Z3CWVMuJ3AJcWlCzP32vzXZpDFgohybOM1d5KqLF/3hq9euDspLfJoXH8q/L?=
+ =?us-ascii?Q?OTmvmAdTy9stRPA7dZgyNoKjgAyKTP3qYLDl4vi0nj2i0jNOmrnWnZFtdy0k?=
+ =?us-ascii?Q?WUvB9YOaZLfKqtbzQ4kzmiSTOT6W66l7dshfvUh3e47g4Z8z6N6jxEGhOO+I?=
+ =?us-ascii?Q?0NBJ7aRSs0gxeGfBJLIATAsjFcLh4Jqw0Xs60CVtF+L2uRN4tAnL6sEDtcFS?=
+ =?us-ascii?Q?YTihvX+zao5Ae/FlnuHgS+VNm0xQMzeSK9uzgL3aKgUf0cZcsTtRI0rt9HGa?=
+ =?us-ascii?Q?p4M3izaKaizvzQ5OJFpy3Xi2vM2/n4UCJrA7OSgaNH+JPQnZVJUT05MK8Bff?=
+ =?us-ascii?Q?ZxQvm0MRQmMVRcg3svOl0HKqQCWSWzL6banG2TY9i95C3Rb+aObw+5tjd+0k?=
+ =?us-ascii?Q?X8Tf8nPKJU0zL6ijnsOKRdj+33m9ssbXuutSKYWYNiPBezIiJDOYRHlrBAAh?=
+ =?us-ascii?Q?ajRiJv0S6MM9a5M0e9OSDcJnVsAJBuyzAm5w3lEENHPtCGXw6eBDze8HTD/1?=
+ =?us-ascii?Q?u3J8cFXvbC2WPLW6vbRkvvZjblUDR3lSq10oSbd9o8413JXXw+zNzYTXMEoR?=
+ =?us-ascii?Q?iRgwj8mwprOggR8XyY0p5zP4T6Ms9W75ljnjOpiWLcF6Mieq6hfLt6pCzoEs?=
+ =?us-ascii?Q?lTMdJgy9aw17KnoZFo4WilPiUXKnLBI55+AYiXmV?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63bae6fa-45e8-466e-cf83-08dc7e05773c
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB7401.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 04:28:32.1549
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LShssbvktRTB7JthA8oXi8f6czC/8QfKv9Yx4cPliuupmhA2FGIPsYUuAwhmNzeGwDz1WpgtUtZXJZjUfS2zoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5504
 
-From: Xue He <xue01.he@samsung.com>
+Configuration for sbq:
+  depth=64, wake_batch=6, shift=6, map_nr=1
 
-It is used in block hybrid poll, the related function
-definitions have been removed, but the function
-declaration has not been delelted.
+1. There are 64 requests in progress:
+  map->word = 0xFFFFFFFFFFFFFFFF
+2. After all the 64 requests complete, and no more requests come:
+  map->word = 0xFFFFFFFFFFFFFFFF, map->cleared = 0xFFFFFFFFFFFFFFFF
+3. Now two tasks try to allocate requests:
+  T1:                                       T2:
+  __blk_mq_get_tag                          .
+  __sbitmap_queue_get                       .
+  sbitmap_get                               .
+  sbitmap_find_bit                          .
+  sbitmap_find_bit_in_word                  .
+  __sbitmap_get_word  -> nr=-1              __blk_mq_get_tag
+  sbitmap_deferred_clear                    __sbitmap_queue_get
+  /* map->cleared=0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
+    if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
+      return false;                         __sbitmap_get_word -> nr=-1
+    mask = xchg(&map->cleared, 0)           sbitmap_deferred_clear
+    atomic_long_andnot()                    /* map->cleared=0 */
+                                              if (!(map->cleared))
+                                                return false;
+                                     /*
+                                      * map->cleared is cleared by T1
+                                      * T2 fail to acquire the tag
+                                      */
 
-Signed-off-by: Xue He <xue01.he@samsung.com>
+4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
+up due to the wake_batch being set at 6. If no more requests come, T1
+will wait here indefinitely.
+
+Fix this issue by adding a new flag swap_inprogress to indicate whether
+the swap is ongoing.
+
+Fixes: 661d4f55a794 ("sbitmap: remove swap_lock")
+Signed-off-by: Yang Yang <yang.yang@vivo.com>
 ---
- block/blk-stat.h | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/sbitmap.h |  5 +++++
+ lib/sbitmap.c           | 22 ++++++++++++++++++++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-stat.h b/block/blk-stat.h
-index 17e1eb4ec7e2..5d7f18ba436d 100644
---- a/block/blk-stat.h
-+++ b/block/blk-stat.h
-@@ -64,7 +64,6 @@ struct blk_stat_callback {
+diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+index d662cf136021..b88a9e4997ab 100644
+--- a/include/linux/sbitmap.h
++++ b/include/linux/sbitmap.h
+@@ -36,6 +36,11 @@ struct sbitmap_word {
+ 	 * @cleared: word holding cleared bits
+ 	 */
+ 	unsigned long cleared ____cacheline_aligned_in_smp;
++
++	/**
++	 * @swap_inprogress: set to 1 when swapping word <-> cleared
++	 */
++	atomic_t swap_inprogress;
+ } ____cacheline_aligned_in_smp;
  
- struct blk_queue_stats *blk_alloc_queue_stats(void);
- void blk_free_queue_stats(struct blk_queue_stats *);
--bool blk_stats_alloc_enable(struct request_queue *q);
+ /**
+diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+index 1e453f825c05..d4bb258fe8b0 100644
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -62,10 +62,19 @@ static inline void update_alloc_hint_after_get(struct sbitmap *sb,
+  */
+ static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+ {
+-	unsigned long mask;
++	unsigned long mask, flags;
++	int zero = 0;
  
- void blk_stat_add(struct request *rq, u64 now);
+-	if (!READ_ONCE(map->cleared))
++	if (!READ_ONCE(map->cleared)) {
++		if (atomic_read(&map->swap_inprogress))
++			goto out_wait;
+ 		return false;
++	}
++
++	if (!atomic_try_cmpxchg(&map->swap_inprogress, &zero, 1))
++		goto out_wait;
++
++	local_irq_save(flags);
+ 
+ 	/*
+ 	 * First get a stable cleared mask, setting the old mask to 0.
+@@ -77,6 +86,15 @@ static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+ 	 */
+ 	atomic_long_andnot(mask, (atomic_long_t *)&map->word);
+ 	BUILD_BUG_ON(sizeof(atomic_long_t) != sizeof(map->word));
++
++	atomic_set(&map->swap_inprogress, 0);
++	smp_mb__after_atomic();
++	local_irq_restore(flags);
++	return true;
++
++out_wait:
++	while (atomic_read(&map->swap_inprogress))
++		;
+ 	return true;
+ }
  
 -- 
-2.40.1
+2.34.1
 
 
