@@ -1,352 +1,133 @@
-Return-Path: <linux-block+bounces-7758-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7760-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 104F38CF89E
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 07:09:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 899FE8CF8C8
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 07:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30ACE1C20D67
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 05:09:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF88728262B
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 05:33:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DCB08C0B;
-	Mon, 27 May 2024 05:09:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA0BA8C07;
+	Mon, 27 May 2024 05:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h3iYM6YJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CHRNSv/U"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8242679F0
-	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0367322E
+	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716786574; cv=none; b=lqP5ALBWinryaQgo9wy0/SKkkqICYJmFcjLc6jjqGlREBRXEVLPzw1fIG3QjysLyGsSbVOy+mj0oDvBiXRQZ9r8V10exJVyuU45R1e9jWQoClcn1PFSOz3IXGwbaAN4YVNqjV++GrbqKF8HaomszmjxfD70CG7ON1ZYLlrroSz4=
+	t=1716788010; cv=none; b=QDFKDm3KM/fBjBb3ZzhtEsSFx9rys3dzks64lDlrrMMQQIE0DTTqCQliJuIDvrgLyaXMDDICGlVJVeNBN7HBA1kQo1YvrVaICBgxEyZwbL//tr+c7S+pLD3baLtvZO9nvVUSVPKhYiaFwQD6igTOM3ENQ78EVHvJ/TBHvhjaj0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716786574; c=relaxed/simple;
-	bh=o0gkSxr7BeB1XFVbO2AyoaeDCBeQmwWcESzdEg4uu0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s+2/AZnItKDPPdOrQjumygZ86yU2tHT5Bg2dwSrEt/BJGD19W0oSOecRZytqDZTrQhloKZJJJTfO1n9yMvI1VXpAysXnxZOtL5BT+DrYzTHI+JEuCdZpUQ8EmPFNDJsu7u+lwcBqAChj3Uc5c7kqwUoeuZRm7JkOSnGOdtwwyss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h3iYM6YJ; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: f.weber@proxmox.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716786568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g1WWxvdlhMhTXfGzzKHpOTyEARM/MvSTsyra7dhtxh0=;
-	b=h3iYM6YJdhtwUKCXNuHrdJ3LXBkSk21OjSNX6OaN3XNLZ85kn8p0ZtB4FBstLaWieyQtq/
-	ciOsrfWIxgX7t9Kjx2cIzu9YBvlf8m4KILRUEeV5FdlsWnm1fDnvg0Ap40hofYFQRhDVaa
-	ldCpKWkOhYuorqce5nt1J981taJsSxg=
-X-Envelope-To: axboe@kernel.dk
-X-Envelope-To: ming.lei@redhat.com
-X-Envelope-To: hch@lst.de
-X-Envelope-To: bvanassche@acm.org
-X-Envelope-To: linux-block@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: zhouchengming@bytedance.com
-Message-ID: <984f1f77-288c-441a-a649-5f320249b576@linux.dev>
-Date: Mon, 27 May 2024 13:09:20 +0800
+	s=arc-20240116; t=1716788010; c=relaxed/simple;
+	bh=MPy2dmqKlCsrw5okIZFwkiGzwVi0bWXg1j0NfWvMFRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=Ib2kjicxCD0Xv0N6LcsHoWhxrSZr6wbQsf/lBkKNH+nlFxYxwI9k94U7eGPuHX/+Q42DXD2TmOdHR3+hnEY6Vocy+tIOQH+IXNtlr7G5pKCmh8QN8CC1rpz1sIMw/x816ci1MFJ8gPevU4PF8vXfvbQssaiWqIc3RlsskBG0qW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CHRNSv/U; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240527053326epoutp01a38e04bf298f48cb77e1d10fdb9a9849~TQZh_1AXn1426314263epoutp01s
+	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:33:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240527053326epoutp01a38e04bf298f48cb77e1d10fdb9a9849~TQZh_1AXn1426314263epoutp01s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716788006;
+	bh=MPy2dmqKlCsrw5okIZFwkiGzwVi0bWXg1j0NfWvMFRQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=CHRNSv/UI9D0bHTeFgF1IT/cvxG2CR/mO0uQK/YugHEHREd3Lr91EHlffDdbFV0l9
+	 4UlLjuSFhIf8H8DGqMy/FTxuLWYCAjikBI8RxMwWExj0jvcNsBez0MpWJhX8H8qmde
+	 NyLPsWCmUGNFDLX6NOkma4HOmVgISoctiQXGTItg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240527053326epcas5p219b06194b28f1e27ff6a989f398a9562~TQZh0x6Ab3163331633epcas5p2F;
+	Mon, 27 May 2024 05:33:26 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Vnknv1H5nz4x9Px; Mon, 27 May
+	2024 05:33:23 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E0.9B.09989.32B14566; Mon, 27 May 2024 14:33:23 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240527053322epcas5p399db2db8f0304d180d1128377ab6b490~TQZe5n0Af1253512535epcas5p3T;
+	Mon, 27 May 2024 05:33:22 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240527053322epsmtrp2fda2e7d1f5c6b4b5d582487b9c208001~TQZe4-kKk0699706997epsmtrp2V;
+	Mon, 27 May 2024 05:33:22 +0000 (GMT)
+X-AuditID: b6c32a4a-e57f970000002705-ad-66541b23007f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CF.5E.18846.22B14566; Mon, 27 May 2024 14:33:22 +0900 (KST)
+Received: from [107.122.11.51] (unknown [107.122.11.51]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240527053322epsmtip131a7fe0fa90dbce08ed3069e9519eb3f~TQZeJj5t10606106061epsmtip1Z;
+	Mon, 27 May 2024 05:33:21 +0000 (GMT)
+Message-ID: <1d041113-54bb-d301-4f17-675cc60749bd@samsung.com>
+Date: Mon, 27 May 2024 11:03:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 4/4] blk-flush: reuse rq queuelist in flush state
- machine
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
+	Gecko/20100101 Thunderbird/91.13.1
+Subject: Re: [PATCH] null_blk: Fix return value of
+ nullb_device_power_store()
 Content-Language: en-US
-To: Friedrich Weber <f.weber@proxmox.com>, axboe@kernel.dk,
- ming.lei@redhat.com, hch@lst.de, bvanassche@acm.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhouchengming@bytedance.com
-References: <20230717040058.3993930-1-chengming.zhou@linux.dev>
- <20230717040058.3993930-5-chengming.zhou@linux.dev>
- <14b89dfb-505c-49f7-aebb-01c54451db40@proxmox.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <14b89dfb-505c-49f7-aebb-01c54451db40@proxmox.com>
-Content-Type: text/plain; charset=UTF-8
+To: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Yu Kuai <yukuai3@huawei.com>
+From: Kanchan Joshi <joshi.k@samsung.com>
+In-Reply-To: <20240527043445.235267-1-dlemoal@kernel.org>
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHKsWRmVeSWpSXmKPExsWy7bCmpq6ydEiawZclbBar7/azWTzYb2+x
+	95a2xZyFbA4sHi1H3rJ6XD5b6rFpVSebx+dNcgEsUdk2GamJKalFCql5yfkpmXnptkrewfHO
+	8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUDrlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2
+	SqkFKTkFJgV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGX/OnmYtMKm4NrePqYFRt4uRk0NCwERi
+	4tZGZhBbSGA3o8TiVpYuRi4g+xOjxPpdM5kgEkDOmcWFMA1HVs+AKtrJKPF5bR8rhPOWUeL7
+	0jUsIFW8AnYSF5b0gXWzCKhKHL/TxAoRF5Q4OfMJWI2oQLLEz64DbCC2sIC/xPPWp2D1zALi
+	EreezAezRQRSJA59fsMOEVeQuNDcBNTLwcEmoClxYXIpSJhTwFLiyOZTUCXyEtvfzmGGOPQa
+	u8TESXEQtgvQaY/YIGxhiVfHt7BD2FISn9/thYonS1yaeY4Jwi6ReLznIJRtL9F6qp8ZZC0z
+	0Nr1u/QhVvFJ9P5+wgQSlhDglehoE4KoVpS4N+kpK4QtLvFwxhIo20Ni+6kZ7JCQ6mGU2Ptp
+	EfsERoVZSIEyC8nzs5B8Mwth8wJGllWMkqkFxbnpqcWmBUZ5qeXwuE7Oz93ECE6IWl47GB8+
+	+KB3iJGJg/EQowQHs5IIr8i8wDQh3pTEyqrUovz4otKc1OJDjKbA2JnILCWanA9MyXkl8YYm
+	lgYmZmZmJpbGZoZK4ryvW+emCAmkJ5akZqemFqQWwfQxcXBKNTCVNmcZV1atkOMXvB6s+sTl
+	lG5fYZybwm9j55ovtd67rh/Ok+9ee+taD3f73XKuJv4VSfJ7Fhl8ktU588zC1tOnJ+P+u2vt
+	56LKgsIUz7DpKfNmzj7XPemEstOD1frf1soYzdgv6eMa23jmDafzt0jJ9EC1p3f4OHbWev3u
+	+v0s9uRzs4hpM3c5Rq/4XeedH7jiX9r/TepFmQksPgrR2n9crPjs1s/tdN2hoG2Ssfi6/+Hy
+	F/MenWx+fOBY8wbuKbPc0rLvcEeK36lf+CFXxKz0emS6DPOttzk7b2c/mfLs5pVP7H0LVHf3
+	/2JnFJonKXRKxq1US6iMT2551RHbi3Zhri9uL8+98P9S99vSK0osxRmJhlrMRcWJAJghb04R
+	BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsWy7bCSnK6SdEiaQc8tPYvVd/vZLB7st7fY
+	e0vbYs5CNgcWj5Yjb1k9Lp8t9di0qpPN4/MmuQCWKC6blNSczLLUIn27BK6MP2dPsxaYVFyb
+	28fUwKjbxcjJISFgInFk9QyWLkYuDiGB7YwSs7fvYYZIiEs0X/vBDmELS6z895wdoug1o8Tx
+	b4eYQBK8AnYSF5b0gdksAqoSx+80sULEBSVOznzCAmKLCiRLvPwzEWyQsICvxK3VzWA2M9CC
+	W0/mA/Wyc4gIpEi844OIKkhcaG6CuqeHUeL9grdA93BwsAloSlyYXApSwylgKXFk8ymoKWYS
+	XVu7GCFseYntb+cwT2AUmoXkiFlIls1C0jILScsCRpZVjKKpBcW56bnJBYZ6xYm5xaV56XrJ
+	+bmbGMFhrxW0g3HZ+r96hxiZOBgPMUpwMCuJ8IrMC0wT4k1JrKxKLcqPLyrNSS0+xCjNwaIk
+	zquc05kiJJCeWJKanZpakFoEk2Xi4JRqYHIVl2IyqI/9e4qdb9/GddWta769yr6zVPr92Zqt
+	N0OlLT6eWG3rt+bF61/p/ae2ieh7hnG6BmyV8yh/PjsgqlND/tr+FZ1HburXaK5zYj9cz7Cx
+	dtl2KV6rX3PK1IwiFqc7HLgf1reTi9vt9adlz/T2rQu36rfVPeLoOWHTrXWScZ1npv7d0uLI
+	VMNQobv4ZVFIhVVv9n4Xm1vF9byzD0/V5HjW5h4muK/S3XPmQba6qI2zFp01/lhfNzPnhyZX
+	ava5gk+/nBNqJbLevt384/0u30u/Vc8ufyNl1e1bPd0kXVZiW71tg5J3W/StLXfjmvxW5XlM
+	EPtlHqZVuVrOI3O3dsDUY4YzbH4KrVKbqsRSnJFoqMVcVJwIAIPAXcbqAgAA
+X-CMS-MailID: 20240527053322epcas5p399db2db8f0304d180d1128377ab6b490
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240527043455epcas5p18a6d514da1e203726501570b07fc8d19
+References: <CGME20240527043455epcas5p18a6d514da1e203726501570b07fc8d19@epcas5p1.samsung.com>
+	<20240527043445.235267-1-dlemoal@kernel.org>
 
-Hi,
+Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
 
-On 2024/5/25 00:07, Friedrich Weber wrote:
-> Hi,
-> 
-> some of our (Proxmox VE) users have been reporting crashes [1] with NULL
-> pointer dereferences in blk_flush_complete_seq. AFAICT, all systems
-> crashing in blk_flush_complete_seq used software RAID1, and ran our
-> downstream kernel based on (Ubuntu) kernel 6.8.
-> 
-> On mainline kernel 6.9, I can reproduce the crash [1] by:
-> 
-> * compiling the kernel with CONFIG_FAIL_MAKE_REQUEST enabled
-> * setting up root on software RAID1
-> * enabling the write-intent bitmap with `mdadm --grow --bitmap=internal
-> /dev/md0`. So far, I have not been able to reproduce the crash with the
-> write-intent bitmap disabled.
-> * injecting write faults via CONFIG_FAIL_MAKE_REQUEST on one of the
-> RAID1 disks
-> * generating IO in a KVM guest with fio
-> * waiting ~5 minutes
-> 
-> I've used this reproducer for a bisect, which produced
-> 
->  81ada09cc25e (blk-flush: reuse rq queuelist in flush state machine)
-> 
-> as the first commit with which I can reproduce the crashes. I'm not 100%
-> sure it is this one because the reproducer is a bit flaky. But it does
-> sound plausible, as the commit is included in our 6.8 kernel, and
-> touches `queuelist` which is AFAICT where blk_flush_complete_seq
-> dereferences the NULL pointer.
-
-Ok, it will be better that I can reproduce it locally, will try later.
-
-> 
-> Does anyone have an idea what could be the cause for the crash, or how
-> to further debug this? Happy to provide more information if needed, as
-> well as the complete reproducer (I'd need to clean it up a little bit
-> first).
-
-BUG shows it panic on 0000000000000008, not sure what it's accessing then,
-does it means rq->queuelist.next == 0 or something? Could you use add2line
-to show the exact source code line that panic? I use blk_flush_complete_seq+0x296/0x2e0
-and get block/blk-flush.c:190, which is "fq->flush_data_in_flight++;",
-obviously fq can't be NULL. (I'm using the v6.9 kernel)
-
-Thanks.
-
-> 
-> Do you think this could also affect setups without software RAID?
-> 
-> Best,
-> 
-> Friedrich
-> 
-> [1]
-> 
-> [  132.292488] BUG: kernel NULL pointer dereference, address:
-> 0000000000000008
-> [  132.293594] #PF: supervisor write access in kernel mode
-> [  132.294408] #PF: error_code(0x0002) - not-present page
-> [  132.295187] PGD 0 P4D 0
-> [  132.295609] Oops: 0002 [#1] PREEMPT SMP NOPTI
-> [  132.296285] CPU: 0 PID: 776 Comm: kvm Tainted: G            E
-> 6.5.0-rc2-bisect11+ #22
-> [  132.297556] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [  132.299292] RIP: 0010:blk_flush_complete_seq+0x296/0x2e0
-> [  132.300122] Code: 0f b6 f6 49 8d 56 01 49 c1 e6 04 4d 01 ee 48 c1 e2
-> 04 49 8b 4e 10 4c 01 ea 48 39 ca 74 2b 48 8b 4b 50 48 8b 7b 48 48 8d 73
-> 48 <48> 89 4f 08 48 89 39 49 8b 4e 18 49 89 76 18 48 89 53 48 48 89 4b
-> [  132.302946] RSP: 0018:ffffa431407a39b8 EFLAGS: 00010046
-> [  132.303765] RAX: 0000000000000000 RBX: ffff92d00c2fd000 RCX:
-> ffff92d00c2fd048
-> [  132.304856] RDX: ffff92d0036dfaa0 RSI: ffff92d00c2fd048 RDI:
-> 0000000000000000
-> [  132.305948] RBP: ffffa431407a39f8 R08: 0000000000000000 R09:
-> 0000000000000000
-> [  132.307043] R10: 0000000000000000 R11: 0000000000000000 R12:
-> 0000000000000801
-> [  132.308120] R13: ffff92d0036dfa80 R14: ffff92d0036dfa90 R15:
-> ffff92d00ba09e00
-> [  132.309216] FS:  0000727d191b86c0(0000) GS:ffff92d137c00000(0000)
-> knlGS:0000000000000000
-> [  132.310457] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  132.311355] CR2: 0000000000000008 CR3: 000000018f088006 CR4:
-> 0000000000372ef0
-> [  132.312444] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [  132.313535] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [  132.314633] Call Trace:
-> [  132.315016]  <TASK>
-> [  132.315381]  ? show_regs+0x6d/0x80
-> [  132.315921]  ? __die+0x24/0x80
-> [  132.316421]  ? page_fault_oops+0x176/0x500
-> [  132.317049]  ? do_user_addr_fault+0x31d/0x6a0
-> [  132.317744]  ? exc_page_fault+0x83/0x1b0
-> [  132.318368]  ? asm_exc_page_fault+0x27/0x30
-> [  132.319008]  ? blk_flush_complete_seq+0x296/0x2e0
-> [  132.319759]  ? __blk_mq_alloc_requests+0x383/0x3a0
-> [  132.320505]  ? wbt_wait+0xb3/0x100
-> [  132.321041]  blk_insert_flush+0xd1/0x220
-> [  132.321664]  blk_mq_submit_bio+0x564/0x690
-> [  132.322294]  __submit_bio+0xb3/0x1c0
-> [  132.322859]  submit_bio_noacct_nocheck+0x2b7/0x390
-> [  132.323622]  submit_bio_noacct+0x18a/0x6b0
-> [  132.324241]  submit_bio+0x6c/0x80
-> [  132.324774]  md_super_write+0xd1/0x120
-> [  132.325376]  write_page+0x23b/0x3f0
-> [  132.325915]  ? md_bitmap_wait_writes+0xda/0xf0
-> [  132.326624]  md_bitmap_unplug+0x9f/0x140
-> [  132.327251]  flush_bio_list+0x102/0x110 [raid1]
-> [  132.327963]  raid1_unplug+0x3c/0xe0 [raid1]
-> [  132.328626]  __blk_flush_plug+0xc1/0x130
-> [  132.329238]  blk_finish_plug+0x31/0x50
-> [  132.329819]  io_submit_sqes+0x53e/0x680
-> [  132.330426]  __do_sys_io_uring_enter+0x59a/0xc10
-> [  132.331149]  ? vfs_read+0x20a/0x360
-> [  132.331699]  __x64_sys_io_uring_enter+0x22/0x40
-> [  132.332414]  do_syscall_64+0x58/0x90
-> [  132.332979]  ? ksys_read+0xe6/0x100
-> [  132.333530]  ? exit_to_user_mode_prepare+0x49/0x220
-> [  132.334292]  ? syscall_exit_to_user_mode+0x1b/0x50
-> [  132.335032]  ? do_syscall_64+0x67/0x90
-> [  132.335627]  ? syscall_exit_to_user_mode+0x1b/0x50
-> [  132.336381]  ? do_syscall_64+0x67/0x90
-> [  132.336958]  ? syscall_exit_to_user_mode+0x1b/0x50
-> [  132.337707]  ? do_syscall_64+0x67/0x90
-> [  132.338296]  ? syscall_exit_to_user_mode+0x1b/0x50
-> [  132.339045]  ? do_syscall_64+0x67/0x90
-> [  132.339646]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [  132.340426] RIP: 0033:0x727d26282b95
-> [  132.341011] Code: 00 00 00 44 89 d0 41 b9 08 00 00 00 83 c8 10 f6 87
-> d0 00 00 00 01 8b bf cc 00 00 00 44 0f 45 d0 45 31 c0 b8 aa 01 00 00 0f
-> 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 41 83 e2 02 74 c2 f0 48 83 0c 24
-> [  132.343837] RSP: 002b:0000727d191b2fd8 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000001aa
-> [  132.344990] RAX: ffffffffffffffda RBX: 0000727d0c0039d0 RCX:
-> 0000727d26282b95
-> [  132.346079] RDX: 0000000000000000 RSI: 0000000000000003 RDI:
-> 0000000000000033
-> [  132.347176] RBP: 0000727d0c0039d8 R08: 0000000000000000 R09:
-> 0000000000000008
-> [  132.348272] R10: 0000000000000000 R11: 0000000000000246 R12:
-> 0000727d0c003ac0
-> [  132.349376] R13: 0000000000000000 R14: 00005a5a2313bc68 R15:
-> 00005a5a25cf0450
-> [  132.350472]  </TASK>
-> [  132.350828] Modules linked in: veth(E) cmac(E) nls_utf8(E) cifs(E)
-> cifs_arc4(E) rdma_cm(E) iw_cm(E) ib_cm(E) ib_core(E) cifs_md4(E)
-> ebtable_filter(E) ebtables(E) ip_set(E) ip6table_raw(E) iptable_raw(E)
-> ip6table_filter(E) ip6_tables(E) iptable_filter(E) nf_tables(E)
-> sunrpc(E) softdog(E) binfmt_misc(E) bonding(E) tls(E) nfnetlink_log(E)
-> nfnetlink(E) intel_rapl_msr(E) intel_rapl_common(E) intel_pmc_core(E)
-> kvm_intel(E) kvm(E) irqbypass(E) crct10dif_pclmul(E) polyval_clmulni(E)
-> polyval_generic(E) ghash_clmulni_intel(E) aesni_intel(E) crypto_simd(E)
-> cryptd(E) rapl(E) pcspkr(E) vmgenid(E) joydev(E) input_leds(E)
-> mac_hid(E) serio_raw(E) vhost_net(E) vhost(E) vhost_iotlb(E) tap(E)
-> efi_pstore(E) dmi_sysfs(E) qemu_fw_cfg(E) ip_tables(E) x_tables(E)
-> autofs4(E) hid_generic(E) usbhid(E) hid(E) raid10(E) raid456(E)
-> async_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E)
-> async_tx(E) xor(E) raid6_pq(E) libcrc32c(E) raid0(E) raid1(E)
-> crc32_pclmul(E) bochs(E) drm_vram_helper(E) psmouse(E) drm_ttm_helper(E)
-> uhci_hcd(E) ttm(E)
-> [  132.350919]  ehci_hcd(E) i2c_piix4(E) pata_acpi(E) floppy(E)
-> [  132.365204] CR2: 0000000000000008
-> [  132.365747] ---[ end trace 0000000000000000 ]---
-> [  132.366468] RIP: 0010:blk_flush_complete_seq+0x296/0x2e0
-> [  132.367290] Code: 0f b6 f6 49 8d 56 01 49 c1 e6 04 4d 01 ee 48 c1 e2
-> 04 49 8b 4e 10 4c 01 ea 48 39 ca 74 2b 48 8b 4b 50 48 8b 7b 48 48 8d 73
-> 48 <48> 89 4f 08 48 89 39 49 8b 4e 18 49 89 76 18 48 89 53 48 48 89 4b
-> [  132.370119] RSP: 0018:ffffa431407a39b8 EFLAGS: 00010046
-> [  132.370935] RAX: 0000000000000000 RBX: ffff92d00c2fd000 RCX:
-> ffff92d00c2fd048
-> [  132.372015] RDX: ffff92d0036dfaa0 RSI: ffff92d00c2fd048 RDI:
-> 0000000000000000
-> [  132.373115] RBP: ffffa431407a39f8 R08: 0000000000000000 R09:
-> 0000000000000000
-> [  132.374193] R10: 0000000000000000 R11: 0000000000000000 R12:
-> 0000000000000801
-> [  132.375286] R13: ffff92d0036dfa80 R14: ffff92d0036dfa90 R15:
-> ffff92d00ba09e00
-> [  132.376385] FS:  0000727d191b86c0(0000) GS:ffff92d137c00000(0000)
-> knlGS:0000000000000000
-> [  132.377600] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  132.378486] CR2: 0000000000000008 CR3: 000000018f088006 CR4:
-> 0000000000372ef0
-> [  132.379564] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [  132.380638] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [  132.381738] note: kvm[776] exited with irqs disabled
-> [  132.382631] note: kvm[776] exited with preempt_count 1
-> [  132.383469] ------------[ cut here ]------------
-> [  132.384193] WARNING: CPU: 0 PID: 776 at kernel/exit.c:818
-> do_exit+0x8db/0xae0
-> [  132.385307] Modules linked in: veth(E) cmac(E) nls_utf8(E) cifs(E)
-> cifs_arc4(E) rdma_cm(E) iw_cm(E) ib_cm(E) ib_core(E) cifs_md4(E)
-> ebtable_filter(E) ebtables(E) ip_set(E) ip6table_raw(E) iptable_raw(E)
-> ip6table_filter(E) ip6_tables(E) iptable_filter(E) nf_tables(E)
-> sunrpc(E) softdog(E) binfmt_misc(E) bonding(E) tls(E) nfnetlink_log(E)
-> nfnetlink(E) intel_rapl_msr(E) intel_rapl_common(E) intel_pmc_core(E)
-> kvm_intel(E) kvm(E) irqbypass(E) crct10dif_pclmul(E) polyval_clmulni(E)
-> polyval_generic(E) ghash_clmulni_intel(E) aesni_intel(E) crypto_simd(E)
-> cryptd(E) rapl(E) pcspkr(E) vmgenid(E) joydev(E) input_leds(E)
-> mac_hid(E) serio_raw(E) vhost_net(E) vhost(E) vhost_iotlb(E) tap(E)
-> efi_pstore(E) dmi_sysfs(E) qemu_fw_cfg(E) ip_tables(E) x_tables(E)
-> autofs4(E) hid_generic(E) usbhid(E) hid(E) raid10(E) raid456(E)
-> async_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E)
-> async_tx(E) xor(E) raid6_pq(E) libcrc32c(E) raid0(E) raid1(E)
-> crc32_pclmul(E) bochs(E) drm_vram_helper(E) psmouse(E) drm_ttm_helper(E)
-> uhci_hcd(E) ttm(E)
-> [  132.385396]  ehci_hcd(E) i2c_piix4(E) pata_acpi(E) floppy(E)
-> [  132.399854] CPU: 0 PID: 776 Comm: kvm Tainted: G      D     E
-> 6.5.0-rc2-bisect11+ #22
-> [  132.401165] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [  132.402987] RIP: 0010:do_exit+0x8db/0xae0
-> [  132.403661] Code: e9 44 f8 ff ff 48 8b bb d8 09 00 00 31 f6 e8 fc d7
-> ff ff e9 f0 fd ff ff 4c 89 ee bf 05 06 00 00 e8 4a 2e 01 00 e9 70 f8 ff
-> ff <0f> 0b e9 9e f7 ff ff 0f 0b e9 57 f7 ff ff 48 89 df e8 bf 7d 13 00
-> [  132.406622] RSP: 0018:ffffa431407a3ec8 EFLAGS: 00010282
-> [  132.407487] RAX: 0000000000000000 RBX: ffff92d08d53a940 RCX:
-> 0000000000000000
-> [  132.408637] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-> 0000000000000000
-> [  132.409791] RBP: ffffa431407a3f20 R08: 0000000000000000 R09:
-> 0000000000000000
-> [  132.410961] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ffff92d0031cba80
-> [  132.412102] R13: 0000000000000009 R14: ffff92d090d53180 R15:
-> 0000000000000000
-> [  132.413256] FS:  0000727d191b86c0(0000) GS:ffff92d137c00000(0000)
-> knlGS:0000000000000000
-> [  132.414582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  132.415512] CR2: 0000000000000008 CR3: 000000018f088006 CR4:
-> 0000000000372ef0
-> [  132.416670] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [  132.417842] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [  132.418998] Call Trace:
-> [  132.419430]  <TASK>
-> [  132.419788]  ? show_regs+0x6d/0x80
-> [  132.420352]  ? __warn+0x89/0x160
-> [  132.420891]  ? do_exit+0x8db/0xae0
-> [  132.421477]  ? report_bug+0x17e/0x1b0
-> [  132.422063]  ? handle_bug+0x46/0x90
-> [  132.422655]  ? exc_invalid_op+0x18/0x80
-> [  132.423299]  ? asm_exc_invalid_op+0x1b/0x20
-> [  132.423975]  ? do_exit+0x8db/0xae0
-> [  132.424565]  ? do_exit+0x72/0xae0
-> [  132.425131]  ? _printk+0x60/0x90
-> [  132.425666]  make_task_dead+0x86/0x180
-> [  132.426297]  rewind_stack_and_make_dead+0x17/0x20
-> [  132.427056] RIP: 0033:0x727d26282b95
-> [  132.427681] Code: 00 00 00 44 89 d0 41 b9 08 00 00 00 83 c8 10 f6 87
-> d0 00 00 00 01 8b bf cc 00 00 00 44 0f 45 d0 45 31 c0 b8 aa 01 00 00 0f
-> 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 41 83 e2 02 74 c2 f0 48 83 0c 24
-> [  132.430663] RSP: 002b:0000727d191b2fd8 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000001aa
-> [  132.431895] RAX: ffffffffffffffda RBX: 0000727d0c0039d0 RCX:
-> 0000727d26282b95
-> [  132.433049] RDX: 0000000000000000 RSI: 0000000000000003 RDI:
-> 0000000000000033
-> [  132.434203] RBP: 0000727d0c0039d8 R08: 0000000000000000 R09:
-> 0000000000000008
-> [  132.435372] R10: 0000000000000000 R11: 0000000000000246 R12:
-> 0000727d0c003ac0
-> [  132.436529] R13: 0000000000000000 R14: 00005a5a2313bc68 R15:
-> 00005a5a25cf0450
-> [  132.437685]  </TASK>
-> [  132.438056] ---[ end trace 0000000000000000 ]---
-> 
 
