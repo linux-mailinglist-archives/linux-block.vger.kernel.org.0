@@ -1,170 +1,153 @@
-Return-Path: <linux-block+bounces-7755-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7759-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B6DA8CF736
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 03:08:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5434D8CF8B1
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 07:22:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3239281C1C
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 01:08:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA476B20B29
+	for <lists+linux-block@lfdr.de>; Mon, 27 May 2024 05:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91703804;
-	Mon, 27 May 2024 01:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1C7107B6;
+	Mon, 27 May 2024 05:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fDpBrjaN"
 X-Original-To: linux-block@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCB563B;
-	Mon, 27 May 2024 01:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F70FBFD
+	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716772122; cv=none; b=M5JIru8bh9pj+EQzrhouhzz73nlNPOjiohTdy6Mr/DZJ580yA6YSJYdrDgQuRndNKwWnfqlC5DulxYBjIcQLYACGBt2h0FvZW2qDC14rc0SaL3ld5B88pDuCZlfbLdkz7BNmKGTSsVe8mu17xGAxkkphW1U1kiAnBl4iW92V0fE=
+	t=1716787345; cv=none; b=hTIay39k2gKk98643nObr1fIHL0O21QJi5D7dc0LSBtuchkuHUdQkJ/DKSL/ZIkNNophZqWq+EuOGuXZzi0nBGRtjKXV19KsqJwhN0Jtaj/fVjYRl5tAYoDYQpDKlUg5ikqSrBhdsWmBAk5VSAX3fXNjiV6RPwuUw7YlKGO2oSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716772122; c=relaxed/simple;
-	bh=aI+EFZH1rjfUKSaYYHxiFlWEFPTZhL+Hgux59hPbcqc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gfSQ145mHdtf5U5IVqEjo3IutpRiKtRB/GQjzD14AxJqWLJbYU28uK0gOZKYOsJYEKma4j9+g89o1jGZ7VPn2ny4v21135DEHk1v/Ov62garQ3trvxOUVVlhE0Lh57lViRRFgUn+QLJE50Vt1T9Qodbp2hNfjSp1eSuaT/5GW5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Vnctj3wKfzcd27;
-	Mon, 27 May 2024 09:07:09 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 44FEE14037D;
-	Mon, 27 May 2024 09:08:29 +0800 (CST)
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 27 May 2024 09:08:28 +0800
-Subject: Re: [PATCH AUTOSEL 6.9 02/15] md: Fix overflow in is_mddev_idle
-To: Sasha Levin <sashal@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-CC: Li Nan <linan122@huawei.com>, Song Liu <song@kernel.org>,
-	<axboe@kernel.dk>, <linux-raid@vger.kernel.org>,
-	<linux-block@vger.kernel.org>
-References: <20240526094152.3412316-1-sashal@kernel.org>
- <20240526094152.3412316-2-sashal@kernel.org>
-From: Yu Kuai <yukuai3@huawei.com>
-Message-ID: <217cd112-b5cb-9b6b-9dc9-b11490c2f137@huawei.com>
-Date: Mon, 27 May 2024 09:08:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1716787345; c=relaxed/simple;
+	bh=GzrNcN+pMuO3nMQV17c8CbPgA62GGIKJYjsQXEmkLWs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=ZCyLSHoAjyoSVZYJ75lDH/bXyCYKO6kI/+IkG5AH4SHAwi04Q+kvqJ+jGrYD4eNxH2WiTP5gIu3ia4laUy7yYg2R5HIKWmCFOaWn9xmprDG5LA2uOYdVYupD0lPgYKO4GgU3g6S+3GKPJFogvew0Qnc11Lw9fF+TEOueZeasGow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fDpBrjaN; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240527052219epoutp014c1adb291c06be5e4532fee68484cf84~TQP0-ABXV0230702307epoutp012
+	for <linux-block@vger.kernel.org>; Mon, 27 May 2024 05:22:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240527052219epoutp014c1adb291c06be5e4532fee68484cf84~TQP0-ABXV0230702307epoutp012
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716787339;
+	bh=awyLAV62P7hclJArbyXEX4hZ9QRa3kG0YZKRWaBh8rM=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=fDpBrjaNjg4RKsrS4C0oJtJFyNp/bvCVdxDG5FKvRW/UfSd43KHJEtQhQmpvTQUrg
+	 Rw9AEA2M1CT7o12K3lUQYfRVNJ+x3SnGodpziV5t+snfDjo5c6PKiR0msWKi8iocDM
+	 kWSingxhDf+qmlb8Rb4Fe3IcuZXBe9CwtF54smgc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240527052219epcas5p38280c9e2b3301ec637ac6245fc76132d~TQP0o7-Yw1654916549epcas5p3_;
+	Mon, 27 May 2024 05:22:19 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VnkY518LWz4x9QB; Mon, 27 May
+	2024 05:22:17 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	00.3B.10035.78814566; Mon, 27 May 2024 14:22:15 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2~TN5JPSfcD2621326213epcas5p1T;
+	Mon, 27 May 2024 02:29:44 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240527022944epsmtrp1dd3ed2e22fd8d71d7c406b471dd523f4~TN5JOc0VH2915229152epsmtrp16;
+	Mon, 27 May 2024 02:29:44 +0000 (GMT)
+X-AuditID: b6c32a4b-8afff70000002733-02-6654188746a9
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	39.BD.07412.810F3566; Mon, 27 May 2024 11:29:44 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240527022943epsmtip122daa5729b4c5b2cbf3e1d7f6cc27ffd~TN5IYsvNE2193421934epsmtip1r;
+	Mon, 27 May 2024 02:29:43 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	peiwei.li@samsung.com, ruyi.zhang@samsung.com, Xue He <xue01.he@samsung.com>
+Subject: [PATCH] block: delete redundant function declarations
+Date: Mon, 27 May 2024 10:29:26 +0800
+Message-Id: <20240527022926.1331950-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240526094152.3412316-2-sashal@kernel.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmpm67REiawdP5xhar7/azWfzqvsto
+	sfeWtsXlXXPYLJ7t5bT4cvg7u8XZCR9YLbounGJz4PC4fLbUo2/LKkaPz5vkApijsm0yUhNT
+	UosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgNYrKZQl5pQChQIS
+	i4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSKE3OLS/PS9fJSS6wMDQyMTIEKE7IzVnx4x15w
+	hrXi4swrLA2MV1m6GDk5JARMJI5cf83axcjFISSwm1Hi7+5HzCAJIYFPjBI/V8lCJL4xSqzr
+	/sgG07H02iOojr2MEq8W9zBBOD8YJX7s72IEqWITUJLYv+UDmC0iICyxv6OVBaSIWaCXUWLj
+	tLXsIAlhATuJBRu2gRWxCKhKvH0yFewoXgFriaVT1kKtk5e42bWfGSIuKHFy5hOwGmagePPW
+	2cwgQyUEDrFLtDy4DvWRi8T1P3OZIWxhiVfHt7BD2FISL/vboOx8icnf1zNC2DUS6za/g+q1
+	lvh3ZQ+QzQG0QFNi/S59iLCsxNRT65gg9vJJ9P5+wgQR55XYMQ/GVpJYcmQF1EgJid8TFrGC
+	jJEQ8JD4+s0ZEqSxEtfWP2GfwCg/C8k3s5B8Mwth8QJG5lWMkqkFxbnpqcWmBcZ5qeXwiE3O
+	z93ECE6FWt47GB89+KB3iJGJg/EQowQHs5IIr8i8wDQh3pTEyqrUovz4otKc1OJDjKbAIJ7I
+	LCWanA9Mxnkl8YYmlgYmZmZmJpbGZoZK4ryvW+emCAmkJ5akZqemFqQWwfQxcXBKNTDZnfqd
+	9a716/6Z8Vl1bVe75ufNPPRC2P/eNPcn8aZnY2R2xR1cOC3O+fuzd8e5VPguuN07uivx897S
+	ooDEVxcP7DZpMmfn2Nd3LctNsGHPtadr9GSy3V+Vhx25a7jwY2XkJC3h+ZNqNcrC61/e/P1m
+	e/akyjKvMykZ4Qksmi0r+RcxnpslvixPftERyQuzejbXNbLZ3L/Fekb9I/shfd09whYdnuY+
+	75NvT3mwTtF8ofCPyFqL6qWiOx6t2ibX+biyqDfiUq5bw85KXtst+y4o+x5ssjkZXHHxU8EH
+	eWbTdywsnR/esKgsytxw+Ek0v6et1C0lG0Uj5p/5T/9YKOtl/2lQ+3osW69EPZo7K1OJpTgj
+	0VCLuag4EQD5B1ZTDgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsWy7bCSnK7Eh+A0g5bjEhar7/azWfzqvsto
+	sfeWtsXlXXPYLJ7t5bT4cvg7u8XZCR9YLbounGJz4PC4fLbUo2/LKkaPz5vkApijuGxSUnMy
+	y1KL9O0SuDJWfHjHXnCGteLizCssDYxXWboYOTkkBEwkll57xNrFyMUhJLCbUWJJx1xGiISE
+	xI5Hf1ghbGGJlf+es0MUfWOU2L1lETtIgk1ASWL/lg9gDSJARfs7WllAipgFJjNKnN+4Hywh
+	LGAnsWDDNjCbRUBV4u2TqWCreQWsJZZOWcsGsUFe4mbXfmaIuKDEyZlPwGqYgeLNW2czT2Dk
+	m4UkNQtJagEj0ypGydSC4tz03GTDAsO81HK94sTc4tK8dL3k/NxNjODA1NLYwXhv/j+9Q4xM
+	HIyHGCU4mJVEeEXmBaYJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zWcMTtFSCA9sSQ1OzW1ILUI
+	JsvEwSnVwPSYi/fvBhnVL5V7tv69z8VvX7rU+HX70U9ZK7dzvKv72T130pf3PxKly2POXLTN
+	Y4/RtbwmO8F+Ubi30tOVxSpX4p+tCCyaYnjT7c7ySbKvK1UWv99uF3YrY2Pc2vbLn3SEu5aa
+	WjUb3mBYXKEn8Hqa7hdL6yUb7y87F/7W/QnDoj081R+N/t1cUFKivd9BeZ7PNRUnwTjx8NVO
+	1xO1uq24BPQnPl8/b47AnJsnQkqTjqi4O94+xb9qQWyVemPdk3fb5GfP0RdoDFy5J9Tu7c68
+	kkPPnUOn79D26t2qmKZ1NM1s+5/Z2dMN2N3/+L37kxL/6uRrdb/P7PfPWLVMXHzleLl6i5Xl
+	1PWyi+NiD/kosRRnJBpqMRcVJwIAr3KfubsCAAA=
+X-CMS-MailID: 20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2
+References: <CGME20240527022944epcas5p16011e653d1f770cd11bc760f39c17ad2@epcas5p1.samsung.com>
 
-Hi,
+From: Xue He <xue01.he@samsung.com>
 
-ÔÚ 2024/05/26 17:41, Sasha Levin Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> [ Upstream commit 3f9f231236ce7e48780d8a4f1f8cb9fae2df1e4e ]
-> 
-> UBSAN reports this problem:
-> 
->    UBSAN: Undefined behaviour in drivers/md/md.c:8175:15
->    signed integer overflow:
->    -2147483291 - 2072033152 cannot be represented in type 'int'
->    Call trace:
->     dump_backtrace+0x0/0x310
->     show_stack+0x28/0x38
->     dump_stack+0xec/0x15c
->     ubsan_epilogue+0x18/0x84
->     handle_overflow+0x14c/0x19c
->     __ubsan_handle_sub_overflow+0x34/0x44
->     is_mddev_idle+0x338/0x3d8
->     md_do_sync+0x1bb8/0x1cf8
->     md_thread+0x220/0x288
->     kthread+0x1d8/0x1e0
->     ret_from_fork+0x10/0x18
-> 
-> 'curr_events' will overflow when stat accum or 'sync_io' is greater than
-> INT_MAX.
-> 
-> Fix it by changing sync_io, last_events and curr_events to 64bit.
-> 
-> Signed-off-by: Li Nan <linan122@huawei.com>
-> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-> Link: https://lore.kernel.org/r/20240117031946.2324519-2-linan666@huaweicloud.com
-> Signed-off-by: Song Liu <song@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+It is used in block hybrid poll, the related function
+definitions have been removed, but the function
+declaration has not been delelted.
 
-Hi, please notice that this patch doesn't fix real issue expect for
-the ubsan warning, and this patch is reverted:
-> ---
->   drivers/md/md.c        | 7 ++++---
->   drivers/md/md.h        | 4 ++--
->   include/linux/blkdev.h | 2 +-
->   3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index e575e74aabf5e..c88b50a4be82f 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8576,14 +8576,15 @@ static int is_mddev_idle(struct mddev *mddev, int init)
->   {
->   	struct md_rdev *rdev;
->   	int idle;
-> -	int curr_events;
-> +	long long curr_events;
->   
->   	idle = 1;
->   	rcu_read_lock();
->   	rdev_for_each_rcu(rdev, mddev) {
->   		struct gendisk *disk = rdev->bdev->bd_disk;
-> -		curr_events = (int)part_stat_read_accum(disk->part0, sectors) -
-> -			      atomic_read(&disk->sync_io);
-> +		curr_events =
-> +			(long long)part_stat_read_accum(disk->part0, sectors) -
-> +			atomic64_read(&disk->sync_io);
->   		/* sync IO will cause sync_io to increase before the disk_stats
->   		 * as sync_io is counted when a request starts, and
->   		 * disk_stats is counted when it completes.
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 097d9dbd69b83..d0db98c0d33be 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -51,7 +51,7 @@ struct md_rdev {
->   
->   	sector_t sectors;		/* Device size (in 512bytes sectors) */
->   	struct mddev *mddev;		/* RAID array if running */
-> -	int last_events;		/* IO event timestamp */
-> +	long long last_events;		/* IO event timestamp */
->   
->   	/*
->   	 * If meta_bdev is non-NULL, it means that a separate device is
-> @@ -621,7 +621,7 @@ extern void mddev_unlock(struct mddev *mddev);
->   
->   static inline void md_sync_acct(struct block_device *bdev, unsigned long nr_sectors)
->   {
-> -	atomic_add(nr_sectors, &bdev->bd_disk->sync_io);
-> +	atomic64_add(nr_sectors, &bdev->bd_disk->sync_io);
->   }
->   
->   static inline void md_sync_acct_bio(struct bio *bio, unsigned long nr_sectors)
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 69e7da33ca49a..f10fb01a629fb 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -174,7 +174,7 @@ struct gendisk {
->   	struct list_head slave_bdevs;
->   #endif
->   	struct timer_rand_state *random;
-> -	atomic_t sync_io;		/* RAID */
-> +	atomic64_t sync_io;		/* RAID */
->   	struct disk_events *ev;
->   
->   #ifdef CONFIG_BLK_DEV_ZONED
-> 
+Signed-off-by: Xue He <xue01.he@samsung.com>
+---
+ block/blk-stat.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/block/blk-stat.h b/block/blk-stat.h
+index 17e1eb4ec7e2..5d7f18ba436d 100644
+--- a/block/blk-stat.h
++++ b/block/blk-stat.h
+@@ -64,7 +64,6 @@ struct blk_stat_callback {
+ 
+ struct blk_queue_stats *blk_alloc_queue_stats(void);
+ void blk_free_queue_stats(struct blk_queue_stats *);
+-bool blk_stats_alloc_enable(struct request_queue *q);
+ 
+ void blk_stat_add(struct request *rq, u64 now);
+ 
+-- 
+2.40.1
+
 
