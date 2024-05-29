@@ -1,312 +1,125 @@
-Return-Path: <linux-block+bounces-7876-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7878-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4B8F8D36F0
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 15:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 237FF8D3977
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 16:37:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EEBE1F22CE8
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 13:01:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C90DA1F282AA
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 14:37:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B31DDD9;
-	Wed, 29 May 2024 13:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897ED15958A;
+	Wed, 29 May 2024 14:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="16KlXnU9"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZveWQ6Dr"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFC6DDA3
-	for <linux-block@vger.kernel.org>; Wed, 29 May 2024 13:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F0715920F;
+	Wed, 29 May 2024 14:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716987668; cv=none; b=L9yCbCgsAN2E3QUyL/pcM3x58hVUSDfvzr6fXV9DXqjkUMqCsNb/gJsbh1OstCB++qViEe/GDvhhOURD2mZNabuB5RyzT2TOGLb3Rw+yaM9NKrFRe7klTW1wSeNB5zI+roLjPjEuekVxwFOcnaEjZn1rmNZKzLwHxukyLO4B0kU=
+	t=1716993427; cv=none; b=VGnLlTNt6wLweVPpdamdVs2caNs3YpcjJwVDxWLCJSw19p5lyYmqXG9ytYSjYVkBZvQnGx6ZXVvCIuDhg6745N+5EC0u2gWIvnseYSyEY3n3u0E3m1KlrTGVNDII5cNqDjErjaSZ4blHGbH0SVCZnucGdtJWd3RvYa8iGxgfTzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716987668; c=relaxed/simple;
-	bh=eR/GH5nB0xBfhtJgnBozNwaRheRGE1NTi78E9R/dmoc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=vDy6oE6D2mtvmOayxHAb+CDwAOzOsGwSf3HJYNbW6ZWvdCcF53UNxcHqzjZLv35D6g3YLxmDGQCGIrUatBoPAMYXBylCf+wOHgG8UgM8Z5FTbBsU2gqS9rsqLvMU5CieTR9mRahuoNbmVTRqphu4vTVMVGBRecqBhNRUr8yutrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=16KlXnU9; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-578626375ffso2344342a12.3
-        for <linux-block@vger.kernel.org>; Wed, 29 May 2024 06:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1716987664; x=1717592464; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N7DoM59dtLeTMen13A6x9C/FcI3j7L4Gc5GfAQ1o108=;
-        b=16KlXnU9Qg1leChuu41s2KMuYnlN4uTLL2tpV/xrVfJ2QZzlB5h4rB/6gf5mvHFsyL
-         9az/D2IQR17LstGnrNH/5SV3dw6kGdWBLBbvkVBBwZbu/ccG3dY7yAGU27g21AvwiYFz
-         suOFbwLfSXzKIWeAxGr2sFA8FzR5ZjKcyGuFqEjqikLHOYEfH81SxHtecYdwmC01Ijqx
-         NKE2eLXlN1mX69ZfT/YXXmuW728kR6Fym6UF/MRFdVfuHgvfaBSDomsSkZzjOeBg51f4
-         KBYo4jontDJCxr5Bcb0cnN0aVskyLAnj8Bovc1mdAo6WTfmvqHG8qc/sWDW3QNMRfskK
-         U0IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716987664; x=1717592464;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N7DoM59dtLeTMen13A6x9C/FcI3j7L4Gc5GfAQ1o108=;
-        b=QbG0COeqFthaA2SowMuLVWnnAGPESbQkq95LJl3EdPvnvETLxVf4gPZRkjVpdpZy7W
-         grjHVTdaNyZj4iX9Cq+D1APgQjk71LPRrbAs3AcddS37GLGEgzObC5lZ18HQTXjQPHaM
-         XNCUrS4HkN2jBrDA31EL0W+UfLFduF+sOrlywozTTPKqtEP8UVFcoEgz3ImSsmv4Igll
-         Xj8ttrRrozVxuZhPcoF0e9AY0Xn9LDTWE/EMCXgKidwB5SpVrsXGzfsxh8bNHmZhX9an
-         PxBvo3yQEugqveq6mR0EUF5VehXBw+88xI+v3BhT3+nravNdOODqMRmL/0BXIjk66My5
-         piuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaSlTcjveSLAKBmdEyDuqIgEKugWut7tGSQydfZiOXFAk+9G6KAGXRjsDEgCGSNOleFyVZAvEMI3TIfrjjR1d08QReMXHKGCdptm4=
-X-Gm-Message-State: AOJu0YxQxzvBN6NqSTcKING5eeOSN9jq+/8TlC8pC18EOdDxmGPowt8d
-	HDeqrIMlP4a9JsLVat/9WTzGSihIGrTvOQo3DBAx42do54HDDw5a9ZRxR8hI4L0=
-X-Google-Smtp-Source: AGHT+IEyXlPXjYGmEw3ahMY9PsNYYzyOwtmCbn2fHHzHfMx2Rg+nYZ3fd0cwUIjCg1Ppewwpbsekzg==
-X-Received: by 2002:a17:906:3896:b0:a62:1347:ad40 with SMTP id a640c23a62f3a-a62641c6eb2mr915825566b.16.1716987663642;
-        Wed, 29 May 2024 06:01:03 -0700 (PDT)
-Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a62dd12b233sm422159566b.2.2024.05.29.06.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 06:01:03 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Jens Axboe <axboe@kernel.dk>,  Christoph Hellwig <hch@lst.de>,  Keith
- Busch <kbusch@kernel.org>,  Damien Le Moal <dlemoal@kernel.org>,  Bart Van
- Assche <bvanassche@acm.org>,  Hannes Reinecke <hare@suse.de>,  Ming Lei
- <ming.lei@redhat.com>,  "linux-block@vger.kernel.org"
- <linux-block@vger.kernel.org>,  Andreas Hindborg <a.hindborg@samsung.com>,
-  Greg KH <gregkh@linuxfoundation.org>,  Matthew Wilcox
- <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor
- <alex.gaynor@gmail.com>,  Wedson Almeida Filho <wedsonaf@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Alice Ryhl <aliceryhl@google.com>,
-  Chaitanya Kulkarni <chaitanyak@nvidia.com>,  Luis Chamberlain
- <mcgrof@kernel.org>,  Yexuan Yang <1182282462@bupt.edu.cn>,  Sergio
- =?utf-8?Q?Gonz=C3=A1lez?= Collado <sergio.collado@gmail.com>,  Joel
- Granados
- <j.granados@samsung.com>,  "Pankaj Raghav (Samsung)"
- <kernel@pankajraghav.com>,  Daniel Gomez <da.gomez@samsung.com>,  Niklas
- Cassel <Niklas.Cassel@wdc.com>,  Philipp Stanner <pstanner@redhat.com>,
-  Conor Dooley <conor@kernel.org>,  Johannes Thumshirn
- <Johannes.Thumshirn@wdc.com>,  Matias =?utf-8?Q?Bj=C3=B8rling?=
- <m@bjorling.me>,  open list
- <linux-kernel@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>,  "lsf-pc@lists.linux-foundation.org"
- <lsf-pc@lists.linux-foundation.org>,  "gost.dev@samsung.com"
- <gost.dev@samsung.com>
-Subject: Re: [PATCH v2 2/3] rust: block: add rnull, Rust null_blk
- implementation
-In-Reply-To: <d7b963f0-060f-44c0-8358-fb8dbd064575@proton.me> (Benno Lossin's
-	message of "Tue, 28 May 2024 13:27:53 +0000")
-References: <20240521140323.2960069-1-nmi@metaspace.dk>
-	<20240521140323.2960069-3-nmi@metaspace.dk>
-	<d7b963f0-060f-44c0-8358-fb8dbd064575@proton.me>
-Date: Wed, 29 May 2024 15:00:48 +0200
-Message-ID: <87o78orcvz.fsf@metaspace.dk>
+	s=arc-20240116; t=1716993427; c=relaxed/simple;
+	bh=pYrTtkOBQOYeyXCIy27DWA6GTTCSA3OpaXyqB8Pa86U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fSO45P+nKBPEIblN4wWRroYLI09EQQ4AnaCyv0bqDVnzdqPoy5YpuVlCrfXhQkC7WuXOpn5/pLCriYDiaN0jmkJcRN/jhQ5Y9WGgUYpXzmTkjmPp+P3Ufi8op1T3GLv9J2JKH0dCKasiH3N9Y0xEA4B8Bvgg+MQkzdKEYhLq94E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZveWQ6Dr; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=B7XB8qUIcTmB1ehnipB+Kf3z1BPRYE36ZBSUE8NS1go=;
+	t=1716993425; x=1717425425; b=ZveWQ6Dr3LUYuVdUNOPo0tAZkO5ChVyME/VbLMP1uqSiRaE
+	yzbEOROreEYOY8mROeCiqHYK/bj/Zrtbeb66pNlA15L0rCy5o1xhVFuTkEzifskJhrzOhg3Aat1/x
+	JHFkgSCVLfdWVLAVgq1eMHiE4tki9j15sZGcGfe9pckoXaURMBFNnODVdNP29WAH8L8BFf4S2BfvE
+	3+pGS1l0eqgUsTjU6ga2iIPLjOIZfYgKFkHogihuqkeuYcHkUKhHc9r51fRhRWU9whiw4WMxtmzQa
+	NgIISdJBWUeB/D5ALf/lnvaEEbuMKfGQyk7lQaVoN8XbMg3ZcerYk2RxItMp2Pig==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCKQF-0003Dv-Nj; Wed, 29 May 2024 16:36:59 +0200
+Message-ID: <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
+Date: Wed, 29 May 2024 16:36:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
+ allocating the queue
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
+ linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
+ Christoph Hellwig <hch@lst.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240520151536.GA32532@lst.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20240520151536.GA32532@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716993425;08490132;
+X-HE-SMSGID: 1sCKQF-0003Dv-Nj
 
-Benno Lossin <benno.lossin@proton.me> writes:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-> On 21.05.24 16:03, Andreas Hindborg wrote:
->> From: Andreas Hindborg <a.hindborg@samsung.com>
->> 
->> This patch adds an initial version of the Rust null block driver.
->> 
->> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
->> ---
->>  drivers/block/Kconfig   |  9 +++++
->>  drivers/block/Makefile  |  3 ++
->>  drivers/block/rnull.rs  | 86 +++++++++++++++++++++++++++++++++++++++++
->>  rust/kernel/block/mq.rs |  4 +-
->>  4 files changed, 101 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/block/rnull.rs
->> 
->> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
->> index 5b9d4aaebb81..ed209f4f2798 100644
->> --- a/drivers/block/Kconfig
->> +++ b/drivers/block/Kconfig
->> @@ -354,6 +354,15 @@ config VIRTIO_BLK
->>  	  This is the virtual block driver for virtio.  It can be used with
->>            QEMU based VMMs (like KVM or Xen).  Say Y or M.
->> 
->> +config BLK_DEV_RUST_NULL
->> +	tristate "Rust null block driver (Experimental)"
->> +	depends on RUST
->> +	help
->> +	  This is the Rust implementation of the null block driver. For now it
->> +	  is only a minimal stub.
->> +
->> +	  If unsure, say N.
->> +
->>  config BLK_DEV_RBD
->>  	tristate "Rados block device (RBD)"
->>  	depends on INET && BLOCK
->> diff --git a/drivers/block/Makefile b/drivers/block/Makefile
->> index 101612cba303..1105a2d4fdcb 100644
->> --- a/drivers/block/Makefile
->> +++ b/drivers/block/Makefile
->> @@ -9,6 +9,9 @@
->>  # needed for trace events
->>  ccflags-y				+= -I$(src)
->> 
->> +obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
->> +rnull_mod-y := rnull.o
->> +
->>  obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
->>  obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
->>  obj-$(CONFIG_BLK_DEV_FD)	+= floppy.o
->> diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
->> new file mode 100644
->> index 000000000000..1d6ab6f0f26f
->> --- /dev/null
->> +++ b/drivers/block/rnull.rs
->> @@ -0,0 +1,86 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! This is a Rust implementation of the C null block driver.
->> +//!
->> +//! Supported features:
->> +//!
->> +//! - blk-mq interface
->> +//! - direct completion
->> +//! - block size 4k
->> +//!
->> +//! The driver is not configurable.
->> +
->> +use kernel::{
->> +    alloc::flags,
->> +    block::mq::{
->> +        self,
->> +        gen_disk::{self, GenDisk},
->> +        Operations, TagSet,
->> +    },
->> +    error::Result,
->> +    new_mutex, pr_info,
->> +    prelude::*,
->> +    sync::{Arc, Mutex},
->> +    types::ARef,
->> +};
->> +
->> +module! {
->> +    type: NullBlkModule,
->> +    name: "rnull_mod",
->> +    author: "Andreas Hindborg",
->> +    license: "GPL v2",
->> +}
->> +
->> +struct NullBlkModule {
->> +    _disk: Pin<Box<Mutex<GenDisk<NullBlkDevice, gen_disk::Added>>>>,
->> +}
->> +
->> +fn add_disk(tagset: Arc<TagSet<NullBlkDevice>>) -> Result<GenDisk<NullBlkDevice, gen_disk::Added>> {
->
-> Any reason that this is its own function and not in the
-> `NullBlkModule::init` function?
+On 20.05.24 17:15, Christoph Hellwig wrote:
+> Adding ben and the linuxppc list.
 
-Would you embed it inside the `init` function? To what end? I don't
-think that would read well.
+Hmm, no reply and no other progress to get this resolved afaics. So lets
+bring Michael into the mix, he might be able to help out.
 
->
->> +    let block_size: u16 = 4096;
->> +    if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
->> +        return Err(kernel::error::code::EINVAL);
->> +    }
->> +
->> +    let mut disk = gen_disk::try_new(tagset)?;
->> +    disk.set_name(format_args!("rnullb{}", 0))?;
->> +    disk.set_capacity_sectors(4096 << 11);
->> +    disk.set_queue_logical_block_size(block_size.into());
->> +    disk.set_queue_physical_block_size(block_size.into());
->> +    disk.set_rotational(false);
->> +    disk.add()
->> +}
->> +
->> +impl kernel::Module for NullBlkModule {
->> +    fn init(_module: &'static ThisModule) -> Result<Self> {
->> +        pr_info!("Rust null_blk loaded\n");
->> +        let tagset = Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
->> +        let disk = Box::pin_init(
->> +            new_mutex!(add_disk(tagset)?, "nullb:disk"),
->> +            flags::GFP_KERNEL,
->> +        )?;
->> +
->> +        Ok(Self { _disk: disk })
->> +    }
->> +}
->> +
->> +struct NullBlkDevice;
->> +
->> +#[vtable]
->> +impl Operations for NullBlkDevice {
->> +    #[inline(always)]
->> +    fn queue_rq(rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
->> +        mq::Request::end_ok(rq)
->> +            .map_err(|_e| kernel::error::code::EIO)
->> +            .expect("Failed to complete request");
->
-> This error would only happen if `rq` is not the only ARef to that
-> request, right?
+BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
+recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
 
-Yes, it should never happen. If it happens, something is seriously
-broken and panic is adequate.
+Ciao, Thorsten
 
-Other drivers might want to retry later or something, but in this case
-it should just work.
-
->
->> +
->> +        Ok(())
->> +    }
->> +
->> +    fn commit_rqs() {}
->> +
->> +    fn complete(rq: ARef<mq::Request<Self>>) {
->
-> Am I correct in thinking that this function is never actually called,
-> since all requests that are queued are immediately ended?
-
-Yes, re my other email. It is a callback that cannot be triggered for
-now. I will move it to a later patch where it belongs.
-
->
->> +        mq::Request::end_ok(rq)
->> +            .map_err(|_e| kernel::error::code::EIO)
->> +            .expect("Failed to complete request")
->> +    }
->> +}
->> diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
->> index efbd2588791b..54e032bbdffd 100644
->> --- a/rust/kernel/block/mq.rs
->> +++ b/rust/kernel/block/mq.rs
->> @@ -51,6 +51,7 @@
->>  //!
->>  //! ```rust
->>  //! use kernel::{
->> +//!     alloc::flags,
->>  //!     block::mq::*,
->>  //!     new_mutex,
->>  //!     prelude::*,
->> @@ -77,7 +78,8 @@
->>  //!     }
->>  //! }
->>  //!
->> -//! let tagset: Arc<TagSet<MyBlkDevice>> = Arc::pin_init(TagSet::try_new(1, 256, 1))?;
->> +//! let tagset: Arc<TagSet<MyBlkDevice>> =
->> +//!     Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
->
-> This change should probably be in the patch before (seems like an
-> artifact from rebasing).
-
-Yes, thank you for spotting that. I thought I checked that this was
-building, so this is strange to me. Maybe I failed to build the
-doctests between the two patches. It is weird that kernel robot did not
-pick this up. Maybe it is not building doctests?
-
-
-Best regards,
-Andreas
+> Context: pata_macio initialization now fails as we enforce that the
+> segment size is set properly.
+> 
+> On Wed, May 15, 2024 at 04:52:29PM -0700, Guenter Roeck wrote:
+>> pata_macio_common_init() Calling ata_host_activate() with limit 65280
+>> ...
+>> max_segment_size is 65280; PAGE_SIZE is 65536; BLK_MAX_SEGMENT_SIZE is 65536
+>> WARNING: CPU: 0 PID: 12 at block/blk-settings.c:202 blk_validate_limits+0x2d4/0x364
+>> ...
+>>
+>> This is with PPC_BOOK3S_64 which selects a default page size of 64k.
+> 
+> Yeah.  Did you actually manage to use pata macio previously?  Or is
+> it just used because it's part of the pmac default config?
+> 
+>> Looking at the old code, I think it did what you suggested above,
+> 
+>> but assuming that the driver requested a lower limit on purpose that
+>> may not be the best solution.
+> 
+>> Never mind, though - I updated my test configuration to explicitly
+>> configure the page size to 4k to work around the problem. With that,
+>> please consider this report a note in case someone hits the problem
+>> on a real system (and sorry for the noise).
+> 
+> Yes, the idea behind this change was to catch such errors.  So far
+> most errors have been drivers setting lower limits than what the
+> hardware can actually handle, but I'd love to track this down.
+> 
+> If the hardware can't actually handle the lower limit we should
+> probably just fail the probe gracefully with a well comment if
+> statement instead.
 
