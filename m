@@ -1,58 +1,69 @@
-Return-Path: <linux-block+bounces-7842-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-7845-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 885228D2A48
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 04:02:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB9868D2BE9
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 07:05:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3AADC1F2B034
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 02:02:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 775482886D5
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2024 05:05:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B350E15ADAE;
-	Wed, 29 May 2024 02:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0049615B999;
+	Wed, 29 May 2024 05:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j6TH1jV+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF7822324;
-	Wed, 29 May 2024 02:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98FA15B572;
+	Wed, 29 May 2024 05:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716948025; cv=none; b=SkCQfImEihzqJNSLCkTi0s9uzQnk6MTSFIv6aBCQ/5fki0nqcXkM7/k6eC++z7xpN896TeSvSArxY+8l/Za1zAFFks+eWT0d9g9O/RaNO+3LcfnXP7scZKDR1yPArVkI92J5cnZB6HtmVQrxq3m4sNtlbu+kI9soRBH3xH69f64=
+	t=1716959123; cv=none; b=jb3bJ1pPNrij/4KEeot+58GHIs80sPJIuD1KUaKpFW1V4xmfKIoQNWlV/OoBc4cUMX445fZ0KnpGQY5v5hW2MVeZ9/jIDgiwb6IDLKVT4W2lIIpSV3679TCkkhLEBA3az/1NXEOoOuyZ98pllwkoxXY4TEkYQf1ywcICP4PF0uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716948025; c=relaxed/simple;
-	bh=MLY6d+dey32u/YtCdHWv2+v7aHSlG95uLNl6Wt1dpk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R2nFfjqu30tSIvDhrDaSO9YDARq/wAPapAdZQCsJdHw6fnXtCeO0b1626FzPSxG88gk8BLlpmj49gu9ACeppG3ko5UUBVsSH8rrb3OJyHp2rlO6xw+042RiUfxaDvXKt5IlDuCG4AwxbviMXtToGfNHejAOnnf1Dl/m+N8H35Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vpsyz12mZz4f3jcv;
-	Wed, 29 May 2024 10:00:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6E2C01A01B9;
-	Wed, 29 May 2024 10:00:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBEzjFZm5ofbNw--.62628S4;
-	Wed, 29 May 2024 10:00:20 +0800 (CST)
-From: linan666@huaweicloud.com
-To: ming.lei@redhat.com,
-	axboe@kernel.dk,
-	ZiyangZhang@linux.alibaba.com
-Cc: czhong@redhat.com,
+	s=arc-20240116; t=1716959123; c=relaxed/simple;
+	bh=ZlR0M/WDziIdI3zApUxmnVbN25kmmXkWi5Zxl1krXKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SqqyQt9myZj9mTqz3rvDMDmBZIVEys91cQXi2J8NjVKq5jyk/qrcUN1ARE+vAZ2ukxA04k/+GXs3t0LUVjWYwiXCZbLCpA7N/qolsyDXxo7c7tdl9herJ0e9ueYU/nJUxXjOFR7TqtlFYEdX6kKsp1TA+ZdhmkJ/iiR+bO9Lrgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j6TH1jV+; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=TkLi7QJRJk+eDm0XKX9y4O+chg+2e2GHQobCf0qIp3Q=; b=j6TH1jV+bD9SRCoTjPn2/w5mPx
+	Sn9ZORQd/0Vc8GCHMbe57GctL2xLaw94IPMXbiJcX95T1JOMiz6/rTaTDfBNMHzt2nFlgKG30WzoF
+	dIAc0Wxprcex1TUAE9kVEamco0ms0NAnDTyHDmkwxAjOMGcnTzwA/qjowsfaaOxk+Q7ohP80n6DFh
+	v0tR+RqojdE8wkTeuKbpKCEu64xWSJW+O63gy+h/ERmksEVT5Z+j3VJtipRNQyIKdFcIPJifoT7Lc
+	JNKkuNwua/4XXVb82UFUzCKKgQOn1LTgSY21EVqNBDHbXJZj6E9u2XVKVoPDNoZ/0QiJ/ZgSUMdps
+	IHDNZnvQ==;
+Received: from 2a02-8389-2341-5b80-7775-b725-99f7-3344.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:7775:b725:99f7:3344] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sCBUs-00000002pSJ-2CVr;
+	Wed, 29 May 2024 05:05:11 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>,
+	=?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+	linux-um@lists.infradead.org,
 	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH] ublk_drv: fix NULL pointer dereference in ublk_ctrl_start_recovery()
-Date: Wed, 29 May 2024 17:53:13 +0800
-Message-Id: <20240529095313.2568595-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	nbd@other.debian.org,
+	ceph-devel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-scsi@vger.kernel.org
+Subject: convert the SCSI ULDs to the atomic queue limits API
+Date: Wed, 29 May 2024 07:04:02 +0200
+Message-ID: <20240529050507.1392041-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -60,86 +71,41 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBEzjFZm5ofbNw--.62628S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3JF47uFyUKw18Kr4rZrb_yoW8tFyUpF
-	W5Gw1Ykrs5tF4rZF4kA3srJryrJ3WrKry7WrZ3ZF1Fva98ArZxZ3y7Ca1YvFZ7GFyfWFyU
-	AF4q934Ikw1UCF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
-	xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAV
-	WUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAK
-	I48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07
-	xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRy
-	89tUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Li Nan <linan122@huawei.com>
+Hi all,
 
-When two UBLK_CMD_START_USER_RECOVERY commands are submitted, the
-first one sets 'ubq->ubq_daemon' to NULL, and the second one triggers
-WARN in ublk_queue_reinit() and subsequently a NULL pointer dereference
-issue.
+this series converts the SCSI upper level drivers to the atomic queue
+limits API.
 
-Continuing execution after WARN is incorrect, as 'ubq->ubq_daemon' is
-known to be NULL. Fix it by return directly if the WARN is triggered.
+The first patch is a bug fix for ubd that later patches depend on and
+might be worth picking up for 6.10.
 
-Note that WARN will still be triggered after the fix if anyone tries to
-start recovery twice.
+The second patch changes the max_sectors calculation to take the optimal
+I/O size into account so that sd, nbd and rbd don't have to mess with
+the user max_sector value.  I'd love to see a careful review from the
+nbd and rbd maintainers for this one!
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000028
-  RIP: 0010:ublk_ctrl_start_recovery.constprop.0+0x82/0x180
-  Call Trace:
-   <TASK>
-   ? __die+0x20/0x70
-   ? page_fault_oops+0x75/0x170
-   ? exc_page_fault+0x64/0x140
-   ? asm_exc_page_fault+0x22/0x30
-   ? ublk_ctrl_start_recovery.constprop.0+0x82/0x180
-   ublk_ctrl_uring_cmd+0x4f7/0x6c0
-   ? pick_next_task_idle+0x26/0x40
-   io_uring_cmd+0x9a/0x1b0
-   io_issue_sqe+0x193/0x3f0
-   io_wq_submit_work+0x9b/0x390
-   io_worker_handle_work+0x165/0x360
-   io_wq_worker+0xcb/0x2f0
-   ? finish_task_switch.isra.0+0x203/0x290
-   ? finish_task_switch.isra.0+0x203/0x290
-   ? __pfx_io_wq_worker+0x10/0x10
-   ret_from_fork+0x2d/0x50
-   ? __pfx_io_wq_worker+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
+The following patches clean up a few lose ends in the sd driver, and
+then convert sd and sr to the atomic queue limits API.  The final
+patches remove the now unused block APIs, and convert a few to be
+specific to their now more narrow use case.
 
-Fixes: c732a852b419 ("ublk_drv: add START_USER_RECOVERY and END_USER_RECOVERY support")
-Reported-and-tested-by: Changhui Zhong <czhong@redhat.com>
-Closes: https://lore.kernel.org/all/CAGVVp+UvLiS+bhNXV-h2icwX1dyybbYHeQUuH7RYqUvMQf6N3w@mail.gmail.com
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/block/ublk_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The patches are against Jens' block-6.10 tree.  Due to the amount of
+block layer changes in here, and other that will depend on it, it
+would be good if this could eventually be merged through the block
+tree, or at least a shared branch between the SCSI and block trees.
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 4e159948c912..99b621b2d40f 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -2630,7 +2630,8 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
- {
- 	int i;
- 
--	WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
-+	if (WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq))))
-+		return;
- 
- 	/* All old ioucmds have to be completed */
- 	ubq->nr_io_ready = 0;
--- 
-2.39.2
-
+Diffstat:
+ arch/um/drivers/ubd_kern.c   |   10 +
+ block/blk-settings.c         |  238 +------------------------------------------
+ drivers/block/nbd.c          |    2 
+ drivers/block/rbd.c          |    1 
+ drivers/block/xen-blkfront.c |    4 
+ drivers/scsi/sd.c            |  218 ++++++++++++++++++++-------------------
+ drivers/scsi/sd.h            |    6 -
+ drivers/scsi/sd_zbc.c        |   27 ++--
+ drivers/scsi/sr.c            |   42 ++++---
+ include/linux/blkdev.h       |   40 +++----
+ 10 files changed, 196 insertions(+), 392 deletions(-)
 
