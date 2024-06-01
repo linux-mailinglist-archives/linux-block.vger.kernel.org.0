@@ -1,96 +1,68 @@
-Return-Path: <linux-block+bounces-8077-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8079-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2222E8D7040
-	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2024 15:40:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A55C8D706C
+	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2024 16:24:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2D122828FB
-	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2024 13:40:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 614931C20F02
+	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2024 14:24:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A5515218D;
-	Sat,  1 Jun 2024 13:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53AF15217C;
+	Sat,  1 Jun 2024 14:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="3L2gyQWx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJyxFB3o"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA0C1514F1
-	for <linux-block@vger.kernel.org>; Sat,  1 Jun 2024 13:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7589B10949;
+	Sat,  1 Jun 2024 14:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717249236; cv=none; b=pV+z1o/lfZSZIYEZola5zMYfdKLrta8Eg7doRmiiZ4g9CT8xBSEJZqHF9cDZS79hB7Gv1IfbqRL0Kt8Wzq2cvWVn4JpRTZOuvYszXwRA9mhAOBj8AXQHitqJvQCqKseYuNd99U0lJHypnPMNCeyjXvgup1n9e/OVzVBmhzQbkpg=
+	t=1717251873; cv=none; b=KXv0EccHTffBTkOoSizopTpIR5o8TGocatKto2ANfDpEgGe4jZX97TxpiCLbTBRzXRDjO4aiheQ1PynSgf3sundvcYvKWfgbvg2UqAWWndEvIri7hG66WUfBv+U3W1M5/sKh2veE70n3UAjpRp4k/ZQyvq2QLhyFbq3a2Q/WFsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717249236; c=relaxed/simple;
-	bh=juRogTLPO2qs3UM+cO6uXQ3Ufimi9V6rXzS1gdbXpLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TBfHwJxVXIPr34tcrMyjgbRYhIEu6WwStRjottljPK7OCaFNPRf+G23W+GUCuIdzWyj1llqNASNatSRlm81T9G/u6himcJRdv2zMgRLZd+l18eU67NDQ1SM+9IhSed52o+dOO+pcrQ+FWyePNxGjLjRUKd/LqNKUpkfmopOOOug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=3L2gyQWx; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52b8254338dso3140786e87.2
-        for <linux-block@vger.kernel.org>; Sat, 01 Jun 2024 06:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717249232; x=1717854032; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
-        b=3L2gyQWx9mzBmilZCnN72PvodhO6oit7sB2Q0mS0pUqAFrNyXgZeg7FEUvgwdwSinZ
-         L+81TX1cfUZQ8tPntHnqRH2VOeH2SoLW+ChUmlCkh+iUb+ti7nIW3yK2+I1u7PhlZuaa
-         rk7wZLbS1yJzKaEXIAG5ME/fzGep4tUd7JQIBO2RqQvJrztKm5h8AjXRz9u5p4aBksrv
-         vuuExU7IdnDM0guesf0WjmlxW2KHqwu45xXlEwbJwTy+LAXn7weNe06qxMM8lAT+9sZ3
-         2etzY/AWw37Zv1bhcTnnfeFhuiKhyGtuXRLk2MGFqOF16NTYpM5PyBmJvzTyJZC1yscu
-         MudA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717249232; x=1717854032;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
-        b=kGMhKZNJ13kY7/dxiDEVAhEskQlhfS73z/yciGJ09dgCBIpOdMggjMbxYnrM6EhIl3
-         J5ozJCQV6lThay1ohMMM6zDioWp3PpyJv9/0rZU/FqXT4R+qsJic/FvAsAuhH68CJRfs
-         dXnBIXY5LMuI3/NbM+rXbSfJm0lWVeI3iarpUEYTk6xnoWTCYTIr1TsKUYr3SJulif4I
-         4gtIzRNKUlqxKoLO5JT8SCOo/lSTtdHWxN++BXOuQG6mQ4+43PCYJfQ93KEJ/HoMq09J
-         2aUJyPUJRRZkXKHql7NPqQOsiF4rBv8gmCl4f5jGQzGrea6DigboV7jy9fReLgTCGB0D
-         haXA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7H3yxIISJIKUUOff3C5SQv4Evmu48SDfUoYaeJ0C7geZaiIBWD3GAg6yS425REwUZR2I4OEsJtmIx3UBH5YAhV/Oxd3SndV2Zr/A=
-X-Gm-Message-State: AOJu0Ywj06P/opjcTGyonrU2V+9g1yhDn4L6dYbe7z0jKlvrei1SEBC5
-	qHrdroL1jJLFlFHPRqYEmZdsYV6BA1VnO9F69OB2KrdUJmcYTLLKHa+byNojrfQ=
-X-Google-Smtp-Source: AGHT+IGrq3PBkLFNZCEIOfb99HJhQdA8UmV7flzStmSdZ6PDy4PhuONljOCGU66Onvq9WUuNAfmmow==
-X-Received: by 2002:a05:6512:b9d:b0:52b:8255:71d4 with SMTP id 2adb3069b0e04-52b8956093emr4368044e87.3.1717249232498;
-        Sat, 01 Jun 2024 06:40:32 -0700 (PDT)
-Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a8ece075sm92371866b.143.2024.06.01.06.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 06:40:32 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
+	s=arc-20240116; t=1717251873; c=relaxed/simple;
+	bh=3hpQGG0DXNOz5SDZzCSta1IGiF02qt2SWM+gfOhfF/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1S/EZKTMJ0hNEzr2/IBrxrh9cSgFIX44SetWT75hinXYyLjPC1LWT1TofLOaIGtTNVF/zkH8nVHzzSXe+VT0E7Uzmm41o4xGXUswcMnrFBbaKAAkZauuWJGsGnfo8lUg3tXTvaPYlUc3w2ePSPp7dxTAma4PpVJgbS3NObjS8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJyxFB3o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF01EC116B1;
+	Sat,  1 Jun 2024 14:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717251873;
+	bh=3hpQGG0DXNOz5SDZzCSta1IGiF02qt2SWM+gfOhfF/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AJyxFB3otjuYJSZT9fWb84TQMFrA2DG/52s5pD4j4oi/54cIya+Zufr0luSztLMbF
+	 ElRL0+vsQ0oDJIbOJ7NoBLGhYiZjquTcvcig2Cr7YnpR25alKPPYPLqdnlmA7Aivyz
+	 GAgwl9B0FSwxiA2lZLlgUuZqjyTJVmCsmIa5ynLP9SGKhjUQzi6OcwSmonDP3IQoeF
+	 klkp8ZxDNqMv+ZDZDGG3DgEsUptU1RBcKProhdwf9b36Es+TvYlMkGSmqI8dCmAzeC
+	 5zj8CdYaJZVk+DxxVuxZ9GvZFT/1tZ2LNZnZtqkddgafQ55TuE+mzYqwl1gImTqq78
+	 bPZNWoyiX+2mg==
+Date: Sat, 1 Jun 2024 08:24:29 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Andreas Hindborg <nmi@metaspace.dk>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Bart Van Assche <bvanassche@acm.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Ming Lei <ming.lei@redhat.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+	Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
 	Greg KH <gregkh@linuxfoundation.org>,
 	Matthew Wilcox <willy@infradead.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
 	Benno Lossin <benno.lossin@proton.me>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Yexuan Yang <1182282462@bupt.edu.cn>,
-	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
+	Sergio =?iso-8859-1?Q?Gonz=E1lez?= Collado <sergio.collado@gmail.com>,
 	Joel Granados <j.granados@samsung.com>,
 	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
 	Daniel Gomez <da.gomez@samsung.com>,
@@ -98,60 +70,38 @@ Cc: Andreas Hindborg <a.hindborg@samsung.com>,
 	Philipp Stanner <pstanner@redhat.com>,
 	Conor Dooley <conor@kernel.org>,
 	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
+	Matias =?iso-8859-1?Q?Bj=F8rling?= <m@bjorling.me>,
 	open list <linux-kernel@vger.kernel.org>,
 	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
 	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
 	"gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: [PATCH v4 3/3] MAINTAINERS: add entry for Rust block device driver API
-Date: Sat,  1 Jun 2024 15:40:05 +0200
-Message-ID: <20240601134005.621714-4-nmi@metaspace.dk>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240601134005.621714-1-nmi@metaspace.dk>
+Subject: Re: [PATCH v4 2/3] rust: block: add rnull, Rust null_blk
+ implementation
+Message-ID: <ZlsvHV6y4DEdC8ja@kbusch-mbp.dhcp.thefacebook.com>
 References: <20240601134005.621714-1-nmi@metaspace.dk>
+ <20240601134005.621714-3-nmi@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240601134005.621714-3-nmi@metaspace.dk>
 
-From: Andreas Hindborg <a.hindborg@samsung.com>
+On Sat, Jun 01, 2024 at 03:40:04PM +0200, Andreas Hindborg wrote:
+> +impl kernel::Module for NullBlkModule {
+> +    fn init(_module: &'static ThisModule) -> Result<Self> {
+> +        pr_info!("Rust null_blk loaded\n");
+> +        let tagset = Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
+> +
+> +        let disk = {
+> +            let block_size: u16 = 4096;
+> +            if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
+> +                return Err(kernel::error::code::EINVAL);
+> +            }
 
-Add an entry for the Rust block device driver abstractions.
-
-Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..698515b0b0b3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3782,6 +3782,20 @@ F:	include/linux/blk*
- F:	kernel/trace/blktrace.c
- F:	lib/sbitmap.c
- 
-+BLOCK LAYER DEVICE DRIVER API [RUST]
-+M:	Andreas Hindborg <a.hindborg@samsung.com>
-+R:	Boqun Feng <boqun.feng@gmail.com>
-+L:	linux-block@vger.kernel.org
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+W:	https://rust-for-linux.com
-+B:	https://github.com/Rust-for-Linux/linux/issues
-+C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
-+F:	drivers/block/rnull.rs
-+F:	rust/kernel/block.rs
-+F:	rust/kernel/block/
-+
- BLOCK2MTD DRIVER
- M:	Joern Engel <joern@lazybastard.org>
- L:	linux-mtd@lists.infradead.org
--- 
-2.45.1
-
+You've set block_size to the literal 4096, then validate its value
+immediately after? Am I missing some way this could ever be invalid?
 
