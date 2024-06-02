@@ -1,369 +1,517 @@
-Return-Path: <linux-block+bounces-8100-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8105-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 717578D75FF
-	for <lists+linux-block@lfdr.de>; Sun,  2 Jun 2024 16:12:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A7BF8D777A
+	for <lists+linux-block@lfdr.de>; Sun,  2 Jun 2024 20:37:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA2171F221B0
-	for <lists+linux-block@lfdr.de>; Sun,  2 Jun 2024 14:12:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47DD11C20E63
+	for <lists+linux-block@lfdr.de>; Sun,  2 Jun 2024 18:37:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E7CF3FBAD;
-	Sun,  2 Jun 2024 14:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1BA60BBE;
+	Sun,  2 Jun 2024 18:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=tiscali.it header.i=@tiscali.it header.b="2N74Pw6g"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08481E501;
-	Sun,  2 Jun 2024 14:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717337529; cv=fail; b=Rnln46b7FzjoLQKz6Lf4AtrFVH7a/hKcpw1rdyt/0cLD4XBGxq1QW5cCWQPF4hVvcQbQBZ6Mjvi31KByfaZ83MmYRMglF4LlCmN3hJL3Qp+hqVWBVVb5Te2N3GAwresIpYlAdQlKccqAS5dMuuN948vZiez/yzgWbI7F0m4qZso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717337529; c=relaxed/simple;
-	bh=iki/1NYZ9YoGpsiuRdEgpVnO8uPeskpeOIqE392MusA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UwBg7chmQZ94bXTdaWjbWhuHwo0JWc99K2GXRBN/1p3RHKX7B3VOXGlql8U4a/hiAOdRgZDAAKCvrqc+y0cSRKOrNtYVCVVtHk1L1Fe8MnUUuLwRvJ2uUm5O0K1zv9bF32fX70VreQRJ1iSkrRUFtRhW+m2SNnQAGHVuhBfWmkI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4526h02i027447;
-	Sun, 2 Jun 2024 14:09:56 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:in-reply?=
- =?UTF-8?Q?-to:message-id:mime-version:references:subject:to;_s=3Dcorp-202?=
- =?UTF-8?Q?3-11-20;_bh=3DIzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=3D;_b?=
- =?UTF-8?Q?=3Dg2iZR+YwuB3+lMC6gVdw7mN96JrGDh7pr3jtH86kD8xe5gPaQ8etjrXaoquL?=
- =?UTF-8?Q?mzSQOONA_jyBQLpsQIkDCID0xkpBE9lolMkyjAa+6AQRxJ+IFxQg29M+L4EDDPT?=
- =?UTF-8?Q?BzG9c/ghyhOrFG_/Jwur23sX8gMmz7g4IpeH4KgphAnx6UCKMwvcsiviJhlBjRs?=
- =?UTF-8?Q?x5XuL4+AGeYTBDlmxcqv_sHCzyRKAI8gUC2ZOrBC1yyPpd1CjlsQKvR408JVXdS?=
- =?UTF-8?Q?hG5TPia12b54AfrX6c0YNekTVC_FBXqabSwbl3KhqKY2UZ7x8G6Sg3+bXchB5zT?=
- =?UTF-8?Q?eV1fgqmLy6/HgGgSJbg3D1lJSe7RIQ4W_0Q=3D=3D_?=
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yfuyu1cm3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 02 Jun 2024 14:09:56 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 452CPWHx003823;
-	Sun, 2 Jun 2024 14:09:55 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrquhb53-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 02 Jun 2024 14:09:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FbOUvnktf7G36RymcpekUwQgST1bFiio7alGrMFOcTID+P+W1oyWGs1nbJdwlA8eXuqNCf2aGZo6WVy44Doi4kC67gQaOQyI3LKLs84PQXoSowJva5V42zxT1qIlHDSuEZugQaml5H7G1VLJ8a6O1m6qwSXjkDSIq0M/QKhkTR0NSLJEIE1VelCSCxXuz+NrkyIDXTwQt0/g9pxyRTWEXkp2kL3q6X+ZYFZUkbTHnU0pK0UfQlu9HdMWCP+9y5g+0EqAKgYNCQh8pSL2fD9/YAUVvgg9f+fkeL2U8MX7KP6TqauPLfOIqVB7ot0hgkgEyORQPRB2AGiEhw8ca5cCnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=;
- b=jk1TtawiAwT/otFziZOEHetoS1Dtz1Mj/rSQutuCX5BbVcusSOTBHB9d+1xMDEseP4leMtbbMyTKoewRAfWv7w61BihyE1bPbMajf4OzYRs8vSmtl4wPtJvfhh4vRJZbwPCA84i2d3abNe5D2i9NosqtEF9isRdO6gEMdVo9GllwduMgd21pq+AgCDPi3dNToTmIQnWp2X9Yp4Gpl0tBDoEsq9ltSy5qkQUnPo/0KevKOqYKAx5dV7UFh+5iY4sk1zo38UHgTCnlVez5fwOdtGkIm7fmGlVzF3Bxb68qxSHAv/BpY6YxvmnaiAKNXnIf2SHrKfyzTfLUS6VWFsMgjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=;
- b=OmEhPEEAVxq5He0Q4lZfiXFQg+YIdqYhpjpoOrVA3uvEpL8g8H0Yj5RNcywBMQjajH+xi1XjmvTG5qXPRFXcZcw/JPM8JBIKG8kNPNwWApX48gIqdsP3xUhT+VW1gwUVCg3C2KvxVVVn1WSUSI33x8yT9G5rnGES/9RWB9/S5mo=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DS0PR10MB8078.namprd10.prod.outlook.com (2603:10b6:8:1fd::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Sun, 2 Jun
- 2024 14:09:54 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7633.018; Sun, 2 Jun 2024
- 14:09:54 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-        jack@suse.cz
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com, linux-scsi@vger.kernel.org,
-        ojaswin@linux.ibm.com, linux-aio@kvack.org,
-        linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org,
-        nilay@linux.ibm.com, ritesh.list@gmail.com, willy@infradead.org,
-        Alan Adamson <alan.adamson@oracle.com>,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v7 9/9] nvme: Atomic write support
-Date: Sun,  2 Jun 2024 14:09:12 +0000
-Message-Id: <20240602140912.970947-10-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240602140912.970947-1-john.g.garry@oracle.com>
-References: <20240602140912.970947-1-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR03CA0014.namprd03.prod.outlook.com
- (2603:10b6:208:23a::19) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+Received: from smtp.tiscali.it (santino-notr.mail.tiscali.it [213.205.33.215])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53BAA3BBF5
+	for <linux-block@vger.kernel.org>; Sun,  2 Jun 2024 18:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.205.33.215
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717353458; cv=none; b=sOnxR8LoUHW+XrYSXp2MxV/XpPS3VDuf6g51nWVsh5x94307BdD7bfvQsjxJai6NM+4qEloNPQ+9/a865YTrEeNa8mBFj64q7xuV10L3y2NjuQCDU8Vz6KZv88IQxIeossT1Gb7KE9WhPNywmImoSs562tsEwPUwW1cAFB91cHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717353458; c=relaxed/simple;
+	bh=8Vo17OmuU+v63OTwVzwDFPwIG+Ka1MDQUxVqHalM1Ek=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VjcH3DnjGNx6w2VwlvRIMQm+k6M/3TVt/hoDCBr7Akkryzc7SgaxUs6wCxy70K/P88o4g0MPkYDWTx6PIGD9ZNqMFT5Phok8mOVBFhDCCq1RKa2fTjWWusKYH2gXAefEZmkKoTve0cVjWaU53F8aOcLpJlG76GXa7Xbt8dPuSSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tiscali.it; spf=pass smtp.mailfrom=tiscali.it; dkim=pass (1024-bit key) header.d=tiscali.it header.i=@tiscali.it header.b=2N74Pw6g; arc=none smtp.client-ip=213.205.33.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tiscali.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tiscali.it
+Received: from localhost.localdomain ([87.0.86.194])
+	by santino.mail.tiscali.it with 
+	id WicN2C00o4BaX8701icN1P; Sun, 02 Jun 2024 18:36:23 +0000
+X-Spam-Final-Verdict: clean
+X-Spam-State: 0
+X-Spam-Score: 0
+X-Spam-Verdict: clean
+x-auth-user: fantonifabio@tiscali.it
+From: Fabio Fantoni <fantonifabio@tiscali.it>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Fantoni <fantonifabio@tiscali.it>
+Subject: [PATCH] block: fix some typo
+Date: Sun,  2 Jun 2024 20:36:03 +0200
+Message-Id: <20240602183603.18799-1-fantonifabio@tiscali.it>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS0PR10MB8078:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28bb8fa2-7cc0-45f5-0ec8-08dc830dacec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230031|366007|7416005|1800799015|376005|921011;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?bzRKUWwzYkdrU0VZVElqNm9yUEJSU21nWVV6OXRYeTAzVlNUUTk2QzUrd3lY?=
- =?utf-8?B?LzUrc3RabVMwRWN5VmpRVmVVNmFCVU9YajdJN0xUc3p2anJka2tlSldYQTVE?=
- =?utf-8?B?aGZnSnViMk5COXhpNk5jS08rV01lS3BkUFNjYWtQVnQvZFU2bFpPZjNaWlF6?=
- =?utf-8?B?ZlJQUENBcjN6VzBobGNMekVTTkQvaXdiV2czY1hwUVQ2NFZsK2dUWE5CNTFS?=
- =?utf-8?B?RlNBVlBOaTIyZlJTaW11K1NkekkrbVdvS3FmRkFEZ2tvM0x5T1MwYUhqV3pi?=
- =?utf-8?B?NDVFRlU4S05ibWNONFMwdmlCOG9rdmdoUGYySEhTSkdpaFdpYms1SlArVDdB?=
- =?utf-8?B?M3o4Z3haaS9tQ3NpT0licU9pUE1ER3RvdHE1dHlKTlB3REVTdUZUVU9BWm1G?=
- =?utf-8?B?M3pHMkUrVzRONVNJWk0zWW0zbm01dlJ4WGhlU1prUE5Wbm1CcFM3UUIzU1hp?=
- =?utf-8?B?VU44Lys3eStRTkZLTlVSL2d6UE5iakxqeTBFcnZ4QlY0M0pnQ3RrRDhLeDQr?=
- =?utf-8?B?RmV4NEtQcDJqeHdjbHNPMkt2a3g5bE0vQWhRc3Q2ZTNJbVJwQUU2aXdpSjZJ?=
- =?utf-8?B?UFNNQVZvM1YvVkozMlEzKysyVFpJQjJQZDRYY3FvakVpQ0ZoTnZDRCt2Qjkw?=
- =?utf-8?B?VXFHeE1uQm9VNTRlcWQ0NFNTN0g0TEdVcC9ETVB3S0hiV3NhQncvTExTeFdB?=
- =?utf-8?B?QW5jc0o4Qlh4Mk5Qc3d3YmZWNXpOYXNLRzVjMTNRY05OZ3FUWWErWWg4bnlG?=
- =?utf-8?B?dEQ1cklkTTFnR1k1TmtDb1pnRU50MTJGK1k1cWg0bWdaY2hwWVdCdG1yb2R4?=
- =?utf-8?B?aXdrZEZhRFVNN1N3NExzNnZFT1g1TDhiVURFaElCS3FMa0xBUkYwVGlQWmtm?=
- =?utf-8?B?ZHF5RTlCTmt0Y0g4dktaZkp0K3dsbk1qUityZHpkYk01clhkckNMc054SE1G?=
- =?utf-8?B?UGhDdFNBWXRGRmN0Tk9LdkxZbEU4djQ5NnBHUzltSnhjUXhzTEpaUHdGdldY?=
- =?utf-8?B?ck5id0FIeVVCSmNJRGpLV0FKYkI0RkFubnBKeThuRzBIamRiUTRzbDlCTGJO?=
- =?utf-8?B?RENpWDg1V2tzY1FSeW1oWE9WbU05SUh5K3pQYXd6Z1BFWi95S3M5cmJHVUxI?=
- =?utf-8?B?NEhpMW9rbHgvWDdJQmFpWjNxL1EwU3ZnaHV1bXJJREM2dzRnUVRFOGt4cGtr?=
- =?utf-8?B?Sk96U2poU1RhVzltbGlIcjc3KzlZWm5QUE1VSm0va0gwVjdvSnN4MkVFeFk3?=
- =?utf-8?B?aDVTNkFlVWxRNzRJUWNURHV1RU9sVU5QRHpCOVRJZmE1UTNrNFlXb0pvSVhM?=
- =?utf-8?B?Z3hhMkduY0lrUWpZc3R0b1BYVVJRNndzOFFvY0xRMWxkN09hS0w4RHFPdTc3?=
- =?utf-8?B?QWxraVkrZmlaMzFQaEZlSTBXbjgxWmswQ3Q4LzA4SytTdm5YdkRxZUtMZmlN?=
- =?utf-8?B?RFRoUnZ2TFRiajgvSlk4dGgxRXJlWCtySWQ1ZmdzRDRudXljNVVTSEFjbHlJ?=
- =?utf-8?B?RGFkRUtZTXVBOERXVzdqbjhwdzJOQzNUMms1cHFXUDVHV2pJRm42am9hMEZE?=
- =?utf-8?B?Um10TE9Cbmpzb3k5WUdHVGd1aFVDa2N2ZzJmMHQxTnc4WlZ1SDRJcFdOVkFm?=
- =?utf-8?B?cUVTK1NlbG1sVWxpaVdNU3lqdGR0SHBpb0NkanFOSUtaMGw0RTBtK1ZtRjJh?=
- =?utf-8?B?ZitNS3U3cmVHcGNOK0xoR1I3MUJvdExscFFrQVlvVVA5cDBleDZsellpZmFM?=
- =?utf-8?Q?bJRIVh658g/EhX5Q26CZk/sc22D7ewhitV47O9/?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?dENjZTZxR0Y4S0IxVSt0RDllc0d2R0JLVmV4bjdDMGdVK2g0a2J3Nm14UWlk?=
- =?utf-8?B?S281Y2Ixck14cDAwYnhIcTRoZXRLdy9mWkRRRVdlK29jbjE3bnpjcGZ0Vnh2?=
- =?utf-8?B?TDd3ZGtYdkpzSEJ5d2ZxK0oxS2cxcVFOWEo1TXNPbFlKZUJscHVPdDZkV3I5?=
- =?utf-8?B?WXFEYXRHWUpVOTlsN2VCRGVTRjRDNnFCa2NPLzJ6YndSRXk4Z2tzdlR3ZGhh?=
- =?utf-8?B?cEQ1RUM3b0ZKZFpIZHBkUGFWNU0zdmlyMWVRRFZyOUZXQnNBWHg0MEJnSkhJ?=
- =?utf-8?B?ZjAwVENySHZjUUxvcDBlLzNXdXZ4U2NJSHJ0VFlyeXdlUUVyaldNQ1FsVTdq?=
- =?utf-8?B?ODFJSHhjMzY3ZDJvVGlDR3JMMW9WNVlXakpMR21NWkRJM1dDRGhKdVVSMFN2?=
- =?utf-8?B?WEE5UFl3cXB5QTRhbVBoM3p4S3dLSnpWd1B0enhVNEE0NnMvZEg0ZVhvemJt?=
- =?utf-8?B?bkp5bTJoYjlHNGhWUlRuelQzTlJHY1MyZU8yeXEyY0RGV3JaYXFTZDlrYUwr?=
- =?utf-8?B?ZTV6NjJTVFRvQ25SaUtPeDdmV3ZVaG00WWVRTU95RzNiWWgwY2QzWG5OVTJW?=
- =?utf-8?B?UjFXZXNzRmMrVFVEZXhMWUNBY3hKZHM4eEtMc2oxVy9wenRkbUo5akF0Slk5?=
- =?utf-8?B?d05qVFBkV09XdkpJcFJ0cVM4V0RXNFFqNDcvaUhyYmZGMnRTSGdaMVJYZFNo?=
- =?utf-8?B?dmpVZS9XbGdDeWdrRGs2dU5Hc0E3TTUrUkdiKzYwN1NqekVsY1JiV2JzekJW?=
- =?utf-8?B?Q1N4WldzVEZpM3p5aVQzMFpobU4zTEd5NE9TWXg0VHVWeWlIQUNmNk9WSmVR?=
- =?utf-8?B?bWpuU2ZSTGl0SnB6Mkt2WVdQMC84QkhLTWJDdGVlNWNUbUdKY3ZJdDNZNEZD?=
- =?utf-8?B?Y0gwTVZkRmdjZGxoQURMcFoyK082T3RmdUc3azQ3VFBlVWtFYmNad0VUdkw5?=
- =?utf-8?B?SXVadnRPN3k0akhwd1FHQThFZm8zenROVDZ1Ym83WVg4cjBhVnlkTEEyRlpC?=
- =?utf-8?B?TFpXbEF3NkpaQW9IMmRDbWZ0NVZwVTVkaHNYRk9XeUJCVElkV0VoVHFiMER6?=
- =?utf-8?B?K0o3OFhtMlY3aWxqc2IzUGRUQnh0YlJlRzNvYm1hSUhyL1hDbVJsT213TjVZ?=
- =?utf-8?B?K3d4bjJ4N0RNZWNHamxQK2FQWVJzTGZKQ3NtQWpOdHFONkU3eGdkNUJ1Mmc0?=
- =?utf-8?B?TURlN0Q2Z2pXcUh1bzVMTUdKK1F6ekpLaHJEYmQ3dVdlTDZ0SzFkcVdZVFdw?=
- =?utf-8?B?WmdZa2JNWmFDYktlSVQzQmRWdEd4UTQ4Y0VuVjJKcG9YbmRVVVovU3NlQUc5?=
- =?utf-8?B?M3JIdDBSREpkSjFKWFhRL2xzV2FuN0dKWVc1SUdsMlQ0L3Z4L0lwQkxaQ25P?=
- =?utf-8?B?T1ZFL0NjcTZzL2VBQUR2a0x2aTdPSUFOUTJ0MVJRejlyekZSdVI0dng1R0dy?=
- =?utf-8?B?U3dJRGlVaDQ2YkdZYlB0OWg3R2ZVOFNVcVNEQ2RzdzdEeUhUWGo4VzhQMzBR?=
- =?utf-8?B?OVpwdXZBRG84QVJ6dU8vSzFTckxSam80NnZtQzIzcTFkaGREMUQxVXZwaW1a?=
- =?utf-8?B?WnZEVDkwTm8reWNDS1JWYmErc09hK0Q1WjBCb3ArSStmVzdONlRqNzg4OTZH?=
- =?utf-8?B?NGtvMm14UTBWYnlNQmdaU0xlNm9NWVNpMGgxK0Q0MitaQm4rWGlDVnhVN2FR?=
- =?utf-8?B?ZzJLL1BZMUxGYklCV09ETW40M2xxaGFjNk9Ra1hxSi9rcFR0UXNRaWZROExX?=
- =?utf-8?B?eTRpcXpLZk5OaklFMWdUODFQSVRyUi83UElkTTY0ckJ2Q0FQdkxtL1BSUGhE?=
- =?utf-8?B?U3hkREppazAwUG5Dd1hFNVh3bzVzbkxrMmFiMStUQ0R4YzR4V1RxYk52M09M?=
- =?utf-8?B?Q0pGUWhRZmJnWlF3dDhXVDJPMzY4N0R0UzAwZS9xTlhjalI5T1JXdmVucEh5?=
- =?utf-8?B?UC92L25RaUFVdEF6UUFLdVVqWFJzVTI5Mm5aT0FicmpQY0tOT1lqNHhya2w5?=
- =?utf-8?B?dUNKQXRIeHpkcWthdjg0NG11bzQ5TGVObnpjS2I4Rk5IM05LemRRb2h2R1pv?=
- =?utf-8?B?bUpYaTNDV0NoZXkrZFdhQUJDbHRXeFhTQTZvMCtHUVRyQThPTnZXMVkxOFBN?=
- =?utf-8?B?R1lPdGpTR1RuTktsL3QrRXpYVGJTUFZOWDFnR01BQVNQQ2tTRE0yK216eHgx?=
- =?utf-8?B?c2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	x3MUx3tISAv8l5+iePx285wQnWl5oZGNY5usGGCzvVjFm+TnFxDmWD4sslg5WBWGV2xt91K1I3kGtt2ro1Owb+LfOREKtsgofD1UxYNt96FlWL7gi8yy09Ceffyj/IIqiInBbuMQmKU3o3kNlkg/osSQVZqwyZvbS07s/pv7715zj7JZbhMjIEl0peH6ByUNySTy+StLsA75XeOc/V+D26FpdHNOAJ2eYqH0vCv0UIBrv+QkeuXM6gjPofayrr+W8tbzgNFESkphliZ/4sJysd2Mk3eTQoYimdYwcUUa4IINmjTIHuIbF7dYY9HzE65T4seeawdJKAs9cbLmOpKZstGUZoqqJzdjS7S4EZ61QlnXZ0vtIap+te1Nh/jSrHc4BWN6umz7HwCY3/MQzWn8A4LqeowMVJlKLK7EGhuEyM3QQRo/MnQOS/EO6qjHH3ywsKicEmYOndGHMCPMYjt+lRLJKi9ioEgu2U2T76/YR0kI9yTYKjKvqx6sTvsA2MlB0hDhFp2asLN/YP9y8qMzEJSxH2CMwTa+Lq1nVdIM32CVzEqTc31HQR/bxdAEg/ybPhdJ942SVTLWcjr8Ly1qqH/Rr73d/LxDcKNLeYDpX9I=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28bb8fa2-7cc0-45f5-0ec8-08dc830dacec
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2024 14:09:53.9974
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sY8NSjkF2Qo2ntBgspVJEXqJ8kwdPGb4LNkgBHi9mL+2TJW4b4KQ2vm6bD+gYry3JAfHZVJpnXXsPkUWwsxiRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8078
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-02_08,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2406020122
-X-Proofpoint-GUID: 87tPnG2vNzXvKEi1UDE8LyV5AhLh4oIS
-X-Proofpoint-ORIG-GUID: 87tPnG2vNzXvKEi1UDE8LyV5AhLh4oIS
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tiscali.it; s=smtp;
+	t=1717353383; bh=rleMtP1ew2ItAJZRQ+5UxW/qkxk3oyyl4iv3r3svIrY=;
+	h=From:To:Cc:Subject:Date;
+	b=2N74Pw6g8g7AxOeoCpqVzi0OyfUVSXbJ/gfcrhJgfoyt6yOiLsGMx8DvkzK23tARj
+	 GTsAw1M6KZCtvdPGvQ69lC9KqTavnF1AFK1K+itAOW+t/6sAxnH7n7n6fnwie7fexW
+	 OFCppZBrRFyhg2Qz9gW2gTTqOnSJmVwZosqWn7Kk=
 
-From: Alan Adamson <alan.adamson@oracle.com>
+During some blksnap patch checks I noticed that the codespell one
+detected other errors outside of patch changes, so I created this patch
+to fix those detected for the block folder.
 
-Add support to set block layer request_queue atomic write limits. The
-limits will be derived from either the namespace or controller atomic
-parameters.
-
-NVMe atomic-related parameters are grouped into "normal" and "power-fail"
-(or PF) class of parameter. For atomic write support, only PF parameters
-are of interest. The "normal" parameters are concerned with racing reads
-and writes (which also applies to PF). See NVM Command Set Specification
-Revision 1.0d section 2.1.4 for reference.
-
-Whether to use per namespace or controller atomic parameters is decided by
-NSFEAT bit 1 - see Figure 97: Identify – Identify Namespace Data
-Structure, NVM Command Set.
-
-NVMe namespaces may define an atomic boundary, whereby no atomic guarantees
-are provided for a write which straddles this per-lba space boundary. The
-block layer merging policy is such that no merges may occur in which the
-resultant request would straddle such a boundary.
-
-Unlike SCSI, NVMe specifies no granularity or alignment rules, apart from
-atomic boundary rule. In addition, again unlike SCSI, there is no
-dedicated atomic write command - a write which adheres to the atomic size
-limit and boundary is implicitly atomic.
-
-If NSFEAT bit 1 is set, the following parameters are of interest:
-- NAWUPF (Namespace Atomic Write Unit Power Fail)
-- NABSPF (Namespace Atomic Boundary Size Power Fail)
-- NABO (Namespace Atomic Boundary Offset)
-
-and we set request_queue limits as follows:
-- atomic_write_unit_max = rounddown_pow_of_two(NAWUPF)
-- atomic_write_max_bytes = NAWUPF
-- atomic_write_boundary = NABSPF
-
-If in the unlikely scenario that NABO is non-zero, then atomic writes will
-not be supported at all as dealing with this adds extra complexity. This
-policy may change in future.
-
-In all cases, atomic_write_unit_min is set to the logical block size.
-
-If NSFEAT bit 1 is unset, the following parameter is of interest:
-- AWUPF (Atomic Write Unit Power Fail)
-
-and we set request_queue limits as follows:
-- atomic_write_unit_max = rounddown_pow_of_two(AWUPF)
-- atomic_write_max_bytes = AWUPF
-- atomic_write_boundary = 0
-
-A new function, nvme_valid_atomic_write(), is also called from submission
-path to verify that a request has been submitted to the driver will
-actually be executed atomically. As mentioned, there is no dedicated NVMe
-atomic write command (which may error for a command which exceeds the
-controller atomic write limits).
-
-Note on NABSPF:
-There seems to be some vagueness in the spec as to whether NABSPF applies
-for NSFEAT bit 1 being unset. Figure 97 does not explicitly mention NABSPF
-and how it is affected by bit 1. However Figure 4 does tell to check Figure
-97 for info about per-namespace parameters, which NABSPF is, so it is
-implied. However currently nvme_update_disk_info() does check namespace
-parameter NABO regardless of this bit.
-
-Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-jpg: total rewrite
-Signed-off-by: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Fabio Fantoni <fantonifabio@tiscali.it>
 ---
- drivers/nvme/host/core.c | 49 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ block/bdev.c                | 4 ++--
+ block/bfq-iosched.c         | 4 ++--
+ block/bfq-iosched.h         | 2 +-
+ block/bio-integrity.c       | 2 +-
+ block/bio.c                 | 2 +-
+ block/blk-cgroup-fc-appid.c | 2 +-
+ block/blk-cgroup-rwstat.c   | 2 +-
+ block/blk-cgroup.c          | 2 +-
+ block/blk-core.c            | 6 +++---
+ block/blk-iocost.c          | 8 ++++----
+ block/blk-iolatency.c       | 4 ++--
+ block/blk-ioprio.c          | 2 +-
+ block/blk-merge.c           | 6 +++---
+ block/blk-mq.c              | 2 +-
+ block/blk-settings.c        | 2 +-
+ block/blk-sysfs.c           | 2 +-
+ block/blk-zoned.c           | 2 +-
+ block/genhd.c               | 2 +-
+ block/ioprio.c              | 4 ++--
+ block/kyber-iosched.c       | 2 +-
+ block/opal_proto.h          | 4 ++--
+ block/partitions/ibm.c      | 2 +-
+ block/partitions/sun.c      | 2 +-
+ block/sed-opal.c            | 2 +-
+ 24 files changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f5d150c62955..91001892f60b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -927,6 +927,30 @@ static inline blk_status_t nvme_setup_write_zeroes(struct nvme_ns *ns,
- 	return BLK_STS_OK;
- }
+diff --git a/block/bdev.c b/block/bdev.c
+index 353677ac49b3..0059bcf6ae6a 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -580,7 +580,7 @@ static void bd_clear_claiming(struct block_device *whole, void *holder)
+  * @holder: holder that has claimed @bdev
+  * @hops: block device holder operations
+  *
+- * Finish exclusive open of a block device. Mark the device as exlusively
++ * Finish exclusive open of a block device. Mark the device as exclusively
+  * open by the holder and wake up all waiters for exclusive open to finish.
+  */
+ static void bd_finish_claiming(struct block_device *bdev, void *holder,
+@@ -1183,7 +1183,7 @@ EXPORT_SYMBOL(lookup_bdev);
+  * to %true the device or media is already gone, if not we are preparing for an
+  * orderly removal.
+  *
+- * This calls into the file system, which then typicall syncs out all dirty data
++ * This calls into the file system, which then typical syncs out all dirty data
+  * and writes back inodes and then invalidates any cached data in the inodes on
+  * the file system.  In addition we also invalidate the block device mapping.
+  */
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 4b88a54a9b76..cb67f5bdd561 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -1964,7 +1964,7 @@ static void bfq_bfqq_handle_idle_busy_switch(struct bfq_data *bfqd,
+ 	 * As for throughput, we ask bfq_better_to_idle() whether we
+ 	 * still need to plug I/O dispatching. If bfq_better_to_idle()
+ 	 * says no, then plugging is not needed any longer, either to
+-	 * boost throughput or to perserve service guarantees. Then
++	 * boost throughput or to preserve service guarantees. Then
+ 	 * the best option is to stop plugging I/O, as not doing so
+ 	 * would certainly lower throughput. We may end up in this
+ 	 * case if: (1) upon a dispatch attempt, we detected that it
+@@ -5363,7 +5363,7 @@ void bfq_put_queue(struct bfq_queue *bfqq)
+ 		 * by the fact that bfqq has just been merged.
+ 		 * 2) burst_size is greater than 0, to handle
+ 		 * unbalanced decrements. Unbalanced decrements may
+-		 * happen in te following case: bfqq is inserted into
++		 * happen in the following case: bfqq is inserted into
+ 		 * the current burst list--without incrementing
+ 		 * bust_size--because of a split, but the current
+ 		 * burst list is not the burst list bfqq belonged to
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 467e8cfc41a2..19654d8215c4 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -843,7 +843,7 @@ struct bfq_data {
+ 	 * We set the threshold, empirically, to the minimum possible
+ 	 * value for which an actuator is fully utilized, or close to
+ 	 * be fully utilized. By doing so, injected I/O 'steals' as
+-	 * few drive-queue slots as possibile to the in-service
++	 * few drive-queue slots as possible to the in-service
+ 	 * queue. This reduces as much as possible the probability
+ 	 * that the service of I/O from the in-service bfq_queue gets
+ 	 * delayed because of slot exhaustion, i.e., because all the
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 2e3e8e04961e..e86a6a4cb6ce 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -419,7 +419,7 @@ static blk_status_t bio_integrity_process(struct bio *bio,
+  * Description:  Checks if the bio already has an integrity payload attached.
+  * If it does, the payload has been generated by another kernel subsystem,
+  * and we just pass it through. Otherwise allocates integrity payload.
+- * The bio must have data direction, target device and start sector set priot
++ * The bio must have data direction, target device and start sector set prior
+  * to calling.  In the WRITE case, integrity metadata will be generated using
+  * the block device's integrity function.  In the READ case, the buffer
+  * will be prepared for DMA and a suitable end_io handler set up.
+diff --git a/block/bio.c b/block/bio.c
+index e9e809a63c59..700931dfe95f 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -520,7 +520,7 @@ struct bio *bio_alloc_bioset(struct block_device *bdev, unsigned short nr_vecs,
+ 				return bio;
+ 			/*
+ 			 * No cached bio available, bio returned below marked with
+-			 * REQ_ALLOC_CACHE to particpate in per-cpu alloc cache.
++			 * REQ_ALLOC_CACHE to participate in per-cpu alloc cache.
+ 			 */
+ 		} else {
+ 			opf &= ~REQ_ALLOC_CACHE;
+diff --git a/block/blk-cgroup-fc-appid.c b/block/blk-cgroup-fc-appid.c
+index 3ec21333f393..c26fedaf6827 100644
+--- a/block/blk-cgroup-fc-appid.c
++++ b/block/blk-cgroup-fc-appid.c
+@@ -3,7 +3,7 @@
+ #include "blk-cgroup.h"
  
-+static bool nvme_valid_atomic_write(struct request *req)
-+{
-+	struct request_queue *q = req->q;
-+	u32 boundary_bytes = queue_atomic_write_boundary_bytes(q);
-+
-+	if (blk_rq_bytes(req) > queue_atomic_write_unit_max_bytes(q))
-+		return false;
-+
-+	if (boundary_bytes) {
-+		u64 mask = boundary_bytes - 1, imask = ~mask;
-+		u64 start = blk_rq_pos(req) << SECTOR_SHIFT;
-+		u64 end = start + blk_rq_bytes(req) - 1;
-+
-+		/* If greater then must be crossing a boundary */
-+		if (blk_rq_bytes(req) > boundary_bytes)
-+			return false;
-+
-+		if ((start & imask) != (end & imask))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
- 		struct request *req, struct nvme_command *cmnd,
- 		enum nvme_opcode op)
-@@ -941,6 +965,12 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
- 
- 	if (req->cmd_flags & REQ_RAHEAD)
- 		dsmgmt |= NVME_RW_DSM_FREQ_PREFETCH;
-+	/*
-+	 * Ensure that nothing has been sent which cannot be executed
-+	 * atomically.
-+	 */
-+	if (req->cmd_flags & REQ_ATOMIC && !nvme_valid_atomic_write(req))
-+		return BLK_STS_INVAL;
- 
- 	cmnd->rw.opcode = op;
- 	cmnd->rw.flags = 0;
-@@ -1921,6 +1951,23 @@ static void nvme_configure_metadata(struct nvme_ctrl *ctrl,
- 	}
- }
- 
-+
-+static void nvme_update_atomic_write_disk_info(struct nvme_ns *ns,
-+			struct nvme_id_ns *id, struct queue_limits *lim,
-+			u32 bs, u32 atomic_bs)
-+{
-+	unsigned int boundary = 0;
-+
-+	if (id->nsfeat & NVME_NS_FEAT_ATOMICS && id->nawupf) {
-+		if (le16_to_cpu(id->nabspf))
-+			boundary = (le16_to_cpu(id->nabspf) + 1) * bs;
-+	}
-+	lim->atomic_write_hw_max = atomic_bs;
-+	lim->atomic_write_hw_boundary = boundary;
-+	lim->atomic_write_hw_unit_min = bs;
-+	lim->atomic_write_hw_unit_max = rounddown_pow_of_two(atomic_bs);
-+}
-+
- static u32 nvme_max_drv_segments(struct nvme_ctrl *ctrl)
+ /**
+- * blkcg_set_fc_appid - set the fc_app_id field associted to blkcg
++ * blkcg_set_fc_appid - set the fc_app_id field associated to blkcg
+  * @app_id: application identifier
+  * @cgrp_id: cgroup id
+  * @app_id_len: size of application identifier
+diff --git a/block/blk-cgroup-rwstat.c b/block/blk-cgroup-rwstat.c
+index a55fb0c53558..c3afb0b62aaa 100644
+--- a/block/blk-cgroup-rwstat.c
++++ b/block/blk-cgroup-rwstat.c
+@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(blkg_rwstat_exit);
+  * @pd: policy private data of interest
+  * @rwstat: rwstat to print
+  *
+- * Print @rwstat to @sf for the device assocaited with @pd.
++ * Print @rwstat to @sf for the device associated with @pd.
+  */
+ u64 __blkg_prfill_rwstat(struct seq_file *sf, struct blkg_policy_data *pd,
+ 			 const struct blkg_rwstat_sample *rwstat)
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 37e6cc91d576..e638653b932d 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1542,7 +1542,7 @@ EXPORT_SYMBOL_GPL(io_cgrp_subsys);
+  * always enough for dereferencing policy data.
+  *
+  * The caller is responsible for synchronizing [de]activations and policy
+- * [un]registerations.  Returns 0 on success, -errno on failure.
++ * [un]registrations.  Returns 0 on success, -errno on failure.
+  */
+ int blkcg_activate_policy(struct gendisk *disk, const struct blkcg_policy *pol)
  {
- 	return ctrl->max_hw_sectors / (NVME_CTRL_PAGE_SIZE >> SECTOR_SHIFT) + 1;
-@@ -1967,6 +2014,8 @@ static bool nvme_update_disk_info(struct nvme_ns *ns, struct nvme_id_ns *id,
- 			atomic_bs = (1 + le16_to_cpu(id->nawupf)) * bs;
- 		else
- 			atomic_bs = (1 + ns->ctrl->subsys->awupf) * bs;
-+
-+		nvme_update_atomic_write_disk_info(ns, id, lim, bs, atomic_bs);
- 	}
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 82c3ae22d76d..83c784feb406 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -728,7 +728,7 @@ void submit_bio_noacct_nocheck(struct bio *bio)
+ 	/*
+ 	 * We only want one ->submit_bio to be active at a time, else stack
+ 	 * usage with stacked devices could be a problem.  Use current->bio_list
+-	 * to collect a list of requests submited by a ->submit_bio method while
++	 * to collect a list of requests submitted by a ->submit_bio method while
+ 	 * it is active, and then process them after it returned.
+ 	 */
+ 	if (current->bio_list)
+@@ -801,7 +801,7 @@ void submit_bio_noacct(struct bio *bio)
+ 	case REQ_OP_FLUSH:
+ 		/*
+ 		 * REQ_OP_FLUSH can't be submitted through bios, it is only
+-		 * synthetized in struct request by the flush state machine.
++		 * synthesized in struct request by the flush state machine.
+ 		 */
+ 		goto not_supported;
+ 	case REQ_OP_DISCARD:
+@@ -960,7 +960,7 @@ int iocb_bio_iopoll(struct kiocb *kiocb, struct io_comp_batch *iob,
+ 	 * point to a freshly allocated bio at this point.  If that happens
+ 	 * we have a few cases to consider:
+ 	 *
+-	 *  1) the bio is beeing initialized and bi_bdev is NULL.  We can just
++	 *  1) the bio is being initialized and bi_bdev is NULL.  We can just
+ 	 *     simply nothing in this case
+ 	 *  2) the bio points to a not poll enabled device.  bio_poll will catch
+ 	 *     this and return 0
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 690ca99dfaca..7a11e04a87fa 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -853,7 +853,7 @@ static int ioc_autop_idx(struct ioc *ioc, struct gendisk *disk)
+ }
  
- 	if (id->nsfeat & NVME_NS_FEAT_IO_OPT) {
+ /*
+- * Take the followings as input
++ * Take the following as input
+  *
+  *  @bps	maximum sequential throughput
+  *  @seqiops	maximum sequential 4k iops
+@@ -1267,7 +1267,7 @@ static bool iocg_activate(struct ioc_gq *iocg, struct ioc_now *now)
+ 
+ 	/*
+ 	 * If seem to be already active, just update the stamp to tell the
+-	 * timer that we're still active.  We don't mind occassional races.
++	 * timer that we're still active.  We don't mind occasional races.
+ 	 */
+ 	if (!list_empty(&iocg->active_list)) {
+ 		ioc_now(ioc, now);
+@@ -2154,7 +2154,7 @@ static void ioc_forgive_debts(struct ioc *ioc, u64 usage_us_sum, int nr_debtors,
+ }
+ 
+ /*
+- * Check the active iocgs' state to avoid oversleeping and deactive
++ * Check the active iocgs' state to avoid oversleeping and deactivate
+  * idle iocgs.
+  *
+  * Since waiters determine the sleep durations based on the vrate
+@@ -2356,7 +2356,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 				 *
+ 				 * Don't reset debtors as their inuse's are
+ 				 * owned by debt handling. This shouldn't affect
+-				 * donation calculuation in any meaningful way
++				 * donation calculation in any meaningful way
+ 				 * as @iocg doesn't have a meaningful amount of
+ 				 * share anyway.
+ 				 */
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index ebb522788d97..e8d71c6f8c30 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -18,7 +18,7 @@
+  * every configured node, and each configured node has it's own independent
+  * queue depth.  This means that we only care about our latency targets at the
+  * peer level.  Some group at the bottom of the hierarchy isn't going to affect
+- * a group at the end of some other path if we're only configred at leaf level.
++ * a group at the end of some other path if we're only configured at leaf level.
+  *
+  * Consider the following
+  *
+@@ -34,7 +34,7 @@
+  * throttle "unloved", but nobody else.
+  *
+  * In this example "fast", "slow", and "normal" will be the only groups actually
+- * accounting their io latencies.  We have to walk up the heirarchy to the root
++ * accounting their io latencies.  We have to walk up the hierarchy to the root
+  * on every submit and complete so we can do the appropriate stat recording and
+  * adjust the queue depth of ourselves if needed.
+  *
+diff --git a/block/blk-ioprio.c b/block/blk-ioprio.c
+index 4051fada01f1..a5d978756496 100644
+--- a/block/blk-ioprio.c
++++ b/block/blk-ioprio.c
+@@ -8,7 +8,7 @@
+  * - This policy is cgroup based so it has all the advantages of cgroups.
+  * - While ioprio_set() does not affect page cache writeback I/O, this rq-qos
+  *   controller affects page cache writeback I/O for filesystems that support
+- *   assiociating a cgroup with writeback I/O. See also
++ *   associating a cgroup with writeback I/O. See also
+  *   Documentation/admin-guide/cgroup-v2.rst.
+  */
+ 
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 8534c35e0497..56a1638bfb40 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -96,7 +96,7 @@ static inline bool req_gap_front_merge(struct request *req, struct bio *bio)
+ }
+ 
+ /*
+- * The max size one bio can handle is UINT_MAX becasue bvec_iter.bi_size
++ * The max size one bio can handle is UINT_MAX because bvec_iter.bi_size
+  * is defined as 'unsigned int', meantime it has to be aligned to with the
+  * logical block size, which is the minimum accepted unit by hardware.
+  */
+@@ -327,7 +327,7 @@ struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
+ 	/*
+ 	 * Bio splitting may cause subtle trouble such as hang when doing sync
+ 	 * iopoll in direct IO routine. Given performance gain of iopoll for
+-	 * big IO can be trival, disable iopoll when split needed.
++	 * big IO can be trivial, disable iopoll when split needed.
+ 	 */
+ 	bio_clear_polled(bio);
+ 	return bio_split(bio, bytes >> SECTOR_SHIFT, GFP_NOIO, bs);
+@@ -738,7 +738,7 @@ static void blk_rq_set_mixed_merge(struct request *rq)
+ 	/*
+ 	 * @rq will no longer represent mixable attributes for all the
+ 	 * contained bios.  It will just track those of the first one.
+-	 * Distributes the attributs to each bio.
++	 * Distributes the attributes to each bio.
+ 	 */
+ 	for (bio = rq->bio; bio; bio = bio->bi_next) {
+ 		WARN_ON_ONCE((bio->bi_opf & REQ_FAILFAST_MASK) &&
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 3b4df8e5ac9e..ad03e7c7fa16 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2253,7 +2253,7 @@ void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
+ EXPORT_SYMBOL(blk_mq_run_hw_queue);
+ 
+ /*
+- * Return prefered queue to dispatch from (if any) for non-mq aware IO
++ * Return preferred queue to dispatch from (if any) for non-mq aware IO
+  * scheduler.
+  */
+ static struct blk_mq_hw_ctx *blk_mq_get_sq_hctx(struct request_queue *q)
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index effeb9a639bb..b8961c2d28f7 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -835,7 +835,7 @@ void blk_queue_write_cache(struct request_queue *q, bool wc, bool fua)
+ EXPORT_SYMBOL_GPL(blk_queue_write_cache);
+ 
+ /**
+- * disk_set_zoned - inidicate a zoned device
++ * disk_set_zoned - indicate a zoned device
+  * @disk:	gendisk to configure
+  */
+ void disk_set_zoned(struct gendisk *disk)
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index f0f9314ab65c..e7e8b58f1d91 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -818,7 +818,7 @@ int blk_register_queue(struct gendisk *disk)
+ 	/*
+ 	 * SCSI probing may synchronously create and destroy a lot of
+ 	 * request_queues for non-existent devices.  Shutting down a fully
+-	 * functional queue takes measureable wallclock time as RCU grace
++	 * functional queue takes measurable wallclock time as RCU grace
+ 	 * periods are involved.  To avoid excessive latency in these
+ 	 * cases, a request_queue starts out in a degraded mode which is
+ 	 * faster to shut down and is made fully functional here as
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 52abebf56027..ea43f07ce9d5 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -1563,7 +1563,7 @@ void disk_free_zone_resources(struct gendisk *disk)
+ 
+ 	/*
+ 	 * Wait for the zone write plugs to be RCU-freed before
+-	 * destorying the mempool.
++	 * destroying the mempool.
+ 	 */
+ 	rcu_barrier();
+ 
+diff --git a/block/genhd.c b/block/genhd.c
+index 8f1f3c6b4d67..7ef2726aa3d3 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -352,7 +352,7 @@ int disk_scan_partitions(struct gendisk *disk, blk_mode_t mode)
+ 
+ 	/*
+ 	 * If the device is opened exclusively by current thread already, it's
+-	 * safe to scan partitons, otherwise, use bd_prepare_to_claim() to
++	 * safe to scan partitions, otherwise, use bd_prepare_to_claim() to
+ 	 * synchronize with other exclusive openers and other partition
+ 	 * scanners.
+ 	 */
+diff --git a/block/ioprio.c b/block/ioprio.c
+index 73301a261429..66cdf8e9b9df 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2004 Jens Axboe <axboe@kernel.dk>
+  *
+  * Helper functions for setting/querying io priorities of processes. The
+- * system calls closely mimmick getpriority/setpriority, see the man page for
++ * system calls closely mimic getpriority/setpriority, see the man page for
+  * those. The prio argument is a composite of prio class and prio data, where
+  * the data argument has meaning within that class. The standard scheduling
+  * classes have 8 distinct prio levels, with 0 being the highest prio and 7
+@@ -157,7 +157,7 @@ static int get_task_ioprio(struct task_struct *p)
+  * Return raw IO priority value as set by userspace. We use this for
+  * ioprio_get(pid, IOPRIO_WHO_PROCESS) so that we keep historical behavior and
+  * also so that userspace can distinguish unset IO priority (which just gets
+- * overriden based on task's nice value) from IO priority set to some value.
++ * overridden based on task's nice value) from IO priority set to some value.
+  */
+ static int get_task_raw_ioprio(struct task_struct *p)
+ {
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 4155594aefc6..274e08dc678d 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -140,7 +140,7 @@ struct kyber_cpu_latency {
+  */
+ struct kyber_ctx_queue {
+ 	/*
+-	 * Used to ensure operations on rq_list and kcq_map to be an atmoic one.
++	 * Used to ensure operations on rq_list and kcq_map to be an atomic one.
+ 	 * Also protect the rqs on rq_list when merge.
+ 	 */
+ 	spinlock_t lock;
+diff --git a/block/opal_proto.h b/block/opal_proto.h
+index d247a457bf6e..f7bdc017b773 100644
+--- a/block/opal_proto.h
++++ b/block/opal_proto.h
+@@ -232,7 +232,7 @@ enum opal_revertlsp {
+ 
+ /* Packets derived from:
+  * TCG_Storage_Architecture_Core_Spec_v2.01_r1.00
+- * Secion: 3.2.3 ComPackets, Packets & Subpackets
++ * Section: 3.2.3 ComPackets, Packets & Subpackets
+  */
+ 
+ /* Comm Packet (header) for transmissions. */
+@@ -425,7 +425,7 @@ struct d0_single_user_mode {
+ };
+ 
+ /*
+- * Additonal Datastores feature
++ * Additional Datastores feature
+  *
+  * code == 0x0202
+  */
+diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
+index 82d9c4c3fb41..eb2327fcaa59 100644
+--- a/block/partitions/ibm.c
++++ b/block/partitions/ibm.c
+@@ -247,7 +247,7 @@ static int find_lnx1_partitions(struct parsed_partitions *state,
+ 		size = label->lnx.formatted_blocks * secperblk;
+ 	} else {
+ 		/*
+-		 * Formated w/o large volume support. If the sanity check
++		 * Formatted w/o large volume support. If the sanity check
+ 		 * 'size based on geo == size based on nr_sectors' is true, then
+ 		 * we can safely assume that we know the formatted size of
+ 		 * the disk, otherwise we need additional information
+diff --git a/block/partitions/sun.c b/block/partitions/sun.c
+index ddf9e6def4b2..a0e46679d0aa 100644
+--- a/block/partitions/sun.c
++++ b/block/partitions/sun.c
+@@ -100,7 +100,7 @@ int sun_partition(struct parsed_partitions *state)
+ 
+ 	/*
+ 	 * So that old Linux-Sun partitions continue to work,
+-	 * alow the VTOC to be used under the additional condition ...
++	 * allow the VTOC to be used under the additional condition ...
+ 	 */
+ 	use_vtoc = use_vtoc || !(label->vtoc.sanity ||
+ 				 label->vtoc.version || label->vtoc.nparts);
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index 14fe0fef811c..9cbf504a3f77 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -2095,7 +2095,7 @@ static int set_lr_boolean_ace(struct opal_dev *dev,
+ 		/*
+ 		 * Add boolean operator in postfix only with
+ 		 * two or more authorities being added in ACE
+-		 * expresion.
++		 * expression.
+ 		 * */
+ 		if (u > 0)
+ 			add_boolean_object_ref(&err, dev, OPAL_BOOLEAN_OR);
 -- 
-2.31.1
+2.25.1
 
 
