@@ -1,103 +1,135 @@
-Return-Path: <linux-block+bounces-8117-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8119-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36B688D7972
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 02:54:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C92478D7A00
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 03:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B8B8B211CB
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 00:54:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA8821C20CCD
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 01:59:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73A3115C3;
-	Mon,  3 Jun 2024 00:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNI9Akv3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6987546AF;
+	Mon,  3 Jun 2024 01:59:18 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-m1040.netease.com (mail-m1040.netease.com [154.81.10.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832E37E8
-	for <linux-block@vger.kernel.org>; Mon,  3 Jun 2024 00:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D794A08;
+	Mon,  3 Jun 2024 01:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717376056; cv=none; b=UIDQsCf0z4DA5ychlvHLTDW+6gMCl/C9EUAX9xtwMbCuEEVZx68sve0pmfRMBM12bS3fkOz4u0+yIxY8sUfF2zgV/21KlDxQoZtPMYULn4x08r3h3jULAyKddxEmTZRBRM9/Qut8VE6F0G0Eg8FC+6xtIi7Z1kx1UZ9i7AzcFwI=
+	t=1717379958; cv=none; b=nQReflqet7LPHqTxUD8gE9OM/iociwY6XukkIUynuoUm7822qJKxZn5d/NmjOjUWp/YHrJ/dlgrWdDgk/cPweRpd1kbKjG6jnvl7AG3Yl83Tu+bpaDlfXK4rg7G5/zaEAPeIiaFNv28NuqYxJe56ofkrgC5WfsZ5EAzRMAJSIbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717376056; c=relaxed/simple;
-	bh=FCG0IEbOfT/bHhxbTtejsIy3REUx0zfjYOoOQ1qBhKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcExhYVSmidfyn/mTXrb2OHHEL59kLAhHMMKHIaWmg+DySlR+owB6Ng09YViHszS9391wAjquIE1n2H8dAhCjQ1VpDmo5KWDezY5FrrMedc+1+Ysagup7YROjdAqyW5YnasOixaEV0eyUe2qQ4y7RH2Mik1v1GboBjGq/HEXvM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TNI9Akv3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717376051;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JwTjl/fChud/3QoHHQ7fbqf2HYYxzvAlq+JNY96sgcY=;
-	b=TNI9Akv3x1AvyvZLy9OXSgOE5WH505/A/KgW+by1CsYFjuCgR8mKFNcLDSHcLMaZJ/YpYe
-	iS/s5yOCSR+nXFqtUXPWTTTXqtz2YEcLmGFc2ahngysDPMEnUyeXBT1al9R0uFqIkk9adZ
-	0OzYt5VOrQzZ+boH2Jm8WTh6tcRN6to=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-EwEXPhcON8iH50r5nD5WZg-1; Sun,
- 02 Jun 2024 20:54:05 -0400
-X-MC-Unique: EwEXPhcON8iH50r5nD5WZg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C115D1C05129;
-	Mon,  3 Jun 2024 00:54:04 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CAF7440D182;
-	Mon,  3 Jun 2024 00:54:01 +0000 (UTC)
-Date: Mon, 3 Jun 2024 08:53:57 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ublk_drv: add missing MODULE_DESCRIPTION() macro
-Message-ID: <Zl0UJZWx9fyZLzrm@fedora>
-References: <20240602-md-block-ublk_drv-v1-1-995474cafff0@quicinc.com>
+	s=arc-20240116; t=1717379958; c=relaxed/simple;
+	bh=GZVCi5VbbjTDmXB32ysDacElGhSOcP5bQWWnQ1WtVSU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gMcODAeawgcdfr5WKuCSns5yfi9+KF8Bcmxiz8m3SWP95zLc7+3jlSTKNhLDJVrsRkgSC0+QAdzd7vx2Xs59eXPybw0lngJGTylgO3Nvrpk+JhpD2JDYMe1D1ykS44xYAl9PoTlUI4AOq7nZWFWbaI8RBz9cKQ1UU0mQvXn11tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=154.81.10.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 5363886017F;
+	Mon,  3 Jun 2024 09:33:29 +0800 (CST)
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, John Groves
+ <John@groves.net>, axboe@kernel.dk, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev
+References: <20240508131125.00003d2b@Huawei.com>
+ <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
+ <20240508164417.00006c69@Huawei.com>
+ <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
+ <20240509132134.00000ae9@Huawei.com>
+ <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
+ <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
+ <ZldIzp0ncsRX5BZE@memverge.com>
+ <5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
+ <Zlndc8NI0eK3MmuR@memverge.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <a04a5bbc-a44b-57e4-0fa6-0ce84b18a395@easystack.cn>
+Date: Mon, 3 Jun 2024 09:33:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240602-md-block-ublk_drv-v1-1-995474cafff0@quicinc.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+In-Reply-To: <Zlndc8NI0eK3MmuR@memverge.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZT0geVh0dTxoYSEhOHx1NQlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8fdbbae4da023ckunm5363886017f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pi46ASo4IjcsCCwyChcyPww#
+	EA4KChlVSlVKTEpMSExDT0pLS01OVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JNSzcG
 
-On Sun, Jun 02, 2024 at 05:23:26PM -0700, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/block/ublk_drv.o
+
+
+在 2024/5/31 星期五 下午 10:23, Gregory Price 写道:
+> On Thu, May 30, 2024 at 02:59:38PM +0800, Dongsheng Yang wrote:
+>>
+>>
+>> 在 2024/5/29 星期三 下午 11:25, Gregory Price 写道:
+>>>
+>>> There are some (FAMFS, for example). The coherence state of these
+>>> systems tend to be less volatile (e.g. mappings are read-only), or
+>>> they have inherent design limitations (cacheline-sized message passing
+>>> via write-ahead logging only).
+>>
+>> Can you explain more about this? I understand that if the reader in the
+>> writer-reader model is using a readonly mapping, the interaction will be
+>> much simpler. However, after the writer writes data, if we don't have a
+>> mechanism to flush and invalidate puncturing all caches, how can the
+>> readonly reader access the new data?
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> This is exactly right, so the coherence/correctness of the data needs to
+> be enforced in some other way.
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  drivers/block/ublk_drv.c | 1 +
->  1 file changed, 1 insertion(+)
+> Generally speaking, the WPQs will *eventually* get flushed.  As such,
+> the memory will *eventually* become coherent.  So if you set up the
+> following pattern, you will end up with an "eventually coherent" system
+
+
+Yes, it is "eventually coherent" if "NO CLEAN WRITEBACK" bit in both 
+CSDS and DVSEC is set.
 > 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 4e159948c912..59916895ee2e 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -3017,4 +3017,5 @@ module_param_cb(ublks_max, &ublk_max_ublks_ops, &ublks_max, 0644);
->  MODULE_PARM_DESC(ublks_max, "max number of ublk devices allowed to add(default: 64)");
->  
->  MODULE_AUTHOR("Ming Lei <ming.lei@redhat.com>");
-> +MODULE_DESCRIPTION("Userspace block device");
->  MODULE_LICENSE("GPL");
+> 1) Writer instantiates the memory to be used
+> 2) Writer calculates and records a checksum of that data into memory
+> 3) Writer invalidates everything
+> 4) Reader maps the memory
+> 5) Reader reads the checksum and calculates the checksum of the data
+>     a) if the checksums match, the data is coherent
+>     b) if they don't, we must wait longer for the queues to flush
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Yes, the checksum was mentioned by John, it is used in FAMFS/pcq_lib.c, 
+pcq use sequence and checksum in consumer to make sure data consistency.
 
-Thanks,
-Ming
+I think it's a good idea and was planning to introduce it into cbd, of 
+coures it should be optional for cbd, as cbd current only supports
+hardware-consistency usage. it can be an option to do data verification.
 
+Thanx
+> 
+> This is just one example of a system design which enforces coherence by
+> placing the limitation on the system that the data will never change
+> once it becomes coherent.
+> 
+> Whatever the case, regardless of the scheme you come up with, you will
+> end up with a system where the data must be inspected and validated
+> before it can be used.  This has the limiting factor of performance:
+> throughput will be limited by how fast you can validate the data.
+> 
+> ~Gregory
+> .
+> 
 
