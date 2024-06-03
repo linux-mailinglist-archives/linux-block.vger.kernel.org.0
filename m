@@ -1,244 +1,578 @@
-Return-Path: <linux-block+bounces-8140-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8142-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81DBF8D817E
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 13:47:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B5588D81CF
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 14:01:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4D811C22217
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 11:47:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41EC81C21D22
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 12:01:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22CF85299;
-	Mon,  3 Jun 2024 11:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A0084A4F;
+	Mon,  3 Jun 2024 12:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b="UZAHehRs"
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="n1fh4Nc5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2121.outbound.protection.outlook.com [40.107.6.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB0984FDE;
-	Mon,  3 Jun 2024 11:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717415242; cv=fail; b=Yr1H0CVkpie/c4E8/eu0a4AMxE6NezuaPvTOMQwDyHeQvBZ4ZqFUgeepsVEaX8BPQf50Knba4tYFoA2i/fH7/LQzkfwC9JvzSZUo7RTrkkZcPXxFtFLKa4MjXYK0cNq4fMZPcZegPYsUWvpKhDeOYr4uqDc7hS4Z0KosbIvomtM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717415242; c=relaxed/simple;
-	bh=emWdh88yIZPuI9XD231vukObF1MJaRhmIpzkFn+8gBk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lCMF/OP9EZ1bmiL4Dg+Wi1bWgA9GvECpXj9dPH7BDzYjbFvw4NFaGTaZB1tpxAPPNdA4FmDKRnp9e763KAQsybzOrzWzCi2jfzblIQ7MFsNUTQrmnsR/zl3/C9g9AbxxaiYnzPhr7wb9quhn6jJVeKUUq/H1TyW1tIVSfLh0gEE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com; spf=pass smtp.mailfrom=volumez.com; dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b=UZAHehRs; arc=fail smtp.client-ip=40.107.6.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=volumez.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A3WMuE9d3PKdxawz2T1T6k442enZ4SAZHSwTegqLGG5/p9rLJU6snRH8EhblHoAA/ZPvS8upUzSNPWm1at1JiZau3AXlgS6kGTkmPtN/9O1HDgtCzCF1EZ9n8JskACTLszZEVFzBsyewu1WaGRkGQQsJ1AgumbynKghnpCBZcADL/Z0yYJQuSC3Up2xq/xmdC5VOhNq1yHJkb1nkChVrJRAYGn1/r+cakTKe2xxU0UNd52QPSuJ904uuhDQSwkAgPsM/BZt+tYpDCCLaXBZYrzzyBVFKHLmderw0sCmLNLVOs+tfSvHCiMqAKstve2TmHQbxUlhytz67pd7/4pxE5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=emWdh88yIZPuI9XD231vukObF1MJaRhmIpzkFn+8gBk=;
- b=Z5EE6UoNo1xBa5fHBchHIrOZHRePsPck4LnX7LGDaDu14rJ+w35s8b9ksYNSLuZMVjksQjLeUXZxIBuNBlAhfePmNR828pA/s4KfVcgljT3o3+D3lJWih9XhOljsIWx93pRpvwIYut3vqVdmix9RL5GCEnDYA/aaNrRN5LCYW65LYPqZtc45MnGugUTo7/dQiXGcHfWcyYaLNPtc/M1i8hyW7d8qeL/RhnROSZr+vkyMuDe1TXN6Q+u2FC6lVIDqWucghPREuQ9mNkJt7nr+dcYsOPBSuc1aBS3Oiab2wETQOiJG8Wj7OlSdC6rcK+xwV42U9gDMyquArqXgSO0DdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=volumez.com; dmarc=pass action=none header.from=volumez.com;
- dkim=pass header.d=volumez.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4311E10949
+	for <linux-block@vger.kernel.org>; Mon,  3 Jun 2024 12:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717416084; cv=none; b=H+zbhHHVkaQ0h7/aYaXM4KAe8ap7UwmSQQvTbJpCHSJi5mWxe3evasL0+Tp8QUQ8yQjLsJ/Y/oPp1Toi/5TZ8yLLWbJMghLDemPEZxLJumY8hy4IOdHbkDq+KJYoMUAdedZ3ImCNzDxHUDvEBilkJO9lmvnnQ4edLO1mmrq4Xgk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717416084; c=relaxed/simple;
+	bh=d2mjs4XZMkNeQ+HUqicIdUBGMGtIr9dkOylyvyZRNZM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ww8gz5AiMjlsjOO8YqGcZsudSRgC+jVIowoGk6d1jweW4TSrUO6eulVdwZoxISvmHcYtbM9dfSQ1d2mTD4YO5TLX1NwCqzfP5I1KE/uz3RHepvhDxRgmU+5d0egUBZNX9bAE69N+29ZREFg0A4cultq+5jamnHpCLmHHSlzE6rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=n1fh4Nc5; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42135a45e2aso13727565e9.3
+        for <linux-block@vger.kernel.org>; Mon, 03 Jun 2024 05:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=storingio.onmicrosoft.com; s=selector1-storingio-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=emWdh88yIZPuI9XD231vukObF1MJaRhmIpzkFn+8gBk=;
- b=UZAHehRsflZp57SyHV/bOSJYWmZsX5N1L4m6NISbn1FB4PhETeazyN/t20jEzL+nXHNcr8ixGIrEVqbLLo49/l3tCFTEUVHTfm40o641kqZu/4bv57DzBhe6B6pbldZE+Axazbj/+6mYS8TYL1vn4NPizWQEWaLui7DCD8sYZQyNw8q3z4xM84Y2TWiI21V26OifojIw77B1yFBeBNerLAgg+XDA6sSHpWwbzyeazO/F+Jsdc+7T2weo6bKbk2ThGC760plgdqyOO/GUnS/+kGDXEQwT69DXK8TuI98FoeqTIuNv6hxk98uCiTg0Qt/dOFHx+NSn79BjBdIHhlbGxA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=volumez.com;
-Received: from AM0PR04MB5107.eurprd04.prod.outlook.com (2603:10a6:208:cb::11)
- by GV1PR04MB10243.eurprd04.prod.outlook.com (2603:10a6:150:17d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Mon, 3 Jun
- 2024 11:47:15 +0000
-Received: from AM0PR04MB5107.eurprd04.prod.outlook.com
- ([fe80::de53:c058:7ef:21fb]) by AM0PR04MB5107.eurprd04.prod.outlook.com
- ([fe80::de53:c058:7ef:21fb%4]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
- 11:47:14 +0000
-Message-ID: <85e8e613-ea8f-4f6d-b9f7-cd05913b5de6@volumez.com>
-Date: Mon, 3 Jun 2024 14:47:04 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] net: introduce helper sendpages_ok()
-To: Hannes Reinecke <hare@suse.de>, davem@davemloft.net,
- linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
- netdev@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc: dhowells@redhat.com, edumazet@google.com, pabeni@redhat.com,
- kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
- christoph.boehmwalder@linbit.com, idryomov@gmail.com, xiubli@redhat.com
-References: <20240530132629.4180932-1-ofir.gal@volumez.com>
- <20240530132629.4180932-2-ofir.gal@volumez.com>
- <8fc3fc34-2861-429e-9716-b25b90049693@suse.de>
-Content-Language: en-US
-From: Ofir Gal <ofir.gal@volumez.com>
-In-Reply-To: <8fc3fc34-2861-429e-9716-b25b90049693@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TL0P290CA0004.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:5::17) To AM0PR04MB5107.eurprd04.prod.outlook.com
- (2603:10a6:208:cb::11)
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717416079; x=1718020879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/3xUCui7cLPYCBQDbqvkFkoK4V/RGmuP0R9MYWDAsMY=;
+        b=n1fh4Nc5ojKHDmx2jtkEIFajYeIujNdPSiQcJ+YAb2UE9fGbCKL3tz7MrQy2/Mfhtf
+         D54WihHka7zQt+iW8Wl3mX4WWoN+VoypLB5dVTT+ZGYHB+vUxIpwVA39XPmPSVZOYiyA
+         qLvCM8NmDYSLbWQC+0glftOL8j2kHoznCK9Rukrmvt9Xq8nQSr4ji/sHET5p3WLqMHUP
+         Yb+huY7gKjTsksCZFUl30OicOKwFzjndxMn9iJ0Pt7CpzqFwAci5Inx9ea/cjbBQrQ4T
+         ocYf/jwI8HsM9EOTp/TX6hZSU+Ze2Y1THZb5iLIVvkJTidU78FQYTNHO1GX7JgM/m/dG
+         lgMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717416079; x=1718020879;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/3xUCui7cLPYCBQDbqvkFkoK4V/RGmuP0R9MYWDAsMY=;
+        b=qZVImISUT4l9k0S8+tbddl+IM4je7oIbrIpEr66s7SorM5rr4pupwvtGPr6wIO56VF
+         3PvE9lgTHbBS20Fp6ViPmZPOxDQhiH0H4qmlG7f5svq6J5kSKn8xPj5zxJqlCoVbMSHo
+         Rd1qh0xlmdKxECaudwgNLY4e9nuy+nXLUMQH9Q8rqd0ap8R7R5BqONXTriUeEVbPh1D7
+         m4eabd89LM/Ia9qh5LKAoEhgeqyytlxj2vNTRgHD2sAVBckH2wzOU2EfCLVCNlxPGnXs
+         jvqQIdYz87s6XZXnhVClWoSrImmdzjcNxx6uH06sFZ0GjrbZPGgrV2tvDkQoVyNRHV+r
+         T5RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyWwdUsRPBr3J2aBMiHpSgDg0K/Rh4BweAPxTdA/xWV/J9FCmwBDV88PtUhjmR0NIUU6nCiQJyBO7nvh3lqHGjhv4e+Kh9ixRi63Q=
+X-Gm-Message-State: AOJu0Yzxi978Ci4dUZUG6wDE5G7jPnHPNIm+BCIJn1wvKoFtb5XmlOkE
+	q+r/9gRN34aGUkmMHe5WHphDmfV5xKEHMxXoujvMaXiqU2wcVABtoV1QQhSIOTzIjntYShrvvQA
+	/
+X-Google-Smtp-Source: AGHT+IEUTn+YwahcCQswRuuEjn2b/mncaQi5c822nBTE41ro1vWLUXwe/FYhGZ+7jdgFe0px3+VKbQ==
+X-Received: by 2002:a05:600c:198b:b0:41a:b30e:42a3 with SMTP id 5b1f17b1804b1-4212e0bfd84mr66395065e9.37.1717416078969;
+        Mon, 03 Jun 2024 05:01:18 -0700 (PDT)
+Received: from localhost ([165.225.194.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42127069305sm145639915e9.22.2024.06.03.05.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 05:01:18 -0700 (PDT)
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Jens Axboe <axboe@kernel.dk>,  Christoph Hellwig <hch@lst.de>,  Keith
+ Busch <kbusch@kernel.org>,  Damien Le Moal <dlemoal@kernel.org>,  Bart Van
+ Assche <bvanassche@acm.org>,  Hannes Reinecke <hare@suse.de>,  Ming Lei
+ <ming.lei@redhat.com>,  "linux-block@vger.kernel.org"
+ <linux-block@vger.kernel.org>,  Andreas Hindborg <a.hindborg@samsung.com>,
+  Wedson Almeida Filho <wedsonaf@gmail.com>,  Greg KH
+ <gregkh@linuxfoundation.org>,  Matthew Wilcox <willy@infradead.org>,
+  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
+  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  Alice Ryhl <aliceryhl@google.com>,
+  Chaitanya Kulkarni <chaitanyak@nvidia.com>,  Luis Chamberlain
+ <mcgrof@kernel.org>,  Yexuan Yang <1182282462@bupt.edu.cn>,  Sergio
+ =?utf-8?Q?Gonz=C3=A1lez?= Collado <sergio.collado@gmail.com>,  Joel
+ Granados
+ <j.granados@samsung.com>,  "Pankaj Raghav (Samsung)"
+ <kernel@pankajraghav.com>,  Daniel Gomez <da.gomez@samsung.com>,  Niklas
+ Cassel <Niklas.Cassel@wdc.com>,  Philipp Stanner <pstanner@redhat.com>,
+  Conor Dooley <conor@kernel.org>,  Johannes Thumshirn
+ <Johannes.Thumshirn@wdc.com>,  Matias =?utf-8?Q?Bj=C3=B8rling?=
+ <m@bjorling.me>,  open list
+ <linux-kernel@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
+ <rust-for-linux@vger.kernel.org>,  "lsf-pc@lists.linux-foundation.org"
+ <lsf-pc@lists.linux-foundation.org>,  "gost.dev@samsung.com"
+ <gost.dev@samsung.com>
+Subject: Re: [PATCH v4 1/3] rust: block: introduce `kernel::block::mq` module
+In-Reply-To: <b6b8e3e6-a2b9-4ddd-bf0f-e924d5d65653@proton.me> (Benno Lossin's
+	message of "Sun, 02 Jun 2024 20:08:17 +0000")
+References: <20240601134005.621714-1-nmi@metaspace.dk>
+	<20240601134005.621714-2-nmi@metaspace.dk>
+	<b6b8e3e6-a2b9-4ddd-bf0f-e924d5d65653@proton.me>
+Date: Mon, 03 Jun 2024 14:01:10 +0200
+Message-ID: <87mso2me0p.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5107:EE_|GV1PR04MB10243:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6afaea04-f8f4-4267-a597-08dc83c2e957
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015|7416005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Nk9MdzNPNUdENis3U2lNSkZDRnVSN3dSVDJodlBlWDRyQ0xwT3AvUW5aUlpV?=
- =?utf-8?B?aGxwZVVyaUNsbG9obUgveHZlV2xOVzFRK3QvTE15dHRpYXdRY3A2RXN1cEZz?=
- =?utf-8?B?MS9tcFdEQlI0RnJ5WnNZQm85WmxSemFFK1kvTU1HMlRUWUp1dmVtbWRkSDFk?=
- =?utf-8?B?R05xUmpZMm1HeGl5VFhMQXdkaFFTUXU1QlZMaWNBTFZhOEJBSTQxTzdkTlVm?=
- =?utf-8?B?eXh0cnVnNndxNnNtOHFkUkVnbktTdVBSVTVNQThmaHFxSmVIcTVRVlQ4RGpT?=
- =?utf-8?B?OEx1anZnZUszM2F6M2l2QU10ZVQ5RGZsVzVZUElxM1lzV3VDRXRxWXB3cHdm?=
- =?utf-8?B?R1R2ZUZVZVVybC91bktBanFMdERCbmdEZm5HcTFrZVR4Q1Y3WUFWWFFvaUVP?=
- =?utf-8?B?bm5vdzBwdk9qZnpQLzlCREo2K1pIMjBlWlIrdkpsbGovN0FvUmxIdTRjYkl4?=
- =?utf-8?B?LzlIOXY3VUl4ZEEzdFFkWWZkaTVETzltNDE1VzFzVkJYNENBOGJHeWViQU5X?=
- =?utf-8?B?dzNWdVdVc25YcElMZU0xeFZEUFIzaHFmOHJwdjhvUFhIV0ZFaVRYd1hnTUZS?=
- =?utf-8?B?YlhkdmhzVnBNRWt2b08zSVp0eHpxelVWQVNPSTU1Q0hTbW9iN2l0eGpmV2RL?=
- =?utf-8?B?bnRoNmJuN3pqSGJxaHpycXdIQTROdmozWmpKb3NRcVBZQ2Q0VkR1cVNKVTVL?=
- =?utf-8?B?WnpXaXIvUlBDNUd4VVZ6bWgzVzhEbms1YXd2U0s1MVdZbm1OdW9yc2U0RkU5?=
- =?utf-8?B?VllndXVRcERJYm8rVnFTUDI5blc4ZzdnWExGK09sTXpDWDkzNG1vK1d0YjAx?=
- =?utf-8?B?YThkbmxFdmR3K2srYjM3UXJFZmpCdHpwWTZDR0dpZVFrQVlINVdhbk9nRENV?=
- =?utf-8?B?U1l5VmxhT0p6Y0tzbUZRMEE4U2lGSWpReDU3ZGliY2xpeFlLY1NhTWNINFQr?=
- =?utf-8?B?RWsrT09nNG9mREprb0lDSVNUL2ZHVXl4TVVmakxmWG9aMS81U0JYenVUNFBW?=
- =?utf-8?B?YzVsZlVsUzNJWXZCdlVHUFFmUnR6Zk54TzhtSlpMdjhMNTcwd052dlcxTVJn?=
- =?utf-8?B?Zm5iaTljUm50MGliOG8wWXNQc1YwcTBqTVNGajRaS05WTWpPbUxKNVJWYlVz?=
- =?utf-8?B?UE90MEJPZ09pcURrdkNNMC9NSmgwQ2JjUlM2QnZBUlJGNkFyM090RGZKRGNJ?=
- =?utf-8?B?Wk1wN3puOVlESXdONW5xd29vT2hzZmdmcmxiVkZRVHhsR2I5N3RvRGZSeklH?=
- =?utf-8?B?MDlPRVo2cDhqUGJFejRtRUZ3MEp0K0NNaGl3THRXSVVnSmowOEVrWFQydkF1?=
- =?utf-8?B?Slh6N2lwYXhjSXBPSThYbWNjaUxEL2MzeGFVUTN4S3ZueXZ0USszSUdpalkz?=
- =?utf-8?B?Q1Y4anJVYVgwU21yc1JTd1VSN1BGaVBZZDk4dHhtVThCY1lUUFI2ZlZhRkt0?=
- =?utf-8?B?MUFRS1p3MUNhNGtEaFM5L05kVUk2L1UwV2ovTDZubk1qYU5HckpHdm81VGND?=
- =?utf-8?B?SnhxRHBMTkJ6ZXI5NzJ3KzRTVW96S0xnVG8vdHdjQno0VzQ5cEg4S2Fsc2ZH?=
- =?utf-8?B?bk9Eb053UGY3dFBPQlA3M2t6TUpPeU5sR3J1Ui9tNUVlS2luL0pza3BZRFl1?=
- =?utf-8?B?TDlhbU5FYlhsSzFOcndVRUM4M09EU1dsRjBqVi9OTHhBM0lVUEZPbjR0WmVG?=
- =?utf-8?B?ZEVuNFk2V21vOHBHNjNIVUV6N1VNdGpNU1FJNkRkNW5DSmNnVjBJdWhRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5107.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?amlkRU95eWFmQng2V3RiZnlHbWFYUkdNNnBjbUh6UiszbllsRFNEVFFhaENo?=
- =?utf-8?B?KzNFVHZVR1pGRCt2S0lnOGZtR3RkdkhUelZaR0VqZTh2eUJJcjljUlpGaWdK?=
- =?utf-8?B?SUhsUGFxOVBkR1hVUlBpYSsySG9Mc3dXeFpaWG9QNEZmcEcvbGFNMm5oc2o1?=
- =?utf-8?B?TVpyTEFINTZKTm1PcFpSQ1V5dGVIY3d2UDdnUjBVUitvSUFrWEJ6NElNOG45?=
- =?utf-8?B?VmwvZDZjSUNGejhXYk1ZbXR3KzlCanJBMGJrei9MNmNtV0tTdWJma0JlcHJa?=
- =?utf-8?B?VG9sWm1TWjEyTmMxbThweEJUYkRjSHZCclhPdGN5OEVyMS9aQVduOE1ucGlO?=
- =?utf-8?B?UlRRQWpnOE5ZSGdVZmdrTTBXdTB6U0pXZmxCbWtLVU1BU3o5a0pqYzAxZndz?=
- =?utf-8?B?aHNlQXNEa0MrTXE5MlJ4c1Q0VUJHcjBsaFh1QmtoWFE4d01aVnI2QzYwalFk?=
- =?utf-8?B?QkNXbFY2K0ZUaElkUWJQcFkwckpCZWRuV3FobC8zM3NxNXRzVDhLT3ZHRlVM?=
- =?utf-8?B?VEVNR0I1Nm9CcnpqWVd1Q0FIcXIvTytnV3U1emYxUXRuNTFqZzhkamVVUXdk?=
- =?utf-8?B?bWNXNjkrazBSS3VZS2N5WlFBM1lKQ3dreVc1TnEzRWQ4TTgvYW9kVVJ5TkFX?=
- =?utf-8?B?d3h1WXFBOFJ1cjc5R1pPd0UrV3p4aTdyaFdqREFoemRZSHhvZ3N1UTY4UnU2?=
- =?utf-8?B?N0d6Ry9ieUo0REx5VG1KQ1Z0RnZVc21JTk92djE1UXB6K3lwaTdIVFNYUEg2?=
- =?utf-8?B?Uk54a2VlcnJkY0NIWFVBWW44RFhlajdKUm5YamVoK3phSWtHNmtzUXNmNDFN?=
- =?utf-8?B?dkE4ZGx0NkhiZGU3a2dvN1VYN0g3NHBldzgxNXZRNjg1YXdHcGxZL1NwNFlZ?=
- =?utf-8?B?VTZXMnhxMzVkbFk3WHVuWjhIK2J1U01RK043ZGdBV0VXT1RYdmJkbDVnZENz?=
- =?utf-8?B?Ui9qZHR0RW83V3dYdHBqZmVyLy9HUGppQW5BL3FDRjRDK3B1NExFTnI2cFNY?=
- =?utf-8?B?YmV4QkhQZ3ZMN0d0T3JEU0I5Si9EWFBwK1dQekF6TElKSWVmTzRQRXB6WnVL?=
- =?utf-8?B?c01pODkrMkVGOVZ0SDFmN25oa2NFOUZ3VTJQdkFxRmhHbjBTV0NOZ3VDaFUx?=
- =?utf-8?B?dU9BQ3MwdnRYNitSbW5QQmIrTjJBOWgyVmIyL1FrNzA0VlNIK3g3UG5BMlBi?=
- =?utf-8?B?SWE1eC9DRWd1dmdnUHVrZ3BtNEZkSWNVekJBN1RWZHo0N3ZGOERjdDdPRzYw?=
- =?utf-8?B?ODVGQXlwS281ODVvOFNUL1RYM1pydy9pS1RLTlhNN0dtUmZ4VTRwM1NtaUwv?=
- =?utf-8?B?clV3YlEvd2NncVZveUhLWU9vY0ZJd2c0ZTRJQmJwMDU3QVRDNVFPMUhDSWJZ?=
- =?utf-8?B?YUtPRjBLdUwxRWErN3R3Sk53Y0RIM3B2ZklTc21hNHFlOFdWY3cyaVY5alk3?=
- =?utf-8?B?VG42QzhEd0pBMWtIZm9ZcURlOVR5SWs3OEZNb1BPczh6dCtDam9qQkQwa1I4?=
- =?utf-8?B?T1NpVXUxZUtzazA4K1RFanFveUx2MERIT0MzTy9JOTcwUklBMzRwdjcvU2JO?=
- =?utf-8?B?V0JBOWVMUTR6ZUJpUmIwbTlsSFRPR3hGNlA2UUtzMnAzb0xUdWlldmRtUDN1?=
- =?utf-8?B?SHZKNVNWYk1sK0R1TzErRllaeTI4bGxMdVI3aGZndVNtbnBNUjRsdWdTMURj?=
- =?utf-8?B?WERNNkt3bFZqKzVUTDlhakFjTVJxekNOZjZQRHRrN1ZNR2JZUVhzVnU4aDhn?=
- =?utf-8?B?cWROeVdiMVo0RTZaTndrQmlVWlIvK3Z3NWIxM1ZJZkZrR3VYL2FMYXFCbGJq?=
- =?utf-8?B?TElvWFhrdStEWEtxUWxmeW8vcDlJcnNxN002VDQxTWpCbmI5dURNaHZBd1Fj?=
- =?utf-8?B?Ynh3eWRocms2Q0pVeXNZUzVhYTdudXBGRnJJSUpBaDBNK1dXUmpsY2ZEdUdO?=
- =?utf-8?B?Nk5FbUhyT0prT0FVUlUvUVo3dzJ1cTBONFFKbldFdUpEWmF4MkFwTkxlNUZ5?=
- =?utf-8?B?TWlkUkZ1bXVQb1JnckRvTXA1b09wV0hZbEdMZkhyK0o5ZFUxcGRTcXZ4dVNt?=
- =?utf-8?B?RnU2NW43b0dWTk90SDdodWd3QW9BOGgxVk1MVTYwUzdQb3ZybjBOOU9qNDVo?=
- =?utf-8?Q?sgB3V8LrslqR+su4RLZJWvMQV?=
-X-OriginatorOrg: volumez.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6afaea04-f8f4-4267-a597-08dc83c2e957
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5107.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 11:47:14.2236
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b1841924-914b-4377-bb23-9f1fac784a1d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2klV7o4pM/SCI5dhtYrYMgZrP+cFire2jGfJahW519bsBdRKFhMY6Pm6/dasRlE+RFFPHCw4YhyoftYhZXUjng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10243
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Benno Lossin <benno.lossin@proton.me> writes:
+
+> On 01.06.24 15:40, Andreas Hindborg wrote:
+>> +/// A generic block device.
+>> +///
+>> +/// # Invariants
+>> +///
+>> +///  - `gendisk` must always point to an initialized and valid `struct =
+gendisk`.
+>> +pub struct GenDisk<T: Operations, S: GenDiskState =3D Added> {
+>
+> I am curious, do you need the type state for this struct? AFAIU you are
+> only using it to configure the `GenDisk`, so could you also use a config
+> struct that is given to `GenDisk::new`. That way we can avoid the extra
+> traits and generic argument.
+>
+> Since there are so many options, a builder config struct might be a good
+> idea.
+
+I agree, let's do a builder. That would actually make some things a bit
+simpler.
 
 
-
-On 03/06/2024 10:18, Hannes Reinecke wrote:
-> On 5/30/24 15:26, Ofir Gal wrote:
->> Network drivers are using sendpage_ok() to check the first page of an
->> iterator in order to disable MSG_SPLICE_PAGES. The iterator can
->> represent list of contiguous pages.
->>
->> When MSG_SPLICE_PAGES is enabled skb_splice_from_iter() is being used,
->> it requires all pages in the iterator to be sendable. Therefore it needs
->> to check that each page is sendable.
->>
->> The patch introduces a helper sendpages_ok(), it returns true if all the
->> contiguous pages are sendable.
->>
->> Drivers who want to send contiguous pages with MSG_SPLICE_PAGES may use
->> this helper to check whether the page list is OK. If the helper does not
->> return true, the driver should remove MSG_SPLICE_PAGES flag.
->>
->> Signed-off-by: Ofir Gal <ofir.gal@volumez.com>
->> ---
->>   include/linux/net.h | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/include/linux/net.h b/include/linux/net.h
->> index 688320b79fcc..b33bdc3e2031 100644
->> --- a/include/linux/net.h
->> +++ b/include/linux/net.h
->> @@ -322,6 +322,26 @@ static inline bool sendpage_ok(struct page *page)
->>       return !PageSlab(page) && page_count(page) >= 1;
->>   }
->>   +/*
->> + * Check sendpage_ok on contiguous pages.
->> + */
->> +static inline bool sendpages_ok(struct page *page, size_t len, size_t offset)
->> +{
->> +    unsigned int pagecount;
->> +    size_t page_offset;
->> +    int k;
->> +
->> +    page = page + offset / PAGE_SIZE;
->> +    page_offset = offset % PAGE_SIZE;
->> +    pagecount = DIV_ROUND_UP(len + page_offset, PAGE_SIZE);
->> +
-> Don't we miss the first page for offset > PAGE_SIZE?
-> I'd rather check for all pages from 'page' up to (offset + len), just
-> to be on the safe side.
-We do, I copied the logic from iov_iter_extract_bvec_pages() to be
-aligned with how skb_splice_from_iter() splits the pages.
-
-I don't think we need to check a page we won't send, but I don't mind to
-be on the safeside.
-
->> +    for (k = 0; k < pagecount; k++)
->> +        if (!sendpage_ok(page + k))
->> +            return false;
->> +
->> +    return true;
+>
+>> +    tagset: Arc<TagSet<T>>,
+>> +    gendisk: *mut bindings::gendisk,
+>> +    _phantom: core::marker::PhantomData<S>,
 >> +}
 >> +
->>   int kernel_sendmsg(struct socket *sock, struct msghdr *msg, struct kvec *vec,
->>              size_t num, size_t len);
->>   int kernel_sendmsg_locked(struct sock *sk, struct msghdr *msg,
+>> +// SAFETY: `GenDisk` is an owned pointer to a `struct gendisk` and an `=
+Arc` to a
+>> +// `TagSet` It is safe to send this to other threads as long as T is Se=
+nd.
+>> +unsafe impl<T: Operations + Send, S: GenDiskState> Send for GenDisk<T, =
+S> {}
+>> +
+>> +/// Disks in this state are allocated and initialized, but are not yet
+>> +/// accessible from the kernel VFS.
+>> +pub enum Initialized {}
+>> +
+>> +/// Disks in this state have been attached to the kernel VFS and may re=
+ceive IO
+>> +/// requests.
+>> +pub enum Added {}
+>> +
+>> +mod seal {
+>> +    pub trait Sealed {}
+>> +}
+>> +
+>> +/// Typestate representing states of a `GenDisk`.
+>> +///
+>> +/// This trait cannot be implemented by downstream crates.
+>> +pub trait GenDiskState: seal::Sealed {
+>> +    /// Set to true if [`GenDisk`] should call `del_gendisk` on drop.
+>> +    const DELETE_ON_DROP: bool;
+>> +}
+>> +
+>> +impl seal::Sealed for Initialized {}
+>> +impl GenDiskState for Initialized {
+>> +    const DELETE_ON_DROP: bool =3D false;
+>> +}
+>> +impl seal::Sealed for Added {}
+>> +impl GenDiskState for Added {
+>> +    const DELETE_ON_DROP: bool =3D true;
+>> +}
+>> +
+>> +impl<T: Operations> GenDisk<T, Initialized> {
+>> +    /// Try to create a new `GenDisk`.
+>> +    pub fn try_new(tagset: Arc<TagSet<T>>) -> Result<Self> {
 >
-> Cheers,
->
-> Hannes
+> Since there is no non-try `new` function, I think we should name this
+> function just `new`.
 
+Right, I am still getting used to the new naming scheme. Do you know if
+it is documented anywhere?
+
+>
+>> +        let lock_class_key =3D crate::sync::LockClassKey::new();
+>> +
+>> +        // SAFETY: `tagset.raw_tag_set()` points to a valid and initial=
+ized tag set
+>> +        let gendisk =3D from_err_ptr(unsafe {
+>> +            bindings::__blk_mq_alloc_disk(
+>> +                tagset.raw_tag_set(),
+>> +                core::ptr::null_mut(), // TODO: We can pass queue limit=
+s right here
+>> +                core::ptr::null_mut(),
+>> +                lock_class_key.as_ptr(),
+>> +            )
+>> +        })?;
+>> +
+>> +        const TABLE: bindings::block_device_operations =3D bindings::bl=
+ock_device_operations {
+>> +            submit_bio: None,
+>> +            open: None,
+>> +            release: None,
+>> +            ioctl: None,
+>> +            compat_ioctl: None,
+>> +            check_events: None,
+>> +            unlock_native_capacity: None,
+>> +            getgeo: None,
+>> +            set_read_only: None,
+>> +            swap_slot_free_notify: None,
+>> +            report_zones: None,
+>> +            devnode: None,
+>> +            alternative_gpt_sector: None,
+>> +            get_unique_id: None,
+>> +            // TODO: Set to THIS_MODULE. Waiting for const_refs_to_stat=
+ic feature to
+>> +            // be merged (unstable in rustc 1.78 which is staged for li=
+nux 6.10)
+>> +            // https://github.com/rust-lang/rust/issues/119618
+>> +            owner: core::ptr::null_mut(),
+>> +            pr_ops: core::ptr::null_mut(),
+>> +            free_disk: None,
+>> +            poll_bio: None,
+>> +        };
+>> +
+>> +        // SAFETY: gendisk is a valid pointer as we initialized it above
+>> +        unsafe { (*gendisk).fops =3D &TABLE };
+>> +
+>> +        // INVARIANT: `gendisk` was initialized above.
+>> +        // INVARIANT: `gendisk.queue.queue_data` is set to `data` in th=
+e call to
+>
+> There is no `data` in the mentioned call above.
+
+Thanks, I'll move the comment to the patch it belongs in =F0=9F=91=8D
+
+>
+>> +        // `__blk_mq_alloc_disk` above.
+>> +        Ok(GenDisk {
+>> +            tagset,
+>> +            gendisk,
+>> +            _phantom: PhantomData,
+>> +        })
+>> +    }
+>> +
+>
+> [...]
+>
+>> +impl<T: Operations> OperationsVTable<T> {
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// - The caller of this function must ensure `bd` is valid
+>> +    ///   and initialized. The pointees must outlive this function.
+>
+> Until when do the pointees have to be alive? "must outlive this
+> function" could also be the case if the pointees die immediately after
+> this function returns.
+
+It should not be plural. What I intended to communicate is that what
+`bd` points to must be valid for read for the duration of the function
+call. I think that is what "The pointee must outlive this function"
+states? Although when we talk about lifetime of an object pointed to by
+a pointer, I am not sure about the correct way to word this. Do we talk
+about the lifetime of the pointer or the lifetime of the pointed to
+object (the pointee). We should not use the same wording for the pointer
+and the pointee.
+
+How about:
+
+    /// - The caller of this function must ensure that the pointee of `bd` =
+is
+    ///   valid for read for the duration of this function.
+
+>
+>> +    /// - This function must not be called with a `hctx` for which
+>> +    ///   `Self::exit_hctx_callback()` has been called.
+>> +    /// - (*bd).rq must point to a valid `bindings:request` for which
+>> +    ///   `OperationsVTable<T>::init_request_callback` was called
+>
+> Missing `.` at the end.
+
+Thanks.
+
+>
+>> +    unsafe extern "C" fn queue_rq_callback(
+>> +        _hctx: *mut bindings::blk_mq_hw_ctx,
+>> +        bd: *const bindings::blk_mq_queue_data,
+>> +    ) -> bindings::blk_status_t {
+>> +        // SAFETY: `bd.rq` is valid as required by the safety requireme=
+nt for
+>> +        // this function.
+>> +        let request =3D unsafe { &*(*bd).rq.cast::<Request<T>>() };
+>> +
+>> +        // One refcount for the ARef, one for being in flight
+>> +        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
+>> +
+>> +        // SAFETY: We own a refcount that we took above. We pass that t=
+o `ARef`.
+>> +        // By the safety requirements of this function, `request` is a =
+valid
+>> +        // `struct request` and the private data is properly initialize=
+d.
+>> +        let rq =3D unsafe { Request::aref_from_raw((*bd).rq) };
+>
+> I think that you need to require that the request is alive at least
+> until `blk_mq_end_request` is called for the request (since at that
+> point all `ARef`s will be gone).
+> Also if this is not guaranteed, the safety requirements of
+> `AlwaysRefCounted` are violated (since the object can just disappear
+> even if it has refcount > 0 [the refcount refers to the Rust refcount in
+> the `RequestDataWrapper`, not the one in C]).
+
+Yea, for the last invariant of `Request`:
+
+  /// * `self` is reference counted by atomic modification of
+  ///   self.wrapper_ref().refcount().
+
+I will add this to the safety comment at the call site:
+
+  //  - `rq` will be alive until `blk_mq_end_request` is called and is
+  //    reference counted by `ARef` until then.
+
+
+>
+>> +
+>> +        // SAFETY: We have exclusive access and we just set the refcoun=
+t above.
+>> +        unsafe { Request::start_unchecked(&rq) };
+>> +
+>> +        let ret =3D T::queue_rq(
+>> +            rq,
+>> +            // SAFETY: `bd` is valid as required by the safety requirem=
+ent for this function.
+>> +            unsafe { (*bd).last },
+>> +        );
+>> +
+>> +        if let Err(e) =3D ret {
+>> +            e.to_blk_status()
+>> +        } else {
+>> +            bindings::BLK_STS_OK as _
+>> +        }
+>> +    }
+>> +
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure.
+>> +    unsafe extern "C" fn commit_rqs_callback(_hctx: *mut bindings::blk_=
+mq_hw_ctx) {
+>> +        T::commit_rqs()
+>> +    }
+>> +
+>> +    /// This function is called by the C kernel. It is not currently
+>> +    /// implemented, and there is no way to exercise this code path.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure.
+>> +    unsafe extern "C" fn complete_callback(_rq: *mut bindings::request)=
+ {}
+>> +
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure.
+>> +    unsafe extern "C" fn poll_callback(
+>> +        _hctx: *mut bindings::blk_mq_hw_ctx,
+>> +        _iob: *mut bindings::io_comp_batch,
+>> +    ) -> core::ffi::c_int {
+>> +        T::poll().into()
+>> +    }
+>> +
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure. Th=
+is
+>> +    /// function may only be called onece before `exit_hctx_callback` i=
+s called
+>
+> Typo: "onece"
+
+Since you keep finding typos in my patches, I took this morning to fix
+my spelling setup in Emacs. It was a deep rabbit hole, but I think I got
+it now =F0=9F=A4=9E
+
+>
+>> +    /// for the same context.
+>> +    unsafe extern "C" fn init_hctx_callback(
+>> +        _hctx: *mut bindings::blk_mq_hw_ctx,
+>> +        _tagset_data: *mut core::ffi::c_void,
+>> +        _hctx_idx: core::ffi::c_uint,
+>> +    ) -> core::ffi::c_int {
+>> +        from_result(|| Ok(0))
+>> +    }
+>> +
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure.
+>> +    unsafe extern "C" fn exit_hctx_callback(
+>> +        _hctx: *mut bindings::blk_mq_hw_ctx,
+>> +        _hctx_idx: core::ffi::c_uint,
+>> +    ) {
+>> +    }
+>> +
+>> +    /// This function is called by the C kernel. A pointer to this func=
+tion is
+>> +    /// installed in the `blk_mq_ops` vtable for the driver.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// This function may only be called by blk-mq C infrastructure. `s=
+et` must
+>> +    /// point to an initialized `TagSet<T>`.
+>> +    unsafe extern "C" fn init_request_callback(
+>> +        _set: *mut bindings::blk_mq_tag_set,
+>> +        rq: *mut bindings::request,
+>> +        _hctx_idx: core::ffi::c_uint,
+>> +        _numa_node: core::ffi::c_uint,
+>> +    ) -> core::ffi::c_int {
+>> +        from_result(|| {
+>> +            // SAFETY: The `blk_mq_tag_set` invariants guarantee that a=
+ll
+>> +            // requests are allocated with extra memory for the request=
+ data.
+>
+> What guarantees that the right amount of memory has been allocated?
+> AFAIU that is guaranteed by the `TagSet` (but there is no invariant).
+
+It is by C API contract. `TagSet`::try_new` (now `new`) writes
+`cmd_size` into the `struct blk_mq_tag_set`. That is picked up by
+`blk_mq_alloc_tag_set` to allocate the right amount of space for each reque=
+st.
+
+The invariant here is on the C type. Perhaps the wording is wrong. I am
+not exactly sure how to express this. How about this:
+
+            // SAFETY: We instructed `blk_mq_alloc_tag_set` to allocate req=
+uests
+            // with extra memory for the request data when we called it in
+            // `TagSet::new`.
+
+>
+>> +            let pdu =3D unsafe { bindings::blk_mq_rq_to_pdu(rq) }.cast:=
+:<RequestDataWrapper>();
+>> +
+>> +            // SAFETY: The refcount field is allocated but not initiali=
+zed, this
+>> +            // valid for write.
+>> +            unsafe { RequestDataWrapper::refcount_ptr(pdu).write(Atomic=
+U64::new(0)) };
+>> +
+>> +            Ok(0)
+>> +        })
+>> +    }
+>
+> [...]
+>
+>> +    /// Notify the block layer that a request is going to be processed =
+now.
+>> +    ///
+>> +    /// The block layer uses this hook to do proper initializations suc=
+h as
+>> +    /// starting the timeout timer. It is a requirement that block devi=
+ce
+>> +    /// drivers call this function when starting to process a request.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// The caller must have exclusive ownership of `self`, that is
+>> +    /// `self.wrapper_ref().refcount() =3D=3D 2`.
+>> +    pub(crate) unsafe fn start_unchecked(this: &ARef<Self>) {
+>> +        // SAFETY: By type invariant, `self.0` is a valid `struct reque=
+st`. By
+>> +        // existence of `&mut self` we have exclusive access.
+>
+> We don't have a `&mut self`. But the safety requirements ask for a
+> unique `ARef`.
+
+Thanks, I'll rephrase to:
+
+        // SAFETY: By type invariant, `self.0` is a valid `struct request` =
+and
+        // we have exclusive access.
+
+>
+>> +        unsafe { bindings::blk_mq_start_request(this.0.get()) };
+>> +    }
+>> +
+>> +    fn try_set_end(this: ARef<Self>) -> Result<ARef<Self>, ARef<Self>> {
+>> +        // We can race with `TagSet::tag_to_rq`
+>> +        match this.wrapper_ref().refcount().compare_exchange(
+>> +            2,
+>> +            0,
+>> +            Ordering::Relaxed,
+>> +            Ordering::Relaxed,
+>> +        ) {
+>> +            Err(_old) =3D> Err(this),
+>> +            Ok(_) =3D> Ok(this),
+>> +        }
+>> +    }
+>> +
+>> +    /// Notify the block layer that the request has been completed with=
+out errors.
+>> +    ///
+>> +    /// This function will return `Err` if `this` is not the only `ARef`
+>> +    /// referencing the request.
+>> +    pub fn end_ok(this: ARef<Self>) -> Result<(), ARef<Self>> {
+>> +        let this =3D Self::try_set_end(this)?;
+>> +        let request_ptr =3D this.0.get();
+>> +        core::mem::forget(this);
+>> +
+>> +        // SAFETY: By type invariant, `self.0` is a valid `struct reque=
+st`. By
+>> +        // existence of `&mut self` we have exclusive access.
+>
+> Same here, but in this case, the `ARef` is unique, since you called
+> `try_set_end`. You could make it a `# Guarantee` of `try_set_end`: "If
+> `Ok(aref)` is returned, then the `aref` is unique."
+
+Makes sense. I have not seen `# Guarantee` used anywhere. Do you have a lin=
+k for that use?
+
+>
+>> +        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::BL=
+K_STS_OK as _) };
+>> +
+>> +        Ok(())
+>> +    }
+>> +
+>> +    /// Return a pointer to the `RequestDataWrapper` stored in the priv=
+ate area
+>> +    /// of the request structure.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// - `this` must point to a valid allocation.
+>> +    pub(crate) unsafe fn wrapper_ptr(this: *mut Self) -> NonNull<Reques=
+tDataWrapper> {
+>> +        let request_ptr =3D this.cast::<bindings::request>();
+>> +        let wrapper_ptr =3D
+>> +            // SAFETY: By safety requirements for this function, `this`=
+ is a
+>> +            // valid allocation.
+>
+> Formatting: move the safety comment above the `let`.
+
+Thanks.
+
+I'll send a new version shortly.
+
+
+BR Andreas
 
