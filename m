@@ -1,114 +1,83 @@
-Return-Path: <linux-block+bounces-8161-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8163-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3954E8D89CC
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 21:17:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF24E8D8A1E
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 21:27:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23F1D1C2464E
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 19:17:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DBB31F21E07
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 19:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93B913CAB8;
-	Mon,  3 Jun 2024 19:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760AD137C3B;
+	Mon,  3 Jun 2024 19:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="u9IrdIrV"
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="VC5X3SyU"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0313CAA4
-	for <linux-block@vger.kernel.org>; Mon,  3 Jun 2024 19:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045A137923
+	for <linux-block@vger.kernel.org>; Mon,  3 Jun 2024 19:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717442114; cv=none; b=ln79lmJ/cvqQ+SJeJlk34jQ2V3KGDnSNT7brCCWXFhMyUXNObgE5hf9X666q9oWX82p+fU/Xxd4u9J4xnAeTZgOIX00RgbsINM9++BX1R3DYK/3pvIPoo1/JTHd0hEtKxyGMJJKbZ95Q9RCL0i/ZyW2yOjMQtSDFYDUGEGsUvcY=
+	t=1717442821; cv=none; b=bUj4ENoUl6AimbGZnt3ez80Bim0tIItgSmiCQa0c/1+1N7RwBYq8tOgdnFRsYD6306VNDaguiUxQHJoCPAN+EQl5bgT7qAz9W3T7Z18va8MXQAqOdZHy8iiapNIQp18e46wRsPD94ocUz2wwRYRIstOLgPxvo+8USjQZI79NPqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717442114; c=relaxed/simple;
-	bh=juRogTLPO2qs3UM+cO6uXQ3Ufimi9V6rXzS1gdbXpLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tXjTdspxf21n+HZbCcA8z6t+pfP3nXjYaDLg438EAR5QECy9P33WPhxTPGVmdZd//Vlh0ndz4DhJhD3HQ+cvkiKixTJjCLdyqJQu6y9OmRbI5LBjOjKMUDVJeh+Py81AZ07e5FQWGnRnNjyqWEyXX39vwMoUMaUip4XZyC4qP70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=u9IrdIrV; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1717442821; c=relaxed/simple;
+	bh=5tryiqGWz7woo9GeAI9cW9IgeIA3mnTyekQazR6n7B4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SuY+SF0VUysyLpcmhAwsUTmqdYAbn/gHhjDBPp+osRt3KYvr034qpLePIHZzGVUok6R5nyQEiRtK/zIQCwQshNunRPEOnbyq8fWmZ7qdxGOyHyRPmAUTNxKoNFuOPCfQI4LPY5hS3zUuBd33MR5EAcNO3IIJkAa+4eivw/4kcFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=VC5X3SyU; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a44c2ce80so2711738a12.0
-        for <linux-block@vger.kernel.org>; Mon, 03 Jun 2024 12:15:12 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5295e488248so4989130e87.2
+        for <linux-block@vger.kernel.org>; Mon, 03 Jun 2024 12:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717442111; x=1718046911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
-        b=u9IrdIrV7smepPLqH8l303XnRV9EvSo3sNSt+9cNOVkSAnLD8IJxfz05mf1Juui6ju
-         PAF2fNkuz4CXndWza9BpIwUINbMfANbsqRWidBgD6XTYbyJuAE4745WKgeVKa+QYiEOB
-         4IxcAS2Tpq/7tAT/omX9uo4O2zh9CZaYRodXPJEVF+CeMH2jL1O8XZO0RGWdkPXkZIqt
-         T6YaA098KHEgzR22bxw4o8jd7ibP8DByAPajhjyKN9XrZ8pHP9N5v+I9cNxg/Md5rqbN
-         WieuaInmqpdRU9U16lGEImeAatGc5Ao0+sAmoswLbKzld61My3BN/rLYdC2GMhzusihV
-         pAiA==
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717442818; x=1718047618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bgq00PUjrhCM1KT9z8TW3RB/dgS4Xp/0LzoRpKh5jRs=;
+        b=VC5X3SyUAX39DOqxIZieCJeam9lTh7o1tGDRr39FCQjSum+iV0kRiLYJqXbT/XadTx
+         Zd4C8geUfvFnvXlVPvq51RbcxsGSgCgw66Y5MB4QdzG9y339gcj3ffadEK262Tqsz9u0
+         xE9Hdf6mEAwFJDmCoSEabrpdvHy68D2E9GDv16HAIDqwss6QEFo2Fa84Q6YkfhTVBiCM
+         zuc9VxnowYCjcU5h4RX8m7fJIAdq9f5k9LmqmuSJVEBm/MfOc1B2LAKeNAzG3O3GgVb8
+         1o3SH6UeVfxCa2/fVPXL1QDHrPb5N+1OHdk9F7Ok/qVXmjwjBvL8mLQ1nHbyxXSZTIO7
+         WlTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717442111; x=1718046911;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
-        b=q8WL/RClGYkDdsu5/hzN2x0tmYCK8skLs2wlFVk/Vz+ptAgGoeZNRJbTNsJH1NHDEz
-         c9e0Pq57G07FopPQS6jOmxkLpX+QmErCEt2sEth43lQnxQ8oQybPAXt2i+Fq29BoIo7p
-         Y3FTdyl1VbkDSqBNjQ+5tkHWux/c484wU3ry3wweBO52+uxu2C3hqduPJ2GZMuXhkhlf
-         jO517cDIgaw4UIpW1Xe/4mUYXNnoKO5xPjlkfZo1PPjmIFIHSHCTgJ2YXhmlvQgNCkuO
-         QQGJC5iFdt8hNfyCNDEphEHjyrtUaIxhnvx+cYhSxq2YK7eHjXsBjSF3FwSs1OvdnXHh
-         Qg3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXkpM/yz0vgqOch6aD1psmDMNVsSBxjqkUSNBCPy+tWZW7GW/ZXFjPDV9c1STcJG/UVRuABqU2LcA0zmLDDgbO+83EK8vOtRJXfQ20=
-X-Gm-Message-State: AOJu0Yza1+/toT+48r9qIJ4NdvOCRS4tyZ1FUagMhBgMv/XjWbyV7mV8
-	f+TBSJfKVPjqy+wh8UB7qxCmAUqh+4lHsOo3tGXS9m7xUyB2GxRMUX4EMrSfEEM=
-X-Google-Smtp-Source: AGHT+IEIe0DVsYmJPScMiomtpDfWdZZhVOCyF8cqTfzaZhruhdjXi0NCVul3W26F1naNI0AuycktXw==
-X-Received: by 2002:a50:d7dc:0:b0:57a:2158:bbef with SMTP id 4fb4d7f45d1cf-57a3635558cmr6349251a12.8.1717442111367;
-        Mon, 03 Jun 2024 12:15:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717442818; x=1718047618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bgq00PUjrhCM1KT9z8TW3RB/dgS4Xp/0LzoRpKh5jRs=;
+        b=LLlR4GGHZTVeKKdy1oebQ0i1fKBKQBKwSREcRtx9IHNlpK5P8BslrG9g2GVebmff9+
+         H59y7Trt0DhyAlnjOVzpoEQe7X1JqNkg/RPStIlbCdQh/GG7J8mxacALwASnr60Dku7Z
+         4CwQyyMuzk82cj47OP4MNI6fR4dUCVTOxqxaKlFPWRLul/8U0kMiS2iS+gSQR9D59InB
+         n9Q9BJjxEXcZ5E43SevlPZXc048aokWKMHVIB7rXPpxb9DcK/a06cIden7Ww/nSlk0N7
+         7m10KdalJKSiCfN749Y9pswHZZiXw6OTt0I3GIT7LcN+XUzo4NrxIz/ZxU53+JhND4jv
+         J62A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvgnsZLc+digayi4TI9HHACSqew0FcugsaSi0yxhimVaf4KdEC2fdARtK/AfMIlS5vpMUA2EE93SQnN4M0BHtdcNIo6AO7bKgWsHs=
+X-Gm-Message-State: AOJu0YzBciusnNm1lWxNUJlBz/y0MRz7Mb6iO/+BaBt7D2Bz7foyH5tT
+	NVH7XO4p9YRnzckrL5kZ+rLKB8gq2xISml1zwTi+x835MG7sV6RtVz1kgkv895Q=
+X-Google-Smtp-Source: AGHT+IEEdiuK70dIt0kRQ6ZqIyfF8/dtIItu00A5a5CGgt7ADEjKNbKwIlbZf+kUgc+loKojBUe4Pw==
+X-Received: by 2002:a19:a40a:0:b0:522:3551:35f5 with SMTP id 2adb3069b0e04-52b89564058mr6258471e87.14.1717442817779;
+        Mon, 03 Jun 2024 12:26:57 -0700 (PDT)
 Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b9943asm5809571a12.14.2024.06.03.12.15.10
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6900c692b0sm235052066b.151.2024.06.03.12.26.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 12:15:11 -0700 (PDT)
+        Mon, 03 Jun 2024 12:26:56 -0700 (PDT)
 From: Andreas Hindborg <nmi@metaspace.dk>
-To: Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Ming Lei <ming.lei@redhat.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
 Cc: Andreas Hindborg <a.hindborg@samsung.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yexuan Yang <1182282462@bupt.edu.cn>,
-	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
-	Joel Granados <j.granados@samsung.com>,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Niklas Cassel <Niklas.Cassel@wdc.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Conor Dooley <conor@kernel.org>,
-	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
-	open list <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: [PATCH v5 3/3] MAINTAINERS: add entry for Rust block device driver API
-Date: Mon,  3 Jun 2024 21:14:55 +0200
-Message-ID: <20240603191455.968301-4-nmi@metaspace.dk>
+	Keith Busch <kbusch@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] null_blk: fix validation of block size
+Date: Mon,  3 Jun 2024 21:26:45 +0200
+Message-ID: <20240603192645.977968-1-nmi@metaspace.dk>
 X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240603191455.968301-1-nmi@metaspace.dk>
-References: <20240603191455.968301-1-nmi@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -119,38 +88,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Andreas Hindborg <a.hindborg@samsung.com>
 
-Add an entry for the Rust block device driver abstractions.
+Block size should be between 512 and PAGE_SIZE and be a power of 2. The current
+check does not validate this, so update the check.
+
+Without this patch, null_blk would Oops due to a null pointer deref when
+loaded with bs=1536 [1].
+
+Link: https://lore.kernel.org/all/87wmn8mocd.fsf@metaspace.dk/
 
 Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
 ---
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..698515b0b0b3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3782,6 +3782,20 @@ F:	include/linux/blk*
- F:	kernel/trace/blktrace.c
- F:	lib/sbitmap.c
+Changes from v2:
+
+ - Use blk_validate_block_size instead of open coding the check.
+ - Change upper bound of chec from 4096 to PAGE_SIZE.
+
+V1: https://lore.kernel.org/all/20240601202351.691952-1-nmi@metaspace.dk/
+
+ drivers/block/null_blk/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index eb023d267369..967d39d191ca 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -1823,8 +1823,9 @@ static int null_validate_conf(struct nullb_device *dev)
+ 		dev->queue_mode = NULL_Q_MQ;
+ 	}
  
-+BLOCK LAYER DEVICE DRIVER API [RUST]
-+M:	Andreas Hindborg <a.hindborg@samsung.com>
-+R:	Boqun Feng <boqun.feng@gmail.com>
-+L:	linux-block@vger.kernel.org
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+W:	https://rust-for-linux.com
-+B:	https://github.com/Rust-for-Linux/linux/issues
-+C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
-+F:	drivers/block/rnull.rs
-+F:	rust/kernel/block.rs
-+F:	rust/kernel/block/
-+
- BLOCK2MTD DRIVER
- M:	Joern Engel <joern@lazybastard.org>
- L:	linux-mtd@lists.infradead.org
+-	dev->blocksize = round_down(dev->blocksize, 512);
+-	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
++	if (blk_validate_block_size(dev->blocksize) != 0) {
++		return -EINVAL;
++	}
+ 
+ 	if (dev->use_per_node_hctx) {
+ 		if (dev->submit_queues != nr_online_nodes)
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
 -- 
 2.45.1
 
