@@ -1,321 +1,179 @@
-Return-Path: <linux-block+bounces-8158-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8162-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB9998D8893
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 20:26:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15C0D8D89D2
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 21:18:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08BE91C2259C
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 18:26:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B826828B86C
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2024 19:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AEB6138495;
-	Mon,  3 Jun 2024 18:26:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF85113CF9F;
+	Mon,  3 Jun 2024 19:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="I8FUfYep"
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="hDlmctC0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B735137C4A;
-	Mon,  3 Jun 2024 18:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023A213D26A
+	for <linux-block@vger.kernel.org>; Mon,  3 Jun 2024 19:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717439187; cv=none; b=FfU4UsonkYOZJyqVfS1XPZlugO9usxpaV2dmOPxzsBxn97PwDWprhs21VXA3/MhH7t2JuKR+/zXuk/vANf6Ipd7318BqarT+xtpYVAku2biFZcofhGQuirVJm+6NowqZu6GZWdiOJfVfdbuCHL2uuhhvA0Y4uDPXvEzWQ956kNI=
+	t=1717442119; cv=none; b=rfDJEJ9VtdFU6fk7T7Dptc/DUQan3iLBj+y9pCl1vkrK9Z0YVN+8eqDd4ZcRRzDYRrxBENllm9rwcbAbL+K0LkpIkQ1UugPoxL9jP8F3fyt19RSEJiqPiMUB9tcAdOX6jOWCddpqS7STI7SI62GEBSnKgnccJaLz+FRlUfbM+Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717439187; c=relaxed/simple;
-	bh=IYDSrevwN0l8xOdEMkQFQ8XiL8ZhTn5e0JZtNVYcOa4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qQvHIQcMvuV04aqLVOZLzEbSMygi0QC/3csdGlzqXTpJxUcBMzwGuJ6WyzK46cB4gLiQO/iFNAvWIYLAa6edE9UdsZ7EdnHhCdsVQqpzf+cSNYjG0BPaYDYftJUAE3U9LxgMMBh7rTiVkzmspOpoUzPt5XDaPCvGOjT2TUbhCqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=I8FUfYep; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1717439176; x=1717698376;
-	bh=h5UBR5s+DqAv1y4ocFeN+mluknCcFmnFq+yPUyc1U4o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=I8FUfYepxDICOZxNDvK48bFsvqV1CguSjcb0QSHtzMRml22V3rC+9nSm5vAtudFnF
-	 UodAOyU3g6SkUHLvYVG5nlVAZenDlK8SzZPQZy+KLD8sItktsP26Xd35ypC97aPcWM
-	 E4bazlmUI/6BnYvHTkRLWqto38XR+WaF4DvsM+2atcXDmFDngLOYX9uKQS5Tdv3My+
-	 eN1URtby09xA2/F6jAddhdTnsypZKlAY8/EV+Qyofj7N4khu3I5WxE0KBpRon81z3s
-	 QtmDJy9yLfE+HJkepQecBZT8NoNhYPwZ0qeFpioJzE8ByonstAJG2CbOsFhcI50zpY
-	 t/mQ2YI8dZISw==
-Date: Mon, 03 Jun 2024 18:26:08 +0000
-To: Andreas Hindborg <nmi@metaspace.dk>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, Andreas Hindborg <a.hindborg@samsung.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>, =?utf-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, Joel Granados <j.granados@samsung.com>, "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Daniel Gomez
-	<da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>, Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>, Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, =?utf-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>, open list <linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, "gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [PATCH v4 1/3] rust: block: introduce `kernel::block::mq` module
-Message-ID: <925fe0fe-9303-4f49-b473-c3a3ecc5e2e6@proton.me>
-In-Reply-To: <87mso2me0p.fsf@metaspace.dk>
-References: <20240601134005.621714-1-nmi@metaspace.dk> <20240601134005.621714-2-nmi@metaspace.dk> <b6b8e3e6-a2b9-4ddd-bf0f-e924d5d65653@proton.me> <87mso2me0p.fsf@metaspace.dk>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 6e3342b49160368ba5b3571626e6270cd0c4f503
+	s=arc-20240116; t=1717442119; c=relaxed/simple;
+	bh=u3t0ocUfsdb3hvZ3j1iQpvNqlGBmE9PoE/Vra50k+lM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qlcCQrmQ5FN2qskY2nGevFRKfCRzC+VvsdIg7KEFLxbZptyyWLYXPItm0qRsnuyAVQBfWVLtwenQ7Wpb+ADMo1MPrxL1HXJECiNXRinKTs1gaykJ/EnWDjbF5Pf8o/wOVIMvvLWuLdfXSAEK8kCQ5IYnjB+BhDhs+SX3jXhuZOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=hDlmctC0; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a68e7538cfaso237690766b.0
+        for <linux-block@vger.kernel.org>; Mon, 03 Jun 2024 12:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717442115; x=1718046915; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B3gYSeR22FHk/H63N5QKIzZFhN7radWE7HTLdWSrTW4=;
+        b=hDlmctC0QQgNQQqIpppS/6l+ka0eMmKm5ZpnmXIpYEr2YTmY+9ug3jMw2demcoAe5N
+         jh73dUfD61yL1VJumFFXNOXZVoCEov3fc7bj31JkgtNo64MQ+YXnGXmTwuEmwAEN2K0U
+         1r0438FkyVVQxpa9EN6LBFZzyG+w4HRWLVcUwMaFyQgpBUK0PHOxwgBOpGE6pqduyTJ2
+         CFz0OlkffTpOjuFSLJ6cgmqEXkeWBljS6sBGt7zT1GHdt6XPheVRAFkpA/yb0UT4fO/r
+         euX5CC6c3yp5o4TUbqHf3kn2JOIFCwwzB7V6wQUhHdtfgQgIiT2n9t5iOwaTpws4aumC
+         S4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717442115; x=1718046915;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B3gYSeR22FHk/H63N5QKIzZFhN7radWE7HTLdWSrTW4=;
+        b=GQpEVmUC06hBFB9qckQMNw7jIbkYhqpcxhN1JCsoDvtNCZ72cp3GTogabqz0W8KL6q
+         JbUT0aVdiXg43jtYYQUNQ595nXkTE1G/t6le64938zERXHcdKQZ2gfdl/dm5K7yloXdv
+         dW4dZbus3OoG48nkc1k+/Sxp6uj9tRS9+6QaK6J4cf6l3wkd2Xt4m5+SJ4H3+VGW9N2y
+         2YeQFy0Ffs95PCaRI+KvuPIaJutuy9S4zbURIU2V+XOlxs/QOuW6WqjmtjwNmIQdK0Nk
+         aotf9hrfPOjARg5Fu+eGvZ0wVLWl0Sz19z/Kz5Vax96PdfN1VO6S0G/QC32O9n7Ohhfh
+         RBTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL5zPrmuWzF9+O4sgQT4D/WfjPJz8DCuQlhOjf098SBHkLIx/FppstKacNcBHViLVXoY+zhTWldXDliSX7EqQ5VIX/iVS3Y5qdCfk=
+X-Gm-Message-State: AOJu0Yz1ntO14drpLQCczvUghsRN7ye202dKsog5uja7vUvHuzewR0AF
+	BKcLeMWot6z/6KnZTI2F2pYnKLsDk67d8kXY4D3XpNZjXn1oR2ka4QdV+BfmQBE=
+X-Google-Smtp-Source: AGHT+IHtgHIBlj0zS7xLzxbXE82m/ijZzbggdzdL/HGAffnhu1YIh6Q7lAgz14EYizsTYU1kolggXw==
+X-Received: by 2002:a17:906:ca57:b0:a68:a117:2635 with SMTP id a640c23a62f3a-a68a117287fmr493697166b.22.1717442115351;
+        Mon, 03 Jun 2024 12:15:15 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68c38b3803sm362409466b.112.2024.06.03.12.15.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 12:15:15 -0700 (PDT)
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Ming Lei <ming.lei@redhat.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yexuan Yang <1182282462@bupt.edu.cn>,
+	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
+	Joel Granados <j.granados@samsung.com>,
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Niklas Cassel <Niklas.Cassel@wdc.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Conor Dooley <conor@kernel.org>,
+	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
+	open list <linux-kernel@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"gost.dev@samsung.com" <gost.dev@samsung.com>
+Subject: [PATCH v5 0/3] Rust block device driver API and null block driver
+Date: Mon,  3 Jun 2024 21:14:52 +0200
+Message-ID: <20240603191455.968301-1-nmi@metaspace.dk>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 03.06.24 14:01, Andreas Hindborg wrote:
-> Benno Lossin <benno.lossin@proton.me> writes:
->> On 01.06.24 15:40, Andreas Hindborg wrote:
->>> +impl seal::Sealed for Initialized {}
->>> +impl GenDiskState for Initialized {
->>> +    const DELETE_ON_DROP: bool =3D false;
->>> +}
->>> +impl seal::Sealed for Added {}
->>> +impl GenDiskState for Added {
->>> +    const DELETE_ON_DROP: bool =3D true;
->>> +}
->>> +
->>> +impl<T: Operations> GenDisk<T, Initialized> {
->>> +    /// Try to create a new `GenDisk`.
->>> +    pub fn try_new(tagset: Arc<TagSet<T>>) -> Result<Self> {
->>
->> Since there is no non-try `new` function, I think we should name this
->> function just `new`.
->=20
-> Right, I am still getting used to the new naming scheme. Do you know if
-> it is documented anywhere?
+From: Andreas Hindborg <a.hindborg@samsung.com>
 
-I don't think it is documented, it might only be a verbal convention at
-the moment. Although [1] is suggesting `new` for general constructors.
-Since this is the only constructor, one could argue that the
-recommendation is to use `new` (which I personally find a good idea).
+Hi!
 
-[1]: https://rust-lang.github.io/api-guidelines/naming.html
+Here is the fifth iteration!. This revision includes a check to validate the
+block size in the abstractions rather than in the driver. Also, the `GenDisk`
+type state was changed to a builder pattern.
 
-[...]
+V4 is here [1].
 
->>> +impl<T: Operations> OperationsVTable<T> {
->>> +    /// This function is called by the C kernel. A pointer to this fun=
-ction is
->>> +    /// installed in the `blk_mq_ops` vtable for the driver.
->>> +    ///
->>> +    /// # Safety
->>> +    ///
->>> +    /// - The caller of this function must ensure `bd` is valid
->>> +    ///   and initialized. The pointees must outlive this function.
->>
->> Until when do the pointees have to be alive? "must outlive this
->> function" could also be the case if the pointees die immediately after
->> this function returns.
->=20
-> It should not be plural. What I intended to communicate is that what
-> `bd` points to must be valid for read for the duration of the function
-> call. I think that is what "The pointee must outlive this function"
-> states? Although when we talk about lifetime of an object pointed to by
-> a pointer, I am not sure about the correct way to word this. Do we talk
-> about the lifetime of the pointer or the lifetime of the pointed to
-> object (the pointee). We should not use the same wording for the pointer
-> and the pointee.
->=20
-> How about:
->=20
->     /// - The caller of this function must ensure that the pointee of `bd=
-` is
->     ///   valid for read for the duration of this function.
+Changes from v4:
 
-But this is not enough for it to be sound, right? You create an `ARef`
-from `bd.rq`, which potentially lives forever. You somehow need to
-require that the pointer `bd` stays valid for reads and (synchronized)
-writes until the request is ended (probably via `blk_mq_end_request`).
+ - validate block size in abstractions instead of in driver code
+ - refactor `GenDisk` to builder pattern instead of type state
+ - refactor `Request::try_end` and `Request::end_ok` methods`
+ - fix formatting errors
+ - fix and clarify a number of safety comments
+ - fix typos in documentation
 
->>> +    /// - This function must not be called with a `hctx` for which
->>> +    ///   `Self::exit_hctx_callback()` has been called.
->>> +    /// - (*bd).rq must point to a valid `bindings:request` for which
->>> +    ///   `OperationsVTable<T>::init_request_callback` was called
->>
->> Missing `.` at the end.
->=20
-> Thanks.
->=20
->>
->>> +    unsafe extern "C" fn queue_rq_callback(
->>> +        _hctx: *mut bindings::blk_mq_hw_ctx,
->>> +        bd: *const bindings::blk_mq_queue_data,
->>> +    ) -> bindings::blk_status_t {
->>> +        // SAFETY: `bd.rq` is valid as required by the safety requirem=
-ent for
->>> +        // this function.
->>> +        let request =3D unsafe { &*(*bd).rq.cast::<Request<T>>() };
->>> +
->>> +        // One refcount for the ARef, one for being in flight
->>> +        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
->>> +
->>> +        // SAFETY: We own a refcount that we took above. We pass that =
-to `ARef`.
->>> +        // By the safety requirements of this function, `request` is a=
- valid
->>> +        // `struct request` and the private data is properly initializ=
-ed.
->>> +        let rq =3D unsafe { Request::aref_from_raw((*bd).rq) };
->>
->> I think that you need to require that the request is alive at least
->> until `blk_mq_end_request` is called for the request (since at that
->> point all `ARef`s will be gone).
->> Also if this is not guaranteed, the safety requirements of
->> `AlwaysRefCounted` are violated (since the object can just disappear
->> even if it has refcount > 0 [the refcount refers to the Rust refcount in
->> the `RequestDataWrapper`, not the one in C]).
->=20
-> Yea, for the last invariant of `Request`:
->=20
->   /// * `self` is reference counted by atomic modification of
->   ///   self.wrapper_ref().refcount().
->=20
-> I will add this to the safety comment at the call site:
->=20
->   //  - `rq` will be alive until `blk_mq_end_request` is called and is
->   //    reference counted by `ARef` until then.
+Thanks to all those who had spare cycles to suggest improvements!
 
-Seems like you already want to use this here :)
+Best regards,
+Andreas Hindborg
 
-[...]
 
->>> +    /// This function is called by the C kernel. A pointer to this fun=
-ction is
->>> +    /// installed in the `blk_mq_ops` vtable for the driver.
->>> +    ///
->>> +    /// # Safety
->>> +    ///
->>> +    /// This function may only be called by blk-mq C infrastructure. `=
-set` must
+Link: https://lore.kernel.org/all/20240601134005.621714-1-nmi@metaspace.dk/ [1]
 
-`set` doesn't exist (`_set` does), you are also not using this
-requirement.
 
->>> +    /// point to an initialized `TagSet<T>`.
->>> +    unsafe extern "C" fn init_request_callback(
->>> +        _set: *mut bindings::blk_mq_tag_set,
->>> +        rq: *mut bindings::request,
->>> +        _hctx_idx: core::ffi::c_uint,
->>> +        _numa_node: core::ffi::c_uint,
->>> +    ) -> core::ffi::c_int {
->>> +        from_result(|| {
->>> +            // SAFETY: The `blk_mq_tag_set` invariants guarantee that =
-all
->>> +            // requests are allocated with extra memory for the reques=
-t data.
->>
->> What guarantees that the right amount of memory has been allocated?
->> AFAIU that is guaranteed by the `TagSet` (but there is no invariant).
->=20
-> It is by C API contract. `TagSet`::try_new` (now `new`) writes
-> `cmd_size` into the `struct blk_mq_tag_set`. That is picked up by
-> `blk_mq_alloc_tag_set` to allocate the right amount of space for each req=
-uest.
->=20
-> The invariant here is on the C type. Perhaps the wording is wrong. I am
-> not exactly sure how to express this. How about this:
->=20
->             // SAFETY: We instructed `blk_mq_alloc_tag_set` to allocate r=
-equests
->             // with extra memory for the request data when we called it i=
-n
->             // `TagSet::new`.
+Andreas Hindborg (3):
+  rust: block: introduce `kernel::block::mq` module
+  rust: block: add rnull, Rust null_blk implementation
+  MAINTAINERS: add entry for Rust block device driver API
 
-I think you need a safety requirement on the function: `rq` points to a
-valid `Request`. Then you could just use `Request::wrapper_ptr` instead
-of the line below.
+ MAINTAINERS                        |  14 ++
+ drivers/block/Kconfig              |   9 ++
+ drivers/block/Makefile             |   3 +
+ drivers/block/rnull.rs             |  73 +++++++++
+ rust/bindings/bindings_helper.h    |   3 +
+ rust/helpers.c                     |  16 ++
+ rust/kernel/block.rs               |   5 +
+ rust/kernel/block/mq.rs            |  98 +++++++++++
+ rust/kernel/block/mq/gen_disk.rs   | 215 ++++++++++++++++++++++++
+ rust/kernel/block/mq/operations.rs | 237 +++++++++++++++++++++++++++
+ rust/kernel/block/mq/raw_writer.rs |  55 +++++++
+ rust/kernel/block/mq/request.rs    | 252 +++++++++++++++++++++++++++++
+ rust/kernel/block/mq/tag_set.rs    |  85 ++++++++++
+ rust/kernel/error.rs               |   6 +
+ rust/kernel/lib.rs                 |   2 +
+ 15 files changed, 1073 insertions(+)
+ create mode 100644 drivers/block/rnull.rs
+ create mode 100644 rust/kernel/block.rs
+ create mode 100644 rust/kernel/block/mq.rs
+ create mode 100644 rust/kernel/block/mq/gen_disk.rs
+ create mode 100644 rust/kernel/block/mq/operations.rs
+ create mode 100644 rust/kernel/block/mq/raw_writer.rs
+ create mode 100644 rust/kernel/block/mq/request.rs
+ create mode 100644 rust/kernel/block/mq/tag_set.rs
 
->>> +            let pdu =3D unsafe { bindings::blk_mq_rq_to_pdu(rq) }.cast=
-::<RequestDataWrapper>();
->>> +
->>> +            // SAFETY: The refcount field is allocated but not initial=
-ized, this
->>> +            // valid for write.
->>> +            unsafe { RequestDataWrapper::refcount_ptr(pdu).write(Atomi=
-cU64::new(0)) };
->>> +
->>> +            Ok(0)
->>> +        })
->>> +    }
->>
->> [...]
->>
->>> +    /// Notify the block layer that a request is going to be processed=
- now.
->>> +    ///
->>> +    /// The block layer uses this hook to do proper initializations su=
-ch as
->>> +    /// starting the timeout timer. It is a requirement that block dev=
-ice
->>> +    /// drivers call this function when starting to process a request.
->>> +    ///
->>> +    /// # Safety
->>> +    ///
->>> +    /// The caller must have exclusive ownership of `self`, that is
->>> +    /// `self.wrapper_ref().refcount() =3D=3D 2`.
->>> +    pub(crate) unsafe fn start_unchecked(this: &ARef<Self>) {
->>> +        // SAFETY: By type invariant, `self.0` is a valid `struct requ=
-est`. By
->>> +        // existence of `&mut self` we have exclusive access.
->>
->> We don't have a `&mut self`. But the safety requirements ask for a
->> unique `ARef`.
->=20
-> Thanks, I'll rephrase to:
->=20
->         // SAFETY: By type invariant, `self.0` is a valid `struct request=
-` and
->         // we have exclusive access.
->=20
->>
->>> +        unsafe { bindings::blk_mq_start_request(this.0.get()) };
->>> +    }
->>> +
->>> +    fn try_set_end(this: ARef<Self>) -> Result<ARef<Self>, ARef<Self>>=
- {
->>> +        // We can race with `TagSet::tag_to_rq`
->>> +        match this.wrapper_ref().refcount().compare_exchange(
->>> +            2,
->>> +            0,
->>> +            Ordering::Relaxed,
->>> +            Ordering::Relaxed,
->>> +        ) {
->>> +            Err(_old) =3D> Err(this),
->>> +            Ok(_) =3D> Ok(this),
->>> +        }
->>> +    }
->>> +
->>> +    /// Notify the block layer that the request has been completed wit=
-hout errors.
->>> +    ///
->>> +    /// This function will return `Err` if `this` is not the only `ARe=
-f`
->>> +    /// referencing the request.
->>> +    pub fn end_ok(this: ARef<Self>) -> Result<(), ARef<Self>> {
->>> +        let this =3D Self::try_set_end(this)?;
->>> +        let request_ptr =3D this.0.get();
->>> +        core::mem::forget(this);
->>> +
->>> +        // SAFETY: By type invariant, `self.0` is a valid `struct requ=
-est`. By
->>> +        // existence of `&mut self` we have exclusive access.
->>
->> Same here, but in this case, the `ARef` is unique, since you called
->> `try_set_end`. You could make it a `# Guarantee` of `try_set_end`: "If
->> `Ok(aref)` is returned, then the `aref` is unique."
->=20
-> Makes sense. I have not seen `# Guarantee` used anywhere. Do you have a l=
-ink for that use?
 
-Alice used it a couple of times, eg in [2]. I plan on putting it in the
-safety standard.
-
-[2]: https://lore.kernel.org/rust-for-linux/20230601134946.3887870-2-alicer=
-yhl@google.com/
-
----
-Cheers,
-Benno
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.45.1
 
 
