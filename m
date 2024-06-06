@@ -1,224 +1,258 @@
-Return-Path: <linux-block+bounces-8361-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8348-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD1248FE3AB
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 11:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14FA58FE083
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 10:05:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 42C891F22B92
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 09:59:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50FE81F22E8E
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 08:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC131181315;
-	Thu,  6 Jun 2024 09:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QKw0wDIB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF6313AA31;
+	Thu,  6 Jun 2024 08:05:43 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACF2180A63
-	for <linux-block@vger.kernel.org>; Thu,  6 Jun 2024 09:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630B2DDD2;
+	Thu,  6 Jun 2024 08:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717667973; cv=none; b=Eblutuak2sqzyI1cELC6pCZfRlY9OpDeLaTBdOPg3b0cY5FeVXrxVjuEZketmFV1diQNs5upT6VMP6uz/9MDPOV0DAAMjFx2qy8JF8VVRgHIaSUF1zDbeEELQH9xatF8FUJr22V7BJ2CPfUbRSz2MgfTebPQ6gUt1LT3C20yYu0=
+	t=1717661143; cv=none; b=kR4XJFfi2w+Zs5SlsuZDeg5ioAvuTCG92K1tH6J5bHRggfSllVSY7keDmToOpkpX2qoYjZpRPu/jnZIZiFVZCnl4w4NuqcIqEMwgLuqJg3k/tkn4mXgJsRn2YZO2D2GIgUNS8epFrPlDX3R14OTNpzDJ/R1jbwctkz+7RRyYDeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717667973; c=relaxed/simple;
-	bh=+kWRtm46EHgrfEjT1jHXAvldmafiXTrXdwgo0depAw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=ui4B5rehfjSvQF0qtwmSn/NNLtVUv4PTE7SsVWjhri1NQIRaQ89QTQKY5ADG6hQ/1OiLClsgCsxS1FEft+8dK2bMpPJ/qcIi4aV4c1tdo4I6DNEU9s4cX6OhMY7seqV64/bYIISqJSBJCQ9Efj2Bd191al8mbLLWs8phjd2tNE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QKw0wDIB; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240606095929epoutp017b28ea7e336ae3c12cf29a23792e75e7~WYesJTjc_1902419024epoutp01F
-	for <linux-block@vger.kernel.org>; Thu,  6 Jun 2024 09:59:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240606095929epoutp017b28ea7e336ae3c12cf29a23792e75e7~WYesJTjc_1902419024epoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717667970;
-	bh=X/08X1olkAIHOusibyucFDGsWQxmM65XPCWbJyAP97k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QKw0wDIB92CTHYFpIxJAvP41i3DJ/cf/0ZXQkxIvg3jr4bqVBhe5VbL0CBZzrUrbE
-	 VIsnKoi3ITrM41Z5pbK7a8XevDX5hsX25Fs2A4xZtx278nq37+lT2uXKtF7YrXjbk4
-	 YCRlRNkc3u6DgyW/ZC5f8kM7jxZaEw/81EV7Z4xg=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240606095929epcas5p245fe6bdf77b2f0f33a3edf73692d5856~WYerhxehs1456214562epcas5p21;
-	Thu,  6 Jun 2024 09:59:29 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Vw0DH2hHwz4x9Px; Thu,  6 Jun
-	2024 09:59:27 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A2.3C.19174.F7881666; Thu,  6 Jun 2024 18:59:27 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240606072827epcas5p285de8d4f3b0f6d3a87f8341414336b42~WWaz25d7o3006730067epcas5p2d;
-	Thu,  6 Jun 2024 07:28:27 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240606072827epsmtrp28b89143fbe61df61e97e0db30931c9e8~WWaz1zddk3242132421epsmtrp2a;
-	Thu,  6 Jun 2024 07:28:27 +0000 (GMT)
-X-AuditID: b6c32a50-157f7a8000004ae6-62-6661887f9388
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C9.FC.07412.B1561666; Thu,  6 Jun 2024 16:28:27 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240606072823epsmtip2dad935b746ccadd32ea43752942abaab~WWawJjuEm2294122941epsmtip2Y;
-	Thu,  6 Jun 2024 07:28:23 +0000 (GMT)
-Date: Thu, 6 Jun 2024 12:58:35 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, martin.petersen@oracle.com, david@fromorbit.com,
-	hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
-	joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-Message-ID: <20240606072835.a7hnqm5mkzvgsojp@nj.shetty@samsung.com>
+	s=arc-20240116; t=1717661143; c=relaxed/simple;
+	bh=djshAUx8bo/RDOx9ATGoxchxDJlrmcOAHO+qgnthJy8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j39mkWHJMxHW9+kstIM/ORrEnqgGEI127vmYceFhJo4N5KAqHqgu3wDg1UMk257fn1DB30ar3jmijL5QhhLPK86njwgPGS81BbbrgtvcsJnXzZhzdSWVDssn24/hzdVx7+JawP7SYNJN9ljN+vaSTsIWJpViH3yGm5+bF8CPo0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vvxhh48CGz4f3n5h;
+	Thu,  6 Jun 2024 16:05:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id BC3DA1A0184;
+	Thu,  6 Jun 2024 16:05:35 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgBXfA_NbWFmwqpTPA--.42412S3;
+	Thu, 06 Jun 2024 16:05:35 +0800 (CST)
+Message-ID: <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
+Date: Thu, 6 Jun 2024 16:05:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTZxjG951zetoSyo7A9APUscKygdw62/rhRIyiHnUzJGbZhltKVw4t
-	AdquFxTHwn1yGchlw1EUOyRyKYEJjIGCY6CAVccWoIsYCyawTQFh3ibrKAMKi//98j7Pm+f7
-	3jcvB3c1sT05cUodo1FKE/ikE9HW6+cXmJojjQ0pH+ahJnMfjjKKFnBkunuKRFO9jwAqm5vH
-	0UT3SYBstwZx1NpnBWj8x3BkrDpLoNvdHRjqrCrBUJ3pGoYqTmdi6NriDIlKeiwATY4YMNQ1
-	ugV9+0U1gTq7rhNo6NIZEp27MMlGNf12DBXnjGCofSIdoMapWQINjHqhwYV+1q6N9NDwIdpc
-	BekOw102PWi9SNBDt/R0c30uSbdUp9J/tpQD+vLtNJI+X1jKogsyH5J0R/YYi/5rcpSgZ6+M
-	kHRhaz2gbxqvsiPdouJ3KBhpDKPxZpQyVUycUh7GP3REskciEocIAgWhaBvfWylNZML4Ee9E
-	Bu6LS1gaEN87SZqgXypFSrVafvDOHRqVXsd4K1RaXRifUcckqIXqIK00UatXyoOUjG67ICTk
-	LdGSMTpe8aTIRKq/9Dg+cKeBSAP33PMAlwMpIczPyCbygBPHleoEsNGahS0LrtQjAEtmkhzC
-	MwAvdBURax01RSPAIXQB+MvT31fbHwP43Pore9lFUL7wfG8+mQc4HJLaAm8scpbL7tSb8Nl4
-	zYofp/pIWJ1VhC8LblQ0nDEXs5aZR+2BBWdqcQevg9fLJ1aSudTbcPFkJ9vxCgsX2upkDo6A
-	P/xswhzsBh/0t656POHjh12kg4/Buq9qyeVgSGUBaPjNABxCOMw2n1oJwykFbLUMrDZvgl+b
-	GzFH3QUW2CZWA3iwvXKNfWBDk3E1wANa/k5fZRr+O9DMckzlMgGtNhtWBDYbXviQ4YU8B2+H
-	uXMZLMPSwHDKC9bYOQ70g02Xgo2AVQ88GbU2Uc7IRGpBoJI59v+aZarEZrByNf6R7cD03UJQ
-	D8A4oAdADs535x3WSmJdeTHS5BOMRiXR6BMYbQ8QLW2oGPd8RaZaOjulTiIQhoYIxWKxMHSr
-	WMDfwJvKPhvjSsmlOiaeYdSMZq0P43A907DoWmuA+l6OuOAb/5SL4fv50x+ZDoJX28osXp++
-	FEU+sGtN3buD54z1zv6Efue2AIvQU+WzcXb6e5GGm60Yn5D46g8vJC/4RB3ENb5xf1QON93M
-	cJluOnDUY778n/WFJ+wfXnV3OWBzvsMqed4bgaUlFUpSaKtH+v5NybobgfSY9T2/gNLP98pf
-	rzmnqUjJP7JPJ1duDc2ZT/G4YiktbulIHuYmDSsTe40NyXszsbqyhdPzUevL7GW75zTeE7By
-	PlV4vyKg0Nn22sgHn8h2rVM+/ezJ+23xH6c62ac4iy+bQSw/F5fdF232dfvpXXfp8TfE7q7e
-	RxXpG7ww7lhzJ28mmE9oFVKBP67RSv8D5UMMgL4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTZxiGfc97enqoIzmU4l6EaDyZDmrsbLLha2SbupicBINTyBLFDc/k
-	UAkUSEvdJNlkoKI0sPIRLaUbHxKLVUQBDShUUpRK1ZAMYaEOpFrkS2A1zoxMyiyNkX93nuu+
-	nufPQ0PpC3I1nZaZI2gy+QyWkpA3utm1myIEPnWzsUuEm5w9EOcbFiC+NPwrhae7XwJ89u95
-	iD1dhQD/97AP4taeEYBHb3+Ja+p+I/FQVzuBO+rKCHzx0l0CV50rIPDdxRkKl9kHAR4bMBG4
-	07UR156qJ3FHZy+J+2+aKVx9YUyMLQ4fgUtPDxC4zfMLwFem50h8zxWB+xYcou2RXP+jOM5Z
-	h7h207CY6xu5RnL9D3Vcs/UMxbXUH+cmWioBd2soj+LOl5SLuOKCWYprP/lExHnHXCQ3Zxug
-	uJJWK+Ae1NwRfx16QBKbImSkHRU0n3xxSHJkwuASZdtW/Wh9biTyQKO0CATRiPkUWQwDoAhI
-	aClzC6DGWgcVAOHowsIdGMih6KJvXBwoeQEqbdMTfkAyH6Hz3fq3Ak1TzEZ0f5H2j2VMFHo9
-	aiH9fcg4KTRkNpF+EMocQjPOUpE/BzNfoWJzAwwsHYeoVf+KDIAQ1FvpWcqQiUG/t7ih/wBk
-	IpDFt3QgiNmGFgs7xAbAmJYZpmWG6b1RA6AVhAvZWrVKfViZrcwUflBoebVWl6lSHM5SN4Ol
-	h5BHtYGRap/CDgga2AGiISsLjtcmp0qDU/hjuYImK1mjyxC0dhBBk+yHwUpjVYqUUfE5Qrog
-	ZAuad5Sgg1bnEeZoeVLfQfOa10mPd9fu4QcTbeky25a2+akdPZ1bp4yRzeV7w1hen7sfZmzu
-	mGWFpsHkKce2GP2bj6uUCajCs5YdzUqSJwCQmkMbfGc863adiM0tPvqm4rPwyzNaw+RJvdnb
-	0Ijmeo8h+QsVW1Fc+NTt/vyVybslMqxopXVn51DV+PxIdPKpEPw00cL/k6D0psf3mk9Xh8Bv
-	bVv/ffC96PFfLnvKow3Pd4T9dFO0zq26bZ2t1zntsdUfRJUoLnfL9sU9a3kiv27P/c6RuvK+
-	fPrn+fWJDVfzj5esgAd1aeJE4qVsMmdS4qbUVNKfBScs3xjjW59dG6zIU/yRX7aJJbVHeKUc
-	arT8/7jiQ5l/AwAA
-X-CMS-MailID: 20240606072827epcas5p285de8d4f3b0f6d3a87f8341414336b42
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_61518_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240606072827epcas5p285de8d4f3b0f6d3a87f8341414336b42
-References: <20240520102033.9361-3-nj.shetty@samsung.com>
-	<eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
-	<9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
-	<a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
-	<665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
-	<abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org>
-	<20240601055931.GB5772@lst.de>
-	<d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
-	<20240604044042.GA29094@lst.de>
-	<4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
-	<CGME20240606072827epcas5p285de8d4f3b0f6d3a87f8341414336b42@epcas5p2.samsung.com>
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_61518_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
-
-On 04/06/24 04:44AM, Bart Van Assche wrote:
->On 6/3/24 21:40, Christoph Hellwig wrote:
->>There is no requirement to process them synchronously, there is just
->>a requirement to preserve the order.  Note that my suggestion a few
->>arounds ago also included a copy id to match them up.  If we don't
->>need that I'm happy to leave it away.  If need it it to make stacking
->>drivers' lifes easier that suggestion still stands.
->
->Including an ID in REQ_OP_COPY_DST and REQ_OP_COPY_SRC operations sounds
->much better to me than abusing the merge infrastructure for combining
->these two operations into a single request. With the ID-based approach
->stacking drivers are allowed to process copy bios asynchronously and it
->is no longer necessary to activate merging for copy operations if
->merging is disabled (QUEUE_FLAG_NOMERGES).
->
-Single request, with bio merging approach:
-The current approach is to send a single request to driver,
-which contains both destination and source information inside separate bios.
-Do you have any different approach in mind ?
-
-If we want to proceed with this single request based approach,
-we need to merge the destination request with source BIOs at some point.
-a. We chose to do it via plug approach.
-b. Alternative I see is scheduler merging, but here we need some way to
-hold the request which has destination info, until source bio is also
-submitted.
-c. Is there any other way, which I am missing here ?
-
-Limitation of current plug based approach:
-I missed the possibility of asynchronous submission by stacked device.
-Since we enabled only dm-linear, we had synchronous submission till now
-and our test cases worked fine.
-But in future if we start enabling dm targets with asynchronous submission,
-the current plug based approach won't work.
-The case where Bart mentioned possibility of 2 different tasks sending
-copy[1] and they are getting merged wrongly is valid in this case.
-There will be corruption, copy ID approach can solve this wrong merging.
-
-Copy ID based merging might preserve the order, but we still need the
-copy destination request to wait for copy source bio to merge.
-
-Copy ID approach:
-We see 3 possibilities here:
-1. No merging: If we include copy-id in src and dst bio, the bio's will get
-submitted separately and reach to the driver as separate requests.
-How do we plan to form a copy command in driver ?
-2. Merging BIOs:
-At some point we need to match the src bio with the dst bio and send this
-information together to the driver. The current implementation.
-This still does not solve the asynchronous submission problem, mentioned
-above.
-3. Chaining BIOs:
-This won't work with stacked devices as there will be cloning, and hence
-chain won't be maintained.
-
-[1] https://lore.kernel.org/all/d7ae00c8-c038-4bed-937e-222251bc627a@acm.org/
-
-Thank You,
-Nitesh Shetty
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_61518_
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] ublk_drv: fix NULL pointer dereference in
+ ublk_ctrl_start_recovery()
+To: Changhui Zhong <czhong@redhat.com>, Ming Lei <ming.lei@redhat.com>
+Cc: Li Nan <linan666@huaweicloud.com>, axboe@kernel.dk,
+ ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
+ houtao1@huawei.com, yangerkun@huawei.com
+References: <20240529095313.2568595-1-linan666@huaweicloud.com>
+ <Zl0QpCbYVHIkKa/H@fedora>
+ <225f4c8e-0e2c-8f4b-f87d-69f4677af572@huaweicloud.com>
+ <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
+ <918f128b-f752-2d66-ca60-7d9c711ed928@huaweicloud.com>
+ <CAGVVp+V6XGmE_LyOYM3z8cEOzkvQZy=2Fnr5V3G4+DchxAz3Qw@mail.gmail.com>
+ <ZmA0Se+t/LZihBKp@fedora>
+ <CAGVVp+WoBochfQvLgAVbpWFv6JVAfQVkPwWDG8mBxqgGK-NDbg@mail.gmail.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <CAGVVp+WoBochfQvLgAVbpWFv6JVAfQVkPwWDG8mBxqgGK-NDbg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgBXfA_NbWFmwqpTPA--.42412S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF1xtrW3AFyfXrWxArWDJwb_yoWxZr45pw
+	18Gr1UGrW8Jry3JF47Jr18Aw1xtw13AFn3G39Fqw1a93W5Xw4Utry0gr4qvr4DGr1kXryI
+	qa1UWw18Kw4DGaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+	4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_61518_--
+
+在 2024/6/6 12:48, Changhui Zhong 写道:
+
+[...]
+
+>>
+>> Hi Changhui,
+>>
+>> The hang is actually expected because recovery fails.
+>>
+>> Please pull the latest ublksrv and check if the issue can still be
+>> reproduced:
+>>
+>> https://github.com/ublk-org/ublksrv
+>>
+>> BTW, one ublksrv segfault and two test cleanup issues are fixed.
+>>
+>> Thanks,
+>> Ming
+>>
+> 
+> Hi,Ming and Nan
+> 
+> after applying the new patch and pulling the latest ublksrv,
+> I ran the test for 4 hours and did not observe any task hang.
+> the test results looks good！
+> 
+> Thanks，
+> Changhui
+> 
+> 
+> .
+
+Thanks for you test!
+
+However, I got a NULL pointer dereference bug with ublksrv. It is not
+introduced by this patch. It seems io was issued after deleting disk. And
+it can be reproduced by:
+
+   while true; do make test T=generic/004; done
+
+[ 1524.286485] running generic/004
+[ 1529.110875] blk_print_req_error: 109 callbacks suppressed
+[ 1529.110881] I/O error, dev ublkb0, sector 164512 op 0x0:(READ) flags 0x0 
+phys_seg 9 prio class 0
+[ 1529.113801] I/O error, dev ublkb0, sector 161000 op 0x0:(READ) flags 0x0 
+phys_seg 6 prio class 0
+[ 1529.114711] I/O error, dev ublkb0, sector 164576 op 0x1:(WRITE) flags 
+0x8800 phys_seg 7 prio class 0
+[ 1529.117441] I/O error, dev ublkb0, sector 164632 op 0x1:(WRITE) flags 
+0x8800 phys_seg 8 prio class 0
+[ 1529.118400] I/O error, dev ublkb0, sector 164584 op 0x0:(READ) flags 0x0 
+phys_seg 8 prio class 0
+[ 1529.119314] I/O error, dev ublkb0, sector 161176 op 0x1:(WRITE) flags 
+0x8800 phys_seg 10 prio class 0
+[ 1529.120274] I/O error, dev ublkb0, sector 165136 op 0x1:(WRITE) flags 
+0x8800 phys_seg 6 prio class 0
+[ 1529.121213] I/O error, dev ublkb0, sector 165184 op 0x1:(WRITE) flags 
+0x8800 phys_seg 10 prio class 0
+[ 1529.122166] I/O error, dev ublkb0, sector 161256 op 0x1:(WRITE) flags 
+0x8800 phys_seg 5 prio class 0
+[ 1529.123101] I/O error, dev ublkb0, sector 161048 op 0x0:(READ) flags 0x0 
+phys_seg 11 prio class 0
+[ 1536.366869] blk_print_req_error: 181 callbacks suppressed
+[ 1536.366885] I/O error, dev ublkb0, sector 181496 op 0x1:(WRITE) flags 
+0x8800 phys_seg 9 prio class 0
+[ 1536.368449] I/O error, dev ublkb0, sector 181568 op 0x1:(WRITE) flags 
+0x8800 phys_seg 5 prio class 0
+[ 1536.369398] I/O error, dev ublkb0, sector 181608 op 0x1:(WRITE) flags 
+0x8800 phys_seg 10 prio class 0
+[ 1536.370351] I/O error, dev ublkb0, sector 180976 op 0x0:(READ) flags 0x0 
+phys_seg 7 prio class 0
+[ 1536.371266] I/O error, dev ublkb0, sector 183696 op 0x1:(WRITE) flags 
+0x8800 phys_seg 9 prio class 0
+[ 1536.372217] I/O error, dev ublkb0, sector 175112 op 0x1:(WRITE) flags 
+0x8800 phys_seg 5 prio class 0
+[ 1536.373168] I/O error, dev ublkb0, sector 183768 op 0x1:(WRITE) flags 
+0x8800 phys_seg 8 prio class 0
+[ 1536.374120] I/O error, dev ublkb0, sector 175152 op 0x1:(WRITE) flags 
+0x8800 phys_seg 5 prio class 0
+[ 1536.375070] I/O error, dev ublkb0, sector 181032 op 0x0:(READ) flags 0x0 
+phys_seg 8 prio class 0
+[ 1536.375977] I/O error, dev ublkb0, sector 181096 op 0x0:(READ) flags 0x0 
+phys_seg 8 prio class 0
+[ 1541.171010] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[ 1541.171734] #PF: supervisor write access in kernel mode
+[ 1541.172271] #PF: error_code(0x0002) - not-present page
+[ 1541.172798] PGD 0 P4D 0
+[ 1541.173065] Oops: Oops: 0002 [#1] PREEMPT SMP
+[ 1541.173515] CPU: 0 PID: 43707 Comm: ublk Not tainted 
+6.9.0-next-20240523-00004-g9bc7e95c7323 #454
+[ 1541.174417] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
+1.16.1-2.fc37 04/01/2014
+[ 1541.175311] RIP: 0010:io_fallback_tw+0x252/0x300
+[ 1541.175808] Code: ff 48 83 05 ef 7f 45 0c 01 e9 f7 fe ff ff 5b 48 83 05 
+31 80 45 0c 01 5d 41 5c 41 5d c3 48 83 05 0b 4d 45 0c 01 49 8b 44 24 20 
+<3e> 48 83 0c
+[ 1541.177682] RSP: 0018:ffffc900036bbd00 EFLAGS: 00010202
+[ 1541.178221] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 
+0000000000100001
+[ 1541.178947] RDX: ffff888177180000 RSI: 0000000000000001 RDI: 
+ffff88817727d000
+[ 1541.179669] RBP: ffff8881345da290 R08: 0000000000100001 R09: 
+0000000000000000
+[ 1541.180393] R10: 0000000000000000 R11: 0000000000000000 R12: 
+ffff888173324800
+[ 1541.181120] R13: 0000000000000001 R14: ffff888177180000 R15: 
+0000000000000008
+[ 1541.181852] FS:  0000000000000000(0000) GS:ffff88842fc00000(0000) 
+knlGS:0000000000000000
+[ 1541.182666] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1541.183256] CR2: 0000000000000000 CR3: 00000001718bc004 CR4: 
+0000000000770ef0
+[ 1541.183978] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
+0000000000000000
+[ 1541.184683] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
+0000000000000400
+[ 1541.185392] PKRU: 55555554
+[ 1541.185668] Call Trace:
+[ 1541.185927]  <TASK>
+[ 1541.186148]  ? show_regs+0x83/0x90
+[ 1541.186497]  ? __die_body+0x22/0x90
+[ 1541.186862]  ? __die+0x35/0x50
+[ 1541.187184]  ? page_fault_oops+0x1cc/0x630
+[ 1541.187604]  ? pick_eevdf+0x65/0x210
+[ 1541.187979]  ? check_preempt_wakeup_fair+0x283/0x300
+[ 1541.188483]  ? xfs_iext_lookup_extent+0xa4/0x2e0
+[ 1541.188967]  ? do_user_addr_fault+0x118/0xab0
+[ 1541.189418]  ? exc_page_fault+0xde/0x390
+[ 1541.189825]  ? asm_exc_page_fault+0x22/0x30
+[ 1541.190247]  ? io_fallback_tw+0x252/0x300
+[ 1541.190652]  tctx_task_work_run+0x181/0x1c0
+[ 1541.191090]  tctx_task_work+0x3f/0x80
+[ 1541.191473]  task_work_run+0x81/0xf0
+[ 1541.191841]  do_exit+0x53e/0x1360
+[ 1541.192179]  ? tctx_task_work+0x3f/0x80
+[ 1541.192578]  do_group_exit+0x34/0xc0
+[ 1541.192953]  get_signal+0xe10/0xe20
+[ 1541.193317]  ? blk_finish_plug+0x30/0x50
+[ 1541.193730]  ? io_submit_sqes+0x9e0/0xd70
+[ 1541.194133]  arch_do_signal_or_restart+0x32/0x400
+[ 1541.194607]  ? __do_sys_io_uring_enter+0x170/0x8d0
+[ 1541.195097]  syscall_exit_to_user_mode+0x2a1/0x430
+[ 1541.195591]  do_syscall_64+0xb9/0x240
+[ 1541.195973]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+[ 1541.196489] RIP: 0033:0x7fcc6c8b34a5
+[ 1541.196863] Code: Unable to access opcode bytes at 0x7fcc6c8b347b.
+[ 1541.197490] RSP: 002b:00007fcc6c1ffd38 EFLAGS: 00000202 ORIG_RAX: 
+00000000000001aa
+[ 1541.198257] RAX: 000000000000003c RBX: 0000000000000000 RCX: 
+00007fcc6c8b34a5
+[ 1541.198984] RDX: 0000000000000001 RSI: 000000000000003c RDI: 
+0000000000000000
+[ 1541.199711] RBP: 00007fcc64002f68 R08: 00007fcc6c1ffd70 R09: 
+0000000000000018
+[ 1541.200438] R10: 0000000000000019 R11: 0000000000000202 R12: 
+00007fcc6c1ffd90
+[ 1541.201165] R13: 0000000000000000 R14: 0000000000000000 R15: 
+00000000000001aa
+[ 1541.202228]  </TASK>
+[ 1541.202465] Modules linked in:
+[ 1541.202798] CR2: 0000000000000000
+[ 1541.203143] ---[ end trace 0000000000000000 ]---
+
+-- 
+Thanks,
+Nan
+
 
