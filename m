@@ -1,164 +1,96 @@
-Return-Path: <linux-block+bounces-8360-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8362-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37BF48FE378
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 11:53:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2D548FE570
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 13:34:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2CED2823B5
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 09:53:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E02928372A
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2024 11:34:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B74817F4F5;
-	Thu,  6 Jun 2024 09:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BPEFWO/v"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF46F195387;
+	Thu,  6 Jun 2024 11:34:54 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50917C9FB
-	for <linux-block@vger.kernel.org>; Thu,  6 Jun 2024 09:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257B53CF73;
+	Thu,  6 Jun 2024 11:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717667548; cv=none; b=c7tWtTFJjew4oAdmdRLGtNL2t/Yql7OXahkPF5dlhsOgNxDhMJ4qBqlAhSX/SRua12n3fDzURBWtMDUqzBHa1AQNGdOGRV5Aa5L9ODPuvaA46GruVK5OqtDY5bgFPMA733dXV2/o+N5HXpiqvJsISqQcA9TX42Gc4Mw0s/bQHtg=
+	t=1717673694; cv=none; b=CGJaVY9Cv1vCECJCwl8PXCPW6Qf9UpbMl2KCWUMurSOhJqutPQKIOv5U0NMepRnpoohOwMh/4pxe6Q+WZa4fkpsay6cSmlzU59X9cckac8DCxRPgBMwl/MUeILoi6P961/crsTDz51UITkZWVuexbN+dqMBHbiqaogZtF7PLNXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717667548; c=relaxed/simple;
-	bh=X7cVxbBveQqrOZ2WwFezmFwF45VgSY2MzHX0JhuP+Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qNvc1BFBUZ/R9ErKtZqIolvHn/KXZR+n56lGRNdhYb6t8rXx6BGL9RJleEsg/zwkWM/dBjGemW9dEdjnFAVvLgJszSqRbrb4tArLwYJGkdrJZ2FlCzWFM4DTNdoNBR7wrKqZf03nTZ1P5eG7MYvVb51h4ysnzPOtSkl6aOdROiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BPEFWO/v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717667545;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rpvCY5bzwtgFrw8HO1MFPpTrsqw6qdsV1vTK4nMLwI=;
-	b=BPEFWO/v7HCfFrB3qF6LU+epk0cMt7zS5P7/R+CE5J+tfbuJ9akCMvcUQZuv7nrRxOQZ3n
-	dlDIxM5N7Y0Y+GSZbngvZEvAk6qCYWhAsRXCzf991OpVQV47P3oU0gf0jWKLCizHACtVvs
-	+g8gM+ln6fyvBXd2+PRtmuXLMQmhjzA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-mIggGKAlO3S6ge_9wYrxmw-1; Thu, 06 Jun 2024 05:52:23 -0400
-X-MC-Unique: mIggGKAlO3S6ge_9wYrxmw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E97C185A78E;
-	Thu,  6 Jun 2024 09:52:22 +0000 (UTC)
-Received: from fedora (unknown [10.72.113.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A116492BF1;
-	Thu,  6 Jun 2024 09:52:16 +0000 (UTC)
-Date: Thu, 6 Jun 2024 17:52:12 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Li Nan <linan666@huaweicloud.com>
-Cc: Changhui Zhong <czhong@redhat.com>, axboe@kernel.dk,
-	ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH] ublk_drv: fix NULL pointer dereference in
- ublk_ctrl_start_recovery()
-Message-ID: <ZmGGzNLLC6WpM9tb@fedora>
-References: <20240529095313.2568595-1-linan666@huaweicloud.com>
- <Zl0QpCbYVHIkKa/H@fedora>
- <225f4c8e-0e2c-8f4b-f87d-69f4677af572@huaweicloud.com>
- <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
- <918f128b-f752-2d66-ca60-7d9c711ed928@huaweicloud.com>
- <CAGVVp+V6XGmE_LyOYM3z8cEOzkvQZy=2Fnr5V3G4+DchxAz3Qw@mail.gmail.com>
- <ZmA0Se+t/LZihBKp@fedora>
- <CAGVVp+WoBochfQvLgAVbpWFv6JVAfQVkPwWDG8mBxqgGK-NDbg@mail.gmail.com>
- <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
+	s=arc-20240116; t=1717673694; c=relaxed/simple;
+	bh=ALWHOh7G/hvm7z6dudM/aW1WhK6v9Gzl2sObnuSnWX4=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TMVdrgSx9Zr18Ym3FUtbR5KF6SeYmai+TZnYUChaVbqjaT0xAge/nElBjhb7RtPjGbhUGOfjGj/BSBG35OXYyYU/7SkhThB9AZpeVjZCRhnp82zey6Vrpyafp2jQDDigb8wfTBLABvUP4pQqvXUkR8yTgCZxGiSqezJeHNDEDTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vw2L515cvz4f3nTK;
+	Thu,  6 Jun 2024 19:34:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 574601A018A;
+	Thu,  6 Jun 2024 19:34:48 +0800 (CST)
+Received: from [10.174.178.185] (unknown [10.174.178.185])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g7XnmFmtDHnOg--.46212S3;
+	Thu, 06 Jun 2024 19:34:48 +0800 (CST)
+Subject: Re: [PATCH] block: bio-integrity: fix potential null-ptr-deref in
+ bio_integrity_free
+To: Christoph Hellwig <hch@infradead.org>
+References: <20240606062655.2185006-1-yebin@huaweicloud.com>
+ <ZmFatW3BEzTPgR7S@infradead.org>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ming.lei@redhat.com,
+ Ye Bin <yebin10@huawei.com>
+From: yebin <yebin@huaweicloud.com>
+Message-ID: <66619EB6.4040002@huaweicloud.com>
+Date: Thu, 6 Jun 2024 19:34:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
-
-On Thu, Jun 06, 2024 at 04:05:33PM +0800, Li Nan wrote:
-> 
-> 
-> 在 2024/6/6 12:48, Changhui Zhong 写道:
-> 
-> [...]
-> 
-> > > 
-> > > Hi Changhui,
-> > > 
-> > > The hang is actually expected because recovery fails.
-> > > 
-> > > Please pull the latest ublksrv and check if the issue can still be
-> > > reproduced:
-> > > 
-> > > https://github.com/ublk-org/ublksrv
-> > > 
-> > > BTW, one ublksrv segfault and two test cleanup issues are fixed.
-> > > 
-> > > Thanks,
-> > > Ming
-> > > 
-> > 
-> > Hi,Ming and Nan
-> > 
-> > after applying the new patch and pulling the latest ublksrv,
-> > I ran the test for 4 hours and did not observe any task hang.
-> > the test results looks good！
-> > 
-> > Thanks，
-> > Changhui
-> > 
-> > 
-> > .
-> 
-> Thanks for you test!
-> 
-> However, I got a NULL pointer dereference bug with ublksrv. It is not
-
-BTW, your patch isn't related with generic/004 which won't touch
-recovery code path.
-
-> introduced by this patch. It seems io was issued after deleting disk. And
-> it can be reproduced by:
-> 
->   while true; do make test T=generic/004; done
-
-We didn't see that when running such test with linus tree, and usually
-Changhui run generic test for hours.
-
-> 
-> [ 1524.286485] running generic/004
-> [ 1529.110875] blk_print_req_error: 109 callbacks suppressed
-...
-> [ 1541.171010] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [ 1541.171734] #PF: supervisor write access in kernel mode
-> [ 1541.172271] #PF: error_code(0x0002) - not-present page
-> [ 1541.172798] PGD 0 P4D 0
-> [ 1541.173065] Oops: Oops: 0002 [#1] PREEMPT SMP
-> [ 1541.173515] CPU: 0 PID: 43707 Comm: ublk Not tainted
-> 6.9.0-next-20240523-00004-g9bc7e95c7323 #454
-> [ 1541.174417] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.16.1-2.fc37 04/01/2014
-> [ 1541.175311] RIP: 0010:io_fallback_tw+0x252/0x300
-
-This one looks one io_uring issue.
-
-Care to provide which line of source code points to by 'io_fallback_tw+0x252'?
-
-gdb> l *(io_fallback_tw+0x252)
+In-Reply-To: <ZmFatW3BEzTPgR7S@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAn9g7XnmFmtDHnOg--.46212S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5i7kC6x804xWl14x267AKxVW8JVW5JwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjc
+	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
+	8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbPEf5UUUU
+	U==
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
 
-Thanks,
-Ming
+
+On 2024/6/6 14:44, Christoph Hellwig wrote:
+> What kernel is this on?  As of Linux 6.9 we are now always freezing
+v4.18
+> the queue while updating the logical_block_size in the nvme driver,
+> so there should be no inflight I/O while it is changing.
+>
+The root cause of the problem is that there is no concurrency protection 
+between
+issuing DIO checks in __ blkdev direct IO simple() and updating logical 
+block sizes ,
+resulting in the block layer being able to see DIOs that are not aligned 
+with logical
+blocks.
 
 
