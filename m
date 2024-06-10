@@ -1,375 +1,267 @@
-Return-Path: <linux-block+bounces-8514-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8520-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DAF3901FC7
-	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2024 12:49:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B06C902047
+	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2024 13:26:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B5811C212D1
-	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2024 10:49:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA22C2834A4
+	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2024 11:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61A513D615;
-	Mon, 10 Jun 2024 10:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAF674414;
+	Mon, 10 Jun 2024 11:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KjXCX7SU";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="azU+s3lS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J2M+PN/U"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE13139583;
-	Mon, 10 Jun 2024 10:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718016294; cv=fail; b=cwobYNeRyFCIqEMjSrWB7usSkSJijsZ5Pb2xf8fdO32cOL/2r6igLEnDyq/Hc3ny+ljhOmd9IAtb+9bjHsfjT2+0KryuUvBs6WwNBN6t1f6L3j5BVbYmw9t3kT0Qt1ouTMI9+1cNp5vviOm7MKjrdX++hpz4DKfdtLAQ8ccN+Sg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718016294; c=relaxed/simple;
-	bh=iki/1NYZ9YoGpsiuRdEgpVnO8uPeskpeOIqE392MusA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sMMDWB+3ygcYVenZrcIpqOiKjWvG8KUR3QzsNSNQ7rc7xvd9v3DLCL5elTjl+ShBwkDoVL0WcOpD51y/bWAcJLIjtbH9bZplEQaTOr4XxD7AZXB455LVqA/5D41K9fypyrbaVdJf6446VJUZVVM007ZyODdN//EXx+U02+fh0rM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KjXCX7SU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=azU+s3lS; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A4BRx6024983;
-	Mon, 10 Jun 2024 10:44:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=
-	corp-2023-11-20; bh=IzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=; b=
-	KjXCX7SUri0Sl3DgGrzH5Y6jtNB87c2mdEXOBWob+HIJUVYxKMGp6ELzyiVCl1W/
-	btslEEuLhMZmreSn3Slz6d7T4rLkcWIQFUuB8UyetjMQCERmRbnl84L3018hIbOU
-	s5FzyqejswV344MQ0r3G+NL0leWo+JE7WmA92d0AntjWRIrKoirFMyCr/BkHJ6q0
-	VupPq+Ks1oRlzcZKwg2qWS5HrNpSXLgvItcSbHwr2jktUYJAevPQw74ILvJ/W88J
-	/fOZxmeUEROhUI1huL7VqqU+k3YOdDtVZgGISu6fBaLmmTkebDPM7omPygeU4l0I
-	bsA8h7qC++yMLWlcqKEyNg==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh7dj8j2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Jun 2024 10:44:16 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45AA4BwO021545;
-	Mon, 10 Jun 2024 10:44:14 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yncasuep3-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Jun 2024 10:44:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wtl/DwLov5dVcfFR7HI+E9HK+UepQoYsyZMK6k+/t0/u349WfU0IsgCGI9mCKaKbFNFMNgQJBpjC3tLSq+mbwncw1qPRPL6W16pE+98onf42jQ3ojxtQm9ejIezfj7IaAqea4JRZxUa7BMiDQ8ATLSuynDDw4IlK46muNFhSxohr0eiB+DLD/7Tqdh7f4KpvglBTAVJFW/FcLMYcu7q48Q09J69C5MweRaPOudzsIkQRHT8trNR4x5tlZZJzg32j4J5w1zaRZ63FPgUomREoN6Zz6VEmJGzkxUNbEVLbMJ/AWpaFg9+1jz6ujG/C/ISkZl6BxgcyQRoJ0qtsq3Zygg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=;
- b=W9DEgM4HoBgv33VT2ZQ4OJeVQJBFdMISM028jxgAl++5fPE7/v2/2BxKl8G3wEH91qzNB83l5G7QyWYIpNazkXu+8hFdY+un13R6hMbH/QLnzxK2yHRTED/NIKGKrHf50zzib5AB5pXCcDGvSc/tGWkEdLtL3bv9p4qPWzcA1JiXak7atHehc9kH9gyIhLUruxsGQjPN4/SA8cIlFOOYggr7X9AO2gRua+7gbveER5unt7ar+gNH2ENyEOAifmxD3Xb6qmcy2cVA8PcJ8+WdzR4nxDqZtddiU9OsO/qKD7qfVmGHR5upC6p+mmhaoU4gnYB+eu/AYOrwfPPLNfrfAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IzYMElQdoafm/KOiCJoqkqo8DHg2mUS9JMz/MJ0HTqY=;
- b=azU+s3lSx3xkoKCalq0N0SRq38SrbVfuYYTdH/IW9EgiigKdPYF8XyZfNNURfQ1B7EtwPdfBkOAv0nIAHVC1qVQluAV+vFORoZeQ+WBKpjoBpEy9Aiz2vAOZ4squCZA/8tKne7fMfzTGU6xFykFFl6ttSP4BL94vNUjsFc0P6sw=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.31; Mon, 10 Jun
- 2024 10:44:11 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.7633.036; Mon, 10 Jun 2024
- 10:44:11 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-        jack@suse.cz
-Cc: djwong@kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-        linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com, linux-aio@kvack.org,
-        linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org,
-        nilay@linux.ibm.com, ritesh.list@gmail.com, willy@infradead.org,
-        agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-        dm-devel@lists.linux.dev, hare@suse.de,
-        Alan Adamson <alan.adamson@oracle.com>,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v8 10/10] nvme: Atomic write support
-Date: Mon, 10 Jun 2024 10:43:29 +0000
-Message-Id: <20240610104329.3555488-11-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240610104329.3555488-1-john.g.garry@oracle.com>
-References: <20240610104329.3555488-1-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0036.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ae::12) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB12FFC01
+	for <linux-block@vger.kernel.org>; Mon, 10 Jun 2024 11:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718018776; cv=none; b=ijRXDOHU2AzuHL9w7zQY43ke0S84baP6ho9BRZJgTUtAroTYSCye8xj5TYFvGqXbiNGjRCtRFEuUz839Oxhu2ehHDCE6RjhLmnsfNsj/HnMk4Mm7xZYLQROC8CxEjglIuwfsxF7uT9xPRx7XBWSHvER6I2dQghcyn5qx1mOndqo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718018776; c=relaxed/simple;
+	bh=dRSCnSi2wW2YkNcg+iNxRDlyrX+MlVwWieDSDoP1Ugk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=YOMZN9h/tn15BsHeknI4WQt2XOJSvVTXDcn5/FyL+J1Ekkt0KwTJsIvF6GzesZPWos8qggpFYdf4/kjPARk74Y1DhejEg5ruoJUlIl0X8bCwx7QSCiVg2zB2V9tMkZww6+uEtumeAy8tpP/oLGFqw7X8ZcluWPZzVxHkJENvxCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=J2M+PN/U; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240610112611epoutp03220e6a7aba67e919b61ddcf86d9fae53~XoPhEWAr50651506515epoutp03x
+	for <linux-block@vger.kernel.org>; Mon, 10 Jun 2024 11:26:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240610112611epoutp03220e6a7aba67e919b61ddcf86d9fae53~XoPhEWAr50651506515epoutp03x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1718018771;
+	bh=H5PrZC3wARxzuDSS35YKymK2QxWjB5gAOd2JPIJ8IIs=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=J2M+PN/UfI1vMCQvBL41P85H58TREIGKpQ3OpMHAgS5wby+NrLLDLmQufr798MJa3
+	 qw4uKdNFKIq0+Fygr1NMaLGefZq7uEf2JTMOHCtJtizxl4RcMtp+THrudPTNfEDXWA
+	 tuO6AUAoBnDvB1z2SgCAhwp5XXfZzR3vwbdTe4iQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240610112610epcas5p28caefce5679b80e6d39304920f68c5b2~XoPggFFwi2826128261epcas5p2H;
+	Mon, 10 Jun 2024 11:26:10 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4VyTyS5LZNz4x9Q7; Mon, 10 Jun
+	2024 11:26:08 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	93.C1.19174.0D2E6666; Mon, 10 Jun 2024 20:26:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240610111927epcas5p1bb534d0a093a9d1243a78a6a93065df7~XoJphKCI72514725147epcas5p1A;
+	Mon, 10 Jun 2024 11:19:27 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240610111927epsmtrp103c1ea7595d63bd46982c4db7082296c~XoJpghO3o1035010350epsmtrp1u;
+	Mon, 10 Jun 2024 11:19:27 +0000 (GMT)
+X-AuditID: b6c32a50-87fff70000004ae6-e3-6666e2d0d7d3
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	08.46.18846.F31E6666; Mon, 10 Jun 2024 20:19:27 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240610111926epsmtip28a89bb83cdd1c4828647a6575ce84c2f~XoJoTr_aK0849908499epsmtip2N;
+	Mon, 10 Jun 2024 11:19:26 +0000 (GMT)
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
+	martin.petersen@oracle.com
+Cc: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, Anuj Gupta
+	<anuj20.g@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v3] block: unmap and free user mapped integrity via
+ submitter
+Date: Mon, 10 Jun 2024 16:41:44 +0530
+Message-Id: <20240610111144.14647-1-anuj20.g@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SJ0PR10MB5613:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3f4dc8f-58ea-4540-1aae-08dc893a4341
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230031|7416005|376005|1800799015|366007|921011;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?eVZwQzVLRGtCR1VjSFpVSlBYeVkvbzlZQXE1cjlyNGRBNTUwVnB0YWlJUHRG?=
- =?utf-8?B?SlpubjVQL3Rzcm0rN2YwQy9OTnRoZjJuc1dKRitxYUNERTVPU3VTaXlSbzhh?=
- =?utf-8?B?dnZkZ3c4cjR2RHdtK0pQYk11N0p3YXRPT0tSbndjQTRLMC9zOWNObHlkL0lz?=
- =?utf-8?B?WVVSMlRwOTkycFAxeUx4dmx6NjBoK29Zbm9oZ0NkNjhuMHUwZE9DRnphelQ0?=
- =?utf-8?B?ZWc2YlowRXppNkEvQnVhL3ZmMTNGMWdGTUVtVnNnRm96STFoWWJNY2V4Q3M0?=
- =?utf-8?B?VWNhTnE3MEhycXcyUVFVOE40elo5QndEMWFKSC9tdnd3dHlFSWY4U3dKZHU3?=
- =?utf-8?B?UlVPWUZQSE5ZSFdrdEFaSEdEc1A1a0NDdWJyblVsbEVqOWhxU1lXTjJXK2Yx?=
- =?utf-8?B?d0pweG9WcTQ4NVlNSnB0VUJ3aE5Ba2VoL2VSRHllRk9CRm9NNXdsek5idUxZ?=
- =?utf-8?B?TEpUTDcyNWJ2SWw3L3pML21EOFMxYmpIS0tDZlQvRkJYdDg5aVhxaFZFbWtl?=
- =?utf-8?B?MjY1VVRHaFR2MFhZa0N1M2cvbDE5c0Mza09XUERhYTdDQjhkR0g2eWJ2MGxD?=
- =?utf-8?B?Zk1zRGNuT0dRTU1IR3ZwUEFzOEJxMTViNll5OVpIYnBrUWF4U2JhMWRYbXRS?=
- =?utf-8?B?MFVleU9Mb0FGYjZ2Y1pLQTBjSndzdUlEVnMrdG9ES0pOSTJxT2Nwc0ViZFRa?=
- =?utf-8?B?Wk9JV29LU0t6c05SYWU1UnlnVm1hOCsvSjM1Sjh6NFNHQU9UM1k1cmhYcFJr?=
- =?utf-8?B?S3JKby9tK0lhSnFhY1F5cFl2YStKNHdJZmF5a2k5OEUweVpzSVlZUkEwMWtX?=
- =?utf-8?B?UE50NUFxRWJnZWVQVHdQTnF2Q0g3b0hpamdhdVROMDJzZG4rektranZMMUxK?=
- =?utf-8?B?aC9SSkx5OGJKN25maHhVRFR4WkZYRUhQQUVVR1M4NVRVYW9KSXNRYmc0TzRF?=
- =?utf-8?B?eWtCWHZHWTliVlBLVWlqSWtLTG9OTW5sNjQ4OUpBZExpUFNxcXhUdGIzdUls?=
- =?utf-8?B?a0ZEd1ozN05IczhQVGUzMnM2MEREeFEwMjlWdm5IeUc2YTh5czZRRlhNeU9O?=
- =?utf-8?B?YzZST2o4YWU2bDRxdGh6OGdCUHVvclNxNEYvM3NJZ0RiMWZHZTcvUWxyRzNq?=
- =?utf-8?B?ZW9DVUxmWmduNTFsZjIwZ1J3ZzBkODhnMFhiOXYvTTNnQm5PNGxVMm05R3pP?=
- =?utf-8?B?T3cvQ0VHK25SL3F5MHhVbDFuU0J6ei9hSUZJY3FWR0dOMkFFMzBBaTd2L3NS?=
- =?utf-8?B?MERvTS9mQ0M1ZzJaSWNjZWN1N3gvUFlPYzA2dWQ3YjV1NWFDSWczWElqK3Uz?=
- =?utf-8?B?NlBYVER1R21hcngvdlRxa290ckpoUUl6a0JXUjEvYm1iQ3RRT3VJQ2FpREVy?=
- =?utf-8?B?TnZ4eWNhWDBFSkdUWi9yT05jQjZMWGlzQlVpNWoySHVYWVdWcHRXdk1iUkM0?=
- =?utf-8?B?Tit1QWtDaktKcHVPcDIxbUxHMmU2TmUyRVl6MnBFeDZOTTlZQ2tHUkxlcGd2?=
- =?utf-8?B?ZXoyRUdWTEtkT2tjRWpGeHk0N0orL2VDWTF2OHZ3S05JZ1VkUmZ6alluYTFj?=
- =?utf-8?B?ekN3V3NlR1dNUWhzQ2Erd2VBN05NNFdHMUwyZHpoQUFLNHB6ZFJFRjZ1eVh3?=
- =?utf-8?B?TTN4ZnUzVWlJYTdSblp3WFBZRkhsdUVmSEVEMHdoZUFqRVFPVUtkaUR2REJJ?=
- =?utf-8?B?bmt2TUhKRkhEN1JSL211dlV0TmcyR3IrTEJ0WnJCTzZSSEJvVXRJTTFBY3lr?=
- =?utf-8?B?c2krOGtpVloxNGIyMDdDNm1JTzlTUTRCeWd3MHR0elFCT0hYdGMySkdlUDJT?=
- =?utf-8?Q?6dvPk0biwfYN8vK3U33dHvg80ETJJh2fXdtpA=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?QVBWNkQ0S29KRnV3M2Q5emtvTG9RYWVSVEFoNzUwbzU4WnlQbnViTFJLWDhS?=
- =?utf-8?B?OGFBblZWTXU2SU1YT3RrRWttb1hmaTYzM3VCN0xaU05tUDM2TlhMMW5IdGVD?=
- =?utf-8?B?N1llVWhzMkxqOFNIektHeHBody9BczlzN1p5RTBDTEJNaHVSYitGZDNVZzdW?=
- =?utf-8?B?aTV0TDM5TmEvKzFEcURvb3FMU3YrRTJHSVZycVAvRFQvdUUwTXlQN3k2ZGFH?=
- =?utf-8?B?QTdGUHJqSURVb0tydlgrRnA4b0tveGFBTGNsS3pZUGoremwybnVnNU52dkpN?=
- =?utf-8?B?VkJtdGZVeCt6K0p4aXpYNEtlRW9ndnorR0JucjQvN3FkdVJ6aG84VjV4STRB?=
- =?utf-8?B?N3ozdC9HUWp1a3ZydVNjRmllT3dqQ1hzVndmWWdERWpLbnZnNm8rVVFlaVNh?=
- =?utf-8?B?NlIwZXVPN0p2SGFDRmxOL3NmYjVrYkJWaElNUUpLdHBySmxiUzFDY2UwSVI4?=
- =?utf-8?B?aGJERERJbGp4Q3lQQlpGZC9JTW9ZTCs3WkJOTDlRZXNKci9FK3F2amVoSVRz?=
- =?utf-8?B?azcwSGp4L2V2elo3dnI1emUxanZUTHI0VTI4aHJBb0d2UkxMWjdCMWx2SFk1?=
- =?utf-8?B?anZ0V3FYaGVzU2JmNEowd1U4a0R3L0lIZTQ1T1dHYklIVVp5cWZ6QzlDTGQy?=
- =?utf-8?B?b2VqZDNKWXI2aEhaMnE2U25ZSGJoWHl3T01uL2g5QjNsQk1OdVdFRWtkQVNI?=
- =?utf-8?B?SlVtTkd5VUdVY3cxd2tLRTlQMHlrQ2RjbENUUmZYakFlR01IeWd0dW1hOG4v?=
- =?utf-8?B?WGc2dEtwMmFwMDF3TFJULzZoeDdUY2d5NHNIQUhQVEw0TWxGWXByZTRyZW1C?=
- =?utf-8?B?WEFYQThoRWxxUWVDbGw5Q0JKbENSK25tWnlYSmtDc0pRbDVETERidk9OeG4w?=
- =?utf-8?B?ajJKejI5eHlUUURtVC9hQ0I2Zjk1TTFIb0hNcUxkblFNRmdtc01uMHBIWXFw?=
- =?utf-8?B?d2hZWTFRSjh4d3ZiU3lvR0JDVXl2T1F3NUhtUzkxcWdmb1kyNDRxMG5GVkY2?=
- =?utf-8?B?SEVIOEppU3dwVmZmRDdRVndrbzRQdXJGeHowWkVmYXlidUhVanIzandUMFBu?=
- =?utf-8?B?YkZSRlJuc0xhQVdQVWdJUHZ2T0IzTWV4b2Q5aDVSWWcwZ2hicWJvbmFXSmNP?=
- =?utf-8?B?OWJoUHRnNGZEZkdNRnlaOE0wU2RJTGFsTE10YTB5Mnh3Q1JFYmpCRUlPQ2R5?=
- =?utf-8?B?WnI0cmUwNWs1WWxibXNKN1p1V3NkZnBsVGcyUE1BeDhqbXZkQWc4RlpwbWdz?=
- =?utf-8?B?MWVLTExET2dXeDNIV1dnZk9CT2VWcGVXbE9DM3JNcDZteUI0d0hDOE5oV0cw?=
- =?utf-8?B?UDJHUEEwTTAyRjI4WmR4VytYK3FQdm4wNkVSbkdwVGNVb0duTlp4Qk9ScCtz?=
- =?utf-8?B?Tm1wU2ZrcjByZU9VYTlBcHpYc0FwdjVlOGNGVWMvcmJkMnAyYWU3d2VycGh2?=
- =?utf-8?B?UkpmZTNIcVRjMkJSN0swU0FEZEJ3NGdPNmpJeFZzUXlyOENiK09LMGRDcENK?=
- =?utf-8?B?b0hVaWJQQjRTSXhjRjIrM0FQdHNsYW4vMWxQMHB3cHF5UTZHQWxuS0VQRjJT?=
- =?utf-8?B?KzBLc1MyWDdWR3BjMVliMGNGbUpzUzRNRVVLQk5Rd205MEpvNEtqU0ozVUp5?=
- =?utf-8?B?MUtaRytGSGlYN21OVEZVZ2d4aG1Mc2xqSitYRFFmbVBVWXB1NUpXSVNNVkdW?=
- =?utf-8?B?MEMzczdIaU9aY1Q5MnA3TlZ1QTQ5M3lWYkRPWVIvd0lxVCsxbEcreDVNc2g5?=
- =?utf-8?B?UlVaVVc1QkUreHJROGROcGMvNWZVVUN0ZnJLOE9hYzV4Q2hhdVJPNlpUdnBz?=
- =?utf-8?B?SUE0a0c1ZlZZZndoeDJ0NXIvamJxTUE0djkzbU94SUh6WCtRMG9xQkNBazZQ?=
- =?utf-8?B?b2lPSVM4T2JSMXpSQk56T3E1TDlkUXQ1UmRvbVRDVEZaRms1b29qdzJMREsx?=
- =?utf-8?B?ZW51NXh0alBmZStwVzFCVGNwbGdLS1phWWREVkt2SjNmcG5IMnRseTVwdzNu?=
- =?utf-8?B?cUk1RzVqSCtWS2IyRHNXOWNXVU1vNmxlUC9vaGllV2Q5OVdlenh3b2dDb1Vt?=
- =?utf-8?B?ZUQrVE5RWWxScU1sek5ma2tqM2VKdHhCWHFRQzdISEIzSjBnRVpQV3ZIUVk2?=
- =?utf-8?B?Q05kWlgrUHp5T3RUdzEzLzdGL3cwZlBKUCtYMWhuMzBmT3BmcVZORFg0R1Ay?=
- =?utf-8?B?M3c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	ak7TbKT66zYXtPBGpHMW4paXrl2ibaiugxnwrEvR6REUEdIKDfnDwEWTqYNXTDTyBTALMXk2r2fpcrsdT5b5fT3J/2SrM5X4kppn4rjOVSOhLYjfMuK4BdU9b/TibkQ3E0+/UwbMlv37SICXNS9N8jSMJst6/mdqODOeNQMqdsdvW28xhIUVC4vof2x8OMkQFRipRoHx9619WPs/FiyerawuITW8xU01Hoi0D/LUSN8B33e+l1VpLo4vshMFOYdh9vMvG+x2fNOeOfcldYSgEGtFeKMR0JSAIMKqKKCGmL69gSF8+D5Oi7PQq2s9Mi7Vwn+xS6aCMPjuavOv/gOhHxBUsVH6gxdFSJW76HYuZmaCiLvlgfqYcoXLdzOFOXgV8U74gRh2gw9VzU5IBvLaTOh9SsWVDo83h7DyV9xkjHG9VKW4sLIj8Arhs613LiHfgnbV26kMtftTntBbLEuCGDO482rcwGbKpXVVoN5Jjcdln3YJCptJ8f2G3+ShgL1GjjlcUbOrekrv7AmMs/+50z41n9wIYwwp3jcDW7O1zBwT+kFobWS/Kjjp3UMu1zsLm/lMxKaQEI7qIXBXAKECU6CIWIc/hEW5C9C2Qg7iYlY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3f4dc8f-58ea-4540-1aae-08dc893a4341
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2024 10:44:11.0211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HyWTxtyrc6n7LDVLpJvs0gKax0gych5oGOvFGySS9EIoJbW2TqetlTxbV488HqVV9WpJ3Pyw9c5kT0eE1NtBqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5613
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406100081
-X-Proofpoint-GUID: 3oVZGuYJx9fSa9lTTXE_tmRHvvyxknO-
-X-Proofpoint-ORIG-GUID: 3oVZGuYJx9fSa9lTTXE_tmRHvvyxknO-
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmuu6FR2lpBiuWqVg0TfjLbLH6bj+b
+	xcrVR5ksjv5/y2Yx6dA1Rou9t7Qt5i97ym6x/Pg/JgcOj8tnSz02repk89i8pN5j980GNo+P
+	T2+xePRtWcXo8XmTXAB7VLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJu
+	qq2Si0+ArltmDtBJSgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCkwK94sTc4tK8
+	dL281BIrQwMDI1OgwoTsjCcPTzAV3FKt2PX9JFMD41n5LkZODgkBE4nrPz8zdzFycQgJ7GGU
+	+LZwEiuE84lR4uOmaywgVWBO1xltmI6b7fsZIYp2Mkr8Pv6KEaLoM6PE/nW8IDabgLrEkeet
+	YHERgQCJWaevgDUwC3QySvzqugeWEBbwl/g87QIziM0ioCrxbv8NVhCbV8BSYvnvCUwQ2+Ql
+	Zl76zg4RF5Q4OfMJ2EXMQPHmrbPB7pYQuMUusefDVTaIBheJmddfsEPYwhKvjm+BsqUkXva3
+	QdnpEj8uP4VaUCDRfGwfI4RtL9F6qh9oKAfQAk2J9bv0IcKyElNPrWOC2Msn0fv7CVQrr8SO
+	eTC2kkT7yjlQtoTE3nMNULaHxIPFp5ggARQr0fH3GtMERvlZSN6ZheSdWQibFzAyr2KUSi0o
+	zk1PTTYtMNTNSy2Hx2xyfu4mRnDS1ArYwbh6w1+9Q4xMHIyHGCU4mJVEeIUyktOEeFMSK6tS
+	i/Lji0pzUosPMZoCA3kis5Rocj4wbeeVxBuaWBqYmJmZmVgamxkqifO+bp2bIiSQnliSmp2a
+	WpBaBNPHxMEp1cCU+vtjwYO0k5t/tofHqycq7KksL/6aGtiR7y65iid20fqy32cPK7mwvAhp
+	n1zn2Mp/YqrB8Tu3BRcGHAznvd6SHrIi+23jpFDRoJTTOzqUxT9xreZ9cMztbEW0uKDZihzO
+	Wrbf91ctj+Z73BXN9eBR/JMrLeEKCtc0048c3LOZUX97/FmZY1pHvsRf3HW8N/VwvB7L/wKf
+	TQKSHtm73i9fo+EuKLL/8Rwl5cgtZ1YUHv9ou8DyyOWbj8QjhLsrQ5vE5A8/M/RfoPW8LHjB
+	UaNPW29qqT7Iu6+zXfSqw/klJSIKqgtPuknsz/nocINt84z3oovN/1/se3ug4OXKCM0e9jeL
+	oh8bLalcffPpizVsSizFGYmGWsxFxYkAScRBaiMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSvK79w7Q0g/NntS2aJvxltlh9t5/N
+	YuXqo0wWR/+/ZbOYdOgao8XeW9oW85c9ZbdYfvwfkwOHx+WzpR6bVnWyeWxeUu+x+2YDm8fH
+	p7dYPPq2rGL0+LxJLoA9issmJTUnsyy1SN8ugSvjycMTTAW3VCt2fT/J1MB4Vr6LkZNDQsBE
+	4mb7fsYuRi4OIYHtjBJ32r+zQyQkJE69XMYIYQtLrPz3nB2i6COjxO4N3WwgCTYBdYkjz1uB
+	ijg4RARCJHqOmIDUMAv0MkocebGfBaRGWMBX4tzif2CDWARUJd7tv8EKYvMKWEos/z2BCWKB
+	vMTMSxCLeQUEJU7OfALWywwUb946m3kCI98sJKlZSFILGJlWMYqmFhTnpucmFxjqFSfmFpfm
+	pesl5+duYgSHrVbQDsZl6//qHWJk4mA8xCjBwawkwiuUkZwmxJuSWFmVWpQfX1Sak1p8iFGa
+	g0VJnFc5pzNFSCA9sSQ1OzW1ILUIJsvEwSnVwBRknR/UuUXPQPw6txX7s4qcBSsvvfmWoPim
+	5BF3c0atqHrPuqsbP1m3nI75UHfiFturpvdTDht9nPZyCvOys5/rpGZ/7eZvEBfxusd88M35
+	6oiW+cri3zndOW04bL/rWx8zE3XnPGDeI70mm2tu/axnutcT2rzaj049MvVg+vvfbx+eWmh+
+	9WPRzMbjesmn15w3POH1hNXIqNVy8xIrlwq/K8e3L3Z+tsGsd+7zeu0w1rxvvc9TPZwS8xVX
+	HgpfonE651l0pPNGRnup79Lr00K3Z8q3vK07/WdjMtdOfqvC0+c31d1itgxrsDzCNCu+ZrPS
+	yXpGEWOrkpUbvnwRfeGqxe8mcPyGziqeT9sMUpVYijMSDbWYi4oTAUEb6QTKAgAA
+X-CMS-MailID: 20240610111927epcas5p1bb534d0a093a9d1243a78a6a93065df7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240610111927epcas5p1bb534d0a093a9d1243a78a6a93065df7
+References: <CGME20240610111927epcas5p1bb534d0a093a9d1243a78a6a93065df7@epcas5p1.samsung.com>
 
-From: Alan Adamson <alan.adamson@oracle.com>
+The user mapped intergity is copied back and unpinned by
+bio_integrity_free which is a low-level routine. Do it via the submitter
+rather than doing it in the low-level block layer code, to split the
+submitter side from the consumer side of the bio.
 
-Add support to set block layer request_queue atomic write limits. The
-limits will be derived from either the namespace or controller atomic
-parameters.
-
-NVMe atomic-related parameters are grouped into "normal" and "power-fail"
-(or PF) class of parameter. For atomic write support, only PF parameters
-are of interest. The "normal" parameters are concerned with racing reads
-and writes (which also applies to PF). See NVM Command Set Specification
-Revision 1.0d section 2.1.4 for reference.
-
-Whether to use per namespace or controller atomic parameters is decided by
-NSFEAT bit 1 - see Figure 97: Identify – Identify Namespace Data
-Structure, NVM Command Set.
-
-NVMe namespaces may define an atomic boundary, whereby no atomic guarantees
-are provided for a write which straddles this per-lba space boundary. The
-block layer merging policy is such that no merges may occur in which the
-resultant request would straddle such a boundary.
-
-Unlike SCSI, NVMe specifies no granularity or alignment rules, apart from
-atomic boundary rule. In addition, again unlike SCSI, there is no
-dedicated atomic write command - a write which adheres to the atomic size
-limit and boundary is implicitly atomic.
-
-If NSFEAT bit 1 is set, the following parameters are of interest:
-- NAWUPF (Namespace Atomic Write Unit Power Fail)
-- NABSPF (Namespace Atomic Boundary Size Power Fail)
-- NABO (Namespace Atomic Boundary Offset)
-
-and we set request_queue limits as follows:
-- atomic_write_unit_max = rounddown_pow_of_two(NAWUPF)
-- atomic_write_max_bytes = NAWUPF
-- atomic_write_boundary = NABSPF
-
-If in the unlikely scenario that NABO is non-zero, then atomic writes will
-not be supported at all as dealing with this adds extra complexity. This
-policy may change in future.
-
-In all cases, atomic_write_unit_min is set to the logical block size.
-
-If NSFEAT bit 1 is unset, the following parameter is of interest:
-- AWUPF (Atomic Write Unit Power Fail)
-
-and we set request_queue limits as follows:
-- atomic_write_unit_max = rounddown_pow_of_two(AWUPF)
-- atomic_write_max_bytes = AWUPF
-- atomic_write_boundary = 0
-
-A new function, nvme_valid_atomic_write(), is also called from submission
-path to verify that a request has been submitted to the driver will
-actually be executed atomically. As mentioned, there is no dedicated NVMe
-atomic write command (which may error for a command which exceeds the
-controller atomic write limits).
-
-Note on NABSPF:
-There seems to be some vagueness in the spec as to whether NABSPF applies
-for NSFEAT bit 1 being unset. Figure 97 does not explicitly mention NABSPF
-and how it is affected by bit 1. However Figure 4 does tell to check Figure
-97 for info about per-namespace parameters, which NABSPF is, so it is
-implied. However currently nvme_update_disk_info() does check namespace
-parameter NABO regardless of this bit.
-
-Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-jpg: total rewrite
-Signed-off-by: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/nvme/host/core.c | 49 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ block/bio-integrity.c     | 26 ++++++++++++++++++++++++--
+ drivers/nvme/host/ioctl.c | 15 +++++++++++----
+ include/linux/bio.h       |  4 ++++
+ 3 files changed, 39 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f5d150c62955..91001892f60b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -927,6 +927,30 @@ static inline blk_status_t nvme_setup_write_zeroes(struct nvme_ns *ns,
- 	return BLK_STS_OK;
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 2e3e8e04961e..8b528e12136f 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -144,16 +144,38 @@ void bio_integrity_free(struct bio *bio)
+ 	struct bio_integrity_payload *bip = bio_integrity(bio);
+ 	struct bio_set *bs = bio->bi_pool;
+ 
++	if (bip->bip_flags & BIP_INTEGRITY_USER)
++		return;
+ 	if (bip->bip_flags & BIP_BLOCK_INTEGRITY)
+ 		kfree(bvec_virt(bip->bip_vec));
+-	else if (bip->bip_flags & BIP_INTEGRITY_USER)
+-		bio_integrity_unmap_user(bip);
+ 
+ 	__bio_integrity_free(bs, bip);
+ 	bio->bi_integrity = NULL;
+ 	bio->bi_opf &= ~REQ_INTEGRITY;
  }
  
-+static bool nvme_valid_atomic_write(struct request *req)
++/**
++ * bio_integrity_unmap_free_user - Unmap and free bio user integrity payload
++ * @bio:	bio containing bip to be unmapped and freed
++ *
++ * Description: Used to unmap and free the user mapped integrity portion of a
++ * bio. Submitter attaching the user integrity buffer is responsible for
++ * unmapping and freeing it during completion.
++ */
++void bio_integrity_unmap_free_user(struct bio *bio)
 +{
-+	struct request_queue *q = req->q;
-+	u32 boundary_bytes = queue_atomic_write_boundary_bytes(q);
++	struct bio_integrity_payload *bip = bio_integrity(bio);
++	struct bio_set *bs = bio->bi_pool;
 +
-+	if (blk_rq_bytes(req) > queue_atomic_write_unit_max_bytes(q))
-+		return false;
-+
-+	if (boundary_bytes) {
-+		u64 mask = boundary_bytes - 1, imask = ~mask;
-+		u64 start = blk_rq_pos(req) << SECTOR_SHIFT;
-+		u64 end = start + blk_rq_bytes(req) - 1;
-+
-+		/* If greater then must be crossing a boundary */
-+		if (blk_rq_bytes(req) > boundary_bytes)
-+			return false;
-+
-+		if ((start & imask) != (end & imask))
-+			return false;
-+	}
-+
-+	return true;
++	if (WARN_ON_ONCE(!(bip->bip_flags & BIP_INTEGRITY_USER)))
++		return;
++	bio_integrity_unmap_user(bip);
++	__bio_integrity_free(bs, bip);
++	bio->bi_integrity = NULL;
++	bio->bi_opf &= ~REQ_INTEGRITY;
 +}
++EXPORT_SYMBOL(bio_integrity_unmap_free_user);
 +
- static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
- 		struct request *req, struct nvme_command *cmnd,
- 		enum nvme_opcode op)
-@@ -941,6 +965,12 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
- 
- 	if (req->cmd_flags & REQ_RAHEAD)
- 		dsmgmt |= NVME_RW_DSM_FREQ_PREFETCH;
-+	/*
-+	 * Ensure that nothing has been sent which cannot be executed
-+	 * atomically.
-+	 */
-+	if (req->cmd_flags & REQ_ATOMIC && !nvme_valid_atomic_write(req))
-+		return BLK_STS_INVAL;
- 
- 	cmnd->rw.opcode = op;
- 	cmnd->rw.flags = 0;
-@@ -1921,6 +1951,23 @@ static void nvme_configure_metadata(struct nvme_ctrl *ctrl,
- 	}
+ /**
+  * bio_integrity_add_page - Attach integrity metadata
+  * @bio:	bio to update
+diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
+index 499a8bb7cac7..2dff5933cae9 100644
+--- a/drivers/nvme/host/ioctl.c
++++ b/drivers/nvme/host/ioctl.c
+@@ -111,6 +111,13 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
+ 	return req;
  }
  
-+
-+static void nvme_update_atomic_write_disk_info(struct nvme_ns *ns,
-+			struct nvme_id_ns *id, struct queue_limits *lim,
-+			u32 bs, u32 atomic_bs)
++static void nvme_unmap_bio(struct bio *bio)
 +{
-+	unsigned int boundary = 0;
-+
-+	if (id->nsfeat & NVME_NS_FEAT_ATOMICS && id->nawupf) {
-+		if (le16_to_cpu(id->nabspf))
-+			boundary = (le16_to_cpu(id->nabspf) + 1) * bs;
-+	}
-+	lim->atomic_write_hw_max = atomic_bs;
-+	lim->atomic_write_hw_boundary = boundary;
-+	lim->atomic_write_hw_unit_min = bs;
-+	lim->atomic_write_hw_unit_max = rounddown_pow_of_two(atomic_bs);
++	if (bio_integrity(bio))
++		bio_integrity_unmap_free_user(bio);
++	blk_rq_unmap_user(bio);
 +}
 +
- static u32 nvme_max_drv_segments(struct nvme_ctrl *ctrl)
+ static int nvme_map_user_request(struct request *req, u64 ubuffer,
+ 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
+ 		u32 meta_seed, struct io_uring_cmd *ioucmd, unsigned int flags)
+@@ -157,7 +164,7 @@ static int nvme_map_user_request(struct request *req, u64 ubuffer,
+ 
+ out_unmap:
+ 	if (bio)
+-		blk_rq_unmap_user(bio);
++		nvme_unmap_bio(bio);
+ out:
+ 	blk_mq_free_request(req);
+ 	return ret;
+@@ -195,7 +202,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 	if (result)
+ 		*result = le64_to_cpu(nvme_req(req)->result.u64);
+ 	if (bio)
+-		blk_rq_unmap_user(bio);
++		nvme_unmap_bio(bio);
+ 	blk_mq_free_request(req);
+ 
+ 	if (effects)
+@@ -406,7 +413,7 @@ static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd,
+ 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+ 
+ 	if (pdu->bio)
+-		blk_rq_unmap_user(pdu->bio);
++		nvme_unmap_bio(pdu->bio);
+ 	io_uring_cmd_done(ioucmd, pdu->status, pdu->result, issue_flags);
+ }
+ 
+@@ -432,7 +439,7 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
+ 	 */
+ 	if (blk_rq_is_poll(req)) {
+ 		if (pdu->bio)
+-			blk_rq_unmap_user(pdu->bio);
++			nvme_unmap_bio(pdu->bio);
+ 		io_uring_cmd_iopoll_done(ioucmd, pdu->result, pdu->status);
+ 	} else {
+ 		io_uring_cmd_do_in_task_lazy(ioucmd, nvme_uring_task_cb);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index d5379548d684..818e93612947 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -731,6 +731,7 @@ static inline bool bioset_initialized(struct bio_set *bs)
+ 		bip_for_each_vec(_bvl, _bio->bi_integrity, _iter)
+ 
+ int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t len, u32 seed);
++void bio_integrity_unmap_free_user(struct bio *bio);
+ extern struct bio_integrity_payload *bio_integrity_alloc(struct bio *, gfp_t, unsigned int);
+ extern int bio_integrity_add_page(struct bio *, struct page *, unsigned int, unsigned int);
+ extern bool bio_integrity_prep(struct bio *);
+@@ -807,6 +808,9 @@ static inline int bio_integrity_map_user(struct bio *bio, void __user *ubuf,
  {
- 	return ctrl->max_hw_sectors / (NVME_CTRL_PAGE_SIZE >> SECTOR_SHIFT) + 1;
-@@ -1967,6 +2014,8 @@ static bool nvme_update_disk_info(struct nvme_ns *ns, struct nvme_id_ns *id,
- 			atomic_bs = (1 + le16_to_cpu(id->nawupf)) * bs;
- 		else
- 			atomic_bs = (1 + ns->ctrl->subsys->awupf) * bs;
-+
-+		nvme_update_atomic_write_disk_info(ns, id, lim, bs, atomic_bs);
- 	}
+ 	return -EINVAL;
+ }
++static inline void bio_integrity_unmap_free_user(struct bio *bio)
++{
++}
  
- 	if (id->nsfeat & NVME_NS_FEAT_IO_OPT) {
+ #endif /* CONFIG_BLK_DEV_INTEGRITY */
+ 
 -- 
-2.31.1
+2.25.1
 
 
