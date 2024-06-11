@@ -1,158 +1,182 @@
-Return-Path: <linux-block+bounces-8562-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8564-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF398902F5B
-	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2024 05:52:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3741902FE3
+	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2024 07:20:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60AFB2823BC
-	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2024 03:52:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0D5285B5C
+	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2024 05:20:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D5AF13D615;
-	Tue, 11 Jun 2024 03:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FDEE171090;
+	Tue, 11 Jun 2024 05:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kYqshQHG"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SP0peDuU"
 X-Original-To: linux-block@vger.kernel.org
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2155.outbound.protection.outlook.com [40.92.62.155])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9018764B;
-	Tue, 11 Jun 2024 03:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.155
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718077940; cv=fail; b=u5T3dQjdKJs0qo/NwFhFzb4BEDwP2A3afpPsKOO7kLzBE9NlkJeyhaYjERBJLRjLNUAg8tNbm7I0qgRoqJa7fHIEQbgEwMT+trHPN2WP4sjD5Be8ctkHecFRdMAOCjRvogZhNcKp8GBG5ki/hyMYbMhBLDJtT/Ha5a6ANUs7Z9Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718077940; c=relaxed/simple;
-	bh=FRineXL3ewsuHRFSCaUZzblmAmpxJIsYLuJy+YE88dI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=bsPHV7qn99UN51spVXWpuuL8+ny28FKqPW5QUDwlNc3IkLelIFx4ciYduDt4PeWLUFy5+3WisfTdPSEbF9y6FH9fAcn57kYSbR/j+9hisAevfkF2rSdEVrCvQjTo2Uk4urrR6DEnHvMhntzHTlbzkMxdlRr+MDHJIV2jzCRIweY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kYqshQHG; arc=fail smtp.client-ip=40.92.62.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k+j9t/1orjc6Vi79Wi5QRA6oV09w48m09Hv0KmAtAkkj77llXIaTAlKVa+o5BuG0xMFMDPCsVq0LtgwJnxNHPVuLrVUJbdTGBswekbvWvwNvC6R3VrAMuJSq7vXctcST+n3f8aKwKXp8shQCmIHly6SBURTKwiRt/Yi3HfXEYROTQNbwnHHI0lzho67lgcN23O8V0e4DEQgIvNmR8HZ1EQn5jYmO8mbZj9sSX2XU95EbtCvNbk/VXSmz9WBeR+v1694TbYlQ/6NMSRzi+nlzPc682JEsKkC1GF/PCftwWXXShUWqU57K/aPv0wRKyZyEpLyZ+R8lhIjjpwccuT5DXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g8ZAoDwRPI3x/AIyFd0MQa/2e5enD6haWpvBAA21fqA=;
- b=Lczw1JYeNy8Cx/riYOKML1Oc0LoV6yF8mAHzuaj45oYF6ku4cWsi2Mdn/pE7jZ4VftpvFAFJUXUpsAU88IdtQ5suGcRtRCNH0u7vd+E5N7ucm2WrZI7ub4eCuzkDqMGDS4FERiwq8aeg7/586OgCdSicq2RoMiHd+0YBtXZprvBN3P+WYTu9tGiVDFYt753eRc3F/PfujDvLjqKmyF0V9nR6el0sZN77CxdYsuzF7v81yOihWkKkei8GNtZnH4rUDvsPL5bUA8xejUwTbV3zaxPNIyELHU74e48GFVI6CMcARKfRUn7ic20omoDekgqIdvnArcDgj4E1HFz+u6m1MQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g8ZAoDwRPI3x/AIyFd0MQa/2e5enD6haWpvBAA21fqA=;
- b=kYqshQHGthKa72gfwUPyiiAjPkRzThVdo/bWGJgVNs0TOa+jivGVfH7HZoyfJmcsvSlbQnjPpgLhNyC5AT/MFA2nm8kbNmB5B/GReX/xqGMocT6K4Gvk/Fv1stepP6qJRTxJgjkFg6C7B6VKA1xTt5TAPi6xm8I7unId/WIoO13UKqrrfXCPZA7znW/VNczpWaUCfQO6PtR4xvazHskjLSCQe47Qm77vUbQovmV4Xg0+NOtA4dMJ9AtHzZKxfR12M8PVQCvkfPIRpYlk9fUsOdoZUdMETeYAk/TE6Mfk9lXg1qLFuWxNN3QPUfMc6Mu7+z8ap+UW9i3/hOsuXdNL1w==
-Received: from ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:186::10)
- by MEYP282MB1639.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:c7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
- 2024 03:52:14 +0000
-Received: from ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM
- ([fe80::ef09:453a:38f:15d9]) by ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM
- ([fe80::ef09:453a:38f:15d9%3]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
- 03:52:14 +0000
-From: Gui-Dong Han <hanguidong02@outlook.com>
-To: justin@coraid.com,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Gui-Dong Han <hanguidong02@outlook.com>
-Subject: [PATCH] aoe: consolidate flags update to prevent race condition
-Date: Tue, 11 Jun 2024 11:52:04 +0800
-Message-ID:
- <ME3P282MB3617DAD141ACDD21170355E0C0C72@ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [V3bLihkrbbRRIeXTwI1pdOFhKHVuI9suIqLdPYefBx0YbCPJlk75L/oggdRqhUVC]
-X-ClientProxiedBy: SGBP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::22)
- To ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:186::10)
-X-Microsoft-Original-Message-ID:
- <20240611035204.9238-1-hanguidong02@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C871E488;
+	Tue, 11 Jun 2024 05:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718083189; cv=none; b=EIoK7UfaGzKLbDeD2AwyFmoVe3q2q6nFxBwB+VXj3JsI06ziL4u6t6Xdj9PFyk+g5wOArVoEF4y47qAKKpMCbxPHkCmus9Zj9XU1vZqQGUS0x64bnrsV4vyb3GEMB+T9M6QAhC1iC5ED7oq7+9ECVCHIxE/xETkCfa3cGOMIc6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718083189; c=relaxed/simple;
+	bh=hch/0P55byq5GbA9713XqbKHtmWPgz2RFxBLYpB4kbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HgNOG+OsbdsKoI80rVrawWwkHXtiCxMFIge11OjQjS0nMJqW7ILOnHLQ+dKFsfE5PhQYY9X7rfMSn2HXUXZZ1ONt9kYnXVV230HaCBnJcGtK9h8V9OnD9NHgyzKm9GhIQQOXCAYZM6zJXKRV9b+SCyzuhvcHtflJAJiOj8cyyGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SP0peDuU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=xQZ0tGVxbRfMe28F2c3vaqhpukPqzWUR2mw3UooUIr8=; b=SP0peDuUs+KEwheRnMyMlYgkS7
+	BJO3TbWxLcYZrtF9hG/zSYlaaEBbMSCF64VvtU307jsPdSrtdMGsHLbLIPlb+3JQ+eYPkj0WFLQ82
+	0RHyWfdxKEhDZW5T1ob5hHG0b14ikv/6qveZEUAQmVDgvdsZVt4TYWW6sqJaVmrwg5KcUOZQ84nPg
+	CjpVq303dQfXA8cJ1suDHbBA/aeCpy9t1nwAxlcRoZCDjrGUy5Vn9fE6+OpvbxggFWtigsP5ZcQpg
+	pUZerKUXlbVu4I0/QgfLjMkjQJmRXdy7KEomGmmJMn8IDs2fYlaMIz6Izl+aZ3CL2CjeVsmwbwNGT
+	O/+0DiLA==;
+Received: from 2a02-8389-2341-5b80-cdb4-8e7d-405d-6b77.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:cdb4:8e7d:405d:6b77] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGtuu-00000007Qnj-2sBx;
+	Tue, 11 Jun 2024 05:19:33 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Richard Weinberger <richard@nod.at>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	=?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+	Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Vineeth Vijayan <vneethv@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-m68k@lists.linux-m68k.org,
+	linux-um@lists.infradead.org,
+	drbd-dev@lists.linbit.com,
+	nbd@other.debian.org,
+	linuxppc-dev@lists.ozlabs.org,
+	ceph-devel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	xen-devel@lists.xenproject.org,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	nvdimm@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: move features flags into queue_limits
+Date: Tue, 11 Jun 2024 07:19:00 +0200
+Message-ID: <20240611051929.513387-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ME3P282MB3617:EE_|MEYP282MB1639:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a579dce-833e-4413-e51f-08dc89c9e19d
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|3430499023|3412199016|440099019|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	4t3GqZDKo6YqOXgJ90yR1zo5AUiAK8Mbo564BueFANQSNFqxRY/c5xUTt9aIQOT9TRevQuttq/9UVuM92Yc/n3ZF50JQZ26zR1akwZxBZe5BHvGGbi0a8O7ZalxnJR2EJ7WO/52yhEN711DHe9W6ziGfwC4zML9U0UFouabrjbXaSbxgHzuNXuPTLmH7I3Yic1SEcb/zWrQGZtazznVcQTwnMhSsIsr+/SviBkHJBYfvM+OWcwqfZ0HNNkm9QvwgwnsE8XSGEVfN1mp7o0FDeFKw3Kdk33aD34+GPSVBspmW7X3oUX2mtduD9I4fJAjOqtBeIzOvIdgcOXqlJ0ouMlp6QsNJnufV5cDWdX1fcilFzoD1xaIxcNTvGlp8J4164s1z66VRzQTPI+omLMCg9kpI8JeHuSBSltQ/t4kz+j6AOaMpNInbgE2GUOEvrBnOFsjjPhJD++EZA6GuuEU+sp1hUrqe4O3aAIrc9tFCn+zONwAQP4+4u8fh4RZKKTuv014+LKZmfFlOV7UycuDJNIxnHxxbOo+xROHQXbwhSssOXfoAabxZ2HtEEPkek63cnNOwJEzJQTr9V/a+Rtvh7QbxivTetcEr4/zedpdSDnq4ONY3l0Z4Lx5k1Xd/PCGk
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DE3LecUxnWuas0fwapjWkRsCZ4u0UtjDR7gSjeHwurki0W3NxJO8dnonzs0I?=
- =?us-ascii?Q?oebkas3AuQfJsfNpF9kJheRmWbm14icQabXzoi1C0UBI5WSbMOaYWZ/dDgPs?=
- =?us-ascii?Q?pv+RObOk/HKXAcR5moAJKRkxt0aChJ9yaE8a9PuRET3BkTfK/3srHtWGsoq8?=
- =?us-ascii?Q?sc5mtXdVRYpLzTDhSd8pdQql9mC/Oky9P1DXmgcnjppkpwFSjHR7DEo1ePMi?=
- =?us-ascii?Q?dz+w5Fss5IyZ10+4onNe+DW1HRZtlwG02JWjHJSKOKuPe4IEiiBIFBZpuAja?=
- =?us-ascii?Q?VRwD+2qsvWWfo0ugCGj9mEpTbL1EgdhFgqozcK5xTwSxRVKBFrLTXkl/c/pX?=
- =?us-ascii?Q?4BvVcTsbKIIBo0p9Ek0JLBldaZVWG9zxkJy2l8FxRCnF0jHO+WJPQuVDTrCG?=
- =?us-ascii?Q?5wYBF1bOIGd9QnM8TswX+SE2yiUqUxnWKoOH6YEzEQSUIRx5T598VHmT0TZu?=
- =?us-ascii?Q?dS8jqNaiCxcp8NR9kxXJflRBGzpgfNBxIuaIKM6Zk3gZG/UcuEeR+9kTd0L4?=
- =?us-ascii?Q?C1vgzqPOEgOkt74OHdgpeH4xNRZ86P84OxqUrgtoOYVhfQr6brMRggd0Ogxu?=
- =?us-ascii?Q?G086E1FQtBWggphmraX0anByXB6AjwIcy4wterzhnRgbwNEBzwmBZQjqK2UD?=
- =?us-ascii?Q?7Afp4dYAB2nPPLcaukugQJl8rOzbMnyw5RNYsD6+sLvOEeOquPzYfM91xWuM?=
- =?us-ascii?Q?ibh0FzOP4UdeyCpghVgiSadl37YCiYVbC7aYwQ/2JquFzGsr9owOe8IxSb2m?=
- =?us-ascii?Q?eb84Bpt9u8SeKQbRH4TfvcFNAZi9F81nmFPW8yO1PKrrzSe3iI1suhdpX6Gd?=
- =?us-ascii?Q?+4RmQDmpAIY6uWcUmZhOSWgCsVNCDTqgOE0ZoMZ7pVxc28ERfgqBvZ+Ae61G?=
- =?us-ascii?Q?3fheiDUBAOSZjSLFw3xvvS0Y/955UyE2w7yBgiXBSlxgzfuSjzCQQvjnOlE6?=
- =?us-ascii?Q?9DlenYpH1bIxev63nqHAGrfvS9lc2ExDU7BJlUr7qoTmsJAhDdAYD8mppLv7?=
- =?us-ascii?Q?mb8OTV+VqwcIF0CSfi7P/9HDmUhk67o6A7Hzx0CA9MkOXQu7FL+1Dvx97V2w?=
- =?us-ascii?Q?HnQc9cv+6ou21HYEvKhn2E1PXwZxDBcNkJRgAlA8ld9puGBLGR/HvJ8n6npR?=
- =?us-ascii?Q?O28i2X6vgwnhaL/ssEaZSAq5mFp2awMUz/3iIx07SQLrQcBkv+cnGcbIPmtt?=
- =?us-ascii?Q?x6nbplfMxj05eRhyCB4YjR8QmYLVmYyrpwzxqzmNVp0SArdyGwbSNf4v+gAv?=
- =?us-ascii?Q?iSSOBO70qa+Bix4ItJ27qJx4C9tOJeYTAwNbOS39yGBg48T7fJjT+95BRDDM?=
- =?us-ascii?Q?JjdqU6hOGR3MBOAjMmykqXSY?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a579dce-833e-4413-e51f-08dc89c9e19d
-X-MS-Exchange-CrossTenant-AuthSource: ME3P282MB3617.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 03:52:14.8965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MEYP282MB1639
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-In aoecmd_sleepwork, there is a race condition caused by two consecutive
-writes to the 'flags' variable within a critical section. If a read 
-operation occurs between these writes, an intermediate state may be 
-read, potentially causing bugs.
+Hi all,
 
-To address this issue, the 'flags' variable should be updated in a 
-single operation to ensure atomicity and prevent any intermediate state
-from being read.
+this is the third and last major series to convert settings to
+queue_limits for this merge window.  After a bunch of prep patches to
+get various drivers in shape, it moves all the queue_flags that specify
+driver controlled features into the queue limits so that they can be
+set atomically and are separated from the blk-mq internal flags.
 
-Fixes: 3ae1c24e395b ("[PATCH] aoe [2/8]: support dynamic resizing of AoE devices")
-Signed-off-by: Gui-Dong Han <hanguidong02@outlook.com>
----
- drivers/block/aoe/aoecmd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Note that I've only Cc'ed the maintainers for drivers with non-mechanical
+changes as the Cc list is already huge.
 
-diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
-index cc9077b588d7..37d556f019c0 100644
---- a/drivers/block/aoe/aoecmd.c
-+++ b/drivers/block/aoe/aoecmd.c
-@@ -897,8 +897,7 @@ aoecmd_sleepwork(struct work_struct *work)
- 		set_capacity_and_notify(d->gd, d->ssize);
- 
- 		spin_lock_irq(&d->lock);
--		d->flags |= DEVFL_UP;
--		d->flags &= ~DEVFL_NEWSIZE;
-+		d->flags = (d->flags | DEVFL_UP) & ~DEVFL_NEWSIZE;
- 		spin_unlock_irq(&d->lock);
- 	}
- }
--- 
-2.34.1
+This series sits on top of the "convert the SCSI ULDs to the atomic queue
+limits API v2" and "move integrity settings to queue_limits v2" series.
 
+A git tree is available here:
+
+    git://git.infradead.org/users/hch/block.git block-limit-flags
+
+Gitweb:
+
+    http://git.infradead.org/?p=users/hch/block.git;a=shortlog;h=refs/heads/block-limit-flags
+
+Diffstat:
+ Documentation/block/writeback_cache_control.rst |   67 +++++---
+ arch/m68k/emu/nfblock.c                         |    1 
+ arch/um/drivers/ubd_kern.c                      |    3 
+ arch/xtensa/platforms/iss/simdisk.c             |    5 
+ block/blk-core.c                                |    7 
+ block/blk-flush.c                               |   36 ++--
+ block/blk-mq-debugfs.c                          |   13 -
+ block/blk-mq.c                                  |   42 +++--
+ block/blk-settings.c                            |   46 ++----
+ block/blk-sysfs.c                               |  118 ++++++++-------
+ block/blk-wbt.c                                 |    4 
+ block/blk.h                                     |    2 
+ drivers/block/amiflop.c                         |    5 
+ drivers/block/aoe/aoeblk.c                      |    1 
+ drivers/block/ataflop.c                         |    5 
+ drivers/block/brd.c                             |    6 
+ drivers/block/drbd/drbd_main.c                  |    6 
+ drivers/block/floppy.c                          |    3 
+ drivers/block/loop.c                            |   79 +++++-----
+ drivers/block/mtip32xx/mtip32xx.c               |    2 
+ drivers/block/n64cart.c                         |    2 
+ drivers/block/nbd.c                             |   24 +--
+ drivers/block/null_blk/main.c                   |   13 -
+ drivers/block/null_blk/zoned.c                  |    3 
+ drivers/block/pktcdvd.c                         |    1 
+ drivers/block/ps3disk.c                         |    8 -
+ drivers/block/rbd.c                             |   12 -
+ drivers/block/rnbd/rnbd-clt.c                   |   14 -
+ drivers/block/sunvdc.c                          |    1 
+ drivers/block/swim.c                            |    5 
+ drivers/block/swim3.c                           |    5 
+ drivers/block/ublk_drv.c                        |   21 +-
+ drivers/block/virtio_blk.c                      |   37 ++--
+ drivers/block/xen-blkfront.c                    |   33 +---
+ drivers/block/zram/zram_drv.c                   |    6 
+ drivers/cdrom/gdrom.c                           |    1 
+ drivers/md/bcache/super.c                       |    9 -
+ drivers/md/dm-table.c                           |  181 +++++-------------------
+ drivers/md/dm-zone.c                            |    2 
+ drivers/md/dm-zoned-target.c                    |    2 
+ drivers/md/dm.c                                 |   13 -
+ drivers/md/md.c                                 |   40 -----
+ drivers/md/raid5.c                              |    6 
+ drivers/mmc/core/block.c                        |   42 ++---
+ drivers/mmc/core/queue.c                        |   20 +-
+ drivers/mmc/core/queue.h                        |    3 
+ drivers/mtd/mtd_blkdevs.c                       |    9 -
+ drivers/nvdimm/btt.c                            |    4 
+ drivers/nvdimm/pmem.c                           |   14 -
+ drivers/nvme/host/core.c                        |   33 ++--
+ drivers/nvme/host/multipath.c                   |   24 ---
+ drivers/nvme/host/zns.c                         |    3 
+ drivers/s390/block/dasd_genhd.c                 |    1 
+ drivers/s390/block/dcssblk.c                    |    2 
+ drivers/s390/block/scm_blk.c                    |    5 
+ drivers/scsi/iscsi_tcp.c                        |    8 -
+ drivers/scsi/scsi_lib.c                         |    5 
+ drivers/scsi/sd.c                               |   60 +++----
+ drivers/scsi/sd.h                               |    7 
+ drivers/scsi/sd_zbc.c                           |   17 +-
+ include/linux/blkdev.h                          |  119 +++++++++++----
+ 61 files changed, 556 insertions(+), 710 deletions(-)
 
