@@ -1,93 +1,93 @@
-Return-Path: <linux-block+bounces-8711-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8713-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7643E90510B
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2024 13:04:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C08890510D
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2024 13:05:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F31371F23175
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2024 11:04:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33E141C2104C
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2024 11:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F2616F0C1;
-	Wed, 12 Jun 2024 11:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CF716EC0B;
+	Wed, 12 Jun 2024 11:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vqzcDz2S";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aAvp3nJL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vqzcDz2S";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aAvp3nJL"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="x38winlz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oQTM+JZP";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="x38winlz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oQTM+JZP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EC43D388
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1717A16EC1E
 	for <linux-block@vger.kernel.org>; Wed, 12 Jun 2024 11:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718190292; cv=none; b=eSV6dS/I3LwhjtQoqQVvYaMpLWxGXvCzXmrpO4Gfne6LViTVXcaxFX2ZJH/tCximkY+XZGlwOi3zW7lJVP+N+9OCqgxZ9yqbb8wnIVgPXqX3ga6Wr7BmzD2dWloWhutX5ADr7er1ufdxumZusQoa3PIjcvMVwWo8LcqKi6jhH+A=
+	t=1718190294; cv=none; b=q1Fc8j9SIaTpv1BeU+INqCfZqMadJqf87qPlcA/pw8WywzgEtXlGnr6kquwHgPZ0fjedzy0sq6bkf7RMG0nGMVzmhZuAzpciStYRK3W7ez/1HjsIL+vkK8fAUqYcp6GrxAEyk2FV8wWf+m/7sRx53gVbRTR6S/YT3xlAPdUI90U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718190292; c=relaxed/simple;
-	bh=jIclO607Q5ZuE+Vy9MBWG/AhV8PThKNabd4Qq2F86Uw=;
+	s=arc-20240116; t=1718190294; c=relaxed/simple;
+	bh=HQ0HaeVX/YJpIZtJ/s83uAyhmSd3WSTvGY9Q+fnaYLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kVNjPpoTJqPqkGq07jmTf3QYRtU8M+QwicOrFwR013mCpjV1ShdAUWCSFZEqmt1CbllUWNZnFlcmxxuC0b0lSNrlrXTVpMDyZ64W5U91Bd6fDM+Q5mWWzzVCO5ItQF0TVahvL3tc6/Rpv6ZYck9XsyxCU0MRwafHd9SquSUFZ+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vqzcDz2S; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aAvp3nJL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vqzcDz2S; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aAvp3nJL; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=jat4wrfqnRKmEIB9lb0hbUuE+e281HalR+JNJQq9//X2Io3/AVOJdP6wDHkSW9TcL40ICanJufoFPIdBJg2j7ExKcBD0cB7fbW8jFkTSbfVO1C9yPj90NzS6iy0myaEcmsK6acJXGvU/zsOkbYmXzEZMnXSWK6MjGNN6GxboWwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=x38winlz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oQTM+JZP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=x38winlz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oQTM+JZP; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 68627342AE;
-	Wed, 12 Jun 2024 11:04:49 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 11F705C0F5;
+	Wed, 12 Jun 2024 11:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718190289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718190290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=36798KKAtsQq5shjSYlwyjx48imMjsBb+8mxaI6X+8c=;
-	b=vqzcDz2Snwp8MIbLiKJ7PuQ/ZPVTDwLBgyJpUlvigeMbiqET2P3VGpFmrdYvUlCfDwsUb7
-	pnG4+BRx89tWkXxofGgvGAeee+86zk1QPG6oJ/0blDWZGOyBytADIsPHRiWc4apDYpqVi7
-	Pu7pPllhtJvLtWzXE+acJdcjaKdxNhA=
+	bh=xmpOIK+pg0ncAZr27wblc5prJ7wNCFLAgD6NifKyPnk=;
+	b=x38winlzIFDyQuqq2IemBdTafMIRToSNxbliLMxGDLPdRdflM90KbXIdSFkDqbcI1JYSYH
+	j5JJDdn892J2eNKuAS7s+ek8UnM9k/jTEBSTAy4b7w9QHf6vGyPFiaZ1lVR/QhKlzVg5F6
+	AHD9+8kE34HXD97cMBw70gyDp2gBQR8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718190289;
+	s=susede2_ed25519; t=1718190290;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=36798KKAtsQq5shjSYlwyjx48imMjsBb+8mxaI6X+8c=;
-	b=aAvp3nJLAX4sithDTE7aTsav9c1B5lI59GB19pPMN/H1rO48nJrteFgd6mtVbxdFOaoSBB
-	y0utpIp6Ob5oyyBQ==
-Authentication-Results: smtp-out1.suse.de;
+	bh=xmpOIK+pg0ncAZr27wblc5prJ7wNCFLAgD6NifKyPnk=;
+	b=oQTM+JZPT8441Y75oSXv3q1kdJC1tzsiUxm2ESvVOYNTeTbxlBw9MsrUbof63Ve4t09NBT
+	nSPRPWxKl4h7QWBg==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718190289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718190290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=36798KKAtsQq5shjSYlwyjx48imMjsBb+8mxaI6X+8c=;
-	b=vqzcDz2Snwp8MIbLiKJ7PuQ/ZPVTDwLBgyJpUlvigeMbiqET2P3VGpFmrdYvUlCfDwsUb7
-	pnG4+BRx89tWkXxofGgvGAeee+86zk1QPG6oJ/0blDWZGOyBytADIsPHRiWc4apDYpqVi7
-	Pu7pPllhtJvLtWzXE+acJdcjaKdxNhA=
+	bh=xmpOIK+pg0ncAZr27wblc5prJ7wNCFLAgD6NifKyPnk=;
+	b=x38winlzIFDyQuqq2IemBdTafMIRToSNxbliLMxGDLPdRdflM90KbXIdSFkDqbcI1JYSYH
+	j5JJDdn892J2eNKuAS7s+ek8UnM9k/jTEBSTAy4b7w9QHf6vGyPFiaZ1lVR/QhKlzVg5F6
+	AHD9+8kE34HXD97cMBw70gyDp2gBQR8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718190289;
+	s=susede2_ed25519; t=1718190290;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=36798KKAtsQq5shjSYlwyjx48imMjsBb+8mxaI6X+8c=;
-	b=aAvp3nJLAX4sithDTE7aTsav9c1B5lI59GB19pPMN/H1rO48nJrteFgd6mtVbxdFOaoSBB
-	y0utpIp6Ob5oyyBQ==
+	bh=xmpOIK+pg0ncAZr27wblc5prJ7wNCFLAgD6NifKyPnk=;
+	b=oQTM+JZPT8441Y75oSXv3q1kdJC1tzsiUxm2ESvVOYNTeTbxlBw9MsrUbof63Ve4t09NBT
+	nSPRPWxKl4h7QWBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5F30F13AB0;
-	Wed, 12 Jun 2024 11:04:49 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 03FA8137DF;
+	Wed, 12 Jun 2024 11:04:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nyk7F9GAaWaaDQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 12 Jun 2024 11:04:49 +0000
+	id 5df4ANKAaWacDQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 12 Jun 2024 11:04:50 +0000
 From: Daniel Wagner <dwagner@suse.de>
 To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
@@ -95,9 +95,9 @@ Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
 	linux-block@vger.kernel.org,
 	linux-nvme@lists.infradead.org,
 	Daniel Wagner <dwagner@suse.de>
-Subject: [RFC blktests v2 2/3] nvme/030: only run against kernel soft target
-Date: Wed, 12 Jun 2024 13:04:43 +0200
-Message-ID: <20240612110444.4507-3-dwagner@suse.de>
+Subject: [RFC blktests v2 3/3] contrib: add remote target setup/cleanup script
+Date: Wed, 12 Jun 2024 13:04:44 +0200
+Message-ID: <20240612110444.4507-4-dwagner@suse.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240612110444.4507-1-dwagner@suse.de>
 References: <20240612110444.4507-1-dwagner@suse.de>
@@ -109,11 +109,11 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
@@ -126,55 +126,215 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email];
 	RCVD_TLS_ALL(0.00)[]
 X-Spam-Flag: NO
 X-Spam-Score: -2.80
 X-Spam-Level: 
 
-This tests is exercising the target code and not so much the host side.
-The problem with nvme/030 is that it depends on interface to interact
-with the target which is not covered by the standard. Thus we can't
-run it against a real target. Just skip it when we run against a
-real target.
+Use nvmetcli to setup/cleanup a remote soft target.
 
 Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
- tests/nvme/030 | 1 +
- tests/nvme/rc  | 8 ++++++++
- 2 files changed, 9 insertions(+)
+ contrib/nvme_target_control.py | 110 +++++++++++++++++++++++++++++++++
+ contrib/nvmet-subsys.jinja2    |  71 +++++++++++++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100755 contrib/nvme_target_control.py
+ create mode 100644 contrib/nvmet-subsys.jinja2
 
-diff --git a/tests/nvme/030 b/tests/nvme/030
-index b1ed8bc20908..672487734332 100755
---- a/tests/nvme/030
-+++ b/tests/nvme/030
-@@ -13,6 +13,7 @@ requires() {
- 	_nvme_requires
- 	_have_loop
- 	_require_nvme_trtype_is_fabrics
-+	_require_kernel_target
- }
- 
- set_conditions() {
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index aaa64453fe16..4a2d107bd532 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -219,6 +219,14 @@ _require_kernel_nvme_fabrics_feature() {
- 	return 0
- }
- 
-+_require_kernel_target() {
-+	if [[ -n "${nvme_target_control}" ]]; then
-+		SKIP_REASONS+=("Linux kernel soft target not available")
-+		return 1;
-+	fi
-+	return 0
-+}
+diff --git a/contrib/nvme_target_control.py b/contrib/nvme_target_control.py
+new file mode 100755
+index 000000000000..97ed1c600dd2
+--- /dev/null
++++ b/contrib/nvme_target_control.py
+@@ -0,0 +1,110 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-3.0+
 +
- _test_dev_nvme_ctrl() {
- 	echo "/dev/char/$(cat "${TEST_DEV_SYSFS}/device/dev")"
- }
++# blktests calls this script to setup/teardown remote targets. blktests passes
++# all relevant information via the command line, e.g. --hostnqn. The interface
++# between blktests and this script is 'documentent' here in build_parser
++# function.
++#
++# This script uses nvmetcli to setup the remote target (it depends on the REST
++# API feature [1]). There is not technical need for nvmetcli to use but it makes
++# it simple to setup a remote Linux box. If you want to setup someting else
++# you should to replace this part.
++#
++# There are couple of global configuration options which need to be set.
++# Add ~/.config/blktests/nvme_target_control.toml file with something like:
++#
++# [main]
++# nvmetcli='/usr/bin/nvmetcli'
++# remote='http://nvmet.local:5000'
++#
++# And then start the nvmetcli server on the remote host.
++#
++# nvmetcli uses JSON configuration, thus this script creates a JSON configuration
++# using a jinja2 template. After this step we simple have to set the blktests
++# variable correctly and start blktests.
++#
++# $ host_ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
++# $ NVME_TRTYPE=tcp NVME_NVMET=nvmet.local NVME_HOST_TRADDR=${host_ip4} \
++#   NVME_TARGET_CONTROL=~/blktests/contrib/nvme_target_control.py ./check nvme
++#
++# [1] https://github.com/hreinecke/nvmetcli/tree/restapi
++
++import os
++import tomllib
++import argparse
++import subprocess
++from jinja2 import Environment, FileSystemLoader
++
++
++XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME")
++if not XDG_CONFIG_HOME:
++    XDG_CONFIG_HOME = os.environ.get('HOME') + '/.config'
++
++
++with open(f'{XDG_CONFIG_HOME}/blktests/nvme_target_control.toml', 'rb') as f:
++    config = tomllib.load(f)
++    nvmetcli = config['main']['nvmetcli']
++    remote = config['main']['remote']
++
++
++def gen_conf(conf):
++    environment = Environment(loader=FileSystemLoader('.'))
++    template = environment.get_template('nvmet-subsys.jinja2')
++    filename = f'{conf["subsysnqn"]}.json'
++    content = template.render(conf)
++    with open(filename, mode='w', encoding='utf-8') as outfile:
++        outfile.write(content)
++
++
++def target_setup(args):
++    conf = {
++        'subsysnqn': args.subsysnqn,
++        'subsys_uuid': args.subsys_uuid,
++        'hostnqn': args.hostnqn,
++        'allowed_hosts': args.hostnqn,
++        'ctrlkey': args.ctrlkey,
++        'hostkey': args.hostkey,
++        'blkdev': '/dev/vdc'
++    }
++
++    gen_conf(conf)
++
++    subprocess.call(['python3', nvmetcli, '--remote=' + remote,
++                     'restore', args.subsysnqn + '.json'])
++
++
++def target_cleanup(args):
++    subprocess.call(['python3', nvmetcli, '--remote=' + remote,
++                     'clear', args.subsysnqn + '.json'])
++
++
++def build_parser():
++    parser = argparse.ArgumentParser()
++    sub = parser.add_subparsers(required=True)
++
++    setup = sub.add_parser('setup')
++    setup.add_argument('--subsysnqn', required=True)
++    setup.add_argument('--subsys-uuid', required=True)
++    setup.add_argument('--hostnqn', required=True)
++    setup.add_argument('--ctrlkey', default='')
++    setup.add_argument('--hostkey', default='')
++    setup.set_defaults(func=target_setup)
++
++    cleanup = sub.add_parser('cleanup')
++    cleanup.add_argument('--subsysnqn', required=True)
++    cleanup.set_defaults(func=target_cleanup)
++
++    return parser
++
++
++def main():
++    import sys
++
++    parser = build_parser()
++    args = parser.parse_args()
++    args.func(args)
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/contrib/nvmet-subsys.jinja2 b/contrib/nvmet-subsys.jinja2
+new file mode 100644
+index 000000000000..a446fbd9b784
+--- /dev/null
++++ b/contrib/nvmet-subsys.jinja2
+@@ -0,0 +1,71 @@
++{
++  "hosts": [
++    {
++      "nqn": "{{ hostnqn }}"
++    }
++  ],
++  "ports": [
++    {
++      "addr": {
++        "adrfam": "ipv4",
++        "traddr": "0.0.0.0",
++        "treq": "not specified",
++        "trsvcid": "4420",
++        "trtype": "tcp",
++        "tsas": "none"
++      },
++      "ana_groups": [
++        {
++          "ana": {
++            "state": "optimized"
++          },
++          "grpid": 1
++        }
++      ],
++      "param": {
++        "inline_data_size": "16384",
++        "pi_enable": "0"
++      },
++      "portid": 0,
++      "referrals": [],
++      "subsystems": [
++        "{{ subsysnqn }}"
++      ]
++    }
++  ],
++  "subsystems": [
++    {
++      "allowed_hosts": [
++        "{{ allowed_hosts }}"
++      ],
++      "attr": {
++        "allow_any_host": "0",
++        "cntlid_max": "65519",
++        "cntlid_min": "1",
++        "firmware": "yada",
++        "ieee_oui": "0x000000",
++        "model": "Linux",
++        "pi_enable": "0",
++        "qid_max": "128",
++        "serial": "0c74361069d9db6c65ef",
++        "version": "1.3"
++      },
++      "namespaces": [
++        {
++          "ana": {
++            "grpid": "1"
++          },
++          "ana_grpid": 1,
++          "device": {
++            "nguid": "00000000-0000-0000-0000-000000000000",
++            "path": "{{ blkdev }}",
++            "uuid": "{{ subsys_uuid }}"
++          },
++          "enable": 1,
++          "nsid": 1
++        }
++      ],
++      "nqn": "{{ subsysnqn }}"
++    }
++  ]
++}
 -- 
 2.45.2
 
