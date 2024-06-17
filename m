@@ -1,56 +1,100 @@
-Return-Path: <linux-block+bounces-8917-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8933-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 031BC90A44A
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 08:09:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1779490A516
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 08:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A5CF285718
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 06:09:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEADE287021
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 06:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A86A19066D;
-	Mon, 17 Jun 2024 06:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9516187356;
+	Mon, 17 Jun 2024 06:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFz/S8Pq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE06919007A
-	for <linux-block@vger.kernel.org>; Mon, 17 Jun 2024 06:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88513186E55;
+	Mon, 17 Jun 2024 06:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718604386; cv=none; b=KPjVeiYFCChMgOjcvugcwVWSxIy9daDCFovvRRPDQm+WQr7LPIMq85lAE97Y0cc04gqndBd8UqDBWHVyyOyOkVsSuzP7dP/l5nBbAZggFoVKUSwXIHh36+7/h/KQub/ei7hDZ8yFaYh8B5cGMXp/YWpG31BLDSZiRhW5RHY9t2I=
+	t=1718604757; cv=none; b=C0RzpT1bzrplv6jpQeVWv2W57qH6K9VvbcZZj7eLKdw9yxSA4+rm83+eCzeH/hdoZzkmk0RcVGeNJdjvawv5qx3plImGjxybJ7x1GyJ+/1UkWciKdkPFZYrOCl0opUcSNbjUEvX9XsFBuU1w8jtpzv9UuE0vbil/sElXJ9lpowU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718604386; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4f8QV3J0Ybr6YHD9KtXJyvESxc+A5CUQH2WvQSB0SsprCJCbZW2shuJsOH5vnneVyMQUfX7tRDr+MOE1QKKL2DowScN9m5ZuNEM2yw3lQkro3b6yLbPwq7d910BankBLcp2l3AIOx9+cv8HxMEhY12cvUjrIsCi2EwvyYS8YpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A0E8268D05; Mon, 17 Jun 2024 08:06:19 +0200 (CEST)
-Date: Mon, 17 Jun 2024 08:06:19 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org
-Subject: Re: [PATCH] block: cleanup flag_{show,store}
-Message-ID: <20240617060619.GA17582@lst.de>
-References: <CGME20240617045649epcas5p1763924a49c5182f30a9ae3ea013390ae@epcas5p1.samsung.com> <20240617044918.374608-1-joshi.k@samsung.com>
+	s=arc-20240116; t=1718604757; c=relaxed/simple;
+	bh=LrLZKWXkRakpWI4/ueXizJXAwKTR991d/slvg583xhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WIOAx38mLYQXjYVCJgxBu4UawAJHgfM+kQwDigN3mFut0g/S9cui8fxsRdTGYpwt53tgPBuliPVJzHanJD2j8fxh7NEtJ4hHEYo2QDAzni0sCBfbtoeGI/8QAp18UhCcQuTejQXFpH9TbnYM5ZCeR9JjnYAon4or58DhkTHwmrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFz/S8Pq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 722E5C2BD10;
+	Mon, 17 Jun 2024 06:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718604757;
+	bh=LrLZKWXkRakpWI4/ueXizJXAwKTR991d/slvg583xhg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nFz/S8PqJ0x5s3Ny5I2evBmJDaO2EaUIuiWjAdtRmCQ/A6QpvJbLmjC0Fw7IXR1VT
+	 uSNeYADsaTVxJipaBcqAsdKPSVVmorISGDB8ghzkIoBVgWELX0vnHVqN5Xf3bgHIW/
+	 Jd7IHk4xFBOBn5HxiZsiAifRO0y8cGSStiGE0NqqwYZj3htvKjZ9JxGjZyZWwJADfE
+	 WIUuoyvXMEqafkiqyCnfGPuXY7GxfWhCoyjXAFv1xdeTp+IRRcD16/M5uHMReQAzrM
+	 yLcLncP795V2wNVqCHkdUBLru1ejkUmD3WFgvqGfKNm1zjEea2esQdxNT2nTdM/0yi
+	 xUG82No+arhQQ==
+Message-ID: <e4ce83ca-160f-4dd9-984a-842b6cd2b5c0@kernel.org>
+Date: Mon, 17 Jun 2024 15:12:31 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617044918.374608-1-joshi.k@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/26] sd: move zone limits setup out of
+ sd_read_block_characteristics
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Richard Weinberger <richard@nod.at>,
+ Philipp Reisner <philipp.reisner@linbit.com>,
+ Lars Ellenberg <lars.ellenberg@linbit.com>,
+ =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+ Josef Bacik <josef@toxicpanda.com>, Ming Lei <ming.lei@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+ Mikulas Patocka <mpatocka@redhat.com>, Song Liu <song@kernel.org>,
+ Yu Kuai <yukuai3@huawei.com>, Vineeth Vijayan <vneethv@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ linux-m68k@lists.linux-m68k.org, linux-um@lists.infradead.org,
+ drbd-dev@lists.linbit.com, nbd@other.debian.org,
+ linuxppc-dev@lists.ozlabs.org, ceph-devel@vger.kernel.org,
+ virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+ linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, nvdimm@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+References: <20240617060532.127975-1-hch@lst.de>
+ <20240617060532.127975-4-hch@lst.de>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20240617060532.127975-4-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Looks good:
+On 6/17/24 15:04, Christoph Hellwig wrote:
+> Move a bit of code that sets up the zone flag and the write granularity
+> into sd_zbc_read_zones to be with the rest of the zoned limits.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Looks good.
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
+-- 
+Damien Le Moal
+Western Digital Research
 
 
