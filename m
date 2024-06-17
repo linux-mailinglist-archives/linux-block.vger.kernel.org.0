@@ -1,171 +1,276 @@
-Return-Path: <linux-block+bounces-8971-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-8973-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A323590B671
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 18:33:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7FDF90B5C1
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 18:06:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D359B28AF6
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 15:27:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E24461C20C36
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jun 2024 16:06:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F998480;
-	Mon, 17 Jun 2024 14:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C3E71D9506;
+	Mon, 17 Jun 2024 16:06:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="clhRAdt9"
+	dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b="gSjeC8AA"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2103.outbound.protection.outlook.com [40.107.6.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EF4D51D;
-	Mon, 17 Jun 2024 14:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636189; cv=none; b=J3aDlsDSoS4wX/8rFtzuU+WKjM0oxrpGFaKQBJnYgEsGA+oXABAOr3d8g3z97arFysc7F3TU2K1i7Y3qsUcfxakqb9t+H7U0+MHgI77X3Ho3aXsNGvTOT6xKs3QDEthtH64d/1kGzLXXzZqQM2rSDFRQxm29Q2UULqvTIcYi7RA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636189; c=relaxed/simple;
-	bh=1g98WIt6DK45Ckxrtdcr5vChfA+pfghexrdjwxiI8YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qr55YnDrBCJpQf2T8uN56HAEMFITZsJGSYO0W3Gh+7SJ6C6cbhJ6iU9ralQoa7qpmUEThezsS1AiUojlnCIAiI6fZby3OqW+7bzgP+j8NMrzXclCkp2uwIbm0EqtLAoj/gf5KBGogL0WlRajrDSiykuJgrqYGO3AnFXbXC0geuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=clhRAdt9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F573C2BD10;
-	Mon, 17 Jun 2024 14:56:26 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="clhRAdt9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718636183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6bcwrvbIl7+eEjyyGJoXxh1mehCsgFRYWHRM/zwpUAQ=;
-	b=clhRAdt9QmHzMaEEzVai+8NS5mBwqdWC/f0sKn8iKNRjAYqBW9N3E2L8sbjmiy2SQkZGk0
-	hK8NYQAMg8k+eCY6yhiOMg3Eok18XjHMRfrN68QDTwANHVK37YKOUoOk4GYwZc7KCjnUD+
-	5Jm/fDnndt2OgFIS0O5m9q1UI47PGCA=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 071c720a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 17 Jun 2024 14:56:22 +0000 (UTC)
-Date: Mon, 17 Jun 2024 16:56:17 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnBOkZClsvAUa_5X@zx2c4.com>
-References: <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
- <Zmru7hhz8kPDPsyz@pc636>
- <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
- <Zmsuswo8OPIhY5KJ@pc636>
- <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
- <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
- <Zmw5FTX752g0vtlD@pc638.lan>
- <ZmybGZDbXkw7JTjc@zx2c4.com>
- <ZnA_QFvuyABnD3ZA@pc636>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F58B4A09
+	for <linux-block@vger.kernel.org>; Mon, 17 Jun 2024 16:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718640363; cv=fail; b=uSm86HjhTJkUpETG+LnETzP8Qi3A4LMcsgrepgI3PuUYUErFmfy3rmAwFy0WxvIOUdVfU5I/kjoOtqi1kuydgBt0oDqJeTh9UbhH4jBD0RETe22e/hRG89EaZ5UY1FP5niDogO/QiDXjlrTYoFj0csBlsrPMUlOigMhn+8BdTZs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718640363; c=relaxed/simple;
+	bh=JxmO4QFnxcBegrTZWsnAOxnQv3MhK6BsN2mNclphgMo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HhRg/8GrHrLbZ03eL3KATwkKDiIVGuyw9muaLu4YIVGY+oko6N1p1RPDbxc38H/i7AwdayyCjJk972/qiSVhDXM7Z/RnewjvRghySEAP6TcbMvb5da9c/bY7FJgI961xpXdaDBPAyWnm3cgE1cdq9wwL3U3kRkewMYpR7IH9YNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com; spf=pass smtp.mailfrom=volumez.com; dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b=gSjeC8AA; arc=fail smtp.client-ip=40.107.6.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=volumez.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pb/rVaxatQwWjwqDqneske/bW0om2v6dxVOEkKriGEi/Vouzrdy3W5DftCKIccFFuTOPkXM2mRqpXwK84bB9f32A1Dugqv5F7FTMWiqi2bDoLkytYLpJwrNOOXHoO0ngUYrmcv1xV6gBvdAyQY0/MWOAEqu6B4hLJvlvEdvOhpIj+Vsz7oCGCpx5u1C0gt+HPeNIQIwptzcgcSker9C5hNLhmgk6MRxoVYOb7vQWBAQ4vyT7L5Yn1/PrhJ1LXEMTZyY1ZVNgW7czKgHjjqlZa7+LQTBEqg0A7dqjuy61PgxjWk5qiJmdNFq98ocLt8bk2DBeCY9KoBG8iSRhP9ONrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=suODURwtz+81rCUze4BkLdIZJJ5PSeNwkzlzNwKa1s0=;
+ b=O4BxOCj5aBDltW1fAp5IMTNN8EUT+hL0Xb3LtFA4QfDK2aouUbarI5Yt1/mnVsNntt7fQY1HrTr32DGFKnREiRIYeeZWjNwK7axdkfiJNDagIdJ10+z/PFIYBw8BP6nMQxTkriXXesTcULneSp1x8/LImFAm4yxB6oNq87sWEsn8+CFCWDF1MNyLwZu7J7a0kN8aotNhi3lsPyQikC4kWDZPPC2tsr35koEuBoz3o0nNydRvAXLLl99ZMumvfZSjzL/2E699yZ9+0PSAAn4mFeqT8UN0JNFpZ3PAqHUgD+sIoFqysAfFxi3eis5gC8SZipSrg22AbaA1rhI8QEcspg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=volumez.com; dmarc=pass action=none header.from=volumez.com;
+ dkim=pass header.d=volumez.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=storingio.onmicrosoft.com; s=selector1-storingio-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=suODURwtz+81rCUze4BkLdIZJJ5PSeNwkzlzNwKa1s0=;
+ b=gSjeC8AACUebCNVxlDWfSYFPd8t8P8N/tcobIdevGgbyTN3s3yC4EP5Fles7SLSTKrE8NCzyOQMpUdInHKPJ/jd8OQhW4xCU+DvJr+ClnrAX4qspmLKIgjv75lbh+PykVwCL2OjjN5CvYKLYE2HWu2yYfSfXfCN2/VsCFz9ww2K8Fi8VQtT60hEUxJd8zxfUHph1MghA6rg8Z1JagC4QGvbBWgNXMaiLK0oiWDJmq8In7na2e0p60yiX5GCqnNMy9UUkDQGvQrJEPdELet99apvxeBZrPrVAytRdChqUzxjODIbU8CrbMVtWVpG+ZqChktfiQnCbzzPTBTPf89wwWA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=volumez.com;
+Received: from AM0PR04MB5107.eurprd04.prod.outlook.com (2603:10a6:208:cb::11)
+ by AM8PR04MB7395.eurprd04.prod.outlook.com (2603:10a6:20b:1c4::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 16:05:58 +0000
+Received: from AM0PR04MB5107.eurprd04.prod.outlook.com
+ ([fe80::de53:c058:7ef:21fb]) by AM0PR04MB5107.eurprd04.prod.outlook.com
+ ([fe80::de53:c058:7ef:21fb%5]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
+ 16:05:58 +0000
+Message-ID: <34ee55e8-a23c-4e7e-b897-cfbcc8337136@volumez.com>
+Date: Mon, 17 Jun 2024 19:05:55 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH blktests] md: add regression test for "md/md-bitmap: fix
+ writing non bitmap pages"
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <20240613123019.3983399-1-ofir.gal@volumez.com>
+ <cnaunh75p4p45e4hgdaeaqry6whwdc2pqatil5v3oxjitwobda@p2oqftzlwv2r>
+Content-Language: en-US
+From: Ofir Gal <ofir.gal@volumez.com>
+In-Reply-To: <cnaunh75p4p45e4hgdaeaqry6whwdc2pqatil5v3oxjitwobda@p2oqftzlwv2r>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL2P290CA0024.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:3::8)
+ To AM0PR04MB5107.eurprd04.prod.outlook.com (2603:10a6:208:cb::11)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZnA_QFvuyABnD3ZA@pc636>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5107:EE_|AM8PR04MB7395:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8bfff50-f19b-468d-0fbc-08dc8ee75fdd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|1800799021;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NUhRUnFxeDcyYUxrWlhYYTlHOG1rWmhKMkpDUHNiT2NKTVpNZXp3ZlRtaTB2?=
+ =?utf-8?B?Ymx1a0VQYlJHekdUNDBBalptWmNoeW12VnhzTXc2bzNSZlN2dUFpVUNOS1dQ?=
+ =?utf-8?B?RWI0bENQdVR3R0hmNm4xMWxMeU9TMC91NXNYSmxpUHRWZkptUEtNVm1TeVBL?=
+ =?utf-8?B?bHN0U3pZdmY2Q1JFRlRkdFR6ZVM0WTV1UnVBQ2JWVGNsdlRlTVRSUzlBMWw1?=
+ =?utf-8?B?QkVKRmNBTDJ3aThqVTlBZExLU1A1dENPaG1idHBDcnl4bjlPOGljekhXN016?=
+ =?utf-8?B?QzNkeFlEdFZrR1duL2kyWXViY2JtRVNLY01xSXNiSzNoc0lLM01zQ09yWEMr?=
+ =?utf-8?B?QmovdFZNMFNjTHl5b0FEWGJMU2FyRGJydEFaZHB3aTBISWdCbENNZWhuTVJy?=
+ =?utf-8?B?RFBWdFhRRm50ZTF4OWpDZEw1TmJBOExsc0J1TjFvRnUxRFQ1VDdvWTBkdXgv?=
+ =?utf-8?B?akMzbllBbVMraHBMVHppZk9zTXpMdE4weFY3cFA3bTk0cmtFY1V4QXlONHcx?=
+ =?utf-8?B?WkhjZ1VlRzRNNzdtS0liUFNnUVNaYy9DWkQxRUJrbktkSCtENVArWFRmQzV6?=
+ =?utf-8?B?cEJ4Ly9KcVJKSUxMY1VMaHJqamxMVUp2cm5BRFpjREdXVE9jUjF1djBrODBO?=
+ =?utf-8?B?bFhpNFpicTdhL25YdXRydnBHcmQyMDZRTXE3cW9OOEFCQnpOVjRobDcyUW1H?=
+ =?utf-8?B?dkhCN0s0N2tLUEIyY3FHSG1Xb0dZSFlUanlCaW94T0tFMWxLZkgxZ1RucnBN?=
+ =?utf-8?B?THFwQzVuUElqdHBLWnErZmNWNi9YK3oraG9FSmd5N3V3amV5OGVia1d4SGRp?=
+ =?utf-8?B?S0R2TldVaTlzZXVhM0lGVVQ2OHV1UytHK0NaUElxa0I3TTJ4Z1JrK0hIa0Z6?=
+ =?utf-8?B?RE1GeHdRK0tkZkpJZFFWM3BwcGticjd4T3ZCVEtheUkyOGxtalRtaEh4cDNr?=
+ =?utf-8?B?S0c1VnFsWFNOM0N6NzM1Ny9mN1I3TmZvc0gxNXBwa0VranNMTFFsUzJoTXdX?=
+ =?utf-8?B?VGVRUHRhVUF2WWovOUdtZWxlVmRoUUErNjJwVHNMcVdNU3MrTkkwNWFhYjJZ?=
+ =?utf-8?B?MmN5eE5YQ2JZUm5XMUp3NkMrM2xXN3RMbkNNR2wxQW1DTFErSU9HNWNRS2c2?=
+ =?utf-8?B?NWpQNlZWcllVQnRTYzZ4RllyV2FrK2duOERHdTFjR1dkallMRFEraFhEY0p3?=
+ =?utf-8?B?SFphazNLZkx3RWpTRU1yTlduSHI4YlpuR3VjWDJpQnppSEY4TEgveThyaW9t?=
+ =?utf-8?B?bWhOWGE5QWZJb0ZuUjJFOXh3VWovWjhjbHgvZElZN25UZHhrdXVwdGIvVHo5?=
+ =?utf-8?B?ZVZnUUFNN29UOFRBemhrK1Vid2JRSXowa3JTVG5FNzlmalpoUVk0cmJBb1F1?=
+ =?utf-8?B?RWw4VGJVcHE2cHlGaVdNSUZKdFI0UmdpSVh3SUFCTHVlVkxTbmJRL2ZjVU05?=
+ =?utf-8?B?eDJnRHFsaEJRZjh5MWZnSUZHUytXS25TWmVKQ2ZXdnZHSUt4REIzM1pDbGRp?=
+ =?utf-8?B?SlN5aDNsQTg2UURZUzJ0MEpiWE1aV05WTW15YVh4SHU3aTB5MngyZy85ZUVY?=
+ =?utf-8?B?cGZpTDAxZVdJbHN3QjIxd1ZkSFg5VlROb3pwRVN6NmlMZnNGcUREcDZZdjBS?=
+ =?utf-8?B?WkV0ZTJoWnJTdjlDd09iSWtnQ2ZLOUtGV3kwVzFtc0hjOHdsbVI2UFllblpo?=
+ =?utf-8?B?UjR5MHdMc2RmL1QrSGxUMDU2aTJWUE91a3QyTDl3SXpmUVo2Q3J2bUNZRm8z?=
+ =?utf-8?Q?jas/ZnGcp62vlR6J7vj69pWY5Bw5f80eCVxhtFE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5107.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S1NVYm4zdTQ5RkpnMklJLzJyUU00VDhNM0haSU11MGhoYVY5LzZlV3dZbEJl?=
+ =?utf-8?B?V1BuMVROSG90eFdRUVBpSnppODQ3M1c0Lzd4Y1F6UXY1SDJlWCtVcmkrQ3gx?=
+ =?utf-8?B?UnhoNXVzZDZleThYeVd3TVl4ZU5MRXl3MjRuMkdQUDZ6TXcwVVNEQ2JqSFNy?=
+ =?utf-8?B?ekVCOWg5elpBa2xxeSsyYjZPKzZVM3J6eUxYZVZQZzdTUitGRmRsb1laT3hv?=
+ =?utf-8?B?QlNIRTc4eW4raGh3UGtmNkxocTkvNlIyMi9OK2xlSjZob2tmUnZOdE1oRWVv?=
+ =?utf-8?B?d0RxN2dBN3NsQUFYZlQrUmFnWXgzYURSZVFZVjFNZm1sLy8rYkF6YkcyOHZx?=
+ =?utf-8?B?UXB3SjZ3eTBoZ3RVeVMzbyt5WWs2NGpaSW8yRm0reWpNYlVxdDMzS2tSZjZY?=
+ =?utf-8?B?TTgrSTI0UFZjN0l2bWNBTHE0OWd1dUVSajZPdFZjL1RzTjMxOWkzVlIrU09J?=
+ =?utf-8?B?SGZqRVBqMVg2NW8yR2tIL0lGcTNZQUtwTTdZV2U1cGE5alNoSm44MVZELzJS?=
+ =?utf-8?B?TUJwSzJMaGJLUjluTFlrUDBUZmIxdnlNZ0dzeTZ6a3N0TlVrbTBlRkNsdGVN?=
+ =?utf-8?B?L2YvazdRM3AyRVQ0ZVorZFNacTRjYUdzT1pWdkVCejRqa3UyTlRWanJrWmNp?=
+ =?utf-8?B?RHlpQjRWcXpEN09xcXh3WXpuZ04vRmFyNC9MQ3JGKy9INGUxTDBLT3Izc245?=
+ =?utf-8?B?T2JocldJdW9UdGc0djZOK2lWWWpFKzdrWG9xeC9XL2NQaXdBSFBzUE9HcGVy?=
+ =?utf-8?B?TjVJREZmNVl3eEw2YUhab1M5VE5WWG1HSzN2WTk2ZUllT2hIYUpQdXVhZi94?=
+ =?utf-8?B?V0ZFcWRZOGRFejVmMlFlSkRLQnZIcStNc0VBclhGRkFoYjRLWXZsRnF4Ykgz?=
+ =?utf-8?B?R2pXTkhWM1hUS29Jc3Vpb2R3Z0JYRHRVMkIvR3huK1M5Y1NGNUt2c0p3WnJO?=
+ =?utf-8?B?d3R0Nlc1bTVPaFBTY21oT1ZiRS9zcGZTL0FkZGZvRTk3TXpIWjZtMjR1ZWJl?=
+ =?utf-8?B?S2pudFJxVk9LU1k3bHd0TmpYMjc1SWRJd29TQTdtcXh0ejRGNVdxZU1aWUFZ?=
+ =?utf-8?B?bkJKSnVQaFpBS0xsUjd4cFdXR29xZlI1K0xSV0FmYzd3OUNIYXdYSTcvZUd3?=
+ =?utf-8?B?djBXRDlwYmZ5WjlJaDlWQ2dkeFJPcm5qZWhkQXVnR1lWRWVSbTVJaTl0Njlk?=
+ =?utf-8?B?NGZSY3R4Zzk0ekxrM25KanJxTGVDdXhlNmJMMk1qU0RScjJ6T09nV29vR1cw?=
+ =?utf-8?B?eDlLZXVrZmRqUjJIWTB6NHV1Z2xkeFEwUi9PMGNEdTB0NkR3Uzl2OTRlQ0ZK?=
+ =?utf-8?B?SnJBSVJYRmlGTkhqYWN1WkxhaXJiSTdTOHFuSkJrR2IxMzZlbENKKzJXV1dZ?=
+ =?utf-8?B?bDJGTEFHVEFON2lodGNhODhYUHFLMTB0MXZRNUZxOUhkbFJGN1A0bmdRcElk?=
+ =?utf-8?B?VXFSazNsUnlHNG8ya3ZBMGZvOFNHTWdCVjF5UVZSME1IZnhNMkt2NTQyYTRK?=
+ =?utf-8?B?MEttVTc5WngwcWMwWkFveVBJZVNqQm1mblFCbHBiUzJMTjNzelgxTTNPV3Jv?=
+ =?utf-8?B?VzZZNzRpQzNOOGw4RkFmLytxY3pKdUZMM0hCL0ZmZis1U3VMQmNFMTFBNE9B?=
+ =?utf-8?B?Z2QzSWN4K2x1ZExpZmtMTTU1Yk55QUpmK3N5RlFGQXlWREhvR2hsNHgyY1Ji?=
+ =?utf-8?B?dXIrZmZNZjIydWFmdW1hSFJ1RFBZRTAvQ2NOT2tKY1pnaWZVelgwQ1dJa1NK?=
+ =?utf-8?B?aWlacEpINTcrV2Qvc2kzZy93TU9aTVd4VXhyZi9XNGJXQVVtbEwvMDExakly?=
+ =?utf-8?B?WUt3TVZLVndOOTVTcWkrcExOcGE0Q2lGdEQrS3hFdHlidTFkUGtaS25ZODg3?=
+ =?utf-8?B?UFUxYTVRNklrMyt0VG1odmc4azdPNWM4U2Z4cDdtYXdtMkZ4Qms4Sks5UjAy?=
+ =?utf-8?B?WmNUWFFCOFd3SWpKYWF6OHY1RFdsQVFwMTMzQ0c2NVBrdkFBQ0l2TlVVNGtW?=
+ =?utf-8?B?QXpIZVIyaTBVUDE4UlNKUnVwaElla2h2QkdoS2NOdUFDQ0pYL2VUS0V2VkdP?=
+ =?utf-8?B?Y1ZQSWwvVHREbUNNNEtMUzhXdHF5dVFXTFJRMHd2M201Y2l5UUNtalpJSjkv?=
+ =?utf-8?Q?Qozj9JJNZi9Awu1+UFbwcIgU0?=
+X-OriginatorOrg: volumez.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8bfff50-f19b-468d-0fbc-08dc8ee75fdd
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5107.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 16:05:57.9911
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b1841924-914b-4377-bb23-9f1fac784a1d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vvC+4lgPZKml7Q37tqA/++M5yO8XgY/gdeA6lwOBKlYQ535C4V+dp6pLqOl4FXHyAnsZlVXKTjZmE1uUuW4z+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7395
 
-On Mon, Jun 17, 2024 at 03:50:56PM +0200, Uladzislau Rezki wrote:
-> On Fri, Jun 14, 2024 at 09:33:45PM +0200, Jason A. Donenfeld wrote:
-> > On Fri, Jun 14, 2024 at 02:35:33PM +0200, Uladzislau Rezki wrote:
-> > > +	/* Should a destroy process be deferred? */
-> > > +	if (s->flags & SLAB_DEFER_DESTROY) {
-> > > +		list_move_tail(&s->list, &slab_caches_defer_destroy);
-> > > +		schedule_delayed_work(&slab_caches_defer_destroy_work, HZ);
-> > > +		goto out_unlock;
-> > > +	}
-> > 
-> > Wouldn't it be smoother to have the actual kmem_cache_free() function
-> > check to see if it's been marked for destruction and the refcount is
-> > zero, rather than polling every one second? I mentioned this approach
-> > in: https://lore.kernel.org/all/Zmo9-YGraiCj5-MI@zx2c4.com/ -
-> > 
-> >     I wonder if the right fix to this would be adding a `should_destroy`
-> >     boolean to kmem_cache, which kmem_cache_destroy() sets to true. And
-> >     then right after it checks `if (number_of_allocations == 0)
-> >     actually_destroy()`, and likewise on each kmem_cache_free(), it
-> >     could check `if (should_destroy && number_of_allocations == 0)
-> >     actually_destroy()`. 
-> > 
-> I do not find pooling as bad way we can go with. But your proposal
-> sounds reasonable to me also. We can combine both "prototypes" to
-> one and offer.
-> 
-> Can you post a prototype here?
 
-This is untested, but the simplest, shortest possible version would be:
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 5f8f47c5bee0..907c0ea56c01 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -275,6 +275,7 @@ struct kmem_cache {
- 	unsigned int inuse;		/* Offset to metadata */
- 	unsigned int align;		/* Alignment */
- 	unsigned int red_left_pad;	/* Left redzone padding size */
-+	bool is_destroyed;		/* Destruction happens when no objects */
- 	const char *name;		/* Name (only for display!) */
- 	struct list_head list;		/* List of slab caches */
- #ifdef CONFIG_SYSFS
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 1560a1546bb1..f700bed066d9 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -494,8 +494,8 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 		goto out_unlock;
+On 17/06/2024 14:32, Shinichiro Kawasaki wrote:
+> On Jun 13, 2024 / 15:30, Ofir Gal wrote:
+>> A bug in md-bitmap has been discovered by setting up a md raid on top of
+>> nvme-tcp devices that has optimal io size larger than the allocated
+>> bitmap.
+>>
+>> The following test reproduce the bug by setting up a md-raid on top of
+>> nvme-tcp device over ram device that sets the optimal io size by using
+>> dm-stripe.
+>>
+>> Signed-off-by: Ofir Gal <ofir.gal@volumez.com>
+>> ---
+>> This is my first contribution to blktests. The tests hangs when being
+>> ran on a kernel without the bugfix. Should we wait for the bugfix to be
+>> merged to upstream before merging the test?
+> Thank you for the contribution :) If the bug does not cause any hang or failure
+> of other following test case runs, I think it's ok to add this test case to the
+> blktests before the fix gets merged to the upstream.
+>
+> Please find my in-line comments below. Later on, I will do trial runs.
+Great!
+>>  common/brd       | 28 +++++++++++++++++
+>>  tests/md/001     | 80 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  tests/md/001.out |  2 ++
+>>  tests/md/rc      | 12 ++++++++
+>>  4 files changed, 122 insertions(+)
+>>  create mode 100644 common/brd
+>>  create mode 100755 tests/md/001
+>>  create mode 100644 tests/md/001.out
+>>  create mode 100644 tests/md/rc
+>>
+>> diff --git a/common/brd b/common/brd
+>> new file mode 100644
+>> index 0000000..b8cd4e3
+>> --- /dev/null
+>> +++ b/common/brd
+>> @@ -0,0 +1,28 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: GPL-3.0+
+>> +# Copyright (C) 2024 Ofir Gal
+>> +#
+>> +# brd helper functions
+>> +
+>> +. common/shellcheck
+>> +
+>> +_have_brd() {
+>> +	_have_driver brd
+> This _have_driver() call checks brd driver is available, but it does not check
+> brd driver is loadable. I think _init_brd() and _cleanup_brd() assume that brd
+> driver is loadable. For that check, please do "_have_module brd" instead.
+>
+> One left work is to improve this case work with built-in brd driver, because
+> some blktests users prefer running tests with built-in drivers. At this point, I
+> think it's okay to go with loadable brd driver.
+Ok, applied to v2
 
- 	err = shutdown_cache(s);
--	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
--	     __func__, s->name, (void *)_RET_IP_);
-+	if (err)
-+		s->is_destroyed = true;
- out_unlock:
- 	mutex_unlock(&slab_mutex);
- 	cpus_read_unlock();
-diff --git a/mm/slub.c b/mm/slub.c
-index 1373ac365a46..7db8fe90a323 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
- 		return;
- 	trace_kmem_cache_free(_RET_IP_, x, s);
- 	slab_free(s, virt_to_slab(x), x, _RET_IP_);
-+	if (s->is_destroyed)
-+		kmem_cache_destroy(s);
- }
- EXPORT_SYMBOL(kmem_cache_free);
+>> diff --git a/tests/md/001 b/tests/md/001
+>> new file mode 100755
+>> index 0000000..d5fb755
+>> --- /dev/null
+>> +++ b/tests/md/001
+>> @@ -0,0 +1,80 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: GPL-3.0+
+>> +# Copyright (C) 2024 Ofir Gal
+>> +#
+>> +# Regression test for patch "md/md-bitmap: fix writing non bitmap pages" and
+>> +# for patch "nvme-tcp: use sendpages_ok() instead of sendpage_ok()"
+>> +
+>> +. tests/md/rc
+>> +. tests/nvme/rc
+> I want to avoid cross references acoss test groups. So far, all test groups do
+> not have any cross reference to keep them independent. How about to add this
+> test case to the nvme test group?
+I don't mind to add it to the nvme test group, just to clarify the test
+checks a bug in md. The bug is "visible" only when the underlying device
+of the raid is a network block device that utilize MSG_SPLICE_PAGES.
 
-@@ -5342,9 +5344,6 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
- 		if (!slab->inuse) {
- 			remove_partial(n, slab);
- 			list_add(&slab->slab_list, &discard);
--		} else {
--			list_slab_objects(s, slab,
--			  "Objects remaining in %s on __kmem_cache_shutdown()");
- 		}
- 	}
- 	spin_unlock_irq(&n->list_lock);
+nvme-tcp is used as the network device, I'm not sure it's related to
+the nvme test group. What do you think?
+
+>> +. common/brd
+>> +
+>> +DESCRIPTION="Create a raid with bitmap on top of nvme device with
+>> +optimal-io-size over bitmap size"
+> This descrption is printed as blktests runs. All other blktests have single line
+> description then the two lines description looks strange. Can we make it shorter
+> to fit in one line?
+Yes, does "Raid with bitmap on nvme device with opt-io-size over bitmap
+size" sounds good?
+
+>> +test() {
+>> +	echo "Running ${TEST_NAME}"
+>> +
+>> +	setup_underlying_device
+>> +	setup_nvme_over_tcp
+>> +
+>> +	# Hangs here without the fix
+>> +	mdadm -q --create /dev/md/blktests_md --level=1 --bitmap=internal \
+> In the past, short options caused some trouble. I suggest to use the long option
+> "--quiet" in place of the short option "-q".
+Applied to v2.
 
 
