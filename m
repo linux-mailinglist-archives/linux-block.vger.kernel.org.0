@@ -1,127 +1,78 @@
-Return-Path: <linux-block+bounces-9169-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9164-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79EFA9109FB
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2024 17:36:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD0609109E0
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2024 17:31:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 363622841A1
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2024 15:36:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 688EF1F25B09
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2024 15:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7D371B1431;
-	Thu, 20 Jun 2024 15:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kil7NbsQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a5ejUb4N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83FE1AE080;
+	Thu, 20 Jun 2024 15:30:58 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B791AF697;
-	Thu, 20 Jun 2024 15:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244401BF53;
+	Thu, 20 Jun 2024 15:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718897773; cv=none; b=AFiUmjcu8lhowQTA9ZpjudZtos8CbGH0GxhdMd+7B8UR7iKNV28mMkM9VkBQzBsfwhuDL2M57jdB+rn5sLb9DCNrVZ/1NbwXiIGWW3kHW2SarujEpVEaiiGRyCiSjwA5Y/wFB3GDdfhjmNNvsAcvO7jfEAiVrolLu4cxToyML90=
+	t=1718897458; cv=none; b=Nm8XxuIEHRpgZWhKJ/B/XR7S2APKEnK3xHXcYFctoSLUA2VhYM43+RQRvG4KnhqEovmb+mR5VI+zqkYh2AgplpwSWVUihnzbflmgyn9XuSOiXmQ8Dl+Z5okxB8vGv3Q+1Nz0fUVIuW/UU3CXu3ZJSKU1ZikxRZRKhdKMQI/EvGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718897773; c=relaxed/simple;
-	bh=G86ZpOCbQel56zil7HXk/BgfDvuf7fbDP5Y1Y0ZjcSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mnbpE8d2yr4WUfTTopE1K2UCDX8ZXQM+qxfDEE71HXqoyKm4d1d6mBwbJtKI2RCuEKrCmezJhyvbE0E4XccoZ6elAX8x6Em91bbJzzt5yATDISqO06v3EzQw1u/tlQd/OT/g39Uq9AlP8n45+Jg11G9Lxznf4jDUP51ad8LWGRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kil7NbsQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a5ejUb4N; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718897763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXGSH918z06aphcGtDz/mGBYt1ti++St5iUsrCgtWaU=;
-	b=kil7NbsQH7jdwnMwRQ2mC2ylka48gdZL9tpAv4FRBrjvfMadVogEM1/+WTiQ5+0827VZYf
-	c87nD8aISnp4+va3ls/l3QT4JUHUmDGdZ1asJOWL4kPFTTnTJRVP5Q2pRkALWgamO1+Bn8
-	Y1fTlTo5oicQavQkXt1U/Fb+N+fTagGTI6/BWxaW9iIYjlYZG3iR5PmTDJPTWI2bapYfnN
-	6/I1GWEVy59eJYLHRjt4BUifRIWL9g4077CT2sMjFnpEE+9s/GMWbp572xsNjbd6myuUEk
-	PtVtO85IRdsD7oxfcX2ZOVNgVrryj5061zRuWhrX9hEHVyCYCtMknXO0qgM5DQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718897763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXGSH918z06aphcGtDz/mGBYt1ti++St5iUsrCgtWaU=;
-	b=a5ejUb4NDgy+H/Z5dRXG/oqwib78j7B/Vohrw7KQ3ygD0UP4FgUax97LjpcaGMfAOiPRLp
-	4bsmjqshnDFWC0Dg==
-To: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mike Galbraith <umgwanakikbuti@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 3/3] zram: Shrink zram_table_entry::flags.
-Date: Thu, 20 Jun 2024 17:28:52 +0200
-Message-ID: <20240620153556.777272-4-bigeasy@linutronix.de>
-In-Reply-To: <20240620153556.777272-1-bigeasy@linutronix.de>
-References: <20240620153556.777272-1-bigeasy@linutronix.de>
+	s=arc-20240116; t=1718897458; c=relaxed/simple;
+	bh=VrvJ06G5eyLt9+YWrUn5n5B/W/O+ADXafPHzbOVoBYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHTKXqXkuvQ3W8hvZ94SARfWZnuUXjaDSFpHM/VAcrnR1WHE8nXQJ5EeYtS9CqNyvNd8UBEGSf4mflMGKrDIFXw5F0870zFApg5qK6jv6DmZgfDXikM9xQ/8Tmyj71D2P2YD3aKVtkTDDbdQbkcMYkNItEy6xGi0k56co6rnJl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id B9AD468AFE; Thu, 20 Jun 2024 17:30:50 +0200 (CEST)
+Date: Thu, 20 Jun 2024 17:30:50 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Hongbo Li <lihongbo22@huawei.com>, linux-bcachefs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	axboe@kernel.dk, hch@lst.de
+Subject: Re: bvec_iter.bi_sector -> loff_t? (was: Re: [PATCH] bcachefs:
+ allow direct io fallback to buffer io for) unaligned length or
+ offset
+Message-ID: <20240620153050.GA26369@lst.de>
+References: <20240620132157.888559-1-lihongbo22@huawei.com> <bbf7lnl2d5sxdzqbv3jcn6gxmtnsnscakqmfdf6vj4fcs3nasx@zvjsxfwkavgm> <ZnQ0gdpcplp_-aw7@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnQ0gdpcplp_-aw7@casper.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The zram_table_entry::flags member is of type long and uses 8 bytes on a
-64bit architecture. With a PAGE_SIZE of 256KiB we have PAGE_SHIFT of 18
-which in turn leads to __NR_ZRAM_PAGEFLAGS =3D 27. This still fits in an
-ordinary integer.
-By reducing it the size of `flags' to four bytes, the size of the struct
-goes back to 16 bytes. The padding between the lock and ac_time (if
-enabled) is also gone.
+On Thu, Jun 20, 2024 at 02:54:09PM +0100, Matthew Wilcox wrote:
+> I'm against it.  Block devices only do sector-aligned IO and we should
+> not pretend otherwise.
 
-Make zram_table_entry::flags an unsigned int and update the build test
-to reflect the change.
+While I agree with that, the bvec_iter is actually used in a few other
+places and could be used in more, and the 512-byte sector unit bi_sector
+is the only weird thing that's not useful elsewhere.  So turning that
+into a
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- drivers/block/zram/zram_drv.c | 3 ++-
- drivers/block/zram/zram_drv.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+	u64 bi_addr;
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 659966e00c300..a35d4bd2e60ef 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -2412,9 +2412,10 @@ static void destroy_devices(void)
-=20
- static int __init zram_init(void)
- {
-+	struct zram_table_entry zram_te;
- 	int ret;
-=20
--	BUILD_BUG_ON(__NR_ZRAM_PAGEFLAGS > BITS_PER_LONG);
-+	BUILD_BUG_ON(__NR_ZRAM_PAGEFLAGS > sizeof(zram_te.flags) * 8);
-=20
- 	ret =3D cpuhp_setup_state_multi(CPUHP_ZCOMP_PREPARE, "block/zram:prepare",
- 				      zcomp_cpu_up_prepare, zcomp_cpu_dead);
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index 262fa960a0783..531cefc666682 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -66,7 +66,7 @@ struct zram_table_entry {
- 		unsigned long handle;
- 		unsigned long element;
- 	};
--	unsigned long flags;
-+	unsigned int flags;
- 	spinlock_t lock;
- #ifdef CONFIG_ZRAM_TRACK_ENTRY_ACTIME
- 	ktime_t ac_time;
---=20
-2.45.2
+that is byte based where the meaning is specific to the user would
+actually be kinda nice.  For traditional block users we'd need a
+bio_sector() helpers similar to the existing bio_sectors() one,
+but a lot of non-trivial drivers actually need to translated to
+a variable LBA-based addressing, which would be (a tiny little bit)
+simpler with the byte address.   As bi_size is already in bytes
+it would also fit in pretty naturally with that.
 
+The only thing that is really off putting is the amount of churn that
+this would cause.
 
