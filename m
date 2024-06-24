@@ -1,246 +1,185 @@
-Return-Path: <linux-block+bounces-9264-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9259-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D6F39147FD
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2024 13:03:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E6CE9147C8
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2024 12:46:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FC81B23B2A
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2024 11:03:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEDE228019C
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2024 10:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AAB1136649;
-	Mon, 24 Jun 2024 11:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CC454C637;
+	Mon, 24 Jun 2024 10:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JLflTxBU"
+	dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b="AKXcuEa3"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2127.outbound.protection.outlook.com [40.107.6.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0939C13791B
-	for <linux-block@vger.kernel.org>; Mon, 24 Jun 2024 11:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719226991; cv=none; b=FbcQRjTde2BCaRJ8IO01JEv20yF14tO8vZ13Yp6NfPkzYoLDHCAIyogM9tLAtKcPMWgD6t5UFWRJXgd9wZ2r78h7YMvVgjGkAe+f+Sp+Rhz/UQFrpSSa7V9ThCUfDldwcTidx8WjOjg+DPxFOqk+JlWT45ug5BB0RoALo66k3Yo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719226991; c=relaxed/simple;
-	bh=aBpS1pkDlNpJM7K9xxkzLUHegsLBeWyXpD5uLOOeVhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=czq5q7VFDNmTbC4Qm7jY2twk2gUA5v/mUE7Hxt0C2x/XXkz/tm1Qs9NVoQaMwLyQ05dENyeLzBt6Tg31Q5XoRFiYhaTaBJn1J66I7PJSnBVuSNfJqh9s8iJ/3U0s6JkYok3jjdC4nU58l8ug4Ipx2PamrhLT8ypCey/i2ZM7VWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JLflTxBU; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240624110306epoutp01f8a68d8451239dc2c93e9cad8a693012~b69XQG2aZ2624826248epoutp01h
-	for <linux-block@vger.kernel.org>; Mon, 24 Jun 2024 11:03:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240624110306epoutp01f8a68d8451239dc2c93e9cad8a693012~b69XQG2aZ2624826248epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719226986;
-	bh=uxpMOuA3IRgLqQWXX8+eqtJkWwddlx/GN7rdVWV2/6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JLflTxBU070L20Ugm/A+/Dt0F7x6DQp5L5lpX/pqEyk0zue6JVzb0+f1K50kGRwIF
-	 zOeDFNP1CNgOc1JkJCWsvapVrdeL2DSGMYsVVplCj6UNquW+ZgaIJcXBbeU7kio2Yz
-	 dmx8omQMkOOG2og1ZnMCbWcIR9nHh0fdSitznPU4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240624110304epcas5p4c8ab6937c499617cbbaaa96fc5a4769f~b69Vn-po40506905069epcas5p4q;
-	Mon, 24 Jun 2024 11:03:04 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4W74nL5C7Kz4x9Pt; Mon, 24 Jun
-	2024 11:03:02 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	24.C9.09989.66259766; Mon, 24 Jun 2024 20:03:02 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0~b6zG9Ypk82450824508epcas5p3C;
-	Mon, 24 Jun 2024 10:51:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240624105121epsmtrp130aa2d7a4474a6eba09309959ab71409~b6zG3AObb1223312233epsmtrp1c;
-	Mon, 24 Jun 2024 10:51:21 +0000 (GMT)
-X-AuditID: b6c32a4a-bffff70000002705-3d-6679526612e3
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E4.9B.29940.9AF49766; Mon, 24 Jun 2024 19:51:21 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240624105114epsmtip2b4e30650a5edb6427c3e9344921bba5e~b6zAu4Mi31228012280epsmtip2c;
-	Mon, 24 Jun 2024 10:51:14 +0000 (GMT)
-Date: Mon, 24 Jun 2024 16:14:07 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>, Damien Le Moal
-	<dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, Jonathan Corbet
-	<corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>, Mike Snitzer
-	<snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>, Keith Busch
-	<kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
-	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
-	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
-	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
-	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-Message-ID: <20240624103212.2donuac5apwwqaor@nj.shetty@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDAD2F24
+	for <linux-block@vger.kernel.org>; Mon, 24 Jun 2024 10:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.127
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719225997; cv=fail; b=mg3f0xEVbYNLkvrt7Qi1MeWpzi2ZHetI8vujgXE4D88CRdug9KzAFJy6enC9w+sx27zaaNuEM5yNbOuFQjjqIO7dP281L2bsXx6kGICSed8G54meG0acMGlttPfUWg8npmqDCxxu/GavV57yA3y8Kyt8rvreTyA0+5xRe2FpzYs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719225997; c=relaxed/simple;
+	bh=bbOUxyijTk0SNOBlEHt97ZZghUi2oHHf+JxmBc7VBtQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JPA9F6ZZ/786vyw6P8NDPXz7OeoanBffaRO/axYJdmXviVi+D8J3a6xSAfAuXhGpEx9LxghSXLtDeqfauTYRfIlWjynwxWloks7Ubb/tQsIiK3jBmvm3v3JZug4+KfNfdazDnWW0cBndH52hrWPAGOzSgRsCObdxPW+NM2P6Rjo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com; spf=pass smtp.mailfrom=volumez.com; dkim=pass (2048-bit key) header.d=storingio.onmicrosoft.com header.i=@storingio.onmicrosoft.com header.b=AKXcuEa3; arc=fail smtp.client-ip=40.107.6.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=volumez.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=volumez.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b6kVh5pWA8JI/+LZBBaN1uNm87VnYPnasq4oEKS2xdq6TgKhN2azCRQkeGOisCB+kxU8NmB9asMbj2+IrfQw/ZmvHALC8FaMG7j3O7wq6ROmItI6vLrbiask3gePX+krs9lzjsSL1srpC6fj4y2s2dsf+uB5Mvx0XOtNWfQFcQ1vzj2PsfpSav76yMyVLou5Aogoi3MZC6VJQlDS0jrXJ8NzPaojU3D/cHp3gdRlHXJ8hT0zbve/q46h7FnCyCrInMNRlqi4WI/rgEJCDsvZ6H0upWKFJW8sxhXBF1E/gWV/i3bpCVrnX2e7d2EQ4SDMGGpBsGEuXKX3iDK5CNgyIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yp32iAqbX63nVrXMhFwJTJ4kvIb9vgnLVyYP4tSoV/I=;
+ b=lb57Ui/4jJ9sbuMj9uV39yNR1BWMWIZ9VgwQmtARiTsGNFc71ACYsRF5cXAlKfKFs4WjWy5OdC6QCBQp20CXtFRuJgLBGhGkL+2ERdrHXPcXtE4KEFF/l0b5qCwiMbP0UqfSG7ZliPyPfY8K7h11pODOvc82OuSCeiQ5ArN1Us8gVgqkc3v7AXeu79kLVzJRcTdH1iU0BXAEcU/sCl0Qnyo+ZjyPp2q9hB0DsAlF6voNUqlSpbrka6HwNGYzno1cpFihEMaYVS76DqofGUOtz8GQCvlp1fI7c13sH2N0pMKZUnZllgSg5Bgi3hFJhM2e1YmPw5+W/w7oRcgoGDq2Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=volumez.com; dmarc=pass action=none header.from=volumez.com;
+ dkim=pass header.d=volumez.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=storingio.onmicrosoft.com; s=selector1-storingio-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yp32iAqbX63nVrXMhFwJTJ4kvIb9vgnLVyYP4tSoV/I=;
+ b=AKXcuEa3ITbG5Y4rw0Rad2tQPm6ip0sdl+ObguOJ+/UaeM7HBODy7Dexkb1atiVmxwk5kXWkxu+zXXW8enKFRC9hPrhoaw+aCWw2DrayySyZQ2U3qG2jti2Y7PjKPO9s6jZMclDQ2WQTzxtKYnrGTmzbMgIZCN0vCC9BvwXyFgJkldA82NtLOirGXYAZkeN1YcSKSmgZa8Udyqr6sBkhApbKcySn2s6yn+KhIP1UJG18mTOcd8lcvPERQBQzFfzY+hPodBJnksqqanQGY0+IjL027RyfNwa4vhbLibYIOL3W14Gp/dsIv7EsHElq1rjl7Qw9Ql6a/REacUbVP0zWCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=volumez.com;
+Received: from AM0PR04MB5107.eurprd04.prod.outlook.com (2603:10a6:208:cb::11)
+ by AS8PR04MB7605.eurprd04.prod.outlook.com (2603:10a6:20b:292::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
+ 2024 10:46:31 +0000
+Received: from AM0PR04MB5107.eurprd04.prod.outlook.com
+ ([fe80::de53:c058:7ef:21fb]) by AM0PR04MB5107.eurprd04.prod.outlook.com
+ ([fe80::de53:c058:7ef:21fb%4]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 10:46:30 +0000
+From: Ofir Gal <ofir.gal@volumez.com>
+To: shinichiro.kawasaki@wdc.com
+Cc: linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	dwagner@suse.de,
+	chaitanyak@nvidia.com
+Subject: [PATCH blktests v2 0/2] md: add regression test for "md/md-bitmap: fix writing non bitmap pages"
+Date: Mon, 24 Jun 2024 13:46:16 +0300
+Message-ID: <20240624104620.2156041-1-ofir.gal@volumez.com>
+X-Mailer: git-send-email 2.45.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TLZP290CA0008.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:9::20) To AM0PR04MB5107.eurprd04.prod.outlook.com
+ (2603:10a6:208:cb::11)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240605082028.GC18688@lst.de>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TezBcdxTH53fv3buXic56lB8aNTeTZCReKx4/EZI2hlvRjKnRaZsRNvay
-	Brs7ux5lmnqE1CPeCWMboZh6pQyhg41SaiUEI0JCSyWlJSJIUn1k0OXSyX+f8z2P3++cM4fC
-	Ddr4ZlS4NJpVSEWRNKlLfN9rZWUT+lF8qL36AY0aBzQ4SsnbwFH9dC6JlnpfAFS0+g+O5rq/
-	Auj10AiOWjQzAM12nUTlFaUEmuxux9DtigIM1db3Yejr4ksY6ttaJlFBzwRA8+MqDHVOHUXf
-	XK4i0O3OuwQa67hOorJv5/moun8TQ/np4xhqm0sGqGFphUB3pszRyEY/79Q7zNiDM8xABWTa
-	VdN8ZmSmiWDGhmKY5roMkrlVlcgs3CoBjHoyiWQqcwp5TPal5yTTnvYrj1mbnyKYlR/GSSan
-	pQ4w98p/4vsZfhZxQsKKxKzCkpWGyMTh0jB3+ox/0OkgJ2d7oY3QFbnQllJRFOtOe/r62XiF
-	R2oHRFvGiiJjtJKfSKmk7TxOKGQx0aylRKaMdqdZuThS7ii3VYqilDHSMFspG31caG/v4KQN
-	DI6QPKzr48snLT5fy7rPSwIq00ygQ0GBI/z7+hQvE+hSBgI1gBnDMxhnvACwsbCd5Ix1AOsr
-	urG9lCcNVbtRnQC+nMgDnPESwP5Hs+R2FCE4CDc0an4moChScBQOblHbspGAhvNPh3biccEw
-	CTNUi/i2w1AQDJcH8nnbrCc4DRueP+JzrA/vlswR26wjsIbFqYM7yVDwuw4saV3BuS95wt6y
-	Nh7HhvBpfwufYzO4mHt5l+Ng7dUakktOBVD1UAU4x0mYNpC7UwgXSOCf7RW7hfbDawMNGKe/
-	BbNfz+32rwfbbuzxAXizsZzk2BRO/JW8ywxc6lojuLF8R8AbeXP8PGCheqMj1RvvcXwcZqym
-	aJnSsjms3qQ42Rj+PNZMcLIVbOywKwdkHTBl5cqoMFbpJHeQsnH/7zxEFtUMdk7oiE8beDy7
-	atsDMAr0AEjhtJFecWJsqIGeWBSfwCpkQYqYSFbZA5y028rHzd4OkWlvUBodJHR0tXd0dnZ2
-	dD3mLKRN9JbSSsUGgjBRNBvBsnJWsZeHUTpmSViryuXxoXsL+rUf+L6XzE9/NhJS16V+FXjB
-	7tr7M+fjE0BA+NRFz4yFL0267cStg8fKhgJ6fvF3e/KhxPKL0Ua3aqGJcSl12NvbxKLoj+HZ
-	bM+O0voLqfir3qIf/bxaazSTBz2dmvwT9xeMBGY7eI9nBRSfX3Itai431WgS0yvfDRqc8Lji
-	bxVXzRwIoD2fxQ8e9vDgZyxWjpjonjvrsFXKD6uB+r5SbFQhLfx3dH2fzELswpu56Y6bNzcl
-	ZeWqvTOTw+yj9k0nSGM/7lodDUw4t6zc8nEzu5KCZfetR2Sfihu2u+9l/UlHs91Fec7Z2uBu
-	v08PGY0vxltvsoXGv6kTfe7QhFIiEh7BFUrRfzJEnsTLBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxzG855zejjFoMdTL29pRdNpIqAo0W3vB68x6IvGeIlfqovQ2SMQ
-	oUJL6XTZQAG5TAXUQSzIXZQyQS4y7kqhMOgIItYIBkYZDQ6E4iXLFCla2DK+PXl+z/N/vvwZ
-	kosVuDMhqkherVKEymhXqrpFtnpj8aFzpze3TolRWWcbiS6mzpCoZCCFRuMtbwBKn3pPopFH
-	CQBNd3WTqKptEKChhztRbv4tCvU9qiVQQ/41AhWXmAiUmRFLINPsBI2uGZ8BZLPoCdTY743y
-	LhVSqKGxg0K9dVk0yimyuaA77Q4CpSVaCFQzcgGg0nE7hX7rl6DumXbBLinufXoAd+ZDXKsf
-	cMHdg+UU7u3S4gpDEo0rC6Pxy8qbANf3xdC44Op1Ab4SO0nj2vg/BPi1rZ/C9iYLja9WGQD+
-	PbfV5bDouOs2JR8aEsWrN+0IdA22FpRQ4W8l383eeyiIAT0rkoGQgexWOFxaSDg1x9YDmG3n
-	530xLJppJee1CBY7Rl2SgevnzGsAe5rMlBNQ7Do401b/GTAMzXpD8yzjtJexMmgb6wLOPMk+
-	oWHjg0yBE4jYQDjRmTan3dg9sHTy+b9H+0jYOhVHzIOlsOPmyNwAyX4Fsyut5LxeAV/0VlDO
-	MZKVwDuOuTEhuwFmxJlBKliqX9DWL2jrF7T1/7dzAWUAYj5cExYUpvEN91XxOh+NIkyjVQX5
-	nDobVgHm/sTLswb8apjyMQKCAUYAGVK2zC0jOuo056ZUnDvPq88GqLWhvMYIJAwlW+m28uUV
-	JccGKSL5Mzwfzqv/owQjdI8hKkwmd6tw2hKR5/FjkviLA8bpg7QuoTs7aktdAs+M9r/bZjpx
-	+YglxCw5KVovlZd/neZ312N3k277t2aD3+hs+2K5yfCD50FlYAkTcXvfPb/OBNhSdLQOJh+r
-	Pp/FLTekZy1xVJX/aU+ps8n3x9vE/2SO+W+Rft9jTdG+WPX4ho5jh/ePld33ePVL9cdF9T+T
-	uqyLggGHPEpIK4+mNhxrnvQY3rAx3hNX2Q0dlYnyDuUhf+6D9q61OW5iyJH5tC/RXMCtvRDR
-	tHc7aX0VII0cbNM/qJFvHvJeI/a6/KW03b9Z8CY4qWxc+fYv9u9vcuDeZz8Ne93Wr1FFB3B7
-	RM/TZZQmWOHrRao1ik966v6UlgMAAA==
-X-CMS-MailID: 20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0
-References: <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
-	<9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
-	<a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
-	<665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
-	<abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org>
-	<20240601055931.GB5772@lst.de>
-	<d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
-	<20240604044042.GA29094@lst.de>
-	<4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
-	<20240605082028.GC18688@lst.de>
-	<CGME20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0@epcas5p3.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5107:EE_|AS8PR04MB7605:EE_
+X-MS-Office365-Filtering-Correlation-Id: d150b54c-1c4d-42ea-2141-08dc943ae80a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|366013|1800799021|52116011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?LzI+JiJjFWGKqzn9mNuXhu/QO2iCU0/VjjUDqfpwfczpK6OKbt3fZF7bf6A9?=
+ =?us-ascii?Q?NbZiSbug6v1VOB10/NBZzMiKb/xx0Tf8TUfXOP/YGTKJn231zqz+2qk3Ey/U?=
+ =?us-ascii?Q?+8hkSMBuqEp7Q2cKWL1D8nvdBqL8vxCSo8zuWvYkaQW4QEFgyL/7oysI+Nfv?=
+ =?us-ascii?Q?zHoRH0YP8i3FoXLESNPDCarBSyey58nIXGqixzbBU3VSuB05kYnqcz6NU81M?=
+ =?us-ascii?Q?XzxkMzb5BXmBtV2g1szBM8oS4+3g+nj0Z+xsGHAQcmjQzKMVjxSiEkY2SAbD?=
+ =?us-ascii?Q?MFtpD47gBdO1cPaJZi2jCTZGmeIeeVHAHA3umpBjb71xX1CXxTW9xUSot961?=
+ =?us-ascii?Q?EEYgvi2+WG27Ac1NpXVzwOrGZefOcNZ7AKdtdVp7oNglz240KHxTMOUIik9o?=
+ =?us-ascii?Q?XPrvpr7sA6VNHoZ5U64hJZ0jN+BcRkubNo3PXXLWGtdfsCnPiIAZoA3BjHJ2?=
+ =?us-ascii?Q?RuseOULR8jdcMPGytttkmvOx0mAjMpNZ/DLBH0gVcxv6JPhXGSxHNRxahRXM?=
+ =?us-ascii?Q?tA8TGNMkXS8CSV9YHPGEKc9JUr9ql+7IYzSI1RafLhi2PpxBSAbRg0DdEsUx?=
+ =?us-ascii?Q?1Z/D6Yiet7B8aK4ARXPjAyOwbddPysSyu2zY2tUdIXxDKhTcg751uXYM91+X?=
+ =?us-ascii?Q?zap3Gh1mcWXh0/ATmQt7KqORuagClGMg9e6VoveBQ4iyM+ksehSGVpdDFRv/?=
+ =?us-ascii?Q?dNWfkuyQvOw/NxFNTueupeLmnf/rH3Px2/+1MhYyfjKnrarkP3caaGaLP6uY?=
+ =?us-ascii?Q?YnbSFmkN0tK5p1Iw2ShBVqoM4ehRTyRktMnaZyO/3pBg/BbQ1Zt8ivMwRhz3?=
+ =?us-ascii?Q?TcY4bEGkDBC/TS7PN10aORJd4NfOK0kUWw8GjpdoZ0f2htjuCAV1EFw6flzy?=
+ =?us-ascii?Q?oY+ZMz/qnZoCFiA8Nvh8dBMCx9qpzfKp8FHrO+8H0x8Ls9mgxIl5HMhuQHOx?=
+ =?us-ascii?Q?joeEEsb607ywK1obMQyMfwcIpPWVjFaOq/8+uhPZUHQOHpcGbJef8xrZ1DYU?=
+ =?us-ascii?Q?XMGzOO2xD/j+3RE5wkpijr4AvhZwrkWtG4lIaBopxJtTajTC90hqPBiKhj1X?=
+ =?us-ascii?Q?vcsdX739Dzl4nSKl4oZez0GwP/V0RnIh6qvrRN4WU2mHvNn2yhS54JJ9Ph+3?=
+ =?us-ascii?Q?p9qrp6Z8+gV7e5N/4yoW+l+4rKS7WElTo34RMEnBBQztvv3yYegU3Dzma7IO?=
+ =?us-ascii?Q?qmRy/Rmg/pWpD6i7vgpHm0l2yGLLkP3O6bY074yUSqZdcg6OkwbDsrZ/ewXC?=
+ =?us-ascii?Q?lCLTYUoxpEw2hXjrbrze8/5F7eUePa083BuPAbE2XVPmFccmzEYafOo6Om3J?=
+ =?us-ascii?Q?+8WTIdlDLveMtxh1J5NfAnHZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5107.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(366013)(1800799021)(52116011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Qcga7OopuW1nljEOE5cKeJHNNGHZdMY9qGIQ8Gb3QdS6OA0Bcn3PtKSSQb1j?=
+ =?us-ascii?Q?Eycvz3XrsnshwqqbOTFrHj6GxomOckEq0szlyZBLSUmnek7ojBpqIlnW/DmY?=
+ =?us-ascii?Q?hHZa0ClmXdsVdllybdJXb8CaubiXP1mhRGUzQjW7x2pNG5WEfyi/ayCQiPUl?=
+ =?us-ascii?Q?xkeknp3mYNZ/5QvI5dJ8Xo4SEE56T0O3coZ8yLMZ6tMsH7iAaRSh8hQX4G3a?=
+ =?us-ascii?Q?f52Ct0gEPlXoGQkypEahcISFYiFJo6zdJLAjEkVbExphsWLkMERFgWKbkRnb?=
+ =?us-ascii?Q?eqsPQVk1V0YI9vgu5W0YcOsHRvg4uwy4fdPkh+1/+XDqhJm+pE14rLoYXuL+?=
+ =?us-ascii?Q?9USoRPgj1ad5s4e2s4TnHIpr6InHBnnTPdwnmsRnaLYFm5/vbdrqBV+6+h5w?=
+ =?us-ascii?Q?K7GO8alFR9H4pv6n59RI6KkiRMK5JViLLDeYfzx9jHXRujjkmNx2X+Lbpq1K?=
+ =?us-ascii?Q?KEA57CDX4osMYbJSFmtRNHBybtqKh4VtGXqnA/bq0AhCqOdZ9Yig44bilLZh?=
+ =?us-ascii?Q?1myJmKDJKB6OXzAAKeoBaw9+ITJpiD7Izo+22kmD57qebah3r0xmy1eJXwhj?=
+ =?us-ascii?Q?M62c8ZmtmkJk3PgreGoM8PtHOInfV6M2zXq9502r1paEAIgFna2YqO/y3uXu?=
+ =?us-ascii?Q?PGdVzOBtv+6qWXKkFtQxwGI6x7DcOCir7pXb0e2dDTWf1DJ9+Hbljan2hlZ3?=
+ =?us-ascii?Q?5bVVZHCkK7exgQEswmyO1U0wLOblV0QtRrB+CVHtkDotEiiWSzSyxqmpQIxP?=
+ =?us-ascii?Q?7diIpPkA/iTyLo4WgaxIHjsGm1r2Fr4qaz/JymZ+y/E8emgc75X8uCZ4QQmk?=
+ =?us-ascii?Q?WgdZB7ACE3qH14wQrwpvEXmJZWetD4Xnq0lOIRWDIxTVcU4i+nsBWV/zUEDA?=
+ =?us-ascii?Q?JQ3ihSHutfGF6BUR8/DpqtWaYa5brAtIh9UTQrsP8Nk7ebtTBBDi8/e/wy8v?=
+ =?us-ascii?Q?4y6LPYziB/p1BnsLcW9mwckSPzHenro1y+qAOHb8Qw0tP20k24kpafcZ8yH/?=
+ =?us-ascii?Q?H0bdH0wHhHd9kZNiKyd0/bl7ZpdoRLw4/znSS80Q50UgBpWbQqiQdhk681qX?=
+ =?us-ascii?Q?N/T1mVYzq6vP1HKN34CNRJM10ytZ7rNmShwDZ1b5Q+Iz7N4G9snZSVCfUgm9?=
+ =?us-ascii?Q?g6+tvR1ZOuFJaO1Db22WFl2IxftbIrQh/DpAdzAjCeBNGYEOugE1Abr0DLtD?=
+ =?us-ascii?Q?Tvnep7fxu1xpYn/J2ujteavk2/PDWZSY27cwZcvS+RylR00oOCJDGimIKVdM?=
+ =?us-ascii?Q?4+NfvuEm8Oi/YeKCkChzk8sV8H+p58zkfTox4bFS+vXRgeTAzG+VOv0uIqut?=
+ =?us-ascii?Q?h7R4ZRFvoFU8TBYnKAr3g/tUlXZlUENAIXP4Rf0u6pffVdH20F1RfZfIl6+H?=
+ =?us-ascii?Q?c4utpKXUW/4wmU5XmcNu4YA1hLkOaa/vU0iNlNKkFSHR8aT/KlnkqHS0pDFi?=
+ =?us-ascii?Q?g+ghdK1se+06RKBrUKmGMiwN8HR2CZ/ung0gJsUr5bgR4/2sOnCT2NjsCgmQ?=
+ =?us-ascii?Q?bYvEoAXQdQfg2JpYT3wtp3Ep2oR6GRG3Vny46tGY6jyuHCeI9hFWh0a9QvBC?=
+ =?us-ascii?Q?dBUr3hfDa4NIMqz0UmTEVZSYIeZRhZ0CcC0S2Tfnx2tY69OsLzzvX+IRhn54?=
+ =?us-ascii?Q?X460keOT7hefgwo77bSHirn2Vg7DdEKq1Af4cKTZr6Xz?=
+X-OriginatorOrg: volumez.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d150b54c-1c4d-42ea-2141-08dc943ae80a
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5107.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:46:30.4091
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b1841924-914b-4377-bb23-9f1fac784a1d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wvln9yzdqsnl+ZhQEKWZPI1AU7yXvHyKsH1zxl1eQI8sKgHlJTPnaYJat3GEzRT7YIhIqnWIa4L4eliLK5LhyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7605
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
-Content-Description: 
+This patchset adds a regression test for "md/md-bitmap: fix writing non
+bitmap pages".
 
-On 05/06/24 10:20AM, Christoph Hellwig wrote:
->On Tue, Jun 04, 2024 at 04:44:34AM -0700, Bart Van Assche wrote:
->> On 6/3/24 21:40, Christoph Hellwig wrote:
->>> There is no requirement to process them synchronously, there is just
->>> a requirement to preserve the order.  Note that my suggestion a few
->>> arounds ago also included a copy id to match them up.  If we don't
->>> need that I'm happy to leave it away.  If need it it to make stacking
->>> drivers' lifes easier that suggestion still stands.
->>
->> Including an ID in REQ_OP_COPY_DST and REQ_OP_COPY_SRC operations sounds
->> much better to me than abusing the merge infrastructure for combining
->> these two operations into a single request. With the ID-based approach
->> stacking drivers are allowed to process copy bios asynchronously and it
->> is no longer necessary to activate merging for copy operations if
->> merging is disabled (QUEUE_FLAG_NOMERGES).
->
->Again, we can decided on QUEUE_FLAG_NOMERGES per request type.  In fact
->I think we should not use it for discards as that just like copy
->is a very different kind of "merge".
->
->I'm in fact much more happy about avoiding the copy_id IFF we can.  It
->it a fair amout of extra overhead, so we should only add it if there
->is a real need for it
+The regression test requires a network layer as the underlying layer of
+md, it use nvme-tcp as the network layer.
 
-Christoph, Martin, Bart, Hannes, Damien
+Changelog:
+v2 - applied Shinichiro's comments, use common/nvme instead of
+   tests/nvme/rc, disconnecting nvme controller on cleanup_nvme_over_tcp
 
-We have iterated over couple of designs for copy offload, but ended up
-with changing them owing to some drawbacks. I would like to take your
-opinion on how we can plumb copy offload in block and dm layer.
+Ofir Gal (2):
+  nvme: move helper functions to common/nvme
+  md: add regression test for "md/md-bitmap: fix writing non bitmap
+    pages"
 
-For reference, I have listed the approaches we have taken in the past.
+ common/brd       |  28 +++
+ common/nvme      | 595 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/md/001     |  88 +++++++
+ tests/md/001.out |   2 +
+ tests/md/rc      |  12 +
+ tests/nvme/rc    | 591 +---------------------------------------------
+ 6 files changed, 726 insertions(+), 590 deletions(-)
+ create mode 100644 common/brd
+ create mode 100644 common/nvme
+ create mode 100755 tests/md/001
+ create mode 100644 tests/md/001.out
+ create mode 100644 tests/md/rc
 
-a. Token/payload based approach:
-1. Here we allocate a buffer/payload.
-2. First source BIO is sent along with the buffer.
-3. Once the buffer reaches driver, it is filled with the source LBA
-and length and namespace info. And the request is completed.
-4. Then destination BIO is sent with same buffer.
-5. Once the buffer reaches driver, it retrieves the source information from
-the BIO and forms a copy command and sends it down to device.
+-- 
+2.45.1
 
-We received feedback that putting anything inside payload which is not
-data, is not a good idea[1].
-
-
-b. Plug based approach:
-1. We take a plug.
-2. Send a destination BIO, this forms a copy request and waits for source BIO
-to arrive.
-3. Send a source BIO, this merges with the copy request which was formed
-by destination BIO.
-4. We release the plug, then copy request reaches driver layer and forms
-a copy command.
-
-This approach won't work with stacked devices which has asynchronous
-submission.
-Overall taking plug and merging BIOs received not so good feedback from
-community.
-
-c. List/ctx based approach:
-A new member is added to bio, bio_copy_ctx, which will a union with
-bi_integrity. Idea is once a copy bio reaches blk_mq_submit_bio, it will
-add the bio to this list.
-1. Send the destination BIO, once this reaches blk_mq_submit_bio, this
-will add the destination BIO to the list inside bi_copy_ctx and return
-without forming any request.
-2. Send source BIO, once this reaches blk_mq_submit_bio, this will
-retrieve the destination BIO from bi_copy_ctx and form a request with
-destination BIO and source BIO. After this request will be sent to
-driver.
-
-This work is still in POC phase[2]. But this approach makes lifetime
-management of BIO complicated, especially during failure cases.
-
-Thank You,
-Nitesh Shetty
-
-[1] https://lore.kernel.org/linux-block/20230605121732.28468-1-nj.shetty@samsung.com/
-[2] https://github.com/SamsungDS/linux/tree/feat/co/v21/ctx
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_
-Content-Type: text/plain; charset="utf-8"
-
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_--
 
