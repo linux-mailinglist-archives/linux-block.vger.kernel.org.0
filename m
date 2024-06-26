@@ -1,31 +1,31 @@
-Return-Path: <linux-block+bounces-9343-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9345-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7DC7917656
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 04:50:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A554B917664
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 04:51:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 47F2D1F22BBC
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 02:50:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D56011C22605
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 02:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C19422EFB;
-	Wed, 26 Jun 2024 02:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C49B83E487;
+	Wed, 26 Jun 2024 02:51:16 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDF314286;
-	Wed, 26 Jun 2024 02:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031176F06B;
+	Wed, 26 Jun 2024 02:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719370226; cv=none; b=dZC8/LQUo1Rgoy5xd4pTgBBUxH1ANFHhFvsc5UFiHEXr6gsVuIn+/ltkKczqASNNMqOBzDGpWrDjfK8jAOTAtxgA/w29Olw+nfpjTwvvl33I9Jj/Rhrj/viabDDToX4jdeGheynkhG+cCviaSdJslpCdBnSeu4y+4hKWnLXy+F8=
+	t=1719370276; cv=none; b=MnTectOKo8sTxDMdBa70Q3DTSIJu9AXKgduk+HVtP8OfKNXxdbH4fS6Bl+2TK12wT3tz99k5/VzHvqrE6314fHBATXjqu9vGFe+Q0TkjUXupchULjevJ44Q2MCnz3Y9JnwicKHnwAlAe4HnLp9BNtJdCMsZkYQYSmxPcjwKdrew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719370226; c=relaxed/simple;
-	bh=WPFaZBrlfCiwjGwhmit5XS3Xl7hiIoT4zjKTjRB2fNg=;
+	s=arc-20240116; t=1719370276; c=relaxed/simple;
+	bh=mjuTceoUgUq4NKeZo7mgWeAGUCarJ1ymjop5K9OGsY8=;
 	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhAVtNPMxomRxAHnv2viZyRPESJMs1D8/yHankDYocIzZ2SBzRgOTwEgsfw/ENvJ4V4lnYSHFSgsNEIaMK7ZTfoWP/d+H1AtOeDyFFraD85LVE1cpOcXq7tq7POZ7025LzBdaGnif0yTqhYjdVPtLiYIjUogis9CY3TyS228Dqo=
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEtDNF3sB0vqtjYqj9wjXG2WOyaw8kEWWGxIiEw2AbO1O4JG9+ba7eBigZgkXOpPBfz7YNM+/IlzjR3/+LVOgfd0I0zxIp2pA7hyMgN1hPDz8l+adveA1Z9iRdoMMXnCBNCM0HFzRIqrBvf+yX+q13GIgQvo40FZI043zPls7pE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
@@ -33,9 +33,9 @@ Received: from local
 	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
 	 (Exim 4.97.1)
 	(envelope-from <daniel@makrotopia.org>)
-	id 1sMIjV-000000005qW-3jIP;
-	Wed, 26 Jun 2024 02:50:06 +0000
-Date: Wed, 26 Jun 2024 03:50:01 +0100
+	id 1sMIkO-000000005sL-1k6y;
+	Wed, 26 Jun 2024 02:51:00 +0000
+Date: Wed, 26 Jun 2024 03:50:56 +0100
 From: Daniel Golle <daniel@makrotopia.org>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -59,9 +59,8 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	"Ricardo B. Marliere" <ricardo@marliere.net>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH v3 1/4] dt-bindings: block: add basic bindings for block
- devices
-Message-ID: <b5d2e277a4b54121f9c33adf219e002b0dd375ae.1719368448.git.daniel@makrotopia.org>
+Subject: [PATCH v3 2/4] block: partitions: populate fwnode
+Message-ID: <afa870ec6ac1027561d1c002205ab1e05358a46c.1719368448.git.daniel@makrotopia.org>
 References: <cover.1719368448.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -73,130 +72,79 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1719368448.git.daniel@makrotopia.org>
 
-Add bindings for block devices which are used to allow referencing
-nvmem bits on them.
+Let block partitions to be represented by a firmware node and hence
+allow them to being referenced e.g. for use with blk-nvmem.
 
 Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
- .../bindings/block/block-device.yaml          | 22 ++++++++
- .../devicetree/bindings/block/partition.yaml  | 51 +++++++++++++++++++
- .../devicetree/bindings/block/partitions.yaml | 20 ++++++++
- 3 files changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/block/block-device.yaml
- create mode 100644 Documentation/devicetree/bindings/block/partition.yaml
- create mode 100644 Documentation/devicetree/bindings/block/partitions.yaml
+ block/partitions/core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/block/block-device.yaml b/Documentation/devicetree/bindings/block/block-device.yaml
-new file mode 100644
-index 000000000000..c83ea525650b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/block/block-device.yaml
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/block/block-device.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index ab76e64f0f6c..f88829e254e6 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -10,6 +10,8 @@
+ #include <linux/ctype.h>
+ #include <linux/vmalloc.h>
+ #include <linux/raid/detect.h>
++#include <linux/property.h>
 +
-+title: block storage device
+ #include "check.h"
+ 
+ static int (*const check_part[])(struct parsed_partitions *) = {
+@@ -281,6 +283,42 @@ static ssize_t whole_disk_show(struct device *dev,
+ }
+ static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
+ 
++static struct fwnode_handle *find_partition_fwnode(struct block_device *bdev)
++{
++	struct fwnode_handle *fw_parts, *fw_part;
++	struct device *ddev = disk_to_dev(bdev->bd_disk);
++	const char *partname, *uuid;
++	u32 partno;
 +
-+description: |
-+  This binding is generic and describes a block-oriented storage device.
++	fw_parts = device_get_named_child_node(ddev, "partitions");
++	if (!fw_parts)
++		fw_parts = device_get_named_child_node(ddev->parent, "partitions");
 +
-+maintainers:
-+  - Daniel Golle <daniel@makrotopia.org>
++	if (!fw_parts)
++		return NULL;
 +
-+properties:
-+  partitions:
-+    $ref: /schemas/block/partitions.yaml
++	fwnode_for_each_child_node(fw_parts, fw_part) {
++		if (!fwnode_property_read_string(fw_part, "uuid", &uuid) &&
++		    (!bdev->bd_meta_info || strlen(uuid) > PARTITION_META_INFO_UUIDLTH ||
++		     strncmp(uuid, bdev->bd_meta_info->uuid, PARTITION_META_INFO_UUIDLTH)))
++			continue;
 +
-+  nvmem-layout:
-+    $ref: /schemas/nvmem/layouts/nvmem-layout.yaml#
++		if (!fwnode_property_read_string(fw_part, "partname", &partname) &&
++		    (!bdev->bd_meta_info || strlen(uuid) > PARTITION_META_INFO_VOLNAMELTH ||
++		     strncmp(partname, bdev->bd_meta_info->volname,
++			     PARTITION_META_INFO_VOLNAMELTH)))
++			continue;
 +
-+unevaluatedProperties: false
-diff --git a/Documentation/devicetree/bindings/block/partition.yaml b/Documentation/devicetree/bindings/block/partition.yaml
-new file mode 100644
-index 000000000000..86b61e30f9a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/block/partition.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/block/partition.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++		if (!fwnode_property_read_u32(fw_part, "partno", &partno) &&
++		    bdev_partno(bdev) != partno)
++			continue;
 +
-+title: Partition on a block device
++		return fw_part;
++	}
 +
-+description: |
-+  This binding describes a partition on a block device.
-+  Partitions may be matched by a combination of partition number, name,
-+  and UUID.
++	return NULL;
++}
 +
-+maintainers:
-+  - Daniel Golle <daniel@makrotopia.org>
+ /*
+  * Must be called either with open_mutex held, before a disk can be opened or
+  * after all disk users are gone.
+@@ -355,6 +393,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
+ 			goto out_put;
+ 	}
+ 
++	device_set_node(pdev, find_partition_fwnode(bdev));
 +
-+properties:
-+  $nodename:
-+    pattern: '^block-partition-.+$'
-+
-+  partnum:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Matches partition by number if present.
-+
-+  partname:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Matches partition by PARTNAME if present.
-+
-+  partuuid:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Matches partition by PARTUUID if present.
-+
-+  nvmem-layout:
-+    $ref: /schemas/nvmem/layouts/nvmem-layout.yaml#
-+    description:
-+      This container may reference an NVMEM layout parser.
-+
-+anyOf:
-+  - required:
-+      - partnum
-+
-+  - required:
-+      - partname
-+
-+  - required:
-+      - partuuid
-+
-+unevaluatedProperties: false
-diff --git a/Documentation/devicetree/bindings/block/partitions.yaml b/Documentation/devicetree/bindings/block/partitions.yaml
-new file mode 100644
-index 000000000000..fd84c3ba8493
---- /dev/null
-+++ b/Documentation/devicetree/bindings/block/partitions.yaml
-@@ -0,0 +1,20 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/block/partitions.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Partitions on block devices
-+
-+description: |
-+  This binding is generic and describes the content of the partitions container
-+  node.
-+
-+maintainers:
-+  - Daniel Golle <daniel@makrotopia.org>
-+
-+patternProperties:
-+  "^block-partition-.+$":
-+    $ref: partition.yaml
-+
-+unevaluatedProperties: false
+ 	/* delay uevent until 'holders' subdir is created */
+ 	dev_set_uevent_suppress(pdev, 1);
+ 	err = device_add(pdev);
 -- 
 2.45.2
 
