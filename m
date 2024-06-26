@@ -1,128 +1,376 @@
-Return-Path: <linux-block+bounces-9363-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9366-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DADF917C56
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 11:20:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD970917FEE
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 13:41:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C04D01C21D27
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 09:20:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 644762865F7
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jun 2024 11:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0F74963A;
-	Wed, 26 Jun 2024 09:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C347D17F4E8;
+	Wed, 26 Jun 2024 11:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="TbI4vw9D"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XU7uaino"
 X-Original-To: linux-block@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04olkn2074.outbound.protection.outlook.com [40.92.45.74])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A222133DD
-	for <linux-block@vger.kernel.org>; Wed, 26 Jun 2024 09:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.45.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393655; cv=fail; b=WPY4gZ0KLca9DhJuFTdVbPMN6BeFtukbAvwxvDO9NcO9wfS+LWTWjyH1DkuCrUeZggYwHVfaVn56oh2Spu6PQQ74FGeFPJ862SaxTcKAzjSBeFHGk1O0DpqTHF7G0FyW/NfLrdleiBn6QEo1pFjtwsC5Yqpfkh3MCjQ4bQOyTZw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393655; c=relaxed/simple;
-	bh=Dd4NNcYqG4Tv/MIgHL1lxWy3hQmr6qfPrSPndWWurPM=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QDMmw8yyO7esprcvqmFoHS9UW/0nwqgFku5aegGq2enGSr1zMwQk3x54HYDnWGCm0yVB4bvzPIZ8D5cw8O930vPIXiRu3CKhsSasf5ZQQfkSABOZ8turlbnj/nfdH+JGM9Hv/aRUmHAVGho7k5VQs9Fmq9CdMzfLj3Ty0BZCrQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=TbI4vw9D; arc=fail smtp.client-ip=40.92.45.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z2vvuZJ9w3tEXUfQsYSh4go25C9/6tuQwD0DPQRft6ZVN9XFly16Maqwcz3MRMNYd3CXpM7xQbmBM5Xs+XN/g0JD7s9AQFOX34F395nEZx1dOx45XOfRIXK2LB6jtPJ5d23BbSVk7ytBHnPmjSvQlpS+2oDoHRqn8qrgQuJDhMK38erY3ECOrGCg+wvvqWIx+N7OMizBH8burt8SAYUlhoptRGRbhVzf08PLjV5GQBd/Fl8sWD8g3e8Tjg6c5tD3kOi0SddOYho+IdM0EUO//rRxD/0+vJsrxZh4VZ/btLUkGRI6g2lpmQAY0awKthcjEJYD3WG/q4qxjoHQu/sJGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dd4NNcYqG4Tv/MIgHL1lxWy3hQmr6qfPrSPndWWurPM=;
- b=e8YqtM7MuWoCeOcOgpHajoYnpoTQn8mDf/+71CtbHXHV0DbLiIOgSfMHG++Mo7ozSHvxXIELltqDcOt0ju5Oc1bFLD2Zc/plP1ZqvzHNUg0hCHpn+T3hpqZfrR/6FcgNMeZUE5y9i+gybea0SCI2+WwbPFwF3LJ0FEZDbA10i03M6tbqBhsfbXIrrUYYzL1Pbq2/dHG22ltSNj1xkLauVQfzyi3fLOqVrJrz/Bh0QdNETg0zDwz0Oq1eiK0Q8Sf4oCAhiKsa/u+a1sWvymfYvVNwKNMuDG+eTc9+/+cEwu9+yjZ3ouxQhHUaIzqEViw9qxoeHCXQbU2bYOGDKbgIBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dd4NNcYqG4Tv/MIgHL1lxWy3hQmr6qfPrSPndWWurPM=;
- b=TbI4vw9DQTJ3rhZf/vVr8/5FU1F8vKK1YLkuIS9UUCTd3JbHlnZnfjTFwjgePdmtHBdeDeG8xpiBolfkJKgo/VGa6HPui4Bojy+/joELwoShbxoj+YZxX8Ary+b8gi+0iFtc/ncKHkTGoFQUhbSHQjtDQXehmixVXdv6u7uH7OLbAeqaVgajoEJKdFt2wNg+8Tw178KU64WEz9W7qColn/x/IHKM6Efv9RwoO56Fu5jBn54Kg+kaEz/xxNjChzkI9BOBpBZDVDDu0sxMX/NC5QoSoIyub2rnc2lbvbBqedhAaPCuLqAuxY6+EKu+G+SMzF+dOSZbtlth3n4+v9x1Pw==
-Received: from CY8PR12MB7193.namprd12.prod.outlook.com (2603:10b6:930:5b::16)
- by SA3PR12MB9090.namprd12.prod.outlook.com (2603:10b6:806:397::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 09:20:51 +0000
-Received: from CY8PR12MB7193.namprd12.prod.outlook.com
- ([fe80::aa62:af09:b5d7:2e45]) by CY8PR12MB7193.namprd12.prod.outlook.com
- ([fe80::aa62:af09:b5d7:2e45%5]) with mapi id 15.20.7698.017; Wed, 26 Jun 2024
- 09:20:51 +0000
-From: huang wolf <huang_wolf@hotmail.com>
-To: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: hello
-Thread-Topic: hello
-Thread-Index: AQHax6ojV0kxlxNGZEqQtq66fyRwCw==
-Date: Wed, 26 Jun 2024 09:20:51 +0000
-Message-ID:
- <CY8PR12MB7193164EACBF3B9F29911BF7F7D62@CY8PR12MB7193.namprd12.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-tmn: [JXsr1EiJNMxpyeuF2F0xSJpVRDt+DKO8]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR12MB7193:EE_|SA3PR12MB9090:EE_
-x-ms-office365-filtering-correlation-id: b5b9db14-cdbe-43db-3985-08dc95c14614
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199026|440099026|3412199023|102099032;
-x-microsoft-antispam-message-info:
- p8OLIIryaAxJPMjNkPUr/hkCFcuh7HCqBI5edrjmkvepuKRueT++8neABy4ptVB1yOHwckppu7Ox4jyQb2oX4jy8D6+LKB0VdxkP0E30u500n3ScdyKSDjholRTj6ABSjvcgb4d/8z3NgkzHujK9aqEG9cz7IGTXh06PCWTgAzj1MBkYKrvUcK3uvnWsO2rgS5vxOF0uTqS26VfWiJj1AVCAm8XFaYqKi3tVLyq5Fq9PHJJbCmNsrP3MD1YHdxjaIrPUnmRZTkVdH8CD7q82iMaYaydzCvQvDccQBhA9nrtT30CLBaj1RQM/uMj3+Tj3Mo3H62POoaXgzhljVTS5J9tmhbgy6zQH+o7VsXXYyiN7iQ1GZiJhU48QWaQPL497zhvVrMpETO2mUV/CYsRwBiYCPPS/QoP0RZPxZbcCVvsum5Azw5d7+NInFfxpLP0l
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?Vk1BNDhabGZuRmNqSVNmVThHc0NhT0xpTnhiQmpraXRMV2ppVmEwQnBEeDN5?=
- =?gb2312?B?OHRBWTUxTjFoWG8xcktMZmhkbWhOV0F5QzlCVjN6Z1ZOTXJXTVUrZXVlS0lZ?=
- =?gb2312?B?K3d2cklMSlZNdlZyVThVTUlhUXhXQlhlWmJ0NjJBVTVvUThKZ0ExTys3OTNM?=
- =?gb2312?B?UjRhVUIwTFh2dXRCZDdiQktobWRSVEQzL2tIa292Wk9NOUl1bkZYQXRDQk40?=
- =?gb2312?B?bGNCM3FNVW5TajBUOWZxa1N4VW5ZUVZaVDFEZUJlMU04bFAzMjZlc1Z5UWY0?=
- =?gb2312?B?K1UzYmNuVmJ5SHJmMmszc1VScVRKOGd4NGRDUHpDbkdXQnRGOE43bFUwWEJh?=
- =?gb2312?B?clpQb2xiQWQ1WnRUcDUrYVlvN3NvVy84UFIwY01Lak9ISzJTaGtHd09PUy96?=
- =?gb2312?B?T1hTNmZXc2hLNnpGUk0yRUJlVHo4QnhVZFRnY3dlNnNQQUpUTlNwR01iaHU3?=
- =?gb2312?B?ZWFycWU3dGRTVHdLcjFSRGc5MnBIVUZiNGVCb1dVSXJTTTJyOG5NeVppc3ZH?=
- =?gb2312?B?T3k3em56SkNKQjM4bFRpbjhPdDcyN0tSK1hpOHF6eWJudE84NVhlZ0J5Y2VV?=
- =?gb2312?B?MXlBcGFOQlg5S0EvT1hEOUllSkxBTUlZMkQ3WDhub0xWY251REJNWjJaZldH?=
- =?gb2312?B?RXA5YmxCSVhRMHBrYjRQWVl1cUVpU0VZQ1FTTDRmV2EzMDhWVzhzU3BSV091?=
- =?gb2312?B?Mzd0RjBzYit1L2kvYmZMRncvQzhQRWF3Y3p2Z1NtNVFKVkdNQnJOVWNzMzJC?=
- =?gb2312?B?ZFkvZzdrUEhLNEZLR05STm5zK25VZ3BsdmdvQ2t3UEsvS0QvaHcrZHhsZjlk?=
- =?gb2312?B?cXJZTDlzVDZsMlVlbWc4ZHRWSDZhRE1xVVRqdjZiYytEYldZSnVzMDVvWGQz?=
- =?gb2312?B?S3RDd1g1RkN3MkYwcUhIc1BlMy9wR0V5RTNrOGdpOHlSYnZjU0plYVJtcDJy?=
- =?gb2312?B?WTBTMSt1R3IrYjl0L042cEY4K09ycE45enN2WDJsam5aZTl0anE4RUdnZml2?=
- =?gb2312?B?L2tONmdLZmpBRm44cHRNUHNZVHJLMG52eXl2L01lTDNlS1U1UFpuUFZESkNW?=
- =?gb2312?B?Rk1aZXJURndNblFGTStBWS9XNVpvYnlQVUxQVGNIYWtZL3k4UVZlVzI4ZlAr?=
- =?gb2312?B?eU5oeWdHblhXUkVPOFdaQ3V4VCtuclRYajN1Y1FTd0VnajN3V29ROE9YSGcy?=
- =?gb2312?B?Y2NVVlVWK01EMVUwN1ZQR1B3VHFTVnk5WXJ0Wnh0VE8rWjExZzJlVHZjaytX?=
- =?gb2312?B?bmtYVU5IUnhFeldGRzhLUTducHZSYXhRSnBRbXhiMmw1UElWTmxPY3FvU1Js?=
- =?gb2312?B?bXdaWXlwazdabVNUQjlTckw1WWdEVWd5dmRMUDFQdFM0L0xRMDZaWFBGY21t?=
- =?gb2312?B?MXIwdm8rMHpMbzZKWjZDVHg3UW5jTHJod3JXNVEyckVFWTZwUUpSaFA1d2xw?=
- =?gb2312?B?bnpyT3ZoZUpTcStvUStCdVdBL2RvdFpCVDBxeTdsQ2hVVzVXcVo1Wkoza25k?=
- =?gb2312?B?U1p6TDdKbU9VN3ZFUkM5Q0FSSVlOOWFtVERHOFpwc0txd3E2QmtxYVl1MjB5?=
- =?gb2312?B?aU5TMHl2c3hlYThJUlBnVG1xWXhVdlE0T0F0eGk5ZU8rMElHRTFYMFlZMG9h?=
- =?gb2312?Q?SvExFWiOAIyVKwJl6/rMMCVTqBaPj1hjzPWbArTHk44g=3D?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2885717F4EB
+	for <linux-block@vger.kernel.org>; Wed, 26 Jun 2024 11:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719402112; cv=none; b=NInCOclVa3Tk4O0qmWsU06rGLPxrXuo2LLqdpw92bjhOrfD2h7Dhq54M+auluyOMUq+yhW5US+lrgRuQ7j09Pr6o72mAjotyq+hZhbCtpLa2wDnQzHwpu78HFlqNkHSDZTa9qTfPs7QMtdr72TRh//YJHg5a7Dh1fILAaoDoFAc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719402112; c=relaxed/simple;
+	bh=W3RMzDViQh4gqMhmybXU7mNEOtXMO8SRkOTSDiQ6Dlg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=g4zHO2VHQhbooMi4B+Al7p9gvZmdRD1AlCZoxdVsLAYo5094DcNLBt06Qj7meZXHaoS4VNdwnyT0MCNXMirpkp2OXofrj/ImYyVBO3Z4tPSWPoVUW+ISYEcy+kV/6ocrgHzLCFt/sE+/qtgjRLf+zJ5ScFSJn4Jve+QA4p6yOLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XU7uaino; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240626114140epoutp0391dd991de46af31a340c0d8e667ce2a5~cixnX3svr0791607916epoutp03E
+	for <linux-block@vger.kernel.org>; Wed, 26 Jun 2024 11:41:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240626114140epoutp0391dd991de46af31a340c0d8e667ce2a5~cixnX3svr0791607916epoutp03E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1719402100;
+	bh=AiYF3SvzbJSOOU9YaBYI5hh4dDdtFAHbd8Yk/ZuJRac=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=XU7uainox3ieFkj6lKbJp4RdHjSxbscYsynXkRgnoHINyLyphuJVTq78cdPvyWYbZ
+	 jzOwYxA1h84tSyyS82CjXotDwqmj384maHxOlMG9LoKq2HVxEMgLu/NfHCdla1aJCL
+	 /LD/lvcvBnrDqCYvbX2n2H84h2WmXanQo5rBJBBA=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240626114140epcas5p35428e65ab929ff0f1a7e2ab94d35cb2f~cixm1JCu02483924839epcas5p3Y;
+	Wed, 26 Jun 2024 11:41:40 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4W8KXy3bLBz4x9Pp; Wed, 26 Jun
+	2024 11:41:38 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	77.5B.06857.27EFB766; Wed, 26 Jun 2024 20:41:38 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240626101415epcas5p3b06a963aa0b0196d6599fb86c90bc38c~chlSN__Xh1180011800epcas5p3P;
+	Wed, 26 Jun 2024 10:14:15 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240626101415epsmtrp24b09ca7def050861363084196318513a~chlSNPRkx1187111871epsmtrp2I;
+	Wed, 26 Jun 2024 10:14:15 +0000 (GMT)
+X-AuditID: b6c32a4b-88bff70000021ac9-25-667bfe72c043
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	54.3C.18846.7F9EB766; Wed, 26 Jun 2024 19:14:15 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240626101413epsmtip10ad8b44a48c3bfcd84e91742fe72acdf~chlQLwbJ20093400934epsmtip1c;
+	Wed, 26 Jun 2024 10:14:13 +0000 (GMT)
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: asml.silence@gmail.com, mpatocka@redhat.com, axboe@kernel.dk,
+	hch@lst.de, kbusch@kernel.org, martin.petersen@oracle.com
+Cc: io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, Anuj Gupta <anuj20.g@samsung.com>
+Subject: [PATCH v2 00/10] Read/Write with meta/integrity
+Date: Wed, 26 Jun 2024 15:36:50 +0530
+Message-Id: <20240626100700.3629-1-anuj20.g@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-71ea3.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7193.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5b9db14-cdbe-43db-3985-08dc95c14614
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2024 09:20:51.6346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9090
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmum7Rv+o0g64dQhZNE/4yW8xZtY3R
+	YvXdfjaLlauPMlm8az3HYjHp0DVGi723tC3mL3vKbrH8+D8mi4kdV5kcuDx2zrrL7nH5bKnH
+	plWdbB6bl9R77L7ZwObx8ektFo/3+66yefRtWcXo8XmTXABnVLZNRmpiSmqRQmpecn5KZl66
+	rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtCZSgpliTmlQKGAxOJiJX07m6L80pJU
+	hYz84hJbpdSClJwCkwK94sTc4tK8dL281BIrQwMDI1OgwoTsjAWnnjAVHLKvmHaykb2B8b92
+	FyMnh4SAicTxzXeZuhi5OIQEdjNKTO76xQLhfGKUaJvVyA7nLH23jrGLkQOs5fx3qKKdjBIN
+	q1uhnM9ARdebmEDmsgmoSxx53soIYosI1EqsbJ3ODmIzC9RJzLrxH8wWFrCQ+LZ9AwuIzSKg
+	KnG39ThYLy9QvO/sGWaI++QlZl76zg4RF5Q4OfMJC8QceYnmrbOZQRZLCPxll+j9vJgNosFF
+	4tiVw1DNwhKvjm9hh7ClJD6/2wtVky7x4/JTJgi7QKL52D5GCNteovVUPzPIl8wCmhLrd+lD
+	hGUlpp5axwSxl0+i9/cTqFZeiR3zYGwlifaVc6BsCYm95xqgbA+Jw88gaoQEYiU2n1/BNIFR
+	fhaSd2YheWcWwuYFjMyrGCVTC4pz01OLTQuM81LL4RGbnJ+7iRGcWrW8dzA+evBB7xAjEwfj
+	IUYJDmYlEd7Qkqo0Id6UxMqq1KL8+KLSnNTiQ4ymwDCeyCwlmpwPTO55JfGGJpYGJmZmZiaW
+	xmaGSuK8r1vnpggJpCeWpGanphakFsH0MXFwSjUwSV06ezAkplKL902/L59o+6n4xONtZzf1
+	ebz+mXbzeP683H86i/NmCdv/YXe/vrjfVOnICl2xglnxziLx3ebPnSdu+KrZ7bZv8nqhk4oq
+	Bz6yFN6amhThs/uaV9r5mg+CRqf/XCzxkuPVWGqU9v+y7mLNNT1my9u7f7xbOctzzhJJmWOc
+	t6/cKO999u94zZTErt9BhcqLJmowOopWM/2ZoeMlcu6pg5V9sJoT82Gzd1JHv6c7KczdVnRz
+	xzWf2KReyercF8yR7ryHdJ7sEvVY6W34v/DK1W06Kq8nr1zw9O3n1TIf4qxn5ZgvrnCoXtSm
+	rbOFJ/QnV+feh0eXsgY6yEyu/cRf9uBsovaf6XkcSizFGYmGWsxFxYkAzcFFljYEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWy7bCSnO73l9VpBj9viVk0TfjLbDFn1TZG
+	i9V3+9ksVq4+ymTxrvUci8WkQ9cYLfbe0raYv+wpu8Xy4/+YLCZ2XGVy4PLYOesuu8fls6Ue
+	m1Z1snlsXlLvsftmA5vHx6e3WDze77vK5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZC049
+	YSo4ZF8x7WQjewPjf+0uRg4OCQETifPfWboYuTiEBLYzSjz4t4uxi5ETKC4hcerlMihbWGLl
+	v+fsEEUfGSWmNu4DS7AJqEsced7KCJIQEWhllDgwtQXMYRZoYpRY9eAEG0iVsICFxLftG1hA
+	bBYBVYm7rceZQGxeoHjf2TPMECvkJWZe+s4OEReUODnzCVg9M1C8eets5gmMfLOQpGYhSS1g
+	ZFrFKJpaUJybnptcYKhXnJhbXJqXrpecn7uJERzgWkE7GJet/6t3iJGJg/EQowQHs5IIb2hJ
+	VZoQb0piZVVqUX58UWlOavEhRmkOFiVxXuWczhQhgfTEktTs1NSC1CKYLBMHp1QDU+Ktr73l
+	C30vWey+FfYmRmqB7pJPD9Xddr/IcxWZfmrmBt5pe+Kcbu32OLesaeN87UQmpS2HhUMEI1jO
+	HHhUfa0vO2KS0sy+iX+n8Gi6zN/z/vm7Za4hnb184k2cAntCrPRUOxte/frFcDPU8svn/ztP
+	Cx+Uqvjz/fP6jnUvLk1T+rZJ4avKuWilmVfVS403xKVfzTt/71/nzyajUwXbTFRm72LaW971
+	i0lKleOd5Qft6wbGEx8GWsXY9QgoMrUaHDEOzmVze5h0p8fN7tWu6V6/1Pj5mFe5LTlxxnjP
+	rKavR89H+M3fzvvdY/KqwMwU+8lzVwmLMNzc+GGPvPLj/50Jcrkqx9PrL1YnyxUVLVdiKc5I
+	NNRiLipOBAAQh07h3wIAAA==
+X-CMS-MailID: 20240626101415epcas5p3b06a963aa0b0196d6599fb86c90bc38c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240626101415epcas5p3b06a963aa0b0196d6599fb86c90bc38c
+References: <CGME20240626101415epcas5p3b06a963aa0b0196d6599fb86c90bc38c@epcas5p3.samsung.com>
 
-bGludXgtYmxvY2tAdmdlci5rZXJuZWwub3Jn
+This adds a new io_uring interface to exchange meta along with read/write.
+
+Interface:
+Meta information is represented using a newly introduced 'struct io_uring_meta'.
+Application sets up a SQE128 ring, and prepares io_uring_meta within unused
+portion of SQE. Application populates 'struct io_uring_meta' fields as below:
+
+* meta_type: describes type of meta that is passed. Currently one type
+"Integrity" is supported.
+* meta_flags: these are meta-type specific flags. Three flags are exposed for
+integrity type, namely INTEGRITY_CHK_GUARD/APPTAG/REFTAG.
+* meta_len: length of the meta buffer
+* meta_addr: address of the meta buffer
+* apptag: optional application-specific 16b value; this goes along with
+INTEGRITY_CHK_APPTAG flag.
+
+Block path (direct IO) and NVMe driver are modified to support
+this.
+
+The first patch is borrowed from Mikulas series[1] to make the metadata split
+work correctly.
+Next 5 patches are enhancements in the block/nvme so that user meta buffer
+is handled correctly (mostly when it gets split).
+
+Patch 8 adds the io_uring support.
+Patch 9 adds the support for block direct IO, and patch 10 for NVMe.
+
+Example program on how to use the interface is appended below [2]
+
+Tree:
+https://github.com/SamsungDS/linux/tree/feat/pi_us_v2
+Testing:
+has been done by modifying fio to use this interface.
+https://github.com/samsungds/fio/commits/feat/test-meta-v3
+
+Changes since v1:
+https://lore.kernel.org/linux-block/20240425183943.6319-1-joshi.k@samsung.com/
+- Do not use new opcode for meta, and also add the provision to introduce new
+meta types beyond integrity (Pavel)
+- Stuff IOCB_HAS_META check in need_complete_io (Jens)
+- Split meta handling in NVMe into a separate handler (Keith)
+- Add meta handling for __blkdev_direct_IO too (Keith)
+- Don't inherit BIP_COPY_USER flag for cloned bio's (Christoph)
+- Better commit descriptions (Christoph)
+
+Changes since RFC:
+- modify io_uring plumbing based on recent async handling state changes
+- fixes/enhancements to correctly handle the split for meta buffer
+- add flags to specify guard/reftag/apptag checks
+- add support to send apptag
+
+[1] https://lore.kernel.org/linux-block/719d2e-b0e6-663c-ec38-acf939e4a04b@redhat.com/
+
+[2]
+
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <linux/io_uring.h>
+#include <linux/types.h>
+#include "liburing.h"
+
+/* write data/meta. read both. compare. send apptag too.
+* prerequisite:
+* unprotected xfer: format namespace with 4KB + 8b, pi_type = 0
+* protected xfer: format namespace with 4KB + 8b, pi_type = 1
+*/
+
+#define DATA_LEN 4096
+#define META_LEN 8
+
+struct t10_pi_tuple {
+        __be16  guard;
+        __be16  apptag;
+        __be32  reftag;
+};
+
+int main(int argc, char *argv[])
+{
+         struct io_uring ring;
+         struct io_uring_sqe *sqe = NULL;
+         struct io_uring_cqe *cqe = NULL;
+         void *wdb,*rdb;
+         char wmb[META_LEN], rmb[META_LEN];
+         char *data_str = "data buffer";
+         char *meta_str = "meta";
+         int fd, ret, blksize;
+         struct stat fstat;
+         unsigned long long offset = DATA_LEN;
+         struct t10_pi_tuple *pi;
+	 struct io_uring_meta *md;
+
+         if (argc != 2) {
+                 fprintf(stderr, "Usage: %s <block-device>", argv[0]);
+                 return 1;
+         };
+
+         if (stat(argv[1], &fstat) == 0) {
+                 blksize = (int)fstat.st_blksize;
+         } else {
+                 perror("stat");
+                 return 1;
+         }
+
+         if (posix_memalign(&wdb, blksize, DATA_LEN)) {
+                 perror("posix_memalign failed");
+                 return 1;
+         }
+         if (posix_memalign(&rdb, blksize, DATA_LEN)) {
+                 perror("posix_memalign failed");
+                 return 1;
+         }
+
+         strcpy(wdb, data_str);
+         strcpy(wmb, meta_str);
+
+         fd = open(argv[1], O_RDWR | O_DIRECT);
+         if (fd < 0) {
+                 printf("Error in opening device\n");
+                 return 0;
+         }
+
+         ret = io_uring_queue_init(8, &ring, IORING_SETUP_SQE128);
+         if (ret) {
+                 fprintf(stderr, "ring setup failed: %d\n", ret);
+                 return 1;
+         }
+
+         /* write data + meta-buffer to device */
+         sqe = io_uring_get_sqe(&ring);
+         if (!sqe) {
+                 fprintf(stderr, "get sqe failed\n");
+                 return 1;
+         }
+
+         io_uring_prep_write(sqe, fd, wdb, DATA_LEN, offset);
+
+	 md = (struct io_uring_meta *) sqe->cmd;
+	 md->meta_type = META_TYPE_INTEGRITY;
+	 md->meta_addr = (__u64)wmb;
+	 md->meta_len = META_LEN;
+         /* flags to ask for guard/reftag/apptag*/
+	 md->meta_flags = INTEGRITY_CHK_APPTAG;
+         md->apptag = 0x1234;
+
+	 pi = (struct t10_pi_tuple *)wmb;
+         pi->apptag = 0x3412;
+
+         ret = io_uring_submit(&ring);
+         if (ret <= 0) {
+                 fprintf(stderr, "sqe submit failed: %d\n", ret);
+                 return 1;
+         }
+
+         ret = io_uring_wait_cqe(&ring, &cqe);
+         if (!cqe) {
+                 fprintf(stderr, "cqe is NULL :%d\n", ret);
+                 return 1;
+         }
+         if (cqe->res < 0) {
+                 fprintf(stderr, "write cqe failure: %d", cqe->res);
+                 return 1;
+         }
+
+         io_uring_cqe_seen(&ring, cqe);
+
+         /* read data + meta-buffer back from device */
+         sqe = io_uring_get_sqe(&ring);
+         if (!sqe) {
+                 fprintf(stderr, "get sqe failed\n");
+                 return 1;
+         }
+
+         io_uring_prep_read(sqe, fd, rdb, DATA_LEN, offset);
+
+	 md = (struct io_uring_meta *) sqe->cmd;
+	 md->meta_type = META_TYPE_INTEGRITY;
+	 md->meta_addr = (__u64)rmb;
+	 md->meta_len = META_LEN;
+	 md->meta_flags = INTEGRITY_CHK_APPTAG;
+         md->apptag = 0x1234;
+
+         ret = io_uring_submit(&ring);
+         if (ret <= 0) {
+                 fprintf(stderr, "sqe submit failed: %d\n", ret);
+                 return 1;
+         }
+
+         ret = io_uring_wait_cqe(&ring, &cqe);
+         if (!cqe) {
+                 fprintf(stderr, "cqe is NULL :%d\n", ret);
+                 return 1;
+         }
+
+         if (cqe->res < 0) {
+                 fprintf(stderr, "read cqe failure: %d", cqe->res);
+                 return 1;
+         }
+         io_uring_cqe_seen(&ring, cqe);
+
+         if (strncmp(wmb, rmb, META_LEN))
+                 printf("Failure: meta mismatch!, wmb=%s, rmb=%s\n", wmb, rmb);
+
+         if (strncmp(wdb, rdb, DATA_LEN))
+                 printf("Failure: data mismatch!\n");
+
+         io_uring_queue_exit(&ring);
+         free(rdb);
+         free(wdb);
+         return 0;
+}
+
+Anuj Gupta (5):
+  block: set bip_vcnt correctly
+  block: copy bip_max_vcnt vecs instead of bip_vcnt during clone
+  block: Handle meta bounce buffer correctly in case of split
+  block: modify bio_integrity_map_user to accept iov_iter as argument
+  io_uring/rw: add support to send meta along with read/write
+
+Kanchan Joshi (4):
+  block: introduce BIP_CLONED flag
+  block: define meta io descriptor
+  block: add support to pass user meta buffer
+  nvme: add handling for user integrity buffer
+
+Mikulas Patocka (1):
+  block: change rq_integrity_vec to respect the iterator
+
+ block/bio-integrity.c         | 75 ++++++++++++++++++++++++++-----
+ block/fops.c                  | 28 +++++++++++-
+ block/t10-pi.c                |  6 +++
+ drivers/nvme/host/core.c      | 85 ++++++++++++++++++++++++-----------
+ drivers/nvme/host/ioctl.c     | 11 ++++-
+ drivers/nvme/host/pci.c       |  6 +--
+ include/linux/bio.h           | 25 +++++++++--
+ include/linux/blk-integrity.h | 16 +++----
+ include/linux/fs.h            |  1 +
+ include/uapi/linux/io_uring.h | 30 ++++++++++++-
+ io_uring/io_uring.c           |  7 +++
+ io_uring/rw.c                 | 68 ++++++++++++++++++++++++++--
+ io_uring/rw.h                 |  9 +++-
+ 13 files changed, 308 insertions(+), 59 deletions(-)
+
+-- 
+2.25.1
+
 
