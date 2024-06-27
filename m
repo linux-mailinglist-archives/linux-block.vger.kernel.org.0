@@ -1,59 +1,82 @@
-Return-Path: <linux-block+bounces-9426-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9439-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6044291A4C9
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jun 2024 13:14:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED21091A7A1
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jun 2024 15:14:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1869D283396
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jun 2024 11:14:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44EE2B2999C
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jun 2024 13:14:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A85145B34;
-	Thu, 27 Jun 2024 11:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1384C186E5E;
+	Thu, 27 Jun 2024 13:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4JY9oCso"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QC2Ebdb1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BEF13BACC
-	for <linux-block@vger.kernel.org>; Thu, 27 Jun 2024 11:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BEB146D6D
+	for <linux-block@vger.kernel.org>; Thu, 27 Jun 2024 13:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719486871; cv=none; b=RFBNOAUeXoIjAp4Q8KTiwdg59Thvc4EcQCN8+p8Wb/6EP0dpbY8GUBZECVnWHKANyGsqXaMMwhZFhzrLrkno3bWInwaP8WHyQB51Z3OqtMkiMfrnOeaKX/UnpSKNgD66pYuVJR6uALu/Kl3B0qbzxgfq3I83q2yBoD9SJ1nVaBo=
+	t=1719494063; cv=none; b=m415QrduOBhsKLP08W4PqDAoQ3zB6cCSqdvlOj/p5MAT86Ai/REBRxFhDzQ8ZM2GtCoCTUPB3vkI+XoYW5stLPNNixiP2VCkyb+km2TxlW9kNyMGVg/1owSi9uMAU2ocgMlUIWsVMJLhYO2oFHibQB4uOAuV77y/6hIcsGkftWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719486871; c=relaxed/simple;
-	bh=IAIrfTPTIFFPp6wPvBSUxk2ZuBVJi9UM/CNyE9DIlWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VzS93hI4wPrMMz7fCu/naon0SaVXIH0ShZrqNWDt9PqJnnMc7hj+T/wModyvv04WCEZAsCjTxIpk8HwNqrhMMWy+Yxk77Bde3/iWAF1VtqU2T9Lzp5KaYhwoaqHW38aF0BMGtjmQi2ftB8fzG1Skc7lh+5y1w+e0T3eZVcNzXhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4JY9oCso; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=z61DvDhem9T/lryMPJw14QyCPVA/HnNvdxdxDj0mWNA=; b=4JY9oCsontrlHDAWuOIgBj9yjY
-	QM09UxYj5rPfLwt5e9e/H5EB1i/WJHwyMcBN5Ojq/hqDxdOIAh5jD2twKE8yj62kGtPvxHhxkeYC1
-	yh/BV5RRRYm8aB53+n4INDSBIB+aql1zySNIAa2L/CqRPF2MsBFPz3TcYNzCQRdO0fwd8TsUZb9c4
-	FJbRyX7r69twra4qY3WwJKTSxdpRWG9ue9PC6oH9ZYUMaKmLVTvhKjvg+gWR8MX+hijrFcgLznKsT
-	3MoGFCoEN1HsD/HPy5s+c0R0945oUgWW9FN8j6eT/Z6NHhrWek3QKFH+/VI5uNwafxeRqIngP2NeS
-	UNcx9UHA==;
-Received: from [2001:4bb8:2dc:6d4c:6789:3c0c:a17:a2fe] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMn59-0000000A7Kf-3O6X;
-	Thu, 27 Jun 2024 11:14:28 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org
-Subject: [PATCH 3/3] block: pass a gendisk to the queue_sysfs_entry methods
-Date: Thu, 27 Jun 2024 13:14:03 +0200
-Message-ID: <20240627111407.476276-4-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627111407.476276-1-hch@lst.de>
-References: <20240627111407.476276-1-hch@lst.de>
+	s=arc-20240116; t=1719494063; c=relaxed/simple;
+	bh=Flao6phTR9c24fGmU5OZKmo2wLm+3dPH9ZxebZS4kcs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=jENJTVYjcb3KkTKEuul1kWBRJ8KoTaZudGpISCtjec6xOklgE1/xtXeI0taJFQLl1DQWrhRBdWdsWsorheMXosmFflTBGyBKQ0m0q3Za0PVheGp09DNe0xOTCmzT5bqBw16GqYbytelTxeOTAA6zAhZSkEXpr2QwKAgZ/AuTzrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QC2Ebdb1; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240627131411epoutp01ac3892d54e8f759258300dd44d6c9b98~c3rq8KUk11698516985epoutp01g
+	for <linux-block@vger.kernel.org>; Thu, 27 Jun 2024 13:14:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240627131411epoutp01ac3892d54e8f759258300dd44d6c9b98~c3rq8KUk11698516985epoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1719494051;
+	bh=wgXVbnzcj5t9PSJxv52vGypzxjxZWEQ5VUwg0rAR7xo=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=QC2Ebdb1f+xUbPNWFG1KzpU9QSRo+yEYXIxhAt+BxnMp/jSg6Iy8t8NYmhzfYoe3z
+	 A840FvPvQcrA3uICrXxQozgjFyeABudoOuwRgRlX/ci2dgtpS3E4FOVPoVI2NC1JwU
+	 YmozsaXNlF94vYGqpQkxcWJU+qRM8UWU3B60Dr3Q=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240627131410epcas5p16b606a9abc25fa96336dd3d2d12fd0dc~c3rqbaZ3w2151921519epcas5p1g;
+	Thu, 27 Jun 2024 13:14:10 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4W8zYF1MVrz4x9Pr; Thu, 27 Jun
+	2024 13:14:09 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D8.98.11095.1A56D766; Thu, 27 Jun 2024 22:14:09 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240627105359epcas5p47eb8839f9e77c85cb737be9434cb2570~c1xQytpOW0555705557epcas5p45;
+	Thu, 27 Jun 2024 10:53:59 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240627105359epsmtrp1a1510cdbbdc604a3d6dc57fe0997a9bb~c1xQx5nQ80705607056epsmtrp1S;
+	Thu, 27 Jun 2024 10:53:59 +0000 (GMT)
+X-AuditID: b6c32a49-423b770000012b57-f6-667d65a143ca
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D0.3F.29940.7C44D766; Thu, 27 Jun 2024 19:53:59 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240627105357epsmtip160ad6ed72f758bebd680edd2bb67da5f~c1xO-tpip2915729157epsmtip11;
+	Thu, 27 Jun 2024 10:53:57 +0000 (GMT)
+From: Kundan Kumar <kundan.kumar@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, willy@infradead.org, kbusch@kernel.org
+Cc: linux-block@vger.kernel.org, joshi.k@samsung.com, mcgrof@kernel.org,
+	anuj20.g@samsung.com, nj.shetty@samsung.com, c.gameti@samsung.com,
+	gost.dev@samsung.com, Kundan Kumar <kundan.kumar@samsung.com>
+Subject: [PATCH v6 0/3] block: add larger order folio instead of pages
+Date: Thu, 27 Jun 2024 16:15:49 +0530
+Message-Id: <20240627104552.11177-1-kundan.kumar@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -61,524 +84,121 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmhu7C1No0gzubWS2aJvxltlh9t5/N
+	4vv2PhaLmwd2MlmsXH2UyeLo/7dsFpMOXWO02PrlK6vF3lvaFjcmPGW02PZ7PrPF7x9z2Bx4
+	PDav0PK4fLbUY9OqTjaP3Tcb2Dz6tqxi9Pi8SS6ALSrbJiM1MSW1SCE1Lzk/JTMv3VbJOzje
+	Od7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoQiWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJ
+	rVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsa/9m7WgjMSFT/vT2VsYDwg3MXIySEh
+	YCLR1neNsYuRi0NIYDejxMY1Z1ghnE+MEgueXmaGcL4xStydMp0dpuXG4a1sILaQwF5GiX1P
+	giCKPjNKLJ16Baidg4NNQFfiR1MoSI2IgLvE1JePwFYwC5xllDgx9RELSEJYwE3i4uy/rCA2
+	i4CqxJJLv8CG8grYSuxasoQZYpm8xMxL39kh4oISJ2c+AetlBoo3b50Ndp2EwE92iSsLPrJA
+	NLhITD3zlRHCFpZ4dXwL1NVSEi/726DsbIlDjRuYIOwSiZ1HGqDi9hKtp/qZQR5gFtCUWL9L
+	HyIsKzH11DomiL18Er2/n0C18krsmAdjq0nMeTcV6gQZiYWXZkDFPSQu7f7PAgmsWIn+Z/+Z
+	JjDKz0Lyziwk78xC2LyAkXkVo2RqQXFuemqxaYFhXmo5PGKT83M3MYITqpbnDsa7Dz7oHWJk
+	4mA8xCjBwawkwhtaUpUmxJuSWFmVWpQfX1Sak1p8iNEUGMYTmaVEk/OBKT2vJN7QxNLAxMzM
+	zMTS2MxQSZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQYm/genzJvNbooHL204xH4w6WL67Ihd
+	lgr3+7Tzomo4Hzn3z/c3MWezNviqKczcqGVyby57Fmd4Vk/kwVXrtmnWTzl98Gi3ic3eHC3j
+	M2K1OxudK81vSTVXHtF7Wa7wO8f73H++45XWcswKn/Xj8tMes4uo/Thd3lkmtnSzztIdSwSP
+	zHyY/vKT5NHrc6Rkt69NOrvKerFK+YIpsdpc8if/RyzdtOJFyaHKd4cKKv00S+Ul5K7fEdhj
+	/m2XZdnuJ3cud1geEzvvFvCoY0We/dkJ9yMjT2iHLmbYsP8zv1KdSJTjx8OrMnzCry8quBEe
+	HnE5vXda1oY7vHscHuaoZm38eOvDywt11ifZDZOSI5cqsRRnJBpqMRcVJwIA6RFzjTEEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsWy7bCSnO5xl9o0g08nRSyaJvxltlh9t5/N
+	4vv2PhaLmwd2MlmsXH2UyeLo/7dsFpMOXWO02PrlK6vF3lvaFjcmPGW02PZ7PrPF7x9z2Bx4
+	PDav0PK4fLbUY9OqTjaP3Tcb2Dz6tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoEr4197N2vBGYmK
+	n/enMjYwHhDuYuTkkBAwkbhxeCtbFyMXh5DAbkaJRQd72CASMhK77+5khbCFJVb+e84OYgsJ
+	fGSU+D3FqIuRg4NNQFfiR1MoSFhEwFdiwYbnjCBzmAWuM0rcmL6VGSQhLOAmcXH2X7A5LAKq
+	Eksu/QKbzytgK7FryRJmiPnyEjMvfWeHiAtKnJz5hAXEZgaKN2+dzTyBkW8WktQsJKkFjEyr
+	GCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGCQ1tLcwfj9lUf9A4xMnEwHmKU4GBWEuEN
+	LalKE+JNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbLxMEp1cDEv4v3
+	teyeVL71V6xnlp17qtO2qDtKekrWpttVh7MfuyooGt1Zcee/Rv0xk9CJGxMr3HtdBS6V6ty6
+	z3/1ZIrMg0VRYpNO/dS77BucneYdeqRXJGJRuWB9dcom42k87x8/21H5Tki4hHdufvZLI477
+	Qau8vG6tnfn0o/idbHPerPbWo33v7T9Odi7Yt+fN6ebA+j072PhzlS29lMK23c/YyK/P7GDX
+	XPng9ocg451lH86ozZH0+LOu0/U0X+fTiKV+nvJVe4/mP6/9sf5Z2MT8sNT8+oJlVipX21Rr
+	shntjOZENottkvuuL5Dk8/ZLm+xtl2fH3v2ekFTbdP8LK0d2YmdO8m5x+/c3tPkDtZVYijMS
+	DbWYi4oTAT0RFzncAgAA
+X-CMS-MailID: 20240627105359epcas5p47eb8839f9e77c85cb737be9434cb2570
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240627105359epcas5p47eb8839f9e77c85cb737be9434cb2570
+References: <CGME20240627105359epcas5p47eb8839f9e77c85cb737be9434cb2570@epcas5p4.samsung.com>
 
-The kobject for the queue entries is embedded into a struct gendisk.
-Pass it to the sysfs methods instead of the request_queue derived from
-it.
+User space memory is mapped in kernel in form of pages array. These pages
+are iterated and added to BIO. In process, pages are also checked for
+contiguity and merged.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-sysfs.c | 180 +++++++++++++++++++++++-----------------------
- block/elevator.c  |   9 +--
- block/elevator.h  |   4 +-
- 3 files changed, 96 insertions(+), 97 deletions(-)
+When mTHP is enabled the pages generally belong to larger order folio. This
+patch series enables adding large folio to bio. It fetches folio for
+page in the page array. The page might start from an offset in the folio
+which could be multiples of PAGE_SIZE. Subsequent pages in page array
+might belong to same folio. Using the length of folio, folio_offset and
+remaining size, determine length in folio which can be added to the bio.
+Check if pages are contiguous and belong to same folio. If yes then skip
+further processing for the contiguous pages.
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index a769fb441b58da..60116d13cb8043 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -22,8 +22,8 @@
- 
- struct queue_sysfs_entry {
- 	struct attribute attr;
--	ssize_t (*show)(struct request_queue *, char *);
--	ssize_t (*store)(struct request_queue *, const char *, size_t);
-+	ssize_t (*show)(struct gendisk *disk, char *page);
-+	ssize_t (*store)(struct gendisk *disk, const char *page, size_t count);
- };
- 
- static ssize_t
-@@ -47,18 +47,18 @@ queue_var_store(unsigned long *var, const char *page, size_t count)
- 	return count;
- }
- 
--static ssize_t queue_requests_show(struct request_queue *q, char *page)
-+static ssize_t queue_requests_show(struct gendisk *disk, char *page)
- {
--	return queue_var_show(q->nr_requests, page);
-+	return queue_var_show(disk->queue->nr_requests, page);
- }
- 
- static ssize_t
--queue_requests_store(struct request_queue *q, const char *page, size_t count)
-+queue_requests_store(struct gendisk *disk, const char *page, size_t count)
- {
- 	unsigned long nr;
- 	int ret, err;
- 
--	if (!queue_is_mq(q))
-+	if (!queue_is_mq(disk->queue))
- 		return -EINVAL;
- 
- 	ret = queue_var_store(&nr, page, count);
-@@ -68,42 +68,35 @@ queue_requests_store(struct request_queue *q, const char *page, size_t count)
- 	if (nr < BLKDEV_MIN_RQ)
- 		nr = BLKDEV_MIN_RQ;
- 
--	err = blk_mq_update_nr_requests(q, nr);
-+	err = blk_mq_update_nr_requests(disk->queue, nr);
- 	if (err)
- 		return err;
- 
- 	return ret;
- }
- 
--static ssize_t queue_ra_show(struct request_queue *q, char *page)
-+static ssize_t queue_ra_show(struct gendisk *disk, char *page)
- {
--	unsigned long ra_kb;
--
--	if (!q->disk)
--		return -EINVAL;
--	ra_kb = q->disk->bdi->ra_pages << (PAGE_SHIFT - 10);
--	return queue_var_show(ra_kb, page);
-+	return queue_var_show(disk->bdi->ra_pages << (PAGE_SHIFT - 10), page);
- }
- 
- static ssize_t
--queue_ra_store(struct request_queue *q, const char *page, size_t count)
-+queue_ra_store(struct gendisk *disk, const char *page, size_t count)
- {
- 	unsigned long ra_kb;
- 	ssize_t ret;
- 
--	if (!q->disk)
--		return -EINVAL;
- 	ret = queue_var_store(&ra_kb, page, count);
- 	if (ret < 0)
- 		return ret;
--	q->disk->bdi->ra_pages = ra_kb >> (PAGE_SHIFT - 10);
-+	disk->bdi->ra_pages = ra_kb >> (PAGE_SHIFT - 10);
- 	return ret;
- }
- 
- #define QUEUE_SYSFS_LIMIT_SHOW(_field)					\
--static ssize_t queue_##_field##_show(struct request_queue *q, char *page) \
-+static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
- {									\
--	return queue_var_show(q->limits._field, page);			\
-+	return queue_var_show(disk->queue->limits._field, page);	\
- }
- 
- QUEUE_SYSFS_LIMIT_SHOW(max_segments)
-@@ -125,10 +118,11 @@ QUEUE_SYSFS_LIMIT_SHOW(atomic_write_unit_min)
- QUEUE_SYSFS_LIMIT_SHOW(atomic_write_unit_max)
- 
- #define QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(_field)			\
--static ssize_t queue_##_field##_show(struct request_queue *q, char *page) \
-+static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
- {									\
- 	return sprintf(page, "%llu\n",					\
--		(unsigned long long)q->limits._field << SECTOR_SHIFT);	\
-+		(unsigned long long)disk->queue->limits._field <<	\
-+			SECTOR_SHIFT);					\
- }
- 
- QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(max_discard_sectors)
-@@ -138,16 +132,16 @@ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(atomic_write_max_sectors)
- QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(atomic_write_boundary_sectors)
- 
- #define QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_KB(_field)			\
--static ssize_t queue_##_field##_show(struct request_queue *q, char *page) \
-+static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
- {									\
--	return queue_var_show(q->limits._field >> 1, page);		\
-+	return queue_var_show(disk->queue->limits._field >> 1, page);	\
- }
- 
- QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_KB(max_sectors)
- QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_KB(max_hw_sectors)
- 
- #define QUEUE_SYSFS_SHOW_CONST(_name, _val)				\
--static ssize_t queue_##_name##_show(struct request_queue *q, char *page) \
-+static ssize_t queue_##_name##_show(struct gendisk *disk, char *page)	\
- {									\
- 	return sprintf(page, "%d\n", _val);				\
- }
-@@ -157,7 +151,7 @@ QUEUE_SYSFS_SHOW_CONST(discard_zeroes_data, 0)
- QUEUE_SYSFS_SHOW_CONST(write_same_max, 0)
- QUEUE_SYSFS_SHOW_CONST(poll_delay, -1)
- 
--static ssize_t queue_max_discard_sectors_store(struct request_queue *q,
-+static ssize_t queue_max_discard_sectors_store(struct gendisk *disk,
- 		const char *page, size_t count)
- {
- 	unsigned long max_discard_bytes;
-@@ -169,15 +163,15 @@ static ssize_t queue_max_discard_sectors_store(struct request_queue *q,
- 	if (ret < 0)
- 		return ret;
- 
--	if (max_discard_bytes & (q->limits.discard_granularity - 1))
-+	if (max_discard_bytes & (disk->queue->limits.discard_granularity - 1))
- 		return -EINVAL;
- 
- 	if ((max_discard_bytes >> SECTOR_SHIFT) > UINT_MAX)
- 		return -EINVAL;
- 
--	lim = queue_limits_start_update(q);
-+	lim = queue_limits_start_update(disk->queue);
- 	lim.max_user_discard_sectors = max_discard_bytes >> SECTOR_SHIFT;
--	err = queue_limits_commit_update(q, &lim);
-+	err = queue_limits_commit_update(disk->queue, &lim);
- 	if (err)
- 		return err;
- 	return ret;
-@@ -188,15 +182,15 @@ static ssize_t queue_max_discard_sectors_store(struct request_queue *q,
-  * underlying queue limits, but actually contains a calculation.  Because of
-  * that we can't simply use QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES here.
-  */
--static ssize_t queue_zone_append_max_show(struct request_queue *q, char *page)
-+static ssize_t queue_zone_append_max_show(struct gendisk *disk, char *page)
- {
--	unsigned long long max_sectors = queue_max_zone_append_sectors(q);
--
--	return sprintf(page, "%llu\n", max_sectors << SECTOR_SHIFT);
-+	return sprintf(page, "%llu\n",
-+		(u64)queue_max_zone_append_sectors(disk->queue) <<
-+			SECTOR_SHIFT);
- }
- 
- static ssize_t
--queue_max_sectors_store(struct request_queue *q, const char *page, size_t count)
-+queue_max_sectors_store(struct gendisk *disk, const char *page, size_t count)
- {
- 	unsigned long max_sectors_kb;
- 	struct queue_limits lim;
-@@ -207,15 +201,15 @@ queue_max_sectors_store(struct request_queue *q, const char *page, size_t count)
- 	if (ret < 0)
- 		return ret;
- 
--	lim = queue_limits_start_update(q);
-+	lim = queue_limits_start_update(disk->queue);
- 	lim.max_user_sectors = max_sectors_kb << 1;
--	err = queue_limits_commit_update(q, &lim);
-+	err = queue_limits_commit_update(disk->queue, &lim);
- 	if (err)
- 		return err;
- 	return ret;
- }
- 
--static ssize_t queue_feature_store(struct request_queue *q, const char *page,
-+static ssize_t queue_feature_store(struct gendisk *disk, const char *page,
- 		size_t count, blk_features_t feature)
- {
- 	struct queue_limits lim;
-@@ -226,26 +220,27 @@ static ssize_t queue_feature_store(struct request_queue *q, const char *page,
- 	if (ret < 0)
- 		return ret;
- 
--	lim = queue_limits_start_update(q);
-+	lim = queue_limits_start_update(disk->queue);
- 	if (val)
- 		lim.features |= feature;
- 	else
- 		lim.features &= ~feature;
--	ret = queue_limits_commit_update(q, &lim);
-+	ret = queue_limits_commit_update(disk->queue, &lim);
- 	if (ret)
- 		return ret;
- 	return count;
- }
- 
--#define QUEUE_SYSFS_FEATURE(_name, _feature)				 \
--static ssize_t queue_##_name##_show(struct request_queue *q, char *page) \
--{									 \
--	return sprintf(page, "%u\n", !!(q->limits.features & _feature)); \
--}									 \
--static ssize_t queue_##_name##_store(struct request_queue *q,		 \
--		const char *page, size_t count)				 \
--{									 \
--	return queue_feature_store(q, page, count, _feature);		 \
-+#define QUEUE_SYSFS_FEATURE(_name, _feature)				\
-+static ssize_t queue_##_name##_show(struct gendisk *disk, char *page)	\
-+{									\
-+	return sprintf(page, "%u\n",					\
-+		!!(disk->queue->limits.features & _feature));		\
-+}									\
-+static ssize_t queue_##_name##_store(struct gendisk *disk,		\
-+		const char *page, size_t count)				\
-+{									\
-+	return queue_feature_store(disk, page, count, _feature);	\
- }
- 
- QUEUE_SYSFS_FEATURE(rotational, BLK_FEAT_ROTATIONAL)
-@@ -253,35 +248,36 @@ QUEUE_SYSFS_FEATURE(add_random, BLK_FEAT_ADD_RANDOM)
- QUEUE_SYSFS_FEATURE(iostats, BLK_FEAT_IO_STAT)
- QUEUE_SYSFS_FEATURE(stable_writes, BLK_FEAT_STABLE_WRITES);
- 
--#define QUEUE_SYSFS_FEATURE_SHOW(_name, _feature)			 \
--static ssize_t queue_##_name##_show(struct request_queue *q, char *page) \
--{									 \
--	return sprintf(page, "%u\n", !!(q->limits.features & _feature)); \
-+#define QUEUE_SYSFS_FEATURE_SHOW(_name, _feature)			\
-+static ssize_t queue_##_name##_show(struct gendisk *disk, char *page)	\
-+{									\
-+	return sprintf(page, "%u\n",					\
-+		!!(disk->queue->limits.features & _feature));		\
- }
- 
- QUEUE_SYSFS_FEATURE_SHOW(poll, BLK_FEAT_POLL);
- QUEUE_SYSFS_FEATURE_SHOW(fua, BLK_FEAT_FUA);
- QUEUE_SYSFS_FEATURE_SHOW(dax, BLK_FEAT_DAX);
- 
--static ssize_t queue_zoned_show(struct request_queue *q, char *page)
-+static ssize_t queue_zoned_show(struct gendisk *disk, char *page)
- {
--	if (blk_queue_is_zoned(q))
-+	if (blk_queue_is_zoned(disk->queue))
- 		return sprintf(page, "host-managed\n");
- 	return sprintf(page, "none\n");
- }
- 
--static ssize_t queue_nr_zones_show(struct request_queue *q, char *page)
-+static ssize_t queue_nr_zones_show(struct gendisk *disk, char *page)
- {
--	return queue_var_show(disk_nr_zones(q->disk), page);
-+	return queue_var_show(disk_nr_zones(disk), page);
- }
- 
--static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
-+static ssize_t queue_nomerges_show(struct gendisk *disk, char *page)
- {
--	return queue_var_show((blk_queue_nomerges(q) << 1) |
--			       blk_queue_noxmerges(q), page);
-+	return queue_var_show((blk_queue_nomerges(disk->queue) << 1) |
-+			       blk_queue_noxmerges(disk->queue), page);
- }
- 
--static ssize_t queue_nomerges_store(struct request_queue *q, const char *page,
-+static ssize_t queue_nomerges_store(struct gendisk *disk, const char *page,
- 				    size_t count)
- {
- 	unsigned long nm;
-@@ -290,29 +286,30 @@ static ssize_t queue_nomerges_store(struct request_queue *q, const char *page,
- 	if (ret < 0)
- 		return ret;
- 
--	blk_queue_flag_clear(QUEUE_FLAG_NOMERGES, q);
--	blk_queue_flag_clear(QUEUE_FLAG_NOXMERGES, q);
-+	blk_queue_flag_clear(QUEUE_FLAG_NOMERGES, disk->queue);
-+	blk_queue_flag_clear(QUEUE_FLAG_NOXMERGES, disk->queue);
- 	if (nm == 2)
--		blk_queue_flag_set(QUEUE_FLAG_NOMERGES, q);
-+		blk_queue_flag_set(QUEUE_FLAG_NOMERGES, disk->queue);
- 	else if (nm)
--		blk_queue_flag_set(QUEUE_FLAG_NOXMERGES, q);
-+		blk_queue_flag_set(QUEUE_FLAG_NOXMERGES, disk->queue);
- 
- 	return ret;
- }
- 
--static ssize_t queue_rq_affinity_show(struct request_queue *q, char *page)
-+static ssize_t queue_rq_affinity_show(struct gendisk *disk, char *page)
- {
--	bool set = test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags);
--	bool force = test_bit(QUEUE_FLAG_SAME_FORCE, &q->queue_flags);
-+	bool set = test_bit(QUEUE_FLAG_SAME_COMP, &disk->queue->queue_flags);
-+	bool force = test_bit(QUEUE_FLAG_SAME_FORCE, &disk->queue->queue_flags);
- 
- 	return queue_var_show(set << force, page);
- }
- 
- static ssize_t
--queue_rq_affinity_store(struct request_queue *q, const char *page, size_t count)
-+queue_rq_affinity_store(struct gendisk *disk, const char *page, size_t count)
- {
- 	ssize_t ret = -EINVAL;
- #ifdef CONFIG_SMP
-+	struct request_queue *q = disk->queue;
- 	unsigned long val;
- 
- 	ret = queue_var_store(&val, page, count);
-@@ -333,28 +330,28 @@ queue_rq_affinity_store(struct request_queue *q, const char *page, size_t count)
- 	return ret;
- }
- 
--static ssize_t queue_poll_delay_store(struct request_queue *q, const char *page,
-+static ssize_t queue_poll_delay_store(struct gendisk *disk, const char *page,
- 				size_t count)
- {
- 	return count;
- }
- 
--static ssize_t queue_poll_store(struct request_queue *q, const char *page,
-+static ssize_t queue_poll_store(struct gendisk *disk, const char *page,
- 				size_t count)
- {
--	if (!(q->limits.features & BLK_FEAT_POLL))
-+	if (!(disk->queue->limits.features & BLK_FEAT_POLL))
- 		return -EINVAL;
- 	pr_info_ratelimited("writes to the poll attribute are ignored.\n");
- 	pr_info_ratelimited("please use driver specific parameters instead.\n");
- 	return count;
- }
- 
--static ssize_t queue_io_timeout_show(struct request_queue *q, char *page)
-+static ssize_t queue_io_timeout_show(struct gendisk *disk, char *page)
- {
--	return sprintf(page, "%u\n", jiffies_to_msecs(q->rq_timeout));
-+	return sprintf(page, "%u\n", jiffies_to_msecs(disk->queue->rq_timeout));
- }
- 
--static ssize_t queue_io_timeout_store(struct request_queue *q, const char *page,
-+static ssize_t queue_io_timeout_store(struct gendisk *disk, const char *page,
- 				  size_t count)
- {
- 	unsigned int val;
-@@ -364,19 +361,19 @@ static ssize_t queue_io_timeout_store(struct request_queue *q, const char *page,
- 	if (err || val == 0)
- 		return -EINVAL;
- 
--	blk_queue_rq_timeout(q, msecs_to_jiffies(val));
-+	blk_queue_rq_timeout(disk->queue, msecs_to_jiffies(val));
- 
- 	return count;
- }
- 
--static ssize_t queue_wc_show(struct request_queue *q, char *page)
-+static ssize_t queue_wc_show(struct gendisk *disk, char *page)
- {
--	if (blk_queue_write_cache(q))
-+	if (blk_queue_write_cache(disk->queue))
- 		return sprintf(page, "write back\n");
- 	return sprintf(page, "write through\n");
- }
- 
--static ssize_t queue_wc_store(struct request_queue *q, const char *page,
-+static ssize_t queue_wc_store(struct gendisk *disk, const char *page,
- 			      size_t count)
- {
- 	struct queue_limits lim;
-@@ -392,12 +389,12 @@ static ssize_t queue_wc_store(struct request_queue *q, const char *page,
- 		return -EINVAL;
- 	}
- 
--	lim = queue_limits_start_update(q);
-+	lim = queue_limits_start_update(disk->queue);
- 	if (disable)
- 		lim.flags |= BLK_FLAG_WRITE_CACHE_DISABLED;
- 	else
- 		lim.flags &= ~BLK_FLAG_WRITE_CACHE_DISABLED;
--	err = queue_limits_commit_update(q, &lim);
-+	err = queue_limits_commit_update(disk->queue, &lim);
- 	if (err)
- 		return err;
- 	return count;
-@@ -489,20 +486,22 @@ static ssize_t queue_var_store64(s64 *var, const char *page)
- 	return 0;
- }
- 
--static ssize_t queue_wb_lat_show(struct request_queue *q, char *page)
-+static ssize_t queue_wb_lat_show(struct gendisk *disk, char *page)
- {
--	if (!wbt_rq_qos(q))
-+	if (!wbt_rq_qos(disk->queue))
- 		return -EINVAL;
- 
--	if (wbt_disabled(q))
-+	if (wbt_disabled(disk->queue))
- 		return sprintf(page, "0\n");
- 
--	return sprintf(page, "%llu\n", div_u64(wbt_get_min_lat(q), 1000));
-+	return sprintf(page, "%llu\n",
-+		div_u64(wbt_get_min_lat(disk->queue), 1000));
- }
- 
--static ssize_t queue_wb_lat_store(struct request_queue *q, const char *page,
-+static ssize_t queue_wb_lat_store(struct gendisk *disk, const char *page,
- 				  size_t count)
- {
-+	struct request_queue *q = disk->queue;
- 	struct rq_qos *rqos;
- 	ssize_t ret;
- 	s64 val;
-@@ -515,7 +514,7 @@ static ssize_t queue_wb_lat_store(struct request_queue *q, const char *page,
- 
- 	rqos = wbt_rq_qos(q);
- 	if (!rqos) {
--		ret = wbt_init(q->disk);
-+		ret = wbt_init(disk);
- 		if (ret)
- 			return ret;
- 	}
-@@ -649,14 +648,13 @@ queue_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
- {
- 	struct queue_sysfs_entry *entry = to_queue(attr);
- 	struct gendisk *disk = container_of(kobj, struct gendisk, queue_kobj);
--	struct request_queue *q = disk->queue;
- 	ssize_t res;
- 
- 	if (!entry->show)
- 		return -EIO;
--	mutex_lock(&q->sysfs_lock);
--	res = entry->show(q, page);
--	mutex_unlock(&q->sysfs_lock);
-+	mutex_lock(&disk->queue->sysfs_lock);
-+	res = entry->show(disk, page);
-+	mutex_unlock(&disk->queue->sysfs_lock);
- 	return res;
- }
- 
-@@ -674,7 +672,7 @@ queue_attr_store(struct kobject *kobj, struct attribute *attr,
- 
- 	blk_mq_freeze_queue(q);
- 	mutex_lock(&q->sysfs_lock);
--	res = entry->store(q, page, length);
-+	res = entry->store(disk, page, length);
- 	mutex_unlock(&q->sysfs_lock);
- 	blk_mq_unfreeze_queue(q);
- 	return res;
-diff --git a/block/elevator.c b/block/elevator.c
-index f64ebd726e588a..f13d552a32c8b8 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -709,24 +709,25 @@ static int elevator_change(struct request_queue *q, const char *elevator_name)
- 	return ret;
- }
- 
--ssize_t elv_iosched_store(struct request_queue *q, const char *buf,
-+ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- 			  size_t count)
- {
- 	char elevator_name[ELV_NAME_MAX];
- 	int ret;
- 
--	if (!elv_support_iosched(q))
-+	if (!elv_support_iosched(disk->queue))
- 		return count;
- 
- 	strscpy(elevator_name, buf, sizeof(elevator_name));
--	ret = elevator_change(q, strstrip(elevator_name));
-+	ret = elevator_change(disk->queue, strstrip(elevator_name));
- 	if (!ret)
- 		return count;
- 	return ret;
- }
- 
--ssize_t elv_iosched_show(struct request_queue *q, char *name)
-+ssize_t elv_iosched_show(struct gendisk *disk, char *name)
- {
-+	struct request_queue *q = disk->queue;
- 	struct elevator_queue *eq = q->elevator;
- 	struct elevator_type *cur = NULL, *e;
- 	int len = 0;
-diff --git a/block/elevator.h b/block/elevator.h
-index e9a050a96e5305..3fe18e1a869275 100644
---- a/block/elevator.h
-+++ b/block/elevator.h
-@@ -147,8 +147,8 @@ extern void elv_unregister(struct elevator_type *);
- /*
-  * io scheduler sysfs switching
-  */
--extern ssize_t elv_iosched_show(struct request_queue *, char *);
--extern ssize_t elv_iosched_store(struct request_queue *, const char *, size_t);
-+ssize_t elv_iosched_show(struct gendisk *disk, char *page);
-+ssize_t elv_iosched_store(struct gendisk *disk, const char *page, size_t count);
- 
- extern bool elv_bio_merge_ok(struct request *, struct bio *);
- extern struct elevator_queue *elevator_alloc(struct request_queue *,
+This complete scheme reduces the overhead of iterating through pages.
+
+perf diff before and after this change(with mTHP enabled):
+
+Perf diff for write I/O with 128K block size:
+    1.26%     -0.27%  [kernel.kallsyms]  [k] bio_iov_iter_get_pages
+    1.78%             [kernel.kallsyms]  [k] bvec_try_merge_page
+Perf diff for read I/O with 128K block size:
+    3.90%     -1.51%  [kernel.kallsyms]  [k] bio_iov_iter_get_pages
+    5.12%             [kernel.kallsyms]  [k] bvec_try_merge_page
+
+Patch 1: Adds folio-lized version of bio_add_hw_page()
+Patch 2: Adds changes to add larger order folio to BIO
+Patch 3: Unpin user pages belonging to folio at once
+
+Changes since v5:
+- Made offset and len as size_t in function bio_add_hw_folio()
+- Avoid unpinning skipped pages at submission, rather unpin all pages at
+  once on IO completion
+
+Changes since v4:
+- folio-lize bio_add_hw_page() to bio_add_hw_folio()
+- make bio_add_hw_page() as a wrapper around bio_add_hw_folio()
+- make new functions bio_release_folio() and unpin_user_folio()
+- made a helper function to check for contiguous pages of folio
+- changed &folio->page to folio_page(folio, 0)
+- reworded comments
+
+Changes since v3:
+- Added change to see if pages are contiguous and belong to same folio.
+  If not then avoid skipping of pages.(Suggested by Matthew Wilcox)
+
+Changes since v2:
+- Made separate patches
+- Corrected code as per kernel coding style
+- Removed size_folio variable
+
+Changes since v1:
+- Changed functions bio_iov_add_page() and bio_iov_add_zone_append_page()
+  to accept a folio
+- Removed branch and calculate folio_offset and len in same fashion for
+  both 0 order and larger folios
+- Added change in NVMe driver to use nvme_setup_prp_simple() by
+  ignoring multiples of PAGE_SIZE in offset
+- Added a change to unpin_user_pages which were added as folios. Also
+  stopped the unpin of pages one by one from __bio_release_pages()
+  (Suggested by Keith)
+
+Kundan Kumar (3):
+  block: Added folio-lized version of bio_add_hw_page()
+  block: introduce folio awareness and add a bigger size from folio
+  block: unpin user pages belonging to a folio at once
+
+ block/bio.c        | 116 ++++++++++++++++++++++++++++++++++-----------
+ block/blk.h        |  11 +++++
+ include/linux/mm.h |   1 +
+ mm/gup.c           |  13 +++++
+ 4 files changed, 114 insertions(+), 27 deletions(-)
+
 -- 
-2.43.0
+2.25.1
 
 
