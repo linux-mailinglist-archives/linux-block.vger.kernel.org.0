@@ -1,645 +1,485 @@
-Return-Path: <linux-block+bounces-9635-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9637-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A10B3923982
-	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2024 11:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EDD1F923A26
+	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2024 11:32:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C66A01C21852
-	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2024 09:17:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E7671C21257
+	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2024 09:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D87117839D;
-	Tue,  2 Jul 2024 09:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7F4146D48;
+	Tue,  2 Jul 2024 09:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6hNK7RX"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ntoxpXEQ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="beQmwmiV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8C1156C40;
-	Tue,  2 Jul 2024 09:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719911471; cv=none; b=I6QDvszvIPMhiy+qerqlw/ono6Ik3lnxdaPj01J0IBNd2q55TuoXLiaZ+rtz9MlBEqzWydLkhWT977/E/A0otiZ/TZUytAnMmbtmGcRCk1Z77zpNYnihQZFvo9Mb68tEwe/1lH3dun3ZcM9AKa6OnpnSOILEF56ZfNx9Lc/+Z80=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719911471; c=relaxed/simple;
-	bh=rWwAHyiwmax8yvMjrwSRAusPbIB/KT92oJ4QN5II8o8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uwuB1V+B4RBmHYgt06nUppznL3i1GWUtiAZK1O7I6jMl1foclbL8svmqvcxWqC+NzFkACaUmq4xpqjNpkn4g2OZ7DA1pbKbi97/PwgOYzaHl4cTCeDuEKvFLQZnvEyKSohBxuH3JWTEhQYeo7SIz5iIPSnZntXZsbLuznuZshK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6hNK7RX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 336E6C116B1;
-	Tue,  2 Jul 2024 09:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719911470;
-	bh=rWwAHyiwmax8yvMjrwSRAusPbIB/KT92oJ4QN5II8o8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y6hNK7RXDkaA/i33kcQvJ4JKz8/yPjpD5lRL7DqV5Xmj2oQvXnyGYAQ2epTmINygy
-	 0y19irtGTGWm+OtjW5NkAItWfTaPfLe+Fvzo6XpXK70xytP//3+E0opt8r1DuIjpCG
-	 8r0JXPXWB2Z4hDwHlXlzcZ3/Bm1gsukpVrzK5gOHjyumUYCJ6hIXV0+iG4nt9CDCbA
-	 AVvnWwKND922egkc2IkGqZ7kYK3GZ63NIoDvDrhXUVUjhoQqnTcoiujq6cCinieq+O
-	 VSwcXGDkFUwWonCqIjy2AUNt+QmmYZvJX5fJ8Y5c5HTLjsPFdIJ2jHoXuGkDlZv1PP
-	 3XgJzr2OB4ILA==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH v1 18/18] nvme-pci: use new dma API
-Date: Tue,  2 Jul 2024 12:09:48 +0300
-Message-ID: <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1719909395.git.leon@kernel.org>
-References: <cover.1719909395.git.leon@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52FF157E82
+	for <linux-block@vger.kernel.org>; Tue,  2 Jul 2024 09:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719912697; cv=fail; b=DfnOYUoewAPv5MWSOFIVgx1llP3jJ3I+UGeXMLKLa+A3dMV3kZYMSCd/yfKDzDiobh+3tab+dK++9NIyFXjlT0z7wuReDrXc5xVdMovZpHfRZG62ENJj53eegFe297dQbw0anCEyrqoXXu7Tx4yg/tsLNThnKScIvJOVEht/k6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719912697; c=relaxed/simple;
+	bh=JInuokPC0zI2/SOVyMGd5xYQ8qBu70Vs9q6tBksOkCc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G+zNJJi5+YYd7GVQ376bk88dFbH4z1C4ZbrrWjRGt5EfFZVLuMGbii+w41De+TP3xYsS6DMFPX10n3xUWAjU4JOohZgB9zgpuf7mUlAKl0+MF4iy95tn/DmG2Q6mP0JRWaKoFOXhaf9eM5RVOiUn2uqoY2ANQ9dfbbzoLvVqtAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=ntoxpXEQ; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=beQmwmiV; arc=fail smtp.client-ip=68.232.143.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1719912695; x=1751448695;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=JInuokPC0zI2/SOVyMGd5xYQ8qBu70Vs9q6tBksOkCc=;
+  b=ntoxpXEQPc4bDDETEUJ0ji0N2Ag2UUWxi5eHr1xnexsr6Xvu7kQZNNVI
+   5SGhx4P493bnWGsk9bFF4UCMW2cF+jJESkGb2QqSmmMXQM02lR3MIiKbL
+   5yOFjHZ78kP4S51Hp5eRt4C64nJ2bW22ssFLA5iGfs7+XMle9WYrLgXwp
+   zraOxOu7FjTfcuT+QdJYrvxWA/BskCEHcF9Tb4ee5b1ocLsxFtPkWfLuv
+   /s+0CACWFzIwtkyAmFNkiE8/RRzJNIVudxzXHs0ISlcGPm89yELNe7q/J
+   Sm2DiGsVOo6Zk3c2lCDuYHmpAC2n/CQ2outXQjDUwemyEfIlZy2UgK/ZD
+   A==;
+X-CSE-ConnectionGUID: cq81Y3WZS3yZDp8yT0h/qw==
+X-CSE-MsgGUID: l696cYMNRXWGs3iM8VxOHQ==
+X-IronPort-AV: E=Sophos;i="6.09,178,1716220800"; 
+   d="scan'208";a="20687020"
+Received: from mail-co1nam11lp2169.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.169])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Jul 2024 17:31:33 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kkOWpYkCNOgTtGxI/H/It7WMiHOMZbdBNCyDhl6HTTkhinu7iICj20oAmlZ1FXEam0vbXKRzfXDh63YPj0fKXx5T5M1wmxJPWICsZCIfmLGnJV2F2+slGJjuOzfZcn96qyNBUq15uh0cu1KeXJ7TBQ0LyBOHtCZ9ikZ7wVYbed0ggq+b6cBU9+6QFeEnB/REDevvje6C/MXVnmUQGDcBt/3Fdg62D+cK5URA3g7FQkgUOYKI4c/rBxIfnZ94m5u9kTO0hggR57JWRWjJ/3TiL0sx/d7Jlx0ksrrmDv2O/pzSgfHmMquHZl2P5xDtLC9H91upoib4Ubuhz1R27nNwhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZSdxLm7P4H+QvXfKGCWONhLrW2jvUUh9LoXZmu5TquQ=;
+ b=HfmqgUJzMU/vUTfYTGpXaLtnRLaMoVbi74b0vWsFjZZZP9pXIQMptGMuppX9l4FE4a4oaWK1Kym2n8mVWsR4plDMBINFjblEHMm+KuAb+0itxFMT+3OScjwxamd1CzcUzcLEgbIy8OgBKXQg/UDrz8i+OhS1hrKZsd4sWr1ZLHpbh04DeX5OC8RMp/w6OAJg5xBzbOkFlhMl2k0OpfuPY1sapkwxxgZCAb2BCkq8jV8u/KHxlHEobEIbCVS0AW/R3hRf9XDf49FvVBEHnZwrXFCd3tVPZHJiNRr6DHsY0F55ldAabxfGekjb87HXhYiziMfxuAbYij05ez0k62+g5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZSdxLm7P4H+QvXfKGCWONhLrW2jvUUh9LoXZmu5TquQ=;
+ b=beQmwmiVytUvEss37AHr+FCsnQyycrcRsKo5jIP3PyEAlfzVrPNCWsSD7Dn/bKApghgIfK9KF0TjY6nxoBJhIZksdFi+/AjjE5MRAJEVabFvRKKC2z3YKSWNDKcR809YnS3cLtiTPAAX6UxOtxpau3ippGvb0ByhnXLDc0HM6l0=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ PH0PR04MB8573.namprd04.prod.outlook.com (2603:10b6:510:296::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Tue, 2 Jul
+ 2024 09:31:31 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::b27f:cdfa:851:e89a]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::b27f:cdfa:851:e89a%3]) with mapi id 15.20.7719.029; Tue, 2 Jul 2024
+ 09:31:31 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Daniel Wagner <dwagner@suse.de>
+CC: Chaitanya Kulkarni <chaitanyak@nvidia.com>, Hannes Reinecke
+	<hare@suse.de>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, Ofir Gal
+	<ofir.gal@volumez.com>
+Subject: Re: [PATCH blktests v3 1/3] nvme/rc: introduce remote target support
+Thread-Topic: [PATCH blktests v3 1/3] nvme/rc: introduce remote target support
+Thread-Index: AQHayHHfaO+i28+dmkSocZJbcLbOWrHjKUQAgAALFIA=
+Date: Tue, 2 Jul 2024 09:31:31 +0000
+Message-ID: <gpbfvnkocibvptwedmm23x4mryt2zxt2aofyovl5p6e4tetbxi@rrhmg36uksuh>
+References: <20240627091016.12752-1-dwagner@suse.de>
+ <20240627091016.12752-2-dwagner@suse.de>
+ <2le6usvr4sfzconrglndjq52i5zwykftrfqc43ddx7cpqanq4m@g4ocikmnnw4s>
+In-Reply-To: <2le6usvr4sfzconrglndjq52i5zwykftrfqc43ddx7cpqanq4m@g4ocikmnnw4s>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|PH0PR04MB8573:EE_
+x-ms-office365-filtering-correlation-id: 65cd9686-001f-4c8e-2b46-08dc9a79c1e2
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?LxxLf3STNcxJMZp4w/83ds0nyUzJFYfvBYxyF4Jt1IS0QbBin6qzy5Nu6jxD?=
+ =?us-ascii?Q?qz0g/eECptZk2fd8bzuPHQMR3x2Zm9MnlJrtGaf8/igndQBfnXIHn8Ps0vQ8?=
+ =?us-ascii?Q?exC6s8exwdrbuEsq3vAXBfsqBoKbYXpvaCzFT9N4LF0c3BmivL1IIYbcAwyI?=
+ =?us-ascii?Q?8C3A66W+v2I6ZXu8p3a9s3LR0+ihvxlJDCGhKUwLehN5QwE9HfcccbTv9Icp?=
+ =?us-ascii?Q?qGon30IVuG9pleCi0PQaU+sHlx1xGNcgXr58pdP4aF/RDO9/OZNV5ZUiVsA6?=
+ =?us-ascii?Q?86YVy/Xp5kutIxORP4b1lgTgbnvjSywDwaceqWJFWXamh4l5zwpLa+9YMSsz?=
+ =?us-ascii?Q?UVuRi4ebocXpUPZwlQnZG1puwxfE56ugzqweMtHv8aAn58X/2XQ0K9BeLO/K?=
+ =?us-ascii?Q?kHhySpUd+ZNa0KovbwlQ4DLTbGKIrHe+8dH/sFMl1wDHNU3Kbt4WezA1jpgk?=
+ =?us-ascii?Q?5G7DN+we3XRfu0GdNcBEofLqVQlWU6b7nS0qDL7HpW4x+gHtgB4pe5XTQlkW?=
+ =?us-ascii?Q?CUPy9DUJlPoxENsvdZ3hvUdQtWHicA6ZBZfvAJq8cg9nkimG8ptPnOclhoaw?=
+ =?us-ascii?Q?Vz4tJRLrWAa7dXKKRTp7KQdSdBWWoioRyHJdYVwnBVp+WYRbzNsymVOqkYpY?=
+ =?us-ascii?Q?60+xkKl+MkFOtcyZ67JE9hw6dQJDs6P4VfrmCSbsF9u5dTN79h0Ts4oH3xaX?=
+ =?us-ascii?Q?ATLV6++I9tTjrGLwHNYIc20+APfQ+w2EYmOenQNNrvf3gxuy+UBuufS1xqsb?=
+ =?us-ascii?Q?OwZl9XecNwv0S2omosp1YtLPcb0cv0z9MmzYWZ/nJ9IaQbzgUGbSyb7R886a?=
+ =?us-ascii?Q?h4/MEeKSOuzvGhfE9lR7nm3js6lqr+zrPqi0agJ/57YImwYKNxb2uLFYZ+dl?=
+ =?us-ascii?Q?MM2tvUDUzQmjbLj3gvnSczArPhHCr8Z/w2tWFZ/HQTcTclpi2RM+6Ru3DIOY?=
+ =?us-ascii?Q?liUjYHWESySsiINlo1t0upndhxxTND3YbwUZtWQraQt2Q/8n3p1G35ij3mtx?=
+ =?us-ascii?Q?b/wnvyzXMKXA+fw7OyYEuETljeDhmHFiWxMAin1A+Q+XNbK3Mb72odS6tc9K?=
+ =?us-ascii?Q?rZ5yfW1zCHptc/RghWAwB/oamvYd4klPJC/PnC3FdAuEYB4mc9J5abRaDT+l?=
+ =?us-ascii?Q?n9UBCPSnMoeFZ8IAeD9QjasZKQ40Fc1gLihmYoUWc3pttZPEQqsnCFPbmHYg?=
+ =?us-ascii?Q?47odotmev/FiI1MoVcdfQZXK0Y98kIbxVpNUyRbFGh5ajk2Gnb6d8Ko/Sgos?=
+ =?us-ascii?Q?5UH49sLSXLsiegUvy3dP3wuqUZZstKg3c5GpLs4Z7t5roFiDN0VPFWGTMCD0?=
+ =?us-ascii?Q?BePy/EeQGGcvmLglWTv4K/mL74KFISFv6pm2dpMm9lgPRW9Wwsdz8bAZZTMt?=
+ =?us-ascii?Q?MD19S3g=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?WPDtR6UnovjjlA0b2aAcp0nxUkG3DTX8wTDDScTbAedRMOgQyE7GMioVH4Ko?=
+ =?us-ascii?Q?sMEYUIqtw0GsKQntGV8+3+WSpbPj/cgZ+emsRLrwsnpWk6XoEVRSztwClH9y?=
+ =?us-ascii?Q?DLTLZ8tEiUcbZDXED+aZvYKXmoWVvV8pBFuMDoj8ad/qXko5MRq3tJxrUKKZ?=
+ =?us-ascii?Q?FzPdaXzMcX3HIbtyEk8UZIYx23cr4CYha+U4duIJ5j2tAiWN0fND0HiI7/RO?=
+ =?us-ascii?Q?CPs1hwVtcgT/txzb0dv6cqhRik/wVuTzT1dmHKdTft/dFzWQSjJTCxB8ShHz?=
+ =?us-ascii?Q?mdfVU6vkop04rBZj46AZgCiBIC4yWDiroKQf6/HpaCpAOsfT43xYBp2h/TwE?=
+ =?us-ascii?Q?DUBOJUXHoyRKcLgHD3JxWs6fjNqSgEgQUEKJqNKTnhOtZNU3G/8qAGXUKu7q?=
+ =?us-ascii?Q?nL+bPvePiNB4s8vJ8BzJ57gIjSnXG2xhw9ND3hzXkg5T8t5Cgf6yAHp7JvPX?=
+ =?us-ascii?Q?9kzKxWfzgpK+piYdrzFFd6+F7d2KlptGAt80sIe9p5WiUBWIYEgbk/+yge4k?=
+ =?us-ascii?Q?gjx9jui04tKhJMv4sMr8sTcg3/Cf6sLevKA5SRPYp3QsAdUqd3UgcBHxuO9Y?=
+ =?us-ascii?Q?Fc3ann5xKljkWDD53U3x+sgWLZPKfV0h2GL/H+7BK2IMHBS90C24XmeTAjKA?=
+ =?us-ascii?Q?ku3YA6ZRMns5ywJRb3Lbf751Xn5q3XwLz8hlg9xCMQt1WKmq6V5zAZvXuvkX?=
+ =?us-ascii?Q?+xLUV0cUtVGkUTuaSL5bmuy2A0sA/wAu/M/ZCesCbh+QSg6R2hkeDz1NvHJY?=
+ =?us-ascii?Q?mBs9fT8hAVKzx6BYCSLudyUhPLlAfzo54ZQE16umE/K8EnLWiNnDMveMlSXS?=
+ =?us-ascii?Q?k5qiDBRnVN3jLbn9ecZQzW678WiHT9w4md7YvB+7nFmIypiIRyQ4G62x9JnN?=
+ =?us-ascii?Q?D0w8U5idc2+Hl650w9oS5aZfx6dyl/tZr4XZh+J+mAdZCpqLd1bEF0FwUBHy?=
+ =?us-ascii?Q?iF4nppv6LCYJz8NvX8U2UmVKUI9Oa8ZBB+FvJ3tCt1nOaQkyouu2cvEp2MVU?=
+ =?us-ascii?Q?hoM04FmpjXFlRz1uj7p98YXOJ+6SYy7/8jE49kBo1e8H1bX+DiO8dr0DcEvi?=
+ =?us-ascii?Q?Z7o9+PEVZt1V2NhhByiJFWku2KWcE42vt7uerY3vDmTiX7UK+oWFxCx56MRQ?=
+ =?us-ascii?Q?iRsPO3uyDi79fPw49li9oGH6m/9Q9UMRULZY7NsAYiiUi69PB/76dMyhCkk3?=
+ =?us-ascii?Q?QKyImtLwDtHFNJZKHiYTyBLkaXlK3W5eTZ9B4+J9JH+edRyi/v5lwE2a3inT?=
+ =?us-ascii?Q?HR5ThWtbO1ni70HHDe7KegwCnQUPowab5xu9VwtFECjOHZCaebrBHoV64yCH?=
+ =?us-ascii?Q?0V8WJ5ZS/s2yf5i1uyfo6GhkKcKcH6Gp+H65DDcZwIxY3uU0giN1Rwni6gMe?=
+ =?us-ascii?Q?EBKLx7WB6twhssIMlDH1YSH0UReHUgCxZyCTHCXXxSpLmb4zEpRPtrT/ktCT?=
+ =?us-ascii?Q?yQDhc4gwGki2VH1Zj3WoOanqJDbOd2ZeyIT0MUhpL/FYT+WUL/Ajcc82c7zn?=
+ =?us-ascii?Q?/tNc00HS8TmuqeGNVWa/PdbHLsoAzWY3bDA/i1FSgIzyJQs1mzixqqw8CsP5?=
+ =?us-ascii?Q?Y7aU/SUK3o7Qy3sip0ZneJ50dLrD7yGHgfihHyQCM8Q6S4i+pNeAQE9YM5S7?=
+ =?us-ascii?Q?wHAgyjBwR6TEBuirgmW/on8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <367CA63B278ACA49A837291CC805DC08@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	oLESjUIfU/VX6cgK3kebokpSiTaABJndZO/fzzSahtEFJExLvJULzLxCRpunQrZZmCLuoXhxTtEGixbv1wQo8oG9nQXXcvQb6FSTW66rA8IDGPUnz9hXAUF8R1QVY3p7LG1qgUzMrIfzL2dCcZNUDUoblJP7sUR6DWcIOjFawBalh0LoNQc+TOX72F/hxsUsEfmLPAOf807a0I6Y/AQvrPukB/JI8qYNHvfTWju1XMs0SVleRzY8M4aip4Ke1zfePsPqGNAyFYPMqGaLdTRk7ttfUSKeex3Q+bXdpy29hhile3x7e0o8vNAWXFatTfU7tTS+jCREkgiUJspGo3KUpPEZ2S93ecG5M7YoZuCUE2lItecnkKxewxqi/nN0ntGZZYh+YuxFsTY7kDz15dnnYHJ51irtsTeyl2gIFPxfPt+ZOjWFnm49yYdxG3nTqIOCEw6P/BArFnmG/N2Y4iCO22FB3AZauCaAafGG+QSX6EyXHdExu1vXOpl140NmNsh5BeXuZyx9CvtMnm/4g+LLP6d8sm33w3N+6mO/FtI8R41VA/Js8Ynsrtt3UpUA8TK2vJkYnecP3xvQGR28Q7PKLJ0B2D9Nlf9Xokmz/EekTNEuBxsckeM3mao+wuFOHtv8
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65cd9686-001f-4c8e-2b46-08dc9a79c1e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2024 09:31:31.3778
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uCEkVg8tnT8lx5jDcPanDUn3EL5sFamZwh3NT/MmN1Lf3Wow0l+k4lqD7Qqi3xNoQJwXplsh+4gxJOG3+2YUJtDiRg4gc9kk2G3smkEhu5U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB8573
 
-From: Chaitanya Kulkarni <kch@nvidia.com>
+On Jul 02, 2024 / 17:51, Shin'ichiro Kawasaki wrote:
+> CC+: Ofir
 
-Introduce a new structure, iod_dma_map, to hold the DMA mapping for each
-I/O. This includes the iova state and mapped addresses from
-dma_link_range() or dma_map_page_attrs(). Replace the existing sg_table
-in nvme_iod with struct dma_map. The size difference between :-
+Sorry, I forgot to add Ofir to the CC list. Let me resend this note.
 
-struct nvme_iod with struct sg_table :- 184
-struct nvme_iod with struct dma_map  :- 176
-
-In nvme_map_data(), allocate dma_map from mempool and iova using
-dma_alloc_iova(). Obtain the memory type from the first bvec of the
-first bio of the request and use that to decide whether we want to use
-iova or not. In the newly added function nvme_rq_dma_map(), perform DMA
-mapping for the bvec pages using nvme_dma_link_page(). Additionally,
-if NVMe SGL is provided, build SGL entry inline while creating this
-mapping to avoid extra traversal.
-
-Call nvme_rq_dma_map() from nvme_pci_setup_prps() and
-nvme_pci_setup_sgls(). For NVME SGL case, nvme_rq_dma_map() will handle
-building SGL inline. To build PRPs, use iod->dma_map->dma_link_address
-in nvme_pci_setup_prps() and increment the counter appropriately to
-retrieve the next set of DMA addresses.
-
-This demonstrates how the new DMA API can fit into the NVMe driver and
-replace the old DMA APIs.
-
-As this is an RFC, I expect more robust error handling, optimizations,
-and in-depth testing for the final version once we agree on DMA API
-architecture.
-
-Following is the performance comparision for existing DMA API case
-with sg_table and with dma_map, once we have agreement on the new DMA
-API design I intend to get similar profiling numbers for new DMA API.
-
-sgl (sg_table + old dma API ) vs no_sgl (iod_dma_map + new DMA API) :-
-
-block size                               IOPS (k) Average of 3
-
-4K
---------------------------------------------------------------
-sg-list-fio-perf.bs-4k-1.fio:             68.6
-sg-list-fio-perf.bs-4k-2.fio:             68       68.36
-sg-list-fio-perf.bs-4k-3.fio:             68.5
-
-no-sg-list-fio-perf.bs-4k-1.fio:          68.7
-no-sg-list-fio-perf.bs-4k-2.fio:          68.5     68.43
-no-sg-list-fio-perf.bs-4k-3.fio:          68.1
-
-% Change default vs new DMA API =       +0.0975%
-
-8K
---------------------------------------------------------------
-sg-list-fio-perf.bs-8k-1.fio:             67
-sg-list-fio-perf.bs-8k-2.fio:             67.1     67.03
-sg-list-fio-perf.bs-8k-3.fio:             67
-
-no-sg-list-fio-perf.bs-8k-1.fio:          66.7
-no-sg-list-fio-perf.bs-8k-2.fio:          66.7     66.7
-no-sg-list-fio-perf.bs-8k-3.fio:          66.7
-
-% Change default vs new DMA API =       +0.4993%
-
-16K
---------------------------------------------------------------
-sg-list-fio-perf.bs-16k-1.fio:            63.8
-sg-list-fio-perf.bs-16k-2.fio:            63.4     63.5
-sg-list-fio-perf.bs-16k-3.fio:            63.3
-
-no-sg-list-fio-perf.bs-16k-1.fio:         63.5
-no-sg-list-fio-perf.bs-16k-2.fio:         63.4     63.33
-no-sg-list-fio-perf.bs-16k-3.fio:         63.1
-
-% Change default vs new DMA API =       -0.2632%
-
-32K
---------------------------------------------------------------
-sg-list-fio-perf.bs-32k-1.fio:            59.3
-sg-list-fio-perf.bs-32k-2.fio:            59.3     59.36
-sg-list-fio-perf.bs-32k-3.fio:            59.5
-
-no-sg-list-fio-perf.bs-32k-1.fio:         59.5
-no-sg-list-fio-perf.bs-32k-2.fio:         59.6     59.43
-no-sg-list-fio-perf.bs-32k-3.fio:         59.2
-
-% Change default vs new DMA API =       +0.1122%
-
-64K
---------------------------------------------------------------
-sg-list-fio-perf.bs-64k-1.fio:            53.7
-sg-list-fio-perf.bs-64k-2.fio:            53.4     53.56
-sg-list-fio-perf.bs-64k-3.fio:            53.6
-
-no-sg-list-fio-perf.bs-64k-1.fio:         53.5
-no-sg-list-fio-perf.bs-64k-2.fio:         53.8     53.63
-no-sg-list-fio-perf.bs-64k-3.fio:         53.6
-
-% Change default vs new DMA API =        +0.1246%
-
-128K
---------------------------------------------------------------
-sg-list-fio-perf/bs-128k-1.fio:           48
-sg-list-fio-perf/bs-128k-2.fio:           46.4     47.13
-sg-list-fio-perf/bs-128k-3.fio:           47
-
-no-sg-list-fio-perf/bs-128k-1.fio:        46.6
-no-sg-list-fio-perf/bs-128k-2.fio:        47        46.9
-no-sg-list-fio-perf/bs-128k-3.fio:        47.1
-
-% Change default vs new DMA API =       −0.495%
-
-256K
---------------------------------------------------------------
-sg-list-fio-perf/bs-256k-1.fio:           37
-sg-list-fio-perf/bs-256k-2.fio:           41        39.93
-sg-list-fio-perf/bs-256k-3.fio:           41.8
-
-no-sg-list-fio-perf/bs-256k-1.fio:        37.5
-no-sg-list-fio-perf/bs-256k-2.fio:        41.4      40.5
-no-sg-list-fio-perf/bs-256k-3.fio:        42.6
-
-% Change default vs new DMA API =       +1.42%
-
-512K
---------------------------------------------------------------
-sg-list-fio-perf/bs-512k-1.fio:           28.5
-sg-list-fio-perf/bs-512k-2.fio:           28.2      28.4
-sg-list-fio-perf/bs-512k-3.fio:           28.5
-
-no-sg-list-fio-perf/bs-512k-1.fio:        28.7
-no-sg-list-fio-perf/bs-512k-2.fio:        28.6      28.7
-no-sg-list-fio-perf/bs-512k-3.fio:        28.8
-
-% Change default vs new DMA API =       +1.06%
-
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/nvme/host/pci.c | 283 ++++++++++++++++++++++++++++++----------
- 1 file changed, 213 insertions(+), 70 deletions(-)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 102a9fb0c65f..53a71b03c794 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -221,6 +221,16 @@ union nvme_descriptor {
- 	__le64			*prp_list;
- };
- 
-+struct iod_dma_map {
-+	bool use_iova;
-+	struct dma_iova_state state;
-+	struct dma_memory_type type;
-+	struct dma_iova_attrs iova;
-+	dma_addr_t dma_link_address[NVME_MAX_SEGS];
-+	u32 len[NVME_MAX_SEGS];
-+	u16 nr_dma_link_address;
-+};
-+
- /*
-  * The nvme_iod describes the data in an I/O.
-  *
-@@ -236,7 +246,7 @@ struct nvme_iod {
- 	unsigned int dma_len;	/* length of single DMA segment mapping */
- 	dma_addr_t first_dma;
- 	dma_addr_t meta_dma;
--	struct sg_table sgt;
-+	struct iod_dma_map *dma_map;
- 	union nvme_descriptor list[NVME_MAX_NR_ALLOCATIONS];
- };
- 
-@@ -521,6 +531,26 @@ static inline bool nvme_pci_use_sgls(struct nvme_dev *dev, struct request *req,
- 	return true;
- }
- 
-+static inline void nvme_dma_unlink_range(struct nvme_iod *iod)
-+{
-+	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-+	dma_addr_t addr;
-+	u16 len;
-+	u32 i;
-+
-+	if (iod->dma_map->use_iova) {
-+		dma_unlink_range(&iod->dma_map->state);
-+		return;
-+	}
-+
-+	for (i = 0; i < iod->dma_map->nr_dma_link_address; i++) {
-+		addr = iod->dma_map->dma_link_address[i];
-+		len = iod->dma_map->len[i];
-+		dma_unmap_page_attrs(iova->dev, addr, len,
-+				     iova->dir, iova->attrs);
-+	}
-+}
-+
- static void nvme_free_prps(struct nvme_dev *dev, struct request *req)
- {
- 	const int last_prp = NVME_CTRL_PAGE_SIZE / sizeof(__le64) - 1;
-@@ -547,9 +577,7 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 		return;
- 	}
- 
--	WARN_ON_ONCE(!iod->sgt.nents);
--
--	dma_unmap_sgtable(dev->dev, &iod->sgt, rq_dma_dir(req), 0);
-+	nvme_dma_unlink_range(iod);
- 
- 	if (iod->nr_allocations == 0)
- 		dma_pool_free(dev->prp_small_pool, iod->list[0].sg_list,
-@@ -559,21 +587,123 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 			      iod->first_dma);
- 	else
- 		nvme_free_prps(dev, req);
--	mempool_free(iod->sgt.sgl, dev->iod_mempool);
-+
-+	dma_free_iova(&iod->dma_map->iova);
-+	mempool_free(iod->dma_map, dev->iod_mempool);
- }
- 
--static void nvme_print_sgl(struct scatterlist *sgl, int nents)
-+static inline dma_addr_t nvme_dma_link_page(struct page *page,
-+					   unsigned int poffset,
-+					   unsigned int len,
-+					   struct nvme_iod *iod)
- {
--	int i;
--	struct scatterlist *sg;
-+	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-+	struct dma_iova_state *state = &iod->dma_map->state;
-+	dma_addr_t dma_addr;
-+	int ret;
-+
-+	if (iod->dma_map->use_iova) {
-+		phys_addr_t phys = page_to_phys(page) + poffset;
-+
-+		dma_addr = state->iova->addr + state->range_size;
-+		ret = dma_link_range(&iod->dma_map->state, phys, len);
-+		if (ret)
-+			return DMA_MAPPING_ERROR;
-+	} else {
-+		dma_addr = dma_map_page_attrs(iova->dev, page, poffset, len,
-+					      iova->dir, iova->attrs);
-+	}
-+	return dma_addr;
-+}
-+
-+static void nvme_pci_sgl_set_data(struct nvme_sgl_desc *sge,
-+				 dma_addr_t dma_addr,
-+				 unsigned int dma_len);
-+
-+static int __nvme_rq_dma_map(struct request *req, struct nvme_iod *iod,
-+		struct nvme_sgl_desc *sgl_list)
-+{
-+	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-+	struct req_iterator iter;
-+	struct bio_vec bv;
-+	int cnt = 0;
-+	dma_addr_t addr;
-+
-+	iod->dma_map->nr_dma_link_address = 0;
-+	rq_for_each_bvec(bv, req, iter) {
-+		unsigned nbytes = bv.bv_len;
-+		unsigned total = 0;
-+		unsigned offset, len;
-+
-+		if (bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
-+			addr = nvme_dma_link_page(bv.bv_page, bv.bv_offset,
-+						  bv.bv_len, iod);
-+			if (dma_mapping_error(iova->dev, addr)) {
-+				pr_err("dma_mapping_error %d\n",
-+					dma_mapping_error(iova->dev, addr));
-+				return -ENOMEM;
-+			}
-+
-+			iod->dma_map->dma_link_address[cnt] = addr;
-+			iod->dma_map->len[cnt] = bv.bv_len;
-+			iod->dma_map->nr_dma_link_address++;
-+
-+			if (sgl_list)
-+				nvme_pci_sgl_set_data(&sgl_list[cnt], addr,
-+						      bv.bv_len);
-+			cnt++;
-+			continue;
-+		}
-+		while (nbytes > 0) {
-+			struct page *page = bv.bv_page;
-+
-+			offset = bv.bv_offset + total;
-+			len = min(get_max_segment_size(&req->q->limits, page,
-+						       offset), nbytes);
-+
-+			page += (offset >> PAGE_SHIFT);
-+			offset &= ~PAGE_MASK;
-+
-+			addr = nvme_dma_link_page(page, offset, len, iod);
-+			if (dma_mapping_error(iova->dev, addr)) {
-+				pr_err("dma_mapping_error2 %d\n",
-+					dma_mapping_error(iova->dev, addr));
-+				return -ENOMEM;
-+			}
-+
-+			iod->dma_map->dma_link_address[cnt] = addr;
-+			iod->dma_map->len[cnt] = len;
-+			iod->dma_map->nr_dma_link_address++;
- 
--	for_each_sg(sgl, sg, nents, i) {
--		dma_addr_t phys = sg_phys(sg);
--		pr_warn("sg[%d] phys_addr:%pad offset:%d length:%d "
--			"dma_address:%pad dma_length:%d\n",
--			i, &phys, sg->offset, sg->length, &sg_dma_address(sg),
--			sg_dma_len(sg));
-+			if (sgl_list)
-+				nvme_pci_sgl_set_data(&sgl_list[cnt], addr, len);
-+
-+			total += len;
-+			nbytes -= len;
-+			cnt++;
-+		}
-+	}
-+	return cnt;
-+}
-+
-+static int nvme_rq_dma_map(struct request *req, struct nvme_iod *iod,
-+			   struct nvme_sgl_desc *sgl_list)
-+{
-+	int ret;
-+
-+	if (iod->dma_map->use_iova) {
-+		ret = dma_start_range(&iod->dma_map->state);
-+		if (ret) {
-+			pr_err("dma_start_dange_failed %d", ret);
-+			return ret;
-+		}
-+
-+		ret = __nvme_rq_dma_map(req, iod, sgl_list);
-+		dma_end_range(&iod->dma_map->state);
-+		return ret;
- 	}
-+
-+	return __nvme_rq_dma_map(req, iod, sgl_list);
- }
- 
- static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
-@@ -582,13 +712,23 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	struct dma_pool *pool;
- 	int length = blk_rq_payload_bytes(req);
--	struct scatterlist *sg = iod->sgt.sgl;
--	int dma_len = sg_dma_len(sg);
--	u64 dma_addr = sg_dma_address(sg);
--	int offset = dma_addr & (NVME_CTRL_PAGE_SIZE - 1);
-+	u16 dma_addr_cnt = 0;
-+	int dma_len;
-+	u64 dma_addr;
-+	int offset;
- 	__le64 *prp_list;
- 	dma_addr_t prp_dma;
- 	int nprps, i;
-+	int ret;
-+
-+	ret = nvme_rq_dma_map(req, iod, NULL);
-+	if (ret < 0)
-+		return errno_to_blk_status(ret);
-+
-+	dma_len = iod->dma_map->len[dma_addr_cnt];
-+	dma_addr = iod->dma_map->dma_link_address[dma_addr_cnt];
-+	offset = dma_addr & (NVME_CTRL_PAGE_SIZE - 1);
-+	dma_addr_cnt++;
- 
- 	length -= (NVME_CTRL_PAGE_SIZE - offset);
- 	if (length <= 0) {
-@@ -600,9 +740,9 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 	if (dma_len) {
- 		dma_addr += (NVME_CTRL_PAGE_SIZE - offset);
- 	} else {
--		sg = sg_next(sg);
--		dma_addr = sg_dma_address(sg);
--		dma_len = sg_dma_len(sg);
-+		dma_addr = iod->dma_map->dma_link_address[dma_addr_cnt];
-+		dma_len = iod->dma_map->len[dma_addr_cnt];
-+		dma_addr_cnt++;
- 	}
- 
- 	if (length <= NVME_CTRL_PAGE_SIZE) {
-@@ -646,31 +786,29 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 			break;
- 		if (dma_len > 0)
- 			continue;
--		if (unlikely(dma_len < 0))
--			goto bad_sgl;
--		sg = sg_next(sg);
--		dma_addr = sg_dma_address(sg);
--		dma_len = sg_dma_len(sg);
-+		if (dma_addr_cnt >= iod->dma_map->nr_dma_link_address)
-+			pr_err_ratelimited("dma_addr_cnt exceeded %u and %u\n",
-+					   dma_addr_cnt,
-+					   iod->dma_map->nr_dma_link_address);
-+		dma_addr = iod->dma_map->dma_link_address[dma_addr_cnt];
-+		dma_len = iod->dma_map->len[dma_addr_cnt];
-+		dma_addr_cnt++;
- 	}
- done:
--	cmnd->dptr.prp1 = cpu_to_le64(sg_dma_address(iod->sgt.sgl));
-+	cmnd->dptr.prp1 = cpu_to_le64(iod->dma_map->dma_link_address[0]);
- 	cmnd->dptr.prp2 = cpu_to_le64(iod->first_dma);
-+
- 	return BLK_STS_OK;
- free_prps:
- 	nvme_free_prps(dev, req);
- 	return BLK_STS_RESOURCE;
--bad_sgl:
--	WARN(DO_ONCE(nvme_print_sgl, iod->sgt.sgl, iod->sgt.nents),
--			"Invalid SGL for payload:%d nents:%d\n",
--			blk_rq_payload_bytes(req), iod->sgt.nents);
--	return BLK_STS_IOERR;
- }
- 
- static void nvme_pci_sgl_set_data(struct nvme_sgl_desc *sge,
--		struct scatterlist *sg)
-+		dma_addr_t dma_addr, unsigned int dma_len)
- {
--	sge->addr = cpu_to_le64(sg_dma_address(sg));
--	sge->length = cpu_to_le32(sg_dma_len(sg));
-+	sge->addr = cpu_to_le64(dma_addr);
-+	sge->length = cpu_to_le32(dma_len);
- 	sge->type = NVME_SGL_FMT_DATA_DESC << 4;
- }
- 
-@@ -685,22 +823,16 @@ static void nvme_pci_sgl_set_seg(struct nvme_sgl_desc *sge,
- static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
- 		struct request *req, struct nvme_rw_command *cmd)
- {
-+	unsigned int entries = blk_rq_nr_phys_segments(req);
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
--	struct dma_pool *pool;
- 	struct nvme_sgl_desc *sg_list;
--	struct scatterlist *sg = iod->sgt.sgl;
--	unsigned int entries = iod->sgt.nents;
-+	struct dma_pool *pool;
- 	dma_addr_t sgl_dma;
--	int i = 0;
-+	int ret;
- 
- 	/* setting the transfer type as SGL */
- 	cmd->flags = NVME_CMD_SGL_METABUF;
- 
--	if (entries == 1) {
--		nvme_pci_sgl_set_data(&cmd->dptr.sgl, sg);
--		return BLK_STS_OK;
--	}
--
- 	if (entries <= (256 / sizeof(struct nvme_sgl_desc))) {
- 		pool = dev->prp_small_pool;
- 		iod->nr_allocations = 0;
-@@ -718,12 +850,11 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
- 	iod->list[0].sg_list = sg_list;
- 	iod->first_dma = sgl_dma;
- 
--	nvme_pci_sgl_set_seg(&cmd->dptr.sgl, sgl_dma, entries);
--	do {
--		nvme_pci_sgl_set_data(&sg_list[i++], sg);
--		sg = sg_next(sg);
--	} while (--entries > 0);
-+	ret = nvme_rq_dma_map(req, iod, sg_list);
-+	if (ret < 0)
-+		return errno_to_blk_status(ret);
- 
-+	nvme_pci_sgl_set_seg(&cmd->dptr.sgl, sgl_dma, ret);
- 	return BLK_STS_OK;
- }
- 
-@@ -791,34 +922,47 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
- 	}
- 
- 	iod->dma_len = 0;
--	iod->sgt.sgl = mempool_alloc(dev->iod_mempool, GFP_ATOMIC);
--	if (!iod->sgt.sgl)
-+	iod->dma_map = mempool_alloc(dev->iod_mempool, GFP_ATOMIC);
-+	if (!iod->dma_map)
- 		return BLK_STS_RESOURCE;
--	sg_init_table(iod->sgt.sgl, blk_rq_nr_phys_segments(req));
--	iod->sgt.orig_nents = blk_rq_map_sg(req->q, req, iod->sgt.sgl);
--	if (!iod->sgt.orig_nents)
--		goto out_free_sg;
- 
--	rc = dma_map_sgtable(dev->dev, &iod->sgt, rq_dma_dir(req),
--			     DMA_ATTR_NO_WARN);
--	if (rc) {
--		if (rc == -EREMOTEIO)
--			ret = BLK_STS_TARGET;
--		goto out_free_sg;
--	}
-+	iod->dma_map->state.range_size = 0;
-+	iod->dma_map->iova.dev = dev->dev;
-+	iod->dma_map->iova.dir = rq_dma_dir(req);
-+	iod->dma_map->iova.attrs = DMA_ATTR_NO_WARN;
-+	iod->dma_map->iova.size = blk_rq_payload_bytes(req);
-+	if (!iod->dma_map->iova.size)
-+		goto free_iod_map;
-+
-+	rc = dma_alloc_iova(&iod->dma_map->iova);
-+	if (rc)
-+		goto free_iod_map;
-+
-+	/*
-+	 * Following call assumes that all the biovecs belongs to this request
-+	 * are of the same type.
-+	 */
-+	dma_get_memory_type(req->bio->bi_io_vec[0].bv_page,
-+			    &iod->dma_map->type);
-+	iod->dma_map->state.iova = &iod->dma_map->iova;
-+	iod->dma_map->state.type = &iod->dma_map->type;
-+
-+	iod->dma_map->use_iova =
-+		dma_can_use_iova(&iod->dma_map->state,
-+				 req->bio->bi_io_vec[0].bv_len);
- 
--	if (nvme_pci_use_sgls(dev, req, iod->sgt.nents))
-+	if (nvme_pci_use_sgls(dev, req, blk_rq_nr_phys_segments(req)))
- 		ret = nvme_pci_setup_sgls(dev, req, &cmnd->rw);
- 	else
- 		ret = nvme_pci_setup_prps(dev, req, &cmnd->rw);
- 	if (ret != BLK_STS_OK)
--		goto out_unmap_sg;
-+		goto free_iova;
- 	return BLK_STS_OK;
- 
--out_unmap_sg:
--	dma_unmap_sgtable(dev->dev, &iod->sgt, rq_dma_dir(req), 0);
--out_free_sg:
--	mempool_free(iod->sgt.sgl, dev->iod_mempool);
-+free_iova:
-+	dma_free_iova(&iod->dma_map->iova);
-+free_iod_map:
-+	mempool_free(iod->dma_map, dev->iod_mempool);
- 	return ret;
- }
- 
-@@ -842,7 +986,6 @@ static blk_status_t nvme_prep_rq(struct nvme_dev *dev, struct request *req)
- 
- 	iod->aborted = false;
- 	iod->nr_allocations = -1;
--	iod->sgt.nents = 0;
- 
- 	ret = nvme_setup_cmd(req->q->queuedata, req);
- 	if (ret)
-@@ -2670,7 +2813,7 @@ static void nvme_release_prp_pools(struct nvme_dev *dev)
- 
- static int nvme_pci_alloc_iod_mempool(struct nvme_dev *dev)
- {
--	size_t alloc_size = sizeof(struct scatterlist) * NVME_MAX_SEGS;
-+	size_t alloc_size = sizeof(struct iod_dma_map);
- 
- 	dev->iod_mempool = mempool_create_node(1,
- 			mempool_kmalloc, mempool_kfree,
--- 
-2.45.2
-
+>=20
+> A heads up: this patch causes conflict with Ofir's patch to move tests/nv=
+me/rc
+> helpers to common/nvme [*]. Depending on which comes first, Daniel or Ofi=
+r will
+> need patch rework.
+>=20
+> [*] https://lore.kernel.org/linux-block/20240624104620.2156041-2-ofir.gal=
+@volumez.com/
+>=20
+>=20
+> On Jun 27, 2024 / 11:10, Daniel Wagner wrote:
+> > Most of the NVMEeoF tests are exercising the host code of the nvme
+> > subsystem. There is no real reason not to run these against a real
+> > target. We just have to skip the soft target setup and make it possible
+> > to setup a remote target.
+> >=20
+> > Because all tests use now the common setup/cleanup helpers we just need
+> > to intercept this call and forward it to an external component.
+> >=20
+> > As we already have various nvme variables to setup the target which we
+> > should allow to overwrite. Also introduce a NVME_TARGET_CONTROL variabl=
+e
+> > which points to a script which gets executed whenever a targets needs t=
+o
+> > be created/destroyed.
+> >=20
+> > Signed-off-by: Daniel Wagner <dwagner@suse.de>
+>=20
+> Daniel, thanks for this v3 patch. Please find some comments in line.
+> I ran "make check" and observed some shellcheck warnings:
+>=20
+> $ make check
+> shellcheck -x -e SC2119 -f gcc check common/* \
+>         tests/*/rc tests/*/[0-9]*[0-9] src/*.sh
+> tests/nvme/rc:962:5: warning: eval negates the benefit of arrays. Drop ev=
+al to preserve whitespace/symbols (or eval as string). [SC2294]
+> tests/nvme/041:34:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/042:40:52: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/042:54:61: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/043:37:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/044:36:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/044:42:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/045:41:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/045:47:36: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/045:72:43: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/045:82:43: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/051:40:25: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+> tests/nvme/051:41:25: note: Double quote to prevent globbing and word spl=
+itting. [SC2086]
+>=20
+> > ---
+> >  Documentation/running-tests.md | 33 ++++++++++++++++++++
+> >  check                          |  4 +++
+> >  tests/nvme/rc                  | 57 ++++++++++++++++++++++++++++++++--
+> >  3 files changed, 92 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/Documentation/running-tests.md b/Documentation/running-tes=
+ts.md
+> > index 968702e76bb5..fe4f729bd037 100644
+> > --- a/Documentation/running-tests.md
+> > +++ b/Documentation/running-tests.md
+> > @@ -120,6 +120,9 @@ The NVMe tests can be additionally parameterized vi=
+a environment variables.
+> >  - NVME_NUM_ITER: 1000 (default)
+> >    The number of iterations a test should do. This parameter had an old=
+ name
+> >    'nvme_num_iter'. The old name is still usable, but not recommended.
+> > +- NVME_TARGET_CONTROL: When defined, the generic target setup/cleanup =
+code will
+> > +  be skipped and this script gets called. This makes it possible to ru=
+n
+> > +  the fabric nvme tests against a real target.
+> > =20
+> >  ### Running nvme-rdma and SRP tests
+> > =20
+> > @@ -167,3 +170,33 @@ if ! findmnt -t configfs /sys/kernel/config > /dev=
+/null; then
+> >  	mount -t configfs configfs /sys/kernel/config
+> >  fi
+> >  ```
+> > +### NVME_TARGET_CONTROL
+> > +
+> > +When NVME_TARGET_CONTROL is set, blktests will call the script which t=
+he
+> > +environment variable points to, to fetch the configuration values to b=
+e used for
+> > +the runs, e.g subsysnqn or hostnqn. This allows the blktest to be run =
+against
+> > +external configured/setup targets.
+> > +
+> > +The blktests expects that the script interface implements following
+> > +commands:
+> > +
+> > +config:
+> > +  --show-blkdev-type
+> > +  --show-trtype
+> > +  --show-hostnqn
+> > +  --show-hostid
+> > +  --show-host-traddr
+> > +  --show-traddr
+> > +  --show-trsvid
+> > +  --show-subsys-uuid
+> > +  --show-subsysnqn
+> > +
+> > +setup:
+> > +  --subsysnqn SUBSYSNQN
+> > +  --subsys-uuid SUBSYS_UUID
+> > +  --hostnqn HOSTNQN
+> > +  --ctrlkey CTRLKEY
+> > +  --hostkey HOSTKEY
+> > +
+> > +cleanup:
+> > +  --subsysnqn SUBSYSNQN
+>=20
+> Thanks. I think the NVME_TARGET_CONTROL script command line interface is =
+well
+> documented.
+>=20
+> > diff --git a/check b/check
+> > index 3ed4510f3f40..d0475629773d 100755
+> > --- a/check
+> > +++ b/check
+> > @@ -603,6 +603,10 @@ _run_group() {
+> >  	# shellcheck disable=3DSC1090
+> >  	. "tests/${group}/rc"
+> > =20
+> > +	if declare -fF group_setup >/dev/null; then
+> > +		group_setup
+> > +	fi
+>=20
+> This new hook adds some complexity, but I can not think of better way. So=
+, I
+> agree to add this hook.
+>=20
+> > +
+> >  	if declare -fF group_requires >/dev/null; then
+> >  		group_requires
+> >  		if [[ -v SKIP_REASONS ]]; then
+> > diff --git a/tests/nvme/rc b/tests/nvme/rc
+> > index c1ddf412033b..4465dea0370b 100644
+> > --- a/tests/nvme/rc
+> > +++ b/tests/nvme/rc
+> > @@ -23,6 +23,7 @@ _check_conflict_and_set_default NVME_IMG_SIZE nvme_im=
+g_size 1G
+> >  _check_conflict_and_set_default NVME_NUM_ITER nvme_num_iter 1000
+> >  nvmet_blkdev_type=3D${nvmet_blkdev_type:-"device"}
+> >  NVMET_BLKDEV_TYPES=3D${NVMET_BLKDEV_TYPES:-"device file"}
+> > +nvme_target_control=3D"${NVME_TARGET_CONTROL:-}"
+> > =20
+> >  _NVMET_TRTYPES_is_valid() {
+> >  	local type
+> > @@ -135,6 +136,13 @@ _nvme_requires() {
+> >  	return 0
+> >  }
+> > =20
+> > +group_setup() {
+> > +	if [[ -n "${nvme_target_control}" ]]; then
+> > +		NVMET_TRTYPES=3D"$(${nvme_target_control} config --show-trtype)"
+> > +		NVMET_BLKDEV_TYPES=3D"$(${nvme_target_control} config --show-blkdev-=
+type)"
+> > +	fi
+> > +}
+> > +
+> >  group_requires() {
+> >  	_have_root
+> >  	_NVMET_TRTYPES_is_valid
+> > @@ -359,6 +367,10 @@ _cleanup_nvmet() {
+> >  		fi
+> >  	done
+> > =20
+> > +	if [[ -n "${nvme_target_control}" ]]; then
+> > +		return
+> > +	fi
+> > +
+> >  	for port in "${NVMET_CFS}"/ports/*; do
+> >  		name=3D$(basename "${port}")
+> >  		echo "WARNING: Test did not clean up port: ${name}"
+> > @@ -403,11 +415,26 @@ _cleanup_nvmet() {
+> > =20
+> >  _setup_nvmet() {
+> >  	_register_test_cleanup _cleanup_nvmet
+> > +
+> > +	if [[ -n "${nvme_target_control}" ]]; then
+> > +		def_hostnqn=3D"$(${nvme_target_control} config --show-hostnqn)"
+> > +		def_hostid=3D"$(${nvme_target_control} config --show-hostid)"
+> > +		def_host_traddr=3D"$(${nvme_target_control} config --show-host-tradd=
+r)"
+> > +		def_traddr=3D"$(${nvme_target_control} config --show-traddr)"
+> > +		def_trsvcid=3D"$(${nvme_target_control} config --show-trsvid)"
+> > +		def_subsys_uuid=3D"$(${nvme_target_control} config --show-subsys-uui=
+d)"
+> > +		def_subsysnqn=3D"$(${nvme_target_control} config --show-subsysnqn)"
+>=20
+> I guess that the lines above caused unpredictable values in $def_*, then
+> caused many of the shellcheck warnings in tests/nvme/*. I'm afraid that a=
+nother
+> commit will be required to modify tests/nvme/* and address the warnings.
+>=20
+> > +		return
+> > +	fi
+> > +
+> >  	modprobe -q nvmet
+> > +
+> >  	if [[ "${nvme_trtype}" !=3D "loop" ]]; then
+> >  		modprobe -q nvmet-"${nvme_trtype}"
+> >  	fi
+> > +
+> >  	modprobe -q nvme-"${nvme_trtype}"
+> > +
+> >  	if [[ "${nvme_trtype}" =3D=3D "rdma" ]]; then
+> >  		start_soft_rdma
+> >  		for i in $(rdma_network_interfaces)
+> > @@ -425,6 +452,7 @@ _setup_nvmet() {
+> >  			fi
+> >  		done
+> >  	fi
+> > +
+> >  	if [[ "${nvme_trtype}" =3D "fc" ]]; then
+> >  		modprobe -q nvme-fcloop
+> >  		_setup_fcloop "${def_local_wwnn}" "${def_local_wwpn}" \
+> > @@ -873,11 +901,13 @@ _find_nvme_passthru_loop_dev() {
+> > =20
+> >  _nvmet_target_setup() {
+> >  	local blkdev_type=3D"${nvmet_blkdev_type}"
+> > +	local subsys_uuid=3D"${def_subsys_uuid}"
+> > +	local subsysnqn=3D"${def_subsysnqn}"
+> >  	local blkdev
+> > +	local ARGS=3D()
+> >  	local ctrlkey=3D""
+> >  	local hostkey=3D""
+> > -	local subsysnqn=3D"${def_subsysnqn}"
+> > -	local subsys_uuid=3D"${def_subsys_uuid}"
+> > +	local blkdev
+> >  	local port
+> > =20
+> >  	while [[ $# -gt 0 ]]; do
+> > @@ -909,6 +939,22 @@ _nvmet_target_setup() {
+> >  		esac
+> >  	done
+> > =20
+> > +	if [[ -n "${hostkey}" ]]; then
+> > +		ARGS+=3D(--hostkey "${hostkey}")
+> > +	fi
+> > +	if [[ -n "${ctrlkey}" ]]; then
+> > +		ARGS+=3D(--ctrkey "${ctrlkey}")
+> > +	fi
+> > +
+> > +	if [[ -n "${nvme_target_control}" ]]; then
+> > +		eval "${nvme_target_control}" setup \
+> > +			--subsysnqn "${subsysnqn}" \
+> > +			--subsys-uuid "${subsys_uuid}" \
+> > +			--hostnqn "${def_hostnqn}" \
+> > +			"${ARGS[@]}" &> /dev/null
+>=20
+> I suggest to replaces ${ARGS[@]} with ${ARGS[*]}. It avoids one of the
+> shellcheck warnings, hopefully.
+>=20
+> > +		return
+> > +	fi
+> > +
+> >  	truncate -s "${NVME_IMG_SIZE}" "$(_nvme_def_file_path)"
+> >  	if [[ "${blkdev_type}" =3D=3D "device" ]]; then
+> >  		blkdev=3D"$(losetup -f --show "$(_nvme_def_file_path)")"
+> > @@ -948,6 +994,13 @@ _nvmet_target_cleanup() {
+> >  		esac
+> >  	done
+> > =20
+> > +	if [[ -n "${nvme_target_control}" ]]; then
+> > +		eval "${nvme_target_control}" cleanup \
+> > +			--subsysnqn "${subsysnqn}" \
+> > +			> /dev/null
+> > +		return
+> > +	fi
+> > +
+> >  	_get_nvmet_ports "${subsysnqn}" ports
+> > =20
+> >  	for port in "${ports[@]}"; do
+> > --=20
+> > 2.45.2
+> > =
 
