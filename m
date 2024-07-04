@@ -1,101 +1,110 @@
-Return-Path: <linux-block+bounces-9723-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9729-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C55829270E1
-	for <lists+linux-block@lfdr.de>; Thu,  4 Jul 2024 09:49:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34525927134
+	for <lists+linux-block@lfdr.de>; Thu,  4 Jul 2024 10:06:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E00C1F2326D
-	for <lists+linux-block@lfdr.de>; Thu,  4 Jul 2024 07:49:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD2D22811D6
+	for <lists+linux-block@lfdr.de>; Thu,  4 Jul 2024 08:06:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5EBA1A2FCB;
-	Thu,  4 Jul 2024 07:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8637C1A38F5;
+	Thu,  4 Jul 2024 08:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="i1VvMj/h"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A796D1A0B07;
-	Thu,  4 Jul 2024 07:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DB310A35
+	for <linux-block@vger.kernel.org>; Thu,  4 Jul 2024 08:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720079345; cv=none; b=AGs7ij/xR1djEhQQQCowh8ylEdHuJSNbEczNx2cqBAdVZDeaV89Qflgv5KZE7eLWfwBuMez0Q64gJnOfUvoxlm9QuZ9OjlKBlQyE1928IHPOREC5ugccTeEHTobqIE5azA30KrIxPkXBW4hLNE+hxtdAnnn1V/9/fva7JAdqscM=
+	t=1720080406; cv=none; b=J/4arao548GZPwxLYxO4W1vzti2YhoXOXmkcdR1M32znXDH9SWrYgtF4kXOaMsv7Qn0GOa73wD0Totua6jiL22JmFESoX7bUbVj1JRHx4PtdJ1iXTt23OAezTjsuckqceAV8h4b9lu1ENXbDKFe8OzND6OGWVMeBsc5WEYffl68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720079345; c=relaxed/simple;
-	bh=FXyIm8BUSs84k8MRehwyXAfw5xJzi4jT6joRNBHNI+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+WhsXfcNXzm1hi5OwIu/A4uoYih80ee3L42dPuBnnEHTZTucpMyo+8y+8RK3RN+HqQz/gXlbxKbwXIlmDFbPFUpi7Z99B3aQRNW9GQ/kwtHoVI//JMXSyRWJCZDuHFx5WekoM17nrHi5MtZ4PxkvtY6lzpr5V0mcmYZwJr38xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 52B5468AA6; Thu,  4 Jul 2024 09:48:56 +0200 (CEST)
-Date: Thu, 4 Jul 2024 09:48:56 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, "Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240704074855.GA26913@lst.de>
-References: <cover.1719909395.git.leon@kernel.org> <20240703054238.GA25366@lst.de> <20240703105253.GA95824@unreal> <20240703143530.GA30857@lst.de> <20240703155114.GB95824@unreal>
+	s=arc-20240116; t=1720080406; c=relaxed/simple;
+	bh=5RGo4lFFt71IQiI1TCTzj0DbowR4sXdnqx/JKtHgaVU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=B/ny5h6zNNqRmRCjHnKv9RH3/vhg/MF5Pt4YSKcw6ineMjRMEW8ATW9JkjZukc1xW9Kvyl0Q3KoG1VuLSeZQJPTIcG8iWqsMzUTxDFZmHH8RGTg1tnSf3T1iSH5eKZ7klFIVfrxGt9GpHwtS1Lu158Zq850DqnxyacVLgyKS2oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=i1VvMj/h; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a77b04d7462so901666b.1
+        for <linux-block@vger.kernel.org>; Thu, 04 Jul 2024 01:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1720080400; x=1720685200; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=InmbeL6o9ojNvDEesFGoWnpa2QxtU5BGWJEJVmI7xik=;
+        b=i1VvMj/hmduQQJeDTi4fJVESMS9k8SxbbvwcrH+FwA3SFrRqofGqGGVChdpCA5xbxm
+         kNisMwZMfF3x2Yma6HGnZYLS+BmcwTbeC6TChzrYafbegmLuWycPd0SVLVEPgobsJ0Ei
+         RalWCkwMERDTROScozg5lOUts/wcHRDVmzxx0ySpLoF3EUt7MpelDcyhzQQhj4d+Goxf
+         2Kv5fj7c6B1n6U1XLtxdF7W/yTctqIveJfXiNFZ9oPMzQPOIh5KToRM6Qwr6YHNDMbfl
+         qyBxIGVkkknd/pTXKAuhPjHqkn/kQuZp6YahHqt0HkLgutvWsaNMYdMZC0iPUDHNuSNU
+         z12A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720080400; x=1720685200;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=InmbeL6o9ojNvDEesFGoWnpa2QxtU5BGWJEJVmI7xik=;
+        b=AeFk5wq24rn9xgeUJEkfqFJDErxIAO0q8EaLcB/SsWDoD/lVbmLwzA+qPvlt2Zq/Jd
+         XvkbDoAGTYQMFJ69ZTe+pfyPVILSDrqWP4s24fVt2a+z/+h7o1y3v145hgE2AW9x2fE/
+         Uhv/ims6JMzuDiwkm0mHuA2DUm8wwQoZ2FVWHxS7+N92KaIolmjEXC6wOTpvlpXe/eKK
+         K9dlX2p/3YuCjsrRi0IAYO6CtCoFqOK0nlscV5adJfIZfsrjjOulUOA+B1WvybFEg3aj
+         FWteYdxl9FeX4G/bC/+b4LmSRVca0uPx3snEYIyOBrlU9Eygg9HK7Ik4a+G45DwKefRI
+         A+hw==
+X-Gm-Message-State: AOJu0Yx51qk955qDYnFvi33mRBtnAI4nOPHW1C+Dc53Yuy8hrBdvV8vL
+	bxdoKvKEuTqE4kZGY0gHZ6tJpBDw5ttzUZlw2I9ZKAx3umfOUEeTKZbCe2lzE8c=
+X-Google-Smtp-Source: AGHT+IEikPiS6rm2p4onuOe+CWtSJY5et+xuqoKVJxbc5RfYthJU32LCfyvFGIgQXNr2/jrFej+yGg==
+X-Received: by 2002:a17:906:f106:b0:a6f:b940:f4 with SMTP id a640c23a62f3a-a77ba706962mr50916066b.3.1720080400128;
+        Thu, 04 Jul 2024 01:06:40 -0700 (PDT)
+Received: from [127.0.0.1] ([77.241.229.232])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a752d528ee5sm299311766b.212.2024.07.04.01.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 01:06:39 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: hch@lst.de, martin.petersen@oracle.com, 
+ Kanchan Joshi <joshi.k@samsung.com>
+Cc: linux-block@vger.kernel.org, Anuj Gupta <anuj20.g@samsung.com>
+In-Reply-To: <20240704061515.282343-1-joshi.k@samsung.com>
+References: <CGME20240704062234epcas5p1dd4ae6e7c91555b9573418d618086c1e@epcas5p1.samsung.com>
+ <20240704061515.282343-1-joshi.k@samsung.com>
+Subject: Re: [PATCH] block: t10-pi: Return correct ref tag when queue has
+ no integrity profile
+Message-Id: <172008039893.235003.9202296408224313061.b4-ty@kernel.dk>
+Date: Thu, 04 Jul 2024 02:06:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703155114.GB95824@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-
-On Wed, Jul 03, 2024 at 06:51:14PM +0300, Leon Romanovsky wrote:
-> If we put aside this issue, do you think that the proposed API is the right one?
-
-I haven't look at it in detail yet, but from a quick look there is a
-few things to note:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
 
 
-1) The amount of code needed in nvme worries me a bit.  Now NVMe a messy
-driver due to the stupid PRPs vs just using SGLs, but needing a fair
-amount of extra boilerplate code in drivers is a bit of a warning sign.
-I plan to look into this to see if I can help on improving it, but for
-that I need a working version first.
+On Thu, 04 Jul 2024 11:45:15 +0530, Kanchan Joshi wrote:
+> Commit <c6e56cf6b2e7> (block: move integrity information into
+> queue_limits) changed the ref tag calculation logic. It would break if
+> there is no integrity profile. This in turn causes read/write failures
+> for such cases.
+> 
+> 
+
+Applied, thanks!
+
+[1/1] block: t10-pi: Return correct ref tag when queue has no integrity profile
+      commit: 162e06871e6dcde861ef608e0c00a8b6a2d35d43
+
+Best regards,
+-- 
+Jens Axboe
 
 
-2) The amount of seemingly unrelated global headers pulled into other
-global headers.  Some of this might just be sloppiness, e.g. I can't
-see why dma-mapping.h would actually need iommu.h to start with,
-but pci.h in dma-map-ops.h is a no-go.
-
-3) which brings me to real layering violations.  dev_is_untrusted and
-dev_use_swiotlb are DMA API internals, no way I'd ever want to expose
-them. dma-map-ops.h is a semi-internal header only for implementations
-of the dma ops (as very clearly documented at the top of that file),
-it must not be included by drivers.  Same for swiotlb.h.
-
-Not quite as concerning, but doing an indirect call for each map
-through dma_map_ops in addition to the iommu ops is not every efficient.
-We've through for a while to allow direct calls to dma-iommu similar
-how we do direct calls to dma-direct from the core mapping.c code.
-This might be a good time to do that as a prep step for this work.
 
 
