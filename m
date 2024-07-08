@@ -1,153 +1,133 @@
-Return-Path: <linux-block+bounces-9851-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-9853-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 580E092A7A0
-	for <lists+linux-block@lfdr.de>; Mon,  8 Jul 2024 18:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 479B892A924
+	for <lists+linux-block@lfdr.de>; Mon,  8 Jul 2024 20:46:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C3341F2161E
-	for <lists+linux-block@lfdr.de>; Mon,  8 Jul 2024 16:52:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F05AD1F21B2C
+	for <lists+linux-block@lfdr.de>; Mon,  8 Jul 2024 18:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1281F146586;
-	Mon,  8 Jul 2024 16:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C171482E6;
+	Mon,  8 Jul 2024 18:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P+TUbkpO"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="myuGue4s"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64067147C7F
-	for <linux-block@vger.kernel.org>; Mon,  8 Jul 2024 16:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD3617C9E;
+	Mon,  8 Jul 2024 18:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720457562; cv=none; b=p/4vu8/iVV6Ql3zt5zZxFEHgknw8Dls5FTlJx6VAhah0x4OOdW00h0ytz3Ld2uHaeKkavnz7dUvrGJbp7wS/90sTTxY+oh5QkVXkR49xEMhjCchnvk1wczd7GYrVqGevpp/V9TNqGXrvSATLhFni709b9RGphjs+jd6PzEeSurQ=
+	t=1720464387; cv=none; b=EmXMiazvq6oc4GvWxVeD/26XnPn8F+hOf7786DPe3kf4tQN8FPexHtrE/VevUZ0US3oHsFwWMTmBzktHBWN8aLm0wURyNjbGMtnAzh6lvrjEwwWH8Lb1doJ5AbKOg5tpadhoCo6Gpxwm3INVCZtZKzKziy8k+J5aP3V9IsXsPd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720457562; c=relaxed/simple;
-	bh=1B5tJgkSM04kGIIt7Bd4CwyiBDyOxIVq095mpakxwCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9M1G4J4tWDPpVc+cvbRLLG8GjOKEjrvEDyczIIfkV+eEuVcXK+UmWTznHxoOiEZdUoTNHlW0hyp0PD84IQESZ7QqeMPSVgRDETIAX4eJJkhORiWMNHmPH3ad/7FcTtJbjDrUeTa5aaNFKacI3kzi2p7ETOg09bIQuPOkBfeWiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=P+TUbkpO; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-444fdb6c1cfso27632581cf.3
-        for <linux-block@vger.kernel.org>; Mon, 08 Jul 2024 09:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1720457559; x=1721062359; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=44iLSgmAA8Jj5OzeQp5q3uGTMuRJb4ek81IJRNbfP50=;
-        b=P+TUbkpOGqpFLTWb4t5NSUvguJ5/6rVKfyrEcU8M/gVD35r280+g1ipvBHqy4Ujl89
-         4BSnWWR1YvaygNAqn4Ow6KuQclsaKNZLcCNhj3cCkaDjZtDd+UmOiH4NWHVUH+68msas
-         M1GFdT4yQHwcmbdKWavJjZJNCX5zEFCR9jqzxxoNB7ibBJqOQn8nhJRqWfq3XCjOQMPa
-         2esubhBzgBcBXIUSdSvYYkXotdxLTl37i654frtw9D1Y6CsM1HQLdgLWFZi9zwgIKx14
-         kfqe8LNIY3cwxvPKoDhXEHc9ekKXEy+9xugONCBQ+fbE0zdKmpvXn7PxxvQgEtxCmgjV
-         bzRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720457559; x=1721062359;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=44iLSgmAA8Jj5OzeQp5q3uGTMuRJb4ek81IJRNbfP50=;
-        b=l8Oym5h8We/VcUwmltan2rL+0ZTpFug0Rwbdjhr4Dyj5NIKT2BXDh8LKF1AcMTfNev
-         Z7u4KqBuWkFrjf9y7VKZr1FyLq/ixVrEZoxt02Gsrasl+vdjFpmNQCOmpAkrNlBanzYc
-         uMOlxX5pZN5xuntQ9KCg9Wpx/4g888hpmo7CS//RskVUzFvAuRAvJ6QemKoWZ0q3IsTI
-         AQ7k6qF2rGR5HtIPrSAqLEzbSpJHZhc53k0Fn7lmQTHakSGP1roWPLSRF1xnqTobgvNv
-         YSmIo4lzVFvIfa29OPfeYeM1aEY55HAx0JJJQaRE/1JFBbstpgz2LDKDqUe6kAQ5s96M
-         Rw0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWmvnonRExOcfzjUzXgaWcwnWqu9nmRWACmHQraXW/c3yddKMP0h7aRWaL8v4IIFznztepGhu/ELKkLgCqbIlpNhKr4BZrijXicKK0=
-X-Gm-Message-State: AOJu0YxiXXQNCgparVSD78vQmVhqgadfv9iAMkgMQN1PZbA4V5LbKfOL
-	27RHqufVP5p0MKvaXc5cXxKCiimLiCiEVHJxlrk7VOdJwbo8PKuiL/OfoNqR9jk=
-X-Google-Smtp-Source: AGHT+IHmTDKEE4X7UqSrEePQ2yW2AFHAIlc2Xn5bxdXHYF1pSNmcIuJQ4brop8xp0q/dd20hJkGD6Q==
-X-Received: by 2002:ac8:58c6:0:b0:447:e532:b370 with SMTP id d75a77b69052e-447fa8aefa5mr156831cf.10.1720457559408;
-        Mon, 08 Jul 2024 09:52:39 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9b40389sm1202611cf.36.2024.07.08.09.52.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 09:52:38 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sQrbS-000Uky-FO;
-	Mon, 08 Jul 2024 13:52:38 -0300
-Date: Mon, 8 Jul 2024 13:52:38 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240708165238.GE14050@ziepe.ca>
-References: <cover.1719909395.git.leon@kernel.org>
- <20240703054238.GA25366@lst.de>
- <20240703105253.GA95824@unreal>
- <20240703143530.GA30857@lst.de>
- <20240703155114.GB95824@unreal>
- <20240704074855.GA26913@lst.de>
+	s=arc-20240116; t=1720464387; c=relaxed/simple;
+	bh=qhKBayIAPavSMW75aEM3zJFBTq4j3VWijVeLsHFc6bE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mF5exyT8mYmQbb0TdjpYY/jf24gwpWdJvmyS5bqC4KvY+JZW+hh19xat7C0lurpmohjA0xZpUCJIA3atDcugCmRofY3p8hpnx3eC3FlLynHIEK7Fddi9buEbTp9xnxFh0g7OVoznFFdYTew3xV37Vo+V81h+h/F2QivG3YqASu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=myuGue4s; arc=none smtp.client-ip=193.252.22.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id QsprsV0CzZLaOQspssvWtF; Mon, 08 Jul 2024 20:11:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720462296;
+	bh=krSibVlXs2Xtz/4LEWDf2JDpcRVHt1a2jYVqAJYebcs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=myuGue4s1pukqR07LJDpCxc11AGXJ4/MLDGGJ/h9rppxkYq/auADyRTiP42xlwiVo
+	 NjvawSS23pOqRM4r0jwEn71PnICPoL9r1H3MYNm5DgtLJO/QZ1cUSepN0wb85FYafp
+	 0ACf17Rtk15N4iWRE3w+x6uvcWPkfy7urwBe/JEIq0dkBh3fiuy2IDgFWT8i3KDrt7
+	 yUjxGM0taYXeZLyX8cyecR9CEiISmAf8CveSqqwBLkrDn/p+M/fi9Lc9wfFLi5F627
+	 MYkNPFG6gQZjSKmqhjPNa/TBnHJ9Sq76K1NNLuacKQfwnQXwapHSi8G2DFY+Afb+NW
+	 dDrAYKK1AUecQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 08 Jul 2024 20:11:36 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Jack Wang <jinpu.wang@ionos.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-block@vger.kernel.org
+Subject: [PATCH] block/rnbd: Constify struct kobj_type
+Date: Mon,  8 Jul 2024 20:11:30 +0200
+Message-ID: <e3d454173ffad30726c9351810d3aa7b75122711.1720462252.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704074855.GA26913@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 04, 2024 at 09:48:56AM +0200, Christoph Hellwig wrote:
+'struct kobj_type' is not modified in this driver. It is only used with
+kobject_init_and_add() which takes a "const struct kobj_type *" parameter.
 
-> 1) The amount of code needed in nvme worries me a bit.  Now NVMe a messy
-> driver due to the stupid PRPs vs just using SGLs, but needing a fair
-> amount of extra boilerplate code in drivers is a bit of a warning sign.
-> I plan to look into this to see if I can help on improving it, but for
-> that I need a working version first.
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-It would be nice to have less.  So much now depends on the caller to
-provide both the input and output data structure.
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   4082	    792	      8	   4882	   1312	drivers/block/rnbd/rnbd-srv-sysfs.o
 
-Ideally we'd have some template code that consolidates these loops to
-common code with driver provided hooks - there are a few ways to get
-that efficiently in C.
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   4210	    672	      8	   4890	   131a	drivers/block/rnbd/rnbd-srv-sysfs.o
 
-I think it will be clearer when we get to RDMA and there we have the
-same SGL/PRP kind of split up and we can see what is sharable.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only
+---
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 2 +-
+ drivers/block/rnbd/rnbd-srv-sysfs.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> Not quite as concerning, but doing an indirect call for each map
-> through dma_map_ops in addition to the iommu ops is not every
-> efficient.
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index 39887556cf95..6ea7c12e3a87 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -475,7 +475,7 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
+ 	}
+ }
+ 
+-static struct kobj_type rnbd_dev_ktype = {
++static const struct kobj_type rnbd_dev_ktype = {
+ 	.sysfs_ops      = &kobj_sysfs_ops,
+ 	.default_groups = rnbd_dev_groups,
+ };
+diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
+index cba6ba43c2c2..64780094442c 100644
+--- a/drivers/block/rnbd/rnbd-srv-sysfs.c
++++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
+@@ -33,7 +33,7 @@ static void rnbd_srv_dev_release(struct kobject *kobj)
+ 	kfree(dev);
+ }
+ 
+-static struct kobj_type dev_ktype = {
++static const struct kobj_type dev_ktype = {
+ 	.sysfs_ops = &kobj_sysfs_ops,
+ 	.release = rnbd_srv_dev_release
+ };
+@@ -184,7 +184,7 @@ static void rnbd_srv_sess_dev_release(struct kobject *kobj)
+ 	rnbd_destroy_sess_dev(sess_dev, sess_dev->keep_id);
+ }
+ 
+-static struct kobj_type rnbd_srv_sess_dev_ktype = {
++static const struct kobj_type rnbd_srv_sess_dev_ktype = {
+ 	.sysfs_ops	= &kobj_sysfs_ops,
+ 	.release	= rnbd_srv_sess_dev_release,
+ };
+-- 
+2.45.2
 
-Yeah, there is no reason to support anything other than dma-iommu.c
-for the iommu path, so the dma_map_op indirection for this could just
-be removed.
-
-I'm also cooking something that should let us build a way to iommu map
-a bio_vec very efficiently, which should transform this into a single
-indirect call into the iommu driver per bio_vec, and a single radix
-walk/etc.
-
-> We've through for a while to allow direct calls to dma-iommu similar
-> how we do direct calls to dma-direct from the core mapping.c code.
-> This might be a good time to do that as a prep step for this work.
-
-I think there is room to benchmark and further improve these
-paths. Even the fast direct map path is not compiling down to a single
-load/store instruction per bio_vec entry as would be ideal.
-
-Jason
 
