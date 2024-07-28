@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-10215-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10216-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA2C793E1DF
-	for <lists+linux-block@lfdr.de>; Sun, 28 Jul 2024 02:53:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEEA593E1F5
+	for <lists+linux-block@lfdr.de>; Sun, 28 Jul 2024 02:55:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC3101C20DA6
-	for <lists+linux-block@lfdr.de>; Sun, 28 Jul 2024 00:53:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2267AB21FC7
+	for <lists+linux-block@lfdr.de>; Sun, 28 Jul 2024 00:55:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7417C13B;
-	Sun, 28 Jul 2024 00:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55B113C8F0;
+	Sun, 28 Jul 2024 00:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POIQAdT4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbLCZgVK"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF4C7E56B;
-	Sun, 28 Jul 2024 00:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA9A13C676;
+	Sun, 28 Jul 2024 00:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722127706; cv=none; b=tC2W6UBXSOs5wf1KXm2V4v/z50QsR8qvyOPDZY0vXOorlDMiLalUPGkVLcUfuZzYYMV1vcT8DmG4ki/wsRsml5tHi/V3qalVjLPDa8qUSqAga3GSp/zJqbIUYPwS+jo9e/9j2AilMJyM9S+yuuP2Y6GEEZouuMuET/7tBaTir0U=
+	t=1722127723; cv=none; b=oXu0UbjfAxVMRqItch7k2GZc0nyEOHN+kvUdz/E5JpVA0cFOgpz1j3R9a6qtEIUr7vh/a9LpsN/gb2YtJ/bAdQZwFQN6lYihRrCMcebCpobj7RbPsbKwDH561eLbmkltp0Atlx7qFGMgap8TmeRURVv/9Xryjhd0rhS4mAIvSmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722127706; c=relaxed/simple;
-	bh=cCrF0eILIbTULWrteyOh0RqBozS/DkpMy1BxsHTqIv4=;
+	s=arc-20240116; t=1722127723; c=relaxed/simple;
+	bh=OP4Jz20guFdytwqiSyJYMbytLrEavIFQ99UdbvUPhO0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l0zg3eRy/u00I2iEcvyog8EAbfGkEqpi4mxNH5AQFHX9Y5Kl1POwaPcUOYkLT84y+iCEhbtlKTiNHVDCTy1c5wtYHkDT+N60QlXY0gGE5PCfhqExlqKNzhjU2df1h7zKRsRY1BUHw8whu9C63KYMD6FRWdVs6V+Yq/aKFJu3sCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POIQAdT4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB893C4AF0F;
-	Sun, 28 Jul 2024 00:48:24 +0000 (UTC)
+	 MIME-Version; b=C9i7BOOPxWW8IRgjl5UdkLe/HwNANjlMjqUrp6tgkK4q4s9GPU1ygjTr5gX+i8B7pY/NagREd9/vM7gYHWn8Za78vtoZh86eafhHKELlAThwSV9YoE08yveL0pOZx2ikNJgH0B2JXbXEA/lQvyDFRnfbV+yTFKxEnYiDexaEIIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbLCZgVK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6DA8C4AF0F;
+	Sun, 28 Jul 2024 00:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722127706;
-	bh=cCrF0eILIbTULWrteyOh0RqBozS/DkpMy1BxsHTqIv4=;
+	s=k20201202; t=1722127723;
+	bh=OP4Jz20guFdytwqiSyJYMbytLrEavIFQ99UdbvUPhO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=POIQAdT43Biw89AifVJcWKTqu6bM68+H6X17bAY1pCZSpkzKDUm7W8z52K/3dcJ1n
-	 P9k43RqJTMDmZRKT987tO+hfvWitcsBatIbbfG3Fy/an9+V6ImClGVkLiVO5whNND1
-	 cLnlMpYITSnRF3C+90HHwYT8F9i3rPmGlSJV2PluH/jNxvfSTMWCkxJ7Umn7g4VDGX
-	 1rsQ57DOp6KfhfUuxhLiszVRxgM7LBMt1l81i+VMdNFXvhVxHxciQUHtymH30AtKyo
-	 820o8DhgFZBtY1a1uwyAwcPaPstM9Idcc8R8ATYPdGe3/DsbTCPZSUjwn0Lur4EVdx
-	 iCxjK/ji2pz7g==
+	b=VbLCZgVKQvHzZPnEULyKfkMXvccc5miJWxFgPRQ3/STLpGvlmN8zzUSi9xcYDlLPB
+	 q1SGP3MNZIT+yJ1zBxEhWZX+YPaUZhUQAkNWA95OaROmTcU/yNCagy95+fDwdFPwtr
+	 UQM6UROVNOogF+HA3avYdD1kRHo5t5tPVVgy2EmNiV2Y6++fRyqzm+BEOangIG3t57
+	 3F36fL8oGtA1hzAmcKQTGnSXo89zQgELfpZ9XlFxSYArt6i/SW084Jgl97ode8+T6D
+	 5ASL7S+9N5ruo2kDbVig7sjckR0QahbYARbT1JR7L4yATWT1oNYpFnUP9N+VtFckbu
+	 hnMlJUdvlX3rA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -54,12 +54,12 @@ Cc: Mikulas Patocka <mpatocka@redhat.com>,
 	sagi@grimberg.me,
 	linux-nvme@lists.infradead.org,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 7/9] block: change rq_integrity_vec to respect the iterator
-Date: Sat, 27 Jul 2024 20:48:08 -0400
-Message-ID: <20240728004812.1701139-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 6/8] block: change rq_integrity_vec to respect the iterator
+Date: Sat, 27 Jul 2024 20:48:28 -0400
+Message-ID: <20240728004831.1702511-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240728004812.1701139-1-sashal@kernel.org>
-References: <20240728004812.1701139-1-sashal@kernel.org>
+In-Reply-To: <20240728004831.1702511-1-sashal@kernel.org>
+References: <20240728004831.1702511-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.43
+X-stable-base: Linux 6.1.102
 Content-Transfer-Encoding: 8bit
 
 From: Mikulas Patocka <mpatocka@redhat.com>
@@ -111,10 +111,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 710fd4d862520..c2f53267cb8c3 100644
+index 32e89ea853a47..21712063cbd5a 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -826,9 +826,9 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
+@@ -873,9 +873,9 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
  		struct nvme_command *cmnd)
  {
  	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
@@ -126,7 +126,7 @@ index 710fd4d862520..c2f53267cb8c3 100644
  	if (dma_mapping_error(dev->dev, iod->meta_dma))
  		return BLK_STS_IOERR;
  	cmnd->rw.metadata = cpu_to_le64(iod->meta_dma);
-@@ -968,7 +968,7 @@ static __always_inline void nvme_pci_unmap_rq(struct request *req)
+@@ -1015,7 +1015,7 @@ static __always_inline void nvme_pci_unmap_rq(struct request *req)
  	        struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
  
  		dma_unmap_page(dev->dev, iod->meta_dma,
