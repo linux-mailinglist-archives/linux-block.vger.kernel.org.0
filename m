@@ -1,247 +1,121 @@
-Return-Path: <linux-block+bounces-10227-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10230-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D4694115B
-	for <lists+linux-block@lfdr.de>; Tue, 30 Jul 2024 14:00:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C2B794120F
+	for <lists+linux-block@lfdr.de>; Tue, 30 Jul 2024 14:42:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97A031C22BC3
-	for <lists+linux-block@lfdr.de>; Tue, 30 Jul 2024 12:00:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C90C81F243F5
+	for <lists+linux-block@lfdr.de>; Tue, 30 Jul 2024 12:42:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967A81A00F3;
-	Tue, 30 Jul 2024 11:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF0D819EEC0;
+	Tue, 30 Jul 2024 12:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bHWvaI8g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCi8btfp"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4D41A00DF;
-	Tue, 30 Jul 2024 11:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82641757FC;
+	Tue, 30 Jul 2024 12:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722340755; cv=none; b=qyfG9c2U2G7QVPf8XWHryl+xToLebPyNjSJpFAo9V6NUSkRJ7qou7XHxlbKdyldGSa8HbAzo1rqLWXB0X1w+KG/0GVyCRo9Uz0hL15WIok3LkRoJ5qSdDQRoGMBVrP682iXZzn8eYzReMGuEXCE2vloK0HCNiTgtLL99WrNwY3w=
+	t=1722343346; cv=none; b=TefX+Kaw2uBc6WGSUyJO9v4k0yBhHSUgEzF13pkojLyjWOXBAc86XyjR7P1e/56QTcjb/Fh7KcgXQZm3qjDpPDp+dQcTNnHst1bpQFg1EReyjEhwcqGdgKQjaglSaSOONgpkEMKFLrJ7czpgcvUdza8QMOYP/xEFDCC8oBr8KQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722340755; c=relaxed/simple;
-	bh=Br5iul1IKL3n9WzMsepXe4wCxuWuLJrejZMwQltHxc8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kt6ogvFcCIWg0HxCPyjlORhrftUbNSgSws+ACEGy5Ii90YYuHtRU9LvwY7KJ3dCEh1QLG1scEDfVdhONRF8E4c0MiX+cV0HNCMrWE5raLkC9d/kP+lqcELeLkXoZEzPRGobgjA4N0IIQtpC4lmAeOtB/3S9JKB4VqGEd6BLf6WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bHWvaI8g; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46UA3P6M016748;
-	Tue, 30 Jul 2024 11:58:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=5iafdj6H+Dw
-	nHZy21LrrA4/vHtwtOgC9r8TCOiDQlGg=; b=bHWvaI8gwx16R8/CcQgx5wRhPv4
-	heTCWmfP1WmTpAhC4P5VCD6vGthgGUGvNc2nf/6Wg4NC0YdyWPPgKGtoappgbM0I
-	V4SZjLiyZY1b8HqhPGeJ8UV5dh8KU6gk8HVg/t8TdG43FJZ/+b6pscU5IiBTlKT2
-	gdmWANfjKWOq7uz2CZcIzCo9oWeBC7suB/NPK9dXoDzkZmomN/U63Lu9PaszimDA
-	wG65QK2WFXdBTgncHPKkjAlvarEqtlh54cuPuoqlscwgW0B0UO987fngR5vNcM/h
-	4c21BGjXjnUFwetm0/GTrHw/O4IVIOaOuh6eIocVbZhVC3NldIuXgvana6w==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40ms4375bn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jul 2024 11:58:46 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 46UBwf73001365;
-	Tue, 30 Jul 2024 11:58:42 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 40msykdx6r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jul 2024 11:58:42 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46UBwfdv001324;
-	Tue, 30 Jul 2024 11:58:42 GMT
-Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 46UBwgJK001392
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jul 2024 11:58:42 +0000
-Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
-	id C9DC0413B5; Tue, 30 Jul 2024 17:28:40 +0530 (+0530)
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-To: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-        adrian.hunter@intel.com, quic_asutoshd@quicinc.com,
-        ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-        linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_viswanat@quicinc.com, quic_srichara@quicinc.com,
-        quic_varada@quicinc.com
-Cc: quic_mdalam@quicinc.com
-Subject: [PATCH 6/6] mmc: sdhci-msm: Add additional algo mode for inline encryption
-Date: Tue, 30 Jul 2024 17:28:38 +0530
-Message-Id: <20240730115838.3507302-7-quic_mdalam@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240730115838.3507302-1-quic_mdalam@quicinc.com>
-References: <20240730115838.3507302-1-quic_mdalam@quicinc.com>
+	s=arc-20240116; t=1722343346; c=relaxed/simple;
+	bh=OX7gXcQNPCvmHTvgcG7NfG9PhoIqqO3oQ/laTGMlWFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kDO2Uqj6eFd5wGRAnS2aclHV9chNVcA1qala+Abp+A+rU2l1OhfWEvC3w6wjE3fTA335iVrmHvwoqHNJoP57jz4yfZ56Qyw0Nbr+pVvvv4WgCEt0N85m+97l5SQkrkkVN5qQ8R2r+m6tk/k7/IA6hZXLWuTzRRwhQtgbLhyoClE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCi8btfp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0829AC32782;
+	Tue, 30 Jul 2024 12:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722343345;
+	bh=OX7gXcQNPCvmHTvgcG7NfG9PhoIqqO3oQ/laTGMlWFI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iCi8btfpZmMmoNrYlDrhSuGluxOfeClACuaAEioHJd07u4DcnQSLQxyGKGDzcmoob
+	 cSSRdLIJ9XrrrAcIJ38g5dXEHSUrtMHdD+KTDQpJFA9c279uvgghBezBlG5b+k9cWR
+	 QUhwsuVOxKQSC5xn32N+8kqoylRqv+QLaypFrwQVsI/ZlZaEvczptnFBQHgo4X8dLq
+	 eVF537Dvgpbqvs4EVFwHBBJlLXX1PKJeKqqVLSSXG04J1C1SsCUlWe7sc7/9/7pjcs
+	 afzX+3xWEkIOeg3XhkMDp7rHkakoqCk7V3p2xkB4VmrhJDezxCINatcN++q14xs36T
+	 GacQGIKC32K8A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 1/3] block: don't call bio_uninit from bio_endio
+Date: Tue, 30 Jul 2024 08:42:19 -0400
+Message-ID: <20240730124222.3083443-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.2
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Wgzb38TwClZThWRfIODRej4zHS0zg-oL
-X-Proofpoint-ORIG-GUID: Wgzb38TwClZThWRfIODRej4zHS0zg-oL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-30_11,2024-07-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 priorityscore=1501
- clxscore=1015 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407300084
 
-Add support for AES-XTS-128, AES-CBC-128 and AES-CBS-256 modes for
-inline encryption. Since ICE (Inline Crypto Engine) supports these
-all modes
+From: Christoph Hellwig <hch@lst.de>
 
-Co-developed-by: Vignesh Viswanathan <quic_viswanat@quicinc.com>
-Signed-off-by: Vignesh Viswanathan <quic_viswanat@quicinc.com>
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+[ Upstream commit bf4c89fc8797f5c0964a0c3d561fbe7e8483b62f ]
+
+Commit b222dd2fdd53 ("block: call bio_uninit in bio_endio") added a call
+to bio_uninit in bio_endio to work around callers that use bio_init but
+fail to call bio_uninit after they are done to release the resources.
+While this is an abuse of the bio_init API we still have quite a few of
+those left.  But this early uninit causes a problem for integrity data,
+as at least some users need the bio_integrity_payload.  Right now the
+only one is the NVMe passthrough which archives this by adding a special
+case to skip the freeing if the BIP_INTEGRITY_USER flag is set.
+
+Sort this out by only putting bi_blkg in bio_endio as that is the cause
+of the actual leaks - the few users of the crypto context and integrity
+data all properly call bio_uninit, usually through bio_put for
+dynamically allocated bios.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/20240702151047.1746127-4-hch@lst.de
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c | 10 ++----
- drivers/soc/qcom/ice.c       | 65 +++++++++++++++++++++++++++++++-----
- 2 files changed, 58 insertions(+), 17 deletions(-)
+ block/bio.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index e113b99a3eab..fc1db58373ce 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1867,17 +1867,11 @@ static int sdhci_msm_program_key(struct cqhci_host *cq_host,
- 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
- 	union cqhci_crypto_cap_entry cap;
- 
--	/* Only AES-256-XTS has been tested so far. */
- 	cap = cq_host->crypto_cap_array[cfg->crypto_cap_idx];
--	if (cap.algorithm_id != CQHCI_CRYPTO_ALG_AES_XTS ||
--		cap.key_size != CQHCI_CRYPTO_KEY_SIZE_256)
--		return -EINVAL;
- 
- 	if (cfg->config_enable & CQHCI_CRYPTO_CONFIGURATION_ENABLE)
--		return qcom_ice_program_key(msm_host->ice,
--					    QCOM_ICE_CRYPTO_ALG_AES_XTS,
--					    QCOM_ICE_CRYPTO_KEY_SIZE_256,
--					    cfg->crypto_key,
-+		return qcom_ice_program_key(msm_host->ice, cap.algorithm_id,
-+					    cap.key_size, cfg->crypto_key,
- 					    cfg->data_unit_size, slot);
- 	else
- 		return qcom_ice_evict_key(msm_host->ice, slot);
-diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
-index fbab7fe5c652..f387b884c516 100644
---- a/drivers/soc/qcom/ice.c
-+++ b/drivers/soc/qcom/ice.c
-@@ -19,6 +19,9 @@
- 
- #include <soc/qcom/ice.h>
- 
-+#define AES_128_CBC_KEY_SIZE			16
-+#define AES_256_CBC_KEY_SIZE			32
-+#define AES_128_XTS_KEY_SIZE			32
- #define AES_256_XTS_KEY_SIZE			64
- 
- /* QCOM ICE registers */
-@@ -161,36 +164,80 @@ int qcom_ice_suspend(struct qcom_ice *ice)
- }
- EXPORT_SYMBOL_GPL(qcom_ice_suspend);
- 
-+static int qcom_ice_get_algo_mode(struct qcom_ice *ice, u8 algorithm_id,
-+				  u8 key_size, enum qcom_scm_ice_cipher *cipher,
-+				  u32 *key_len)
-+{
-+	struct device *dev = ice->dev;
-+
-+	switch (key_size) {
-+	case QCOM_ICE_CRYPTO_KEY_SIZE_128:
-+		fallthrough;
-+	case QCOM_ICE_CRYPTO_KEY_SIZE_256:
-+		break;
-+	default:
-+		dev_err(dev, "Unhandled crypto key size %d\n", key_size);
-+		return -EINVAL;
-+	}
-+
-+	switch (algorithm_id) {
-+	case QCOM_ICE_CRYPTO_ALG_AES_XTS:
-+		if (key_size == QCOM_ICE_CRYPTO_KEY_SIZE_256) {
-+			*cipher = QCOM_SCM_ICE_CIPHER_AES_256_XTS;
-+			*key_len = AES_256_XTS_KEY_SIZE;
-+		} else {
-+			*cipher = QCOM_SCM_ICE_CIPHER_AES_128_XTS;
-+			*key_len = AES_128_XTS_KEY_SIZE;
-+		}
-+		break;
-+	case QCOM_ICE_CRYPTO_ALG_BITLOCKER_AES_CBC:
-+		if (key_size == QCOM_ICE_CRYPTO_KEY_SIZE_256) {
-+			*cipher = QCOM_SCM_ICE_CIPHER_AES_256_CBC;
-+			*key_len = AES_256_CBC_KEY_SIZE;
-+		} else {
-+			*cipher = QCOM_SCM_ICE_CIPHER_AES_128_CBC;
-+			*key_len = AES_128_CBC_KEY_SIZE;
-+		}
-+		break;
-+	default:
-+		dev_err_ratelimited(dev, "Unhandled crypto capability; algorithm_id=%d, key_size=%d\n",
-+				    algorithm_id, key_size);
-+		return -EINVAL;
-+	}
-+
-+	dev_info(dev, "cipher: %d key_size: %d", *cipher, *key_len);
-+
-+	return 0;
-+}
-+
- int qcom_ice_program_key(struct qcom_ice *ice,
- 			 u8 algorithm_id, u8 key_size,
- 			 const u8 crypto_key[], u8 data_unit_size,
- 			 int slot)
- {
- 	struct device *dev = ice->dev;
-+	enum qcom_scm_ice_cipher cipher;
- 	union {
- 		u8 bytes[AES_256_XTS_KEY_SIZE];
- 		u32 words[AES_256_XTS_KEY_SIZE / sizeof(u32)];
- 	} key;
- 	int i;
- 	int err;
-+	u32 key_len;
- 
--	/* Only AES-256-XTS has been tested so far. */
--	if (algorithm_id != QCOM_ICE_CRYPTO_ALG_AES_XTS ||
--	    key_size != QCOM_ICE_CRYPTO_KEY_SIZE_256) {
--		dev_err_ratelimited(dev,
--				    "Unhandled crypto capability; algorithm_id=%d, key_size=%d\n",
--				    algorithm_id, key_size);
-+	if (qcom_ice_get_algo_mode(ice, algorithm_id, key_size, &cipher, &key_len)) {
-+		dev_err(dev, "Unhandled crypto capability; algorithm_id=%d, key_size=%d\n",
-+			algorithm_id, key_size);
- 		return -EINVAL;
+diff --git a/block/bio.c b/block/bio.c
+index e9e809a63c597..c7a4bc05c43e7 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1630,8 +1630,18 @@ void bio_endio(struct bio *bio)
+ 		goto again;
  	}
  
--	memcpy(key.bytes, crypto_key, AES_256_XTS_KEY_SIZE);
-+	memcpy(key.bytes, crypto_key, key_len);
- 
- 	/* The SCM call requires that the key words are encoded in big endian */
- 	for (i = 0; i < ARRAY_SIZE(key.words); i++)
- 		__cpu_to_be32s(&key.words[i]);
- 
--	err = qcom_scm_ice_set_key(slot, key.bytes, AES_256_XTS_KEY_SIZE,
--				   QCOM_SCM_ICE_CIPHER_AES_256_XTS,
-+	err = qcom_scm_ice_set_key(slot, key.bytes, key_len, cipher,
- 				   data_unit_size);
- 
- 	memzero_explicit(&key, sizeof(key));
+-	/* release cgroup info */
+-	bio_uninit(bio);
++#ifdef CONFIG_BLK_CGROUP
++	/*
++	 * Release cgroup info.  We shouldn't have to do this here, but quite
++	 * a few callers of bio_init fail to call bio_uninit, so we cover up
++	 * for that here at least for now.
++	 */
++	if (bio->bi_blkg) {
++		blkg_put(bio->bi_blkg);
++		bio->bi_blkg = NULL;
++	}
++#endif
++
+ 	if (bio->bi_end_io)
+ 		bio->bi_end_io(bio);
+ }
 -- 
-2.34.1
+2.43.0
 
 
