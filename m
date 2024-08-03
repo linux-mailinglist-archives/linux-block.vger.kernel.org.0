@@ -1,163 +1,156 @@
-Return-Path: <linux-block+bounces-10313-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10315-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B1D09469BB
-	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2024 14:39:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DB049469DE
+	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2024 15:28:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 022641F216EF
-	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2024 12:39:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C82E9281C55
+	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2024 13:28:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14322139D13;
-	Sat,  3 Aug 2024 12:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE66139CFA;
+	Sat,  3 Aug 2024 13:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRvMccqC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=grep.be header.i=@grep.be header.b="XZT3XKFc"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from lounge.grep.be (lounge.grep.be [144.76.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2C210A2A
-	for <linux-block@vger.kernel.org>; Sat,  3 Aug 2024 12:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB249847B;
+	Sat,  3 Aug 2024 13:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722688789; cv=none; b=PrFp/z9KtfulKfAZVmjC1FW89ElpY57J0ir62cO5E9yRFdITo7pEtRr7PATs8NCkyyl2NbWT0n2o5FqMybeY7xg8iz6pSxVIcvgjaz8xF7+lo/Y2EUaU7PWUiwV17Byu3F5/veQamrMLixJo74Z2UnK5W8GDKOzwherpDZCRbOk=
+	t=1722691680; cv=none; b=sFONsCUQRgzRdWZfdO3JUK3vVHEtmHpuyChiKlCYp2lHRynNjxyXcj/wXl0M4OYvq6DexiXVy/DtKVV5IdE+YsccLhxQ5RJydhyTaPaCAo1eIkMPKscIJwNyXQgywhOgoOt/rmV3dFEYkDqVDvAsGLSULTsb8Uv/OjEEP9hwWIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722688789; c=relaxed/simple;
-	bh=gD2FpfB39EnjPLFzGX1h9zd6wgd7sajf8+31wkVyNEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kntySytyswPMCSRyoetM5Y/zm3ZQb9gzsPX9fwhMRtZYzznGbsBv/6ne4OWUNF6GaAx36U3/jSwwWYQPLVH7dCO3riG7H3Ld+l4ve6BZbJv9SWvOiFWGWlW7c85ttM040aThYuiS3zbbkkSCB9g1mSQHGogUvre9aS6dtgKfD1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dRvMccqC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722688786;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bud4nRKRklECKnm96ltuCrae8m0qJHJoxUo8AttxE8U=;
-	b=dRvMccqCKaOLdY9U7/3G4YIZ3rql/WcNU++gTYN64HnUsbd08KiDu7abDpNBrTT2ymkkUT
-	pp149JlODk8CxNnqUB3Pa3AEp5mvhJO97Hm8r0wbhtrQaCXgm5uAYBGQm67GLdZppuK9+G
-	pQ10kF2wNXCq34VZBaM3QXp9/Wm3pDU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-fmXuR6hQOhK9VROJ3mZy-A-1; Sat, 03 Aug 2024 08:39:44 -0400
-X-MC-Unique: fmXuR6hQOhK9VROJ3mZy-A-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42816096cb8so84326215e9.0
-        for <linux-block@vger.kernel.org>; Sat, 03 Aug 2024 05:39:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722688783; x=1723293583;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bud4nRKRklECKnm96ltuCrae8m0qJHJoxUo8AttxE8U=;
-        b=j8NQZcmR7PoentD2kN+4+YmgWXhAJHNfdz9kJqW2FtG51tf8IyeFrjmkOfJclevrXH
-         vsC4mwwHXGFHoMShCo9fjShfO7LkErDHwE2UfLufFsUUcspxOhFb6RY/amyXyabPOn4Z
-         Qr5HeNujBMUZEEEy6jOwfJ8vQ86fUVPE8Wo1mbe2cbZ+kAx20E6NrlSBswQ5Fy+8iKBC
-         O7zBxr2rlpaaomT8AhecSZUJ3/n1lSEG4o7TdNf1BXdvc/sqYkHAZIuauRzOe81wDNre
-         dGGpj/o12LspfpgO3kVLz8bj+MjvNZO89S2NiR814/rzsjEmeomietlspocZUWgEfd+9
-         s5CA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuACI/SL4JhPTKvwNcmoPDjxn77+ZM1/vEZO4RFvvKgEraJV0FupnZTAbM1IO6ITR6aQc02jQ6FW3eW4YtKGn4JL2nlQFICZZcNA0=
-X-Gm-Message-State: AOJu0YzYse03NxmrTdWztqOxVXx2B1d/+OkCmbknTsQO8b6oW46FbdFl
-	IWH5gaUoaZsTiFklDDE88n42vz3JhTuW57f1mwZW4s/qCnToQJpEPsGJSCkKk1dc9bW1nyEmLdi
-	qz7NrN8drCKzSpAEGok8EaTDZho4qm+4jsONiotUwARfWT0ACRCh0PFlFNVeR
-X-Received: by 2002:a05:600c:46d5:b0:428:e820:37b6 with SMTP id 5b1f17b1804b1-428e8203ceamr44618465e9.31.1722688783173;
-        Sat, 03 Aug 2024 05:39:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHztpDlicRIdPi/ph07KPQz9rUp5hL3ZffxDp857thGb8EBxST2h/nU6rQ6f3ID+f0aHwyskA==
-X-Received: by 2002:a05:600c:46d5:b0:428:e820:37b6 with SMTP id 5b1f17b1804b1-428e8203ceamr44618275e9.31.1722688782353;
-        Sat, 03 Aug 2024 05:39:42 -0700 (PDT)
-Received: from redhat.com ([2a06:c701:743c:ac00:6ba3:915a:fea:a61d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282b89a862sm127450475e9.4.2024.08.03.05.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Aug 2024 05:39:41 -0700 (PDT)
-Date: Sat, 3 Aug 2024 08:39:38 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev,
-	axboe@kernel.dk, kvm@vger.kernel.org, linux-block@vger.kernel.org,
-	oren@nvidia.com
-Subject: Re: [PATCH 1/1] virtio_blk: implement init_hctx MQ operation
-Message-ID: <20240803083824-mutt-send-email-mst@kernel.org>
-References: <20240801151137.14430-1-mgurtovoy@nvidia.com>
- <20240801111337-mutt-send-email-mst@kernel.org>
- <0888da3b-3283-405b-b1a8-a315e2623289@nvidia.com>
- <20240801112843-mutt-send-email-mst@kernel.org>
- <9400fb28-47c2-4629-af17-df2a95f2d3d8@nvidia.com>
- <20240801114205-mutt-send-email-mst@kernel.org>
- <6a8f0c72-ba77-42c3-8d85-6bb23a23f025@nvidia.com>
- <20240801175617.GA1133773@fedora.redhat.com>
- <a10e97ce-792a-410f-b68e-d00292987b3a@nvidia.com>
+	s=arc-20240116; t=1722691680; c=relaxed/simple;
+	bh=lBtW6B9bCQWBP7gNW6PL+A+p4hgYnhTrL80VojCqqK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YVh6h0ysOFelaeaMh+zHI7RD5C13wyuZcrCLMS0GeJFhYL9D7ZG84jGuHS2nF/aeZb8hHuUm+GSxbrrF/c35HKUdiD/A7i7egRxWKJfQuBsajbKqLNzjqzdct3R/q4A9wDnUXBMPjDuMH1huGqgFnnOUyk1nyWqFhtrar+yTPhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be; spf=pass smtp.mailfrom=grep.be; dkim=fail (0-bit key) header.d=grep.be header.i=@grep.be header.b=XZT3XKFc reason="key not found in DNS"; arc=none smtp.client-ip=144.76.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grep.be
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=grep.be;
+	s=2017.latin; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=mTmrVs40Cd7CzbdJDjAxo2PlQHK4j3xD7Gp2kwSFalY=; b=XZT3XKFcrTcnILrWffFUGC+EnY
+	AsCxRvwdh0ss5Ea1fl2jvYnwr4CQ9DbVdzeZ7UWWtZ3I7AbZLLjzCZTpp/8PNwaRSpClU8x+/Kqj1
+	frwB0XIdMNoaOV7KIdyvw73NrTUXKmUurw3azOtj4q+h2zEEYJ7gt2x3jJNeQsY+lh65uAVUaaKMP
+	pvwPkuzULAqT0wXFggzs99ZcXB7FymzYf+a1S0f7cV15L2w5ayhEIiUncj5IgPgATuVL3EQnvwn6p
+	cQzV1rO5NlEXLseQppLpUBLNNl3/m5kZlg+5N+gUdJhvytoLKueSzf+KFLpcuVC/U9h1xcaQGoYDR
+	ouUdTUAg==;
+Received: from [102.39.154.62] (helo=pc220518)
+	by lounge.grep.be with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <wouter@grep.be>)
+	id 1saERy-00CawW-1s;
+	Sat, 03 Aug 2024 15:05:34 +0200
+Received: from wouter by pc220518 with local (Exim 4.98)
+	(envelope-from <wouter@grep.be>)
+	id 1saERr-000000001ZC-0nJ7;
+	Sat, 03 Aug 2024 15:05:27 +0200
+From: Wouter Verhelst <w@uter.be>
+To: Josef Bacik <josef@toxicpanda.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Wouter Verhelst <w@uter.be>,
+	linux-block@vger.kernel.org,
+	nbd@other.debian.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] nbd: implement the WRITE_ZEROES command
+Date: Sat,  3 Aug 2024 15:04:30 +0200
+Message-ID: <20240803130432.5952-1-w@uter.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a10e97ce-792a-410f-b68e-d00292987b3a@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 03, 2024 at 01:07:27AM +0300, Max Gurtovoy wrote:
-> 
-> On 01/08/2024 20:56, Stefan Hajnoczi wrote:
-> > On Thu, Aug 01, 2024 at 06:56:44PM +0300, Max Gurtovoy wrote:
-> > > On 01/08/2024 18:43, Michael S. Tsirkin wrote:
-> > > > On Thu, Aug 01, 2024 at 06:39:16PM +0300, Max Gurtovoy wrote:
-> > > > > On 01/08/2024 18:29, Michael S. Tsirkin wrote:
-> > > > > > On Thu, Aug 01, 2024 at 06:17:21PM +0300, Max Gurtovoy wrote:
-> > > > > > > On 01/08/2024 18:13, Michael S. Tsirkin wrote:
-> > > > > > > > On Thu, Aug 01, 2024 at 06:11:37PM +0300, Max Gurtovoy wrote:
-> > > > > > > > > In this operation set the driver data of the hctx to point to the virtio
-> > > > > > > > > block queue. By doing so, we can use this reference in the and reduce
-> > > > > > > > in the .... ?
-> > > > > > > sorry for the type.
-> > > > > > > 
-> > > > > > > should be :
-> > > > > > > 
-> > > > > > > "By doing so, we can use this reference and reduce the number of operations in the fast path."
-> > > > > > ok. what kind of benefit do you see with this patch?
-> > > > > As mentioned. This is a micro optimization that reduce the number of
-> > > > > instructions/dereferences in the fast path.
-> > > > By how much? How random code tweaks affect object code is unpredictable.
-> > > > Pls show results of objdump to prove it does anything
-> > > > useful.
-> > > This is the way all modern block drivers such as NVMe PCI/RDMA/TCP use the
-> > > driver_data.
-> > > 
-> > > These drivers don't have driver specific mechanisms to find the queue from
-> > > the hctx->queue->queuedata like vblk driver has for some unknown reason.
-> > > 
-> > > It is pretty easy to review this patch and see its benefits, isn't it ?
-> > > 
-> > > It is not expected to provide extreme perf improvement.
-> > > 
-> > > It is introduced for aligning the driver to use common MQ mechanisms and
-> > > reduce dereferences.
-> > > 
-> > > This is not "random code tweaks".
-> > If you cannot observe a performance change, then adjusting the commit
-> > description to explain this as a code cleanup to reduce dereferences and
-> > local variables, improving code readability seems fine to me. I think
-> > it's a nice cleanup when presented as such rather than a performance
-> > optimization.
-> > 
-> > Stefan
-> 
-> Sure. Please check the bellow adjustment:
-> 
-> virtio_blk: implement init_hctx MQ operation
-> 
-> Set the driver data of the hardware context (hctx) to point directly to
-> the virtio block queue. This cleanup improves code readability, reduces
-> the number of dereferences, and minimizes local variables in the fast
-> path.
+The NBD protocol defines a message for zeroing out a region of an export
 
-I'd drop the local variables part, it is not at all clear why is that
-a win.
+Add support to the kernel driver for that message.
 
+Signed-off-by: Wouter Verhelst <w@uter.be>
+---
+ drivers/block/nbd.c      | 8 ++++++++
+ include/uapi/linux/nbd.h | 5 ++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 5b1811b1ba5f..215e7ea9a3c3 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -352,6 +352,8 @@ static int __nbd_set_size(struct nbd_device *nbd, loff_t bytesize,
+ 	}
+ 	if (nbd->config->flags & NBD_FLAG_ROTATIONAL)
+ 		lim.features |= BLK_FEAT_ROTATIONAL;
++	if (nbd->config->flags & NBD_FLAG_SEND_WRITE_ZEROES)
++		lim.max_write_zeroes_sectors = UINT_MAX;
+ 
+ 	lim.logical_block_size = blksize;
+ 	lim.physical_block_size = blksize;
+@@ -421,6 +423,8 @@ static u32 req_to_nbd_cmd_type(struct request *req)
+ 		return NBD_CMD_WRITE;
+ 	case REQ_OP_READ:
+ 		return NBD_CMD_READ;
++	case REQ_OP_WRITE_ZEROES:
++		return NBD_CMD_WRITE_ZEROES;
+ 	default:
+ 		return U32_MAX;
+ 	}
+@@ -637,6 +641,8 @@ static blk_status_t nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd,
+ 
+ 	if (req->cmd_flags & REQ_FUA)
+ 		nbd_cmd_flags |= NBD_CMD_FLAG_FUA;
++	if ((req->cmd_flags & REQ_NOUNMAP) && (type == NBD_CMD_WRITE_ZEROES))
++		nbd_cmd_flags |= NBD_CMD_FLAG_NO_HOLE;
+ 
+ 	/* We did a partial send previously, and we at least sent the whole
+ 	 * request struct, so just go and send the rest of the pages in the
+@@ -1706,6 +1712,8 @@ static int nbd_dbg_flags_show(struct seq_file *s, void *unused)
+ 		seq_puts(s, "NBD_FLAG_SEND_FUA\n");
+ 	if (flags & NBD_FLAG_SEND_TRIM)
+ 		seq_puts(s, "NBD_FLAG_SEND_TRIM\n");
++	if (flags & NBD_FLAG_SEND_WRITE_ZEROES)
++		seq_puts(s, "NBD_FLAG_SEND_WRITE_ZEROES\n");
+ 
+ 	return 0;
+ }
+diff --git a/include/uapi/linux/nbd.h b/include/uapi/linux/nbd.h
+index d75215f2c675..f1d468acfb25 100644
+--- a/include/uapi/linux/nbd.h
++++ b/include/uapi/linux/nbd.h
+@@ -42,8 +42,9 @@ enum {
+ 	NBD_CMD_WRITE = 1,
+ 	NBD_CMD_DISC = 2,
+ 	NBD_CMD_FLUSH = 3,
+-	NBD_CMD_TRIM = 4
++	NBD_CMD_TRIM = 4,
+ 	/* userspace defines additional extension commands */
++	NBD_CMD_WRITE_ZEROES = 6,
+ };
+ 
+ /* values for flags field, these are server interaction specific. */
+@@ -53,11 +54,13 @@ enum {
+ #define NBD_FLAG_SEND_FUA	(1 << 3) /* send FUA (forced unit access) */
+ #define NBD_FLAG_ROTATIONAL	(1 << 4) /* device is rotational */
+ #define NBD_FLAG_SEND_TRIM	(1 << 5) /* send trim/discard */
++#define NBD_FLAG_SEND_WRITE_ZEROES (1 << 6) /* supports WRITE_ZEROES */
+ /* there is a gap here to match userspace */
+ #define NBD_FLAG_CAN_MULTI_CONN	(1 << 8)	/* Server supports multiple connections per export. */
+ 
+ /* values for cmd flags in the upper 16 bits of request type */
+ #define NBD_CMD_FLAG_FUA	(1 << 16) /* FUA (forced unit access) op */
++#define NBD_CMD_FLAG_NO_HOLE	(1 << 17) /* Do not punch a hole for WRITE_ZEROES */
+ 
+ /* These are client behavior specific flags. */
+ #define NBD_CFLAG_DESTROY_ON_DISCONNECT	(1 << 0) /* delete the nbd device on
 -- 
-MST
+2.43.0
 
 
