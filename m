@@ -1,109 +1,94 @@
-Return-Path: <linux-block+bounces-10387-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10389-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 728E294B714
-	for <lists+linux-block@lfdr.de>; Thu,  8 Aug 2024 09:07:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC7D994B973
+	for <lists+linux-block@lfdr.de>; Thu,  8 Aug 2024 11:03:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AAF91F22742
-	for <lists+linux-block@lfdr.de>; Thu,  8 Aug 2024 07:07:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A7C31F21F84
+	for <lists+linux-block@lfdr.de>; Thu,  8 Aug 2024 09:03:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1680188002;
-	Thu,  8 Aug 2024 07:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2A2189BBE;
+	Thu,  8 Aug 2024 09:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=grep.be header.i=@grep.be header.b="ckK2gKf5"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VyArdnMf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cpHKDo6+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from lounge.grep.be (lounge.grep.be [144.76.219.42])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122C47464;
-	Thu,  8 Aug 2024 07:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0AC189BA0;
+	Thu,  8 Aug 2024 09:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723100811; cv=none; b=JVczRfMtYdzGps7obaRqF4qukzQfIP+rx8s7Zwquk4K60rrxzukgcLXrsNGNaHn01XNAr6MZTYomk4hxN1RB8GfiHIoZfCI25LzmU0Tc+3VcHxz/p/rvBbJ5VOLBSF5PFMLzxH1Ay6ip0civGmMJ4petut4VbgQ/K2AlJ+K282I=
+	t=1723107803; cv=none; b=kmu5dC9kfAW15BJ6Jn1fHOT5aNsuT0+2qQHVB5hm4t7NcZxH3IMf/teau/a2YH2SEjaodWMJo6JKQtWTEmF0TuOuX7Fhc4vChu16duy/G1c3K8318BJFD0WF/+4gy2V2viW9K4YpuuJ9CJlmGiwDiz7QM776n/V/kGmKt4TgaF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723100811; c=relaxed/simple;
-	bh=WYdJjsUR0XcPAVxzn4RPM8KtaqCFZ5ZcWUHVmE5gdmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=id6mXVtK6dLFgUZLDWL1w1O67E98vEJnXoGBR96XFl46t32VhmUSoWqv9Pfcw6QHQmoDNPqTXEuS9aAi4loQ4zfm72GxUZEkMtUx84zZ1kyKipw3jzpZ5grLKV5BxVUY9HilQXpf35Gf5K8sgzuX83LVT2sFaFohr/CL5eb0BYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be; spf=pass smtp.mailfrom=grep.be; dkim=fail (0-bit key) header.d=grep.be header.i=@grep.be header.b=ckK2gKf5 reason="key not found in DNS"; arc=none smtp.client-ip=144.76.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grep.be
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=grep.be;
-	s=2017.latin; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
-	:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ar1LioCAReyFeveBmkcT8PsTVaYpzp50hAJKGqIzHME=; b=ckK2gKf5rNOyVze3rH/Zm0dKDx
-	9IPPwIO2RxfdmW3wLKDwbfp1hhW8t9b3mWbKsCh2GFCe4avbX6T2XUrdLFsaByUUGnjSNNqZgYAiz
-	NTzsh4Z98fSEhBdPyOMhBNLhDH7KIC+2UvBnbVKDZ27J/Mc2I0352mZcrozm/g9E3hvHH/eCYXccd
-	0guZJRN5GXGUsDIs1cr5wf11Tz+ybqvFxoRiDS/+OkgyI5yE7AnvHOekAn1hu3zzWK6Y7anI6uL+W
-	ep2sMWt0i1HcAuoTp2qLbMFMG/KP3CAqhYFt+mDohGn9J+6eMwQZGu9J31rbUa1yam9mYYoY4bNU8
-	L95TvUBg==;
-Received: from [102.39.154.62] (helo=pc220518)
-	by lounge.grep.be with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <wouter@grep.be>)
-	id 1sbxER-002YIe-0q;
-	Thu, 08 Aug 2024 09:06:43 +0200
-Received: from wouter by pc220518 with local (Exim 4.98)
-	(envelope-from <wouter@grep.be>)
-	id 1sbxEJ-00000000ko8-3FhP;
-	Thu, 08 Aug 2024 09:06:35 +0200
-From: Wouter Verhelst <w@uter.be>
-To: Josef Bacik <josef@toxicpanda.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Wouter Verhelst <w@uter.be>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	linux-block@vger.kernel.org,
-	nbd@other.debian.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] nbd: correct the maximum value for discard sectors
-Date: Thu,  8 Aug 2024 09:06:03 +0200
-Message-ID: <20240808070604.179799-3-w@uter.be>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240808070604.179799-1-w@uter.be>
-References: <20240803130432.5952-1-w@uter.be>
- <20240808070604.179799-1-w@uter.be>
+	s=arc-20240116; t=1723107803; c=relaxed/simple;
+	bh=2ChP9h6uvmcLLnCbTjZZ0+YBvy42YPx8xhOigoYtrO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kpiDyN1b7cpbTgf8EC/PNGeyO165d43Q6DQCU2LkpR3/4ZG2x26uoeyE4rs0EWwfns16TuYCq0kUDl817ob1Fw0S1tt6tl6VfIUbCnxOyd4qArmQd2COmrWEq4eUk+PxrJFRywdQvCc11X3wwGX5OIpINPxCCppYJ0BuvNCpErQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VyArdnMf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cpHKDo6+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Thu, 8 Aug 2024 11:03:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1723107800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9/1t1xXO8srYRXGtZtBYUSTKE21fIlSAdIBoEh9+Jk4=;
+	b=VyArdnMfM6Ft0V5xk7epE8/UB0F3FKEMT70DZTJHylxo6VX/VTC5lxOw9lSlC83Mxz29Ni
+	zJuW2+rb11RlCdasd/K5mnC0j56mZNgamBhlrh3xjC8NA9xTCDrMr7jkGqDNO+yQ3y6iwz
+	EQoXnPxMxPaNKHY4OSFe6r7jKtWp9hg761ZJ6Fm7D5uKVJZ0DFtQKSraqk1zt0eRkzNuaD
+	P2or1FxPG/HxRESGM9BPiBJZTWo3sC0+czBwlXyb6SwPmsjEcaaaZF12UxDjnoID/rbJNm
+	2Nb2gj7ZBkxzv1iFZG49Vhvxcd1MTVnRurRxcwVIEgEgwCh7v44dgSyae7l7Lw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1723107800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9/1t1xXO8srYRXGtZtBYUSTKE21fIlSAdIBoEh9+Jk4=;
+	b=cpHKDo6+t2vQgs76o3VqWotu/aNi1haMWUtVYkgaX7EB1szHkh8YkjWZZITyff+gtx3jkc
+	1slHVbD2r/Jm6PDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, Mike Galbraith <umgwanakikbuti@gmail.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>
+Subject: Re: [PATCH v3 0/3] zram: Replace bit spinlocks with a spinlock_t.
+Message-ID: <20240808090318.OYWITKyu@linutronix.de>
+References: <20240705125058.1564001-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240705125058.1564001-1-bigeasy@linutronix.de>
 
-The version of the NBD protocol implemented by the kernel driver
-currently has a 32 bit field for length values. As the NBD protocol uses
-bytes as a unit of length, length values larger than 2^32 bytes cannot
-be expressed.
+On 2024-07-05 14:49:13 [+0200], To linux-block@vger.kernel.org wrote:
+Hi,
 
-Update the max_hw_discard_sectors field to match that.
+> this is follow up to the previous posting, making the lock
+> unconditionally. The original problem with bit spinlock is that it
+> disabled preemption and the following operations (within the atomic
+> section) perform operations that may sleep on PREEMPT_RT. Mike expressed
+> that he would like to keep using zram on PREEMPT_RT.
+>=20
+> v2=E2=80=A6v3 https://lore.kernel.org/all/20240620153556.777272-1-bigeasy=
+@linutronix.de/
+>   - Do "size_t index" within the for loop.
 
-Signed-off-by: Wouter Verhelst <w@uter.be>
-Fixes: 268283244c0f018dec8bf4a9c69ce50684561f46
-Cc: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/block/nbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can this be applied, please? Or v2 ;)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index fdcf0bbedf3b..235ab5f59608 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -339,7 +339,7 @@ static int __nbd_set_size(struct nbd_device *nbd, loff_t bytesize,
- 
- 	lim = queue_limits_start_update(nbd->disk->queue);
- 	if (nbd->config->flags & NBD_FLAG_SEND_TRIM)
--		lim.max_hw_discard_sectors = UINT_MAX;
-+		lim.max_hw_discard_sectors = UINT_MAX >> SECTOR_SHIFT;
- 	else
- 		lim.max_hw_discard_sectors = 0;
- 	if (!(nbd->config->flags & NBD_FLAG_SEND_FLUSH)) {
--- 
-2.43.0
-
+Sebastian
 
