@@ -1,104 +1,78 @@
-Return-Path: <linux-block+bounces-10459-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10455-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41F4F94EED3
-	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2024 15:54:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6DE994EE7C
+	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2024 15:38:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73F221C215BD
-	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2024 13:54:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 606B51F22832
+	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2024 13:38:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E24A817D366;
-	Mon, 12 Aug 2024 13:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=grep.be header.i=@grep.be header.b="rdvzS5oT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A76717C211;
+	Mon, 12 Aug 2024 13:38:49 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from lounge.grep.be (lounge.grep.be [144.76.219.42])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BA817D34D;
-	Mon, 12 Aug 2024 13:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E7817BB14
+	for <linux-block@vger.kernel.org>; Mon, 12 Aug 2024 13:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723470744; cv=none; b=Ju4IifJQBLx6QbH7Mojti/5nGMh/IKKsfryW7npSg7A0VU9MBJW/OMV2qMwzlZp1W0Qg0mzGMvYJHrnWbUqrNL/gRKEe9vh9wLS9BYbLzx06UE7fuuPPT2DIsQIKkWDSwxVpF3vm2w4WytArIEQivNoc7RLQK26T5ejQSN+JjdY=
+	t=1723469929; cv=none; b=ipsroQAbIR4OYckdGTJe4DM0oc3JAaAXGY/iYPfo39iMXwuvE+gBSAWqxEQGlzNrmx3ldk1DB+K4coPIjD8v3CFhgG6uUJ5RuJbXEGnVtFREohsM04sKDP7d1BHftprgNZda6dNwCHWecW2owPxw+r6FtXgwdYuVuU5xbeIb+Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723470744; c=relaxed/simple;
-	bh=1nykpV20XzUyh1xghYDzTzIRKc3dX90aa7aq40fZ6iI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tYvCdaXzwbxDlQcVmWRJGkfjr/bNqaS/nXKpwjo1XY0LIyEzvgWYeK3TLeC8XyohTJ3KWHUvwpI/XRDBEQUn7F/0p3slMEeHd7ZT1xrhcIgJPJCM6Zssc6hd79t4VCTOnzkV6JgwgtdS780WAVeUAkrcpKV/UrDyZtjKxkYiDVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be; spf=pass smtp.mailfrom=grep.be; dkim=fail (0-bit key) header.d=grep.be header.i=@grep.be header.b=rdvzS5oT reason="key not found in DNS"; arc=none smtp.client-ip=144.76.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uter.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grep.be
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=grep.be;
-	s=2017.latin; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
-	:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ExUwhfh9phkCbbYOnXzCUwr8Bo5hwWP+odZj9PhevEY=; b=rdvzS5oT+ybPlKqsblXfZflCUc
-	yL8cJELY5LfnVLjER++4v8mfqpFeoFCkInWE/NH1Pbjf4JfIBu0fQlJpzVaYiJQE5FyVdulRqOsJJ
-	GvUjvI8bCPp7WTPVJsggz0INvLbd3BQ6IrSUgWvFU/Xhmxn7hcnEVrY4he+jmECksIbjByiOJiq1j
-	19V72j1hAVGLdnsTT/CO+boe2HmqHXuuMLT3GAXAGg99+ROMYryy9YDknYkR2cpTnB34wSlm+GICl
-	9AfTQZu+dI7lEY5UTuhbfDhHeL6lvVfurf5iCnjUdj83+K3Z+XiQGyQJcLYpWaWAy4Uf0bvkfouEc
-	xS+QY3Fg==;
-Received: from vc-gp-n-105-245-229-160.umts.vodacom.co.za ([105.245.229.160] helo=pc220518)
-	by lounge.grep.be with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <wouter@grep.be>)
-	id 1sdVT6-009Xv2-1r;
-	Mon, 12 Aug 2024 15:52:16 +0200
-Received: from wouter by pc220518 with local (Exim 4.98)
-	(envelope-from <wouter@grep.be>)
-	id 1sdVBW-00000000VEg-3N10;
-	Mon, 12 Aug 2024 15:34:06 +0200
-From: Wouter Verhelst <w@uter.be>
-To: Josef Bacik <josef@toxicpanda.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Wouter Verhelst <w@uter.be>,
-	Eric Blake <eblake@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	linux-block@vger.kernel.org,
-	nbd@other.debian.org,
-	linux-kernel@vger.kernel.org,
-	Eric Blake <eblake@redhat.Com>
-Subject: [PATCH v4 2/3] nbd: nbd_bg_flags_show: add NBD_FLAG_ROTATIONAL
-Date: Mon, 12 Aug 2024 15:20:40 +0200
-Message-ID: <20240812133032.115134-6-w@uter.be>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240812133032.115134-1-w@uter.be>
-References: <20240812133032.115134-1-w@uter.be>
+	s=arc-20240116; t=1723469929; c=relaxed/simple;
+	bh=i2TopCfxA35jt5R9+xgsJwJF5Hih2D+XHUrfqA1tags=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDC/btfZnnvo/yWdGAgmnOA5CoWNT43jYvV2hbMM/J6kicxYeU0D98VrO6GelEnLZujaIldJ8osGtnKpq2gYF2yZFCphpYp88dSFLuAQUaBq3AHIQBPW2r17Y+eRLGGqqsy2bVs7bn6mOLWP1KCArQVY3MEB16rMCMyNUGk+8f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 27577227A87; Mon, 12 Aug 2024 15:38:44 +0200 (CEST)
+Date: Mon, 12 Aug 2024 15:38:43 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kundan Kumar <kundan.kumar@samsung.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Pankaj Raghav <p.raghav@samsung.com>, kernel@pankajraghav.com,
+	axboe@kernel.dk, hch@lst.de, willy@infradead.org, kbusch@kernel.org,
+	linux-block@vger.kernel.org, joshi.k@samsung.com,
+	anuj20.g@samsung.com, nj.shetty@samsung.com, c.gameti@samsung.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v8 0/5] block: add larger order folio instead of pages
+Message-ID: <20240812133843.GA24570@lst.de>
+References: <CGME20240711051521epcas5p348f2cd84a1a80577754929143255352b@epcas5p3.samsung.com> <20240711050750.17792-1-kundan.kumar@samsung.com> <ZrVO45fvpn4uVmFH@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZrVO45fvpn4uVmFH@bombadil.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Also handle NBD_FLAG_ROTATIONAL in our debug helper function
+On Thu, Aug 08, 2024 at 04:04:03PM -0700, Luis Chamberlain wrote:
+> This is not just about mTHP uses though, this can also affect buffered IO and
+> direct IO patterns as well and this needs to be considered and tested as well.
 
-Signed-off-by: Wouter Verhelst <w@uter.be>
-Cc: Eric Blake <eblake@redhat.Com>
----
- drivers/block/nbd.c | 2 ++
- 1 file changed, 2 insertions(+)
+Not sure what the above is supposed to mean.  Besides small tweaks
+to very low-level helpers the changes are entirely in the direct I/O
+path, and they optimize that path for folios larger than PAGE_SIZE.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b2b69cc5ca23..fdcf0bbedf3b 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1714,6 +1714,8 @@ static int nbd_dbg_flags_show(struct seq_file *s, void *unused)
- 		seq_puts(s, "NBD_FLAG_SEND_TRIM\n");
- 	if (flags & NBD_FLAG_SEND_WRITE_ZEROES)
- 		seq_puts(s, "NBD_FLAG_SEND_WRITE_ZEROES\n");
-+	if (flags & NBD_FLAG_ROTATIONAL)
-+		seq_puts(s, "NBD_FLAG_ROTATIONAL\n");
- 
- 	return 0;
- }
--- 
-2.43.0
+> I've given this a spin on top of of the LBS patches [0] and used the LBS
+> patches as a baseline. The good news is I see a considerable amount of
+> larger IOs for buffered IO and direct IO, however for buffered IO there
+> is an increase on unalignenment to the target filesystem block size and
+> that can affect performance.
+
+Compared to what?  There is nothing in the series here changing buffered
+I/O patterns.  What do you compare?  If this series changes buffered
+I/O patterns that is very well hidden and accidental, so we need to
+bisect which patch does it and figure out why, but it would surprise me
+a lot.
 
 
