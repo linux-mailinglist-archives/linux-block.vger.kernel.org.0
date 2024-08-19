@@ -1,227 +1,108 @@
-Return-Path: <linux-block+bounces-10650-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10646-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43C79957A21
-	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 01:59:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B588957845
+	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 00:57:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6849C1C23AB4
-	for <lists+linux-block@lfdr.de>; Mon, 19 Aug 2024 23:59:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 508F1B209B3
+	for <lists+linux-block@lfdr.de>; Mon, 19 Aug 2024 22:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32201667CD;
-	Mon, 19 Aug 2024 23:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D783196C7C;
+	Mon, 19 Aug 2024 22:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="mERexwoy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ot1hZGON"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFE8B657;
-	Mon, 19 Aug 2024 23:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274B73C482;
+	Mon, 19 Aug 2024 22:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724111982; cv=none; b=XOF8bEeSb6NicyNCeMncWwAAFrom7/3bUVfTeXF3WP8bWa2T1OOuPShDHNBdbRbuIbrkyZ4Z783Tacmd5+8V1L6hnCvWZ5f+0Ifum0+wMisSiDc51WkVEtWszka42Flo3Tnmwo7mancmy1rHMztXt6NUFwfPRVEWUf1qGmdKgn8=
+	t=1724108266; cv=none; b=NS0pd0RLzAXwLoNPMwnN4tkFwALv+RTltyjKe0XsEBJdBja73KFmA2wGyzfxr0ESYt0HQQHDfZbJE+t0I1tOgwx35XnXqoc4+8f6dnVAF4GCXK0bmjVYMOfo23ckHaeSSQWEJQza4pUIwau4857QRggZAcVisTYsFLfWn4zXD7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724111982; c=relaxed/simple;
-	bh=yuIaNRdT2XsbRktrinM+nAtjGpiDnUSrUd78oiucAek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2J//nk2eWjb5f7nQxAiHogMm1Tjrszgf//tPAvrXPYmGJzRbLMHXGuGGxbvTMyDwiKyBN56bG0ptxneE2X+KeII/szBvp+XurEd3YI1jwYVz0ZUj1kIvhXQPtaowFWJuFMsb7JveSu8rJJt6gmLaUxq2y/F5+JOX5xYHpoEenY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=mERexwoy; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id g6yfszJBlQRySg6yfszKrO; Mon, 19 Aug 2024 20:19:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1724091584;
-	bh=i2piStncb9aJgwDrvhVqFSwNM+FZr5qttsR8sW3kpiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=mERexwoyPzlfOebBUEnIZsOtSDCyALgn06bAE0XuHJCOZf7MgURweOtCYf6D5ucvJ
-	 hMxqf1tym0+N1Yh1Kbtxnt/uiEN5D/QjnWk+qeYU1kf9fnNGIcOfFfUV8ildjug1Wj
-	 +AeJZMCJpizoL16BT/5H1yRsJWk4bK4mOJMcJ5w1C1DdkuK+LTxHCusEYR4OwF84Ku
-	 +LejUCxpLFrzVaYKQL35SlVlnRKXCLRCjGATL+8fj/YDf1K9GFn7lWZ/Qy8KDoyJRY
-	 4PIjpQAMLXkiwAulAoaPdD5hVIViRIDkDDoFS+N0BjfpoxS/HV8fdzvU2do0815ek2
-	 I0eIZaE9SrODA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 19 Aug 2024 20:19:44 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanadoo.fr>
-Date: Mon, 19 Aug 2024 20:19:28 +0200
+	s=arc-20240116; t=1724108266; c=relaxed/simple;
+	bh=3RYkj11lora+jk88iuLfmUrVXzlcGtIcbelB817NQv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rZYyxBJgEjVnLQ0qO/GR88tECafHV+hSMZvRcn8tfYoZ0m+q8kB/PaY9SOjGCuD/46wcm1pOTbUHNjswvWRm1rAZ2svwLjeqnUsmtNHcEaNFLU3PtCzoSwdFDz1ExKFlRR/B3tBA6txkTv7PL8qCLjjjMeQcHC7MNYM26T+2rS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ot1hZGON; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=iGfyJmX1Qzz8nM0pIFZUr1CNLjNyXjnaY0/FtRYCuzY=; b=ot1hZGONVPSZvQBPNekSSZ6h1b
+	L1c1lvSHOZlXHoDhld0CaHi/GNxXUK7CHiKtcNEW1TFDHUrJbaGy4irle5OEGCQDHrXTSO+CK5gN2
+	a0xMyaH38iD/d2kKA+X7iO3HrCKfV8hhHC7/inMqtTvEcYt6H/zyMHaFNY5XUNWmtRquWVnK4ZYhp
+	KicX6G55EOvHCSEM9Rez9da2LN3jlllyp9JJpKuMbC9XewXOmSk8l0/5l6hVEZPK9xf76EY14sKCZ
+	wEacaWqalp/l59k5PlBpj3YnNzWtZJL+3bTlU6gxbV0Vuy79SD4k9JWnBkZ/RN7051LIAsW2d4SRj
+	+1NGjhlA==;
+Received: from [177.76.152.96] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sgBJb-002OXu-UJ; Tue, 20 Aug 2024 00:57:31 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: linux-doc@vger.kernel.org
+Cc: corbet@lwn.net,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	kernel-dev@igalia.com,
+	kernel@gpiccoli.net,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH] Documentation: Document the kernel flag bdev_allow_write_mounted
+Date: Mon, 19 Aug 2024 19:56:27 -0300
+Message-ID: <20240819225626.2000752-2-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/9] vdap: solidrun: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>, onathan Corbet <corbet@lwn.net>,
- Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
- Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
- Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Alvaro Karsz <alvaro.karsz@solid-run.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-fpga@vger.kernel.org,
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- virtualization@lists.linux.dev
-References: <20240819165148.58201-2-pstanner@redhat.com>
- <20240819165148.58201-10-pstanner@redhat.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240819165148.58201-10-pstanner@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 19/08/2024 à 18:51, Philipp Stanner a écrit :
-> solidrun utilizes pcim_iomap_regions(), which has been deprecated by the
-> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()"), among other
-> things because it forces usage of quite a complicated bitmask mechanism.
-> The bitmask handling code can entirely be removed by replacing
-> pcim_iomap_regions() and pcim_iomap_table().
-> 
-> Replace pcim_iomap_regions() and pcim_iomap_table() with
-> pci_iomap_region().
-> 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
->   drivers/vdpa/solidrun/snet_main.c | 47 +++++++++++--------------------
->   1 file changed, 16 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/vdpa/solidrun/snet_main.c b/drivers/vdpa/solidrun/snet_main.c
-> index 99428a04068d..abf027ca35e1 100644
-> --- a/drivers/vdpa/solidrun/snet_main.c
-> +++ b/drivers/vdpa/solidrun/snet_main.c
-> @@ -556,33 +556,24 @@ static const struct vdpa_config_ops snet_config_ops = {
->   static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
->   {
->   	char name[50];
-> -	int ret, i, mask = 0;
-> +	int i;
-> +
-> +	snprintf(name, sizeof(name), "psnet[%s]-bars", pci_name(pdev));
-> +
->   	/* We don't know which BAR will be used to communicate..
->   	 * We will map every bar with len > 0.
->   	 *
->   	 * Later, we will discover the BAR and unmap all other BARs.
->   	 */
->   	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> -		if (pci_resource_len(pdev, i))
-> -			mask |= (1 << i);
-> -	}
-> -
-> -	/* No BAR can be used.. */
-> -	if (!mask) {
-> -		SNET_ERR(pdev, "Failed to find a PCI BAR\n");
-> -		return -ENODEV;
-> -	}
-> -
-> -	snprintf(name, sizeof(name), "psnet[%s]-bars", pci_name(pdev));
-> -	ret = pcim_iomap_regions(pdev, mask, name);
-> -	if (ret) {
-> -		SNET_ERR(pdev, "Failed to request and map PCI BARs\n");
-> -		return ret;
-> -	}
-> +		if (pci_resource_len(pdev, i)) {
-> +			psnet->bars[i] = pcim_iomap_region(pdev, i, name);
+Commit ed5cc702d311 ("block: Add config option to not allow writing to mounted
+devices") added a Kconfig option along with a kernel command-line tuning to
+control writes to mounted block devices, as a means to deal with fuzzers like
+Syzkaller, that provokes kernel crashes by directly writing on block devices
+bypassing the filesystem (so the FS has no awareness and cannot cope with that).
 
-Hi,
+The patch just missed adding such kernel command-line option to the kernel
+documentation, so let's fix that.
 
-Unrelated to the patch, but is is safe to have 'name' be on the stack?
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-pcim_iomap_region()
---> __pcim_request_region()
---> __pcim_request_region_range()
---> request_region() or __request_mem_region()
---> __request_region()
---> __request_region_locked()
---> res->name = name;
-
-So an address on the stack ends in the 'name' field of a "struct resource".
-
-According to a few grep, it looks really unusual.
-
-I don't know if it is used, but it looks strange to me.
-
-
-If it is an issue, it was apparently already there before this patch.
-
-> +			if (IS_ERR(psnet->bars[i])) {
-> +				SNET_ERR(pdev, "Failed to request and map PCI BARs\n");
-> +				return PTR_ERR(psnet->bars[i]);
-> +			}
-> +		}
->   
-> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> -		if (mask & (1 << i))
-> -			psnet->bars[i] = pcim_iomap_table(pdev)[i];
->   	}
->   
->   	return 0;
-> @@ -591,18 +582,15 @@ static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
->   static int snet_open_vf_bar(struct pci_dev *pdev, struct snet *snet)
->   {
->   	char name[50];
-> -	int ret;
->   
->   	snprintf(name, sizeof(name), "snet[%s]-bar", pci_name(pdev));
->   	/* Request and map BAR */
-> -	ret = pcim_iomap_regions(pdev, BIT(snet->psnet->cfg.vf_bar), name);
-> -	if (ret) {
-> +	snet->bar = pcim_iomap_region(pdev, snet->psnet->cfg.vf_bar, name);
-
-Same
-
-Just my 2c.
-
-CJ
-
-> +	if (IS_ERR(snet->bar)) {
->   		SNET_ERR(pdev, "Failed to request and map PCI BAR for a VF\n");
-> -		return ret;
-> +		return PTR_ERR(snet->bar);
->   	}
->   
-> -	snet->bar = pcim_iomap_table(pdev)[snet->psnet->cfg.vf_bar];
-> -
->   	return 0;
->   }
->   
-> @@ -650,15 +638,12 @@ static int psnet_detect_bar(struct psnet *psnet, u32 off)
->   
->   static void psnet_unmap_unused_bars(struct pci_dev *pdev, struct psnet *psnet)
->   {
-> -	int i, mask = 0;
-> +	int i;
->   
->   	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->   		if (psnet->bars[i] && i != psnet->barno)
-> -			mask |= (1 << i);
-> +			pcim_iounmap_region(pdev, i);
->   	}
-> -
-> -	if (mask)
-> -		pcim_iounmap_regions(pdev, mask);
->   }
->   
->   /* Read SNET config from PCI BAR */
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 09126bb8cc9f..709d1ee342db 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -517,6 +517,16 @@
+ 			Format: <io>,<irq>,<mode>
+ 			See header of drivers/net/hamradio/baycom_ser_hdx.c.
+ 
++	bdev_allow_write_mounted=
++			Format: <bool>
++			Control the ability of directly writing to mounted block
++			devices' page cache, i.e., allow / disallow writes that
++			bypasses the FS. This was implemented as a means to
++			prevent fuzzers to crash the kernel by breaking the
++			filesystem without its awareness, through direct block
++			device writes. Default is Y and can be changed through
++			the Kconfig option CONFIG_BLK_DEV_WRITE_MOUNTED.
++
+ 	bert_disable	[ACPI]
+ 			Disable BERT OS support on buggy BIOSes.
+ 
+-- 
+2.45.2
 
 
