@@ -1,169 +1,187 @@
-Return-Path: <linux-block+bounces-10659-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10661-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33C3C958001
-	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 09:40:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5E2A958066
+	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 09:58:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D60D1C24162
-	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 07:40:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 167071C2306E
+	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2024 07:58:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A393189527;
-	Tue, 20 Aug 2024 07:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24EB188CBD;
+	Tue, 20 Aug 2024 07:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eJta+Jvo"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vBW+gI0I"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C330188CBB
-	for <linux-block@vger.kernel.org>; Tue, 20 Aug 2024 07:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F6518E34F
+	for <linux-block@vger.kernel.org>; Tue, 20 Aug 2024 07:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724139620; cv=none; b=jReaPwEML3MbXRAJW5Pi2ZekEBi+4v9QLtKzvbSnWRr6yqsMnvHc33Bi+WxciIdgBQ4SNeo9fkEIQb3Ulg7aTEVNEplCsyLK5kcq6jplJu6BdDx6N2hn/gZAZ7ivYrynd7107bFSFFBwbGGCJB8JHD1THVrGj6RI1aydrZAdvrs=
+	t=1724140698; cv=none; b=CXxiAnUsup1UoDak6rTOKDhZ1Fc2XeeDN80jrYKNVVKt1GSyryNwlRkN8/y4EO1lyhKyYXpMzktK1ZMNxq202+3OcvEI/MC9vYR1536uRSUp9yX0CX/buH2ibtt8nYI6HaDLMEZ+88cB2LwFiWWMfVAEh2fLaDvUPZSXbNFOWE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724139620; c=relaxed/simple;
-	bh=aYkN9CyGqEIYAw2LdxUgvvFJ/GqgBaxXltVMI7LxkmY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BNroB+mNl0waBuwFyJbb9P/L7V+asaskjQVl/bdbtDFVwbIdUihxk01f21cOo4Fe9WAqG/4ZF16qVY6yrw9hrT9WFVvSJvBTSyp60Iu/JSiLcgmk5KSZ1lkrKOnN4urYsx1SjRBh2tDleGlaFmECd2khOGYti0hb532UrQxB7HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eJta+Jvo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724139617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LI6kfa5oLV045Jmdu7a0CojUb3GQJzHs7H4OiymNEbE=;
-	b=eJta+JvoAWDoq+TClca86nb1bs8xpBb+o5RHBqIDL2NFV2l3yaEvTzSxTrb7IuvYQv56o6
-	QzM3HYFuNwLshv5bg817PpSVjUKuJq3S3C/WUtSLa8o0NPrg98ZWcQ1T3mBx2E72TvWBKq
-	kD2JUPT7cJsgtQdSvVBw+Tu7sM+zyso=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-NMmwCt0MOMCDWXyWgZXccQ-1; Tue, 20 Aug 2024 03:40:14 -0400
-X-MC-Unique: NMmwCt0MOMCDWXyWgZXccQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2f01b609ac9so4173671fa.1
-        for <linux-block@vger.kernel.org>; Tue, 20 Aug 2024 00:40:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724139612; x=1724744412;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LI6kfa5oLV045Jmdu7a0CojUb3GQJzHs7H4OiymNEbE=;
-        b=T7ApzKRrKx1mbobZKpmXF/HrMlH3mh8J8625sFd0FMJ9KdpyJpby7Rr202gtpCxyhL
-         YlM37GGAcqofwSHXGkyD/siscQWgFgl4Rn1VHCKnCTSrukLLG5aZ6eSjFQ+qveh2mHmk
-         D90ZWLhbx1c/EVT7ejWOpiNY7p1t/z8jBaKzWmFTcPGglYVQGN0oY66IrrlJuCsOeBoK
-         3q3heA0Dgplsuvz/IUF2rGLFAiLtCuPTske8Bkf1e4jBx7uBPAHY7dFGVVxD8BBQEhFA
-         7s187pwFsYmwFg1Smanc2l/4LolO5KD9/uDNlU8RFnVKoZ9SZiA5zTJq5zeH4M9msRde
-         fqaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhRKvnVEZC0uaotBuncXHvBOOqfVv/vxdmE4c09VfCxH9R77yohYnvS+8lnSQ9alz4anlJMJS+GZVcsA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpZPHOUpZpusUO35ZlMeu79gq0pe+l2u+30MvHu3plmq5gniwD
-	PyQDlZqq6w/oHB+Q5EIvZ1CtYbgn1YD1ZfBUaaMnXRgF57G1H2XSymYJIQsCHfMsT7TV+cpWxN8
-	MzEyaFEMB3utLMHzVnk9n/RiofziozXcXMIP4XFLY12OcGVLE8UXyXJHbZK6j
-X-Received: by 2002:a05:6512:3d04:b0:52f:c0dd:d168 with SMTP id 2adb3069b0e04-5331c6e53bfmr4778912e87.7.1724139612400;
-        Tue, 20 Aug 2024 00:40:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuY9Bjt5iBWcm2YKpDyt42mNkBOnX16tyh4gc9tacJQihXtDb0AW33sxGPjl0kWgtMyZPzMQ==
-X-Received: by 2002:a05:6512:3d04:b0:52f:c0dd:d168 with SMTP id 2adb3069b0e04-5331c6e53bfmr4778883e87.7.1724139611750;
-        Tue, 20 Aug 2024 00:40:11 -0700 (PDT)
-Received: from eisenberg.fritz.box ([2001:16b8:3dcc:1f00:bec1:681e:45eb:77e2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83839344fdsm726051366b.100.2024.08.20.00.40.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 00:40:11 -0700 (PDT)
-Message-ID: <5d70794731198ec7bc59bd95e50a8aa81cf97c7b.camel@redhat.com>
-Subject: Re: [PATCH 6/9] ethernet: cavium: Replace deprecated PCI functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao
- <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer
- <mdf@kernel.org>,  Xu Yilun <yilun.xu@intel.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael
- S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>,  Eugenio =?ISO-8859-1?Q?P=E9rez?=
- <eperezma@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Mark
- Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>,  Hannes Reinecke <hare@suse.de>,
- Damien Le Moal <dlemoal@kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
- virtualization@lists.linux.dev
-Date: Tue, 20 Aug 2024 09:40:09 +0200
-In-Reply-To: <ZsONiNkdXGMKMbRL@smile.fi.intel.com>
-References: <20240819165148.58201-2-pstanner@redhat.com>
-	 <20240819165148.58201-8-pstanner@redhat.com>
-	 <ZsONiNkdXGMKMbRL@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1724140698; c=relaxed/simple;
+	bh=gpwtE6Bp1AiaIl5ZsIKRTj25WTSViH0Pce7tm1HMtDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=sgYAT3rnwuiMAMsUdmwAFjKpka8LA8PvfcdFFnghYaCmmWu0oixb+KJl9aP0bugbpc7t17snXz1GCQPpCHJqSN7i1h5FVTGsr4G7E4aa85O21Yw9NmZgO+YIGXq5AYJur53EJA1jgeitZgj019NC8j7oiKq1EIAr7FBI3HPVuTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vBW+gI0I; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240820075814epoutp03c0aa41ff6b46a7d48e361f48118dcbc5~tYNOQ9Qfd3131131311epoutp03R
+	for <linux-block@vger.kernel.org>; Tue, 20 Aug 2024 07:58:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240820075814epoutp03c0aa41ff6b46a7d48e361f48118dcbc5~tYNOQ9Qfd3131131311epoutp03R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1724140694;
+	bh=n1op7kAX1nG07G4nghX8cBHUl5wUBr1ZSxziuhLqLDw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vBW+gI0IGprGyJGxu3ptaOyJT4WJETn8KI5hnqNg2rGwRtTT8wJEnsh0LGkJqQacz
+	 ArYvsXL5Cu1gzKkLl2OL3tlbfCOSlpkQrY1XeFTzJirnJGOe6SADVFoDDPQsJq0JTG
+	 UBP1hyKHZpJWPo9uh9aSKkeajMwV5MVrdReR/HeQ=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20240820075813epcas5p4df09804ccc489a360a8e9bf10302515f~tYNNryvhr0688506885epcas5p4c;
+	Tue, 20 Aug 2024 07:58:13 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Wp1zl4SMJz4x9Pt; Tue, 20 Aug
+	2024 07:58:11 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A4.04.19863.39C44C66; Tue, 20 Aug 2024 16:58:11 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240820075104epcas5p4c54b3d4d81703cd1eb8209182026905a~tYG_J2DnS2271822718epcas5p4G;
+	Tue, 20 Aug 2024 07:51:04 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240820075104epsmtrp2380cb688a4f7e5b0c1a69156b13de175~tYG_IyMNo0902009020epsmtrp2k;
+	Tue, 20 Aug 2024 07:51:04 +0000 (GMT)
+X-AuditID: b6c32a50-c73ff70000004d97-34-66c44c936758
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8A.75.07567.8EA44C66; Tue, 20 Aug 2024 16:51:04 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240820075102epsmtip118e64ca0808443d851154d982ab59c78~tYG8m_NSQ1149211492epsmtip1b;
+	Tue, 20 Aug 2024 07:51:02 +0000 (GMT)
+Date: Tue, 20 Aug 2024 13:13:21 +0530
+From: Kundan Kumar <kundan.kumar@samsung.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
+	linux-block@vger.kernel.org, joshi.k@samsung.com, mcgrof@kernel.org,
+	anuj20.g@samsung.com, nj.shetty@samsung.com, c.gameti@samsung.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v8 1/5] block: Added folio-ized version of
+ bvec_try_merge_hw_page()
+Message-ID: <20240820074321.i5budzkt4efcqodd@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <ZsAlsjZeNmsBI6J0@casper.infradead.org>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmlu5knyNpBou+yVs0TfjLbLH6bj+b
+	xfftfSwWNw/sZLJYufook8XR/2/ZLCYdusZosfeWtsWNCU8ZLbb9ns9s8fvHHDYHbo/NK7Q8
+	Lp8t9di0qpPNY/fNBjaPvi2rGD0+b5ILYIvKtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw
+	1DW0tDBXUshLzE21VXLxCdB1y8wBOk5JoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCS
+	U2BSoFecmFtcmpeul5daYmVoYGBkClSYkJ1x83EPU8FVgYpjS9qYGhhf8HYxcnJICJhIPF98
+	jbWLkYtDSGAPo8TWI3+ZIZxPjBL3txxhh3C+MUpcuH6MEaZl3qXVLBCJvYwS7+ZuhHKeMUpM
+	f9vKBFLFIqAqsfTMZqAEBwebgK7Ej6ZQEFNEQEPizRYjkHJmgWuMEifXH2cDiQsLREosOscI
+	YvIKmElsbQgGGcIrIChxcuYTFhCbE2jt1zUfmEFsUQEZiRlLv4IdKiEwl0Pi4imQFziAHBeJ
+	xlMqEGcKS7w6voUdwpaS+PxuLxuEnS1xqHEDE4RdIrHzSANUjb1E66l+ZpAxzAIZEtu3mkGE
+	ZSWmnloHVs4swCfR+/sJVCuvxI55MLaaxJx3U1kgbBmJhZdmQMU9JDafWgIN3PeMEodnXWac
+	wCg/C8lrsxDWzQJbYSXR+aGJFSIsLbH8HweEqSmxfpf+AkbWVYxSqQXFuempyaYFhrp5qeXw
+	2E7Oz93ECE64WgE7GFdv+Kt3iJGJg/EQowQHs5IIb/fLg2lCvCmJlVWpRfnxRaU5qcWHGE2B
+	8TSRWUo0OR+Y8vNK4g1NLA1MzMzMTCyNzQyVxHlft85NERJITyxJzU5NLUgtgulj4uCUamAK
+	zL6/XFZnravWM/aMl9vtpTzC1ycu73LTmj9ppf6vD6KTDK67bZ5UderN+QXZpscFbvb+/nVx
+	s4t4x5mrK3cJTS1eyHruyOrwWS9azP/F8NwteRxqPPvH8SpFmf/MEvdyfv7P3uza3Ggyd8J3
+	9rK4hvj/BU1Vt1PMPiQ8PaL+Y+7s/NkaX558qtrUuCYtwm+T65V6frbaC9I+4j5/gnVtstaL
+	mpguctzTuzKvR7Fwld6dfEsWwbpYu80/y7N/ra53VXPSPqeW/SzT8B1n8ukDRbf+51qeWBSo
+	pXN+jdZn7opa8xaufUuPhnj8lhKUj7QSfsbFuXhD1XXmqtr24nOm7DV7/s9zrqw+wXyU6aYS
+	S3FGoqEWc1FxIgBn9S9oQQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSnO4LryNpBh/+Slk0TfjLbLH6bj+b
+	xfftfSwWNw/sZLJYufook8XR/2/ZLCYdusZosfeWtsWNCU8ZLbb9ns9s8fvHHDYHbo/NK7Q8
+	Lp8t9di0qpPNY/fNBjaPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyjg8+yRjQTtfxcLTPSwN
+	jFu4uxg5OSQETCTmXVrN0sXIxSEksJtRYsPGe0wQCRmJ3Xd3skLYwhIr/z1nhyh6wiix7vVW
+	sASLgKrE0jObgbo5ONgEdCV+NIWCmCICGhJvthiBlDMLXGOUOLn+OBtIXFggUmLROUYQk1fA
+	TGJrQzDExPeMEgfnnmMBmcgrIChxcuYTMJsZqGbe5ofMIPXMAtISy/9xgIQ5gU7+uuYDM4gt
+	CnTljKVfmScwCs5C0j0LSfcshO4FjMyrGCVTC4pz03OTDQsM81LL9YoTc4tL89L1kvNzNzGC
+	Y0VLYwfjvfn/9A4xMnEwHmKU4GBWEuHtfnkwTYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv4YzZ
+	KUIC6YklqdmpqQWpRTBZJg5OqQamvFPXPD5/d6tLipaYafjmxKuTqxblTrxdeffvwqpKwZ+8
+	rK8UzjzLCHq65PEerx5lZ3m5HR6HE1Yu95fqXm4UIHG6epfIvPyoPIYau627MrXm1K1Y5733
+	1bfDdsv39vz5XnZ7e83S56xtyRv97vTtmzvJYd4KFaPrzj8MM+o8vkgVhj6vFDucGBx43vbO
+	3LMxmv/2Zh64qxvHz1hzt+rH4QCjxBdff1iUbAu6Fz0lJX7iha/31rbMt5LqnsjVe25NxfvZ
+	ZoumJDEc+VZaPfFJ5Qm1Sdvms591mv3TSz54bqasI1c1q3OEuvXybcccHj/XXDL7j/Mndram
+	hUp7PTsdO4MnHtw5e/pq7UTpN1d9ipVYijMSDbWYi4oTAdE7aEAEAwAA
+X-CMS-MailID: 20240820075104epcas5p4c54b3d4d81703cd1eb8209182026905a
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K_xth5sKcUEfCV0X9aU-k.Br-XWllh-4huxyB_iNSY1rR3o.=_8c32d_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240711051529epcas5p1aaf694dfa65859b8a32bdffce5239bf6
+References: <20240711050750.17792-1-kundan.kumar@samsung.com>
+	<CGME20240711051529epcas5p1aaf694dfa65859b8a32bdffce5239bf6@epcas5p1.samsung.com>
+	<20240711050750.17792-2-kundan.kumar@samsung.com>
+	<ZsAlsjZeNmsBI6J0@casper.infradead.org>
 
-On Mon, 2024-08-19 at 21:23 +0300, Andy Shevchenko wrote:
-> On Mon, Aug 19, 2024 at 06:51:46PM +0200, Philipp Stanner wrote:
-> > pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-> > the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> > pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> >=20
-> > Replace these functions with the function pcim_iomap_region().
->=20
-> ...
->=20
-> cavium_ptp_probe()
->=20
-> > -	pcim_iounmap_regions(pdev, 1 << PCI_PTP_BAR_NO);
-> > +	pcim_iounmap_region(pdev, PCI_PTP_BAR_NO);
-> > =C2=A0
-> > =C2=A0error_free:
-> > =C2=A0	devm_kfree(dev, clock);
->=20
-> Both are questionable. Why do we need either of them?
+------K_xth5sKcUEfCV0X9aU-k.Br-XWllh-4huxyB_iNSY1rR3o.=_8c32d_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-You seem to criticize my pcim_iounmap_region() etc. in other unwind
-paths, too. I think your criticism is often justified. This driver
-here, however, was the one which made me suspicious and hesitate and
-removing those calls; because of the code below:
+On 17/08/24 05:23AM, Matthew Wilcox wrote:
+>On Thu, Jul 11, 2024 at 10:37:46AM +0530, Kundan Kumar wrote:
+>> -bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
+>> -		struct page *page, unsigned len, unsigned offset,
+>> +bool bvec_try_merge_hw_folio(struct request_queue *q, struct bio_vec *bv,
+>> +		struct folio *folio, size_t len, size_t offset,
+>>  		bool *same_page)
+>>  {
+>> +	struct page *page = folio_page(folio, 0);
+>>  	unsigned long mask = queue_segment_boundary(q);
+>>  	phys_addr_t addr1 = bvec_phys(bv);
+>>  	phys_addr_t addr2 = page_to_phys(page) + offset + len - 1;
+>[...]
+>> +bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
+>> +		struct page *page, unsigned int len, unsigned int offset,
+>> +		bool *same_page)
+>> +{
+>> +	struct folio *folio = page_folio(page);
+>> +
+>> +	return bvec_try_merge_hw_folio(q, bv, folio, len,
+>> +			((size_t)folio_page_idx(folio, page) << PAGE_SHIFT) +
+>> +			offset, same_page);
+>> +}
+>
+>This is the wrong way to do it.  bio_add_folio() does it correctly
+>by being a wrapper around bio_add_page().
+>
+>The reason is that in the future, not all pages will belong to folios.
+>For those pages, page_folio() will return NULL, and this will crash.
+>
 
-
-	pcim_iounmap_region(pdev, PCI_PTP_BAR_NO);
-
-error_free:
-	devm_kfree(dev, clock);
-
-error:
-	/* For `cavium_ptp_get()` we need to differentiate between the case
-	 * when the core has not tried to probe this device and the case when
-	 * the probe failed.  In the later case we pretend that the
-	 * initialization was successful and keep the error in
-	 * `dev->driver_data`.
-	 */
-	pci_set_drvdata(pdev, ERR_PTR(err));
-	return 0;
-}
-
-
-So in case of an error they return 0 and do... stuff.
-
-I don't want to touch that without someone who maintains (and, ideally,
-understands) the code details what's going on here.
+I can change in this fashion. page_folio is getting used at many other
+places in kernel and currently there are no NULL checks. Will every place
+need a change?
+In this series we use page_folio to fetch folio for pages returned by
+iov_iter_extract_pages. Then we iterate on the folios instead of pages.
+We were progressing to change all the page related functions to accept
+struct folio.
+If page_folio may return NULL in future, it will require us to maintain
+both page and folio versions. Do you see it differently ?
 
 
-P.
+------K_xth5sKcUEfCV0X9aU-k.Br-XWllh-4huxyB_iNSY1rR3o.=_8c32d_
+Content-Type: text/plain; charset="utf-8"
 
+
+------K_xth5sKcUEfCV0X9aU-k.Br-XWllh-4huxyB_iNSY1rR3o.=_8c32d_--
 
