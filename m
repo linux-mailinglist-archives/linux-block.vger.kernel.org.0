@@ -1,203 +1,119 @@
-Return-Path: <linux-block+bounces-10775-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10777-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7747695B767
-	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 15:51:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2776495B852
+	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 16:25:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26597282BEF
-	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 13:51:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56FAA1C23C6A
+	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 14:25:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88C041CE6F9;
-	Thu, 22 Aug 2024 13:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542331CC151;
+	Thu, 22 Aug 2024 14:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LX1cRsD6"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="iayurmIL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331131CDFC9
-	for <linux-block@vger.kernel.org>; Thu, 22 Aug 2024 13:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9271CBEBF;
+	Thu, 22 Aug 2024 14:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724334499; cv=none; b=mTq5bLeV4vDhr0xUHVjPLvixw92iW5FepiPX2xP4aNWKnONNdu2N6BkhFTWNFMkkCf/tTy87OyGim8EswDeM2OtplN87lnxhdeCaSnptgdqACAuiemN+6k+jTDbQyjU7gxWnM59lbA+lgbu4rzFa7uSCmyJyu09wjVAMbI6Ze+0=
+	t=1724336706; cv=none; b=mRhn8u/dr9rOwO8csg7c16YXJHB+gAcicMezeiZxs3cvRdLsXmNmFc9Znr0dUwPaaZyivdKhioZ6o4HJD5hb++q6G3IUATvhURRrxKPHWjUZR+O74uXd3fVECKhEnoxzmZ0NXlo1rgXs91JfkH9ZTVnZgmBZf5hSdYs1pqgwhlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724334499; c=relaxed/simple;
-	bh=xzKTSbBUCxwnUpKs8six5ekb8eTkm5n7sI9qBsfTSxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RIyJQs6gZnvW1SMarJrPrris1s63Pl2whHm1JNpUIIpZpQqPD4gFhVbEkkGSBqqcFgjXt+vk8KKLtKNBR6hJ3grhcSn6Nt/6L4OBA170kNwzQtls25tTNTbuB43FNKtvgFKKiYa7LeA5sLkekN1ALZiGgGsEC1rTIL3WNueS0JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LX1cRsD6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724334496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=stErXlsn4bG59ZiuP1S49NzWKfcbkIn79Ht3IKYskFI=;
-	b=LX1cRsD6/Q6Vax7T1ODI1RnAIXS+w5tZla8sA1P9sgjqJGmHazVO0IraAP4XxtEBys8oGa
-	V0R35Q57U62DQZXcOCqDcSvz0s7RaHHBHXp5s6TOoEYlRTiK6W612HbUICGfIrx1xNOm1e
-	T3XlBuVqz8iG0XzxM8I50dynEiUbLis=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-1xhWNJi6N-ClbtoCYytwYA-1; Thu, 22 Aug 2024 09:48:15 -0400
-X-MC-Unique: 1xhWNJi6N-ClbtoCYytwYA-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42807a05413so6221485e9.2
-        for <linux-block@vger.kernel.org>; Thu, 22 Aug 2024 06:48:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724334494; x=1724939294;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=stErXlsn4bG59ZiuP1S49NzWKfcbkIn79Ht3IKYskFI=;
-        b=TxmIBNctFu1xPySFTeSongzgUm3P2fULSbmc74muJqSP3c7M6/8Qm869DFBKEVqvq4
-         UGAPd/ix7WE654/Xj0dvJ1tH2u87qZyR+/z8VkDJ4TvejghxGZMVo+MEPkpD8q3J58XU
-         C5tHl/l23Ua36S9VEaeVWzYj64qut+J1q79w53SYjBMgBHCM8fgAEMMmDka7cvI5bWf7
-         3eCp1pmBpKyW6ppUMlNiqkiHgSKxpywFW+O0fdSrN6RbdsI37yLmiEuv7y71AhyQmguf
-         uFvo8TIgPG6FsDvnIkAMpRCqjHxzlj0bdHvznz3+wKm9dQ5ZDREH/8OSEex/M0BomVmI
-         VvBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpGFI+X46v0HMabFwfr9Hqh2HzWnCr4TCHh+jDMkzTCBSxHu/ihkFr7t1IV9DphGwHWxA6PXSSrlPXsQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH6vgyni+X65SWROK2gMDpKhn1L1BW3hkLw49TnuKRD6BypHYp
-	l/3asCrw4Kn7yVhauMCAe7iITp4vxc81sAhBB/C7drBmZeAjz/nu9s3eWJYvsEwyV1lXZ/iZaoN
-	Tpt2lZv5GG2IY3dwNTZc/wrsZrMS7zH8C/wAco4h80Ge+8LMx7pHACUzXOMk0
-X-Received: by 2002:a05:600c:470d:b0:426:5cee:4abc with SMTP id 5b1f17b1804b1-42abd23c42fmr42834325e9.20.1724334494008;
-        Thu, 22 Aug 2024 06:48:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+ml6suAX3eG1pz2LPHUrAJqRTfncLpMSUbPA+Ci3dUa++3KF20e/68btOdPMgiZkBffw5eg==
-X-Received: by 2002:a05:600c:470d:b0:426:5cee:4abc with SMTP id 5b1f17b1804b1-42abd23c42fmr42833985e9.20.1724334493539;
-        Thu, 22 Aug 2024 06:48:13 -0700 (PDT)
-Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ac5162322sm25057215e9.24.2024.08.22.06.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 06:48:11 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alvaro Karsz <alvaro.karsz@solid-run.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fpga@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH v3 9/9] PCI: Remove pcim_iounmap_regions()
-Date: Thu, 22 Aug 2024 15:47:41 +0200
-Message-ID: <20240822134744.44919-10-pstanner@redhat.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240822134744.44919-1-pstanner@redhat.com>
-References: <20240822134744.44919-1-pstanner@redhat.com>
+	s=arc-20240116; t=1724336706; c=relaxed/simple;
+	bh=5gAn08tl0DWw9UTcGtfFWbARqnR/Yvy1JbPAIXA+o/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hX0fULm3lmkMvSl5cKZGCCZO0EzNTzJtf8Y1KAjAsEoAKndpGFdlpHxxwsqe16rhlKx0YY5E+cZ+6mmkcVnTA60Xhu2He7iwdgRo4W/p68j1Bv27LA7fs0sDZJnt/m1H7KFnIIsGdPfCHV2q4aYcUJvWt1rojtYrjZszP0S0Roc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=iayurmIL; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WqQTC6Xh1z6ClY9L;
+	Thu, 22 Aug 2024 14:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1724336697; x=1726928698; bh=A7yFaIGsFtQ/Bafrc7gGhxSj
+	CNRGAj8JHNdgO2uxxPM=; b=iayurmILqnEybKQXnzw5y6A7YPTUlHSXOEPjy5Wq
+	s6Lqo494HmCoYbb5UZ87Cn6tvajKUZuScpHKUZkEjS5rfh0s4n4L5rPcTr8D2egU
+	8Fxa10+ArC5J9EwHrqTyPhyJ7/57Kriu/H1COPnZKY3XOFrsYnWoV/duKe64TYnI
+	hH7hb9VH9qq4Cka0me+ROlzR7A0ITIooVqn2Q9UfjIpA6Vy86ZmsCcNT6mcOmC/c
+	QuHmj+3/bIrL9p4cygKiCKhFHyLmgMOmcY7i3wPbgoU9IBYK//WZ1isbteX8mvuk
+	7opqTY9Y7SmvQoUxe6SUtWFGtVb9bcXu2aAlbtVMAkkaNQ==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Vh6dqYTRNtGE; Thu, 22 Aug 2024 14:24:57 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WqQT11wDxz6ClY9F;
+	Thu, 22 Aug 2024 14:24:52 +0000 (UTC)
+Message-ID: <1a95a60c-730a-4bb7-80c9-98b8a70f6521@acm.org>
+Date: Thu, 22 Aug 2024 07:24:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regarding patch "block/blk-mq: Don't complete locally if
+ capacities are different"
+To: MANISH PANDEY <quic_mapa@quicinc.com>,
+ Sandeep Dhavale <dhavale@google.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Qais Yousef <qyousef@layalina.io>,
+ Christian Loehle <christian.loehle@arm.com>, axboe@kernel.dk,
+ mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+ linux-block@vger.kernel.org, sudeep.holla@arm.com,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+ kailash@google.com, tkjos@google.com, bvanassche@google.com,
+ quic_nitirawa@quicinc.com, quic_cang@quicinc.com, quic_rampraka@quicinc.com,
+ quic_narepall@quicinc.com,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <10c7f773-7afd-4409-b392-5d987a4024e4@quicinc.com>
+ <3feb5226-7872-432b-9781-29903979d34a@arm.com>
+ <20240805020748.d2tvt7c757hi24na@airbuntu>
+ <25909f08-12a5-4625-839d-9e31df4c9c72@acm.org>
+ <1d9c27b2-77c7-462f-bde9-1207f931ea9f@quicinc.com>
+ <17bf99ad-d64d-40ef-864f-ce266d3024c7@acm.org>
+ <e2c19f3a-13b0-4e88-ba44-7674f3a1ea87@quicinc.com>
+ <c151b6d5-7e02-48ee-951f-c23594f6be6f@arm.com>
+ <CAB=BE-RHwqmSRt-RbmuJ4j1bOFqv1DrYD9m-E1H99hYRnTiXLw@mail.gmail.com>
+ <ca78ada8-d68b-4759-a068-ac8f66c51b72@quicinc.com>
+ <12a6f001-813e-4bc4-90c2-9f9ef7dc72e6@acm.org>
+ <688ead11-c1c0-48b2-b4d1-feeb1278c692@quicinc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <688ead11-c1c0-48b2-b4d1-feeb1278c692@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-All users of pcim_iounmap_regions() have been removed by now.
+On 8/22/24 3:46 AM, MANISH PANDEY wrote:
+> On 8/21/2024 10:52 PM, Bart Van Assche wrote:
+> > What is the performance impact of the above change?
+ >
+> No impact at all
+Is this a good summary of this email thread?
+* The first email in this thread reports an important performance
+   regression.
+* In your previous email there is a candidate fix for the performance
+   regression.
+* Above I read that the proposed fix has no performance impact at all
+   on any setup.
 
-Remove pcim_iounmap_regions().
+Is this a good summary of this email thread? If so, do you agree that
+this must be confusing everyone who is following this email thread?
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
----
- .../driver-api/driver-model/devres.rst        |  1 -
- drivers/pci/devres.c                          | 21 -------------------
- include/linux/pci.h                           |  1 -
- 3 files changed, 23 deletions(-)
+Thanks,
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index ac9ee7441887..525f08694984 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -397,7 +397,6 @@ PCI
-   pcim_iomap_regions_request_all() : do request_region() on all and iomap() on multiple BARs
-   pcim_iomap_table()		: array of mapped addresses indexed by BAR
-   pcim_iounmap()		: do iounmap() on a single BAR
--  pcim_iounmap_regions()	: do iounmap() and release_region() on multiple BARs
-   pcim_pin_device()		: keep PCI device enabled after release
-   pcim_set_mwi()		: enable Memory-Write-Invalidate PCI transaction
- 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 4dbba385e6b4..022c0bb243ad 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -1013,27 +1013,6 @@ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
- }
- EXPORT_SYMBOL(pcim_iomap_regions_request_all);
- 
--/**
-- * pcim_iounmap_regions - Unmap and release PCI BARs
-- * @pdev: PCI device to map IO resources for
-- * @mask: Mask of BARs to unmap and release
-- *
-- * Unmap and release regions specified by @mask.
-- */
--void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
--{
--	int i;
--
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (!mask_contains_bar(mask, i))
--			continue;
--
--		pcim_iounmap_region(pdev, i);
--		pcim_remove_bar_from_legacy_table(pdev, i);
--	}
--}
--EXPORT_SYMBOL(pcim_iounmap_regions);
--
- /**
-  * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
-  * @pdev: PCI device to map IO resources for
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9625d8a7b655..6c60f063c672 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2301,7 +2301,6 @@ void pcim_iounmap_region(struct pci_dev *pdev, int bar);
- int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
- int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
- 				   const char *name);
--void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
- void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
- 				unsigned long offset, unsigned long len);
- 
--- 
-2.46.0
-
+Bart.
 
