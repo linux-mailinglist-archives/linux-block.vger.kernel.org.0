@@ -1,128 +1,191 @@
-Return-Path: <linux-block+bounces-10766-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10768-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF94E95B600
-	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 15:09:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1308095B72A
+	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 15:48:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 697BA1F2493D
-	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 13:09:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 911DFB2197D
+	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2024 13:48:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E856D1C9DE5;
-	Thu, 22 Aug 2024 13:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E28D1CBEA6;
+	Thu, 22 Aug 2024 13:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRQtPJTr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KRMmp4Tw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EED41C9DD7;
-	Thu, 22 Aug 2024 13:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0911CB33A
+	for <linux-block@vger.kernel.org>; Thu, 22 Aug 2024 13:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724332123; cv=none; b=uOW03EafV45x8LYqjUjRMNdZQd2ZHKCHMiGXx0ZcErs91BRvWwwwRZpzdLwRf3PcWuPpsrOCI0PGdTOLX/NqHfllwfqKYe37g4cc9+bo2lL7aZnF9UvReA1rkP55fh0C5lJDdHOhQDNh7aVFoB6o1TE+VgD+l1u4frFj+pJijjE=
+	t=1724334485; cv=none; b=bM+rEBsXZZn70jeUcRLtawV3/eoR6jEnOOJ/J4uoyJqBSrZYwvRZ3xbiCQkpADPpWbkxu+d4z1flQ2dt3b9rPZVp4lQaUcxtq1VcoybMaKsKfLbJYa9GzSj76M4bcl3O6tyZRsbBapS5Y193sFBLEOxATQ94Ors8kAojyf9Y+bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724332123; c=relaxed/simple;
-	bh=qmNqu6ae8ARraFZaQxP22e+UfQbynK394nji+qy0BAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LmZ7S+S51RBN5Rahnc1l3EpPpjNe8nLIx9OilCRidFd1PD0Mbgwf3k0R7w0dvAva//fzjyBk4rELp8tb3I1pfk35fUOxImhnxxt28h8wAdCDsVDu9XzN0UotBIn6GJaNS0IedjjvJiyc9CDRr1bD4CVATxQbFlpgl+FRUgpVL+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRQtPJTr; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8666734767so98879466b.1;
-        Thu, 22 Aug 2024 06:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724332120; x=1724936920; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dl+Hsm8zibvc7WrumbZdWV/OSVlPFvlVPjSvuxKRlb0=;
-        b=NRQtPJTrK7ovOW1A3eYHzRhetOXlprhZ4LV8W6M0mInxLbszt+2fa1+BY6/UYOr8yB
-         rlZ6r8vIFI0y9Usx4uRCG2WGHGmAVzHc+by4xHyu/SB+3ymE69I/EuMWDFRgjX7I0cnu
-         9w+JlS3g8UHEu/tIGPAXG3PQOQf7w58+4/oXLLswIqYGQR1cUKlgNf4LPuGPk27RieLl
-         3Pt0YMjeTJAqfRH4UjJbZSgNSgbRQGaGaoOUyTo/7OE+0BYrWTHasV09TzmatHAWMefz
-         zv+OW6A4LGYGXrZrxs0R/cbLGYeGs4lRi0lKl6MKHSHiwZuSao+eTUBVGX4+KECECjs9
-         dK1w==
+	s=arc-20240116; t=1724334485; c=relaxed/simple;
+	bh=TveaYkEbx2doRY7IcRS2QWPC/9cfsUPF8paUrSreb6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JAN9QD2hdNDi0PC3/4QYCIdGSIkojQBTuE1otcXZ7ukH/7/29U6Yf2NT3kL/dA80poBqhKn3jGVy8Kv/iFmmyjlchgY4n6NnBDW6F9Tc7uP1LCGdle60ge37ulzivo3rB8SFo2sRkf1SphRAZ9zzv7yvmhQjhSxMaw1qKW7PwDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KRMmp4Tw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724334482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FjYBhspv7tRST0pSqSmRh821Mv70zB5zctMwrlaK9DI=;
+	b=KRMmp4TwaYeNmgMYe+OAC61MmEjeegfpkvS9vY3tIbqXkintCa+7Xmk53QqE5uTFNN9HRI
+	VLjjgy8oOrHR8bWReuZGcdYv4afXV5sOqLDYF+hFbinBn5NKh0K7Ir7NBSdbnl5u7wnA5a
+	mt0Gxp4hosf5gz/+8VAIuJyMn3yFoAA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-451-FAU8uyy_PXaGaoUII8MeCQ-1; Thu, 22 Aug 2024 09:47:59 -0400
+X-MC-Unique: FAU8uyy_PXaGaoUII8MeCQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-428ea5b1479so6323435e9.0
+        for <linux-block@vger.kernel.org>; Thu, 22 Aug 2024 06:47:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724332120; x=1724936920;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dl+Hsm8zibvc7WrumbZdWV/OSVlPFvlVPjSvuxKRlb0=;
-        b=u5gctDq8xPiqtkBsCE8O7TVB7Ew4wSOXl2/AUEMPYvjEyk7SdQFLGgQttjdW8OSfer
-         FREPhXexFusNEALqCUtLV2on/oet2xxCKHSoIRF1oEDa0wF9CdwYddml5jSWGroyJ8Po
-         kPL5MjEaaQbc5eQ+pXDevJLfvf14U16Vg8yOgpSozrxFwxuBfC/Wxf9NId7PBiWV1dxW
-         IOLXqYP/DOfb2x3G3qmi/hjUFyCVT50Blquj5MZp/UJEufLZaKbS6BVW1uPIDxrQgeoU
-         EhB4YmfGV2DciKHiHo3D7czMOEqL8SabK3j9WjGkcKRf5HB9nxM33LsUJafJKr894PFH
-         TuNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgkAQ/c5WUvGZ8kgKTMfDDqM6TvIvKKG6l7cGhpycy1d8kbUgMCo0wJZn0GCbYbZc3AX2bLpT5Udt/Hw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjX8Cq6j2Z0j8pFlbaRDDudlFFVii+GEGfOsB/5lgmenxphjJJ
-	Z0eC5/LyR2N3oqge7+T+/DYmENTMCd8bXPDm2/eW9T5rjhKxgx0xo3jfLw==
-X-Google-Smtp-Source: AGHT+IFhOWmaj/+dvpn8QW8FqpNKUG4zL5yX1NIC/SrZU7nd40LcEHlt/jfOHgQhcw8E5s5ffGox+Q==
-X-Received: by 2002:a17:907:986:b0:a86:85eb:bddb with SMTP id a640c23a62f3a-a8685ebcd68mr255418566b.52.1724332120131;
-        Thu, 22 Aug 2024 06:08:40 -0700 (PDT)
-Received: from [192.168.42.32] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f436bd5sm117966966b.119.2024.08.22.06.08.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2024 06:08:39 -0700 (PDT)
-Message-ID: <523aed7d-6c19-4fce-9a25-b13163a43917@gmail.com>
-Date: Thu, 22 Aug 2024 14:09:05 +0100
+        d=1e100.net; s=20230601; t=1724334478; x=1724939278;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FjYBhspv7tRST0pSqSmRh821Mv70zB5zctMwrlaK9DI=;
+        b=lgSfFq8d/vME1KVRgo6FBOWIHJWDkYCCZKX0gfqAyo5xVbemRdzS8n+qUyBb1xHs+r
+         9uyuG/O20DRFkBg/vUJXsODI7I7Jr5497FWMk5oSHI0YZfq6onWUWVFcqNS/5bOgocL6
+         fcClnkOf7sC1i0g8/A3nTcd0RGCfFgOEI8UWQKe8cgqGBpe4Mo7Pq5Vs8+Z4wa4+Kmzm
+         TYrbTGgDklcQQGnF2U5+MUHL8F/jTLHgWY9heYIWeLj3nK0cx21WrG7qjRP3XZ1Y1YRh
+         FsgIbh7A5tLM25fb2tA0Jf/lBv8vVM7Ml6ypB9lugOhE7fkvfdZIAXU6gtF0qYe5rkT4
+         9eyw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6jYhjqSQysUAx8YFLXGlxsw2iw9/sshM7u7wqYYuZBj29CDyr5aI/uyWjHTw+2G3o0oqlxM7aBsUdoQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVqk5kXLghG6mKkDGcrD5vEd6t49klbqzWHjApOCqjYy7L6+FX
+	XVtPKF5pzHeS8bvOWf2R/STmArRh7gD3r0J6hk1DQSmcjLKWTYAy+ji92nskYzcXD9SQ5SCUOOA
+	PVLGHWyQtpiFqh1I2BrDNJlzb6JVYRT2YsrzPiy2BeRh1x0RRhclfRtDt1ZbU
+X-Received: by 2002:a05:600c:5014:b0:426:6e95:78d6 with SMTP id 5b1f17b1804b1-42ac55babf8mr14882725e9.4.1724334478048;
+        Thu, 22 Aug 2024 06:47:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9pgATN30e2cGvgnx/4ylawVQ+wC24Vnwz41hd/vPVumxXeQFsraVN5ewZN1S7fwv2HF76Rg==
+X-Received: by 2002:a05:600c:5014:b0:426:6e95:78d6 with SMTP id 5b1f17b1804b1-42ac55babf8mr14882365e9.4.1724334477513;
+        Thu, 22 Aug 2024 06:47:57 -0700 (PDT)
+Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ac5162322sm25057215e9.24.2024.08.22.06.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2024 06:47:57 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Jens Axboe <axboe@kernel.dk>,
+	Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alvaro Karsz <alvaro.karsz@solid-run.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fpga@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH v3 0/9] PCI: Remove pcim_iounmap_regions()
+Date: Thu, 22 Aug 2024 15:47:32 +0200
+Message-ID: <20240822134744.44919-1-pstanner@redhat.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] block: implement async wire write zeroes
-To: Christoph Hellwig <hch@infradead.org>
-Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Conrad Meyer <conradmeyer@meta.com>, linux-block@vger.kernel.org,
- linux-mm@kvack.org
-References: <cover.1724297388.git.asml.silence@gmail.com>
- <09c5ef75c04c17ee2fd551da50fc9aae3bfce50a.1724297388.git.asml.silence@gmail.com>
- <ZsbfwKgdLZKVHOMD@infradead.org>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZsbfwKgdLZKVHOMD@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 8/22/24 07:50, Christoph Hellwig wrote:
-> On Thu, Aug 22, 2024 at 04:35:56AM +0100, Pavel Begunkov wrote:
->> Add another io_uring cmd for block layer implementing asynchronous write
->> zeroes. It reuses helpers we've added for async discards, and inherits
->> the code structure as well as all considerations in regards to page
->> cache races.
-> 
-> Most comments from discard apply here as well.
-> 
->> +static int blkdev_queue_cmd(struct io_uring_cmd *cmd, struct block_device *bdev,
->> +			    uint64_t start, uint64_t len, sector_t limit,
->> +			    blk_opf_t opf)
-> 
-> This feels a little over generic as it doesn't just queue any random
-> command.
-> 
->> +static int blkdev_cmd_write_zeroes(struct io_uring_cmd *cmd,
->> +				   struct block_device *bdev,
->> +				   uint64_t start, uint64_t len, bool nowait)
->> +{
->> +	blk_opf_t opf = REQ_OP_WRITE_ZEROES | REQ_NOUNMAP;
->> +
->> +	if (nowait)
->> +		opf |= REQ_NOWAIT;
->> +	return blkdev_queue_cmd(cmd, bdev, start, len,
->> +				bdev_write_zeroes_sectors(bdev), opf);
-> 
-> So no support for fallback to Write of zero page here?  That's probably
-> the case where the async offload is needed most.
+Changes in v3:
+  - fpga/dfl-pci.c: remove now surplus wrapper around
+    pcim_iomap_region(). (Andy)
+  - block: mtip32xx: remove now surplus label. (Andy)
+  - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
+    occurs. (Andy, Christophe)
+  - Some minor wording improvements in commit messages. (Me)
 
-Fair enough, but I believe it's more reasonable to have a separate
-cmd for it instead of silently falling back.
+Changes in v2:
+  - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
+    patch, put stable kernel on CC. (Christophe, Andy).
+  - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
+  - Consequently, drop patch "PCI: Make pcim_release_region() a public
+    function", since there's no user anymore. (obsoletes the squash
+    requested by Damien).
+  - vdap/solidrun:
+    • make 'i' an 'unsigned short' (Andy, me)
+    • Use 'continue' to simplify loop (Andy)
+    • Remove leftover blank line
+  - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
+
+
+Important things first:
+This series is based on [1] and [2] which Bjorn Helgaas has currently
+queued for v6.12 in the PCI tree.
+
+This series shall remove pcim_iounmap_regions() in order to make way to
+remove its brother, pcim_iomap_regions().
+
+@Bjorn: Feel free to squash the PCI commits.
+
+Regards,
+P.
+
+[1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
+[2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
+
+Philipp Stanner (9):
+  PCI: Make pcim_iounmap_region() a public function
+  fpga/dfl-pci.c: Replace deprecated PCI functions
+  block: mtip32xx: Replace deprecated PCI functions
+  gpio: Replace deprecated PCI functions
+  ethernet: cavium: Replace deprecated PCI functions
+  ethernet: stmicro: Simplify PCI devres usage
+  vdpa: solidrun: Fix UB bug with devres
+  vdap: solidrun: Replace deprecated PCI functions
+  PCI: Remove pcim_iounmap_regions()
+
+ .../driver-api/driver-model/devres.rst        |  1 -
+ drivers/block/mtip32xx/mtip32xx.c             | 16 +++---
+ drivers/fpga/dfl-pci.c                        | 16 ++----
+ drivers/gpio/gpio-merrifield.c                | 14 ++---
+ .../net/ethernet/cavium/common/cavium_ptp.c   | 10 ++--
+ .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 25 ++------
+ .../net/ethernet/stmicro/stmmac/stmmac_pci.c  | 18 ++----
+ drivers/pci/devres.c                          | 24 +-------
+ drivers/vdpa/solidrun/snet_main.c             | 57 ++++++++-----------
+ include/linux/pci.h                           |  2 +-
+ 10 files changed, 61 insertions(+), 122 deletions(-)
 
 -- 
-Pavel Begunkov
+2.46.0
+
 
