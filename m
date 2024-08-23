@@ -1,235 +1,396 @@
-Return-Path: <linux-block+bounces-10811-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10814-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9494095CA4E
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 12:19:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CCF995CAC5
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 12:48:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16C951F26206
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 10:19:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C18051C226B0
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 10:48:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A6413AA3F;
-	Fri, 23 Aug 2024 10:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ADDD1862B2;
+	Fri, 23 Aug 2024 10:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DjzvgUN6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vYgwok+A"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B2514B084
-	for <linux-block@vger.kernel.org>; Fri, 23 Aug 2024 10:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A925A18757A
+	for <linux-block@vger.kernel.org>; Fri, 23 Aug 2024 10:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724408332; cv=none; b=GYSF1Fc5HDC4bvIjLBOZgWIBhX1OF9WOipIA2o7bHajBiT3JQtunM2rif4EfMadt3U6cWxgmlZuXZifQGLGVgreoLKRaNRtRS5/sYuWZbJZYs7j38fRuPE8MpmgZWc4BF01AoZbACFocdSwbBJekjdtmKlovlOEg1LLGL+wq7+E=
+	t=1724410091; cv=none; b=UswWUbYtf64PJXb11PREfXx/4YVnopekFKtqpWxXGfR29b3FkYWifQer2HzKvw5VuaAGNkONoPigwG06Bm6uFtQxeM4fQAj+MCy/0vHDc9AqDvjViNsTlkOQUrVGAoQ/j7mqszrb9TzCGqL5bqE351Rb6+8/zAyj7eNIrojrMjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724408332; c=relaxed/simple;
-	bh=xCBbAoU4hSXzjELAjOth1qldOnPViAlTYpFt7JWYNBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qEikx01vyb9dmGtXxEE0KJcK+O43jcqcGoVtQtsttN8Edt/oz22BdYQH95tuqxGw2VK7YKNq5H8MKkFSYD/Hc5koA6McDZl2fngDZVIJGAMqtqWKc3P080zYWV6+OHe3+sI3I6/z0TlSf2UoGc9eZM9ojKI9dKnlXI35K+9E/Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DjzvgUN6; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47NA9khv016917;
-	Fri, 23 Aug 2024 10:18:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=Y
-	nX/CYPg46ufwMFBeJik/ByRTw1OMorfiS4qpoaUxHM=; b=DjzvgUN6/xe9p+SRD
-	W4SuZqxZfQIfTBICvRmhYBToyWsxxbG7x4ZCfKCy8KhcAAwfqar2nWwKTxp6tV1h
-	pv4iVTE5tfBfIRftR/HsFdxiZ5CqiO1EXdIopg+T5WN/+/J/otAH2d+ng/ao2ROP
-	2CtzaToyFXL3vCy9gxITa/50RCI7jfR64TSXYUTpT5JQisONgd+kAclCeVA0gD0q
-	WGRv+VDOhsTvYjsnfmsOgFUl32qbbpqIMAtXFbsyrpsqWldDtMs9OHZEGl/jvPmH
-	180kzKEDCCd3XkyPz6lMeMxL+PsKak+31Jawb/HFocSGIrX0yx8r3+Zoqf6Np3Cf
-	3awIA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412ma0mcwg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Aug 2024 10:18:41 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47NAEsHk013097;
-	Fri, 23 Aug 2024 10:18:40 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41366uhkv6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Aug 2024 10:18:40 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47NAIbKo28836514
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 Aug 2024 10:18:39 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA67458055;
-	Fri, 23 Aug 2024 10:18:37 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 702BE58065;
-	Fri, 23 Aug 2024 10:18:34 +0000 (GMT)
-Received: from [9.171.23.201] (unknown [9.171.23.201])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 23 Aug 2024 10:18:34 +0000 (GMT)
-Message-ID: <9c260acf-48c1-4b4e-8e02-594bff222af3@linux.ibm.com>
-Date: Fri, 23 Aug 2024 15:48:32 +0530
+	s=arc-20240116; t=1724410091; c=relaxed/simple;
+	bh=EgOo2RdVvxEfaspXutVpouY3tst4yPfc+l642W7oIQo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=oy9+CeXwSgeulyaV8uK9czdjuxwEHQFB4AW0Z23nPZvQwb7OKgRSwPCLQTYq/r19Rz9EsRx9Ek6DAMK63pKnldIwwlmL0BaAVrKJiWhCwqKftPNMfA04enzcTH/iHy/8WL/W06IELlLJHBwCYcCFbt9NWU27Y9RUvfdum7HZFaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vYgwok+A; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240823104759epoutp027620283f4fa7a18af90fc2ae49d320ae~uVdTZR9xT0948909489epoutp02e
+	for <linux-block@vger.kernel.org>; Fri, 23 Aug 2024 10:47:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240823104759epoutp027620283f4fa7a18af90fc2ae49d320ae~uVdTZR9xT0948909489epoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1724410080;
+	bh=ADBIpkeIB8Qi21TqEW0JFS/Lus6pDiHqXhO9uvgTh08=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=vYgwok+AM8RR8j/BEt4YSPOg6zSNcWLAWEGTpohx6yASU0GOsXPga52CCW9GU5caL
+	 vXYRRPfXi3YtYzs9/nRXFVE83qI4HPg87I95vttWaPddDXmPkbDtSnQMeMlYcVfMiE
+	 s/gOMwI/p73Hs7cxRf5WfXcGhxBe3RC+w1ocWLMU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240823104759epcas5p201ae2ecf4f855e66d2c4b5e06368aaf7~uVdS3L3pZ2862728627epcas5p2c;
+	Fri, 23 Aug 2024 10:47:59 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4WqxcF4njbz4x9Py; Fri, 23 Aug
+	2024 10:47:57 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2C.7A.19863.DD868C66; Fri, 23 Aug 2024 19:47:57 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240823104552epcas5p226dbbbd448cd0ee0955ffdd3ad1b112d~uVbdEJJAv1853818538epcas5p2J;
+	Fri, 23 Aug 2024 10:45:52 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240823104552epsmtrp1fce2f756964da5da85f1fe7c679dcebe~uVbdDfnuq0200102001epsmtrp1S;
+	Fri, 23 Aug 2024 10:45:52 +0000 (GMT)
+X-AuditID: b6c32a50-ef5fe70000004d97-ce-66c868ddd764
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EA.40.19367.06868C66; Fri, 23 Aug 2024 19:45:52 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240823104550epsmtip207cc970cee2c454ad86ac71f553e16a2~uVbbI4dcd1240712407epsmtip2T;
+	Fri, 23 Aug 2024 10:45:50 +0000 (GMT)
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
+	martin.petersen@oracle.com, asml.silence@gmail.com, krisman@suse.de
+Cc: io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, gost.dev@samsung.com,
+	linux-scsi@vger.kernel.org, Anuj Gupta <anuj20.g@samsung.com>
+Subject: [PATCH v3 00/10] Read/Write with meta/integrity
+Date: Fri, 23 Aug 2024 16:08:00 +0530
+Message-Id: <20240823103811.2421-1-anuj20.g@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] nvme: add test for controller rescan under I/O load
-To: Martin Wilck <martin.wilck@suse.com>,
-        "Shin'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Martin Wilck <mwilck@suse.com>
-References: <20240822193814.106111-1-mwilck@suse.com>
- <20240822193814.106111-3-mwilck@suse.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20240822193814.106111-3-mwilck@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZlWBhoi2H-1KPVNyEE0fDhtKXCw0OZgR
-X-Proofpoint-ORIG-GUID: ZlWBhoi2H-1KPVNyEE0fDhtKXCw0OZgR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-23_06,2024-08-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0
- bulkscore=0 adultscore=0 impostorscore=0 suspectscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408230073
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmuu7djBNpBheWKVg0TfjLbDFn1TZG
+	i9V3+9ksbh7YyWSxcvVRJot3redYLCYdusZosf3MUmaLvbe0LeYve8pu0X19B5vF8uP/mBx4
+	PHbOusvucflsqcemVZ1sHpuX1HvsvtnA5vHx6S0Wj74tqxg9Np+u9vi8SS6AMyrbJiM1MSW1
+	SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoXiWFssScUqBQQGJx
+	sZK+nU1RfmlJqkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsai1RtYCma4
+	V8xu+83WwPjTsIuRk0NCwETi1bJuli5GLg4hgT2MEhu697NBOJ8YJRpa7jHCOW2nT7HAtPy4
+	OwsqsZNRYtnci+wQzmdGiSl9D5lBqtgE1CWOPG9lBLFFBColnu/6AbaEWWATo8Sv68eYQBLC
+	AhYS299uZgexWQRUJfb2LAGL8wLFX9y7ygaxTl5i5qXv7BBxQYmTM5+AncEMFG/eOpsZZKiE
+	QCuHROvLi0AOB5DjIvH1pz1Er7DEq+Nb2CFsKYmX/W1QdrrEj8tPmSDsAonmY/sYIWx7idZT
+	/WBjmAU0Jdbv0ocIy0pMPbWOCWItn0Tv7ydQrbwSO+bB2EoS7SvnQNkSEnvPNTBBXOMh0X2M
+	DyQsJBArcXveJuYJjPKzkDwzC8kzsxAWL2BkXsUolVpQnJuemmxaYKibl1oOj9nk/NxNjOB0
+	qxWwg3H1hr96hxiZOBgPMUpwMCuJ8CbdO5omxJuSWFmVWpQfX1Sak1p8iNEUGMQTmaVEk/OB
+	CT+vJN7QxNLAxMzMzMTS2MxQSZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQYm3lP/uGZXbBJy
+	trv+Qqxe+6aqQe4+l65epZ0CXp5W/9mb3Nunn1tmzfbqQqTPQX+etWnHJt2T//xn118vnkLm
+	/5s5N101nZTJN8vyzgyxQwcOS51eHHXRbq/T+feKR1dvvd9ud+r5gyKPmXKKCjFnv3q9uThl
+	f8H1H/d1/8RMdDHMuqZV6j/j9tW4nID86iWL82+KpWWsLvzuVPT5ub2FyfuQ1THz/Y52vY74
+	cWHRfS6HOWKlrV2Fy3jn7W4t1Khf1tErNPFYXUdWjqf9HcnZV6o8vX+JJ56x+rrk5PzZxrMm
+	NhQ+4EhIPHL+0FLJO2rl7Nv+vFb5N2+ul0+QSO/cem6zq1qnGHTXfs+6EbrslxJLcUaioRZz
+	UXEiAOAkDb5ABAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsWy7bCSvG5Cxok0g8kzjC2aJvxltpizahuj
+	xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02H5mKbPF3lvaFvOXPWW36L6+g81i+fF/TA48
+	Hjtn3WX3uHy21GPTqk42j81L6j1232xg8/j49BaLR9+WVYwem09Xe3zeJBfAGcVlk5Kak1mW
+	WqRvl8CVsWj1BpaCGe4Vs9t+szUw/jTsYuTkkBAwkfhxdxYjiC0ksJ1RYuf5VIi4hMSpl8sY
+	IWxhiZX/nrN3MXIB1XxklPj28QhYgk1AXeLI81ZGkISIQCOjxJbmLywgDrPADkaJdc8Wg1UJ
+	C1hIbH+7mR3EZhFQldjbs4QJxOYFir+4d5UNYoW8xMxL39kh4oISJ2c+YQGxmYHizVtnM09g
+	5JuFJDULSWoBI9MqRtHUguLc9NzkAkO94sTc4tK8dL3k/NxNjOCQ1wrawbhs/V+9Q4xMHIyH
+	GCU4mJVEeJPuHU0T4k1JrKxKLcqPLyrNSS0+xCjNwaIkzquc05kiJJCeWJKanZpakFoEk2Xi
+	4JRqYFp9aU/vnS9eG5sjF7peZt+vr+5T9v3Rita+6kTF+uq/544JihbzL1wzuz9V+4ahDltw
+	TFBWnhCveqq9i/kLA72eP0G35K5U/eENn6LFfPRhg4fRQgPhlCTh1KPzaq8oXrJpMeCedDS/
+	4vkE8wnHxZ65m4ed+bBwmdUXA/ZtTgu//dA8vljXLMDV0qtU5cOpCREnz0y/zf/Ru767rWDK
+	HPfJvySe1Lpf2Cu6UpTpNfu9Y217t+8trQydY/z60371nLaTfJHPOfr1p/fKN9j0uh87X8x2
+	Y9umdWuTgzW+PJfQVVnu8if8XejMBY68HIqHF5ya9jj++fLk16LKXSmfDt5y6J3ieMdMgzvh
+	tvPtECWW4oxEQy3mouJEALqBhZroAgAA
+X-CMS-MailID: 20240823104552epcas5p226dbbbd448cd0ee0955ffdd3ad1b112d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240823104552epcas5p226dbbbd448cd0ee0955ffdd3ad1b112d
+References: <CGME20240823104552epcas5p226dbbbd448cd0ee0955ffdd3ad1b112d@epcas5p2.samsung.com>
 
+This adds a new io_uring interface to exchange meta along with read/write.
 
+Interface:
+Meta information is represented using a newly introduced 'struct io_uring_meta'.
+Application sets up a SQE128 ring, and prepares io_uring_meta within second
+SQE. Application populates 'struct io_uring_meta' fields as below:
 
-On 8/23/24 01:08, Martin Wilck wrote:
-> Add a test that repeatedly rescans nvme controllers while doing IO
-> on an nvme namespace connected to these controllers. The purpose
-> of the test is to make sure that no I/O errors or data corruption
-> occurs because of the rescan operations.
-> 
-> Signed-off-by: Martin Wilck <mwilck@suse.com>
-> ---
->  tests/nvme/053 | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/nvme/rc  | 18 ++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100755 tests/nvme/053
-> 
-> diff --git a/tests/nvme/053 b/tests/nvme/053
-> new file mode 100755
-> index 0000000..41dc8f2
-> --- /dev/null
-> +++ b/tests/nvme/053
-> @@ -0,0 +1,56 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-3.0+
-> +# Copyright (C) 2024 Martin Wilck, SUSE LLC
-> +
-> +. tests/nvme/rc
-> +
-> +DESCRIPTION="test controller rescan under I/O load"
-> +TIMED=1
-> +: "${TIMEOUT:=60}"
-> +
-> +rescan_controller() {
-> +	local finish
-> +
-> +	[[ -f "$1/rescan_controller" ]] || {
-> +		echo "cannot rescan $1"
-> +		return 1
-> +	}
-> +
-> +	finish=$(($(date +%s) + TIMEOUT))
-> +	while [[ $(date +%s) -le $finish ]]; do
-> +		# sleep interval between 0.1 and 5s
-> +		usleep "$(((RANDOM%50 + 1)*100000))"
-> +		echo 1 >"$1/rescan_controller"
-> +	done
-> +}
-I think here usleep may not be available by default on all systems.
-For instance, on fedora/rhel I don't have usleep installed in the 
-defualt configuration and so I have to first install it. So you may
-want to add "usleep" as per-requisite for this test. Moreover, after 
-I installed usleep on fedora and ran the above test I see this warning:
+* meta_type: describes type of meta that is passed. Currently one type
+"Integrity" is supported.
+* meta_flags: these are meta-type specific flags. Three flags are exposed for
+integrity type, namely INTEGRITY_CHK_GUARD/APPTAG/REFTAG.
+* meta_len: length of the meta buffer
+* meta_addr: address of the meta buffer
+* app_tag: optional application-specific 16b value; this goes along with
+INTEGRITY_CHK_APPTAG flag.
 
-warning: usleep is deprecated, and will be removed in near future!
+Block path (direct IO) , NVMe and SCSI driver are modified to support
+this.
 
-Due to above warning the test fails. So is it possible to replace 
-usleep with sleep?
- 
-> +
-> +test_device() {
-> +	local -a ctrls
-> +	local c
-> +
-> +	echo "Running ${TEST_NAME}"
-> +	ctrls=($(_nvme_get_ctrl_list))
-> +
-> +	_run_fio_verify_io --filename="$TEST_DEV" --time_based &> "$FULL" &
-> +
-> +	for c in "${ctrls[@]}"; do
-> +		rescan_controller "$c" &
-> +	done
-> +
-> +	while true; do
-> +		wait -n &>/dev/null
-> +		st=$?
-> +		case $st in
-> +			127)
-> +				break
-> +				;;
-> +			0)
-> +				;;
-> +			*)
-> +				echo "child process exited with $st!"
-> +				;;
-> +		esac
-> +	done
-> +
-> +	echo "Test complete"
-> +}
-> diff --git a/tests/nvme/rc b/tests/nvme/rc
-> index e7d2ab1..93b0571 100644
-> --- a/tests/nvme/rc
-> +++ b/tests/nvme/rc
-> @@ -192,6 +192,24 @@ _test_dev_nvme_nsid() {
->  	cat "${TEST_DEV_SYSFS}/nsid"
->  }
->  
-> +_nvme_get_ctrl_list() {
-> +	local subsys
-> +	local c
-> +
-> +	subsys=$(readlink  "${TEST_DEV_SYSFS}/device/subsystem")
-> +	case $subsys in
-> +		*/nvme)
-> +			readlink -f "${TEST_DEV_SYSFS}/device"
-> +			;;
-> +		*/nvme-subsystem)
-> +			for c in "${TEST_DEV_SYSFS}"/device/nvme*; do
-> +				[[ -L "$c" ]] || continue
-> +				[[ -f "$c/dev" ]] && readlink -f "$c"
-> +			done
-> +			;;
-> +	esac
-> +}
-> +
-I don't know if I am missing anything here but just curious to know 
-for which case $subsys would point to link ending in */nvme?
-I think that for all cases $subsys shall point to link which ends 
-in */nvme-subsystem, isn't it? I assume here that $TEST_DEV_SYSFS would 
-always resolve to a nvme block device.
+The first three patches are required to make the user metadata split
+work correctly.
+Patch 4,5 are prep patches.
+Patch 6 adds the io_uring support.
+Patch 7 gives us unified interface for user and kernel generated
+integrity.
+Patch 8 adds the support for block direct IO, patch 9 for NVMe, and
+patch 10 for SCSI.
 
-And the last point: I don't see 053.out file in your patchset. Did you forget
-to add this file?
+Some of the design choices came from this discussion [2].
 
-Thanks,
---Nilay
+Example program on how to use the interface is appended below [3]
 
+Tree:
+https://github.com/SamsungDS/linux/tree/feat/pi_us_v3
+Testing:
+has been done by modifying fio to use this interface.
+https://github.sec.samsung.net/DS8-MemoryOpenSource/fio/tree/feat/test-meta-v4
 
+Changes since v2:
+https://lore.kernel.org/linux-block/20240626100700.3629-1-anuj20.g@samsung.com/
+- io_uring error handling styling (Gabriel)
+- add documented helper to get metadata bytes from data iter (hch)
+- during clone specify "what flags to clone" rather than
+"what not to clone" (hch)
+- Move uio_meta defination to bio-integrity.h (hch)
+- Rename apptag field to app_tag (hch)
+- Change datatype of flags field in uio_meta to bitwise (hch)
+- Don't introduce BIP_USER_CHK_FOO flags (hch, martin)
+- Driver should rely on block layer flags instead of seeing if it is
+user-passthrough (hch)
+- update the scsi code for handling user-meta (hch, martin)
 
+Changes since v1:
+https://lore.kernel.org/linux-block/20240425183943.6319-1-joshi.k@samsung.com/
+- Do not use new opcode for meta, and also add the provision to introduce new
+meta types beyond integrity (Pavel)
+- Stuff IOCB_HAS_META check in need_complete_io (Jens)
+- Split meta handling in NVMe into a separate handler (Keith)
+- Add meta handling for __blkdev_direct_IO too (Keith)
+- Don't inherit BIP_COPY_USER flag for cloned bio's (Christoph)
+- Better commit descriptions (Christoph)
+
+Changes since RFC:
+- modify io_uring plumbing based on recent async handling state changes
+- fixes/enhancements to correctly handle the split for meta buffer
+- add flags to specify guard/reftag/apptag checks
+- add support to send apptag
+
+[1] https://lore.kernel.org/linux-block/719d2e-b0e6-663c-ec38-acf939e4a04b@redhat.com/
+
+[2] https://lore.kernel.org/linux-block/20240705083205.2111277-1-hch@lst.de/
+
+[3]
+
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <linux/io_uring.h>
+#include <linux/types.h>
+#include "liburing.h"
+
+/* write data/meta. read both. compare. send apptag too.
+* prerequisite:
+* unprotected xfer: format namespace with 4KB + 8b, pi_type = 0
+* protected xfer: format namespace with 4KB + 8b, pi_type = 1
+*/
+
+#define DATA_LEN 4096
+#define META_LEN 8
+
+struct t10_pi_tuple {
+        __be16  guard;
+        __be16  apptag;
+        __be32  reftag;
+};
+
+int main(int argc, char *argv[])
+{
+         struct io_uring ring;
+         struct io_uring_sqe *sqe = NULL;
+         struct io_uring_cqe *cqe = NULL;
+         void *wdb,*rdb;
+         char wmb[META_LEN], rmb[META_LEN];
+         char *data_str = "data buffer";
+         char *meta_str = "meta";
+         int fd, ret, blksize;
+         struct stat fstat;
+         unsigned long long offset = DATA_LEN;
+         struct t10_pi_tuple *pi;
+         struct io_uring_meta *md;
+
+         if (argc != 2) {
+                 fprintf(stderr, "Usage: %s <block-device>", argv[0]);
+                 return 1;
+         };
+
+         if (stat(argv[1], &fstat) == 0) {
+                 blksize = (int)fstat.st_blksize;
+         } else {
+                 perror("stat");
+                 return 1;
+         }
+
+         if (posix_memalign(&wdb, blksize, DATA_LEN)) {
+                 perror("posix_memalign failed");
+                 return 1;
+         }
+         if (posix_memalign(&rdb, blksize, DATA_LEN)) {
+                 perror("posix_memalign failed");
+                 return 1;
+         }
+
+         strcpy(wdb, data_str);
+         strcpy(wmb, meta_str);
+
+         fd = open(argv[1], O_RDWR | O_DIRECT);
+         if (fd < 0) {
+                 printf("Error in opening device\n");
+                 return 0;
+         }
+
+         ret = io_uring_queue_init(8, &ring, IORING_SETUP_SQE128);
+         if (ret) {
+                 fprintf(stderr, "ring setup failed: %d\n", ret);
+                 return 1;
+         }
+
+         /* write data + meta-buffer to device */
+         sqe = io_uring_get_sqe(&ring);
+         if (!sqe) {
+                 fprintf(stderr, "get sqe failed\n");
+                 return 1;
+         }
+
+         io_uring_prep_write(sqe, fd, wdb, DATA_LEN, offset);
+
+         md = (struct io_uring_meta *) sqe->big_sqe_cmd;
+         md->meta_type = META_TYPE_INTEGRITY;
+         md->meta_addr = (__u64)wmb;
+         md->meta_len = META_LEN;
+         /* flags to ask for guard/reftag/apptag*/
+         md->meta_flags = INTEGRITY_CHK_APPTAG;
+         md->app_tag = 0x1234;
+
+         pi = (struct t10_pi_tuple *)wmb;
+         pi->apptag = 0x3412;
+
+         ret = io_uring_submit(&ring);
+         if (ret <= 0) {
+                 fprintf(stderr, "sqe submit failed: %d\n", ret);
+                 return 1;
+         }
+
+         ret = io_uring_wait_cqe(&ring, &cqe);
+         if (!cqe) {
+                 fprintf(stderr, "cqe is NULL :%d\n", ret);
+                 return 1;
+         }
+         if (cqe->res < 0) {
+                 fprintf(stderr, "write cqe failure: %d", cqe->res);
+                 return 1;
+         }
+
+         io_uring_cqe_seen(&ring, cqe);
+
+         /* read data + meta-buffer back from device */
+         sqe = io_uring_get_sqe(&ring);
+         if (!sqe) {
+                 fprintf(stderr, "get sqe failed\n");
+                 return 1;
+         }
+
+         io_uring_prep_read(sqe, fd, rdb, DATA_LEN, offset);
+
+         md = (struct io_uring_meta *) sqe->big_sqe_cmd;
+         md->meta_type = META_TYPE_INTEGRITY;
+         md->meta_addr = (__u64)rmb;
+         md->meta_len = META_LEN;
+         md->meta_flags = INTEGRITY_CHK_APPTAG;
+         md->app_tag = 0x1234;
+
+         ret = io_uring_submit(&ring);
+         if (ret <= 0) {
+                 fprintf(stderr, "sqe submit failed: %d\n", ret);
+                 return 1;
+         }
+
+         ret = io_uring_wait_cqe(&ring, &cqe);
+         if (!cqe) {
+                 fprintf(stderr, "cqe is NULL :%d\n", ret);
+                 return 1;
+         }
+
+         if (cqe->res < 0) {
+                 fprintf(stderr, "read cqe failure: %d", cqe->res);
+                 return 1;
+         }
+         io_uring_cqe_seen(&ring, cqe);
+
+         if (strncmp(wmb, rmb, META_LEN))
+                 printf("Failure: meta mismatch!, wmb=%s, rmb=%s\n", wmb, rmb);
+
+         if (strncmp(wdb, rdb, DATA_LEN))
+                 printf("Failure: data mismatch!\n");
+
+         io_uring_queue_exit(&ring);
+         free(rdb);
+         free(wdb);
+         return 0;
+}
+
+Anuj Gupta (7):
+  block: define set of integrity flags to be inherited by cloned bip
+  block: introduce a helper to determine metadata bytes from data iter
+  block: handle split correctly for user meta bounce buffer
+  block: modify bio_integrity_map_user to accept iov_iter as argument
+  io_uring/rw: add support to send meta along with read/write
+  block,nvme: introduce BIP_CHECK_GUARD/REFTAG/APPTAG bip_flags
+  scsi: add support for user-meta interface
+
+Kanchan Joshi (3):
+  block: define meta io descriptor
+  block: add support to pass user meta buffer
+  nvme: add handling for app_tag
+
+ block/bio-integrity.c         | 71 ++++++++++++++++++++++++++++++-----
+ block/fops.c                  | 25 ++++++++++++
+ block/t10-pi.c                |  6 +++
+ drivers/nvme/host/core.c      | 24 +++++++-----
+ drivers/nvme/host/ioctl.c     | 11 +++++-
+ drivers/scsi/sd.c             | 25 +++++++++++-
+ drivers/scsi/sd_dif.c         |  2 +-
+ include/linux/bio-integrity.h | 33 ++++++++++++++--
+ include/linux/blk-integrity.h | 17 +++++++++
+ include/linux/fs.h            |  1 +
+ include/uapi/linux/io_uring.h | 32 ++++++++++++++++
+ io_uring/io_uring.c           |  6 +++
+ io_uring/rw.c                 | 70 ++++++++++++++++++++++++++++++++--
+ io_uring/rw.h                 | 10 ++++-
+ 14 files changed, 302 insertions(+), 31 deletions(-)
+
+-- 
+2.25.1
 
 
