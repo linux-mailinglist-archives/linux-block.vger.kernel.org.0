@@ -1,119 +1,86 @@
-Return-Path: <linux-block+bounces-10796-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10804-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5D6495C2C6
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 03:27:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BB4695C64A
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 09:11:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A3A01F238E2
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 01:27:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CAB71C20DC2
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2024 07:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 896D1800;
-	Fri, 23 Aug 2024 01:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1e/wpXi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F031417984;
+	Fri, 23 Aug 2024 07:11:23 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9DB125AC;
-	Fri, 23 Aug 2024 01:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from cmccmta2.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A829F4F88C;
+	Fri, 23 Aug 2024 07:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724376431; cv=none; b=OhN9fLCqUiZoaCR3l4FHhzWcDFm+lHiTk2aoIcOrHMN0R9NljzlbviAs/VwQK3nCvgeGP1LanayGckttG5FjEPyEaMiDo11z9Mqt9v1YpGvLxnKD9mO1euYLEWedEgrsTdu1NWc8B9qAuxlsA3sdfWZnGBqzQc79iIsAI2i5oXI=
+	t=1724397083; cv=none; b=Us7Zz8HT/FaGqDNHcE6uypQHZSA3Ee7rmUmqmOJM2KOpU71ItzQD4QoG0WFJ01tiuz0qFEb6P4FYda5DQPiEduh6anmdLDafuvJ3fpPgvRfRruvi/lZJ6jfOTNRp5vXWLshDZyGXDX3FMKFfOzhgrf2yqJF9kPLgQ/Ph14rt2jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724376431; c=relaxed/simple;
-	bh=Nf2wPTVgwfnfO4wozJbawzPg7tqsI7NIDsI0AfWVapU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pJcjUuv9ODHZ20It6FIpPlvoKAYatLzDoVmKwEZWZMggddPgH74gFdTH17xTgU8ggKv+jr3GyVCXVjaeH3LocJRw/nD9ZEjKVtfD3/L1A9u4MfFtLoZiJQfGNnZzUhPU67wCxZ/Qcjeqn+ZYmd+7s4QvlywyJt7p1xMhaj1OANA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1e/wpXi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D07E3C32782;
-	Fri, 23 Aug 2024 01:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724376430;
-	bh=Nf2wPTVgwfnfO4wozJbawzPg7tqsI7NIDsI0AfWVapU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y1e/wpXirDNkn3eK7AMUEuOd/yiilMZj5Qiy43h17fD3qXrfAK8rg8H4vKD4x0+L3
-	 tIWNy0aa61rQGYVBxjurWcSTXTmMy7zJQq8I+uGKg22bC5BWhQymnKOfQTt7HZzyRK
-	 muY7J3ACs4u5HKVN7W7FaTL579agaEALb3PyUDKEPHEBHS6OtsBcxISwyXF8PSeGiq
-	 tDuJ+rsOdag9qCF8Q/uBcyxronyeuZqoZKHqn4WYp7WHSil2NJqt32Q/A9m4ezsjmh
-	 2CHeLBvMph8Dw0uRsUvyd0zSz7swMqU+VR7zyJUmUVX5lQaMi6bWeIuPcm4VseS0g1
-	 Foby2pF4Rqzrg==
-Date: Thu, 22 Aug 2024 18:27:10 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-doc@vger.kernel.org, corbet@lwn.net, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	kernel-dev@igalia.com, kernel@gpiccoli.net
-Subject: Re: [PATCH] Documentation: Document the kernel flag
- bdev_allow_write_mounted
-Message-ID: <20240823012710.GY6082@frogsfrogsfrogs>
-References: <20240819225626.2000752-2-gpiccoli@igalia.com>
- <20240820162359.GI6043@frogsfrogsfrogs>
- <170545d7-3fa5-f52a-1250-dfe0a0fff93c@igalia.com>
+	s=arc-20240116; t=1724397083; c=relaxed/simple;
+	bh=0nX5cizmjDfwa0vSoG5uTMuuvECCUZmvgA7PTcXsBOs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K1Do2dTAjdD9YYJJ6e6o2w7CJs9BlfGa0YxIR7Q1TjGCYyH95Xb8aGyFKGYkVIagq5RI1GFQDM3bnTR9oHWcvM68AIgCpiO/G1F39sFkvjy5khJFbVYo16EzpnJSguqboS7dUlWTRlj85tiq2gYplpAefGeVlpXx4p3NJA/x0Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee766c8360a95e-84962;
+	Fri, 23 Aug 2024 15:11:09 +0800 (CST)
+X-RM-TRANSID:2ee766c8360a95e-84962
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain (unknown[223.108.79.103])
+	by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea66c8360d970-ed34b;
+	Fri, 23 Aug 2024 15:11:09 +0800 (CST)
+X-RM-TRANSID:2eea66c8360d970-ed34b
+From: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
+To: axboe@kernel.dk
+Cc: justin@coraid.com,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhang Jiao <zhangjiao2@cmss.chinamobile.com>
+Subject: [PATCH] aoe: Use IS_ERR_OR_NULL() to clean code
+Date: Fri, 23 Aug 2024 13:26:40 +0800
+Message-Id: <20240823052640.3668-1-zhangjiao2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <170545d7-3fa5-f52a-1250-dfe0a0fff93c@igalia.com>
 
-On Tue, Aug 20, 2024 at 03:42:53PM -0300, Guilherme G. Piccoli wrote:
-> On 20/08/2024 13:23, Darrick J. Wong wrote:
-> > [...]
-> >> +	bdev_allow_write_mounted=
-> >> +			Format: <bool>
-> >> +			Control the ability of directly writing to mounted block
-> >> +			devices' page cache, i.e., allow / disallow writes that
-> >> +			bypasses the FS. This was implemented as a means to
-> >> +			prevent fuzzers to crash the kernel by breaking the
-> >> +			filesystem without its awareness, through direct block
-> >> +			device writes. Default is Y and can be changed through
-> >> +			the Kconfig option CONFIG_BLK_DEV_WRITE_MOUNTED.
-> > 
-> > Can we mention that this also solves the problem of naïve storage
-> > management tools (aka the ones that don't use O_EXCL) writing over a
-> > mounted filesystem and trashing it?
-> > 
-> > --D
-> 
-> 
-> Sure! At least from my side, fine with that.
-> How about the following string ?
-> 
-> + Control the ability of directly writing to mounted block
-> + devices' page cache, i.e., allow / disallow writes that
-> + bypasses the FS. This was implemented as a means to
-> + prevent fuzzers to crash the kernel by breaking the
+From: Zhang Jiao <zhangjiao2@cmss.chinamobile.com>
 
-                "...from crashing the kernel by overwriting
-the metadata underneath a mounted filesystem without its awareness."
+Use IS_ERR_OR_NULL() to make the code cleaner.
 
-> + filesystem without its awareness, through direct block
-> + device writes. Also prevents issues from direct writes
+Signed-off-by: Zhang Jiao <zhangjiao2@cmss.chinamobile.com>
+---
+ drivers/block/aoe/aoecmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You can do it with buffered writes to the block device pagecache too.
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index cc9077b588d7..5514b7a6e5c2 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -1256,7 +1256,7 @@ aoe_ktstart(struct ktstate *k)
+ 
+ 	init_completion(&k->rendez);
+ 	task = kthread_run(kthread, k, "%s", k->name);
+-	if (task == NULL || IS_ERR(task))
++	if (IS_ERR_OR_NULL(task))
+ 		return -ENOMEM;
+ 	k->task = task;
+ 	wait_for_completion(&k->rendez); /* allow kthread to start */
+-- 
+2.33.0
 
-"This also prevents destructive formatting of mounted filesystems by
-naïve storage tooling that don't use O_EXCL."
 
---D
 
-> + of silly storage tooling (that doesn't use O_EXCL). The
-> + default is Y and can be changed through the Kconfig
-> + option CONFIG_BLK_DEV_WRITE_MOUNTED.
-> 
-> 
-> But feel free to improve / change it. I'll wait more feedback and
-> resubmit with a refined text.
-> Cheers,
-> 
-> 
-> Guilherme
 
