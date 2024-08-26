@@ -1,179 +1,196 @@
-Return-Path: <linux-block+bounces-10894-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-10896-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC9995F591
-	for <lists+linux-block@lfdr.de>; Mon, 26 Aug 2024 17:52:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B87E595F7A1
+	for <lists+linux-block@lfdr.de>; Mon, 26 Aug 2024 19:14:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B42B81C21A40
-	for <lists+linux-block@lfdr.de>; Mon, 26 Aug 2024 15:52:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD4071C21D2C
+	for <lists+linux-block@lfdr.de>; Mon, 26 Aug 2024 17:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0871946A0;
-	Mon, 26 Aug 2024 15:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878A6198A02;
+	Mon, 26 Aug 2024 17:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RBz80yny"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kACi0uut"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE86C194131
-	for <linux-block@vger.kernel.org>; Mon, 26 Aug 2024 15:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC233B782
+	for <linux-block@vger.kernel.org>; Mon, 26 Aug 2024 17:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724687529; cv=none; b=rgqsDrNZ60Qgi/pHw38zcJztRKoQNn0hlDQJEjbMpFBEaGrfVrG5HbHkJFeivceggSo4VAnSkRVHvkEmbpNXeTjQunHsDdMm8woiezRotFhL++W0tQxVhR7joeEiu5+W6bfg9al5bh1525ueg7qOsb9yhHhl7Q+C4oTncqnNsbY=
+	t=1724692457; cv=none; b=DV/jdhroSKnN+fojkqzcqQwITnviKSnHKC5Q5A4SYwEBe50IJKSKi2DaqbzW8tPAtcpun54RAHoJGUO9PvbaN8EQFswz2uV44tex2hg4f6YORN237sT9foUWcA8QtSv+Ft1tgbWUm7Xrh3YVmSHJ8Y2Q0e4uiyFUPspIiU6lfzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724687529; c=relaxed/simple;
-	bh=Dwazc+e0kXeS2xTQ712+0BIKFANt7k7hBlcLvCAFWPU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hCPzmVfJIL/QnfNi++gyL2izzw2wUv9805Yo8CqpWABkQ1omo8LDAcK8P9pQSBVWsOMGl210p2RSwfvkVQBoHlcdY+Kr8VjX9UE6QgqLQUxi4Xi7nF/yOoMRdo3slYm2HdtIMPsxoU4MG0tf5zeZjRL1Gqh/MHAx62fYGfghWbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RBz80yny; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724687527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dwazc+e0kXeS2xTQ712+0BIKFANt7k7hBlcLvCAFWPU=;
-	b=RBz80ynyED2PrGlQP9fKNdk2BsY4HTkWCsZUDfjZSm4MqweOCc/QdXfH5GkUwiRYWkohpN
-	NJrSJnUu4QnMNz5+tOp/+Gq1LdZoPmUH8kzX3qPtQCluFqDRg7gnqixS5yMcnbVDi1xY+/
-	Z2m1kVwoJ7MjxHL6GvpyZofVOe83KcI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-vncbgebdOMKvl0XNNRL3Iw-1; Mon, 26 Aug 2024 11:52:05 -0400
-X-MC-Unique: vncbgebdOMKvl0XNNRL3Iw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-429c224d9edso42888175e9.1
-        for <linux-block@vger.kernel.org>; Mon, 26 Aug 2024 08:52:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724687524; x=1725292324;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dwazc+e0kXeS2xTQ712+0BIKFANt7k7hBlcLvCAFWPU=;
-        b=Hrvzgs5jmKdGdt5B0Rzs7Rl5epstcY/YCaHnO4RgKe/f8b08JNhiEtrePY9Ae9erNk
-         OsShf3v+p8P2zXPIHbg/e7RhrQPMwKgfagT4jU7CSD4wqQ/jJwdJJSGQhtaDA12932Ug
-         R6DJJTrEf/rStQNI3xgZ2f6JCnKpt2PCxXFWZsmAw1PhNDTMJWxYrnluzasfXS26uYZV
-         JpoCGXatPD2t5Mah93AlJJ7zu4HDFkIlfx2fkG05KCFwkfGcMeD0ThWpzCgPhR5FsDap
-         6SXaxY+IUNYMedD2II9MfenpPbL7B6qnshvMk+Sr/t1TPP85ulF7APeFD0INSFeiUmBj
-         0UHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDLVOWXR3Rwwttql6T1UpcMdaOuF7waKY1Sbc00X5KPTnj94pkPNkiAOFpOuvGGPNAR/WG+mTB140jcQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1fLhbTE2wyVo7gTFQdSZA/6BrNrC34eoaoHSYyMESIpw7PzXc
-	curIX7HsXyBcG4n5dHGXCZaHWeHRegfjitCGgTbUeWP6bGbSm8QLT+td+EUu3AlR1laLerrD0+5
-	JKAjts6WW0AdPNlGJn4DR5xNLjtXQ2iaxcXHHJQ61KA5dwevh3g0Nw0IJhoye
-X-Received: by 2002:adf:e44b:0:b0:360:7c4b:58c3 with SMTP id ffacd0b85a97d-3748c835e08mr49210f8f.54.1724687524280;
-        Mon, 26 Aug 2024 08:52:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxAzHOXHhnfnYaxqHhgL/uz7vF7Nw5k64KjkexckDk+9QWCj+MHZcvnBNc7cGqudRMU7r7fA==
-X-Received: by 2002:adf:e44b:0:b0:360:7c4b:58c3 with SMTP id ffacd0b85a97d-3748c835e08mr49174f8f.54.1724687523730;
-        Mon, 26 Aug 2024 08:52:03 -0700 (PDT)
-Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730814602asm11021638f8f.44.2024.08.26.08.52.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 08:52:02 -0700 (PDT)
-Message-ID: <f2d6345a8a684f62035108d74938ec0b2e162019.camel@redhat.com>
-Subject: Re: [PATCH v3 5/9] ethernet: cavium: Replace deprecated PCI
- functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
- <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  Paolo
- Abeni <pabeni@redhat.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Alvaro
- Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Richard Cochran
- <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Damien Le Moal <dlemoal@kernel.org>, 
- Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>,
- linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org,  linux-fpga@vger.kernel.org,
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
- virtualization@lists.linux.dev
-Date: Mon, 26 Aug 2024 17:52:00 +0200
-In-Reply-To: <CAHp75VfKS_PWer2hEH8x0qgBUEPx05p8BA=c0UirAWjg0SaLeA@mail.gmail.com>
-References: <20240822134744.44919-1-pstanner@redhat.com>
-	 <20240822134744.44919-6-pstanner@redhat.com>
-	 <ZsdO2q8uD829hP-X@smile.fi.intel.com>
-	 <ad6af1c4194873e803df65dc4d595f8e4b26cb33.camel@redhat.com>
-	 <CAHp75VfKS_PWer2hEH8x0qgBUEPx05p8BA=c0UirAWjg0SaLeA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1724692457; c=relaxed/simple;
+	bh=kal5xydGPETFQwQvqncim45a19u2XhkRTCYUkp7F6HA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=WorTcVYr92Ygj9P9gIq6QdkEs4Ql5DoYYe18yy0kpg1FSJTncux8YqdvaAaBkkq9iSwQANwD7I+M2hKbSpEHwlpsyhcKyXA970k5v2soiCirRqPr2+NrsPbmT73h69t3bUtFaIIGmN2xCGFNKwXYuFBTE23F1vP7/dHrWGnOsyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kACi0uut; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240826171412epoutp03667e52d0e62f3ccf79bcf27da946687b~vVqXkvVFn0855408554epoutp03v
+	for <linux-block@vger.kernel.org>; Mon, 26 Aug 2024 17:14:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240826171412epoutp03667e52d0e62f3ccf79bcf27da946687b~vVqXkvVFn0855408554epoutp03v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1724692452;
+	bh=Po2gU7Tj1IXZMxwPWnpQrOZ+vFEA/kofumpkR30jMIU=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=kACi0uutz/JVECZ5teosHI8WGM9SKa0OHvbP5bdqcnS1XsN5DvIQH7gv/VushIqJo
+	 fXe0I076oDp1ZjrTkUMy9dq0vVHHdqcwahrhEx8Yl9jDOon1H9PqRTzow2XXug8ynU
+	 msRrbYBTgssUDczi3ZNyDeVvEHKoVogvD5q5c6hc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240826171412epcas5p3131af6d126d29e121f88274b259a5d35~vVqW6MHli2946129461epcas5p3h;
+	Mon, 26 Aug 2024 17:14:12 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Wsy2V308wz4x9Pt; Mon, 26 Aug
+	2024 17:14:10 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0D.A3.09642.2E7BCC66; Tue, 27 Aug 2024 02:14:10 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240826171409epcas5p306ba210a9815e202556778a4c105b440~vVqUt5c6C2946129461epcas5p3f;
+	Mon, 26 Aug 2024 17:14:09 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240826171409epsmtrp21dff6590920e7f62967e1b0cd6fa8b5f~vVqUs0lps3048030480epsmtrp2V;
+	Mon, 26 Aug 2024 17:14:09 +0000 (GMT)
+X-AuditID: b6c32a4b-613ff700000025aa-42-66ccb7e27d64
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	95.B2.07567.1E7BCC66; Tue, 27 Aug 2024 02:14:09 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240826171405epsmtip2435567b12708596c83fb75f46f239673~vVqRFnxQu0040200402epsmtip2b;
+	Mon, 26 Aug 2024 17:14:05 +0000 (GMT)
+From: Kanchan Joshi <joshi.k@samsung.com>
+To: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
+	martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
+	brauner@kernel.org, jack@suse.cz, jaegeuk@kernel.org, jlayton@kernel.org,
+	chuck.lever@oracle.com, bvanassche@acm.org
+Cc: linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, linux-block@vger.kernel.org,
+	linux-scsi@vger.kernel.org, gost.dev@samsung.com, vishak.g@samsung.com,
+	javier.gonz@samsung.com, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v4 0/5] Write-placement hints and FDP
+Date: Mon, 26 Aug 2024 22:36:01 +0530
+Message-Id: <20240826170606.255718-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TfUwTZxz2vTuuh7HkVjS+I4p4zj9gAi3SciyA6Mi8rcvS7DMj2eBWjo8A
+	bddrJ5NNccxNuglSFBUlVkLYLONTQLTDOCo6HA5CkQmIVCwsk4lAtyFCYC2Hm/89v+f9Pb/n
+	eb8IVDKABxAZGgOn17BZFL4aa7EHB4eOXuhKlfaeI+nq4SKcnrDPALp0ag6ll4Z/R+iBKxcR
+	+lx1B0KfOp6P0K66MpRuKCLo+3fcInquyiqiO5Ye4rS5vR/QbYMv0r0Vu+kf2zox+kzVmIj+
+	5rdWnP7u+iJC1048wujustOi+HWMo0/JdN9twJhS8w2ccdw0Mo3WApw5X7mfsVncCGMbyMOZ
+	6bFBjClssgKmy3JVxLgbA1VrEjNj0jk2hdMHcRq1NiVDkxZLKd9KejlJrpDKQmXRdBQVpGGz
+	uVgq4XVV6CsZWZ6dUkGfsFlGD6VieZ4Kj4vRa40GLihdyxtiKU6XkqWL1IXxbDZv1KSFaTjD
+	SzKpNELuaUzOTL+89IuPbprMqXFYRXmgQGwCvgQkI+GR232YCawmJKQNQGf5GBCKGQB76gp8
+	hOIfAO8tTGJPJbVFXSJhoQ3A2YqJFb0bwD+s3R49QeBkMOwpMXr5tWQ+AhtqnuDeAiXNCJx2
+	1uDeUf6kHNrHzyJejJFbYeeXZtSLxWQ0HKipRAW7TfBk76xI4J+DnSddyzFQD5/ffGqlx0XA
+	vkXeawzJBHihWC/Q/vDB9SaRgAOge7INF3AmdI46V3bzGWw9X+gj4B0wb+G2j3cM6slfdylc
+	cPKDh+ddiDBdDA99JRG6N8O75rEV5Xp470TlCmbgoO2vZScJ+QH8YngRPQICy57JX/ZM/rL/
+	zSwAtYLnOR2fncbxct12Dbfnv7tUa7MbwfIbD1G2glHnVFg7QAjQDiCBUmvFgY7OVIk4hf10
+	L6fXJumNWRzfDuSeQy1GA9aptZ5PojEkySKjpZEKhSIyertCRq0XTxwsT5GQaayBy+Q4Had/
+	qkMI34A8pCOnxIb4F2+7LN21Z2jT25c67TbTqqFjlTuZWccPGfLkgzm/qgpZ3TZ13EN3/BVd
+	XGq1wpKLDcms4b0not7YWJi8+YUHrfWHFvubtab63MHTt/oiSlw3+qnivY9JaPlTShlqs0M2
+	+IN9Be+9uiHqnZCRuUeSKHXV8TW6ucF5v6uHvw3rOfN1d8SHd8a79zsyZ/cl6L93XsttPjo3
+	Mr7lLPB9zYx8fPFne+JUUKEzUfXurpjP9cc0t1bV41aVEhnFipw77PL50q2TpqGbse+bp3ya
+	cn5amn1T2accQVuu7VY/ue93IH96p+ujOuPjlvhp00KERBp3YHzLjOXoxih3+d8VfhTGp7Oy
+	EFTPs/8CWXJOt2wEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSvO7D7WfSDHa/VLZYfbefzeL14U+M
+	FtM+/GS2+H/3OZPFzQM7mSxWrj7KZDF7ejOTxZP1s5gtNvZzWDy+85nd4ueyVewWR/+/ZbOY
+	dOgao8XeW9oWlxa5W+zZe5LFYv6yp+wW3dd3sFksP/6PyWLd6/csFudnzWF3EPW4fMXb4/y9
+	jSwe0yadYvO4fLbUY9OqTjaPzUvqPXYv+MzksftmA5vHx6e3WDz6tqxi9Diz4Ai7x+dNcgE8
+	UVw2Kak5mWWpRfp2CVwZ+/6fZi34KFCx9vIq9gbGTt4uRk4OCQETiXX9Z9i7GLk4hAR2M0o8
+	+PCaCSIhLtF87Qc7hC0ssfLfc6iij4wSO56vBHI4ONgENCUuTC4FiYsITGaSaHq4hQXEYRaY
+	wySxvHM7M0i3sICpxOFnC8GmsgioSpxsmQQW5xWwlLi5dgkzxAZ5iZmXvrNDxAUlTs58wgJi
+	MwPFm7fOZp7AyDcLSWoWktQCRqZVjJKpBcW56bnJhgWGeanlesWJucWleel6yfm5mxjB8aal
+	sYPx3vx/eocYmTgYDzFKcDArifDKXT6ZJsSbklhZlVqUH19UmpNafIhRmoNFSZzXcMbsFCGB
+	9MSS1OzU1ILUIpgsEwenVANT+JdsVgHpuo6Uf37BDWufbE2P5Sy227qyK0nWbO4x1qvfvt/e
+	HaWXL2dXdFfvMNv0jAlWt2OLRO0WfqlcJX5VTfvRq7JtqvdijB6eKK79vuXHp82JAdN7fpzc
+	9sf+mbzlrzKpgI4SZu0djevmiTocEd67XfiIRbaerFSlbMemdYW8HzLWrNAwPKayblnpfJ7F
+	okmz55TyiOqblz4wcdgiPX2br+RMnWmtDyq3cuTNFhd/6PxESX3uqRa5T6EvDNc+32kToLI7
+	QOJWUM7u+VGnKh83Hanui5E+VOQvkhq5eSu/6vtgn866PkblELf/quzsLlO8gzUO3u6dkpHq
+	elpvReI/adbq+E/H9+lc71BiKc5INNRiLipOBADy+3UfJgMAAA==
+X-CMS-MailID: 20240826171409epcas5p306ba210a9815e202556778a4c105b440
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240826171409epcas5p306ba210a9815e202556778a4c105b440
+References: <CGME20240826171409epcas5p306ba210a9815e202556778a4c105b440@epcas5p3.samsung.com>
 
-On Mon, 2024-08-26 at 18:41 +0300, Andy Shevchenko wrote:
-> On Mon, Aug 26, 2024 at 5:51=E2=80=AFPM Philipp Stanner <pstanner@redhat.=
-com>
-> wrote:
-> > On Thu, 2024-08-22 at 17:44 +0300, Andy Shevchenko wrote:
-> > > On Thu, Aug 22, 2024 at 03:47:37PM +0200, Philipp Stanner wrote:
->=20
-> ...
->=20
-> > > > -=C2=A0=C2=A0 err =3D pcim_iomap_regions(pdev, 1 << PCI_PTP_BAR_NO,
-> > > > pci_name(pdev));
-> > > > -=C2=A0=C2=A0 if (err)
-> > > > +=C2=A0=C2=A0 clock->reg_base =3D pcim_iomap_region(pdev, PCI_PTP_B=
-AR_NO,
-> > > > pci_name(pdev));
-> > > > +=C2=A0=C2=A0 if (IS_ERR(clock->reg_base)) {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =
-=3D PTR_ERR(clock->reg_base);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-goto error_free;
-> > > > -
-> > > > -=C2=A0=C2=A0 clock->reg_base =3D pcim_iomap_table(pdev)[PCI_PTP_BA=
-R_NO];
-> > > > +=C2=A0=C2=A0 }
-> > >=20
-> > > Perhaps
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock->reg_base =3D pcim_iomap_region(=
-pdev, PCI_PTP_BAR_NO,
-> > > pci_name(pdev));
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D PTR_ERR_OR_ZERO(clock->reg_bas=
-e);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 goto error_free;
-> > >=20
-> > > This will make your patch smaller and neater.
-> > >=20
-> > > P.S. Do you use --histogram diff algo when preparing patches?
-> >=20
-> > So far not.
-> > Should one do that?
->=20
-> Id doesn't alter your code, it's in addition to what I suggested, but
-> as Linus shared that there is no reason to avoid using --histogram
-> not
-> only in Linux kernel, but in general as it produces more
-> human-readable diff:s.
+Current write-hint infrastructure supports 6 temperature-based data life
+hints.
+The series extends the infrastructure with a new temperature-agnostic
+placement-type hint. New fcntl codes F_{SET/GET}_RW_HINT_EX allow to
+send the hint type/value on file. See patch #3 commit description for
+the details.
 
-If the Boss says so, one can surely do that \o/
+Overall this creates 128 placement hint values [*] that users can pass.
+Patch #5 adds the ability to map these new hint values to nvme-specific
+placement-identifiers.
+Patch #4 restricts SCSI to use only life hint values.
+Patch #1 and #2 are simple prep patches.
 
-Though if it has 0 disadvantages I'd propose proposing to the git-devs
-to make it the default.
+[*] While the user-interface can support more, this limit is due to the
+in-kernel plumbing consideration of the inode size. Pahole showed 32-bit
+hole in the inode, but the code had this comment too:
 
+/* 32-bit hole reserved for expanding i_fsnotify_mask */
 
-P.
+Not must, but it will be good to know if a byte (or two) can be used
+here.
 
->=20
+Changes since v3:
+- 4 new patches to introduce write-placement hints
+- Make nvme patch use the placement hints rather than write-life hints
+
+Changes since v2:
+- Base it on nvme-6.11 and resolve a merge conflict
+
+Changes since v1:
+- Reduce the fetched plids from 128 to 6 (Keith)
+- Use struct_size for a calculation (Keith)
+- Handle robot/sparse warning
+
+Kanchan Joshi (4):
+  fs, block: refactor enum rw_hint
+  fcntl: rename rw_hint_* to rw_life_hint_*
+  fcntl: add F_{SET/GET}_RW_HINT_EX
+  nvme: enable FDP support
+
+Nitesh Shetty (1):
+  sd: limit to use write life hints
+
+ drivers/nvme/host/core.c   | 81 ++++++++++++++++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h   |  4 ++
+ drivers/scsi/sd.c          |  7 ++--
+ fs/buffer.c                |  4 +-
+ fs/f2fs/f2fs.h             |  4 +-
+ fs/f2fs/segment.c          |  4 +-
+ fs/fcntl.c                 | 79 ++++++++++++++++++++++++++++++++++---
+ include/linux/blk-mq.h     |  2 +-
+ include/linux/blk_types.h  |  2 +-
+ include/linux/fs.h         |  2 +-
+ include/linux/nvme.h       | 19 +++++++++
+ include/linux/rw_hint.h    | 20 +++++++---
+ include/uapi/linux/fcntl.h | 14 +++++++
+ 13 files changed, 218 insertions(+), 24 deletions(-)
+
+-- 
+2.25.1
 
 
