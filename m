@@ -1,104 +1,125 @@
-Return-Path: <linux-block+bounces-11000-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11002-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0534962933
-	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2024 15:47:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D78AF962AC5
+	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2024 16:51:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E1FDB2256C
-	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2024 13:47:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20393281E0D
+	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2024 14:51:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03A116EBE2;
-	Wed, 28 Aug 2024 13:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60E9199FB9;
+	Wed, 28 Aug 2024 14:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RGvYF1st"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="P0YHczkk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBB315B0E4;
-	Wed, 28 Aug 2024 13:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AE0189B91;
+	Wed, 28 Aug 2024 14:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724852848; cv=none; b=CRio66S2/rOF9qG8bRBKSW862g+frdJMw98tbfFVKzvVPZYqAfa8nqPM5u0ztN8n+gEsidZ5u9NPWt3mX4Gmss6kW5Ke17FwMAOS3a5+HK+SsZ5V6YQL9mtZFjWb3mUDDVxstZDq4t2nuQGsMVlx+JkY9a42J30RutkRYk0WNOk=
+	t=1724856671; cv=none; b=gdevBxRoc9V/cEB7tpjrYmyDP3uH3Aed49/DeJaxnQkDog6qHHwEbIT9KEK3l17NKhmLgko00Y7kiPkietKRUUuAoKy7NlYqlpIL50ET9wEFva+uqpVVIGHDVu/Ld2WIoYMv33xS08Hcd/erH0KtZd92DzHljrInRD7FhxaJl9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724852848; c=relaxed/simple;
-	bh=PhyhFSq2ssqfE87Z8rulgW9y6ISQIaoU1dXRLUiK4to=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bHKh+0YYTluEegdGJsc7qpsl4Kkdvn3eBEhkGrArsptwZLzpRE0YGPdGRMcGAGJVSOc4ybIaZeF3vuqe4eJZo8ShTnQpadLK6hPfrzhyYgxPVKFHan0DEBK5AX7JrgFfFVPz8SkVH4Z4xde/+IEbhJeY60GHAcXwn/OhnCoHV2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RGvYF1st; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Wv5M226tWz6ClY92;
-	Wed, 28 Aug 2024 13:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1724852842; x=1727444843; bh=8HL0xEOnM68xTrIbWEcNqu71
-	FrJVlvPt0DHaEvk1u08=; b=RGvYF1stSw9zMiJSUwLphKJmx5HVqKxc8/3gdeW5
-	3Y2WlnuQRHHW0w4ZLY6GxmsBzuHHm6rTxq3ZI/tnxD16IHdf86/NOUm/AcAqpKcw
-	Yi31YZGYrNC3CDB4BkT8TYytetvEOqYh6pspsX0hIgAxVczqSxbdh500jXu1aDWR
-	IbOcGDRM2Y4NfedqIkML08daEezbJr3YECGiLh4HuCLEFHSGYl1/hxwdBUxiIgRJ
-	SX9focuhDzdNASpuuy/yffcDd/It6cn1VpiFZOLVyxLOc6t21fW7pTr/Vn60sers
-	rv5pUl5LR82bpdnlgOlG50Guv+OSDtdqxxw03lYhAquHZQ==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id u71Aahn4zS-I; Wed, 28 Aug 2024 13:47:22 +0000 (UTC)
-Received: from [172.16.58.82] (modemcable170.180-37-24.static.videotron.ca [24.37.180.170])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Wv5Lt5znwz6ClbJB;
-	Wed, 28 Aug 2024 13:47:18 +0000 (UTC)
-Message-ID: <03e92755-2011-4c43-8a1c-f1ad9a1382eb@acm.org>
-Date: Wed, 28 Aug 2024 09:47:17 -0400
+	s=arc-20240116; t=1724856671; c=relaxed/simple;
+	bh=Yx/xWH7sRQ0bUoCuj+xNJqLUe1vsbZ+IZWTvoqAWuGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YHoDLRFYEN6Tl4PgdJV5UyvzssneHXgaZ6MRoPm403sC4sSyfqruCvWQOw8ndB6jYkM5cwniTlHBPOPGug1S8d38qTPIi1JxRlE2CcMtfDSOhtNZCgaRqA0SzcQQt9e+OktSWRM7wpBOCK/6oXJiYbHZLFjJP+UmO8st3pD+z2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=P0YHczkk; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kktE0sKtiI/wFdgKRtUfY1cxi+R6IyXPcJRTWtxZiag=; b=P0YHczkky21tDEptzoJ5oKMwwD
+	JaPNpeZYkuScmkHxvH99HM5r+FWHH0Z8kz0a3jlvir16AVO6Q6ruNa+TGTuZigDieepjS+INvrBh1
+	sgEIxQixEC5n5TaiEG6YpRRH7fIiBRbiVJAGDw5ia/Gxu82RXeEmIrt14TSEA8LcTDsIw6Gy6e20N
+	tWk/2QQUkHNFIZxU3cott1otTBgff215iSDARpBAYV2vYeOdDMvZnoDV7331kCCRx4bUZw14ZH37c
+	c2hTKf2EZoBDcRsIpA3JY4R8wLf7iBHUUqKFtDdRp1RMpiMXShOjAhahFVG+6AREaEo+mjz52KLIw
+	QkoYNv7g==;
+Received: from [177.76.152.96] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sjK0e-006N2z-1X; Wed, 28 Aug 2024 16:50:56 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: linux-doc@vger.kernel.org
+Cc: corbet@lwn.net,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	kernel-dev@igalia.com,
+	kernel@gpiccoli.net,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH V5] Documentation: Document the kernel flag bdev_allow_write_mounted
+Date: Wed, 28 Aug 2024 11:48:58 -0300
+Message-ID: <20240828145045.309835-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] blk-mq: Allow complete locally if capacities are
- different
-To: Christian Loehle <christian.loehle@arm.com>,
- Manish Pandey <quic_mapa@quicinc.com>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com,
- quic_narepall@quicinc.com, quic_rampraka@quicinc.com, quic_cang@quicinc.com,
- quic_nguyenb@quicinc.com, Qais Yousef <qyousef@layalina.io>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>
-References: <20240828114958.29422-1-quic_mapa@quicinc.com>
- <c5d0966b-7de3-4eff-9310-d9a31d822dad@acm.org>
- <7661afec-168d-406e-903b-a2dc9adf6408@arm.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <7661afec-168d-406e-903b-a2dc9adf6408@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 8/28/24 8:26 AM, Christian Loehle wrote:
-> On 8/28/24 13:13, Bart Van Assche wrote:
->> I think that the following is missing from the above description:
->> - Mentioning that this is for an unusual interrupt routing technology
->>  =C2=A0 (SoC sends the interrupt to another CPU core than what has bee=
-n
->>  =C2=A0=C2=A0 specified in the smp_affinity mask).
->=20
-> FWIW on !mcq that doesn't have to be the case.
+Commit ed5cc702d311 ("block: Add config option to not allow writing to mounted
+devices") added a Kconfig option along with a kernel command-line tuning to
+control writes to mounted block devices, as a means to deal with fuzzers like
+Syzkaller, that provokes kernel crashes by directly writing on block devices
+bypassing the filesystem (so the FS has no awareness and cannot cope with that).
 
-Hmm ... is there any x86 architecture that ignores the smp_affinity
-mask? I have not yet encountered an x86 system that does not respect
-the smp_affinity mask.
+The patch just missed adding such kernel command-line option to the kernel
+documentation, so let's fix that.
 
-Thanks,
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Darrick J. Wong <djwong@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
 
-Bart.
+V5:
+- s/open a block device/open a mounted block device (thanks Jan!).
+- Added the Review tag from Jan.
+
+V4 link: https://lore.kernel.org/r/20240826001624.188581-1-gpiccoli@igalia.com
+
+
+ Documentation/admin-guide/kernel-parameters.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 09126bb8cc9f..efc52ddc6864 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -517,6 +517,18 @@
+ 			Format: <io>,<irq>,<mode>
+ 			See header of drivers/net/hamradio/baycom_ser_hdx.c.
+ 
++	bdev_allow_write_mounted=
++			Format: <bool>
++			Control the ability to open a mounted block device
++			for writing, i.e., allow / disallow writes that bypass
++			the FS. This was implemented as a means to prevent
++			fuzzers from crashing the kernel by overwriting the
++			metadata underneath a mounted FS without its awareness.
++			This also prevents destructive formatting of mounted
++			filesystems by naive storage tooling that don't use
++			O_EXCL. Default is Y and can be changed through the
++			Kconfig option CONFIG_BLK_DEV_WRITE_MOUNTED.
++
+ 	bert_disable	[ACPI]
+ 			Disable BERT OS support on buggy BIOSes.
+ 
+-- 
+2.46.0
 
 
