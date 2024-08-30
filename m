@@ -1,171 +1,202 @@
-Return-Path: <linux-block+bounces-11069-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11064-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCEA3965A92
-	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2024 10:39:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10217965966
+	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2024 10:06:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B3231C20C38
-	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2024 08:39:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA50E28151C
+	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2024 08:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E51314BF90;
-	Fri, 30 Aug 2024 08:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB93D16BE02;
+	Fri, 30 Aug 2024 08:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qvO7M0za"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXMurrdJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744541667F1
-	for <linux-block@vger.kernel.org>; Fri, 30 Aug 2024 08:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB38166F28
+	for <linux-block@vger.kernel.org>; Fri, 30 Aug 2024 08:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725007182; cv=none; b=pZDTnc8lkSY9UgPSbT6DQYasajdcuTqeOyN05k0tnM/5Zb1iqAIW5a+AFlsrOa8QRet+MVA4BUVzaUJ3FPC+B5KLaqjYscdG7ye9TZ3B99rM5dnkdNGq5sWAztdz0zCU6krZc4lR7IJd56wTMa11Zv8NNRCPIeBiop9+a3wLzaA=
+	t=1725005190; cv=none; b=cFOAYK0FoJV3TNNa71F9DpJ9NxeZFRU80oOOrnLYPX5mX1c5ja0Z6NZooe+CuzaDo7mzBCC0FCUIjPztn19AEiJYVby3oVs06jOwI1vhqDdlGBEsmtrjwdYUL5zU5oQ+ntnR1QvD/OVNNB3boO+piNHlY+iLQAc1Fff3jHzotIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725007182; c=relaxed/simple;
-	bh=ByjhQZNBrmtwvjzAKA7p8qjIQOlMQlAbGUvLshQ7ARw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=mAXe0I1VENQrwFEt3NsXVh7WJB2QoCfrdn6UMXFpXvVFrhDZyDpBcHhYNMjc43lfs7JLDMv01Hq/nCZyVZJJU7tD0ABnAxcTSRgJgEUAToPE7mu9TvJdPhPKhSzDpdMv8IimrgiQfWMD2skitSeQVznBkV4fKxiihbgFOTE3hyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qvO7M0za; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240830083938epoutp01c96eefad86c6f836417ebdc8ce115e88~wdOOzu_qJ3142131421epoutp01J
-	for <linux-block@vger.kernel.org>; Fri, 30 Aug 2024 08:39:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240830083938epoutp01c96eefad86c6f836417ebdc8ce115e88~wdOOzu_qJ3142131421epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1725007178;
-	bh=N908WA4PL4Ey099voGw4MaeeUDI9efP2rV1ZprSvzt0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qvO7M0za+FStJCqu7++ddqJjJUlG0WAYkqACCyxtcn7SCNu3ijl18bikW+j1ojZW1
-	 1QBr67aLmlRqLB8SEW4ReZw5+awVFODx19MZtfhC5rQjOVTbH/0ovLyNVKmvG8iVUU
-	 01ZLJXDEFfZIRxUvi1jDG8Nj7tYkDWhII5kyKZGc=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240830083937epcas5p2ab2ae74b72ea51598cc5b2a9fc4adb2e~wdOOG0DFO2838628386epcas5p2I;
-	Fri, 30 Aug 2024 08:39:37 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4WwBQv4YQ0z4x9Px; Fri, 30 Aug
-	2024 08:39:35 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D4.69.09640.74581D66; Fri, 30 Aug 2024 17:39:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240830080059epcas5p4c880e8052b5f8e70077746a947442e56~wcsfKp96m0511305113epcas5p4W;
-	Fri, 30 Aug 2024 08:00:59 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240830080059epsmtrp178975af7d8e9c25c30d65169a7efae1c~wcsfJ5fcs1337013370epsmtrp1F;
-	Fri, 30 Aug 2024 08:00:59 +0000 (GMT)
-X-AuditID: b6c32a49-aabb8700000025a8-00-66d18547954c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	21.AA.19367.B3C71D66; Fri, 30 Aug 2024 17:00:59 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240830080057epsmtip20456ba5999e517d47785a2aa3a608810~wcscytv882259122591epsmtip2P;
-	Fri, 30 Aug 2024 08:00:56 +0000 (GMT)
-From: Kundan Kumar <kundan.kumar@samsung.com>
-To: axboe@kernel.dk, hch@lst.de, willy@infradead.org, kbusch@kernel.org
-Cc: linux-block@vger.kernel.org, joshi.k@samsung.com, mcgrof@kernel.org,
-	anuj20.g@samsung.com, nj.shetty@samsung.com, c.gameti@samsung.com,
-	vishak.g@samsung.com, gost.dev@samsung.com, Kundan Kumar
-	<kundan.kumar@samsung.com>
-Subject: [PATCH v9 4/4] block: unpin user pages belonging to a folio at once
-Date: Fri, 30 Aug 2024 13:22:57 +0530
-Message-Id: <20240830075257.186834-5-kundan.kumar@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240830075257.186834-1-kundan.kumar@samsung.com>
+	s=arc-20240116; t=1725005190; c=relaxed/simple;
+	bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=K9eqgNAM7GMtcliwVCJE1Az9vFpzmTF/Ev8p4tJ5ponH0aKA7zTpNGKK8zw4gxSIiOnnqAiPAvYLl1RerMyEIEXfQxxcTp/F0vMKfBvl7aI1FgnocNsHxSsC1zrbNn40n+21dGS3fwbqU8zfBIjmZKmsT5PzYBc1vje5ShCgX+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KXMurrdJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725005187;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
+	b=KXMurrdJSWi/NjM0k0S7xW0yLSH8wUpRXZDKD0zETzSpwA5Ze3rxY2Plp1CCtHqJD/IG6t
+	gSPai8A6cevo2/PivW2T0y43BmUo1g9To0FRX5lYJkyS5EUphW/ugf3c50ctDqCAgLWnO3
+	db0zIYPmxZKZEz7ebBFEArJsXD0gBfA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-544-hr3K4FkCPTKj1D7Va0r7LQ-1; Fri, 30 Aug 2024 04:05:17 -0400
+X-MC-Unique: hr3K4FkCPTKj1D7Va0r7LQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42bb68e1706so14387005e9.3
+        for <linux-block@vger.kernel.org>; Fri, 30 Aug 2024 01:05:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725005116; x=1725609916;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
+        b=et8KRgFWGNILAsxKtwQnm75EylBMdSJWf1jsCsFbZBLVYX+ExNtYIXJP3IKnh37qXq
+         YeZjwvb3ttoh+KvOVThx0gj4yeEMismx6iW/k1y1hvvQTHbPa6ppal8s+M6Ln1RG/grj
+         B+AgxIXqwGPVu07nAbF8szr6VHa5ebbkCSqHUPt/JRcP7KCPDaj6Bzjk/97OkBkyGOYm
+         nc1rJoX6Fwq17chkRr7AqbkO4zbeteI2vBHGqi+ecLG32Z7DQ40JN3DJ+AgIgQbqflP2
+         Hp4RiCRsLTbzL/AmLeY3F0c0JH5g1F8aAelP1noUz2TsQBxozljanuNOfdET8RO+n/7R
+         qMDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXngJmRk7WLWTVUJT3ut9y18VMS5M+Glop+GROXxEqlnZ2EiHLDtezIdTDEvZ3CQNRQMsUZFrhcwgiFig==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE9J18J6B0FQ+XPcU4OfhR8mpe0rrY5oQNe+UVgA1GWcULbFrX
+	e0SqHP7egJLg5vm790yUijH1hTB5kL76tens6KOpL1dFWw5qH21l/ffdaWclGp4V07uhyU7Zbl9
+	v55XV+Gk4tlKPWG6zaZrzTbjTa++HHnyktXMr8I4WL44fMy1Y2imE4G5ehrFD
+X-Received: by 2002:a05:600c:1914:b0:42b:afbb:1704 with SMTP id 5b1f17b1804b1-42bb0281326mr42324485e9.6.1725005115845;
+        Fri, 30 Aug 2024 01:05:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElMHHa1ss0AjuIdZRhm4Z2kioy67ZZmuCCx+UBXe8jQVj10UPNfr/s1tjKN2uvyTW+vaIl2g==
+X-Received: by 2002:a05:600c:1914:b0:42b:afbb:1704 with SMTP id 5b1f17b1804b1-42bb0281326mr42324235e9.6.1725005115323;
+        Fri, 30 Aug 2024 01:05:15 -0700 (PDT)
+Received: from eisenberg.fritz.box (200116b82d2f1b0080ee39dcd7d81ce9.dip.versatel-1u1.de. [2001:16b8:2d2f:1b00:80ee:39dc:d7d8:1ce9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ef7f329sm3287195f8f.70.2024.08.30.01.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2024 01:05:14 -0700 (PDT)
+Message-ID: <ff637570c16c6a15be414839ec4878e49ecd2350.camel@redhat.com>
+Subject: Re: [PATCH v5 6/7] vdpa: solidrun: Fix UB bug with devres
+From: Philipp Stanner <pstanner@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jens Axboe
+ <axboe@kernel.dk>,  Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+ Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Andy
+ Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Alvaro Karsz <alvaro.karsz@solid-run.com>, Jason
+ Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
+ =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Richard Cochran
+ <richardcochran@gmail.com>, Damien Le Moal <dlemoal@kernel.org>, Hannes
+ Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
+ linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+ virtualization@lists.linux.dev, stable@vger.kernel.org, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>
+Date: Fri, 30 Aug 2024 10:05:12 +0200
+In-Reply-To: <20240829110902-mutt-send-email-mst@kernel.org>
+References: <20240829141844.39064-1-pstanner@redhat.com>
+	 <20240829141844.39064-7-pstanner@redhat.com>
+	 <20240829102320-mutt-send-email-mst@kernel.org>
+	 <CAHp75Ve7O6eAiNx0+v_SNR2vuYgnkeWrPD1Umb1afS3pf7m8MQ@mail.gmail.com>
+	 <20240829104124-mutt-send-email-mst@kernel.org>
+	 <2cc5984b65beb6805f8d60ffd9627897b65b7700.camel@redhat.com>
+	 <20240829110902-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPJsWRmVeSWpSXmKPExsWy7bCmuq5768U0gxOLFS2aJvxltlh9t5/N
-	4vv2PhaLmwd2MlmsXH2UyeLo/7dsFpMOXWO02PrlK6vF3lvaFjcmPGW02PZ7PrPF+Vlz2C1+
-	/5jD5sDrsXmFlsfls6Uem1Z1snnsvtnA5tG3ZRWjx+dNcgFsUdk2GamJKalFCql5yfkpmXnp
-	tkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUBnKimUJeaUAoUCEouLlfTtbIryS0tS
-	FTLyi0tslVILUnIKTAr0ihNzi0vz0vXyUkusDA0MjEyBChOyMz5OaWQr2MNRsehBD3sD43O2
-	LkZODgkBE4n3My6ydzFycQgJ7GaUOPp7BzOE84lR4vG8tQjO2zWTmWFaTq07wgqR2Mkocejc
-	RiYI5zOjxKr9Cxm7GDk42AR0JX40hYI0iAi4S0x9+YgRpIZZ4CmjxJUvP1lBEsICPhLdizay
-	gNgsAqoSDS+bwWxeATuJg40r2CG2yUvMvPQdzOYUsJfYMr+HFaJGUOLkzCdg9cxANc1bZ0Nd
-	N5FDYnJHBITtIrG85TojhC0s8er4FqiZUhIv+9ug7GyJQ40bmCDsEomdRxqg4vYSraf6mUF+
-	YRbQlFi/Sx8iLCsx9dQ6Joi1fBK9v59AtfJK7JgHY6tJzHk3lQXClpFYeGkGVNxD4uH3FrC4
-	kMAkRomeWzwTGBVmIflmFpJvZiFsXsDIvIpRMrWgODc9tdi0wDAvtRweycn5uZsYwSlXy3MH
-	490HH/QOMTJxMB5ilOBgVhLhPXH8bJoQb0piZVVqUX58UWlOavEhRlNgcE9klhJNzgcm/byS
-	eEMTSwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpjWvcs94HDntmzCvjnb
-	y7amLr2hX3dBIOeT9dtXkhrbIwTX7rqdk3E17Uz0romx003eXA8Nrf913VW6ffVG6biqtPfZ
-	LcczpErOsE/hEq248v+vjViPrN357XMZbxdnZjGZWXwTsEuVT+u66hF0sTdgWsDNEEeejpJ9
-	tYd2dE64vr7xW2/q80q/bpHKTZ3sffEiUUdnifQtfm3GuX/5yomeTebyzZ8d1rEXnIlLaXwn
-	en2VvHnjZRPf/p45zInTtO/WCE/cE3r+qOMnKyuG89PX7Ns5XfPQpz0/q5J4n/c0263RfWY0
-	N73427Ipn8OX7ZmnPj3dMbpEtu+h4ox1yx4IvPtgobT4WX7E/a/XIsKUWIozEg21mIuKEwHc
-	BKhJQgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsWy7bCSvK51zcU0gw1nlC2aJvxltlh9t5/N
-	4vv2PhaLmwd2MlmsXH2UyeLo/7dsFpMOXWO02PrlK6vF3lvaFjcmPGW02PZ7PrPF+Vlz2C1+
-	/5jD5sDrsXmFlsfls6Uem1Z1snnsvtnA5tG3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZH6c0
-	shXs4ahY9KCHvYHxOVsXIyeHhICJxKl1R1i7GLk4hAS2M0rcbFsMlZCR2H13JyuELSyx8t9z
-	doiij4wSX35cZepi5OBgE9CV+NEUClIjIuArsWDDc0YQm1ngPaPE7SXSILawgI9E96KNLCA2
-	i4CqRMPLZjCbV8BO4mDjCnaI+fISMy99B7M5BewltszvAdsrBFTTcnURE0S9oMTJmU9YIObL
-	SzRvnc08gVFgFpLULCSpBYxMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGCo0EraAfjsvV/
-	9Q4xMnEwHmKU4GBWEuE9cfxsmhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe5ZzOFCGB9MSS1OzU
-	1ILUIpgsEwenVAOTb9S+HZs+LU7ufmkrqZ50lq86O6/mrfbZCuGm783rb9gr7bjhn/VV+/Ne
-	o0s6mgtYJ79+9N4/X0Mwy+DEpKuFJwv3ubwXE3y1yMhdXOfYg3KOPU+3L2zb878iXsCutqXu
-	XcmbvbcXX5zkwm8SGWgn0fl3wYEtsdasXV9/XeezmvR3zcVz/0Q2Jam5mYh4HXr/nHmBo+UU
-	Tn3dO6obeZXcgv4xvs3ZPaPcSCwr91S/8N1XfLJqJ5bv5fKSNCxc9SCBU07jrpH+ebPQquoJ
-	bzhKr8z6MlPGbfOKB7P4f3btjHploTBB/tTJO3y7vPwY1m3VXm13RSMgsOTF+xS7W7Ybt6//
-	zyk6++siZhM/+ZW7lViKMxINtZiLihMBs2C7kvUCAAA=
-X-CMS-MailID: 20240830080059epcas5p4c880e8052b5f8e70077746a947442e56
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240830080059epcas5p4c880e8052b5f8e70077746a947442e56
-References: <20240830075257.186834-1-kundan.kumar@samsung.com>
-	<CGME20240830080059epcas5p4c880e8052b5f8e70077746a947442e56@epcas5p4.samsung.com>
 
-Use newly added mm function unpin_user_folio() to put refs by npages
-count.
+On Thu, 2024-08-29 at 11:10 -0400, Michael S. Tsirkin wrote:
+> On Thu, Aug 29, 2024 at 04:49:50PM +0200, Philipp Stanner wrote:
+> > On Thu, 2024-08-29 at 10:41 -0400, Michael S. Tsirkin wrote:
+> > > On Thu, Aug 29, 2024 at 05:26:39PM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Aug 29, 2024 at 5:23=E2=80=AFPM Michael S. Tsirkin
+> > > > <mst@redhat.com>
+> > > > wrote:
+> > > > >=20
+> > > > > On Thu, Aug 29, 2024 at 04:16:25PM +0200, Philipp Stanner
+> > > > > wrote:
+> > > > > > In psnet_open_pf_bar() and snet_open_vf_bar() a string
+> > > > > > later
+> > > > > > passed to
+> > > > > > pcim_iomap_regions() is placed on the stack. Neither
+> > > > > > pcim_iomap_regions() nor the functions it calls copy that
+> > > > > > string.
+> > > > > >=20
+> > > > > > Should the string later ever be used, this, consequently,
+> > > > > > causes
+> > > > > > undefined behavior since the stack frame will by then have
+> > > > > > disappeared.
+> > > > > >=20
+> > > > > > Fix the bug by allocating the strings on the heap through
+> > > > > > devm_kasprintf().
+> > > > > >=20
+> > > > > > Cc: stable@vger.kernel.org=C2=A0=C2=A0=C2=A0 # v6.3
+> > > > > > Fixes: 51a8f9d7f587 ("virtio: vdpa: new SolidNET DPU
+> > > > > > driver.")
+> > > > > > Reported-by: Christophe JAILLET
+> > > > > > <christophe.jaillet@wanadoo.fr>
+> > > > > > Closes:
+> > > > > > https://lore.kernel.org/all/74e9109a-ac59-49e2-9b1d-d825c9c9f89=
+1@wanadoo.fr/
+> > > > > > Suggested-by: Andy Shevchenko <andy@kernel.org>
+> > > > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > > > >=20
+> > > > > Post this separately, so I can apply?
+> > > >=20
+> > > > Don't you use `b4`? With it it as simple as
+> > > >=20
+> > > > =C2=A0 b4 am -P 6 $MSG_ID_OF_THIS_SERIES
+> > > >=20
+> > > > --=20
+> > > > With Best Regards,
+> > > > Andy Shevchenko
+> > >=20
+> > > I can do all kind of things, but if it's posted as part of a
+> > > patchset,
+> > > it is not clear to me this has been tested outside of the
+> > > patchset.
+> > >=20
+> >=20
+> > Separating it from the series would lead to merge conflicts,
+> > because
+> > patch 7 depends on it.
+> >=20
+> > If you're responsible for vdpa in general I could send patches 6
+> > and 7
+> > separately to you.
+> >=20
+> > But number 7 depends on number 1, because pcim_iounmap_region()
+> > needs
+> > to be public. So if patches 1-5 enter through a different tree than
+> > yours, that could be a problem.
+> >=20
+> >=20
+> > P.
+>=20
+> Defer 1/7 until after the merge window, this is what is normally
+> done.
 
-Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
-Tested-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/bio.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+1 cannot be deferred. Take a look what 1 does.
 
-diff --git a/block/bio.c b/block/bio.c
-index c8fc97b42410..1babe30f3a84 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1190,7 +1190,6 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
- 	struct folio_iter fi;
- 
- 	bio_for_each_folio_all(fi, bio) {
--		struct page *page;
- 		size_t nr_pages;
- 
- 		if (mark_dirty) {
-@@ -1198,12 +1197,9 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
- 			folio_mark_dirty(fi.folio);
- 			folio_unlock(fi.folio);
- 		}
--		page = folio_page(fi.folio, fi.offset / PAGE_SIZE);
- 		nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
- 			   fi.offset / PAGE_SIZE + 1;
--		do {
--			bio_release_page(bio, page++);
--		} while (--nr_pages != 0);
-+		unpin_user_folio(fi.folio, nr_pages);
- 	}
- }
- EXPORT_SYMBOL_GPL(__bio_release_pages);
--- 
-2.25.1
+Your message is not comprehensible. Be so kind and write some more
+sentences.
+*What* is normally done? Sending patches? It's up to subsystem
+maintainers to queue them for the right cycle.
+
+> Adding new warnings is not nice, anyway.
+
+What?
+
+
+
+>=20
 
 
