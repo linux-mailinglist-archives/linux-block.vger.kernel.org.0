@@ -1,213 +1,122 @@
-Return-Path: <linux-block+bounces-11152-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11155-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2821969F6B
-	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2024 15:53:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C2F8969FB6
+	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2024 16:03:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B8201C23727
-	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2024 13:53:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE0BF285A98
+	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2024 14:03:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382142B9A5;
-	Tue,  3 Sep 2024 13:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA643BB24;
+	Tue,  3 Sep 2024 14:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEX9Rwe/"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7202A1D3;
-	Tue,  3 Sep 2024 13:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFEA2C6A3
+	for <linux-block@vger.kernel.org>; Tue,  3 Sep 2024 14:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725371610; cv=none; b=Hyxt48dEqKONKJH5zaDk1466F3BuNoelK/J/rKpzqBIcMBY/is+zEW3srlqs6beYAnJFcrnoWx/CmtsLmEy/Rawc2DCV0QXzu4XG2SUW0cgCtl99mmF4Ck9QeGKm/RJJEXg5GgA09Cdq++D77i8tRgePA01cVekn9N/HlZx2WcY=
+	t=1725372177; cv=none; b=Xi5///TlhBonpkVto3NUX4NK/C5uFSxuhgp5KZY+xWIRt2aLiuZDFC56A9B2BEyLPMjpku3pHdu2QZK6fdo7BVj0TC6rzkTqtS7Qh6CH1tUJ6vCVzgr5Pf/MMUlQurKxOSUz4rhgiRdAfUPCjnN7qT0nFfMHKuTKXnMpQU5iJ6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725371610; c=relaxed/simple;
-	bh=mOHqSBCGfoGqsl9rxTgfLkUkSCG2LYjrcFdiWH34Pq4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U6yTyDuPf/Thv+/N4iJLRxNHXiiZxO8lYD6R4jcp06kTJSwz+xoGw83PXu3WLcvp5QNNaJ3PZd7Bk7Y+vLQaRuN83O55PnJd4JKgtUniwRWzmBM1pEidcMJBStOXgxsXkv6+coXdm7XiQCOzDY4qSzxTZESThu68KRx7AGtGl7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WynBs6Llrz4f3kq0;
-	Tue,  3 Sep 2024 21:53:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2447E1A018D;
-	Tue,  3 Sep 2024 21:53:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDH+sbNFNdmiUgjAQ--.58276S6;
-	Tue, 03 Sep 2024 21:53:19 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH for-6.12 2/2] blk-throttle: support prioritized processing of metadata
-Date: Tue,  3 Sep 2024 21:51:49 +0800
-Message-Id: <20240903135149.271857-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240903135149.271857-1-yukuai1@huaweicloud.com>
-References: <20240903135149.271857-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1725372177; c=relaxed/simple;
+	bh=KbVX5/WJLt/Z0+uhwnKhCH5C1tCBFTeakpeppFQXWBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOE4aSr5ibJe61dghr8dTS8kjDl/jwWO7Ig1LBf3WtmHosi9ncosbscMUVcLIlR442Se0ZuyJOpJV6nW6ye1OBIexJbKr95bummLEJ+Xjhoj/85LM2XzxkkmWZwS5DkAx07cqAlMm/8XsvWyla4fMmQRjw5sTCDA1M0RMD88MRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aEX9Rwe/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725372175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1T7shADQQm1E7ZhQRMDcUIIeoOERk2k982scWhmF05E=;
+	b=aEX9Rwe/Wo/5sR4tawJcmvkvr0aktBDy0u9KBjvmfpnJ90LtW1UrsQ5lZTY+0doAdLVnia
+	Gc1rhwG0SQqUyPL9COpj9bf0zA+Esr+IX/HLZlWWuFRJhfEVqVSC4hNtnYT4v+MdagX/6w
+	qNcutHRrhX8077noELHyEc0t7BZ7o2k=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-18-a_HdLno8NnS3iy1JBhqcLg-1; Tue, 03 Sep 2024 10:02:53 -0400
+X-MC-Unique: a_HdLno8NnS3iy1JBhqcLg-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3756212a589so876517f8f.2
+        for <linux-block@vger.kernel.org>; Tue, 03 Sep 2024 07:02:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725372167; x=1725976967;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1T7shADQQm1E7ZhQRMDcUIIeoOERk2k982scWhmF05E=;
+        b=R7tk0QLByZGt9fAuB35tiXh3xnB1qzr2hKcXt9Nh3uDrLNbcE/XqaOQp2ZTr9Xu60u
+         dToSsMGPugxRbtMdUFX7vWVcajX2/0qUmwVE/o7d6bSXpQn7s4hAWVnvw7Ggx94GT69T
+         2gnZEmK/vbuSQt7YIbMbZhpfniPYIW3A6/40AhPFDmA+kzAhTozw2pZyc888ojrxVY5Z
+         CDyZxap87EC6VkLK+2NUKfvOdRv57aRLGnbT+jk+Kf34nkyBpSh3xDi4mgd5whuBdL63
+         Q6oUt8P9+suMQoX90cQKsw4WhWorIjreuRIn94ag+Mp88pNpBVvRKgkl76BE18MfKLQE
+         k9yA==
+X-Gm-Message-State: AOJu0Yy4537XMVGEF7p3iFBbFPL2+9vCkQMxrCrWsm/3JZxzz6yYyaN/
+	wCpohPZ4d0bhNTQx8K+cuXRovw9tGHWK8PnwroxRYlAuekjpvsm54kZJ1pqdBo98YFzLwVJFKLN
+	UZWojlDugc/iNkiYfokQdzpcOFYBzdARCZJqbVGBQuc7o49VkebWH0riRs//S
+X-Received: by 2002:a5d:5c87:0:b0:374:c8eb:9b18 with SMTP id ffacd0b85a97d-374c8eb9b69mr5013787f8f.24.1725372166725;
+        Tue, 03 Sep 2024 07:02:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGG+gCA4emCQ8lN+v2r+4PD0Xf7gtP5260Hobybyq26ysa18Yk2eN574I3dEkpcvY9bhrHY7Q==
+X-Received: by 2002:a5d:5c87:0:b0:374:c8eb:9b18 with SMTP id ffacd0b85a97d-374c8eb9b69mr5013434f8f.24.1725372163170;
+        Tue, 03 Sep 2024 07:02:43 -0700 (PDT)
+Received: from [192.168.88.27] (146-241-55-250.dyn.eolo.it. [146.241.55.250])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee9ba8esm14372770f8f.50.2024.09.03.07.02.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2024 07:02:42 -0700 (PDT)
+Message-ID: <c5658b79-f0bc-4b34-b113-825f40a57677@redhat.com>
+Date: Tue, 3 Sep 2024 16:02:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDH+sbNFNdmiUgjAQ--.58276S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4UtryrCF1Uuw15tr47urg_yoWrXryDpr
-	WfCrW5Kws5JFsrKwsI9F1UXa4fKan7Xr98J3s3JrW3A3W7Zrn8WFn0yryFyFWrAF9rGF4a
-	9rs0qr95CF1UGrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUczV8UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/5] ethernet: cavium: Replace deprecated PCI functions
+To: Philipp Stanner <pstanner@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+ Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
+ John Garry <john.g.garry@oracle.com>, Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20240902062342.10446-2-pstanner@redhat.com>
+ <20240902062342.10446-7-pstanner@redhat.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20240902062342.10446-7-pstanner@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Yu Kuai <yukuai3@huawei.com>
+On 9/2/24 08:23, Philipp Stanner wrote:
+> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
+> the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
+> 
+> Furthermore, the driver contains an unneeded call to
+> pcim_iounmap_regions() in its probe() function's error unwind path.
+> 
+> Replace the deprecated PCI functions with pcim_iomap_region().
+> 
+> Remove the unnecessary call to pcim_iounmap_regions().
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-Currently, blk-throttle handle all IO fifo, hence if data IO is
-throttled and then meta IO is dispatched, the meta IO will have to wait
-for the data IO, causing priority inversion problems.
-
-This patch support to handle metadata first and then pay debt while
-throttling data.
-
-Test script: use cgroup v1 to throttle root cgroup, then create new
-dir and file while write back is throttled
-
-test() {
-  mkdir /mnt/test/xxx
-  touch /mnt/test/xxx/1
-  sync /mnt/test/xxx
-  sync /mnt/test/xxx
-}
-
-mkfs.ext4 -F /dev/nvme0n1 -E lazy_itable_init=0,lazy_journal_init=0
-mount /dev/nvme0n1 /mnt/test
-
-echo "259:0 $((1024*1024))" > /sys/fs/cgroup/blkio/blkio.throttle.write_bps_device
-dd if=/dev/zero of=/mnt/test/foo1 bs=16M count=1 conv=fdatasync status=none &
-sleep 4
-
-time test
-echo "259:0 0" > /sys/fs/cgroup/blkio/blkio.throttle.write_bps_device
-
-sleep 1
-umount /dev/nvme0n1
-
-Test result: time cost for creating new dir and file
-before this patch:  14s
-after this patch:   0.1s
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 65 +++++++++++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 22 deletions(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index eb859c44c9f3..9c5bbd261724 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -1595,6 +1595,22 @@ void blk_throtl_cancel_bios(struct gendisk *disk)
- 	spin_unlock_irq(&q->queue_lock);
- }
- 
-+static bool tg_within_limit(struct throtl_grp *tg, struct bio *bio, bool rw)
-+{
-+	/* throtl is FIFO - if bios are already queued, should queue */
-+	if (tg->service_queue.nr_queued[rw])
-+		return false;
-+
-+	return tg_may_dispatch(tg, bio, NULL);
-+}
-+
-+static void tg_dispatch_in_debt(struct throtl_grp *tg, struct bio *bio, bool rw)
-+{
-+	if (!bio_flagged(bio, BIO_BPS_THROTTLED))
-+		tg->carryover_bytes[rw] -= throtl_bio_data_size(bio);
-+	tg->carryover_ios[rw]--;
-+}
-+
- bool __blk_throtl_bio(struct bio *bio)
- {
- 	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
-@@ -1611,29 +1627,34 @@ bool __blk_throtl_bio(struct bio *bio)
- 	sq = &tg->service_queue;
- 
- 	while (true) {
--		/* throtl is FIFO - if bios are already queued, should queue */
--		if (sq->nr_queued[rw])
-+		if (tg_within_limit(tg, bio, rw)) {
-+			/* within limits, let's charge and dispatch directly */
-+			throtl_charge_bio(tg, bio);
-+
-+			/*
-+			 * We need to trim slice even when bios are not being
-+			 * queued otherwise it might happen that a bio is not
-+			 * queued for a long time and slice keeps on extending
-+			 * and trim is not called for a long time. Now if limits
-+			 * are reduced suddenly we take into account all the IO
-+			 * dispatched so far at new low rate and * newly queued
-+			 * IO gets a really long dispatch time.
-+			 *
-+			 * So keep on trimming slice even if bio is not queued.
-+			 */
-+			throtl_trim_slice(tg, rw);
-+		} else if (bio_issue_as_root_blkg(bio)) {
-+			/*
-+			 * IOs which may cause priority inversions are
-+			 * dispatched directly, even if they're over limit.
-+			 * Debts are handled by carryover_bytes/ios while
-+			 * calculating wait time.
-+			 */
-+			tg_dispatch_in_debt(tg, bio, rw);
-+		} else {
-+			/* if above limits, break to queue */
- 			break;
--
--		/* if above limits, break to queue */
--		if (!tg_may_dispatch(tg, bio, NULL))
--			break;
--
--		/* within limits, let's charge and dispatch directly */
--		throtl_charge_bio(tg, bio);
--
--		/*
--		 * We need to trim slice even when bios are not being queued
--		 * otherwise it might happen that a bio is not queued for
--		 * a long time and slice keeps on extending and trim is not
--		 * called for a long time. Now if limits are reduced suddenly
--		 * we take into account all the IO dispatched so far at new
--		 * low rate and * newly queued IO gets a really long dispatch
--		 * time.
--		 *
--		 * So keep on trimming slice even if bio is not queued.
--		 */
--		throtl_trim_slice(tg, rw);
-+		}
- 
- 		/*
- 		 * @bio passed through this layer without being throttled.
--- 
-2.39.2
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
 
