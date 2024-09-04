@@ -1,181 +1,118 @@
-Return-Path: <linux-block+bounces-11239-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11243-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DBDB96C1C7
-	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2024 17:09:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0607896C243
+	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2024 17:26:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6AF14B2AD37
-	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2024 15:04:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B12331F24212
+	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2024 15:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA4B1DA10D;
-	Wed,  4 Sep 2024 15:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E49791EC017;
+	Wed,  4 Sep 2024 15:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tq7EDcon"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ixPsuGhO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8808D1DA2FE
-	for <linux-block@vger.kernel.org>; Wed,  4 Sep 2024 15:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF2D1DEFCB
+	for <linux-block@vger.kernel.org>; Wed,  4 Sep 2024 15:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725462234; cv=none; b=IN+oWWEYQzS+febrfl7KMAe+lFb7XfQANRNOr/laWftY0S8lphndhTJ7LrBEbeMJRoeiPOWuqOeooHyGR7VUiLNKCaFkMeyiT16lU0/vZ518jxZ17ILG1/LIJKqRnfJv4POgkwAsIu7faZYzj68+jZYc9d3bQCSKvtuMjeSuvy4=
+	t=1725463608; cv=none; b=LxUKWUfMlettrwQ8SlT8VlGMSBkn3fY9o239n3hsjMq7FuQX6hnRsSqGs+Cm3dlpCGfdtFEJMpAAgw8KzbRrrPWYY8myHgu24vEi2oeLJdmSRqm4VvMrwUl9Sc5Q1uRJS8whylCCGBGc01BkhPtmWz1W/FkQ+cyoPKVgpB9fiyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725462234; c=relaxed/simple;
-	bh=2MNDvJdAuFrKPaz7AKdeoAkNagaHCANVw+2OvyTUO+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=XJNCmXWJoEdRrttaNTcGUH4fhEshitFU9vvFBG7CTk6dw45LOmZpbKhXE/jt2WMmsR8FpW0B1szT314bf6B6pS2wNDkfYUzItAGYR4Huu0cEzr970/9F6lJjk/dhNjYsp1kefxVBW5E49wsbSu87VMb0mXFyClKiR7xbYRM6lmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tq7EDcon; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240904145712epoutp02bda6293aa88f8745098317e95531113b~yEmUnXqav2704327043epoutp021
-	for <linux-block@vger.kernel.org>; Wed,  4 Sep 2024 14:57:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240904145712epoutp02bda6293aa88f8745098317e95531113b~yEmUnXqav2704327043epoutp021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1725461832;
-	bh=/XD9MSPm2ieh7tYbx02NG5OSwwR0Rs4WQ1DiKKxiIlc=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=tq7EDconfAAxtqzrR0A2EYizCmpDG4aADIRh7WMATDaYhe7mBUC+hV/f4w95OCHbG
-	 N3tropibV5reJDG9mXkx7U1E0Meop0P+bWBeP7knpW19vZ9Z1UWdqtvZvyvmbm4eh4
-	 8vbbQ0LhF4GRsWACIy5UaJFd4WRbZq3W/VNGW+ck=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240904145712epcas5p16b1e59b36b65364e750ad6186f3c40c0~yEmT86gsc0537605376epcas5p1a;
-	Wed,  4 Sep 2024 14:57:12 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4WzQZG2H28z4x9Pt; Wed,  4 Sep
-	2024 14:57:10 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	02.09.09743.64578D66; Wed,  4 Sep 2024 23:57:10 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240904145709epcas5p1500f0810833c70c779c5b5d911fa7842~yEmRhvbRj0635006350epcas5p1x;
-	Wed,  4 Sep 2024 14:57:09 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240904145709epsmtrp2579123e002487ee76c7e08d31d1d3da9~yEmRfmIxb0123901239epsmtrp25;
-	Wed,  4 Sep 2024 14:57:09 +0000 (GMT)
-X-AuditID: b6c32a4a-14fff7000000260f-69-66d875463bee
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8A.1B.08964.54578D66; Wed,  4 Sep 2024 23:57:09 +0900 (KST)
-Received: from [107.122.11.51] (unknown [107.122.11.51]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240904145705epsmtip23467e1ecdd38069c57e5f46971b556e1~yEmN4AJW22167321673epsmtip2W;
-	Wed,  4 Sep 2024 14:57:05 +0000 (GMT)
-Message-ID: <cd7fa0b4-9f85-a73c-3f28-baa234a2ae7c@samsung.com>
-Date: Wed, 4 Sep 2024 20:27:04 +0530
+	s=arc-20240116; t=1725463608; c=relaxed/simple;
+	bh=hHFMDP2NtPGgFNnNaN8JDHv0kbdqrJvoXh7h639Ozu4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dPp+05jJMHjIgwzlWUKejmSnMSR+LuFVKKBBy6OOesJZkuCb0X3ALtzUozB6WS6q68tm18peA6QoD2OFyvcmGmunlfDs7kJDztXBY/DwYkUT8Q1zGTDhaDPuAXb9m/xQqhIecYn1Z9eosdoAg62C3o5MlgHDQYLRxvlxKoXlyyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ixPsuGhO; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4849U2Nt022336
+	for <linux-block@vger.kernel.org>; Wed, 4 Sep 2024 08:26:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=s2048-2021-q4; bh=yXz
+	LEZ5bz9vaEEDlWYyoB6/11NgwtSFlDVn1Em7Vjmw=; b=ixPsuGhOlG92dui+K6S
+	74cl0wF2RgPBbqUHFyH86rlpwN/QLrkH8o1bCWzLfmDWuS0u/BQSHMoSelSI/pt2
+	xNCvCukbAbwz5FFrqZFwNZue5xnBYOsyf53xHZNbGAlZiLNxz94mFJkFBZAenKhs
+	MK5aDuz6SkCHUNj+UwnOLWwahiN4zd5MTc9ZC92+0jfgDZpZeoDpO4dEhEsrfCLU
+	7a6sdlmpDLRxzJe8zY3sufYCGiYT1dPWH7NjijIn/ajlFF9xVgNVUkbevJUkahJY
+	nhwCB/yVW5aZK/gigCR2xNfULEIx9ZebAXhdypRNuqkgQ1el5T+2KIRACMVo6a1Q
+	fRA==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 41emyp1w8k-11
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Wed, 04 Sep 2024 08:26:46 -0700 (PDT)
+Received: from twshared34253.17.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Wed, 4 Sep 2024 15:26:12 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 9D67312A036E2; Wed,  4 Sep 2024 08:26:07 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <axboe@kernel.dk>, <hch@lst.de>, <martin.petersen@oracle.com>,
+        <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-scsi@vger.kernel.org>, <sagi@grimberg.me>
+CC: Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv3 00/10] block integrity merging and counting
+Date: Wed, 4 Sep 2024 08:25:55 -0700
+Message-ID: <20240904152605.4055570-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
-	Gecko/20100101 Thunderbird/91.8.1
-Subject: Re: [PATCH v4 0/5] Write-placement hints and FDP
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>
-Cc: amir73il@gmail.com, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-	martin.petersen@oracle.com, James.Bottomley@hansenpartnership.com,
-	jack@suse.cz, jaegeuk@kernel.org, jlayton@kernel.org,
-	chuck.lever@oracle.com, bvanassche@acm.org, "axboe@kernel.dk"
-	<axboe@kernel.dk>, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-	gost.dev@samsung.com, vishak.g@samsung.com, javier.gonz@samsung.com
-From: Kanchan Joshi <joshi.k@samsung.com>
-In-Reply-To: <20240903-erfassen-bandmitglieder-32dfaeee66b2@brauner>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxbZRTOe3t7e8HUXAvIa1VgjSyOCaN8eVkATSRwwyASly3zI0IHF1pb
-	2q63ZRshSmCbfGyjsIXOgqFWBAfKhCLjYxhSRLYJgiKDEj5dEUcFxrqgSHW2tFP+Pe85z3Oe
-	95yTg7N4xRw+LpGraZVcJBNg3mjnwL4XQ5M0UznhzZtPkGOtLYBsma3ESNvAA0DW3N9ikY9m
-	lxHS0t+NkFdbBhGyVleCkNZrehbZVomTd2fsHHKrsZlDVpvvALJvej/5kzGZvNF3CyXrG5c4
-	ZMVkF0Y2Df2DkK22dZQc1ddxXvWjxn8+RHXrZznU6FwbStVU38ao8REN1d5chlGmhg+oXoMd
-	oXotRRi1sTSNUhc7mgE1bPiWQ9nbA9K5b0njxLQom1YF0fIsRbZEnhsvOHQ447WM6JhwYagw
-	lnxZECQX5dHxgsTU9NAkiczZriAoXyTTOEPpIoYRHEiIUyk0ajpIrGDU8QJamS1TRinDGFEe
-	o5Hnhslp9UFheHhEtJOYKRU3XOhnK+9wT63rv+cUgS3vcuCFQyIKNn1twMqBN84jegFcrqpl
-	ux8PABzsn/VkNgEc0J5FH0t05j/ZLswj+gC0lu5xk1YBvFSxDlwJLpEAtyoaEBdGiRfgRslV
-	zB1/Ct76yLpTyI84Dv+aqNvh+xCx0DyyulOURfjDaWv9jtaXCIHFxg3EZcAizqBwcGnQKcZx
-	jNgHxy5pXBwvIhFum2qBWxsIr6/WsdwfbfGCcyMenAgbOwc82AeuDHVw3JgP7Wt9mBtL4cIv
-	C54mC2GX6SLbjV+BRY4ptsuW5bS91nPAbfUkvLBtRVxhSHBh6Tmem70HzlUveZT+cPFKgwdT
-	cLr3oWeeDgA7iu2YFgTpd01Fv6t7/a5u9P87GwDaDJ6hlUxeLs1EKyPk9Mn/9p2lyGsHO8cQ
-	ktIFFhfuh5kBggMzgDhL4Mu1+U7l8LjZotMFtEqRodLIaMYMop3rqWLx/bIUzmuSqzOEUbHh
-	UTExMVGxkTFCgT/XdvbjbB6RK1LTUppW0qrHOgT34hchpWud22cqr0Re/+Z3m3g+2Jb54f76
-	ma5yn758B2bybtWl/j3En3y/pyAt2cGSls3mrCSuWy3lPZZPPv2uKha3J6T98NXEwFYE9D4f
-	vfcLo3Av89x4sOmuJjOsxP6bXOvz9POfl1UP30OffVsrLnovdLgqYDMwLuKNxgWLNrf04GGk
-	Lcl4cuadJot48VFAaq3jS/m9eYZjHGXePZ0amaK1JktsOq3pMuEjeZN/vubEPHX7ZuCNieCM
-	14/4F56SGT+bV9q7jdMpSYWyo8cHj92sEOjW08YWj76UuiwzGDIfsn/0uzxH/SopXJtcmbKd
-	qP7jXE1nfzKhc9gix6X5aIH0yDEByohFwhCWihH9CwmGeIWVBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTYRTGe++9u/c6Wt2my9eKglVURqtByJvZB1R6Q4miKChKV7up6Nba
-	dX2IpLagmpRl6GpqmpjiBopOs1qWrSxsibOFTmuWH2FlpmZRyz7nCvzvx3me5zznj0Pj4tfE
-	LDpRncJp1YpkKSkkbjyQzlu2Sec+uML4LAQ5Ky0AWTzZJBp88AmgvBEvjn57BjDU2XgLQxWW
-	JgzlG/UY6q8y4ag6m0Z9L8co5C0zUyjH3g5QQ9dS9KwkCt1paCZQUdkbCmV13CRR+eNfGKoc
-	HCZQq6mAWi9hXc+j2VsmD8W2dlcTbF7OE5J1tejYGvNZkrWWprO24jGMtXVmkOzomy6CPV9r
-	BuzT4ocUO1Yzd6totzBCySUnHuG0y9fGCRNKzzUKNO2iY8MmB5UBvEIDCKAhsxIa7d8EBiCk
-	xYwNwAbLEPALwVDf/o3ycyCs+DVA+U2DAL7/XkL4BBGzFnqzSjEfE8wCOKqvIP3zGbD5Sv+E
-	R8Lsh3deZU54AplV0N4yJPAx/regq79oYh7EhMKTJaOYrwBnThEwx/0B+Nt+AHjdmocbAE2T
-	zBLovKTzBQKYjXDcmg/8i8Kgoc7wj+fB+qEC/AIQmybdYZrUZ5oUMU2KFAPCDEI4Da+KV/Fy
-	jVzNHZXxChWvU8fLDhxS1YCJJwhdchPUm0dkdoDRwA4gjUuDRINB7oNikVJxPJXTHorV6pI5
-	3g5m04Q0WBT89pxSzMQrUrgkjtNw2v8qRgfMysCqe2tdsUXpIRG32zq2P9m7hVg4jM/cU5f/
-	YqSAbw3sHs09XaHMSx2XGLqd5Wme9A5bHAqumytI3loVkdiWVt4bHv6ZkU8p5GXrbs+Rvj9l
-	bUtyhCo2riiINTocmS/LUmZ2ZjkCjx/uK3Qr+/L3/6RrW5oGUmOqOu/NftrWWuy0hGfre6bm
-	bvsJG5qiKunp042wzpzpuh81vu/utU3yMG/KvmnubEnMaiqs0XC954dG4tx2JGDDu2jiBHkt
-	4Wjkh8j1MfMvZ3icqp5HH/HwpLfrdgltO3ecWdT7pVym33zP+jVy+buuV2sWH96hXnqsPlJg
-	i84dm9bc7Sq9mhYH0i5SUoJPUMhDcS2v+AN9Se0qcwMAAA==
-X-CMS-MailID: 20240904145709epcas5p1500f0810833c70c779c5b5d911fa7842
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240826171409epcas5p306ba210a9815e202556778a4c105b440
-References: <CGME20240826171409epcas5p306ba210a9815e202556778a4c105b440@epcas5p3.samsung.com>
-	<20240826170606.255718-1-joshi.k@samsung.com>
-	<20a9df07-f49e-ee58-3d0b-b0209e29c6af@samsung.com>
-	<20240903-erfassen-bandmitglieder-32dfaeee66b2@brauner>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: _lcdEuV4U4quhF-iqCptCN7MavoIV6Rj
+X-Proofpoint-ORIG-GUID: _lcdEuV4U4quhF-iqCptCN7MavoIV6Rj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-04_13,2024-09-04_01,2024-09-02_01
 
-On 9/3/2024 8:05 PM, Christian Brauner wrote:
-> On Tue, Sep 03, 2024 at 07:58:46PM GMT, Kanchan Joshi wrote:
->> Hi Amir,
->>
->>
->> On 8/26/2024 10:36 PM, Kanchan Joshi wrote:
->>> Current write-hint infrastructure supports 6 temperature-based data life
->>> hints.
->>> The series extends the infrastructure with a new temperature-agnostic
->>> placement-type hint. New fcntl codes F_{SET/GET}_RW_HINT_EX allow to
->>> send the hint type/value on file. See patch #3 commit description for
->>> the details.
->>>
->>> Overall this creates 128 placement hint values [*] that users can pass.
->>> Patch #5 adds the ability to map these new hint values to nvme-specific
->>> placement-identifiers.
->>> Patch #4 restricts SCSI to use only life hint values.
->>> Patch #1 and #2 are simple prep patches.
->>>
->>> [*] While the user-interface can support more, this limit is due to the
->>> in-kernel plumbing consideration of the inode size. Pahole showed 32-bit
->>> hole in the inode, but the code had this comment too:
->>>
->>> /* 32-bit hole reserved for expanding i_fsnotify_mask */
->>>
->>> Not must, but it will be good to know if a byte (or two) can be used
->>> here.
->>
->> Since having one extra byte will simplify things, I can't help but ask -
->> do you still have the plans to use this space (in entirety) within inode?
-> 
-> I just freed up 8 bytes in struct inode with what's currently in -next.
-> There will be no using up those 8 bytes unless it's for a good reason
-> and something that is very widely useful.
+From: Keith Busch <kbusch@kernel.org>
 
-I see, so now there are two holes. Seems the plan is to co-locate these 
-and reduce the size by 8 bytes. Thanks for the pointer. Primary reason 
-is a bit cleaner plumbing, but I'll manage without extra space.
+Just some fixes and cleanups to counting integrity segments when
+metadata is used. This fixes merging issues.
+
+Changes from v2:
+
+  Included all the follow up patches I mentioned in the v2 thread.
+
+  Incorporated Christoph's suggestion to rename blk_rq_count_integrity_sg=
+.
+
+Keith Busch (10):
+  blk-mq: set the nr_integrity_segments from bio
+  block: provide helper for nr_integrity_segments
+  scsi: use request helper to get integrity segments
+  nvme-rdma: use request helper to get integrity segments
+  block: unexport blk_rq_count_integrity_sg
+  blk-integrity: simplify counting segments
+  blk-integrity: simplify mapping sg
+  blk-integrity: remove inappropriate limit checks
+  blk-integrity: consider entire bio list for merging
+  blk-merge: properly account for integrity segments
+
+ block/bio-integrity.c         |  7 ----
+ block/blk-integrity.c         | 78 +++++++----------------------------
+ block/blk-merge.c             | 13 +++---
+ block/blk-mq.c                |  4 ++
+ block/blk.h                   | 34 ---------------
+ drivers/nvme/host/rdma.c      |  6 +--
+ drivers/scsi/scsi_lib.c       |  6 +--
+ include/linux/blk-integrity.h | 11 ++---
+ include/linux/blk-mq.h        | 12 ++++++
+ 9 files changed, 47 insertions(+), 124 deletions(-)
+
+--=20
+2.43.5
+
 
