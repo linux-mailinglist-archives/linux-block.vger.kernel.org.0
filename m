@@ -1,44 +1,59 @@
-Return-Path: <linux-block+bounces-11294-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11296-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E41C96F073
-	for <lists+linux-block@lfdr.de>; Fri,  6 Sep 2024 11:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BAA796F172
+	for <lists+linux-block@lfdr.de>; Fri,  6 Sep 2024 12:27:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B33E2826A1
-	for <lists+linux-block@lfdr.de>; Fri,  6 Sep 2024 09:55:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5BD028E465
+	for <lists+linux-block@lfdr.de>; Fri,  6 Sep 2024 10:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D291C9EC0;
-	Fri,  6 Sep 2024 09:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50EBE1CB128;
+	Fri,  6 Sep 2024 10:23:42 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.122])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B181C8FB1;
-	Fri,  6 Sep 2024 09:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.226.244.122
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D961C9EA4;
+	Fri,  6 Sep 2024 10:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725616469; cv=none; b=TuNPU4ku4o2zmKijXur2RmiCw9tf0y/G0Zz80/wnIrw0UDmpJ99U/n7mtkFDsyL+YzdYIAu87La46OjZnOFP/VETuuyCEXVv+sBzOnzeDuXSBzduAu/RmWUIlItpffk6HcZfpiVYLDLTIzLbHeKqQ5RLIVOf9CMUMMH0yy0/+MM=
+	t=1725618222; cv=none; b=WDo5OYrDuy1oVMlJQAL22UyvJ59dD5m//MouUIukd7nP69JsDWEfqQ/Ug1t5CXlOQLw90YVIkQJQIMNVNCtOOq8IdGobkBUJxS6dIbftfg2u97j+jV9pGmKUAn7HedUKxT6rAV0bvQxoC+pYEwivwf/GUNaGjYrb+m3oB9o0cNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725616469; c=relaxed/simple;
-	bh=LhLOIknncOR8nUXzZVU6X5nmS6RSB0q0J8kz29/WyQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qCYtbC9CJwZoZcZfZ2lcueh7mo1yq+AJK9lvvdrBO98n7IS2S04u0gWn4iCrtKdKVYhE1cFoxA8bZ/GMLJF35B4JSr72/kL4kns8o+9nw6crXnRq8nKFSzyheXXzScDKx6sb+2MhehhS472QRcL62VgJSShI4j6/o4kXUKlNdx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass smtp.mailfrom=xiaomi.com; arc=none smtp.client-ip=207.226.244.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xiaomi.com
-X-CSE-ConnectionGUID: A++tOMZaQyqvWvmqSK8N9Q==
-X-CSE-MsgGUID: 8MqO5s3/QCGwNUwcO5XlIw==
-X-IronPort-AV: E=Sophos;i="6.10,207,1719849600"; 
-   d="scan'208";a="121317229"
-From: ZhangHui <zhanghui31@xiaomi.com>
-To: <axboe@kernel.dk>, <bvanassche@acm.org>, <ming.lei@redhat.com>,
-	<dlemoal@kernel.org>
-CC: <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<zhanghui31@xiaomi.com>
-Subject: [PATCH v5] block: move non sync requests complete flow to softirq
-Date: Fri, 6 Sep 2024 17:54:14 +0800
-Message-ID: <20240906095414.386388-1-zhanghui31@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1725618222; c=relaxed/simple;
+	bh=0cPUYRjKz+cEQA/HyuVxBI6hyIfBSPTS2C3lIVvEyt0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JVXyfCWtL4MEneIhs1Vc7I7RJjqFTFfCzkXKvT/Y7JICwC7cEk0Hy8Vit3u1WNi1HYotsAWuRJf7tKoLU/kaNF/4Z60DmTKRftOALw2nNo/w76wqbIIKTQPSIFJ1ReOzS1khPEvtPWSYKCbMxeWtsBMoLfxQQmndA0LP52Ly2j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4X0XPM063Tz4f3jXP;
+	Fri,  6 Sep 2024 18:23:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 23B8C1A06D7;
+	Fri,  6 Sep 2024 18:23:34 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDH+8ck2NpmtyU1Ag--.55896S4;
+	Fri, 06 Sep 2024 18:23:33 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org
+Cc: jack@suse.cz,
+	ming.lei@redhat.com,
+	bvanassche@acm.org,
+	paolo.valente@unimore.it,
+	ulf.hansson@linaro.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH -next] MAINTAINERS: Move the BFQ io scheduler to Odd Fixes state
+Date: Fri,  6 Sep 2024 18:21:53 +0800
+Message-Id: <20240906102153.612997-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -46,65 +61,65 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJ-MBX13.mioffice.cn (10.237.8.133) To YZ-MBX07.mioffice.cn
- (10.237.88.127)
+X-CM-TRANSID:gCh0CgDH+8ck2NpmtyU1Ag--.55896S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw13uF48Jw13tr4ftw1kXwb_yoW8Xry8pa
+	n8Cw4akr93tF15CwnrGF17ZFyktas5ZF47GrZxtw15ZFn8tryFkrnIqay3uan7urWfZa90
+	vr9Iyr1jyrWUAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: zhanghui <zhanghui31@xiaomi.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Currently, for a controller that supports multiple queues, like UFS4.0,
-the mq_ops->complete is executed in the interrupt top-half. Therefore, 
-the file system's end io is executed during the request completion process,
-such as f2fs_write_end_io on smartphone.
+BFQ has been lacking active maintenance for approximately two years, and it
+was recently transitioned to the Orphan state. However, there are still
+many users, I have decided to step forward and assume the role of
+maintainer to ensure continued support and development.
 
-However, we found that the execution time of the file system end io
-is strongly related to the size of the bio and the processing speed
-of the CPU. Because the file system's end io will traverse every page
-in bio, this is a very time-consuming operation.
+While I may not be the one with the most extensive knowledge of BFQ's
+internals, I have been actively involved in its development since 2021.
+Moreover, our team continues to rigorously test BFQ in downstream kernels,
+ensuring it's stability and performance. Despite my confidence to maintain
+BFQ, I believe it is prudent to classify its state as "Odd Fixes" to
+accurately reflect my relatively new position as the maintainer.
 
-We measured that the 80M bio write operation on the little CPU will
-cause the execution time of the top-half to be greater than 100ms,
-which will undoubtedly affect interrupt response latency.
+By assuming this responsibility, I am committed to providing the necessary
+support and addressing any issues that may arise with BFQ. As time
+progresses, we will reassess the situation and determine the appropriate
+state.
 
-Let's fix this issue by moving non sync requests completion to softirq
-context, and keeping sync requests completion in the IRQ top-half context.
-
-Signed-off-by: zhanghui <zhanghui31@xiaomi.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
-Changes in v5:
-- modify the commit log
-- remove unnecessary variable and add comment
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes in v4:
-- fix commit log from "scheduling efficiency" to "interrupt response latency"
-
-Changes in v3:
-- modify op_is_sync to rq_is_sync
-
-Changes in v2:
-- fix build warning
----
- block/blk-mq.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e3c3c0c21b55..45e4d255ea3b 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1210,7 +1210,11 @@ bool blk_mq_complete_request_remote(struct request *rq)
- 		return true;
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4a857a125d6e..6da36e26ee8a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3781,8 +3781,9 @@ F:	Documentation/filesystems/befs.rst
+ F:	fs/befs/
  
--	if (rq->q->nr_hw_queues == 1) {
-+	/*
-+	 * To reduce the execution time in the IRQ top-half,
-+	 * move non-sync request completions to softirq context.
-+	 */
-+	if ((rq->q->nr_hw_queues == 1) || !rq_is_sync(rq)) {
- 		blk_mq_raise_softirq(rq);
- 		return true;
- 	}
+ BFQ I/O SCHEDULER
++M:	Yu Kuai <yukuai3@huawei.com>
+ L:	linux-block@vger.kernel.org
+-S:	Orphan
++S:	Odd Fixes
+ F:	Documentation/block/bfq-iosched.rst
+ F:	block/bfq-*
+ 
 -- 
-2.43.0
+2.39.2
 
 
