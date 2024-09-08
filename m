@@ -1,129 +1,130 @@
-Return-Path: <linux-block+bounces-11370-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11372-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAA229708DE
-	for <lists+linux-block@lfdr.de>; Sun,  8 Sep 2024 19:10:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00134970A74
+	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2024 00:26:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 810991F216BF
-	for <lists+linux-block@lfdr.de>; Sun,  8 Sep 2024 17:10:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B76351C21157
+	for <lists+linux-block@lfdr.de>; Sun,  8 Sep 2024 22:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F2541741D9;
-	Sun,  8 Sep 2024 17:10:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B92F814B086;
+	Sun,  8 Sep 2024 22:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOdtHTwP"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Ys9BY4lB"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945CAC8D7;
-	Sun,  8 Sep 2024 17:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DFE13A261
+	for <linux-block@vger.kernel.org>; Sun,  8 Sep 2024 22:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725815446; cv=none; b=CPrRyBzNUyMuHB1oO+D4+TutsBrI4nYc6j9hnFcAQMV6QiZHPNtX39yrmWg8/9m4P5si0IsNZfCBK4Mhb8n/o1DBuWJnDs1+cFQngeCCr8eYfQ4yVdaiNhsXQLinKELhOPQwFoCEFjxKOEgAV6uVkJB6b46V2wCsZ1yduIV5FzI=
+	t=1725834362; cv=none; b=PDkYt2SLaLdj2TWnnztdrA5O/PhwTA5aVmUZyYPMrMLC/zZOdI60fXu+ldM5Myust4E2NLkCNyh5S+CNdsAncjFZDVdQAW3/LZdkIm7lj5Ql9wOpAKJtlsFtz5bKyScmswB9D2nBW9wTfAfSZn7g0Ey4G9yk30wxZe0S44m7lXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725815446; c=relaxed/simple;
-	bh=ETmEyKY/wmFWkgs6oDDGLtk+Ums6ozmdGe3NhiKv9lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sTD/boe5Ox5vpwisyftPDhY8CGjoOUvu7Y7lstAY6TWeYqP7bYK1mBbtt6JHAZtWXFye7gCi2uMcPC0ehPQM5Bd9F9RZEe6RBOoW6raECTijrKBKv5JzQDI3e+A1RsApXF4F1GBh+E+NNObfNExZe5ox3cTs06KeNv4CT8ecMoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOdtHTwP; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2705d31a35cso2209011fac.0;
-        Sun, 08 Sep 2024 10:10:44 -0700 (PDT)
+	s=arc-20240116; t=1725834362; c=relaxed/simple;
+	bh=WmpeAAzT0TjzN64zX3hckcbNTMWj+Us84tfUUkHbKn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QlXSxAhnPyXMrvVTIwUH/E5aHkq26bFX6iYM/peR3fw9uFdGcDJrFydHIHsWxNcPhsxQZkObmnsxgsF77Tz8JH/OBSNLbh4uZ5xwezoNzmb//YCUWvR1mTtmIIbGT0ESSAP6bX7sgjd7T/efHcJObwcTpQYHYQcsXBioG9NbSCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Ys9BY4lB; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2daaa9706a9so2872424a91.1
+        for <linux-block@vger.kernel.org>; Sun, 08 Sep 2024 15:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725815443; x=1726420243; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=byBuFjgDxI+Clh3ypYFOuNkNtpRkS52941a5a/b/UG0=;
-        b=BOdtHTwPrOOjojLoDbmFRbPIVtX6oaA1v1yUduuPaa2TBrMBVwSt1w3vbxaHjDIW5v
-         eqavkodYHP0b7vxK6qn1YJ8h+OS42I7yXI4B8sp9BA18bt0pQGklMm9r4zPQ49QLx7jY
-         lwpircVHV4d8g4TbS+sJTdRVM+o7G3Kq8ShEjB/UuEG8DtpLBaRIE24i8inUhH2YhpXK
-         8mci7DErRBHm+eUE998WKueeH5CZrtlydSHL/HeZI0JtSDsazLgMOIfQhpvt9TkePydB
-         g+8ZAnLYntTEyWiMUXMiLWpFT+lMa8pIVW4aG74SHviz5keSjDQ3y6i1TSdodSfEGlRK
-         Dz4Q==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1725834358; x=1726439158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nhheKD2MaWmX7ObGYzIUVDmcL/vXif7CCP5OFRo31ag=;
+        b=Ys9BY4lB5zHXyCVGjrUix4hM76iemo7BaEtFkHC2c+CPURV6hplNoqBvpBGRGlaFHn
+         mDFooUus31D/tMGTTijCIU2k9eB577UqW3y8pK40vCerC2PlrtA+iQV0oUmnBJlVLlRq
+         ABL7LsJe9jqvPfeT83xK+BDQs8Sjz4rtGsCijB0wn0TfrfD+We6qmgEY9uIwWcghjTzU
+         MgTCWL/ixgM7H1v7AXGLru3dI9iRTnOZS6vXYHXTA/i0FEJrkcCBDsmgwkbMtCjJ4SbR
+         +I4SQ7CEBYbrb9kB4hesiV9CgPq+/4+6bv+4fQU8dCn66MmTJQaAHMk01b+kYUwTJoht
+         IIgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725815443; x=1726420243;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=byBuFjgDxI+Clh3ypYFOuNkNtpRkS52941a5a/b/UG0=;
-        b=JfNRon6kIH+66fqmfVq1iT1m4MzE/N/lfzjSM0JDxKDEEQ5ATrV5w8Rej3dTMloBLo
-         nZ/3qa7+iITZjT069GmQTpjsvk+pv8JYg6npZGBme/0rbyaC9yS6nNVjn5Zcfna1EQ1w
-         8YD1I4MOmStA5I/35kcywXleJ01hPCb3Cx6n2GkJDLNcL7HSfXWEm50BqMsxDmA3mJ52
-         SUw6g59cxt51cY+fZfxHAAuGteseWXIqE1Ad7b4ud48B6J8EtdbditHas4OsTh7IiJAn
-         YWO9tpxFxAJDVBjfc+mZQOmvQ+l4be56KEBnIghZE0xfUArVSavMYbClcHXYkszNadkx
-         W6xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoPIV6oHHAyzFp+AmEZsr+CpUFcRUIN1bBGs8dDzGSsYq6Nso7NCcElOrBNAX6Dy73bmGijiRHwmPiZjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf/Ns2Ti6690/PWP1166+SOf/2wWo524xPqeWNtkuRQlf3kqzF
-	qQj1YbRGHai41JXW2YJVFF5AJPKTDU2bZEOTbKmWkNhMEUgRvRjI
-X-Google-Smtp-Source: AGHT+IHl3f6WSZw7QaESPgVzFX6GH959Zxb37RMZB5GYNtWCuMeDpv79hH7EnhuumG50S5l8PS7Hfg==
-X-Received: by 2002:a05:6870:a54b:b0:278:237:57ea with SMTP id 586e51a60fabf-27b82ea9594mr9741493fac.28.1725815443447;
-        Sun, 08 Sep 2024 10:10:43 -0700 (PDT)
-Received: from fedora.. ([106.219.163.133])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d82092e957sm2610168a12.0.2024.09.08.10.10.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2024 10:10:42 -0700 (PDT)
-From: Riyan Dhiman <riyandhiman14@gmail.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Riyan Dhiman <riyandhiman14@gmail.com>
-Subject: [PATCH] block: fix potential invalid pointer dereference in blk_add_partition
-Date: Sun,  8 Sep 2024 22:40:36 +0530
-Message-ID: <20240908171036.71874-1-riyandhiman14@gmail.com>
-X-Mailer: git-send-email 2.46.0
+        d=1e100.net; s=20230601; t=1725834358; x=1726439158;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nhheKD2MaWmX7ObGYzIUVDmcL/vXif7CCP5OFRo31ag=;
+        b=iljpAcgpmfVqu7sp6TB04jxRn7w3hXpyaKc9OuN84IYHnaiDzUwmOLG4NwTKIA4DGV
+         vbvMWAeqe398fpvo75/VUcP3lHyriimZ5V+wfpGU/jnPihZNmn4x63rzTbR+LlVs8q2u
+         uHp5+zm6/B/O7jZtXGAmGIc/i6S39iV2AIoMaax96gZN9IP5HfYMaXWiXvp3pHuX2d+n
+         nwLhiZEbVl9Sp8CMIiPEP2YX2OY8X3iY32FsDrvzsqcsIkXCfbou1pOvZ6ASX0PqsmDV
+         LeoMe0toc9DJLqnac34tFY54rdvFmhJsN1fVYlX6I7RNKOslTUj3bVZUsWpdyro3/cxQ
+         b5Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxMsbFru/cGfWLNgAAP7VS2y+OZGwTbxjO8MnWtS2wZDs6uNoRMzQWU/ClSU018ySrHQ0eCTLUkroyuQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm3tSz4c43P9KdebXYKmAVfr/U4SO23tGr6/Z/R1fZo3zhPhmW
+	IKOFh5dJv8Mm5mVoQ57L9RBhomOxefDn9cwE7pbbz0SV/29CtWJ+p7hF5L37b0g=
+X-Google-Smtp-Source: AGHT+IGovwS3k3odF8N7sOl23DHwA+IOE/iVu4aQQ89/6DHIT/GBnaepkRD3z4HHegIOEg53WSFELA==
+X-Received: by 2002:a17:90a:ea05:b0:2d3:ca3f:7f2a with SMTP id 98e67ed59e1d1-2dad5023345mr8442074a91.22.1725834358439;
+        Sun, 08 Sep 2024 15:25:58 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2db033fea14sm3156249a91.0.2024.09.08.15.25.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Sep 2024 15:25:57 -0700 (PDT)
+Message-ID: <3edd6a16-3e95-4cae-ae16-e1702eafe724@kernel.dk>
+Date: Sun, 8 Sep 2024 16:25:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/8] implement async block discards and other ops via
+ io_uring
+To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc: Conrad Meyer <conradmeyer@meta.com>, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, Christoph Hellwig <hch@infradead.org>
+References: <cover.1725621577.git.asml.silence@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <cover.1725621577.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The blk_add_partition() function initially used a single if-condition
-(IS_ERR(part)) to check for errors when adding a partition. This was
-modified to handle the specific case of -ENXIO separately, allowing the
-function to proceed without logging the error in this case. However,
-this change unintentionally left a path where md_autodetect_dev()
-could be called without confirming that part is a valid pointer.
+On 9/6/24 4:57 PM, Pavel Begunkov wrote:
+> There is an interest in having asynchronous block operations like
+> discard and write zeroes. The series implements that as io_uring commands,
+> which is an io_uring request type allowing to implement custom file
+> specific operations.
+> 
+> First 4 are preparation patches. Patch 5 introduces the main chunk of
+> cmd infrastructure and discard commands. Patches 6-8 implement
+> write zeroes variants.
+> 
+> Branch with tests and docs:
+> https://github.com/isilence/liburing.git discard-cmd
+> 
+> The man page specifically (need to shuffle it to some cmd section):
+> https://github.com/isilence/liburing/commit/a6fa2bc2400bf7fcb80496e322b5db4c8b3191f0
 
-This commit separates the error handling logic by splitting the
-initial if-condition, improving code readability and handling specific
-error scenarios explicitly. The function now distinguishes the general
-error case from -ENXIO without altering the existing behavior of
-md_autodetect_dev() calls.
+This looks good to me now. Only minor nit is that I generally don't
+like:
 
-Fixes: b72053072c0b (block: allow partitions on host aware zone devices)
+while ((bio = blk_alloc_discard_bio(bdev, &sector, &nr_sects, gfp))) {
 
-Signed-off-by: Riyan Dhiman <riyandhiman14@gmail.com>
----
-Compile tested only
+where assignment and test are in one line as they are harder do read,
+prefer doing:
 
- block/partitions/core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+do {
+	bio = blk_alloc_discard_bio(bdev, &sector, &nr_sects, gfp);
+	if (!bio)
+		break;
+	[...]
+} while (1);
 
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index ab76e64f0f6c..5bd7a603092e 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -555,9 +555,11 @@ static bool blk_add_partition(struct gendisk *disk,
- 
- 	part = add_partition(disk, p, from, size, state->parts[p].flags,
- 			     &state->parts[p].info);
--	if (IS_ERR(part) && PTR_ERR(part) != -ENXIO) {
--		printk(KERN_ERR " %s: p%d could not be added: %pe\n",
--		       disk->disk_name, p, part);
-+	if (IS_ERR(part)) {
-+		if (PTR_ERR(part) != -ENXIO) {
-+			printk(KERN_ERR " %s: p%d could not be added: %pe\n",
-+			       disk->disk_name, p, part);
-+		}
- 		return true;
- 	}
- 
+instead. But nothing that should need a respin or anything.
+
+I'll run some testing on this tomorrow!
+
+Thanks,
 -- 
-2.46.0
+Jens Axboe
 
 
