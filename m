@@ -1,115 +1,109 @@
-Return-Path: <linux-block+bounces-11403-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11397-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0564971BA0
-	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2024 15:50:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D656971B5F
+	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2024 15:44:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27E271C23709
-	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2024 13:50:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B433284CB9
+	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2024 13:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064CF1B9B57;
-	Mon,  9 Sep 2024 13:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="IMmCe9UO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A9B1BA283;
+	Mon,  9 Sep 2024 13:43:53 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA2E1B86E4;
-	Mon,  9 Sep 2024 13:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFB11B6549;
+	Mon,  9 Sep 2024 13:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725889841; cv=none; b=u1x+tJMvPzOaw69KcGXnCv2saYKcGGHjXLDfUauF7STar1EP04bnmXoTuCCxt9QeitMCe4qxOMaOzl4JPRz7sprhwtRyujsTT2mViFGAWwY/TD6g9yz2H83YhUuDb03iXbQMB8wQtymqpIxB2e00ToupWjvZHdtvKtj1Zzj7lRs=
+	t=1725889432; cv=none; b=NGTavwTjJXo+hp4aOycHx41fJUHJUopNclY1yc1hAwEoBAd+GA4NYKNnZl/q22IHhuUHoT3E1SuEAaEpYudFEVY7V7Kjop1jJtxyfFntJhIV34T4sRWKZPKpZDEqXACkNLoVhd6qHax4UrPkqWgbTsuinoZhGdw5dLnKeaEEkUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725889841; c=relaxed/simple;
-	bh=2D7C10L9qGR1xYUVuRaUwP/lQVaj8GW63TvL3cfW5lw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPJaymFPa1TkkUZBJLn9EAgwjMuw2a//B/TTQBAnrA7575IshHwHbjNSbUHZ/HaJOaA/JXSfUzoEVk0l/hK1xxLqJyo1a3YPS+tnsRsHVD7L2hbqdwVWs7Sd/OwLmVItxcDjdti7vU6Vdflefooqpavmul05cHV9nhSgbfTtvaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=IMmCe9UO; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 8F129F90A07EC;
-	Mon,  9 Sep 2024 16:40:41 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id UKXrqmmBMBf4; Mon,  9 Sep 2024 16:40:41 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 65003F90A07ED;
-	Mon,  9 Sep 2024 16:40:41 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 65003F90A07ED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1725889241;
-	bh=j0w10pqKqsCrw9p4jGmOYSKGwJAYnt8q1qKqtK5tU14=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=IMmCe9UOVK5OEKqqUmeRavJNTsDhR3XSBn+T95wfSCkAxcIEbX1Qxz8IrqscPG1QW
-	 UBjvN4VeQ3Rp2xMIa0EO7LVnxxjDc5+yh2tgu+brpqpe6Du4bg/94KvgyBtFpFxXBY
-	 OHrFn9bNsqrrarPwPtO6S/qBzFtMYJMB/AOhMd8RvCSYVfzb2uH1/t9zgL/L9U/2ZX
-	 OCuic9PS9C+SWviPQqWBWN5Szhg5bf2F1Kbcv3+Yua3HFG6eEtLV495RynplbYh1o/
-	 WujCae8+G0v39cGT9ey43xxd4U+aDa6Rz9nLeDHgvF01ejZ3MlW+iHalYSEZ7p7VLt
-	 0f3mbo8+yYfjw==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DBj-TN5343t1; Mon,  9 Sep 2024 16:40:41 +0300 (MSK)
-Received: from localhost.localdomain (unknown [89.169.48.235])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id 27DCEF90A07EC;
-	Mon,  9 Sep 2024 16:40:41 +0300 (MSK)
-From: Mikhail Lobanov <m.lobanov@rosalinux.ru>
-To: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Mikhail Lobanov <m.lobanov@rosalinux.ru>,
-	Lars Ellenberg <lars.ellenberg@linbit.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	drbd-dev@lists.linbit.com,
+	s=arc-20240116; t=1725889432; c=relaxed/simple;
+	bh=R/CqUNRn+CDC6sIlr8LozUZmOylZVeixcdggYb+qeAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BATNCAUDRkEmkGkx5LgRYJLeLQpLVkBdjsz+S0YzzOcdtSU/E0sRjVfsTXWDpFTQdctsiB/WjdGJMpOH6gykA/VttSTjH8sy3EOiR3JU5K+8DPfcbCU8G27qc1kzG0LCmJOOauD0oNBoGV4jZDfpW4XOw22wyFoNXIDZ11DkURo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4X2Sj34d5xz4f3jqt;
+	Mon,  9 Sep 2024 21:43:35 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 302C41A0359;
+	Mon,  9 Sep 2024 21:43:46 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCn28eQ+95mhC1hAw--.55605S4;
+	Mon, 09 Sep 2024 21:43:45 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: jack@suse.cz,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk,
+	yukuai3@huawei.com
+Cc: cgroups@vger.kernel.org,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] drbd: Add NULL check for net_conf to prevent dereference in state validation
-Date: Mon,  9 Sep 2024 09:37:36 -0400
-Message-ID: <20240909133740.84297-1-m.lobanov@rosalinux.ru>
-X-Mailer: git-send-email 2.43.0
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH for-6.12 0/7] block, bfq: bfqq merge chain fixes and cleanup
+Date: Mon,  9 Sep 2024 21:41:47 +0800
+Message-Id: <20240909134154.954924-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCn28eQ+95mhC1hAw--.55605S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrur1ftryxJF45CFy5tryrZwb_yoWfurb_uF
+	95tFyfGFs7Wa4YkFy7Ar1UAa98CrWUJwn0qF9xGr45Xw17tFn3AwnxKFs3ZFZ8Wan3Gw45
+	tr1Sv3y8JrnFqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-If the net_conf pointer is NULL and the code attempts to access its=20
-fields without a check, it will lead to a null pointer dereference.
-Add a NULL check before dereferencing the pointer.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Patch 1 fixes a problem found by xfstests generic/323, tested on scsi
+disk with bfq.
+Patch 2 fixes a problem while digging the above problem, by a debug patch
+to print procress reference.
+Patch 3-7 are cleanups while reviewing code.
 
-Fixes: 44ed167da748 ("drbd: rcu_read_lock() and rcu_dereference() for tco=
-nn->net_conf")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mikhail Lobanov <m.lobanov@rosalinux.ru>
----
- drivers/block/drbd/drbd_state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yu Kuai (7):
+  block, bfq: fix uaf for accessing waker_bfqq after splitting
+  block, bfq: fix procress reference leakage for bfqq in merge chain
+  block, bfq: merge bfq_release_process_ref() into bfq_put_cooperator()
+  block, bfq: remove bfq_log_bfqg()
+  block, bfq: remove local variable 'split' in bfq_init_rq()
+  block, bfq: remove local variable 'bfqq_already_existing' in
+    bfq_init_rq()
+  block, bfq: factor out a helper to split bfqq in bfq_init_rq()
 
-diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_st=
-ate.c
-index 287a8d1d3f70..87cf5883078f 100644
---- a/drivers/block/drbd/drbd_state.c
-+++ b/drivers/block/drbd/drbd_state.c
-@@ -876,7 +876,7 @@ is_valid_state(struct drbd_device *device, union drbd=
-_state ns)
- 		  ns.disk =3D=3D D_OUTDATED)
- 		rv =3D SS_CONNECTED_OUTDATES;
-=20
--	else if ((ns.conn =3D=3D C_VERIFY_S || ns.conn =3D=3D C_VERIFY_T) &&
-+	else if (nc && (ns.conn =3D=3D C_VERIFY_S || ns.conn =3D=3D C_VERIFY_T)=
- &&
- 		 (nc->verify_alg[0] =3D=3D 0))
- 		rv =3D SS_NO_VERIFY_ALG;
-=20
---=20
-2.43.0
+ block/bfq-cgroup.c  |   1 -
+ block/bfq-iosched.c | 191 ++++++++++++++++++++++++--------------------
+ block/bfq-iosched.h |   6 --
+ 3 files changed, 103 insertions(+), 95 deletions(-)
+
+-- 
+2.39.2
 
 
