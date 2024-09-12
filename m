@@ -1,113 +1,173 @@
-Return-Path: <linux-block+bounces-11570-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11572-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA2C9767C5
-	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 13:26:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD5D59767D4
+	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 13:27:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7E20B20E5D
-	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 11:26:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C4C41C22497
+	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 11:27:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 236531BF7E1;
-	Thu, 12 Sep 2024 11:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMt/9VHS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2871A2644;
+	Thu, 12 Sep 2024 11:22:30 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2361BF335;
-	Thu, 12 Sep 2024 11:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 033EE19F43A;
+	Thu, 12 Sep 2024 11:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726139846; cv=none; b=Myxsxv3MpNYmtflcuFPcSr61wxn0mfEuY8ZlfZ3x8URBuTGHwZeD2s5j6EewBf4rYVNo0JcBbGC8QkSsIQo6yrfO9C4yY4BfykyWycvzBMxzrQwa8+ftAY68AV8xsC4Wcd4RN44BJgu2PvVktqdnhmdXqZvcik3Vb5X15tbVMgE=
+	t=1726140149; cv=none; b=aVGhSO4VUKTNLQCqiHxa3mCExiEvPmH9RYwOMCJlQ8ns7l8oXTbYMmpBGtgtw0xFKrCd6MleBjWsf3wMIDMmATbRvYMQeFookszctFD3wREqUhwMNywOUMmgCbT9jCx9y6C1ujtF04zii56m7dOk8vK/ASOwpMSmfDSdv/TIFqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726139846; c=relaxed/simple;
-	bh=HzFyylaMePR5bS7VyKQApbkFy4MWvNmh8/Ifgo8KsU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X3k83cql+lGRLfEG2mznFjbvqmxe2GBmSacn8UrcLCoAa81N0pdiByeY+QUZOZl8GOoBQa1ewTZFSbWl7UtD3OyVfnaClBhtJdQ7DwRx+MfCR5z2s5ODNeB0B4/I01s6n9RIPLDKTqlcr6e8kG0iZw+Vmui3SzpDEhPnFc/A5Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMt/9VHS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFE14C4CEC5;
-	Thu, 12 Sep 2024 11:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726139845;
-	bh=HzFyylaMePR5bS7VyKQApbkFy4MWvNmh8/Ifgo8KsU0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iMt/9VHSYIlDpVGdX26n1N0CdVrTRm10It8Sa8NMHcf+17B/DEKPd5jcRIQstDF5l
-	 y/zknkTz0QWWnnaDNoU/w5MrYILx1JHP+V4tz9u84Cewb0+/xN0X7Xobu9RYdt4sE3
-	 8QSp8DqCuKUgnnC5JLgioLFGolGO2jWjErhnFWAI64U90eRPEY/a80PM1URWvna2tv
-	 EjnP1bBa2i6W+ZV7YFLYJDEIpcKOoFD0i83H5rqEd6sFjATC3qHX2bD88Wi/OivMQx
-	 jvCqxXIec8J/zMqtF5Uhjik7uSRXJU4fi3neuttBSeo6DVEN/1c89HG77KYw9oQArh
-	 FWiOq1isCI2iQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC v2 21/21] nvme-pci: don't allow mapping of bvecs with offset
-Date: Thu, 12 Sep 2024 14:15:56 +0300
-Message-ID: <63cdbb87e1b08464705fa343b65e561eb3abd5f9.1726138681.git.leon@kernel.org>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <cover.1726138681.git.leon@kernel.org>
-References: <cover.1726138681.git.leon@kernel.org>
+	s=arc-20240116; t=1726140149; c=relaxed/simple;
+	bh=WkMmrR2PMxTc+mNjIBBn0lHsWo61UePSvPPcS/l2WUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SmQ1C3U490qc/gvri33hNVapn+5qUkxM5YvMgL8Npq2m5L8Q2Y/Vgh34mCXpP8J0iG/JxQ4/+WqBNo1yUrmFjULL9uLP1m6VdKLNLpeebJqySFqaJNMVtBS5XxNuxO05knXFcsl3VhwULbcMhLbIB/17VM+IasdPNcyBCH0Rx9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53CC8DA7;
+	Thu, 12 Sep 2024 04:22:55 -0700 (PDT)
+Received: from [10.1.32.61] (e127648.arm.com [10.1.32.61])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 798AA3F64C;
+	Thu, 12 Sep 2024 04:22:23 -0700 (PDT)
+Message-ID: <7d755a55-31ab-4538-aee4-f88e04dfb6cb@arm.com>
+Date: Thu, 12 Sep 2024 12:22:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: [RFC PATCH] TEST: cpufreq: intel_pstate: sysfs iowait_boost_cap
+To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rafael@kernel.org, peterz@infradead.org
+Cc: juri.lelli@redhat.com, mingo@redhat.com, dietmar.eggemann@arm.com,
+ vschneid@redhat.com, vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
+ adrian.hunter@intel.com, ulf.hansson@linaro.org, bvanassche@acm.org,
+ andres@anarazel.de, asml.silence@gmail.com, linux-block@vger.kernel.org,
+ io-uring@vger.kernel.org, qyousef@layalina.io, dsmythies@telus.net,
+ axboe@kernel.dk
+References: <20240905092645.2885200-1-christian.loehle@arm.com>
+ <20240905092645.2885200-7-christian.loehle@arm.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20240905092645.2885200-7-christian.loehle@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+For non-HWP systems, rework iowait boost to be linear and add
+the sysfs knob iowait_boost_cap to limit the maximum boost in
+8 steps.
 
-It is a hack, but direct DMA works now.
+I don't see a good way to translate this to HWP, as the
+boost applied isn't as static as it is for non-HWP, but there
+is already the dynamic_hwp_boost sysfs to enable/disable
+completely.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Christian Loehle <christian.loehle@arm.com>
 ---
- drivers/nvme/host/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cpufreq/intel_pstate.c | 39 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 881cbf2c0cac..1872fa91ac76 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -791,6 +791,9 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
- 			return BLK_STS_RESOURCE;
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index c0278d023cfc..6882d8c74e61 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -183,6 +183,7 @@ struct global_params {
+ 	bool turbo_disabled;
+ 	int max_perf_pct;
+ 	int min_perf_pct;
++	unsigned int iowait_boost_cap;
+ };
  
- 		rq_for_each_bvec(bv, req, iter) {
-+			if (bv.bv_offset != 0)
-+				goto out_free;
+ /**
+@@ -1444,6 +1445,30 @@ static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
+ 	return count;
+ }
+ 
++static ssize_t store_iowait_boost_cap(struct kobject *a, struct kobj_attribute *b,
++				  const char *buf, size_t count)
++{
++	unsigned int input;
++	int ret;
 +
- 			dma_addr = dma_map_bvec(dev->dev, &bv, rq_dma_dir(req), 0);
- 			if (dma_mapping_error(dev->dev, dma_addr))
- 				goto out_free;
++	ret = sscanf(buf, "%u", &input);
++	if (ret != 1)
++		return -EINVAL;
++
++	mutex_lock(&intel_pstate_driver_lock);
++
++	if (!intel_pstate_driver) {
++		mutex_unlock(&intel_pstate_driver_lock);
++		return -EAGAIN;
++	}
++
++	global.iowait_boost_cap = clamp_t(int, input, 0, 8);
++
++	mutex_unlock(&intel_pstate_driver_lock);
++
++	return count;
++}
++
+ static ssize_t show_hwp_dynamic_boost(struct kobject *kobj,
+ 				struct kobj_attribute *attr, char *buf)
+ {
+@@ -1497,6 +1522,7 @@ static ssize_t store_energy_efficiency(struct kobject *a, struct kobj_attribute
+ 
+ show_one(max_perf_pct, max_perf_pct);
+ show_one(min_perf_pct, min_perf_pct);
++show_one(iowait_boost_cap, iowait_boost_cap);
+ 
+ define_one_global_rw(status);
+ define_one_global_rw(no_turbo);
+@@ -1506,6 +1532,7 @@ define_one_global_ro(turbo_pct);
+ define_one_global_ro(num_pstates);
+ define_one_global_rw(hwp_dynamic_boost);
+ define_one_global_rw(energy_efficiency);
++define_one_global_rw(iowait_boost_cap);
+ 
+ static struct attribute *intel_pstate_attributes[] = {
+ 	&status.attr,
+@@ -1562,6 +1589,9 @@ static void __init intel_pstate_sysfs_expose_params(void)
+ 		rc = sysfs_create_file(intel_pstate_kobject, &energy_efficiency.attr);
+ 		WARN_ON(rc);
+ 	}
++
++	rc = sysfs_create_file(intel_pstate_kobject, &iowait_boost_cap.attr);
++	WARN_ON(rc);
+ }
+ 
+ static void __init intel_pstate_sysfs_remove(void)
+@@ -2322,18 +2352,23 @@ static void intel_pstate_update_util(struct update_util_data *data, u64 time,
+ 		if (delta_ns > TICK_NSEC) {
+ 			cpu->iowait_boost = ONE_EIGHTH_FP;
+ 		} else if (cpu->iowait_boost >= ONE_EIGHTH_FP) {
+-			cpu->iowait_boost <<= 1;
++			cpu->iowait_boost += ONE_EIGHTH_FP;
+ 			if (cpu->iowait_boost > int_tofp(1))
+ 				cpu->iowait_boost = int_tofp(1);
+ 		} else {
+ 			cpu->iowait_boost = ONE_EIGHTH_FP;
+ 		}
++		if (cpu->iowait_boost > global.iowait_boost_cap * ONE_EIGHTH_FP)
++			cpu->iowait_boost = global.iowait_boost_cap * ONE_EIGHTH_FP;
+ 	} else if (cpu->iowait_boost) {
+ 		/* Clear iowait_boost if the CPU may have been idle. */
+ 		if (delta_ns > TICK_NSEC)
+ 			cpu->iowait_boost = 0;
+-		else
++		else {
+ 			cpu->iowait_boost >>= 1;
++			if (cpu->iowait_boost < ONE_EIGHTH_FP)
++				cpu->iowait_boost = 0;
++		}
+ 	}
+ 	cpu->last_update = time;
+ 	delta_ns = time - cpu->sample.time;
 -- 
-2.46.0
-
+2.25.1
 
