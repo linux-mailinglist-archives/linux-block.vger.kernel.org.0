@@ -1,87 +1,112 @@
-Return-Path: <linux-block+bounces-11573-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11549-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 542AB9767FE
-	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 13:37:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D704097671B
+	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 13:01:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 867161C21035
-	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 11:37:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 895FF1F23C01
+	for <lists+linux-block@lfdr.de>; Thu, 12 Sep 2024 11:01:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D3E19CC18;
-	Thu, 12 Sep 2024 11:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA1418C004;
+	Thu, 12 Sep 2024 11:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vguxJ7Yf"
 X-Original-To: linux-block@vger.kernel.org
-Received: from iris.vrvis.at (iris.vrvis.at [92.60.8.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B33A29CF6;
-	Thu, 12 Sep 2024 11:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.60.8.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C397DA81;
+	Thu, 12 Sep 2024 11:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726141021; cv=none; b=PhKGzLMeEb9e9coHdFwrF/V6ogyc+28JLqNDF73cf7rYOONUCYu9ZymBCrhT4r7HpDZPRvY5pI3qVpgKL+6fUHvNMmguyM91rRlypwEhg3Dsg67/LMiwT/GthHrPJ0kD6KVROkQb8rt4AP6mb18yIrf8CL1k1jURO9btWAX59sA=
+	t=1726138878; cv=none; b=AMLYQ487P6wS3NEH25h8sJghm15iDzPVYTp/fvtpL/7DOBKgRAdLNrll7gtp8GAnYFx84BtdvbXDfpD4lVoomoRJp+92dSGj039s9RdLba6ehOZM4ut1CFkZ0edLXe1rcGpMC8k90Ut31DqBi03of6msHRFdlT/rkR3wCJBV1Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726141021; c=relaxed/simple;
-	bh=yCWwqYowKJ2cQpeC8wSeYs2nASVcdeCpMVxGz7y9JtA=;
-	h=Message-ID:Date:MIME-Version:Cc:To:References:From:In-Reply-To:
-	 Content-Type:Subject; b=GcFvNLPNjNeNAr4HjxKDUf4ibTEtJr8avnrOzzjlCXzjQxYLMYCoaXHuz0LSfp4g79n5LNr5gip4uYfbVRu/VVME9nR3i1N6VzEXYrjflF6PK01ljZhBmt4QOLFG2MgLZ+xSzIs8F/5Wg6qndwH3ncny3FMdAvxKk4+94fNT924=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vrvis.at; spf=pass smtp.mailfrom=vrvis.at; arc=none smtp.client-ip=92.60.8.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vrvis.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vrvis.at
-Received: from whiskey.org.vrvis.lan ([10.42.2.171])
-	by iris.vrvis.at with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(ESMPT Server)
-	(envelope-from <valentin@vrvis.at>)
-	id 1sohXD-0007Us-2A;
-	Thu, 12 Sep 2024 12:58:52 +0200
-Message-ID: <9371a3ab-3637-4106-bee5-9280abb5f5ae@vrvis.at>
-Date: Thu, 12 Sep 2024 12:58:46 +0200
+	s=arc-20240116; t=1726138878; c=relaxed/simple;
+	bh=fXQcQtrV0+Va2dCrpxf845jeSK2LMbLalbklwUSo7Tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=foHyStYxhCC7CPwfRWTNYeQIyNxhq/Yc4A8NXJCKdo0v3gvfoCgZPCIycjhw+i58E2wnEnW4TiGK922SR33pAtbybNZRXOD4ffbXYmKx2r00FUmWjfsOWxkG4XP5LVffgT4rnTfCfnEwl2RQKoaXuzsesCAkKTexDY0pbp5r2XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vguxJ7Yf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58EFCC4CEC3;
+	Thu, 12 Sep 2024 11:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1726138877;
+	bh=fXQcQtrV0+Va2dCrpxf845jeSK2LMbLalbklwUSo7Tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vguxJ7YfhP6ntceJ2F89PLgmk976qLE7NK0UYdRiLaWmaT6u2u1WnC+MuaGJW6juJ
+	 ibzIv3VtQMKns2MxjjNr1Bjw/4Mn9E6+oSWUQPqaf2hmhKgEO5ygdXnViKS7nRsq9g
+	 /KP/0Zl2ynIAlOQSmxudQGwqbjRY2X2GhMfDZ7mY=
+Date: Thu, 12 Sep 2024 13:01:14 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chun-Yi Lee <joeyli.kernel@gmail.com>
+Cc: Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
+	Pavel Emelianov <xemul@openvz.org>,
+	Kirill Korotaev <dev@openvz.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Nicolai Stange <nstange@suse.com>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Chun-Yi Lee <jlee@suse.com>
+Subject: Re: [PATCH v2] aoe: fix the potential use-after-free problem in more
+ places
+Message-ID: <2024091202-frivolous-reimburse-3639@gregkh>
+References: <20240912102935.31442-1-jlee@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Jens Axboe <axboe@kernel.dk>, Pavel Emelianov <xemul@openvz.org>,
- Kirill Korotaev <dev@openvz.org>, "David S . Miller" <davem@davemloft.net>,
- Nicolai Stange <nstange@suse.com>, Greg KH <gregkh@linuxfoundation.org>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chun-Yi Lee <jlee@suse.com>
-To: Chun-Yi Lee <joeyli.kernel@gmail.com>, Justin Sanders <justin@coraid.com>
-References: <20240912102935.31442-1-jlee@suse.com>
-Content-Language: en-US, de-AT-frami
-From: Valentin Kleibel <valentin@vrvis.at>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240912102935.31442-1-jlee@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -4.5 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-	*      [score: 0.0000]
-Subject: Re: [PATCH v2] aoe: fix the potential use-after-free problem in more
- places
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
 
+On Thu, Sep 12, 2024 at 06:29:35PM +0800, Chun-Yi Lee wrote:
+> For fixing CVE-2023-6270, f98364e92662 ("aoe: fix the potential
+> use-after-free problem in aoecmd_cfg_pkts") makes tx() calling dev_put()
+> instead of doing in aoecmd_cfg_pkts(). It avoids that the tx() runs
+> into use-after-free.
+> 
 > Then Nicolai Stange found more places in aoe have potential use-after-free
 > problem with tx(). e.g. revalidate(), aoecmd_ata_rw(), resend(), probe()
 > and aoecmd_cfg_rsp(). Those functions also use aoenet_xmit() to push
 > packet to tx queue. So they should also use dev_hold() to increase the
 > refcnt of skb->dev.
+> 
+> Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
+> Fixes: f98364e92662 ("aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts")
+> Reported-by: Nicolai Stange <nstange@suse.com>
+> Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+> ---
+> 
 
-We've tested your patch on our servers and ran into an issue.
-With heavy I/O load the aoe device had stale I/Os (e.g. rsync waiting 
-indefinetly on one core) that can be "fixed" by running aoe-revalidate 
-on that device.
+Hi,
 
-Additionally when trying to shut down the system we see the message:
-unregister_netdevice: waiting for XXX to become free. Usage Count = XXXXX
-on aoe devices with a usage count somewhere in the millions.
-This has been the same as without the patch, i assume the fix is still 
-incomplete.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Thanks for your work,
-Valentin
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
 
