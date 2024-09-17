@@ -1,153 +1,196 @@
-Return-Path: <linux-block+bounces-11704-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11706-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70DD297AAE2
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 07:02:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1343D97AAE5
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 07:06:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39B0228255B
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 05:02:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 916051F23AC5
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 05:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D813BA935;
-	Tue, 17 Sep 2024 05:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D1644C77;
+	Tue, 17 Sep 2024 05:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ViAy9Srb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HlR564Qh"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0379474
-	for <linux-block@vger.kernel.org>; Tue, 17 Sep 2024 05:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576A025763;
+	Tue, 17 Sep 2024 05:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726549364; cv=none; b=Q5j8nuUjX5CL1SZaEbxnUo2KsLdK4kb/xXg/fVddzOE7PR6elZv+T50O/m+mEBAd9MoSnb3O5LeU2/VM6k9U7H/gbK+maiGBndfw5FVRNuB/z14Eyc8By76Y91Yh4k80f456+KUZFO3wVnVSAlHOaztgSrJeFeNzJ4sm0MdV6x4=
+	t=1726549555; cv=none; b=A34nNXpE7ffdhqiKPPy7c+q0utPyPykZPLxQnBluhlJqNRgzxn6MYVdjmR6jY/6q35O379HYoeudFcGLypZZZJKuASIsceO748f19DNmtZ68OTaYowZ0jAqqb2pD6WBDqr4I+ki+Vrvl48YKIT6P85Ru91/x6VqndiAZm6IbTzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726549364; c=relaxed/simple;
-	bh=Msi7Ner7crIq3QhA1BupXqtw4DWXj3xdz11MA6VILk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=EXi8RezZQyhpDyrx1OpbYKwP+2B9tvqdK/TYFUBjTguFjQf09C7CiHlAqPKi8CnDsUJkDmdavuRFB+09Y7Ye7AYvFbsNkZeJSmH6EByktxGMkUglRoFd9VWGcXGzRp4PCFLglDAVlr+KqiaD7D5qsDCEgcIDP9pWF+USo883t4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ViAy9Srb; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240917050239epoutp01c4dde2b61f0a588744ac5703648afb04~1736t3YTX1382813828epoutp01y
-	for <linux-block@vger.kernel.org>; Tue, 17 Sep 2024 05:02:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240917050239epoutp01c4dde2b61f0a588744ac5703648afb04~1736t3YTX1382813828epoutp01y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1726549359;
-	bh=252Cv4ekYy1STWc8+OAT60RMqfIJmmf+13KTZeu7ht0=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ViAy9SrboBf0zNkunusjSvGcjGxdRHu2wfkR4GuhieEsbuGmUsK4pw1LaWT0e95De
-	 zJ6nz/9zIEHSWiEdAi3TWnAVkouVN9DdRwzYRvE9nWgsbZk/Zf6Pb0tPw/t8moXYtS
-	 ADAPUwKCqQIem3PY+4VqVHkT/Y/F0xTIZjFMzSJ8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240917050239epcas5p18c7f2ef05bbd156c46f6bcc5fe1e51ea~1736bCr5g2061620616epcas5p1s;
-	Tue, 17 Sep 2024 05:02:39 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4X78mD5Vlqz4x9Pq; Tue, 17 Sep
-	2024 05:02:36 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5B.E9.09640.C6D09E66; Tue, 17 Sep 2024 14:02:36 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240917050236epcas5p3b032bf733800ef5b2b9d1ebe9ce92838~1733cz_-f2558825588epcas5p3W;
-	Tue, 17 Sep 2024 05:02:36 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240917050236epsmtrp2bd20fc5567f9cb4851ab937156a5a8c2~1733cONOh2591825918epsmtrp2O;
-	Tue, 17 Sep 2024 05:02:36 +0000 (GMT)
-X-AuditID: b6c32a49-aabb8700000025a8-87-66e90d6c457c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	06.0F.07567.B6D09E66; Tue, 17 Sep 2024 14:02:35 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240917050235epsmtip25c67a46b83e973f396e9e66f62b157b8~1732opMK12340623406epsmtip2a;
-	Tue, 17 Sep 2024 05:02:35 +0000 (GMT)
-From: Kanchan Joshi <joshi.k@samsung.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, martin.petersen@oracle.com, Kanchan Joshi
-	<joshi.k@samsung.com>
-Subject: [PATCH] block: remove bogus union
-Date: Tue, 17 Sep 2024 10:24:57 +0530
-Message-Id: <20240917045457.429698-1-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1726549555; c=relaxed/simple;
+	bh=XqJJFeOp7MdyQLdxKtgi2ITW8F7GZDZkuwkfDas8Xb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VwozU18aFUP8pvYWD34P0lddyghY/HKcL8FKFCTFMDIw38K+9d8fNSosdxF27K38HClfLeF/aPT5K4OwoobBLNGK8p9Lu7qXkQkhInb8Py5akjv+u5zupuGmzjjjPLwI5YBBy/virPnHfUKoFJ02wvIcaTx1mShftQNiVHwbxLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HlR564Qh; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726549554; x=1758085554;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XqJJFeOp7MdyQLdxKtgi2ITW8F7GZDZkuwkfDas8Xb8=;
+  b=HlR564Qh3/p5Sh0kkkGBUofPAQ65soGZ4CK5Z8nlxodHDyRb4O9uEMNC
+   DpV+aJsmo0HRNGZuht82DWlFbgxY2I0m8dqsFT7Lr6Jqgho6vwK5HATZj
+   D4lif6G+V0IoAnTXf7ERJvWNdQoZvsENNoMsIRFzCqIBURiQg5qVRX4I+
+   Vrcfz6xo3WXKkX3ML6bYshh0OKfK8HeEidDo5+OYMn6YfnRSoGKWmYLgZ
+   p7xcyOIrzUDsmfzq0F4sEG1B+dJ8IcnEpvkhM9h/k7JVg9LxvO/e2IO5c
+   MmLHFmWeyKGfnP00nhmLb0l1e4pbh/xWZdf9uXKaEVksQMoKjFbTzu1jA
+   g==;
+X-CSE-ConnectionGUID: RZaWERXNRE2VLSmrXFOGjA==
+X-CSE-MsgGUID: Kka+zk0pT5O5eczFkik6tQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11197"; a="24930138"
+X-IronPort-AV: E=Sophos;i="6.10,234,1719903600"; 
+   d="scan'208";a="24930138"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 22:05:53 -0700
+X-CSE-ConnectionGUID: UDgYpWYHSw6tiyAgLVXzBA==
+X-CSE-MsgGUID: w5W0zApoSMCZMnGOleu5JA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,234,1719903600"; 
+   d="scan'208";a="68954735"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 16 Sep 2024 22:05:47 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sqQPI-000AoA-22;
+	Tue, 17 Sep 2024 05:05:44 +0000
+Date: Tue, 17 Sep 2024 13:05:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
+	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
+	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
+	ulf.hansson@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, quic_srichara@quicinc.com,
+	quic_varada@quicinc.com, quic_mdalam@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+Message-ID: <202409171209.aEtxsPez-lkp@intel.com>
+References: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHKsWRmVeSWpSXmKPExsWy7bCmhm4O78s0gx3LNC1W3+1nszj6/y2b
-	xd5b2hbLj/9jcmDxuHy21OPj01ssHn1bVjF6fN4kF8ASlW2TkZqYklqkkJqXnJ+SmZduq+Qd
-	HO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA7RQSaEsMacUKBSQWFyspG9nU5RfWpKqkJFf
-	XGKrlFqQklNgUqBXnJhbXJqXrpeXWmJlaGBgZApUmJCdMePZZtaCD6wVn09+ZmlgfMfSxcjJ
-	ISFgIrHu6CKmLkYuDiGB3YwSa4/sYIVwPjFK3HhzCirzjVFi/5k9cC3fLvcyQiT2Mkq8//wK
-	yvnMKPG9+RZQCwcHm4CmxIXJpSANIgLCEvs7WsGamQWSJKafXMYKYgsLaEksnXCbGaScRUBV
-	Yk4XD4jJK2ApsX1HNsQqeYmZl76zg9i8AoISJ2c+gZoiL9G8dTYzyFYJgVXsEgvuPWSFaHCR
-	OLK6jRnCFpZ4dXwLO4QtJfH53V42CDtb4sGjB1C/1Ejs2NwH1Wsv0fDnBivIDcxA16/fpQ+x
-	i0+i9/cTsKckBHglOtqEIKoVJe5NegrVKS7xcMYSKNtDYv2sHrALhARiJZpa3jBNYJSbheSD
-	WUg+mIWwbAEj8ypGydSC4tz01GLTAsO81HJ4TCbn525iBCc0Lc8djHcffNA7xMjEwXiIUYKD
-	WUmE1/b30zQh3pTEyqrUovz4otKc1OJDjKbAQJ3ILCWanA9MqXkl8YYmlgYmZmZmJpbGZoZK
-	4ryvW+emCAmkJ5akZqemFqQWwfQxcXBKNTBtyFDp2V1/m/VRjmzH49uqBe3e011C7MTml1gf
-	uXXWpOCE//YijfInc3v171i/NF1UPXeZ6ofFV0QXH3y/j7/Z8p/tzymTHk8uYX4asnidhOas
-	8sJ7QanyB/bO3vO6OWCPUGBA9reGW1++vzWd6NXsknmM4ZDPkyWutR5MHo1RxSG7ogz1vcS3
-	70phFHhh6xCgsKZgUoLjYeHNnubzJ7Tu1n8UHC/CwHhDsf9r4cviS1WmUzQSgtVOWaUs9rZ/
-	tmZH/xOu2iWrj5mdexZ4Y9Y+B3ndnSEer21Mjl33NmT5YPT8oJlkUgDzn+KkZdFvc+Km+ASt
-	n7Np+8YLDo7Sy09Vq0xXuxoUmPzNxnbOS0YlluKMREMt5qLiRAA3pLYZ8QMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKLMWRmVeSWpSXmKPExsWy7bCSvG4278s0g13NZhar7/azWRz9/5bN
-	Yu8tbYvlx/8xObB4XD5b6vHx6S0Wj74tqxg9Pm+SC2CJ4rJJSc3JLEst0rdL4MqY8Wwza8EH
-	1orPJz+zNDC+Y+li5OSQEDCR+Ha5lxHEFhLYzSixq0kaIi4u0XztBzuELSyx8t9zIJsLqOYj
-	o8Tcx1OAmjk42AQ0JS5MLgWpEQGq2d/RCjaTWSBF4tzPZawgtrCAlsTSCbeZQcpZBFQl5nTx
-	gJi8ApYS23dkQ0yXl5h56TvYJl4BQYmTM59ATZGXaN46m3kCI98sJKlZSFILGJlWMUqmFhTn
-	pucmGxYY5qWW6xUn5haX5qXrJefnbmIEh5yWxg7Ge/P/6R1iZOJgPMQowcGsJMJr+/tpmhBv
-	SmJlVWpRfnxRaU5q8SFGaQ4WJXFewxmzU4QE0hNLUrNTUwtSi2CyTBycUg1MbYULGJXbfOco
-	LJmyVE/pVbBFeKvV/s1ro7a6/GJJms37yi1I7a/OgWOv/jkraXFMjnudfSXrfsEvha2bzpz/
-	GbCOW76F846bXlDKrX3rLktsfnZsB+sF6UD/XXM9LxzjzDk4993/Xs8U35vu+Wa36njeHbCs
-	CObVZ73wSsZR6xbP7SnWu485ty1fzyB9w8hLZp2f9ekb8fv0vu7a57uU51nLXh27mMrYHW8T
-	Hu69YFFjV5TwmWFDcBqnW9sxC8fS1g/3nourl9xUbS95tkvm0dm1ZnkXEj5826e2yqztOvOR
-	81O4hTaz6fnNqbuy9LDZt9cy6a8fVzr96Dm4/kf6/vUhAsz+Ey8WBifPylmZqMRSnJFoqMVc
-	VJwIAJ0ZfDyoAgAA
-X-CMS-MailID: 20240917050236epcas5p3b032bf733800ef5b2b9d1ebe9ce92838
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240917050236epcas5p3b032bf733800ef5b2b9d1ebe9ce92838
-References: <CGME20240917050236epcas5p3b032bf733800ef5b2b9d1ebe9ce92838@epcas5p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 
-The union around bi_integrity field is pointless.
-Remove it.
+Hi Md,
 
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- include/linux/blk_types.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 36ed96133217..6d3a0fff2a1d 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -248,11 +248,9 @@ struct bio {
- 	struct bio_crypt_ctx	*bi_crypt_context;
- #endif
- 
--	union {
- #if defined(CONFIG_BLK_DEV_INTEGRITY)
--		struct bio_integrity_payload *bi_integrity; /* data integrity */
-+	struct bio_integrity_payload *bi_integrity; /* data integrity */
- #endif
--	};
- 
- 	unsigned short		bi_vcnt;	/* how many bio_vec's */
- 
+[auto build test ERROR on device-mapper-dm/for-next]
+[also build test ERROR on axboe-block/for-next linus/master song-md/md-next v6.11 next-20240916]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Md-Sadre-Alam/dm-inlinecrypt-Add-inline-encryption-support/20240916-170452
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git for-next
+patch link:    https://lore.kernel.org/r/20240916085741.1636554-2-quic_mdalam%40quicinc.com
+patch subject: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+config: openrisc-randconfig-r062-20240917 (https://download.01.org/0day-ci/archive/20240917/202409171209.aEtxsPez-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240917/202409171209.aEtxsPez-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409171209.aEtxsPez-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/md/dm-inline-crypt.c: In function 'crypt_prepare_inline_crypt_key':
+>> drivers/md/dm-inline-crypt.c:81:15: error: implicit declaration of function 'blk_crypto_init_key' [-Wimplicit-function-declaration]
+      81 |         ret = blk_crypto_init_key(cc->blk_key, cc->key, cc->crypto_mode,
+         |               ^~~~~~~~~~~~~~~~~~~
+>> drivers/md/dm-inline-crypt.c:88:15: error: implicit declaration of function 'blk_crypto_start_using_key' [-Wimplicit-function-declaration]
+      88 |         ret = blk_crypto_start_using_key(cc->dev->bdev, cc->blk_key);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/md/dm-inline-crypt.c: In function 'crypt_destroy_inline_crypt_key':
+>> drivers/md/dm-inline-crypt.c:104:17: error: implicit declaration of function 'blk_crypto_evict_key'; did you mean 'blk_crypto_register'? [-Wimplicit-function-declaration]
+     104 |                 blk_crypto_evict_key(cc->dev->bdev, cc->blk_key);
+         |                 ^~~~~~~~~~~~~~~~~~~~
+         |                 blk_crypto_register
+   drivers/md/dm-inline-crypt.c: In function 'crypt_inline_encrypt_submit':
+>> drivers/md/dm-inline-crypt.c:121:17: error: implicit declaration of function 'bio_crypt_set_ctx' [-Wimplicit-function-declaration]
+     121 |                 bio_crypt_set_ctx(bio, cc->blk_key, dun, GFP_KERNEL);
+         |                 ^~~~~~~~~~~~~~~~~
+
+
+vim +/blk_crypto_init_key +81 drivers/md/dm-inline-crypt.c
+
+    72	
+    73	static int crypt_prepare_inline_crypt_key(struct inlinecrypt_config *cc)
+    74	{
+    75		int ret;
+    76	
+    77		cc->blk_key = kzalloc(sizeof(*cc->blk_key), GFP_KERNEL);
+    78		if (!cc->blk_key)
+    79			return -ENOMEM;
+    80	
+  > 81		ret = blk_crypto_init_key(cc->blk_key, cc->key, cc->crypto_mode,
+    82					  cc->iv_size, cc->sector_size);
+    83		if (ret) {
+    84			DMERR("Failed to init inline encryption key");
+    85			goto bad_key;
+    86		}
+    87	
+  > 88		ret = blk_crypto_start_using_key(cc->dev->bdev, cc->blk_key);
+    89		if (ret) {
+    90			DMERR("Failed to use inline encryption key");
+    91			goto bad_key;
+    92		}
+    93	
+    94		return 0;
+    95	bad_key:
+    96		kfree_sensitive(cc->blk_key);
+    97		cc->blk_key = NULL;
+    98		return ret;
+    99	}
+   100	
+   101	static void crypt_destroy_inline_crypt_key(struct inlinecrypt_config *cc)
+   102	{
+   103		if (cc->blk_key) {
+ > 104			blk_crypto_evict_key(cc->dev->bdev, cc->blk_key);
+   105			kfree_sensitive(cc->blk_key);
+   106			cc->blk_key = NULL;
+   107		}
+   108	}
+   109	
+   110	static void crypt_inline_encrypt_submit(struct dm_target *ti, struct bio *bio)
+   111	{
+   112		struct inlinecrypt_config *cc = ti->private;
+   113		u64 dun[BLK_CRYPTO_DUN_ARRAY_SIZE];
+   114	
+   115		bio_set_dev(bio, cc->dev->bdev);
+   116		if (bio_sectors(bio)) {
+   117			memset(dun, 0, BLK_CRYPTO_MAX_IV_SIZE);
+   118			bio->bi_iter.bi_sector = cc->start +
+   119				dm_target_offset(ti, bio->bi_iter.bi_sector);
+   120			dun[0] = le64_to_cpu(bio->bi_iter.bi_sector + cc->iv_offset);
+ > 121			bio_crypt_set_ctx(bio, cc->blk_key, dun, GFP_KERNEL);
+   122		}
+   123	
+   124		submit_bio_noacct(bio);
+   125	}
+   126	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
