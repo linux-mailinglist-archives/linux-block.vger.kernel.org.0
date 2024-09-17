@@ -1,107 +1,102 @@
-Return-Path: <linux-block+bounces-11705-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11707-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CC1C97AAE3
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 07:05:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9AC97AB16
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 07:39:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BD9528509A
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 05:05:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8F361F22AC9
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2024 05:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7222125763;
-	Tue, 17 Sep 2024 05:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB3E7C6E6;
+	Tue, 17 Sep 2024 05:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gY9SIGlL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgQIydEV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04050A935
-	for <linux-block@vger.kernel.org>; Tue, 17 Sep 2024 05:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D073446
+	for <linux-block@vger.kernel.org>; Tue, 17 Sep 2024 05:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726549543; cv=none; b=hu3rsZi4ci9Z6xMSZT27Ymu/jZ0wuF2lij/ECosfw1pjEkHgtudovr2SqXRWQxE4G+BgF7tjVPcxcOGWb2iDTkMNG31YIanaVYaPzk//aSXOVG7T1aWmieqp0LFJW0PLCSITYCYEPPuuya8+1ULFzSdwmpDK14WwZdI5lpj3YyA=
+	t=1726551183; cv=none; b=Ss104DXUehg9GnCACHgtDVPXoP0H3IPdSuxfXjFE4NHc7vtfAwwowGHed80bmVBzYEl2GU1f09Xn9rs/FweQN6LsCnKDrVLnKjeMzyCMRXX1iRyGam7IocqQ8iN5lX0V/qugHdgELJKbWab2e9Mg7bJaaLaFZiHzOnrQ1xHlAaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726549543; c=relaxed/simple;
-	bh=sI/2mt7ZT8N34yENSaH7wnfjV+R3hlFLykW9UNdwiOg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jnnottioFoEKctO8cNd9v/zXgP4UGOeercUcKyrx2mIaKM8Y3koOuxiOZHI4l6daaBVKLYnq3CuL37EV8pEchvg5CAih3ZZ23yKKb/v+XjTWYGA1jqnB50iTtY8fbKi4Cu+21EHFf7H7eAHe/D1KzcN6ukCypZjERtWv6vRVJUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gY9SIGlL; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42cacabd2e0so44188635e9.3
-        for <linux-block@vger.kernel.org>; Mon, 16 Sep 2024 22:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1726549537; x=1727154337; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NnXFGLwLgpergV5Rek/ag+qOrPfRTIWsHRHyAV4CVNE=;
-        b=gY9SIGlLryd4m1wlyKDzpsKNUdOhFyO3i3DcqU9qDCgycy/xg3f5XXjksXMvLuoQmx
-         O3+dIIGkweLX2ZL9Ij6Axdqq9scIbfAKHm7AtwdT7cTA76XiumPHMugw0DR+aZH+s5Xf
-         t90mCkw3P+HjMS8uz954dle4JSDy1dNXDY9/Uj/LTWg4r/xt6WOpmK6TfD8qr3c0vX9F
-         bC324h0g4xdXIxiJMqpd19EpXHQ0K5bXOpJgDWiVNfWZS5Hv+x4mMgAAqa1zK8lQd/RT
-         lGzhOq8LeRGErM5fb4S0DA41Of7upMiFCNfNUcQLruzuSip+IvpfmkAx5GeEXblY9qgl
-         Mddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726549537; x=1727154337;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NnXFGLwLgpergV5Rek/ag+qOrPfRTIWsHRHyAV4CVNE=;
-        b=LofMtinrItFn8F8I04EqiafinbC2EmInYdChSq58T1mkk+4lMEyUQSr269NNmYB2dB
-         etYQ4qXQXFC2H6sIgRPfQ3t0AvhaU4TpFsWRdSMWnCYabYy2mTunH3v2PFXn8xVBai0b
-         p9enVPYOWH4pm/ZQJ4EZuahnuobRXoBsfpuEpzHZDEGrlgptHd2ytHNMhPqP4oWGs5Gq
-         JRaW7jXiVZcqpYGGXssHCPi3IfyVTGGwuLf0UA+wkqmV5ohEcyTdToPlTVjDunV2rTAU
-         sIrsFPLYDDm1zLwmqzp3jQlVCEUgS2dh0yO7XG3csHl2PXGl0Y4yN/Y2ngHOTbFgYkBl
-         wVlw==
-X-Gm-Message-State: AOJu0Yze7EOnggZI51B+JJAvBJq/9OVdyLZc8H2rwbMwBLCOV/loFtlY
-	NNk/EcZ3BufEbai0PZn1RpF3NxvZn6tg3KxLQR8YHyPOAF956zlVrpfwxmC+iO2Hf865qvjfJgv
-	O+pSRYN2E
-X-Google-Smtp-Source: AGHT+IGmD4cTooVvjm65bHFOQH0ZzIoM3T7BNUcz8mFESImVuIFtWIMwCz732+UwRTY70k9kZczvgw==
-X-Received: by 2002:a05:6000:184c:b0:374:c022:fa76 with SMTP id ffacd0b85a97d-378c2d5ab83mr10513603f8f.37.1726549536565;
-        Mon, 16 Sep 2024 22:05:36 -0700 (PDT)
-Received: from [127.0.0.1] ([185.44.53.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73f99b0sm8600063f8f.60.2024.09.16.22.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 22:05:35 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: linux-block@vger.kernel.org, martin.petersen@oracle.com
-In-Reply-To: <20240917045457.429698-1-joshi.k@samsung.com>
-References: <CGME20240917050236epcas5p3b032bf733800ef5b2b9d1ebe9ce92838@epcas5p3.samsung.com>
- <20240917045457.429698-1-joshi.k@samsung.com>
-Subject: Re: [PATCH] block: remove bogus union
-Message-Id: <172654953561.180692.8301135057283740885.b4-ty@kernel.dk>
-Date: Mon, 16 Sep 2024 23:05:35 -0600
+	s=arc-20240116; t=1726551183; c=relaxed/simple;
+	bh=Byz+FGQQoYuHubRax7vtAJApKyDAGo22b41HPFg6vVk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gMuEyjlOk2JhdQ7SZEM8QSnlYzfgh3vcODaZr1gT4/f3BCgWWJKXxcWsE4uWnDcqCQgiOgRJ1G7Nx8LnfvMfEB7ksL7bzeOYo/SIPmmQz/xARyl/ptnuW2IDHVsf5l/EL/ZlvGFkM4oxXPhPqQGAT1N+eT1/J9wOy/W6jZeMYL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgQIydEV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8FEC4CEC6;
+	Tue, 17 Sep 2024 05:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726551182;
+	bh=Byz+FGQQoYuHubRax7vtAJApKyDAGo22b41HPFg6vVk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VgQIydEVlG8ty2sYppsXdqW/WsN8GbbhBQirAdy0dkJtGM5bBRW40VkQKUG7KW3lo
+	 qz6PkiFdDeJ4neNdGFO1K1AM11l0Un7732e7C/lwBmiuf3f1Rd3p9JwWj0PDfi7DRz
+	 85Wmc79sWd3u6KfXjJdlA6pnKqPjhKiafX78x2YR/TH8Gpq9edARAXV6p4xEMiUtFS
+	 Okb5Y4lVV6+eKnczJIsFnWmN63akz2LkNcjWS3EbZzzkbN2tzj36IizbKv12AMF56E
+	 uVbfcyfzhyB3FEDVOOMofLMZ2IIuAeWdas5mCTfAePVd0B4wxYKsQoknMbxPSx5Hg3
+	 5ce6gnExd7zHw==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: "Richard W . M . Jones" <rjones@redhat.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	Jeff Moyer <jmoyer@redhat.com>,
+	Jiri Jaburek <jjaburek@redhat.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH] block: Fix elv_iosched_local_module handling of "none" scheduler
+Date: Tue, 17 Sep 2024 14:32:58 +0900
+Message-ID: <20240917053258.128827-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.1
+Content-Transfer-Encoding: 8bit
 
+Commit 734e1a860312 ("block: Prevent deadlocks when switching
+elevators") introduced the function elv_iosched_load_module() to allow
+loading an elevator module outside of elv_iosched_store() with the
+target device queue not frozen, to avoid deadlocks. However, the "none"
+scheduler does not have a module and as a result,
+elv_iosched_load_module() always returns an error when trying to switch
+to this valid scheduler.
 
-On Tue, 17 Sep 2024 10:24:57 +0530, Kanchan Joshi wrote:
-> The union around bi_integrity field is pointless.
-> Remove it.
-> 
-> 
+Fix this by checking that the requested scheduler is "none" and doing
+nothing in that case.
 
-Applied, thanks!
+Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Fixes: 734e1a860312 ("block: Prevent deadlocks when switching elevators")
+Cc: stable@vger.kernel.org
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ block/elevator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[1/1] block: remove bogus union
-      commit: 4208c562a27899212e8046080555e0f204e0579a
-
-Best regards,
+diff --git a/block/elevator.c b/block/elevator.c
+index c355b55d0107..d0ee9c0aaed2 100644
+--- a/block/elevator.c
++++ b/block/elevator.c
+@@ -714,6 +714,8 @@ int elv_iosched_load_module(struct gendisk *disk, const char *buf,
+ 		return -EOPNOTSUPP;
+ 
+ 	strscpy(elevator_name, buf, sizeof(elevator_name));
++	if (!strncmp(elevator_name, "none", 4))
++		return 0;
+ 
+ 	return request_module("%s-iosched", strstrip(elevator_name));
+ }
 -- 
-Jens Axboe
-
-
+2.46.0
 
 
