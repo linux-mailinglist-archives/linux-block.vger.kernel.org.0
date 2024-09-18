@@ -1,143 +1,162 @@
-Return-Path: <linux-block+bounces-11739-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11741-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E35A97B74E
-	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2024 07:09:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0BD997B81E
+	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2024 08:47:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AE271C21ABE
-	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2024 05:09:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4CE92849EB
+	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2024 06:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6E714A09E;
-	Wed, 18 Sep 2024 05:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E1E14B94A;
+	Wed, 18 Sep 2024 06:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAG1H8us"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dDixTifc"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CDE13792B;
-	Wed, 18 Sep 2024 05:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D52A3C3C
+	for <linux-block@vger.kernel.org>; Wed, 18 Sep 2024 06:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726636146; cv=none; b=j6GSes9crPFJzvI0owhXqO8yxCEc5LRkjDBYVAanEy4wRf8z7wBUr9IcAbvN2/x/7wLNhFcLNRAct1GIFu4AcVr/FepUAml8bNxNijg0ybgjL2/YjGCUBX1pjQTxpNmKYd30ZSW5J+tZ8QxkPqDpIsyj+psC5iLaCpgJI6+NZxI=
+	t=1726642070; cv=none; b=WbLpZK8E31pRhg4ps/qQvRXYTYQUfBxdNmzqKDb//TFFHWxN/Ndoz6xHOR+6cdRelEi20cZeu2M6fbu4vApPv5D9jvPj86GNIoHCmTKW6CuxOk7lMKSB/bt83B7Tf7oQDDna8nAdrZNjSapNOazEYyirjqOwGjtStguvdNzKxJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726636146; c=relaxed/simple;
-	bh=As9YAcSfIVcVorbigO5cjdtcP7FT++p9qmX0oJ0wRCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ai9KcWU7PkYVb8AaP8RRY4jF5HCr3ixZjZuopr/zaAKrs8zFwdfSomBrAQhkFxw7fqmqdjwSExY7ZWk9S0ZdwqmT5tBI35rMSu5zAKHZAXoeNZW29wB1iETwLN6j9axUwSIo0cMG0JKQ3VJnyb7AHmiVTej7Rih6LA95OA3mExg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAG1H8us; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726636145; x=1758172145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=As9YAcSfIVcVorbigO5cjdtcP7FT++p9qmX0oJ0wRCQ=;
-  b=eAG1H8usHg8/n08bFZ85faWQwSPOc6SFKKlvbHy+1KW5/8FIhKDKCEsI
-   CL9TqV/6l42dXQGFz3co2W4xg0cB0Z9VlbBcGou8FXd6hsBKH0VbQv2bS
-   RNuWEHkpk1BeGo8wmfmg4EQ/snlG/71HNHbHN84rVdoXV6YPP/VwcODoa
-   M+7a/YFGXMuv4vCGRFa3rK5H7oRw0m5n0HmNtozYmAQqOVC5XZ2sBLR4a
-   GNd9suj1PiXi75gF95jkgCgAo/RxtPUM65OPT7pbcvNm91F8GQ05eLeOq
-   NbD8uPF4ta0mmm4GRlnRBq2O4I8AF2JEaUasy1TvTuXxI+1ol41tEwqf8
-   w==;
-X-CSE-ConnectionGUID: /7d10skPSn2rAIic22H4LA==
-X-CSE-MsgGUID: hqym9ymLTX+24XfwvNo9Fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11198"; a="25685993"
-X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
-   d="scan'208";a="25685993"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 22:09:04 -0700
-X-CSE-ConnectionGUID: Cy3mqgGyTzamROZvS8CXGw==
-X-CSE-MsgGUID: fdUzLaH/TGeu2Fmg+0hK+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
-   d="scan'208";a="73779548"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 17 Sep 2024 22:08:58 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sqmvv-000Bt8-24;
-	Wed, 18 Sep 2024 05:08:55 +0000
-Date: Wed, 18 Sep 2024 13:08:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
-	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
-	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
-	ulf.hansson@linaro.org, andersson@kernel.org,
-	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com, quic_mdalam@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-Message-ID: <202409181233.1FrQNVtU-lkp@intel.com>
-References: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
+	s=arc-20240116; t=1726642070; c=relaxed/simple;
+	bh=7molbCH+4Oxgs7cSunHpqCo1cLuuytcEOYchQ+dJ5rk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=pxyH8buihofjtMVCOvYyOo7hx1PBwGY24S3sMazkBst2pinOE+ZjGyrqq2JGOaJOQQPl41cWebYXU4RvK87uacMAKsCEOSQOtkNh8V1AcibqoNcO3uNlxX9f9/So4D/5pzyDHbUVkDZAkBzsVHnAujcUg+eERuLek2rJo5gJWDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dDixTifc; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240918064743epoutp018c8d48862ca2e3c04713e4b817c3fad9~2Q87ojqcT0535905359epoutp01f
+	for <linux-block@vger.kernel.org>; Wed, 18 Sep 2024 06:47:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240918064743epoutp018c8d48862ca2e3c04713e4b817c3fad9~2Q87ojqcT0535905359epoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1726642063;
+	bh=jYdDIM61rLfK0sbYeOdIoHCyY98urG+92WC1lv7H3EU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dDixTifcRRe6g2ROPHyiZYoVjIznfnp0EC5mwPr48OgXxmkNFLsKprdjYG7tAnphk
+	 5HlWRkY/a7zhcf4q6BIslmbOg4PabM6rrS1vYJ1apGSTmC83XK2edIr1QWi8Mqp9xu
+	 lLBRgLOPtUvGMrGKB3xUNvCgEqjCkV6NYuXBe1qY=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240918064742epcas5p2969ab58dbc7631e2d59ca245d304c660~2Q87QF7Ot0584005840epcas5p2Q;
+	Wed, 18 Sep 2024 06:47:42 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4X7q3147Dqz4x9Pv; Wed, 18 Sep
+	2024 06:47:41 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C1.8E.09640.D877AE66; Wed, 18 Sep 2024 15:47:41 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240918064651epcas5p418d61389752da25e5fc50e6a50a111b8~2Q8LznB2w2037020370epcas5p4E;
+	Wed, 18 Sep 2024 06:46:51 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240918064651epsmtrp23995a57e9cdd729b9bae2631404646d5~2Q8LvwawO1973319733epsmtrp2k;
+	Wed, 18 Sep 2024 06:46:51 +0000 (GMT)
+X-AuditID: b6c32a49-a57ff700000025a8-25-66ea778d5c70
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6A.D3.08456.B577AE66; Wed, 18 Sep 2024 15:46:51 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240918064650epsmtip2f1a3a529f7506fa5be05a6349e84272e~2Q8KrfkBj1101711017epsmtip2B;
+	Wed, 18 Sep 2024 06:46:50 +0000 (GMT)
+Date: Wed, 18 Sep 2024 12:09:10 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, Kanchan Joshi <joshi.k@samsung.com>,
+	linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-nvme@lists.infradead.org
+Subject: Re: fine-grained PI control
+Message-ID: <20240918063910.hqntgm5jy2jisys2@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <yq1ttgz5l6d.fsf@ca-mkp.ca.oracle.com>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmpm5v+as0g73zpS1Wrj7KZHH0/1s2
+	i723tC3mL3vKbtF9fQebxfLj/5gc2Dw2L6n32H2zgc3j49NbLB59W1YxenzeJBfAGpVtk5Ga
+	mJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0X0mhLDGnFCgU
+	kFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFKgV5yYW1yal66Xl1piZWhgYGQKVJiQnbH9gHXB
+	NI6K03sesjcwPmPrYuTkkBAwkdi9+z9LFyMXh5DAbkaJq1ueQjmfGCWef3rNDuF8Y5SYenYa
+	I0xLx65NbBCJvYwSs44egWp5xijxsn85M0gVi4CqxP/pXUwgNpuAusSR561g3SICphKTP20F
+	62YWWMIo8ePPTbBLhAVUJLbPuAVm8wqYSRycfooZwhaUODnzCQuIzSlgLHHmz1l2EFtUQEZi
+	xtKvzBAnfWSX2LI1FMJ2kXjWPocFwhaWeHV8CzuELSXx+d1eqK/TJX5cfsoEYRdINB/bB/Wa
+	vUTrqX6wmcwCGRLnjrRC1ctKTD21jgkizifR+/sJVC+vxI55MLaSRPvKOVC2hMTecw1QtofE
+	zl3NrJAQWscoMXfaNrYJjPKzkPw2C8k+CNtKovNDE+ssRg4gW1pi+T8OCFNTYv0u/QWMrKsY
+	JVMLinPTU4tNCwzzUsvhMZ6cn7uJEZw+tTx3MN598EHvECMTB+MhRgkOZiURXvEPL9OEeFMS
+	K6tSi/Lji0pzUosPMZoCI2sis5Rocj4wgeeVxBuaWBqYmJmZmVgamxkqifO+bp2bIiSQnliS
+	mp2aWpBaBNPHxMEp1cAk98RwafCByYZbP8qWXJzw/OjZpqI1J0SF7NefOnN1odENg9yfk47G
+	HMzoeHUvJr+Lt40ldtLJepbv3o21njcm/Wlz64ro5zYpELvrXPk0QsrL2zm+xfmh8EIOPt6Z
+	58rNryeedb9rd07ed+aVDdGmoVdTFvjvqnjmspA1d7HLZWGft8X3s6Q919a2aKbtsWS+u3Wd
+	q9zVM3/FZY4GphpviYlJCcr4XXZ8okf3XNbdse+XpVn8ttF738156vHzS2eWx1c/WPUiTd5v
+	vcx5hZm7bxdN3RUdslhmudWmI0u39r3glvrVpJG/6WHTY8nH8rFBnFvs3ygJFLtcMZzRrGp4
+	pq6pYv/HbYprdrXeCV2mxFKckWioxVxUnAgACajEfCgEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWy7bCSvG50+as0gw3LVSxWrj7KZHH0/1s2
+	i723tC3mL3vKbtF9fQebxfLj/5gc2Dw2L6n32H2zgc3j49NbLB59W1YxenzeJBfAGsVlk5Ka
+	k1mWWqRvl8CV0dYzn7ngBGvFocVbmRoYN7F0MXJySAiYSHTs2sQGYgsJ7GaUOHg2BiIuIXHq
+	5TJGCFtYYuW/5+xdjFxANU8YJU692cAKkmARUJX4P72LCcRmE1CXOPK8FaxBRMBUYvKnrWwg
+	DcwCSxglfvy5CbZBWEBFYvuMW2A2r4CZxMHpp5ghNkdJ9JzrgIoLSpyc+QTsOmagmnmbHwLV
+	cADZ0hLL/3GAhDkFjCXO/DnLDmKLCshIzFj6lXkCo+AsJN2zkHTPQuhewMi8ilEytaA4Nz23
+	2LDAKC+1XK84Mbe4NC9dLzk/dxMjOOi1tHYw7ln1Qe8QIxMH4yFGCQ5mJRFe8Q8v04R4UxIr
+	q1KL8uOLSnNSiw8xSnOwKInzfnvdmyIkkJ5YkpqdmlqQWgSTZeLglGpgMvH+ZsH/ouT1cdZ7
+	/s2Oqi7n2b5cvbyHzWyhJ7c92wmHnX/UNy3Y5fZ56gohlzNfzgYo/Hu/cG7wFx2PjTdW/Mk3
+	LVR7KRd116zbevd0R4Ewf95XsU8ePd+l8GdF1vrW8/cU9INMr6nZ+p+wmBTQkXm6J9r43Dv/
+	G2eStvmerbsjXCVu2mTcF/BJ6smKk57TT6yQ3/goL1ev29hxbrBkkbIEmztzllaQTbBLRQWf
+	30qhDX7KHzTaXOY9r9I681PIrW9K/+q/nNdVFL4tuL/yQ7Py5B+JX94suWixfeni8lWKbb+l
+	Qp2s1jzV8Y+af/9ZdZy9b/vyi3xPrv2elOo422WStken8vnHElkHW0KnKbEUZyQaajEXFScC
+	AGBOgtTpAgAA
+X-CMS-MailID: 20240918064651epcas5p418d61389752da25e5fc50e6a50a111b8
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----BXry2NbAWZo9yJTNih6DAV11S-FgciuNcVifFwRAucM.VCOc=_34c99_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240918064651epcas5p418d61389752da25e5fc50e6a50a111b8
+References: <20240705083205.2111277-1-hch@lst.de>
+	<yq1ttgz5l6d.fsf@ca-mkp.ca.oracle.com>
+	<CGME20240918064651epcas5p418d61389752da25e5fc50e6a50a111b8@epcas5p4.samsung.com>
+
+------BXry2NbAWZo9yJTNih6DAV11S-FgciuNcVifFwRAucM.VCOc=_34c99_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-In-Reply-To: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 
-Hi Md,
+>
+>Another wrinkle is that SCSI does not have a way to directly specify
+>which tags to check. You can check guard only, check app+ref only, or
+>all three. But you can't just check the ref tag if that's what you want
+>to do.
 
-kernel test robot noticed the following build warnings:
+Hi Martin,
 
-[auto build test WARNING on device-mapper-dm/for-next]
-[also build test WARNING on axboe-block/for-next linus/master song-md/md-next v6.11 next-20240917]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+When the drive is formatted with type1 integrity and dix is supported,
+the block layer would generate/verify the guard and reftag. For scsi,
+apptag would also need to be generated/verified as reftag-check can't
+be specified alone. But I am not not able to find (in SCSI code) where
+exactly: 
+1. this apptag is being generated
+2. and getting added to the PI buffer and scsi command.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Md-Sadre-Alam/dm-inlinecrypt-Add-inline-encryption-support/20240916-170452
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git for-next
-patch link:    https://lore.kernel.org/r/20240916085741.1636554-2-quic_mdalam%40quicinc.com
-patch subject: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-config: csky-randconfig-r111-20240918 (https://download.01.org/0day-ci/archive/20240918/202409181233.1FrQNVtU-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20240918/202409181233.1FrQNVtU-lkp@intel.com/reproduce)
+Can you please point to where/how it is handled.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409181233.1FrQNVtU-lkp@intel.com/
+Thank you,
+Anuj Gupta
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/md/dm-inline-crypt.c:120:26: sparse: sparse: cast to restricted __le64
-   drivers/md/dm-inline-crypt.c:214:32: sparse: sparse: self-comparison always evaluates to false
+------BXry2NbAWZo9yJTNih6DAV11S-FgciuNcVifFwRAucM.VCOc=_34c99_
+Content-Type: text/plain; charset="utf-8"
 
-vim +120 drivers/md/dm-inline-crypt.c
 
-   109	
-   110	static void crypt_inline_encrypt_submit(struct dm_target *ti, struct bio *bio)
-   111	{
-   112		struct inlinecrypt_config *cc = ti->private;
-   113		u64 dun[BLK_CRYPTO_DUN_ARRAY_SIZE];
-   114	
-   115		bio_set_dev(bio, cc->dev->bdev);
-   116		if (bio_sectors(bio)) {
-   117			memset(dun, 0, BLK_CRYPTO_MAX_IV_SIZE);
-   118			bio->bi_iter.bi_sector = cc->start +
-   119				dm_target_offset(ti, bio->bi_iter.bi_sector);
- > 120			dun[0] = le64_to_cpu(bio->bi_iter.bi_sector + cc->iv_offset);
-   121			bio_crypt_set_ctx(bio, cc->blk_key, dun, GFP_KERNEL);
-   122		}
-   123	
-   124		submit_bio_noacct(bio);
-   125	}
-   126	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+------BXry2NbAWZo9yJTNih6DAV11S-FgciuNcVifFwRAucM.VCOc=_34c99_--
 
