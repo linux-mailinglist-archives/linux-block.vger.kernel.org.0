@@ -1,271 +1,175 @@
-Return-Path: <linux-block+bounces-11856-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11850-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48B8498425F
-	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 11:39:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B21E6984207
+	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 11:26:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7C52280F42
-	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 09:39:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 360E71F23B41
+	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 09:26:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F79915575C;
-	Tue, 24 Sep 2024 09:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC52176230;
+	Tue, 24 Sep 2024 09:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Nuwkp8ND"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BwzRx14T"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0199215574F
-	for <linux-block@vger.kernel.org>; Tue, 24 Sep 2024 09:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF881714CD
+	for <linux-block@vger.kernel.org>; Tue, 24 Sep 2024 09:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727170776; cv=none; b=Zg/UnbN80EHnJbkbdcSVRXKA9jSLap20OBydwPp4p62lzwx3/0YxhZEqmNG9v8P1Va8e1SAsP0XKvmUKXlhuYBfRH9s5arVMlXBBuiSZWJcd5KsdYaQlf2TO2G8H2GOpJ4u2d6KmppsMd6fQh12OSu99cbAK37LDylSFaPmE3KQ=
+	t=1727169912; cv=none; b=sjEHQMUTOQwjte98n529o/Os/eR2oIkKsbs1UndluX+4ikYy3FwbfJqrR2ve5jzBdVJU2z6qp0wMebYo4oFDxmNu54ZgV5UHQVosjCedvTvlEyMct/WQjEkrVBJCOzyXGtmvRoV7a6wBTPUKxh4u7sPBw1vjD4sJ79UqTfIXGNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727170776; c=relaxed/simple;
-	bh=RV7GOBkMD7Kztavn/z9JQF7Ken9p0b4/wZatHvse9Ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ga3gD8HTTNWRJdH2I/1/YxYs79SdpbUypAnqJEkozwhaMCaIJqZXwmBImZs3FWO0CU075eXrmBZbo0udPe16x4/1sNGZlK7WKqsHdeKsCsCzaxq7X+T4LLE1jWwdGaM7UVU/gYKQceDzOhXvFOvNoQMz3Ce9q4XKNHoWjZapRA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Nuwkp8ND; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48O0YH6c001659;
-	Tue, 24 Sep 2024 08:49:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=OFSXQdbU4eGt5D3bPR1JWE10TDEbBJ2tSqvS8uo
-	xnp0=; b=Nuwkp8NDGqmoS7YUpd/PWRhkXN313sqoroj+AyvoBbfztvED4CVrjJf
-	Bm6/BaC4T9LWKS8EfVvpQfvuLow1pk7ea6kXnZjFbEVg4OKR35hidjjyvq8rSdr+
-	2J+G8fTTy1x+gSqlkPJJPpLHbhSAdxKixJg7Q+w7acO4i4Hi8RRlrmZXTuu+9+JY
-	HnLPHWDx+kw4zxCQQfpMMHg8Dh3IJlnO+HvBtMeKJ7ay6p/nXg93UEdIk7nGgnss
-	vV37YZyS9Q0HC+IqvOz8i4YLvlGQCJEHI9GvhvBtrYn/xJ1J1I8Bu/6a5+qTnAs4
-	dCaKbfwa/UEBsWjpxLungNARllV1e2w==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snvb0pbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 08:49:14 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48O8HJfB005810;
-	Tue, 24 Sep 2024 08:49:14 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 41tapmaqnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 08:49:13 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48O8nAQl53084584
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Sep 2024 08:49:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5FA6520040;
-	Tue, 24 Sep 2024 08:49:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0975C20043;
-	Tue, 24 Sep 2024 08:49:09 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.171.42.77])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Sep 2024 08:49:08 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
-Cc: shinichiro.kawasaki@wdc.com, martin.wilck@suse.com, gjoyce@linux.ibm.com,
-        Nilay Shroff <nilay@linux.ibm.com>
-Subject: [PATCH blktests] nvme/{033-037}: timeout while waiting for nvme passthru namespace device
-Date: Tue, 24 Sep 2024 14:18:45 +0530
-Message-ID: <20240924084907.143999-1-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: usYr5aIqkuBN2luRweNOciY43CHZP7MY
-X-Proofpoint-GUID: usYr5aIqkuBN2luRweNOciY43CHZP7MY
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1727169912; c=relaxed/simple;
+	bh=dNHi3O2X2k099XP44w2M/mi53+tBlMIsNqguMCPtdWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=F3qzg2aFOQQFO4eL5Cj0IeV9f6Kr4amF2IkOAbOQjhTSRNolY9eL38h25swno91jWFWGRMSRAO/KL53N87DhnEXcfyAmMxqBT5tomUUbtYECz/e4YINQ20HysiCra5d9MWjmdvF3GL9o4UrC6yLVLO5W5ihv//cDPy+jx9feAJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BwzRx14T; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240924092502epoutp04622dab74e6d37cfb0a5e09cb0534bdcd~4I_Aw87Zy1569415694epoutp04f
+	for <linux-block@vger.kernel.org>; Tue, 24 Sep 2024 09:25:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240924092502epoutp04622dab74e6d37cfb0a5e09cb0534bdcd~4I_Aw87Zy1569415694epoutp04f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1727169902;
+	bh=ujjozdZ0S6smtIOf2Eo64izQZAki0Dpgi2fL4KYD0eo=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=BwzRx14TxKNqqWxCV80gLdhvlfdc3ZqAyqcv+xSN/70v+VU1BDgpX7Yuq6dY1gHVy
+	 ey8Olc4DD3l7lFYt/DEiUZBlmTiFuxpTH6/QCV6O5fmYcYU6ci4DhvRoK/tjGUdkZJ
+	 EUzrxFfdKRAF4qrCCMeIX6oz91FYWhRs96A4HH3E=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240924092501epcas5p3f637377fab6c1cc78535ad611ec3c268~4I9-tP-SU2625526255epcas5p3P;
+	Tue, 24 Sep 2024 09:25:01 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4XCZFm1yQRz4x9Q8; Tue, 24 Sep
+	2024 09:25:00 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	AE.0F.08855.C6582F66; Tue, 24 Sep 2024 18:25:00 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240924092459epcas5p23e41d7dfa92acf415d9dab1d0e433842~4I9918t0b2825728257epcas5p2N;
+	Tue, 24 Sep 2024 09:24:59 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240924092459epsmtrp2deb043bef0671cc130aa36af932e5811~4I991DpJu0725707257epsmtrp2I;
+	Tue, 24 Sep 2024 09:24:59 +0000 (GMT)
+X-AuditID: b6c32a44-15fb870000002297-2f-66f2856cb18c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	AF.28.19367.B6582F66; Tue, 24 Sep 2024 18:24:59 +0900 (KST)
+Received: from [107.122.11.51] (unknown [107.122.11.51]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240924092456epsmtip18d685cf23e102be2cbcceaf47e18117b~4I960RNvX2191221912epsmtip1D;
+	Tue, 24 Sep 2024 09:24:56 +0000 (GMT)
+Message-ID: <edcbf69e-9ae9-06df-60c0-47393371fcd8@samsung.com>
+Date: Tue, 24 Sep 2024 14:54:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-24_02,2024-09-23_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 spamscore=0 mlxscore=0
- adultscore=0 impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409240061
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
+	Gecko/20100101 Thunderbird/91.8.1
+Subject: Re: [PATCH v5 4/5] sd: limit to use write life hints
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>
+Cc: axboe@kernel.dk, kbusch@kernel.org, sagi@grimberg.me,
+	martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
+	brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	jaegeuk@kernel.org, jlayton@kernel.org, chuck.lever@oracle.com,
+	bvanassche@acm.org, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+	gost.dev@samsung.com, vishak.g@samsung.com, javier.gonz@samsung.com, Nitesh
+	Shetty <nj.shetty@samsung.com>
+From: Kanchan Joshi <joshi.k@samsung.com>
+In-Reply-To: <20240918120159.GA20658@lst.de>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbdRTH/d17e1saO69ljB9FgTVqNgasVcAfDIZmZLtuU0gWQ+LcaqUX
+	SugrfTCdJMLIUNfBBs2YVATmkM4iMhhBXiXIRthEHg6UR4UAlm2ullcTsw1FW8om/33OOd/z
+	O6/8ODj/E7aAk6XSM1qVVCEkuUTL9Z3hkYrTKxmiEQsb1U2dI5Hz+gpAZUsPcfTv1F0MTXS3
+	Yeibul4MfXGxAEOOBjOOGs9x0O+/udnoYa2VjUp7fgXINrkL3f7qAOq03SJQVe08GxnHWklk
+	6VvDUMtqFY6+cy4SaOifPhYaMlewX9tGj4weooemGwm6rPRHkh4ZMNBN1s9I+lrNx3RHtRuj
+	OybySHp5fpKgi5utgP6p+gabdjeF0E0OF5bKeyc7Qc5IZYw2jFGlq2VZqsxE4aEjkn2SmFiR
+	OFIch14VhqmkSiZRmHw4NXJ/lsIzszAsR6oweFypUp1OuHtvglZt0DNhcrVOnyhkNDKFJloT
+	pZMqdQZVZpSK0ceLRaKXYzzC97LlQ6MuUjPI/WB+roudB7o4Z4AfB1LRsPxKOTgDuBw+1QHg
+	iDOP8BkrAA7XL4InRvFAG+txyoVTi5gv0Aagq2WV9Ab4lAvA/AcyL/OovdDoGsa9TFAvwlO2
+	i6TP/yy8Ve4gvBxAvQ8f/VIBvOxPJUJj0di6H6cC4aSjCvPyVkoI5+8PrHeBU7UE/Hp5yPMQ
+	h0NSO+GwyeDV+FER8I+1ReDLDYXfuypwrx5SFj9ou9C60XUytDknNtgf3u9rZvtYAN0LNtLH
+	2XBmbobwcS5svVa8oU+CeX+Ps7x1cU/dhvbdvlpbYNGqA/O6IcWDnxbyfertcLp0fiMzEM5+
+	XsPySWjYmx/kW1shAecmb2DnQZh501bMm6Y3b5rG/H/hakBYQRCj0SkzmfQYjVjFnHhy73S1
+	sgms/4jw5FYwXrUW1QMwDugBkIMLt/JKJ5Yz+DyZ9MOTjFYt0RoUjK4HxHjOU4ILAtLVni+l
+	0kvE0XGi6NjY2Oi4V2LFwkCe8/SXMj6VKdUz2QyjYbSP8zCOnyAPu6t/w3RTYqvr739hPN60
+	ULS9Pi05KoNu2HOwpb7/0dlBZ1JpGstwnpVfWddqMpUcGSvY8lffYpkycs+9whS3wGI/2t0u
+	LzwccbnT/hJ3ind89s6DHzJudqgGk+yX3vyoqzFn2BTvnzIYvFTC4L1zTWOSSt2BJSLtyvPJ
+	RdxdRMIzIfaoqw72ytsdx6dn7sVlPXXMOPFtMGkNKrB0GizD7bWjEe6COvaCQL6tDTydItDu
+	mJ2qoHszjLhAeSnnas3+fQG5K7f77gDn2csDq9VH/1zrzrX/XBJUFiIKbh4PPtHy+sBYEbeT
+	KGXsb6W8W2yrPBaaayzpPHlwh7UsIC30uXohoZNLxeG4Vif9D9ch+QCaBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRmVeSWpSXmKPExsWy7bCSnG5266c0gxeflC1W3+1ns3h9+BOj
+	xbQPP5kt/t99zmRx88BOJouVq48yWcye3sxk8WT9LGaLjf0cFo/vfGa3+LlsFbvFpEPXGC32
+	3tK2uLTI3WLP3pMsFvOXPWW36L6+g81i+fF/TBbbfs9ntlj3+j2Lxfm/x1ktzs+aw+4g5nH5
+	irfH+XsbWTymTTrF5nH5bKnHplWdbB6bl9R77F7wmclj980GNo+PT2+xePRtWcXocWbBEXaP
+	z5vkPDY9ecsUwBvFZZOSmpNZllqkb5fAlXH+ylu2gnNcFU8f7WNvYNzH0cXIySEhYCIxtek9
+	UxcjF4eQwHZGiUlTGtghEuISzdd+QNnCEiv/PWeHKHrNKLH/wkqwBK+AnUT32wvMIDaLgKpE
+	097pbBBxQYmTM5+wgNiiAkkSe+43MoHYwgK2Et2918HizEALbj2ZDxYXEVCSePrqLCPIAmaB
+	ZSwSB6e8hTqpjUXi/bKjQA4HB5uApsSFyaUgDZwCOhIv/71nhBhkJtG1tQvKlpfY/nYO8wRG
+	oVlI7piFZN8sJC2zkLQsYGRZxSiaWlCcm56bXGCoV5yYW1yal66XnJ+7iRGcCrSCdjAuW/9X
+	7xAjEwfjIUYJDmYlEd5JNz+mCfGmJFZWpRblxxeV5qQWH2KU5mBREudVzulMERJITyxJzU5N
+	LUgtgskycXBKNTAxZTk/npb9vf5JxJxFZb9sdj2UtDTnCmw+l8dk8PN8MC+T9RfWPctrZj9S
+	PX7t0yQ1jUUFqyMD9z5PDMopqF18XUXtz88XHkqdcqLX5XY/eOIh21hXIX36RapCxrUlBx12
+	MvA+qUg40M7/dIqBwcGpefNPVjzysw+7Y375/MlQhsXC1jv41+3i/HvW7W1SOvfJpwxdZzr9
+	95642n47dO0pn8n6f176ZOY2tFSHhOi8Dexm7V5YyXpQ6dHEbfl35D6dneP0b7uBi6Qov5tM
+	xJS3vfHv+G05uzawr63p3fv/2DbLYJ0Fi2/yN9rmbjtamu4e9ObqQ7uj8q5Lfp37G+FuW/D1
+	9Lu9U19esHq+otJFiaU4I9FQi7moOBEAityLA3QDAAA=
+X-CMS-MailID: 20240924092459epcas5p23e41d7dfa92acf415d9dab1d0e433842
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240910151057epcas5p3369c6257a6f169b4caa6dd59548b538c
+References: <CGME20240910151057epcas5p3369c6257a6f169b4caa6dd59548b538c@epcas5p3.samsung.com>
+	<20240910150200.6589-5-joshi.k@samsung.com> <20240912130235.GB28535@lst.de>
+	<e6ae5391-ae84-bae4-78ea-4983d04af69f@samsung.com>
+	<20240913080659.GA30525@lst.de>
+	<4a39215a-1b0e-3832-93bd-61e422705f8b@samsung.com>
+	<20240917062007.GA4170@lst.de>
+	<b438dddd-f940-dd2b-2a6c-a2dbbc4ee67f@samsung.com>
+	<20240918064258.GA32627@lst.de>
+	<197b2c1a-66d2-5f5a-c258-7e2f35eff8e4@samsung.com>
+	<20240918120159.GA20658@lst.de>
 
-Avoid waiting indefinitely for nvme passthru namespace block device
-to appear. Wait for up to 5 seconds and during this time if namespace
-block device doesn't appear then bail out and FAIL the test.
+On 9/18/2024 5:31 PM, Christoph Hellwig wrote:
+> On Wed, Sep 18, 2024 at 01:42:51PM +0530, Kanchan Joshi wrote:
+>> Would you prefer a new queue attribute (say nr_streams) that tells that?
+> 
+> No.  For one because using the same file descriptors as the one used
+> to set the hind actually makes it usable - finding the block device
+> does not.  And second as told about half a dozend time for this scheme
+> to actually work on a regular file the file system actually needs the
+> arbiter, as it can work on top of multiple block devices, consumes
+> streams, might export streams even if the underlying devices don't and
+> so on.
+> 
 
-Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
----
-Hi,
+FS managed/created hints is a different topic altogether, and honestly 
+that is not the scope of this series. That needs to be thought at per-FS 
+level due to different data/meta layouts.
+This scope of this series is to enable application-managed hints passing 
+through the file system. FS only needs to pass what it receives. No 
+active decision making (since application is doing that). Whether it 
+works fine or not - is application's problem. But due to the simplicity 
+it scales across filesystems. This is for the class of applications that 
+know about their data and have decided to be in control.
 
-You may find more details about this issue here[1]. 
-
-I found that blktest nvme/033-037 hangs indefinitely when 
-kernel rejects the passthru target namespace due to the 
-duplicate IDs. This patch helps address this issue by  
-ensuring that we bail out and fail the test if for any 
-reason passthru target namspace is not created on the 
-host. The relevant kernel patchv2 to fix the issue with 
-duplicate IDs while using passthru loop target can be
-found here[2].
-
-[1]: https://lore.kernel.org/all/8b17203f-ea4b-403b-a204-4fbc00c261ca@linux.ibm.com/
-[2]: https://lore.kernel.org/all/20240921070547.531991-1-nilay@linux.ibm.com/
-
-Thanks!
----
- tests/nvme/033 |  7 +++++--
- tests/nvme/034 |  7 +++++--
- tests/nvme/035 |  6 +++---
- tests/nvme/036 | 14 ++++++++------
- tests/nvme/037 |  6 +++++-
- tests/nvme/rc  | 12 +++++++++++-
- 6 files changed, 37 insertions(+), 15 deletions(-)
-
-diff --git a/tests/nvme/033 b/tests/nvme/033
-index 5e05175..171974e 100755
---- a/tests/nvme/033
-+++ b/tests/nvme/033
-@@ -62,8 +62,11 @@ test_device() {
- 	_nvmet_passthru_target_setup
- 
- 	nsdev=$(_nvmet_passthru_target_connect)
--
--	compare_dev_info "${nsdev}"
-+	if [[ -z "$nsdev" ]]; then
-+		echo "FAIL"
-+	else
-+		compare_dev_info "${nsdev}"
-+	fi
- 
- 	_nvme_disconnect_subsys
- 	_nvmet_passthru_target_cleanup
-diff --git a/tests/nvme/034 b/tests/nvme/034
-index 154fc91..7625204 100755
---- a/tests/nvme/034
-+++ b/tests/nvme/034
-@@ -32,8 +32,11 @@ test_device() {
- 
- 	_nvmet_passthru_target_setup
- 	nsdev=$(_nvmet_passthru_target_connect)
--
--	_run_fio_verify_io --size="${NVME_IMG_SIZE}" --filename="${nsdev}"
-+	if [[ -z "$nsdev" ]]; then
-+		echo "FAIL"
-+	else
-+		_run_fio_verify_io --size="${NVME_IMG_SIZE}" --filename="${nsdev}"
-+	fi
- 
- 	_nvme_disconnect_subsys
- 	_nvmet_passthru_target_cleanup
-diff --git a/tests/nvme/035 b/tests/nvme/035
-index ff217d6..6ad9c56 100755
---- a/tests/nvme/035
-+++ b/tests/nvme/035
-@@ -30,13 +30,13 @@ test_device() {
- 
- 	_setup_nvmet
- 
--	local ctrldev
- 	local nsdev
- 
- 	_nvmet_passthru_target_setup
- 	nsdev=$(_nvmet_passthru_target_connect)
--
--	if ! _xfs_run_fio_verify_io "${nsdev}" "${NVME_IMG_SIZE}"; then
-+	if [[ -z "$nsdev" ]]; then
-+		echo "FAIL"
-+	elif ! _xfs_run_fio_verify_io "${nsdev}" "${NVME_IMG_SIZE}"; then
- 		echo "FAIL: fio verify failed"
- 	fi
- 
-diff --git a/tests/nvme/036 b/tests/nvme/036
-index 442ffe7..a67ca12 100755
---- a/tests/nvme/036
-+++ b/tests/nvme/036
-@@ -30,13 +30,15 @@ test_device() {
- 
- 	_nvmet_passthru_target_setup
- 	nsdev=$(_nvmet_passthru_target_connect)
--
--	ctrldev=$(_find_nvme_dev "${def_subsysnqn}")
--
--	if ! nvme reset "/dev/${ctrldev}" >> "$FULL" 2>&1; then
--		echo "ERROR: reset failed"
-+	if [[ -z "$nsdev" ]]; then
-+		echo "FAIL"
-+	else
-+		ctrldev=$(_find_nvme_dev "${def_subsysnqn}")
-+
-+		if ! nvme reset "/dev/${ctrldev}" >> "$FULL" 2>&1; then
-+			echo "ERROR: reset failed"
-+		fi
- 	fi
--
- 	_nvme_disconnect_subsys
- 	_nvmet_passthru_target_cleanup
- 
-diff --git a/tests/nvme/037 b/tests/nvme/037
-index f7ddc2d..f0c8a77 100755
---- a/tests/nvme/037
-+++ b/tests/nvme/037
-@@ -27,7 +27,6 @@ test_device() {
- 
- 	local subsys="blktests-subsystem-"
- 	local iterations=10
--	local ctrldev
- 
- 	for ((i = 0; i < iterations; i++)); do
- 		_nvmet_passthru_target_setup --subsysnqn "${subsys}${i}"
-@@ -37,6 +36,11 @@ test_device() {
- 		_nvme_disconnect_subsys \
- 			--subsysnqn "${subsys}${i}" >>"${FULL}" 2>&1
- 		_nvmet_passthru_target_cleanup --subsysnqn "${subsys}${i}"
-+
-+		if [[ -z "$nsdev" ]]; then
-+			echo "FAIL"
-+			break
-+		fi
- 	done
- 
- 	echo "Test complete"
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index a877de3..3def0d0 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -394,6 +394,7 @@ _nvmet_passthru_target_setup() {
- 
- _nvmet_passthru_target_connect() {
- 	local subsysnqn="$def_subsysnqn"
-+	local timeout="5"
- 
- 	while [[ $# -gt 0 ]]; do
- 		case $1 in
-@@ -414,9 +415,18 @@ _nvmet_passthru_target_connect() {
- 	# The following tests can race with the creation
- 	# of the device so ensure the block device exists
- 	# before continuing
--	while [ ! -b "${nsdev}" ]; do sleep 1; done
-+	start_time=$(date +%s)
-+	while [ ! -b "${nsdev}" ]; do
-+		sleep .1
-+		end_time=$(date +%s)
-+		if ((end_time - start_time > timeout)); then
-+			echo ""
-+			return 1
-+		fi
-+	done
- 
- 	echo "${nsdev}"
-+	return 0
- }
- 
- _nvmet_passthru_target_cleanup() {
--- 
-2.45.2
-
+Regardless, since placement-hints are not getting the reception I 
+imagined, I will backtrack.
 
