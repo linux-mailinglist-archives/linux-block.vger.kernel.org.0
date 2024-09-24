@@ -1,100 +1,83 @@
-Return-Path: <linux-block+bounces-11849-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11856-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E6B6984019
-	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 10:15:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48B8498425F
+	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 11:39:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04E1A284961
-	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 08:15:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7C52280F42
+	for <lists+linux-block@lfdr.de>; Tue, 24 Sep 2024 09:39:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C1E8149C52;
-	Tue, 24 Sep 2024 08:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F79915575C;
+	Tue, 24 Sep 2024 09:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FukPoBfK"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Nuwkp8ND"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485A150276;
-	Tue, 24 Sep 2024 08:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0199215574F
+	for <linux-block@vger.kernel.org>; Tue, 24 Sep 2024 09:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727165748; cv=none; b=fxx/OOiATxnbp0LT0x7PylAcTUYveKotf3C9sLqQbM24Vc3LaWBCZAt7kPFvAaHkBhmbYx7rfPxRIQdyFMtZqJsCFh62CjbAx4jtlBpC6608a8ufpO5zyVjgyMhR+lOGxc3c5SRq4FFd/NREzfgUd4u0e015N++lOMDK+gIlQV0=
+	t=1727170776; cv=none; b=Zg/UnbN80EHnJbkbdcSVRXKA9jSLap20OBydwPp4p62lzwx3/0YxhZEqmNG9v8P1Va8e1SAsP0XKvmUKXlhuYBfRH9s5arVMlXBBuiSZWJcd5KsdYaQlf2TO2G8H2GOpJ4u2d6KmppsMd6fQh12OSu99cbAK37LDylSFaPmE3KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727165748; c=relaxed/simple;
-	bh=vSGXyxX6oOxCSJBz4sD8kNpYaTs7kKqybk7DzfvvCt4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GAGuuh1aMEGaxEwiy8zZJjIJteq8hCm7kNOaY81vjMSkzxwimBHdFf1/NzCLeX2c5rKO/vI+tbpJVK5Lw2qay81FFLKRDdylAWiJECLt2j4nskuQcUg8X5g5RUKkBMpNWZkfJiIjW3MBiLgsFe8wK5jbMXr4RjJJZWyAHesdo+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FukPoBfK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48O2RpDt023576;
-	Tue, 24 Sep 2024 08:15:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	en0OrIo1jP7PuqBMsu1Ct7FHd5WhkM4OW0+JX6esDAU=; b=FukPoBfKG2i48q1X
-	1wDfbMjHbEBozSGIzYDCdNmtv4riZyyEV+sV5Uvql7nBNejj9rPhi824MZ+qVoS4
-	4u6dcFIreFDSMOol1h8PkBoN8jeEATkXinaw7+u3ETkkZ9GaPcA8SCGPvl+Gb7aB
-	0m293IQslKDWGbO5EfX8dCWb/6sLXcLgQcj9ZYyHaZCyaldp6l+dJbrd4LcFGyYT
-	e9/1Y2cxgvWxw/R8ut56wn2wKdec50qkoTQ7sZ8I4aizsxqy2nB/NlYpojQkFsOc
-	Bf9h350K9ECqorkVPhLjK5Za7YwTClxQ6k+IEcyoa0K855NdE0IAI1eNRgchHUqV
-	RrromQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41skjrgp6s-1
+	s=arc-20240116; t=1727170776; c=relaxed/simple;
+	bh=RV7GOBkMD7Kztavn/z9JQF7Ken9p0b4/wZatHvse9Ew=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ga3gD8HTTNWRJdH2I/1/YxYs79SdpbUypAnqJEkozwhaMCaIJqZXwmBImZs3FWO0CU075eXrmBZbo0udPe16x4/1sNGZlK7WKqsHdeKsCsCzaxq7X+T4LLE1jWwdGaM7UVU/gYKQceDzOhXvFOvNoQMz3Ce9q4XKNHoWjZapRA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Nuwkp8ND; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48O0YH6c001659;
+	Tue, 24 Sep 2024 08:49:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=OFSXQdbU4eGt5D3bPR1JWE10TDEbBJ2tSqvS8uo
+	xnp0=; b=Nuwkp8NDGqmoS7YUpd/PWRhkXN313sqoroj+AyvoBbfztvED4CVrjJf
+	Bm6/BaC4T9LWKS8EfVvpQfvuLow1pk7ea6kXnZjFbEVg4OKR35hidjjyvq8rSdr+
+	2J+G8fTTy1x+gSqlkPJJPpLHbhSAdxKixJg7Q+w7acO4i4Hi8RRlrmZXTuu+9+JY
+	HnLPHWDx+kw4zxCQQfpMMHg8Dh3IJlnO+HvBtMeKJ7ay6p/nXg93UEdIk7nGgnss
+	vV37YZyS9Q0HC+IqvOz8i4YLvlGQCJEHI9GvhvBtrYn/xJ1J1I8Bu/6a5+qTnAs4
+	dCaKbfwa/UEBsWjpxLungNARllV1e2w==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snvb0pbq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 08:15:40 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48O8Fdeb006749;
-	Tue, 24 Sep 2024 08:15:40 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41skjrgp6p-1
+	Tue, 24 Sep 2024 08:49:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48O8HJfB005810;
+	Tue, 24 Sep 2024 08:49:14 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 41tapmaqnq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 08:15:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48O7o9dZ013933;
-	Tue, 24 Sep 2024 08:15:39 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41t9ymtq3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 08:15:39 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48O8FcVT27198042
+	Tue, 24 Sep 2024 08:49:13 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48O8nAQl53084584
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Sep 2024 08:15:38 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CE7A5805D;
-	Tue, 24 Sep 2024 08:15:38 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA6ED58059;
-	Tue, 24 Sep 2024 08:15:35 +0000 (GMT)
-Received: from [9.204.204.92] (unknown [9.204.204.92])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Sep 2024 08:15:35 +0000 (GMT)
-Message-ID: <d22cff1a-701d-4078-867d-d82caa943bab@linux.vnet.ibm.com>
-Date: Tue, 24 Sep 2024 13:45:34 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] zram: don't free statically defined names
-Content-Language: en-GB
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.ibm.com>
-References: <20240923164843.1117010-1-andrej.skvortzov@gmail.com>
- <20240924014241.GH38742@google.com>
-From: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
-In-Reply-To: <20240924014241.GH38742@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+	Tue, 24 Sep 2024 08:49:10 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5FA6520040;
+	Tue, 24 Sep 2024 08:49:10 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0975C20043;
+	Tue, 24 Sep 2024 08:49:09 +0000 (GMT)
+Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.171.42.77])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 24 Sep 2024 08:49:08 +0000 (GMT)
+From: Nilay Shroff <nilay@linux.ibm.com>
+To: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
+Cc: shinichiro.kawasaki@wdc.com, martin.wilck@suse.com, gjoyce@linux.ibm.com,
+        Nilay Shroff <nilay@linux.ibm.com>
+Subject: [PATCH blktests] nvme/{033-037}: timeout while waiting for nvme passthru namespace device
+Date: Tue, 24 Sep 2024 14:18:45 +0530
+Message-ID: <20240924084907.143999-1-nilay@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LILgiBblAokMJKO6uowWvrf4iMi37SFI
-X-Proofpoint-ORIG-GUID: bC6rzon100RjJ8KmFnzah6Sezjtt_6rD
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: usYr5aIqkuBN2luRweNOciY43CHZP7MY
+X-Proofpoint-GUID: usYr5aIqkuBN2luRweNOciY43CHZP7MY
+Content-Transfer-Encoding: 8bit
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -105,56 +88,184 @@ MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-24_02,2024-09-23_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- spamscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
- clxscore=1011 malwarescore=0 mlxlogscore=701 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409240053
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 spamscore=0 mlxscore=0
+ adultscore=0 impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409240061
 
-Please add below tages to the patch.
+Avoid waiting indefinitely for nvme passthru namespace block device
+to appear. Wait for up to 5 seconds and during this time if namespace
+block device doesn't appear then bail out and FAIL the test.
 
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+---
+Hi,
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+You may find more details about this issue here[1]. 
 
-Refer: 
-https://lore.kernel.org/lkml/57130e48-dbb6-4047-a8c7-ebf5aaea93f4@linux.vnet.ibm.com/
+I found that blktest nvme/033-037 hangs indefinitely when 
+kernel rejects the passthru target namespace due to the 
+duplicate IDs. This patch helps address this issue by  
+ensuring that we bail out and fail the test if for any 
+reason passthru target namspace is not created on the 
+host. The relevant kernel patchv2 to fix the issue with 
+duplicate IDs while using passthru loop target can be
+found here[2].
 
-Regards,
+[1]: https://lore.kernel.org/all/8b17203f-ea4b-403b-a204-4fbc00c261ca@linux.ibm.com/
+[2]: https://lore.kernel.org/all/20240921070547.531991-1-nilay@linux.ibm.com/
 
-Venkat.
+Thanks!
+---
+ tests/nvme/033 |  7 +++++--
+ tests/nvme/034 |  7 +++++--
+ tests/nvme/035 |  6 +++---
+ tests/nvme/036 | 14 ++++++++------
+ tests/nvme/037 |  6 +++++-
+ tests/nvme/rc  | 12 +++++++++++-
+ 6 files changed, 37 insertions(+), 15 deletions(-)
 
-On 24/09/24 7:12 am, Sergey Senozhatsky wrote:
-> On (24/09/23 19:48), Andrey Skvortsov wrote:
->> When CONFIG_ZRAM_MULTI_COMP isn't set ZRAM_SECONDARY_COMP can hold
->> default_compressor, because it's the same offset as ZRAM_PRIMARY_COMP,
->> so we need to make sure that we don't attempt to kfree() the
->> statically defined compressor name.
->>
->> This is detected by KASAN.
->>
->> ==================================================================
->>    Call trace:
->>     kfree+0x60/0x3a0
->>     zram_destroy_comps+0x98/0x198 [zram]
->>     zram_reset_device+0x22c/0x4a8 [zram]
->>     reset_store+0x1bc/0x2d8 [zram]
->>     dev_attr_store+0x44/0x80
->>     sysfs_kf_write+0xfc/0x188
->>     kernfs_fop_write_iter+0x28c/0x428
->>     vfs_write+0x4dc/0x9b8
->>     ksys_write+0x100/0x1f8
->>     __arm64_sys_write+0x74/0xb8
->>     invoke_syscall+0xd8/0x260
->>     el0_svc_common.constprop.0+0xb4/0x240
->>     do_el0_svc+0x48/0x68
->>     el0_svc+0x40/0xc8
->>     el0t_64_sync_handler+0x120/0x130
->>     el0t_64_sync+0x190/0x198
->> ==================================================================
->>
->> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
->> Fixes: 684826f8271a ("zram: free secondary algorithms names")
->> Cc: <stable@vger.kernel.org>
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+diff --git a/tests/nvme/033 b/tests/nvme/033
+index 5e05175..171974e 100755
+--- a/tests/nvme/033
++++ b/tests/nvme/033
+@@ -62,8 +62,11 @@ test_device() {
+ 	_nvmet_passthru_target_setup
+ 
+ 	nsdev=$(_nvmet_passthru_target_connect)
+-
+-	compare_dev_info "${nsdev}"
++	if [[ -z "$nsdev" ]]; then
++		echo "FAIL"
++	else
++		compare_dev_info "${nsdev}"
++	fi
+ 
+ 	_nvme_disconnect_subsys
+ 	_nvmet_passthru_target_cleanup
+diff --git a/tests/nvme/034 b/tests/nvme/034
+index 154fc91..7625204 100755
+--- a/tests/nvme/034
++++ b/tests/nvme/034
+@@ -32,8 +32,11 @@ test_device() {
+ 
+ 	_nvmet_passthru_target_setup
+ 	nsdev=$(_nvmet_passthru_target_connect)
+-
+-	_run_fio_verify_io --size="${NVME_IMG_SIZE}" --filename="${nsdev}"
++	if [[ -z "$nsdev" ]]; then
++		echo "FAIL"
++	else
++		_run_fio_verify_io --size="${NVME_IMG_SIZE}" --filename="${nsdev}"
++	fi
+ 
+ 	_nvme_disconnect_subsys
+ 	_nvmet_passthru_target_cleanup
+diff --git a/tests/nvme/035 b/tests/nvme/035
+index ff217d6..6ad9c56 100755
+--- a/tests/nvme/035
++++ b/tests/nvme/035
+@@ -30,13 +30,13 @@ test_device() {
+ 
+ 	_setup_nvmet
+ 
+-	local ctrldev
+ 	local nsdev
+ 
+ 	_nvmet_passthru_target_setup
+ 	nsdev=$(_nvmet_passthru_target_connect)
+-
+-	if ! _xfs_run_fio_verify_io "${nsdev}" "${NVME_IMG_SIZE}"; then
++	if [[ -z "$nsdev" ]]; then
++		echo "FAIL"
++	elif ! _xfs_run_fio_verify_io "${nsdev}" "${NVME_IMG_SIZE}"; then
+ 		echo "FAIL: fio verify failed"
+ 	fi
+ 
+diff --git a/tests/nvme/036 b/tests/nvme/036
+index 442ffe7..a67ca12 100755
+--- a/tests/nvme/036
++++ b/tests/nvme/036
+@@ -30,13 +30,15 @@ test_device() {
+ 
+ 	_nvmet_passthru_target_setup
+ 	nsdev=$(_nvmet_passthru_target_connect)
+-
+-	ctrldev=$(_find_nvme_dev "${def_subsysnqn}")
+-
+-	if ! nvme reset "/dev/${ctrldev}" >> "$FULL" 2>&1; then
+-		echo "ERROR: reset failed"
++	if [[ -z "$nsdev" ]]; then
++		echo "FAIL"
++	else
++		ctrldev=$(_find_nvme_dev "${def_subsysnqn}")
++
++		if ! nvme reset "/dev/${ctrldev}" >> "$FULL" 2>&1; then
++			echo "ERROR: reset failed"
++		fi
+ 	fi
+-
+ 	_nvme_disconnect_subsys
+ 	_nvmet_passthru_target_cleanup
+ 
+diff --git a/tests/nvme/037 b/tests/nvme/037
+index f7ddc2d..f0c8a77 100755
+--- a/tests/nvme/037
++++ b/tests/nvme/037
+@@ -27,7 +27,6 @@ test_device() {
+ 
+ 	local subsys="blktests-subsystem-"
+ 	local iterations=10
+-	local ctrldev
+ 
+ 	for ((i = 0; i < iterations; i++)); do
+ 		_nvmet_passthru_target_setup --subsysnqn "${subsys}${i}"
+@@ -37,6 +36,11 @@ test_device() {
+ 		_nvme_disconnect_subsys \
+ 			--subsysnqn "${subsys}${i}" >>"${FULL}" 2>&1
+ 		_nvmet_passthru_target_cleanup --subsysnqn "${subsys}${i}"
++
++		if [[ -z "$nsdev" ]]; then
++			echo "FAIL"
++			break
++		fi
+ 	done
+ 
+ 	echo "Test complete"
+diff --git a/tests/nvme/rc b/tests/nvme/rc
+index a877de3..3def0d0 100644
+--- a/tests/nvme/rc
++++ b/tests/nvme/rc
+@@ -394,6 +394,7 @@ _nvmet_passthru_target_setup() {
+ 
+ _nvmet_passthru_target_connect() {
+ 	local subsysnqn="$def_subsysnqn"
++	local timeout="5"
+ 
+ 	while [[ $# -gt 0 ]]; do
+ 		case $1 in
+@@ -414,9 +415,18 @@ _nvmet_passthru_target_connect() {
+ 	# The following tests can race with the creation
+ 	# of the device so ensure the block device exists
+ 	# before continuing
+-	while [ ! -b "${nsdev}" ]; do sleep 1; done
++	start_time=$(date +%s)
++	while [ ! -b "${nsdev}" ]; do
++		sleep .1
++		end_time=$(date +%s)
++		if ((end_time - start_time > timeout)); then
++			echo ""
++			return 1
++		fi
++	done
+ 
+ 	echo "${nsdev}"
++	return 0
+ }
+ 
+ _nvmet_passthru_target_cleanup() {
+-- 
+2.45.2
+
 
