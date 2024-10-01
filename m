@@ -1,71 +1,50 @@
-Return-Path: <linux-block+bounces-11989-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-11993-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6002698B729
-	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2024 10:38:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9436998B787
+	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2024 10:50:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1193F28398E
-	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2024 08:38:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0836AB22C21
+	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2024 08:50:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4777119C547;
-	Tue,  1 Oct 2024 08:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g5SB8AL+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F02C419DF8D;
+	Tue,  1 Oct 2024 08:48:29 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8E419ADB6;
-	Tue,  1 Oct 2024 08:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C64419DF9A;
+	Tue,  1 Oct 2024 08:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727771880; cv=none; b=mBBgbdwtXscvsQ0CvhUpQCfP+HaYms46NqEiHE/amHtgI2VDJiN+FPu3f+Sr9jZlusag9nO1ejsMMdtAQ9g7qEHDo+hhF3iSwoMuw/t3kpwWxoEWEGrtq0XRRFZ61OndxOPfg7/nRrNIsu+n4nRs9JS4e0TrpfajaR4NNo5lMlU=
+	t=1727772509; cv=none; b=EdmoAtcyvZS9Jxkh3sC5lxiO68gqrvjjxvbru9NwY+uL4DzmxwxZnFwy/TN1jM0sHt124PqU4J/ufpt5UX3nLxGoBBasFO7yuyRs3fGarWAdVn9+bnIPisbvV74Ue4trh6qi5CIOWrq+Z0Nc/9L5CBudWOnjXo9tJHQpmQX5/7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727771880; c=relaxed/simple;
-	bh=kG+EL0rn+XcyRx2CbdffaboTJsLP+hsn1SasbxStq3I=;
+	s=arc-20240116; t=1727772509; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bFLFksSI+NlKk637x+xbfzfajshwGLOE4dQVE+BdP1Z9bhedOEH7S3jEgo55OYt7gvYl6gulPhawacJkD2AmEiq2TgnsTi5AEaVKjw9KFzkRIuDYLfpyARvxzcSOgiAYPsacOUDjKzIgTuwAyubxc6yXhNU9EC8tac85+OzpmzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g5SB8AL+; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qXoOcYfzZE6E6pgaLVSBFi51h/CsL3grM8P/EAXiFLw=; b=g5SB8AL+kYZylbyKBCQIZhHkFF
-	VMAUyHANorRK7W5JUUhuXxQIhlJ93M7+FfLAs0MHwW3tElzaqWCoiYRuon+z1XJYoEVIWvImfVuOL
-	uvCceEAqQB820eH8cfbh8udPHdLfA/4jFisbhZjnsVtWbvDhX3/tliZ1S6bkELOi44wRkdgBjM+tq
-	ZtrUxuAEOR5B3V63qg8zUTnItzRXLZTMzArHFaQNBoxSj9pm1kEmspy1TGT8yNp7yAEDtPMAYUShR
-	bBVVEvnCkbis0P4SGiqp6TCnupAgSSWqpCNPXJOCnWOkIL8DTmcyozQoXAqJxFSWz7b3Ek4XUSpVv
-	/tXAAW8Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1svYOG-000000024pT-2OIF;
-	Tue, 01 Oct 2024 08:37:52 +0000
-Date: Tue, 1 Oct 2024 01:37:52 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
-	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
-	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
-	ulf.hansson@linaro.org, andersson@kernel.org,
-	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-Message-ID: <Zvu04AYu0zUEvjBs@infradead.org>
-References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
- <20240916085741.1636554-2-quic_mdalam@quicinc.com>
- <20240921185519.GA2187@quark.localdomain>
- <ZvJt9ceeL18XKrTc@infradead.org>
- <20240924220434.GB1585@sol.localdomain>
+	 Content-Type:Content-Disposition:In-Reply-To; b=csilEM9JUcGhRWJ/43elaWD7AaATYPhqrhFQv1ssWcvE3gtrgS0L4ozHRl/brEBiPQO+qzgquaN+kh17eRY0YNLUD6olDG7h78cGwqtic3pcUU8nZ6TafRbvq99/U71y99O4PqyVZU/Ct+hx6/i1Fz44lxZ1fc9nlbAkCLEq8Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 10C4C227A87; Tue,  1 Oct 2024 10:39:12 +0200 (CEST)
+Date: Tue, 1 Oct 2024 10:39:11 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, dchinner@redhat.com,
+	hch@lst.de, cem@kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, hare@suse.de,
+	martin.petersen@oracle.com, catherine.hoang@oracle.com,
+	mcgrof@kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com
+Subject: Re: [PATCH v6 1/7] block/fs: Pass an iocb to
+ generic_atomic_write_valid()
+Message-ID: <20241001083911.GA20648@lst.de>
+References: <20240930125438.2501050-1-john.g.garry@oracle.com> <20240930125438.2501050-2-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -74,14 +53,11 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240924220434.GB1585@sol.localdomain>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20240930125438.2501050-2-john.g.garry@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Sep 24, 2024 at 03:04:34PM -0700, Eric Biggers wrote:
-> What about a block device ioctl, as was previously proposed
-> (https://lore.kernel.org/linux-block/1658316391-13472-1-git-send-email-israelr@nvidia.com/T/#u)?
+Looks good:
 
-No.  This is a file system layer policy and needs to sit entirely above
-the block layer instead of breaking abstraction boundaries.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
