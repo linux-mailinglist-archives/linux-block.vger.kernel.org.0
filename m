@@ -1,237 +1,136 @@
-Return-Path: <linux-block+bounces-12083-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12085-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E101B98E49B
-	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 23:08:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57FF198E5D0
+	for <lists+linux-block@lfdr.de>; Thu,  3 Oct 2024 00:10:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C1851F224BD
-	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 21:08:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D4AEAB22BFC
+	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 22:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421B41D1E60;
-	Wed,  2 Oct 2024 21:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E49194A4C;
+	Wed,  2 Oct 2024 22:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ZlWn2Vsy"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BOtRigmJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f227.google.com (mail-qk1-f227.google.com [209.85.222.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D23216A3E
-	for <linux-block@vger.kernel.org>; Wed,  2 Oct 2024 21:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68BE198858
+	for <linux-block@vger.kernel.org>; Wed,  2 Oct 2024 22:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727903281; cv=none; b=U3HrzWbFrxOOvd7tG7xxoslBqQ2n26dmd3n0gEKRzgKGZtkNbZj4wU0btfQYxpJFruK5RcGrysvYItlLKTPcGwmRDhYReJeKPZ5navkdRUUCa7fmeY2jckWFGxsH4o9fW0U8P5AYwCK0fIZcWrggWkZwGJNGjQ+GGG8bU6ECvvM=
+	t=1727906995; cv=none; b=JgX7R+mC5zl/CDwsNXmtKv+PI/ACLPhYXeAARAkns9aU+rxncSnoopwKoh2pwqJ+mXu8pYIBh8bfaX4iaxFb+xKLLUgTOFTC7JUNSI6xUuzuXv9GqxruovAd3nGuYhStPTg/9rqfWMOHrPa/1M0VTTwGtYJtpMWWdW1rl+TtqmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727903281; c=relaxed/simple;
-	bh=uIU9/dvL8/00wNevP6Qa65WaqGjvlFsIsh0/t0VoZaY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WJV9ogJmxXcwc29zWT8snaUx1FG6r2aOEBJKSGx8NCus2aVHZ0/xFoIKOtkgEdSW5JdkK0/NFRFrONU6eug+K0dV/KF+/CUeiT4rqFweEXukOJdeYW35P1e+3fWb+B0JTh6IqaxvVidy+4uG8mqchUvwz93zMbUsFZBv0FZDlRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ZlWn2Vsy; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 492KQ5lj021768
-	for <linux-block@vger.kernel.org>; Wed, 2 Oct 2024 14:07:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=s2048-2021-q4; bh=BSv
-	1UtrntDyJE+pBH0762wAgPVpHlECcxkaxdgUXrQQ=; b=ZlWn2Vsy6QzyuLKo0r3
-	urtIKNNbTd7pGfmBiLKU2sSewjZ+juImlNp4hl0KVrg0e8Ex7uMGxymSbETRX/iO
-	A9/+H9wJ3Z/+HYQyKL/Y4yFtQwX7iW9MGeHHCdTGRWpa6kbtVwRKtoOm7fAiNDdM
-	haDwA6xMyadZBhzMgZI+s0ZcrFoM5hogISAG1D5ebn1Ef3MTyP7VpIUTYfd5vlBk
-	xQyosIudxF/xkAaIjXEOzURqH1ml7R8+SDFqz4kqmtxE8FA5tG8BYC7tGmMKTQ7g
-	TRQji9rGn1aa1WYyMuKeFBjkfDxbQO5zHJSggkkxzoibxNv7m1ssSSLnmj/teLjG
-	X8w==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 42163x3fwk-5
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Wed, 02 Oct 2024 14:07:57 -0700 (PDT)
-Received: from twshared23455.15.frc2.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Wed, 2 Oct 2024 21:07:52 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 0D39D13B8B09E; Wed,  2 Oct 2024 14:07:44 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-CC: <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH] block: enable passthrough command statistics
-Date: Wed, 2 Oct 2024 14:07:44 -0700
-Message-ID: <20241002210744.72321-1-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1727906995; c=relaxed/simple;
+	bh=45UR2z5wJFRmcL5gk335pr++TR817+wINiqq673xlkg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ovy4595mhB0hsaBqpQS8LU3hLTRapHCMqAWYthX2nrC+Qqm/yUAOXNJbScypAbcpp9AXCt98+9HX59xHI2Q1vzNWTWVEBV8lpaKV4H013WeCxYPP/GJp4u5dr4OVzqxOiWJ/BV9WEDu81ge3JMBIWRT8GbjKjL1JtYAOZ63S0U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BOtRigmJ; arc=none smtp.client-ip=209.85.222.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-qk1-f227.google.com with SMTP id af79cd13be357-7a99fd4ea26so25650685a.1
+        for <linux-block@vger.kernel.org>; Wed, 02 Oct 2024 15:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1727906993; x=1728511793; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6afvH3qs06X8hpCRvtEWaOTzwuCuJbSy0eO5PWmZw4=;
+        b=BOtRigmJDoQqnvV36Q5DmVwP7U7KUnwpITa4OmonvZSLUXSXX/j8Ls32T8gFOXquVO
+         /ByORQXWA+uvJ3HOwsQiv/VOvZUCLuFtLWn8NXjLiMPyw+/bn94+deiZ/YGAkcn8uhw8
+         v8z9Enb72j/IGEAMXKC7nUlQP/qlwpr+9iIwfSut+fsomDKJOw5CNEFPKWJxENpmjhUH
+         7esltowfmjGN72p4wSC+y3EXmQ70d3uhTEkj0E0JByLgq8QGShoUk7uYhrl5JF5SKCma
+         3mXJPwHpIxh9PZMQ2Z5PP8dzlynd+ezRaVXiByuE1L+pqTcCKD7xEVbX/oHJTDMrDHKC
+         LzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727906993; x=1728511793;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E6afvH3qs06X8hpCRvtEWaOTzwuCuJbSy0eO5PWmZw4=;
+        b=smfiXuRZ03OVCSCtL8db9UFCyAFaJSQVzQvh9NPIOuEDn+CenZmt8DydTdqHpG81sW
+         7KN1Bgj6I7150TtXdMLmKe0y2MvEj6iu3ct2qDlFaN5y+SyGCqbcnXfXTJTPb1RLLlVz
+         lqs8gzOzbaFhmGxhd3DGxY0KAMyktEDkyqpM5/W8WMv6V5HfncD9Yo7zmWYwXDWzHj1d
+         C5pZ1LY1AVtWpYl9AmHaHavLUiOS3PchrF32c1XHlXprhT0toyAM96jw6KcU455QmbG9
+         ZFRXdaMoXabP8lAgj/g9uYPfZXgge1N6VWLCiC5iRX3TzIKnjlg3VgHIe2XqOeTkPT4d
+         SkPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNc6mKESutR3aJJos+dAAkpQJ/NMWddcTR1ihsDy/7+H9LqWtFvou+oOWpMLmeP+nRB280Tmf6XQpwdg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC3d8TAJ+vZJZNbLQEREkUM0GhUgJ6l5dv7vjtzAHKd188ulFX
+	fHgwGQBA/9mghXa7Y3S8pAHREFsWkz0vxR3/TjQBl9SHlgPvGHDZl8fdcgRU44tncK0Kxekw748
+	wzX32h+LGSyBB5wQnfpjMt0Apa5g/JwBtDRQtA8Vz9tlx6dzJ
+X-Google-Smtp-Source: AGHT+IErAuuAS4AEKksBar0VPbp/w8pPakVM0GvxWsDzOW5pG2w6io++eRe/B1AB+2yvwEddJxlqge5cC6VQ
+X-Received: by 2002:a05:6214:2f10:b0:6cb:79ce:bdef with SMTP id 6a1803df08f44-6cb819e0b24mr57547526d6.14.1727906992626;
+        Wed, 02 Oct 2024 15:09:52 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6cb3b606b95sm4066646d6.8.2024.10.02.15.09.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 15:09:52 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5B8AD340357;
+	Wed,  2 Oct 2024 16:09:51 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 4BC9FE413BF; Wed,  2 Oct 2024 16:09:51 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v3 0/5] ublk: support device recovery without I/O queueing
+Date: Wed,  2 Oct 2024 16:09:44 -0600
+Message-Id: <20241002220949.3087902-1-ushankar@purestorage.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: TbyqSYcmZdE-q4VxXi662jplc6IuHAHz
-X-Proofpoint-ORIG-GUID: TbyqSYcmZdE-q4VxXi662jplc6IuHAHz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-02_21,2024-09-30_01,2024-09-30_01
+Content-Transfer-Encoding: 8bit
 
-From: Keith Busch <kbusch@kernel.org>
+ublk currently supports the following behaviors on ublk server exit:
 
-Applications using the passthrough interfaces for advance protocol IO
-want to continue seeing the disk stats. These requests had been fenced
-off from this block layer feature. While the block layer doesn't
-necessarily know what a passthrough command does, we do know the data
-size and direction, which is enough to account for the command's stats.
+A: outstanding I/Os get errors, subsequently issued I/Os get errors
+B: outstanding I/Os get errors, subsequently issued I/Os queue
+C: outstanding I/Os get reissued, subsequently issued I/Os queue
 
-Since tracking these has the potential to produce unexpected results,
-the passthrough stats are locked behind a new queue feature flag that
-needs to be enabled using the /sys/block/<dev>/queue/iostats attribute.
+and the following behaviors for recovery of preexisting block devices by
+a future incarnation of the ublk server:
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
-This is based off the recently created for-6.13/block tree here:
+1: ublk devices stopped on ublk server exit (no recovery possible)
+2: ublk devices are recoverable using start/end_recovery commands
 
-  https://git.kernel.dk/cgit/linux-block/log/?h=3Dfor-6.13/block
+The userspace interface allows selection of combinations of these
+behaviors using flags specified at device creation time, namely:
 
- Documentation/ABI/stable/sysfs-block |  4 +++-
- block/blk-mq.c                       | 17 +++++++++++++-
- block/blk-sysfs.c                    | 35 +++++++++++++++++++++++++++-
- include/linux/blkdev.h               |  4 ++++
- 4 files changed, 57 insertions(+), 3 deletions(-)
+default behavior: A + 1
+UBLK_F_USER_RECOVERY: B + 2
+UBLK_F_USER_RECOVERY|UBLK_F_USER_RECOVERY_REISSUE: C + 2
 
-diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/sta=
-ble/sysfs-block
-index cea8856f798dd..bcf6ebedc9199 100644
---- a/Documentation/ABI/stable/sysfs-block
-+++ b/Documentation/ABI/stable/sysfs-block
-@@ -422,7 +422,9 @@ Date:		January 2009
- Contact:	linux-block@vger.kernel.org
- Description:
- 		[RW] This file is used to control (on/off) the iostats
--		accounting of the disk.
-+		accounting of the disk. Set to 0 to disable all stats. Set to 1
-+		to enable block IO stats. Set to 2 to enable passthrough stats
-+		in addition to block IO.
-=20
-=20
- What:		/sys/block/<disk>/queue/logical_block_size
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ee6cde39e52b7..55809f4bd09e3 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -994,13 +994,28 @@ static inline void blk_account_io_done(struct reque=
-st *req, u64 now)
- 	}
- }
-=20
-+static inline bool blk_rq_passthrough_stats(struct request *req)
-+{
-+	struct bio *bio =3D req->bio;
-+
-+	if (!blk_queue_passthrough_stat(req->q))
-+		return false;
-+	if (!bio)
-+		return false;
-+	if (!bio->bi_bdev)
-+		return false;
-+	if (blk_rq_bytes(req) & (bdev_logical_block_size(bio->bi_bdev) - 1))
-+		return false;
-+	return true;
-+}
-+
- static inline void blk_account_io_start(struct request *req)
- {
- 	trace_block_io_start(req);
-=20
- 	if (!blk_queue_io_stat(req->q))
- 		return;
--	if (blk_rq_is_passthrough(req))
-+	if (blk_rq_is_passthrough(req) && !blk_rq_passthrough_stats(req))
- 		return;
-=20
- 	req->rq_flags |=3D RQF_IO_STAT;
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index e85941bec857b..99f438beb6c67 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -246,7 +246,6 @@ static ssize_t queue_##_name##_store(struct gendisk *=
-disk,		\
-=20
- QUEUE_SYSFS_FEATURE(rotational, BLK_FEAT_ROTATIONAL)
- QUEUE_SYSFS_FEATURE(add_random, BLK_FEAT_ADD_RANDOM)
--QUEUE_SYSFS_FEATURE(iostats, BLK_FEAT_IO_STAT)
- QUEUE_SYSFS_FEATURE(stable_writes, BLK_FEAT_STABLE_WRITES);
-=20
- #define QUEUE_SYSFS_FEATURE_SHOW(_name, _feature)			\
-@@ -272,6 +271,40 @@ static ssize_t queue_nr_zones_show(struct gendisk *d=
-isk, char *page)
- 	return queue_var_show(disk_nr_zones(disk), page);
- }
-=20
-+static ssize_t queue_iostats_show(struct gendisk *disk, char *page)
-+{
-+	return queue_var_show((bool)blk_queue_passthrough_stat(disk->queue) +
-+			      (bool)blk_queue_io_stat(disk->queue), page);
-+}
-+
-+static ssize_t queue_iostats_store(struct gendisk *disk, const char *pag=
-e,
-+				   size_t count)
-+{
-+	struct queue_limits lim;
-+	unsigned long ios;
-+	ssize_t ret;
-+
-+	ret =3D queue_var_store(&ios, page, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	lim =3D queue_limits_start_update(disk->queue);
-+	if (!ios)
-+		lim.features &=3D ~(BLK_FEAT_IO_STAT | BLK_FEAT_PASSTHROUGH_STAT);
-+	else if (ios =3D=3D 2)
-+		lim.features |=3D BLK_FEAT_IO_STAT | BLK_FEAT_PASSTHROUGH_STAT;
-+	else if (ios =3D=3D 1) {
-+		lim.features |=3D BLK_FEAT_IO_STAT;
-+		lim.features &=3D ~BLK_FEAT_PASSTHROUGH_STAT;
-+	}
-+
-+	ret =3D queue_limits_commit_update(disk->queue, &lim);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
- static ssize_t queue_nomerges_show(struct gendisk *disk, char *page)
- {
- 	return queue_var_show((blk_queue_nomerges(disk->queue) << 1) |
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 50c3b959da281..9a66334a6e356 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -332,6 +332,8 @@ typedef unsigned int __bitwise blk_features_t;
- #define BLK_FEAT_RAID_PARTIAL_STRIPES_EXPENSIVE \
- 	((__force blk_features_t)(1u << 15))
-=20
-+#define BLK_FEAT_PASSTHROUGH_STAT	((__force blk_features_t)(1u << 16))
-+
- /*
-  * Flags automatically inherited when stacking limits.
-  */
-@@ -617,6 +619,8 @@ void blk_queue_flag_clear(unsigned int flag, struct r=
-equest_queue *q);
- 	test_bit(QUEUE_FLAG_NOXMERGES, &(q)->queue_flags)
- #define blk_queue_nonrot(q)	(!((q)->limits.features & BLK_FEAT_ROTATIONA=
-L))
- #define blk_queue_io_stat(q)	((q)->limits.features & BLK_FEAT_IO_STAT)
-+#define blk_queue_passthrough_stat(q)	\
-+	((q)->limits.features & BLK_FEAT_PASSTHROUGH_STAT)
- #define blk_queue_dax(q)	((q)->limits.features & BLK_FEAT_DAX)
- #define blk_queue_pci_p2pdma(q)	((q)->limits.features & BLK_FEAT_PCI_P2P=
-DMA)
- #ifdef CONFIG_BLK_RQ_ALLOC_TIME
---=20
-2.43.5
+A + 2 is a currently unsupported behavior. This patch series aims to add
+support for it.
+
+Userspace support and testing for this flag are available at:
+https://github.com/ublk-org/ublksrv/pull/73
+
+Uday Shankar (5):
+  ublk: check recovery flags for validity
+  ublk: refactor recovery configuration flag helpers
+  ublk: merge stop_work and quiesce_work
+  ublk: support device recovery without I/O queueing
+  Documentation: ublk: document UBLK_F_USER_RECOVERY_FAIL_IO
+
+ Documentation/block/ublk.rst  |  24 +++--
+ drivers/block/ublk_drv.c      | 191 +++++++++++++++++++++++-----------
+ include/uapi/linux/ublk_cmd.h |  18 ++++
+ 3 files changed, 165 insertions(+), 68 deletions(-)
+
+
+base-commit: 52d980df51c607867e40e11eef125cb51f8769a5
+-- 
+2.34.1
 
 
