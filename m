@@ -1,123 +1,127 @@
-Return-Path: <linux-block+bounces-12056-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12059-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBA4398DE03
-	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 16:55:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1665198DE47
+	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 17:03:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 981511F218E3
-	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 14:55:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD44C281177
+	for <lists+linux-block@lfdr.de>; Wed,  2 Oct 2024 15:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DB91D0F43;
-	Wed,  2 Oct 2024 14:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F4DC79D0;
+	Wed,  2 Oct 2024 15:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="muXarhqC"
+	dkim=pass (2048-bit key) header.d=geexology.org header.i=@geexology.org header.b="YT7urD2c"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EA61E892
-	for <linux-block@vger.kernel.org>; Wed,  2 Oct 2024 14:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBF010E9
+	for <linux-block@vger.kernel.org>; Wed,  2 Oct 2024 15:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727880756; cv=none; b=CEuKOTNtoT5+Uy2RZ6ia0rgaOOLkv8IHidRW6scemANkJ8Y07MTpwB9Qc4ovHushCDvtFV74p14BLboWZ35CV95MX/VVxF/EexLA7P3z3EgdM0nsRWNkYIVKDjpw74EvHfAVuMxZWUDvCf8ckl4K2d0CC9+5/WjnIGQJZcIM1H0=
+	t=1727881397; cv=none; b=N0xdsekUffJ6/sxCCSJsMIvcdzXmCmxO81pqgN2svGWhf+WungtejbBqkSu1ZWQzaJqz6RI57K7ciVtwEo4fLwSFowsCG50ftUU1Lhqr+jFZb2IldZc4mvAykXG7qomw3GxcDXOu1QdVDIQaDUtVBJDfC3aIXB4espX839XTvvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727880756; c=relaxed/simple;
-	bh=7Eecab9W9O8J2c0mz3Jjl0PiWNnIAHMdaQcGLACoUWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Req77VD6IJUWofXC8LHIpsdb1WKEscelPLgsi0YGdW7y/rTtR0hbWc9paXYyScdEL5M6omIeE8WOmPKBM7xdUzLgO0ZxcRKdwo+c6FOOb10MtLJpNURMgd+vxc8YGkNYNAxRS4OTC2ZysTdZXK6nSUDlrAE7ehyLQJqen1xfiX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=muXarhqC; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-82aa6be8457so33693739f.0
-        for <linux-block@vger.kernel.org>; Wed, 02 Oct 2024 07:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1727880752; x=1728485552; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RE3jwLRIcca02DnRrcz1K5ebgHznFKMdpmHOaNwDBuQ=;
-        b=muXarhqCavX7PZEbmBI3vs+V5X/AVVG7JxqG02h2HslyhOUIfRtjdPMzJb7WKpoaBI
-         cAU0E5FDdTooPJL9DSVwyzZg5jd7MyJPyJ1Q17aw/GcQoyoP3VRdb0a0vISWy9UTVG7V
-         /RobB4y9HihRm1gwhu0JYl+d3FW+QIlFdofZ3SQPcTawFjLu9+pQWp5LR18qOSluTQyP
-         dBkSgjoMxgjGv8Ceb3+aiPsVEcW16y8Qoud63xWwnoslcrRIFoOk3iZbCU6BuO8rdr/w
-         PNY59Tspd63+gqIoRU2KFtQ/5C1d8hDruIHTPT6heyiZNjhhcvzfzzk9gkbkN8x1hL3k
-         BFRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727880752; x=1728485552;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RE3jwLRIcca02DnRrcz1K5ebgHznFKMdpmHOaNwDBuQ=;
-        b=gzujgL9j6/0bQt/AQOeCN0fZjsxXUrHyyLooh9OcfFpNipCGbPcrVfCSFrE66NPfmP
-         X03UYQFRUkWoHNA05ofcwgxenRdl2MIjlLDBfeT2YCl5qii6CYLXFcdcaNgKZ/GR9cPZ
-         RGt5Bl78h1KWN9VuhRU3B83eRtcJ8DtWEFTtgibk5bDcrq1+YmrC+T0eyqsh42pbBPUT
-         BJHivMTdTYMPk6daWOnopa5+dcfj3yvHVdAO62+DtPQowtF+MG12xYtsio5k/pbFCF6k
-         1Peas6pw5bM0SozuP/L3yL2KjwAtxArqlIqvpQuhy0yd3h8uBoQii6awWGxba0chhxYO
-         Sw2w==
-X-Gm-Message-State: AOJu0YwHcH2gco7O/+LxlDJK2rDmvcsUcYfnzQIX5ATng9SGFXLuhKeW
-	RRtLtjQi5U8gURi9NKl+4EpC4mnt/bkVslcDBCPCQ0JHUBiDT+YnxZsE09xM5LSAK3gIKq5UUus
-	HZaY=
-X-Google-Smtp-Source: AGHT+IFxDrN1Jh9fL8m84ZZezCHROf22HJJ0i4yAlQJwKsDHcgLHrPVrxXpUs+W4KsPCS/Gzvt++tA==
-X-Received: by 2002:a5e:d709:0:b0:82c:da1e:4ae7 with SMTP id ca18e2360f4ac-834c839aa54mr506574639f.2.1727880751887;
-        Wed, 02 Oct 2024 07:52:31 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-834936cd3c6sm332234039f.13.2024.10.02.07.52.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2024 07:52:30 -0700 (PDT)
-Message-ID: <b8fc402d-11d3-400f-ac35-f2b4f8538abf@kernel.dk>
-Date: Wed, 2 Oct 2024 08:52:30 -0600
+	s=arc-20240116; t=1727881397; c=relaxed/simple;
+	bh=HAc5UTPWcxbLVyB3ExKR3J8DVu/xMihDErOtSJavi/0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=X5CNqD16/40IIXlH6JUwNP5Eaiu42iXv70EQnvHWTtwnPlMKgGym7VA6WiTPRSDZpMDiS8c40cfwsRlinREtuj/W0xMqtMjMVpEdVECYqohXZ3+vmC3qOg9tonYq285my5dv5q8ZBlv/al2+N1LuVhdQx1TnzlFimXVW4cKnXIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geexology.org; spf=pass smtp.mailfrom=fe-bounces.geexology.org; dkim=pass (2048-bit key) header.d=geexology.org header.i=@geexology.org header.b=YT7urD2c; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geexology.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.geexology.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geexology.org;
+ h=Content-Transfer-Encoding: Content-Type: Cc: To: Subject: Message-ID:
+ Date: From: MIME-Version; q=dns/txt; s=fe-7b91e1338f; t=1727881393;
+ bh=jvCLfXWsfGjSN5aktBhWAq6X2qEF5Es102uqDOGx0Ms=;
+ b=YT7urD2c2ydsWQyKtlGP2OgU1d776L3uup86d7s3V1RECU6XOLsD2dCFpoezq/yDYGJS+nIN7
+ DwExNg3RkYcm+vSLfqaUJRmZydQRe1Xgf/2Dtl5giaMcIqjIYVSMX4zTaAT7jcQj8gy1ONMrxco
+ odgkBTSImBblClQZL0QLLgNCtwostQo3csvblYOfHj8JoeIeGak2WPedgFSRNrPY+Z+isD/oVeU
+ clRk02c8Ngq8BpH1N0Sdc6G+78MRWYYVFAQja7JmmKEHxWR5G+CpXtzyBBcdohw9sviczCPzBTT
+ 1WvDSzNOggLX4scNSpv+5D//jVHi3sK9kd4OC03thKCw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso1045690766b.3
+        for <linux-block@vger.kernel.org>; Wed, 02 Oct 2024 07:52:54 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwKdx18nH1+QFZue6bkAnOQu3W18Hc/KhVCpDY1K54mpPbiXSqm
+	XS/HpOQBt295alVQreL+k5MgfJ1Hbk981xILtxH2S8BB5ep+eYPdmy0pM2B3kLvgNoh57MTXn61
+	77ogeQ3lX3szJmhHrj2G7db0dRqJWudaLqaJc
+X-Google-Smtp-Source: AGHT+IEYSKyQi7KAHswp3vi24/pVTQDHfoOZeL54ewo76pnqYju5+QNVShGjrvw+Z8KslC2JXknVngvZ4zUqkzx0MoM=
+X-Received: by 2002:a17:907:9705:b0:a8a:8c04:ce95 with SMTP id
+ a640c23a62f3a-a98f83d7a68mr343426366b.43.1727880772581; Wed, 02 Oct 2024
+ 07:52:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Applying "none" for io-scheduler causes coredump
-To: Fred Richards <fredr@geexology.org>
+From: Fred Richards <fredr@geexology.org>
+Date: Wed, 2 Oct 2024 10:52:41 -0400
+X-Gmail-Original-Message-ID: <CANPzkX=JkOgziVBR5jW7pXa6ZawG7KQjbKQK6wdt4=7ZjjpH8Q@mail.gmail.com>
+Message-ID: <CANPzkX=JkOgziVBR5jW7pXa6ZawG7KQjbKQK6wdt4=7ZjjpH8Q@mail.gmail.com>
+Subject: apply "none" for io-scheduler causes coredump under 6.11.1
+To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org
-References: <CANPzkX=nUnDGZjVrJmmJZgeeqAdDacbZgvUxptLuKTpVJ53oHg@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CANPzkX=nUnDGZjVrJmmJZgeeqAdDacbZgvUxptLuKTpVJ53oHg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; fredr@geexology.org, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 66fd5e47316f1d07bd3c5ad9
 
-On 10/2/24 8:45 AM, Fred Richards wrote:
-> Hello,
->  Mainline kernel 6.11.1 on my archlinux machine with several disks, if I apply "none" as the io-scheduler, it core dumps.
-> 
-> Startup script rc.local has:
-> 
-> echo none  | sudo tee /sys/block/nvme{0n1,1n1}/queue/scheduler
-> 
-> Causes this in the journal log -
-> 
-> Oct 01 14:39:06 tor systemd-coredump[987]: [🡕] Process 980 (tee) of user 0 dumped core.
->                                            
->                                            Stack trace of thread 980:
->                                            #0  0x000079b6a0ca43f4 n/a (libc.so.6 + 0x963f4)
->                                            #1  0x000079b6a0c4b120 raise (libc.so.6 + 0x3d120)
->                                            #2  0x000079b6a0c324c3 abort (libc.so.6 + 0x244c3)
->                                            #3  0x000079b6a0c323df n/a (libc.so.6 + 0x243df)
->                                            #4  0x000079b6a0c43177 __assert_fail (libc.so.6 + 0x35177)
->                                            #5  0x0000617a0fb4e3ec n/a (tee + 0x63ec)
->                                            #6  0x0000617a0fb4a34f n/a (tee + 0x234f)
->                                            #7  0x000079b6a0c33e08 n/a (libc.so.6 + 0x25e08)
->                                            #8  0x000079b6a0c33ecc __libc_start_main (libc.so.6 + 0x25ecc)
->                                            #9  0x0000617a0fb4a665 n/a (tee + 0x2665)
->                                            ELF object binary architecture: AMD x86-64
+Hello,
+ Mainline kernel 6.11.1 on my archlinux machine with several disks, if
+I apply "none" as the io-scheduler, it core dumps.
 
-Should be fixed by:
+Startup script rc.local has:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/block?id=e3accac1a976e65491a9b9fba82ce8ddbd3d2389
+echo none  | sudo tee /sys/block/nvme{0n1,1n1}/queue/scheduler
 
-which is heading to 6.11-stable.
+Causes this in the journal log -
 
--- 
-Jens Axboe
+Oct 01 14:39:06 tor systemd-coredump[987]: [=F0=9F=A1=95] Process 980 (tee)=
+ of
+user 0 dumped core.
 
+                                           Stack trace of thread 980:
+                                           #0  0x000079b6a0ca43f4 n/a
+(libc.so.6 + 0x963f4)
+                                           #1  0x000079b6a0c4b120
+raise (libc.so.6 + 0x3d120)
+                                           #2  0x000079b6a0c324c3
+abort (libc.so.6 + 0x244c3)
+                                           #3  0x000079b6a0c323df n/a
+(libc.so.6 + 0x243df)
+                                           #4  0x000079b6a0c43177
+__assert_fail (libc.so.6 + 0x35177)
+                                           #5  0x0000617a0fb4e3ec n/a
+(tee + 0x63ec)
+                                           #6  0x0000617a0fb4a34f n/a
+(tee + 0x234f)
+                                           #7  0x000079b6a0c33e08 n/a
+(libc.so.6 + 0x25e08)
+                                           #8  0x000079b6a0c33ecc
+__libc_start_main (libc.so.6 + 0x25ecc)
+                                           #9  0x0000617a0fb4a665 n/a
+(tee + 0x2665)
+                                           ELF object binary
+architecture: AMD x86-64
+
+
+Problem is reproducible as well.
+I can set the nvme disks for "bfq" but then cannot set it back to "none".
+Unsure about the origin of the problem but it appears to be something
+with libc and the newer kernel.
+I can login as root, and redirect ( echo none >
+/proc/sys/nvme1n1/queue/scheduler ... ) this procuded no error but the
+scheduler does not change.
+
+Also tried on a Rocky 9.4 VM with the mainline 6.11.1 elrepo kernel,
+the error just reports no such file or directory ... the VM also has
+virtio devices so unsure if that is related.
+I can provide other outputs of commands like strace if needed.
+
+-- Fred R.
 
