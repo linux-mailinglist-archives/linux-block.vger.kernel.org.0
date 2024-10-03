@@ -1,74 +1,73 @@
-Return-Path: <linux-block+bounces-12118-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12120-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E16A98F030
-	for <lists+linux-block@lfdr.de>; Thu,  3 Oct 2024 15:19:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D56C898F037
+	for <lists+linux-block@lfdr.de>; Thu,  3 Oct 2024 15:20:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9E921F21F4A
-	for <lists+linux-block@lfdr.de>; Thu,  3 Oct 2024 13:19:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12F951C20AE3
+	for <lists+linux-block@lfdr.de>; Thu,  3 Oct 2024 13:20:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 256C5146A66;
-	Thu,  3 Oct 2024 13:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8949199936;
+	Thu,  3 Oct 2024 13:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="yJsantDn"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="r3/B8kuu"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1ED199397
-	for <linux-block@vger.kernel.org>; Thu,  3 Oct 2024 13:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F5C199FC2
+	for <linux-block@vger.kernel.org>; Thu,  3 Oct 2024 13:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727961585; cv=none; b=JhgJTwaqBYKJIYiO3UEzeorXXVn3kWJeArguVNtycYrdLOW8OqStVZ1CyD3e+xoxkvtlUFjGP2zg9E1DyWc93ChVMjfxZyeNmAyUe+x4NtmmNEuX+MI9LKs9N8ZWM8SFVvflT8A8cwVEpG4kfSKirLqOTGkvoJ9mGQ3aiSvQNgw=
+	t=1727961622; cv=none; b=se66udCMmrXUzZ2HlC1K9/48SPMmEAzbEQ7R6WF9jGYppN0y39xQ1SOvzEeYEOfWkxNYKWGLpII8Go9WzMKhdqcL+KglBdNQdKMPGPO3OLpAPEiEHCfRTHoriokIkufhueRCM20EyPKi1NbsNBBYSnvQdkSq+nMk9ehqkzZZxN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727961585; c=relaxed/simple;
-	bh=zEb6a1QvZoqzNEtpcnL5thUH9mK5tyo1QgQ2a1ZjwzU=;
+	s=arc-20240116; t=1727961622; c=relaxed/simple;
+	bh=WD4yKKiKfvM6Y/N3sOKCsh8BIytPui1G2fZUyZj0j9k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWt1m84KOm/vy0CVznrh+ufKjcceGGlFhxN6E5y1qFPvnXYmeaCFFsGBUPKhT39C0f1D8mROMs4sUhNbDZTgXNCY/1HZdiE8kMEe+2+bmbQLwWmw/avI7SoI4c7C1USVRDS1GQkx1q4b0s6K1jU0Su0YEdMzvRM6aPo/hJMcL2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=yJsantDn; arc=none smtp.client-ip=209.85.166.49
+	 In-Reply-To:Content-Type; b=BMHISCZ5q3L3iOGapv/3NJeXMIe07z7Palpt6h3+aC598TbgUR01K30fY4qIFKR9q+pwbrptvOg3R7cDfbcnwVh2OyIBk6v/azBqDnZIN3W96bnULQbSyKjhj5rZhK7lpBEqNnbP2+wpPl475u6zdyUVsDNZhL9UGSh3DZ4v944=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=r3/B8kuu; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-82d24e18dfcso43676039f.3
-        for <linux-block@vger.kernel.org>; Thu, 03 Oct 2024 06:19:42 -0700 (PDT)
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a342bae051so3808845ab.3
+        for <linux-block@vger.kernel.org>; Thu, 03 Oct 2024 06:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1727961582; x=1728566382; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1727961619; x=1728566419; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ksledoz+0tCyRkg6dZBWZTFYrHLsLVD+KPBfYyEgYsU=;
-        b=yJsantDnPe+Ksj1SRqxZIsMdLQ1fL4HoE4n1JeUN/i/ZvTj7jCFr9zj8SpRDuMPZmh
-         oTuJvZQQS7du/wh+ETsY78eOZMI9D5Ipf5gb/1X/zpKNs8hSbqhnTv+/NDNw1TDIpD5E
-         P1dQj+mr13hgtzW0EB609LwqsVr7WcZnJojlvMC6yHsLS670Vs2CsfDV3XtO2QZvjGOi
-         PMOPHrxZihPvV3XO8ICgjE9wwv43r+p2Vfmne1IGfI05eJSxQZ5GHkMH5qT784IjtmAi
-         klg7nGIQWnU35wZTQSHYIqJ19HVT7XyabpGfg5+HrLZBqjnTDjdJz4ykxMykHD3R2uUy
-         2qGw==
+        bh=7acx50tgt/uVPHLaSIR2NzBWUBzAmiQEE7K7Tpb53+M=;
+        b=r3/B8kuuo6PkwuRWs89AKEinEEbNf1LCDmnDoeqw/wTCKgMW//HyVLXjnSE58P+zxz
+         Fh4IILpcMFyi6lKyJqC0Rc9VDp77QZ1+wg0/ot9EqIX8z6CFGo/dDr0uaI1DvcVaFgOT
+         6WK5W9ubS/51Spa9MqkTifhjdecUFUkKRwt7AOMnvRcVXcQzGT0XE73qtZgTmjdx2lPn
+         0Yr9hGFNwYGssy1bsmYRqkfyuardAdX5PYA59xgxjBJDvzW96newK2nMRcXAfAqm+I96
+         k805aywYYGMOoN/xhZ23IRzDVLiRIJWeJ54CLq+I37dkVgRiZ3vrW4/7oOuJTLbKuKQj
+         wzgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727961582; x=1728566382;
+        d=1e100.net; s=20230601; t=1727961619; x=1728566419;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ksledoz+0tCyRkg6dZBWZTFYrHLsLVD+KPBfYyEgYsU=;
-        b=DV1gl/5okuyzfvqRiFmuAIjZgPrNaAAo14zsDwWQ5D27D1MuPFt7RR9XBcXNR9kGg9
-         kZiJ1UIFHuiuLY/FfgQC3v3nDHd1hzpWBl9A+R2XilAEpWtzOIMVmOQPz4iKgyjqKcS4
-         nHuIcmj941dE/kqt8VgmaEAXTkhMOlQRJOStkdi+V+4lWcztDL71cq7SuhRgurcsegs0
-         4EDUcG1VoU40BHy6un37dAfM7S8+bB6TaUZBHEuIg5yIuXAAw/B9nGZfW6PRMpsU6zYw
-         X/eWr2updTHrdL9h4I6pdi+tvhHdkMTkGCItdJtT4kF1YPOJ8M81QXxBzX+gO+4NT9i6
-         sXCg==
-X-Gm-Message-State: AOJu0YwKeqv5NAlhEhMmLXT2RxrWDIM+0TFbtJzqyl81wCQaXjiePp0i
-	Co3BD5wcMI9D8ZWmmpHIiOIWHEvfY3PaBffC7hVBEgQLr0YSmB/YEoqSl1+g8FOljKdDsLyaee+
-	0U80aPA==
-X-Google-Smtp-Source: AGHT+IHgJIGLrfkkKi5vJWqHGlsDFAxA2ea+j9r0KS7N+MGOu6xV4VcsMs4xssx1qX6Dhk6tR4CPoQ==
-X-Received: by 2002:a05:6602:1615:b0:82a:a4e7:5544 with SMTP id ca18e2360f4ac-834d8440a47mr651238939f.9.1727961581917;
-        Thu, 03 Oct 2024 06:19:41 -0700 (PDT)
+        bh=7acx50tgt/uVPHLaSIR2NzBWUBzAmiQEE7K7Tpb53+M=;
+        b=QFmkTHrqJcTNkukWKYa/niE+OsmQPLVJ+Yc5wCAubHXbuY5mkoK+6j+yeyjdFD3Hqd
+         ch6sUzUmAUc/n0RdLNVhdxZ+FymwpVJI8upPMXnvJ8o7MhlhQJ2NjRSpB/kdxV1nlnDh
+         zhk6hs7xQc9IWNjLQzYPpZdwV8GG04BAoOyid5QzTyv452QQv856zvGzEKYL9I7wPL0g
+         FJODeJWguCCgjAgVe+GYS05gGkgDnNfPlfVoeYvv1ThFxNrbDxq6gglvgrrMVteIM3v4
+         amfUMikqOieH+QM8wGWBcWXwzQO1XTYCF40MG8a8V8t610CHOurQuMqb4F3uEt3Y0I4e
+         sDdA==
+X-Gm-Message-State: AOJu0YyQyN+acht8JuNCNjS/vfVM/n0TaKW2qXCee4I4YxwyI3PwOoZh
+	jShff0V/SYyZWRjeFcDGcL952WL7mLs6refLF67vuTUtA/GmY2SVMuZUM7JNoTY=
+X-Google-Smtp-Source: AGHT+IGjDLJNIN9w3Mk2FVQ8pyAaz2zDdkttdssQRtEsPNh0pQnr3foixacoiNYIhFks5iUt/DMIbg==
+X-Received: by 2002:a05:6e02:194e:b0:3a0:480c:6ac4 with SMTP id e9e14a558f8ab-3a36594b787mr63127165ab.22.1727961619479;
+        Thu, 03 Oct 2024 06:20:19 -0700 (PDT)
 Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4db55ad6608sm264952173.171.2024.10.03.06.19.41
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4db55a63e53sm262900173.92.2024.10.03.06.20.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2024 06:19:41 -0700 (PDT)
-Message-ID: <80ddb9f2-af29-4489-8985-8ba9588e5891@kernel.dk>
-Date: Thu, 3 Oct 2024 07:19:40 -0600
+        Thu, 03 Oct 2024 06:20:18 -0700 (PDT)
+Message-ID: <bdf5f4c8-e943-44bc-b9cb-9dd8e726d5cd@kernel.dk>
+Date: Thu, 3 Oct 2024 07:20:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -76,30 +75,31 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: move iostat check into blk_acount_io_start()
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <550fc8a0-3461-49ac-879e-32908870f007@kernel.dk>
- <Zv6XkXyAQ4yiaJGE@infradead.org>
+Subject: Re: [PATCH] block: enable passthrough command statistics
+To: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>
+Cc: linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>
+References: <20241002210744.72321-1-kbusch@meta.com>
+ <20241003130053.GE17031@lst.de>
 Content-Language: en-US
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Zv6XkXyAQ4yiaJGE@infradead.org>
+In-Reply-To: <20241003130053.GE17031@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/3/24 7:09 AM, Christoph Hellwig wrote:
->>  static inline bool blk_do_io_stat(struct request *rq)
->>  {
->> +	return rq->rq_flags & RQF_IO_STAT;
->>  }
+On 10/3/24 7:00 AM, Christoph Hellwig wrote:
+> On Wed, Oct 02, 2024 at 02:07:44PM -0700, Keith Busch wrote:
+>> +		accounting of the disk. Set to 0 to disable all stats. Set to 1
+>> +		to enable block IO stats. Set to 2 to enable passthrough stats
+>> +		in addition to block IO.
 > 
-> I'd kill this somewhat oddly named wrapper now that it is a single
-> check.
+> Jens' reply suggest he likes this interface, but I have to say I
+> already hated it with a passion for the merges - overloading a
+> previously boolean file with a numberic value is not exactly an
+> intuitive interface.  Is a new sysfs file for this really a problem?
 
-Yeah I did ponder that, since there's just that one check left. Will
-do a followup for that.
+We can do a new file as well, like iostats_passthrough. Don't really
+feel strongly about that part.
 
 -- 
 Jens Axboe
-
 
