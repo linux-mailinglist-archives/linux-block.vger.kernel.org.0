@@ -1,97 +1,115 @@
-Return-Path: <linux-block+bounces-12219-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12221-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67EE6990F50
-	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 21:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DDEC990FB8
+	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 22:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E2AE1F21CE9
-	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 19:55:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40FA71F21F68
+	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 20:06:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052211EF0A2;
-	Fri,  4 Oct 2024 18:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50FAA1DBB2A;
+	Fri,  4 Oct 2024 19:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDfuHnFp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSaSprE1"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9771EF09D;
-	Fri,  4 Oct 2024 18:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166E1DBB24;
+	Fri,  4 Oct 2024 19:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728067701; cv=none; b=gv+cnvkdZQv9jCmQOBaJpGOJ90GofELB9wA4IdKMCSGuJm4+DkrvP9amE7HJ01mHRf+9AiHXd/CQ0dY2ORkmMih/X3hv4Y+jBIvbJWNkL1gIGC2Q/o2hGws48SqY/RZjyf4tHzPW5lY/NTU12ymkcrH+JROrgCvPOtZHtDfUMhM=
+	t=1728069755; cv=none; b=FY0Gedy0J6/oCpjVjN5nAnHPZEWvMgY58H8m6CGZgK3QJ8xbQBpavUPGfCfAw5nSkfF3cRZ/hKv9HQoNRD16s39r6nFFicld+7XWBOQT/6UohF+Aw3+50utGChcjXhXJUwLfoC/YrO8mjw4uLQd0d2YXUTCYJwidbchgIgtVM94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728067701; c=relaxed/simple;
-	bh=1HqgdvKOc/m4/qLy85gUA+bM5IvgY3Z2AWC8955moa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uaFdPYJDB7nA8OIA7YwdSMQ1msSCj59eUiol4NpcdorhInZ3ZLZ6+YhpDTFx/kfYlSujQt4wioiAR6iGXuqQZbjc1DT/slKOHAtyRtdDMPUThZ1pU+p4I5RDIhhwdFZZdLfu8HSkGuJnrvHG1CWhVpKrEz38eXTeauiJ3F5NaqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDfuHnFp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5258EC4CEC6;
-	Fri,  4 Oct 2024 18:48:21 +0000 (UTC)
+	s=arc-20240116; t=1728069755; c=relaxed/simple;
+	bh=6slShbL4MlgHiIezr8TX3tBdk8WYBf3htlE1LQbLCPc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LtcvCtiCRHaBLX56jDYWtUTKnCoIp8VdYcWq6I4KC/M5LiPiZ4W/fNASDzrg2ZXZzjFx72yyKaRf8Lx0Euk13uOhwhG2jG6gmxqt9jHjM58TJG5mNmquqqsO2VJcggvP+Q3FbKqMbbfxbGe398r+le0o/XqH7LOqjVUYKfD7PPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSaSprE1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC117C4CEC6;
+	Fri,  4 Oct 2024 19:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728067701;
-	bh=1HqgdvKOc/m4/qLy85gUA+bM5IvgY3Z2AWC8955moa0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jDfuHnFpMa2Kke9DJFgMsuFPRzKuZeZGJu9ZOakdPAneuj3mEz17czBe1gn2bDqsQ
-	 dThauq2ASkkZ+8UlNcBQXm0n1wiBhN1LySl7trtOX2jNNWLhP1TiJFUBj/Bx4bqF8O
-	 WYU9jqOh33DSRChvrclLBXiXD3ERk7TwYBMFCvxwHFlGZhSYaxeZtxjuXMGOZnufLA
-	 BynRKILRbJW7AEwcF8MxkyDcGiPnsqjGJhPM7GT/InUycDZ4flRg0podnKhi1toROU
-	 xmGMUOKggYwvD+6qq3mgBGszKj+CAu5aaCHYxG8bLK1u882PnP+N81sJI2vE4/Vvsx
-	 RVf2Er26ZaMvw==
-Date: Fri, 4 Oct 2024 18:48:19 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: dm-devel@lists.linux.dev, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Israel Rukshin <israelr@nvidia.com>,
-	Milan Broz <gmazyland@gmail.com>
-Subject: Re: [RFC PATCH] dm-inlinecrypt: add target for inline block device
- encryption
-Message-ID: <20241004184819.GA86456@google.com>
-References: <20241004004152.8845-1-ebiggers@kernel.org>
- <Zv-Ap9E2r1bRT2Wm@infradead.org>
+	s=k20201202; t=1728069754;
+	bh=6slShbL4MlgHiIezr8TX3tBdk8WYBf3htlE1LQbLCPc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kSaSprE1rFwZ0xXZGNIzp/5abPPE1CbdjPi8N95IY2FHLeg2ajsOEF2jMfmzkJMUw
+	 QlPC7CIzVUD+6qOcuDQe9y5mCTcgAywKmMrUNpYk0rRuUNjNcGskGRxv8yxI1S4ZxM
+	 q65EKsGKvPJPNyMy3yFcjc61tpUlhFLYhBmK17bYnEDbIjOw+Ys0t1As1Ib1vRLE2y
+	 O9xtvMQNI9OidMbTdXvbNIrCxyWmO5XRKyRobsyT1iCxOUWUsQrH8r7Ic+Oe/6mxHC
+	 ACxWNrKWPdHLpGawswF3PQ+iT3e/Y7TnBiy7lxilfCp/rZOoxuKeSxjeGJiHka2YVk
+	 2zLEdULje7LEw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Gary Guo" <gary@garyguo.net>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>,  "Miguel Ojeda" <ojeda@kernel.org>,
+  "Alex Gaynor" <alex.gaynor@gmail.com>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Jens Axboe" <axboe@kernel.dk>,  "Will Deacon" <will@kernel.org>,  "Peter
+ Zijlstra" <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,
+  <linux-block@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rust: block: convert `block::mq` to use `Refcount`
+In-Reply-To: <20241004194330.651c1db8.gary@garyguo.net> (Gary Guo's message of
+	"Fri, 04 Oct 2024 19:43:30 +0100")
+References: <20241004155247.2210469-1-gary@garyguo.net>
+	<Ai8LlcjRkqtugtU8IFGU53QASgH_GnKT_H3nxOjxpBnGaTTgWFUKv8lsnSPM6qzWAhq7alWhj8U6wJcGiABcpw==@protonmail.internalid>
+	<20241004155247.2210469-4-gary@garyguo.net> <87h69rpvja.fsf@kernel.org>
+	<7qQNVF4awh6SbIu5i7dqpxu-AoXKnhXX8K7VL3khHvYvSapkpSFkI4DcbNjIw5FVyJ_Ux3T9UJXFkHQr1zNfgQ==@protonmail.internalid>
+	<20241004194330.651c1db8.gary@garyguo.net>
+Date: Fri, 04 Oct 2024 21:18:22 +0200
+Message-ID: <878qv3pthd.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zv-Ap9E2r1bRT2Wm@infradead.org>
+Content-Type: text/plain
 
-On Thu, Oct 03, 2024 at 10:44:07PM -0700, Christoph Hellwig wrote:
-> On Thu, Oct 03, 2024 at 05:41:52PM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Add a new device-mapper target "dm-inlinecrypt" that is similar to
-> > dm-crypt but uses the blk-crypto API instead of the regular crypto API.
-> > This allows it to take advantage of inline encryption hardware such as
-> > that commonly built into UFS host controllers.
-> > 
-> > The table syntax matches dm-crypt's, but for now only a stripped-down
-> > set of parameters is supported.  For example, for now AES-256-XTS is the
-> > only supported cipher.
-> 
-> Maybe I'm stepping into a mine-field here, but if this simply uses
-> blk-crypto to accellerate a subset of dm-crypt, why isn't dm-crypt
-> simply enhanced to use blk-crypto when available?
-> compatible,
-> 
+"Gary Guo" <gary@garyguo.net> writes:
 
-Milan Broz (cryptsetup maintainer) has said that he prefers a separate dm
-target.  See
-https://lore.kernel.org/dm-devel/9ef95bbc-4eee-4c00-f199-0daa3cdd03ed@gmail.com/
+> On Fri, 04 Oct 2024 20:34:01 +0200
+> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>
+>> Hi Gary,
+>>
+>> "Gary Guo" <gary@garyguo.net> writes:
+>>
+>> [...]
+>>
+>> >  // SAFETY: All instances of `Request<T>` are reference counted. This
+>> >  // implementation of `AlwaysRefCounted` ensure that increments to the ref count
+>> >  // keeps the object alive in memory at least until a matching reference count
+>> >  // decrement is executed.
+>> >  unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {
+>> >      fn inc_ref(&self) {
+>> > -        let refcount = &self.wrapper_ref().refcount();
+>> > -
+>> > -        #[cfg_attr(not(CONFIG_DEBUG_MISC), allow(unused_variables))]
+>> > -        let updated = atomic_relaxed_op_unless(refcount, |x| x + 1, 0);
+>> > -
+>> > -        #[cfg(CONFIG_DEBUG_MISC)]
+>> > -        if !updated {
+>> > -            panic!("Request refcount zero on clone")
+>> > -        }
+>> > +        self.wrapper_ref().refcount().inc();
+>>
+>> What happened to the debug code?
+>>
+>>
+>> BR Andreas
+>>
+>
+> `refcount_inc` will WARN and saturate the refcount when trying to
+> increment from zero. This is true regardless of config.
+>
+> I've already captured this in `Refcount::inc` documentation.
 
-That was a couple years ago though, and this discussion seems to have gone
-around in a circle.  Maybe things have changed.
+I did not know. Thanks!
 
-A dm-crypt extension sounds fine to me too, though keep in mind there will
-eventually be inline crypto exclusive features such as hardware-wrapped keys.
+BR Andreas
 
-- Eric
 
