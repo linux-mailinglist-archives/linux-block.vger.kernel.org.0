@@ -1,92 +1,139 @@
-Return-Path: <linux-block+bounces-12222-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12224-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73B2F99106C
-	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 22:27:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EDD099120A
+	for <lists+linux-block@lfdr.de>; Sat,  5 Oct 2024 00:02:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A54691C225E3
-	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 20:27:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A18B1C22EA0
+	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 22:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5704D231CB4;
-	Fri,  4 Oct 2024 20:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D076C149C4D;
+	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Mvpix5kL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5hMdJav"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AD2231CA5;
-	Fri,  4 Oct 2024 20:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEEA13A3ED;
+	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728073042; cv=none; b=ndndAlb1mMiFpwQCKNXkYMELQX78Rmr2X5DSleiD+1I50Gqs3bI8XLsTQSXo4GPwSg4BdA32Y48VNXzWWKVCcvNsRp+F55/R1AHiUMhg5OfMYG+qHvLojf+x3mj6gj/ezxl4uylMGnYbMgFKFnvflRSgu5Hr3qRgsRtpCZxxcGM=
+	t=1728079320; cv=none; b=CTlQk9I5STQWf41VqyyM1W50Fm69KBCIjixvxqVnnJcYgnz/h0WBVREBIr62o/HfRDCqyDmVqqPr+h/ItoUuhHaVAIzp2SRSvPzEAGRWv7dxge0HjiukwWr9RMndVELvM/wV9mvWXExXch+/KqiGptIBf/MvfGLZ2UPFyoF4w4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728073042; c=relaxed/simple;
-	bh=R7ofc7BUsJgAI+HbPx78qvcddXfCuxMxe24ralzHk3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=clrM7gk9EgXj/dBTkyqE4/MT1tv/SjL5KUAcXt+PavG4VvNTLQgiY694HISib3dO4OxuizmU4JEp+fsiVg2dCBBpdKjG8yLV8bVk5rGzAK69dnnvmou4hgJruOFI8zrfUmV3aaPC5Y7FmhcPri8KzwxI8Hy4Mc94VxaXSpCI+xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Mvpix5kL; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4XL0Fr1nR3z6ClSq7;
-	Fri,  4 Oct 2024 20:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1728073038; x=1730665039; bh=lTXL/Dz1oBJXvLrR6pwgSAxa
-	29xr1iIqzNXMrLo4jNw=; b=Mvpix5kLc2oIoIqW6o4Vhm+p8em9/ylzV3bVFoUC
-	NPoQ/+UmpIxqLYQYV4FgldlcePzY4U5qZ4UBmNwnRPkitT5+WPsCpOWQCGMkF67f
-	MusmS54gFpulmGDTn+PitK7+yUPM7wmqdgOZ9OL8pw7QjOmNesdgiLXJm8FBizxM
-	xnd/4do5KbvSzqXz3s8ESRb0IISNKtRnKTry6nEhxeVguuFaaCAXFpuVgDmn1avh
-	aMaQejNg+a6WDgYY9U4wuKwjia1c8GM2WsC7Z1YPJB/yQqQ2iWuooquw4+eyPKBr
-	mQF0sTxKmFQKemUtW47MheXwiEfYHPKJuQC4ylF06iTK4Q==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id MoKYJnH8YtKY; Fri,  4 Oct 2024 20:17:18 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4XL0Fn079dz6ClSq6;
-	Fri,  4 Oct 2024 20:17:16 +0000 (UTC)
-Message-ID: <5af3a653-d4b8-4e73-bffc-5583f17e00eb@acm.org>
-Date: Fri, 4 Oct 2024 13:17:14 -0700
+	s=arc-20240116; t=1728079320; c=relaxed/simple;
+	bh=yA8zi+D/kjXfBz7wwbF2jGW3GGImBGWDMebbbCkbJtk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tUWa3jQhQhbuTwrnkgmjVh5OH/iGgIfRsnXjRmoLviNIpCQJiSp00eRTFcXPY1tPpWuR91ndB8IpKWUGl4UclNBXc2y9lFprk5TII14josbrG182Zq+pNKeHA73ZjuA/jbzLtEE00+MVq1m9VgcoJrWsdwqlzSHm/SCTmUnCuaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5hMdJav; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 33139C4CEC6;
+	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728079320;
+	bh=yA8zi+D/kjXfBz7wwbF2jGW3GGImBGWDMebbbCkbJtk=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=d5hMdJavBg1kiftWPpZxcHf+KjR0tlkGnBaX/MNqoH/EtMay2VdboKsCVxqwQHArf
+	 FgprJgyHGKY43fRa36k4Qk5/A3za09SF7jVAfGEYmAAKzD4z47E5pRvjyIeccJYEL8
+	 FOuMDEta1fhQM6L8ceCOJOTZXBMCL7mpdlDH8vdDbDN3EQ0ftv+HgslAHCfe4I/Kcz
+	 TG7ea/HgZXxpl5B5PFPpu4Of0Odli89fkgA5bRfUI2MhjPOaIELvCoTgoBR+TEmC6S
+	 +vg/tVWQWE296xqIYSwMu2LTRlFQuGnrx8uPvyHcUV2G1qegQYVTxbxFVwGhU6T2xV
+	 uVJiaQ6Ry6enw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CE0CF8853;
+	Fri,  4 Oct 2024 22:01:59 +0000 (UTC)
+From: Mitchell Levy via B4 Relay <devnull+levymitchell0.gmail.com@kernel.org>
+Subject: [PATCH 0/2] rust: lockdep: Fix soundness issue affecting
+ LockClassKeys
+Date: Fri, 04 Oct 2024 15:01:36 -0700
+Message-Id: <20241004-rust-lockdep-v1-0-e9a5c45721fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] dm-inlinecrypt: add target for inline block device
- encryption
-To: Eric Biggers <ebiggers@kernel.org>, dm-devel@lists.linux.dev
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- Md Sadre Alam <quic_mdalam@quicinc.com>, Israel Rukshin <israelr@nvidia.com>
-References: <20241004004152.8845-1-ebiggers@kernel.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20241004004152.8845-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMBlAGcC/3XMQQ6CMBCF4auQWTumLZKAK+9hWJTpCBOBkhYbD
+ eHuVvYu/5e8b4PIQTjCtdggcJIofs6hTwXQYOeeUVxuMMpcVKMqDK+44ujp6XhBV3KpKqOp7iz
+ kyxL4Ie+Du7e5B4mrD59DT/q3/oGSRo3OUENGW1t35tZPVsYz+Qnafd+/qun5vqgAAAA=
+To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, 
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Mitchell Levy <levymitchell0@gmail.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728079319; l=2325;
+ i=levymitchell0@gmail.com; s=20240719; h=from:subject:message-id;
+ bh=yA8zi+D/kjXfBz7wwbF2jGW3GGImBGWDMebbbCkbJtk=;
+ b=yz5wfUx3V0h0nT096o9DYbVaoFL3T8pflNc7g21tFsCTJnfM/kKGtgWLYSVQnxXTNAjq8L9Uv
+ njm4iXSHk3bBh7tUymQ2ZfjzzviLMkJFU/H+29VLkmZkeDi7mJ6ihe6
+X-Developer-Key: i=levymitchell0@gmail.com; a=ed25519;
+ pk=n6kBmUnb+UNmjVkTnDwrLwTJAEKUfs2e8E+MFPZI93E=
+X-Endpoint-Received: by B4 Relay for levymitchell0@gmail.com/20240719 with
+ auth_id=188
+X-Original-From: Mitchell Levy <levymitchell0@gmail.com>
+Reply-To: levymitchell0@gmail.com
 
-On 10/3/24 5:41 PM, Eric Biggers wrote:
-> +	u64 dun[BLK_CRYPTO_DUN_ARRAY_SIZE] = { 0 };
+This series is aimed at fixing a soundness issue with how dynamically
+allocated LockClassKeys are handled. Currently, LockClassKeys can be
+used without being Pin'd, which can break lockdep since it relies on
+address stability. Similarly, these keys are not automatically
+(de)registered with lockdep.
 
-Hi Eric,
+At the suggestion of Alice Ryhl, this series includes a patch for
+-stable kernels that disables dynamically allocated keys. This prevents
+backported patches from using the unsound implementation.
 
-Isn't the preferred style in the Linux kernel for aggregate
-initialization "{}" instead of "{ 0 }"?
+Currently, this series requires that all dynamically allocated
+LockClassKeys have a lifetime of 'static (i.e., they must be leaked
+after allocation). This is because Lock does not currently keep a
+reference to the LockClassKey, instead passing it to C via FFI. This
+causes a problem because the rust compiler would allow creating a
+'static Lock with a 'a LockClassKey (with 'a < 'static) while C would
+expect the LockClassKey to live as long as the lock. This problem
+represents an avenue for future work.
 
-Thanks,
+---
+Changes from RFC:
+- Split into two commits so that dynamically allocated LockClassKeys are
+removed from stable kernels. (Thanks Alice Ryhl)
+- Extract calls to C lockdep functions into helpers so things build
+properly when LOCKDEP=n. (Thanks Benno Lossin)
+- Remove extraneous `get_ref()` calls. (Thanks Benno Lossin)
+- Provide better documentation for `new_dynamic()`. (Thanks Benno
+Lossin)
+- Ran rustfmt to fix formatting and some extraneous changes. (Thanks
+Alice Ryhl and Benno Lossin)
+- Link to RFC: https://lore.kernel.org/r/20240905-rust-lockdep-v1-1-d2c9c21aa8b2@gmail.com
 
-Bart.
+---
+Mitchell Levy (2):
+      rust: lockdep: Remove support for dynamically allocated LockClassKeys
+      rust: lockdep: Use Pin for all LockClassKey usages
+
+ rust/helpers/helpers.c      |  1 +
+ rust/helpers/sync.c         | 13 +++++++++++++
+ rust/kernel/lib.rs          |  2 +-
+ rust/kernel/sync.rs         | 34 ++++++++++++++++++++++++----------
+ rust/kernel/sync/condvar.rs | 11 +++++++----
+ rust/kernel/sync/lock.rs    |  4 ++--
+ rust/kernel/workqueue.rs    |  2 +-
+ 7 files changed, 49 insertions(+), 18 deletions(-)
+---
+base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+change-id: 20240905-rust-lockdep-d3e30521c8ba
+
+Best regards,
+-- 
+Mitchell Levy <levymitchell0@gmail.com>
+
 
 
