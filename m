@@ -1,266 +1,150 @@
-Return-Path: <linux-block+bounces-12223-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12226-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1467991209
-	for <lists+linux-block@lfdr.de>; Sat,  5 Oct 2024 00:02:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6CBB99136E
+	for <lists+linux-block@lfdr.de>; Sat,  5 Oct 2024 02:14:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E96F1F2375C
-	for <lists+linux-block@lfdr.de>; Fri,  4 Oct 2024 22:02:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C69DB21749
+	for <lists+linux-block@lfdr.de>; Sat,  5 Oct 2024 00:14:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5B71442F2;
-	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF26A196;
+	Sat,  5 Oct 2024 00:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PClPP3oH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jqgsak8Q"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8236A231CAD;
-	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE8AD4B
+	for <linux-block@vger.kernel.org>; Sat,  5 Oct 2024 00:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728079320; cv=none; b=hWBCYqqf5UU2s/yByZ6rW5UQM/+ybQpM4YanHVLiPwvn+95ka7r4K1S0OO4Khavt0LT/iLqa6xp/Mv666KAA/FYGuAX9NDXZB+kslImri4jMKEYOKAwSadOY5aMK0K8AbmrR/COKI0Lx36UkYjDdBamnFcMwG3f9oKIVpIVgBns=
+	t=1728087251; cv=none; b=owiDR4X9XUv9q/eK8htYbYHEpeJWy1p1sL6SKMiUNpbPpLkG2TkcFbXmPtfsKVhPOwY4M9KbSV0o93i3NxG1/5XYyzapirE5niuw8PFo+CpCFPD6IbP5+u4kBlj4axhW/Xke/bphkOWxYVGpJVcUQBjpMGUtIW0e8sNEojrMUrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728079320; c=relaxed/simple;
-	bh=MhJNA96GzFeBg9a6LYM830UHrSoHd405+L5yke1y9rE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ds+VrmkwxwDSGc9icM8XMg6SyWteRkpvM2J6csOE7mr9ORS6rbBn7IS+sU4wCOPcWbcYE4zWAbvTbO0tWYNlm8wnvGDqBqZXNJYu9fEabOpbXJMUXPSTj230P2q1Hnulyjt4BIsp3yjSTMWFFb+uF+RHjc2tUh6fv3q1IieTci4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PClPP3oH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57C17C4CECE;
-	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728079320;
-	bh=MhJNA96GzFeBg9a6LYM830UHrSoHd405+L5yke1y9rE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PClPP3oHEke17anFGzi/uawGZRH7vcpmnaeepa0cCP9UWc8gvpkN7MnjfAn4uVnXs
-	 Rx4bPvGxSjw+tyv1Om3XOubWIDI7f/aXdwfwCVbp1AdyTW80pPIRAwyPJFNkYrluid
-	 nNwMuf+nUQHaW4QaDSWKDfnr998qCUcrfuDM1gy8u0Q+z3tQ2woPMjPJtIlKq7K1YX
-	 bVC75lOs6l9173K8zE93DHFNTq0Vx2e8da/K+G1Ey49vrG9iGn5iAkI+YClXBnSiGd
-	 b17MxnBZO0xyI9QO1bNms6QQWVsvnq6fWnPcwviqr2DLDlrZ8/u4RitS5oBSPNQ3F1
-	 xGqrpiH4+pgGw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BBDCF8862;
-	Fri,  4 Oct 2024 22:02:00 +0000 (UTC)
-From: Mitchell Levy via B4 Relay <devnull+levymitchell0.gmail.com@kernel.org>
-Date: Fri, 04 Oct 2024 15:01:38 -0700
-Subject: [PATCH 2/2] rust: lockdep: Use Pin for all LockClassKey usages
+	s=arc-20240116; t=1728087251; c=relaxed/simple;
+	bh=T0W0KBZI5DkiCjtxQ7TpePJYH2d/3/oGKPm/Q6dRQDk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RnTAJdb2Inx+cTP+xv/uR4tWXFfGFfVpxtnAY11oq79i3R/g7W+0GZzYJ8rMiACzRPy2sVCVQHMe7nQ4rhtSEkNp2d/8q00DJOSG9a9m43khw2Kdyyr3BRD9xBgnXD3pbYXsvlniwESxlzw5FXllljRL07Uf8AinpliA21fxRRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jqgsak8Q; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20b6c311f62so24128075ad.0
+        for <linux-block@vger.kernel.org>; Fri, 04 Oct 2024 17:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1728087249; x=1728692049; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sdvgpKhmD14lH5DEz2GjjZadZ28c69PHIkDv34BVtjY=;
+        b=jqgsak8QsIQ0alVyGBI3WHFcIA11Y0wF8K1uNNlhSzk9Ab3pinrLVBqoaNx8Xac70V
+         f8WQeLptSwLq7RsNFBgNffUXXrHepegJVD0vGcGgLTgV2HjBfU1S003tw/fA8bK7PNxc
+         CCg/bAVp4NhVDhrCI7vE4VU4KFUF2iVtH5d18=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728087249; x=1728692049;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sdvgpKhmD14lH5DEz2GjjZadZ28c69PHIkDv34BVtjY=;
+        b=fwjnUW4bWrYAX6NuUFcUXnSkcDnMKya3TUp9bLeJ2h9QnFeYXhXinawq61mx7BEIsH
+         2AFmXFRmDVesJp0lMZl8L9pN8ADX78DlmJSxu02SO9+GYglW/X08gp0OQiCo2qwiZ3Rr
+         jSMRIEZwdzsOjckCHvgLr0nutRts9WeHWM074+3Nwgg5sq5RS6mKQ+MqczHjhiwfVhIT
+         uWmU0OvWn3TahrxICVdF7SarlpIfq2nClZ/8IoWznfnK9zRw06xqMwr65xbNanyRG32p
+         BSw3drzBdTJxq0EHiTUhJLCY0uQ7lccG+P93gdbSP5Ni1GROJ7UxjztkDatFI71TFQEN
+         oq3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWbUXVR9Q2JRA9WJkxf8FXWmOoNUjaoQIiKpoKGhixiNiAbdT2HdpKKpCrop5p86XJ1y2MC1tuRuZ8WBw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoKraqlyTKzR1q7Rugy36PaulY/rgzq/VuuJT7BbEMMXXmTyXh
+	vbmCBc1m/nzUrSJ5lHnQ86+j8cVyRt77RjLKTBvlZ3R+3P0LMuLp90juepBWug==
+X-Google-Smtp-Source: AGHT+IHv9C2jX/9/LO7J+EAweNR0wJaRJh/hpB23twcLNfojV9w8IEn9Gf8JDOL0bDIVCXkQV6JdPQ==
+X-Received: by 2002:a17:902:d485:b0:20b:b238:9d15 with SMTP id d9443c01a7336-20bff1a8709mr49363695ad.41.1728087249288;
+        Fri, 04 Oct 2024 17:14:09 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:8252:ce4b:5690:56b3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c13939c30sm3950575ad.142.2024.10.04.17.14.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2024 17:14:08 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+	Kyle Fortin <kyle.fortin@oracle.com>,
+	Douglas Anderson <dianders@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Christian Heusel <christian@heusel.eu>,
+	Jan Kara <jack@suse.cz>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	Riyan Dhiman <riyandhiman14@gmail.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] block: add partition uuid into uevent as "PARTUUID"
+Date: Fri,  4 Oct 2024 17:13:43 -0700
+Message-ID: <20241004171340.v2.1.I938c91d10e454e841fdf5d64499a8ae8514dc004@changeid>
+X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241004-rust-lockdep-v1-2-e9a5c45721fc@gmail.com>
-References: <20241004-rust-lockdep-v1-0-e9a5c45721fc@gmail.com>
-In-Reply-To: <20241004-rust-lockdep-v1-0-e9a5c45721fc@gmail.com>
-To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, 
- Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Andreas Hindborg <a.hindborg@kernel.org>
-Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mitchell Levy <levymitchell0@gmail.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1728079319; l=6324;
- i=levymitchell0@gmail.com; s=20240719; h=from:subject:message-id;
- bh=egblrpL7foe9PRdbj/s3OB75zKKFl+jmHi9rcTsQviA=;
- b=LdiL3W4op5Qu1coC1Ds9URaXOy062w9QiB15UUnMDuMQjAyH3+2kMrnlBzksDqKylGYFr18Ti
- nqFq0B0wN48AlL1Atuu3qY0QTiQ/I3HHVbVixZD/5GBoVGQB8BqFDhS
-X-Developer-Key: i=levymitchell0@gmail.com; a=ed25519;
- pk=n6kBmUnb+UNmjVkTnDwrLwTJAEKUfs2e8E+MFPZI93E=
-X-Endpoint-Received: by B4 Relay for levymitchell0@gmail.com/20240719 with
- auth_id=188
-X-Original-From: Mitchell Levy <levymitchell0@gmail.com>
-Reply-To: levymitchell0@gmail.com
+Content-Transfer-Encoding: 8bit
 
-From: Mitchell Levy <levymitchell0@gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Reintroduce dynamically-allocated LockClassKeys such that they are
-automatically (de)registered. Require that all usages of LockClassKeys
-ensure that they are Pin'd.
+Both most common formats have uuid in addition to partition name:
+GPT: standard uuid xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+DOS: 4 byte disk signature and 1 byte partition xxxxxxxx-xx
 
-Link: https://lore.kernel.org/rust-for-linux/20240815074519.2684107-1-nmi@metaspace.dk/
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Mitchell Levy <levymitchell0@gmail.com>
+Tools from util-linux use the same notation for them.
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Kyle Fortin <kyle.fortin@oracle.com>
+[dianders: rebased to modern kernels]
+Signed-off-by: Douglas Anderson <dianders@google.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- rust/helpers/helpers.c      |  1 +
- rust/helpers/sync.c         | 13 +++++++++++++
- rust/kernel/sync.rs         | 30 +++++++++++++++++++++++++++---
- rust/kernel/sync/condvar.rs | 11 +++++++----
- rust/kernel/sync/lock.rs    |  4 ++--
- rust/kernel/workqueue.rs    |  2 +-
- 6 files changed, 51 insertions(+), 10 deletions(-)
+I found myself needing the PARTUUID from userspace recently and it
+seems like pretty much all of the solutions involve a lot of code or
+including some userspace libraries to solve this for you. This is less
+than ideal when you're running from an initrd and want to keep things
+simple.
 
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 30f40149f3a9..2e8a2abfca33 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -20,6 +20,7 @@
- #include "signal.c"
- #include "slab.c"
- #include "spinlock.c"
-+#include "sync.c"
- #include "task.c"
- #include "uaccess.c"
- #include "wait.c"
-diff --git a/rust/helpers/sync.c b/rust/helpers/sync.c
-new file mode 100644
-index 000000000000..ff7e68b48810
---- /dev/null
-+++ b/rust/helpers/sync.c
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/lockdep.h>
-+
-+void rust_helper_lockdep_register_key(struct lock_class_key *k)
-+{
-+	lockdep_register_key(k);
-+}
-+
-+void rust_helper_lockdep_unregister_key(struct lock_class_key *k)
-+{
-+	lockdep_unregister_key(k);
-+}
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index d270db9b9894..3903573143b3 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -5,6 +5,8 @@
- //! This module contains the kernel APIs related to synchronisation that have been ported or
- //! wrapped for usage by Rust code in the kernel.
- 
-+use crate::pin_init;
-+use crate::prelude::*;
- use crate::types::Opaque;
- 
- mod arc;
-@@ -20,15 +22,35 @@
- 
- /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
- #[repr(transparent)]
--pub struct LockClassKey(Opaque<bindings::lock_class_key>);
-+#[pin_data(PinnedDrop)]
-+pub struct LockClassKey {
-+    #[pin]
-+    inner: Opaque<bindings::lock_class_key>,
-+}
- 
- // SAFETY: `bindings::lock_class_key` is designed to be used concurrently from multiple threads and
- // provides its own synchronization.
- unsafe impl Sync for LockClassKey {}
- 
- impl LockClassKey {
-+    /// Initializes a dynamically allocated lock class key. In the common case of using a
-+    /// statically allocated lock class key, the static_lock_class! macro should be used instead.
-+    pub fn new_dynamic() -> impl PinInit<Self> {
-+        pin_init!(Self {
-+            // SAFETY: lockdep_register_key expects an uninitialized block of memory
-+            inner <- Opaque::ffi_init(|slot| unsafe { bindings::lockdep_register_key(slot) })
-+        })
-+    }
-+
-     pub(crate) fn as_ptr(&self) -> *mut bindings::lock_class_key {
--        self.0.get()
-+        self.inner.get()
-+    }
-+}
-+
-+#[pinned_drop]
-+impl PinnedDrop for LockClassKey {
-+    fn drop(self: Pin<&mut Self>) {
-+        unsafe { bindings::lockdep_unregister_key(self.as_ptr()) }
-     }
+Given that the kernel has PARTUUID handling already and needs to keep
+track of it for using it in "root=" matching, it seems silly not to
+expose it, so I wrote a patch for it.
+
+After I wrote the 2 line patch to expose the UUID, I thought to search
+the internet and found an old patch where someone had written what
+amounts to the same two lines [1], so I'm grabbing the old patch and
+resending as a v2. I'm keeping the Reviewed-by even though I rebased
+the patch (adjusted for file moves / name changes) since it's a tiny
+patch and the concept is identical to the old patch.
+
+Crossing my fingers that this looks OK to land.
+
+[1] https://lore.kernel.org/r/150729013610.744480.1644359289262914898.stgit@buzz
+
+Changes in v2:
+- Rebased
+
+ block/partitions/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index 5bd7a603092e..aa54c1f4eaa5 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -253,6 +253,8 @@ static int part_uevent(const struct device *dev, struct kobj_uevent_env *env)
+ 	add_uevent_var(env, "PARTN=%u", bdev_partno(part));
+ 	if (part->bd_meta_info && part->bd_meta_info->volname[0])
+ 		add_uevent_var(env, "PARTNAME=%s", part->bd_meta_info->volname);
++	if (part->bd_meta_info && part->bd_meta_info->uuid[0])
++		add_uevent_var(env, "PARTUUID=%s", part->bd_meta_info->uuid);
+ 	return 0;
  }
  
-@@ -37,9 +59,11 @@ pub(crate) fn as_ptr(&self) -> *mut bindings::lock_class_key {
- #[macro_export]
- macro_rules! static_lock_class {
-     () => {{
-+        // SAFETY: lockdep expects uninitialized memory when it's handed a statically allocated
-+        // lock_class_key
-         static CLASS: $crate::sync::LockClassKey =
-             unsafe { ::core::mem::MaybeUninit::uninit().assume_init() };
--        &CLASS
-+        $crate::prelude::Pin::static_ref(&CLASS)
-     }};
- }
- 
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index 2b306afbe56d..0469a9d81b7e 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -14,9 +14,12 @@
-     time::Jiffies,
-     types::Opaque,
- };
--use core::ffi::{c_int, c_long};
--use core::marker::PhantomPinned;
--use core::ptr;
-+use core::{
-+    ffi::{c_int, c_long},
-+    marker::PhantomPinned,
-+    pin::Pin,
-+    ptr,
-+};
- use macros::pin_data;
- 
- /// Creates a [`CondVar`] initialiser with the given name and a newly-created lock class.
-@@ -102,7 +105,7 @@ unsafe impl Sync for CondVar {}
- 
- impl CondVar {
-     /// Constructs a new condvar initialiser.
--    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
-+    pub fn new(name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
-         pin_init!(Self {
-             _pin: PhantomPinned,
-             // SAFETY: `slot` is valid while the closure is called and both `name` and `key` have
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index f6c34ca4d819..305c41321369 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -7,7 +7,7 @@
- 
- use super::LockClassKey;
- use crate::{init::PinInit, pin_init, str::CStr, types::Opaque, types::ScopeGuard};
--use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned};
-+use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned, pin::Pin};
- use macros::pin_data;
- 
- pub mod mutex;
-@@ -106,7 +106,7 @@ unsafe impl<T: ?Sized + Send, B: Backend> Sync for Lock<T, B> {}
- 
- impl<T, B: Backend> Lock<T, B> {
-     /// Constructs a new lock initialiser.
--    pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
-+    pub fn new(t: T, name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
-         pin_init!(Self {
-             data: UnsafeCell::new(t),
-             _pin: PhantomPinned,
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index 553a5cba2adc..1720a99f53be 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -367,7 +367,7 @@ impl<T: ?Sized, const ID: u64> Work<T, ID> {
-     /// Creates a new instance of [`Work`].
-     #[inline]
-     #[allow(clippy::new_ret_no_self)]
--    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self>
-+    pub fn new(name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self>
-     where
-         T: WorkItem<ID>,
-     {
-
 -- 
-2.34.1
-
+2.47.0.rc0.187.ge670bccf7e-goog
 
 
