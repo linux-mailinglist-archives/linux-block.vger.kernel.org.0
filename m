@@ -1,30 +1,30 @@
-Return-Path: <linux-block+bounces-12280-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12278-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 362C8992EF7
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 16:23:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6142B992EC3
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 16:18:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B706BB23902
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 14:23:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1877A1F22448
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 14:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B0A1D6DC7;
-	Mon,  7 Oct 2024 14:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23FAF1D6DC4;
+	Mon,  7 Oct 2024 14:17:01 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from MSK-MAILEDGE.securitycode.ru (msk-mailedge.securitycode.ru [195.133.217.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11E95338D;
-	Mon,  7 Oct 2024 14:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E76F1D6DC7;
+	Mon,  7 Oct 2024 14:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.217.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728310971; cv=none; b=OdpmkU1OG/k2+/FpxVVqzduFDGmTmwbsyGy9B0zw1Bmxv/j7y62+zYg2F36vc2New2/V/RM28qrSpBcw9Hc5jAW0QCPuTWeEFZU4d0m9S//Ncpco3ytiyAmwtM5s6/XVkIlYWbNJGouAWJuRKY7fcP7ECyVzjVDwztn6up/tx90=
+	t=1728310621; cv=none; b=frzqIBVbzlnFx/vm9VDHfIQB+x39yymmey+EVivRD+T9YmcMe6kUYw7qM9TbR912wWtETvr1BQohHt/qiZl6bvb/dDZU4mimaE1Gt+BqorbNqO2jHMDB4Y4Gxhc/2EZHIC6Ya54nd8454utUjrDx0wPTTf9uWXHPplGhuIm2uUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728310971; c=relaxed/simple;
-	bh=4jhDfpfpgCyddwDBxOgIA7K7Kk5rU/bHljeRUpcpP4s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Up9UnKR2xWgA0B5dccrOtqptYQJG1v2Y2fZ6rr5MDesmyv1/8+62QaO9ANHpnrm2JW2bzZ56t1/hXeHf/0lXlQFfY25wX87GQZ3cqOBjgi7SoeiodvAOVwgB3RXwI+vSDDWWJ4yIbLl3FyFkljwym/4ncDG1nZUaWzpDHqXuWzM=
+	s=arc-20240116; t=1728310621; c=relaxed/simple;
+	bh=8DGTH5FD1i9Kn/l1YJyaz3nBsYdk+fBaMBnPUh8SBLk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IiP1EMtow21z6kteD29JwcI0HyAQ83lj7qOPDdsuyBvUzquYoWiTv08nPk6wnl4AcYv1g120d9i3gwMXKNGDnZs1ypdkygWPIPOY8a+3suXwXhs5apacC3ydUlSGSA3sFi+zRNFDIoT/P98/D1M2/OykiC+2D9sO3eOGHH3uJWY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=securitycode.ru; spf=pass smtp.mailfrom=securitycode.ru; arc=none smtp.client-ip=195.133.217.143
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=securitycode.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=securitycode.ru
@@ -36,8 +36,8 @@ CC: George Ryurikov <g.ryurikov@securitycode.ru>, Paolo Valente
 	<lvc-project@linuxtesting.org>, Yu Kuai <yukuai3@huawei.com>, Jan Kara
 	<jack@suse.cz>
 Subject: [PATCH 5.10] block, bfq: remove useless checking in bfq_put_queue()
-Date: Mon, 7 Oct 2024 17:07:08 +0300
-Message-ID: <20241007140709.1762881-1-g.ryurikov@securitycode.ru>
+Date: Mon, 7 Oct 2024 17:16:18 +0300
+Message-ID: <20241007141618.1766564-1-g.ryurikov@securitycode.ru>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -47,14 +47,14 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-X-ClientProxiedBy: SPB-EX1.Securitycode.ru (172.16.24.91) To
+X-ClientProxiedBy: MSK-EX2.Securitycode.ru (172.17.8.92) To
  MSK-EX2.Securitycode.ru (172.17.8.92)
 
 From: George Ryurikov <g.ryurikov@securitycode.ru>
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-commit 1e3cc2125d7cc7d492b2e6e52d09c1e17ba573c3
+commit 1e3cc2125d7cc7d492b2e6e52d09c1e17ba573c3 upstream.
 
 'bfqq->bfqd' is ensured to set in bfq_init_queue(), and it will never
 change afterwards.
