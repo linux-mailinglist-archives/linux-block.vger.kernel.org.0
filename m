@@ -1,114 +1,136 @@
-Return-Path: <linux-block+bounces-12290-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12292-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF9029934E3
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 19:25:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8CF799360E
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 20:24:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 875A3B222F7
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 17:25:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECE9C1C234E9
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 18:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38EDB1DD875;
-	Mon,  7 Oct 2024 17:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157FC1DE2AE;
+	Mon,  7 Oct 2024 18:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="BwJqjvRz"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Q7lhBTJ2"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-lf1-f100.google.com (mail-lf1-f100.google.com [209.85.167.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD631DD862
-	for <linux-block@vger.kernel.org>; Mon,  7 Oct 2024 17:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056031DDC36
+	for <linux-block@vger.kernel.org>; Mon,  7 Oct 2024 18:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728321905; cv=none; b=dKCWCDoAoP6hdptmfNC8uRcXi3KsVHNFr0jxmQ6TXWmglxbsNn5Otj5uHDRndlTj8O2h8QG3m4lIQupWApT0bbtLq9YxO5c0sNl6kaOJw282S9joABxdk+wwoxY9LGlp8A+6NpQ7/Ci76l+PfBXNtzMWSDsrFtLlYSOms7Rqofo=
+	t=1728325476; cv=none; b=UpN3c/tpQY8uCpFCFBHa9C1YJwbpWbqykIzDPFT6Z5INu6xKuq6JXjeBv0nmxub4AWh+OEmSzD00namDJUfmHVhfJBH14RcNDJPkq+mZ3Ik/DtwBLpVmIcO/SfWpAurO6t7sQ+VvBNPQ0+nKycJ/h1rkhW3bRHBWC/lVgy2PdBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728321905; c=relaxed/simple;
-	bh=1/7sb4L013jDAAikYnXrFI6XHOPJj4cPj8B9qnNztFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YkwLLD/yahPNBSR2hJzEkdt2u7QYsN4nssA0BnP4mfffBBJt24er1brCfNVVkDi3gfhCBtN9oFhoh/qRm7JfMjsQ5gISZRtMjhbXj5Bkdji1HZdohWNaCikPm84FSP+H5XPQtO2ahcYY10UAxFZFX0Ulyl181hkCUbW4LXj+LaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=BwJqjvRz; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-82ce603d8b5so217668639f.0
-        for <linux-block@vger.kernel.org>; Mon, 07 Oct 2024 10:25:03 -0700 (PDT)
+	s=arc-20240116; t=1728325476; c=relaxed/simple;
+	bh=Bm8pohTrWTkYKI3XXcCRH7TxwPDICL+HxiIBiPqI2Ts=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uG3zud373xV8BqoHCZs3qYCkZiVGsc2gYp1EYyLaRJwgQwoeALfpGLveN6OwyHIJvN2Va6CBVdSESAlVNAdNIf60Gdea/pbdAfl2w92Bu3gf4sfMBf4FrqGAjt0SDsw0HOdukXCs0oE28EVPCSIaCIx6qlICNqBHPGNc8ctA/0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Q7lhBTJ2; arc=none smtp.client-ip=209.85.167.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-lf1-f100.google.com with SMTP id 2adb3069b0e04-539983beb19so5894393e87.3
+        for <linux-block@vger.kernel.org>; Mon, 07 Oct 2024 11:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1728321902; x=1728926702; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cDdjFXnqmzo2D0DMdD34d22tTx1BzoX1VwMsigXz9oA=;
-        b=BwJqjvRzFR1laLjjVMwjjOphH10LIdrPsOfmNvXCPsnJjfG2mWBc/n5zw1Ljb9JFqz
-         UziNOhml7Dig1yB88LEFrx7WitHV1Gc1V8E6AQqq3qw7Ce90cYWbbPEc7eXscdutEn6H
-         +Fq3dKEPLwQ3Ss3EPyFKNpm2uwlZiOQrlZCuOIXRrbgYxGLFLPt8AXmMAJuKkTGGfkuK
-         83muVKMGkDKNl7Y6+CAWX30giOTTMZEP3s1BBk0aaSShjOUv6dCeL95+834dmdJ+UAK1
-         V5Ih2aZE+o6Pq91CdRfd0Rvx63xrX9EghM1es8b15fiuh8aQRds47VVvuQqDddoPKUr1
-         IUVA==
+        d=purestorage.com; s=google2022; t=1728325472; x=1728930272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d7F+reMg7nqljdqdR3c2o8Ja1h9e3wiG2vM32ITmUUU=;
+        b=Q7lhBTJ247f85xIxDSqv2NMmAlDZP4EizVr+cvnyHRwS7pJ0F0K9erQKD8z4/VqUkX
+         lgcoSOgKbURMFXC4QG0tN7JI4f5hZHTj0gjkRffs0NqQOnHaxn0TKbBtQP6pq8CisIzM
+         uP8bBiaU4oTCnO5VDHYCMWu57NbyZsxZ1zez1ibUBu2fsaXwxn6rKnvkzyMwF+X57IWp
+         MaKwXL1wicretbCkvWAK9gfgkFABvKB+XFq93nYX8xzFQem+Ed/0DvZwGmbekd/AdZhp
+         wMpksez9yMtWp4eCdXn3RKQHXjbNQtVVM9nYDfRlZdpBD4jI1UiuYEPS5YrYg1YdPF+u
+         Ctvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728321902; x=1728926702;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cDdjFXnqmzo2D0DMdD34d22tTx1BzoX1VwMsigXz9oA=;
-        b=XYiMDHP/bcx04yeIk8qMTmenw9W9D0dCa5bKD3l0CDltjP8ZSwCQvl2X25RCdahCwS
-         TWKghzRSOMLRtjEx9RjcfgmQfcBHFr3GaCASsnGzSdEC51EpCmHpU5FYlUa4xS1OhWJZ
-         XSwwXbh0PKJbE6gnaUGrQLHunriZlwC7mSDgp1LSuiHzBiOIjEMGkP7u0dclDKRAkC0Z
-         eCDj/UV6jL8BLP3KtL9BuY3PcF97SYpo7sR0HWpPa6/kk3LfAFunyResBSDZHUJHqcmK
-         qv2AcO22yFzkhY7dlcrg8UYU0cCHAqrVlC82u2zwsUz2W6hKTH68/lLcQdykxZubs5T+
-         70lg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5yz6/rtz94BXdbBi7QC2uxm3Otu90eqPLSv37B4P/2dOzdrnUEXOebxqBuPK9b1YhRKNfW8EpqBboGg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVX4ExyWhcCLaLEHKrZtmgGALkIZD3pG09SEIbDl61Nw1/VVhs
-	tZk2xo+yR02+Nsa7WWFI7zOwoPtXk4JrwIbr7sLDOh/X5BiuGSOE6ZtSr5aP5tE=
-X-Google-Smtp-Source: AGHT+IGWfL6HTIq4hx4Xl9HY/v7hmc4gwRkJVnaJ9iEtS1GjCpScQx9VZE12aSSpuwRj5pyXh82SWw==
-X-Received: by 2002:a05:6602:48c:b0:82d:2a45:79f6 with SMTP id ca18e2360f4ac-834f7d65548mr1332217339f.11.1728321902609;
-        Mon, 07 Oct 2024 10:25:02 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-83503b2fc8csm132792039f.48.2024.10.07.10.25.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2024 10:25:02 -0700 (PDT)
-Message-ID: <5878e794-a5b3-4a76-ba1e-5ab678dac86b@kernel.dk>
-Date: Mon, 7 Oct 2024 11:25:01 -0600
+        d=1e100.net; s=20230601; t=1728325472; x=1728930272;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d7F+reMg7nqljdqdR3c2o8Ja1h9e3wiG2vM32ITmUUU=;
+        b=u3GaBbKFtb7oPivpAuGbwwqSRmCVka0aJ7ODnUXTF/CWizf5xF2YPAEgnTfYwiZLmQ
+         V4rhQYRFGNsjRbdzYRB270JDqwJCntDWveh6MUHyvQ3oJcIRWqTIyPQBhNdX8sjrsKAS
+         n1Fy0boWGVoKshRM5N/p+vjoWZoEuTcVxFQbMZCkXcdVCUjZZ6NA/T4UGE7ZTZP8tHTa
+         UsxxhN9AP8Pa3PsTWt/Nn0jng2lR6mxdbJiUohLttEa/k/aFfTwtNosR5/IN+ddZBUu/
+         pWgYsonfVfapuXL2pRPhyv/jxmgrh3jut9iy5bf3TtWFbne++jWVeYC7mt1aHJZANXHc
+         VaDw==
+X-Forwarded-Encrypted: i=1; AJvYcCULqe+fBtggDqLHGxUyYCnwbREv4u6m93apAd2E5kLpMoBGlCFFVjrdGXLaLPRr1NmAr0ZY8nRGmo4TfQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkeYdqHojYx5J+hbifp+4xGsAVkiAw/NMdWhIlZw2hk+p1Kqrv
+	3gdzr04kgFQJbg33SFTpp6QxOr2RaDtparapcYNnCNVApqHbT6pioRuEl/TdkqSMa77CJGlZsII
+	Tg/1Q01zJiwM3jerk/XWPBvPlCdNFpErY
+X-Google-Smtp-Source: AGHT+IGV2t3SngtLGsSeHOFwsPlCDhCLEKm2RUGTjOXvgRo5Y3Xv6FXDDHYkwFJhHaqW8oG3UkU/YWg0ALw8
+X-Received: by 2002:a05:6512:6c5:b0:52c:de29:9ff with SMTP id 2adb3069b0e04-539ab84e79emr5326901e87.2.1728325471882;
+        Mon, 07 Oct 2024 11:24:31 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 2adb3069b0e04-539afee57cesm172020e87.70.2024.10.07.11.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2024 11:24:31 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2F69B340204;
+	Mon,  7 Oct 2024 12:24:30 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 23EF1E41398; Mon,  7 Oct 2024 12:24:30 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v4 0/5] ublk: support device recovery without I/O queueing
+Date: Mon,  7 Oct 2024 12:24:13 -0600
+Message-Id: <20241007182419.3263186-1-ushankar@purestorage.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RDMA/srpt: Make slab cache names unique
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>,
- Leon Romanovsky <leonro@nvidia.com>, linux-rdma@vger.kernel.org,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <20241004173730.1932859-1-bvanassche@acm.org>
- <3108a1da-3eb3-4b9d-8063-eab25c7c2f29@linux.dev>
- <e9778971-9041-4383-8633-c3c8b137e92e@kernel.dk>
- <09ffcd22-8853-4bb3-8471-ef620303174b@acm.org>
- <09aa620c-b44b-41d2-a207-d2cc477fdad2@kernel.dk>
- <04daaf4c-9c62-404e-8c5e-1fffb3f2ecbd@acm.org>
- <d6df2c28-467d-458e-9b53-4cb7abcf682f@kernel.dk>
- <20241007172253.GB1365916@nvidia.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20241007172253.GB1365916@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/7/24 11:22 AM, Jason Gunthorpe wrote:
-> On Mon, Oct 07, 2024 at 11:20:56AM -0600, Jens Axboe wrote:
-> 
->> stand by my comment that using ida for this is overengineering. And that
->> yes there are 3 slab caches, but having 3 per whatever instance is silly
->> and you should share those 3 across instances. 
-> 
-> Store the slab cache in an xarray indexed by the variable size and
-> name them according to their size?
+ublk currently supports the following behaviors on ublk server exit:
 
-That's a way better idea.
+A: outstanding I/Os get errors, subsequently issued I/Os get errors
+B: outstanding I/Os get errors, subsequently issued I/Os queue
+C: outstanding I/Os get reissued, subsequently issued I/Os queue
 
+and the following behaviors for recovery of preexisting block devices by
+a future incarnation of the ublk server:
+
+1: ublk devices stopped on ublk server exit (no recovery possible)
+2: ublk devices are recoverable using start/end_recovery commands
+
+The userspace interface allows selection of combinations of these
+behaviors using flags specified at device creation time, namely:
+
+default behavior: A + 1
+UBLK_F_USER_RECOVERY: B + 2
+UBLK_F_USER_RECOVERY|UBLK_F_USER_RECOVERY_REISSUE: C + 2
+
+A + 2 is a currently unsupported behavior. This patch series aims to add
+support for it.
+
+Userspace support and testing for this flag are available at:
+https://github.com/ublk-org/ublksrv/pull/73
+
+Uday Shankar (5):
+  ublk: check recovery flags for validity
+  ublk: refactor recovery configuration flag helpers
+  ublk: merge stop_work and quiesce_work
+  ublk: support device recovery without I/O queueing
+  Documentation: ublk: document UBLK_F_USER_RECOVERY_FAIL_IO
+
+ Documentation/block/ublk.rst  |  24 +++--
+ drivers/block/ublk_drv.c      | 191 +++++++++++++++++++++++-----------
+ include/uapi/linux/ublk_cmd.h |  18 ++++
+ 3 files changed, 165 insertions(+), 68 deletions(-)
+
+
+base-commit: 8faa82888e7109d91902260ecffd12291abb4bf6
 -- 
-Jens Axboe
+2.34.1
 
 
