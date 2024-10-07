@@ -1,79 +1,79 @@
-Return-Path: <linux-block+bounces-12291-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12296-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 712CD99360C
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 20:24:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2F3C99361C
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 20:25:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2815D286BAF
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 18:24:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18887B2199F
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2024 18:25:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8182A1DE2A1;
-	Mon,  7 Oct 2024 18:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889241DE2C8;
+	Mon,  7 Oct 2024 18:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="PomkSCir"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="W0ADNFCB"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ed1-f104.google.com (mail-ed1-f104.google.com [209.85.208.104])
+Received: from mail-wm1-f97.google.com (mail-wm1-f97.google.com [209.85.128.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDAB1DDC32
-	for <linux-block@vger.kernel.org>; Mon,  7 Oct 2024 18:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE761DDC3C
+	for <linux-block@vger.kernel.org>; Mon,  7 Oct 2024 18:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728325475; cv=none; b=ntTjA3681yCLYrHwljsDhoKYxFrmK5dQnzdQODQVXIG4CWW9HHF860/aXafpDqHIOaik1b9cBBdmcPdeLX22OxCKtsUGjZZw+/7eWT+YRjqB0pBB3FBXyDcK+nS7glEPbWt5brNBkJlYFTBRMZIQb6pb+QU0C1racEpXdBn6ffQ=
+	t=1728325478; cv=none; b=jPCnmLUnHI2KstWy9YTRx1iRxX3bIKYcAeQerqwfTznn+rMi/6UM/GaMjoGcZwgr3XU54nXGVQxDP9KYW2axbaRcZDEdnb/qlyyzSQO63mRSEzCHZ+6l2sx8Cqoxh/bgkheHTyA8PnZsgTEJMF0/ZjR877L1y1Fm8GNA2ve96QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728325475; c=relaxed/simple;
-	bh=+2yeGZOGUjgWkvwGxUKH3XKuycbfw4OGi1abjQnPJdA=;
+	s=arc-20240116; t=1728325478; c=relaxed/simple;
+	bh=QZBCwy/lD0XW0UevSXfq144qRLCxHg+wAUyu0q5BGR4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ayFgBngVG7ieavrJfeTXXelFTIirubLfNriEIM82Uk/aEp4O8TVDlrYHc5Kph916I9uNcP9YFPKHAwM+/aYJPfIf1nTNfR8PDKPG+u/WETFbvDufxcKpYhHUC6gZTqoW7vNs9JMXN2MUTwHtM4PVj7MCJAQgJu5EJcVOuScbzAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=PomkSCir; arc=none smtp.client-ip=209.85.208.104
+	 MIME-Version; b=nIcQ0m1MyPoLbUmqSqDFWCpf7nbcV1A5BTee2sFLTbrukXasGUwaC5K9tg2lLQYjQa5/QD/vFkIf9vQl+USLcpFWi553d81ntJ9FS2a8GXB5s1jwq2F1PLgCDfdaqwRIvd30JSMgttnTBy3XpCaZqvMZEC+UtaxwIgWEtUB7aII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=W0ADNFCB; arc=none smtp.client-ip=209.85.128.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ed1-f104.google.com with SMTP id 4fb4d7f45d1cf-5c881aa669fso5839538a12.0
-        for <linux-block@vger.kernel.org>; Mon, 07 Oct 2024 11:24:33 -0700 (PDT)
+Received: by mail-wm1-f97.google.com with SMTP id 5b1f17b1804b1-42cde6b5094so48163655e9.3
+        for <linux-block@vger.kernel.org>; Mon, 07 Oct 2024 11:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1728325472; x=1728930272; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1728325474; x=1728930274; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q0H5UANoZHToB9rgvSi2MaCgzreFgIPa7pZTdPrm7xg=;
-        b=PomkSCirmnunYHKwG3P+iNbQV0uEOqN7uAmRKSzqHi3f3Vfi0aSzEXSRBHo5E414vd
-         tn1bRnimPeTdqJjjtlVDBuvkpJdTcIcV7b9N+P7P51XInUPRgelDqSt1Lah+K05q7of4
-         FTUNMtRKOkVYRLPYfcmSBthcERRtr+prj5dfV7an8V6hh1UgPgjSp6XdSG560X9ygEe2
-         CulmN//0ntGVUYdamr0DZAgBLQlVJLWG7qLXywyagEV3JOmu0Oed4weKj1bKof8v9Pkg
-         HzPm6rJC3V3oSSWoOG7LjF8KmveAiPPcPZAwHmYhIeUSNW2MMqn/mxHDA8FnqZQXpjQ0
-         R+3w==
+        bh=9yH/L8ILWxKtxaV/Gz8pZ/T+h8pPYEsO/DmxFNXaNNo=;
+        b=W0ADNFCBRqKFEQ0GVJXJeKn9BwxC+1AftEi9+q3i4xNHEcQpHcaEyBkXzlcrke9Oi5
+         cWkS4/4eRIOcfZkhoHUg9QeuokHxg6KXs28N0kQKqmI4YomG88ys0J55NlB1nXjw36S7
+         Ji/tuT9b3rMg7DFoclUHAYV2d2dis9jxV4tnBdVoUqbP8W64bnAEQfEYJ+sMo0OMpwN/
+         YAc310GtwoAPBU1+SUb++WRErjAQO09oNsJVgZCPt8plWsVlABe1kGc0S7zowAaQYakn
+         W3DbmNlYHAUDN1cgOG1riOgkUq0XJXPP9FHP6FGYjeY0oxhmu2gYJsP3+oS554mjbTLg
+         V+wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728325472; x=1728930272;
+        d=1e100.net; s=20230601; t=1728325474; x=1728930274;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q0H5UANoZHToB9rgvSi2MaCgzreFgIPa7pZTdPrm7xg=;
-        b=YaRR/gNAr+5OQOCnFLJ+DQ68CgRWSzTGKQavI07R+S2ibLMhl490mQshbn22ml9/YR
-         30K4FtqSVd9mP2gQcNiZ0DLOaQ53YT7ODY2SabN+mb09x8P5YZ1+syQ0/ryE4az/EFZV
-         T8s/O/5YsRqmZZnJHERyH5rLoKnbtcMDUI5anSd11JdEXD2Fb8sLP6GfY+3OMGLryob1
-         BUv3KbOdS11uMpwQRNj/XM3Ov5I0ucXbXG6L1f9nyoxWn7clmiKMuhl5rysEm+y5nhu5
-         1PmIsCuT5O1pvmhPcvXWvx2fWYWDdQ7IyRc/5uPC+Uu2CII3KmPNp7vVUMXVtOv0xAsa
-         PZsw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7Iw0CkN6PWMlqqJbFJyWHd25h19UH8IcMQ7oYC/YWC/h5nHoCQQJolFDd+S9qo3MRSA9iKewsaCJmNQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YytF/tt88vqCSVpxmLwEbjNXTwG7tIeNDYkCiZveG9Pzz1itaW6
-	RXANFEy28VIIADLBDF2qfJLNkUSl1GqsvHVrvBVZBxGVkYkPHH4bTBQQJ5QwFx7Nn9UVcbzZmJm
-	9rCTPoTe3bwOddM/d3DUT0TWIF6KBg9cqW9IlmDKyCkojmvIA
-X-Google-Smtp-Source: AGHT+IGNk3Y43MYHgLbF6OholHcwuUlH43K4CIEcj5UM0DVy/lYFbYONxkLL20mWRt36SwzaWT+I+DHJGmfA
-X-Received: by 2002:a17:907:2cc2:b0:a99:6476:ce78 with SMTP id a640c23a62f3a-a99647705c3mr88621066b.17.1728325471502;
-        Mon, 07 Oct 2024 11:24:31 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id a640c23a62f3a-a992e784a60sm10104866b.124.2024.10.07.11.24.31
+        bh=9yH/L8ILWxKtxaV/Gz8pZ/T+h8pPYEsO/DmxFNXaNNo=;
+        b=I8ialnINPnpoG7UdsCUJ2yt+JRyXnseBeyroB1y6BYDE9cUCzkHQ96ZYgoi/7vj01G
+         ynbEBIWtpZCIRBCwRAOeh9RVX0K6t08Rm6E7rF7WttZq8CxTBKU6f5QDdH7N4pO4ZVMh
+         1FL6ibazEzmPpN10m8PVrLtVFQEAW9nj0rwiNff6FSVkc/cMHzWyFpMDDxFE+V+Viqfj
+         Ef60n6cPaB6Nojommoj2w0llglVAle33rF9GcrJr685kj/KcLZkkVokSQbs7eVjD5m7s
+         KZ2UmPjTs8pHi0LHBZ/2wjvg6TQ9tgseE8lj4EZLgEQiaOgzLiWYeqEyXiyteS2In5YC
+         otpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVojcXnFMD/aAuIGo5jELx3DP2Z1FiuXroAJeRRfU9ms1unLygSdUGBanOIyECruqP2D7erKLqI66rfoA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnEjnEBNjbEVeJo454Z5Q/cyoZuTud0nqwlZoChYxYnNWR9/eb
+	L3PWmteBkkJsPNZWTPVROgwsCvvdG7/AzS+cef/7KPRJ4dkatWLpOCR9tvztmwUf8rHmbIZ8sBF
+	u8S4CuRaJkmrF2PsF/+inxmpejWgPz22j
+X-Google-Smtp-Source: AGHT+IGvRWZfNrgX4t5z6ZPb+UcA+5iXc9bUSxiSGrmAutwO/10Mra5K2+QfutcihWPdi+Yzu5wTLx2LtBgX
+X-Received: by 2002:a05:600c:8718:b0:42c:bd5a:9479 with SMTP id 5b1f17b1804b1-42f85ab8e77mr98408525e9.18.1728325473618;
+        Mon, 07 Oct 2024 11:24:33 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 5b1f17b1804b1-42f89e85d85sm1906765e9.8.2024.10.07.11.24.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 11:24:31 -0700 (PDT)
+        Mon, 07 Oct 2024 11:24:33 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 464DF3410EA;
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 4E088341809;
 	Mon,  7 Oct 2024 12:24:30 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 4197AE41358; Mon,  7 Oct 2024 12:24:30 -0600 (MDT)
+	id 4B995E41358; Mon,  7 Oct 2024 12:24:30 -0600 (MDT)
 From: Uday Shankar <ushankar@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -81,9 +81,9 @@ To: Ming Lei <ming.lei@redhat.com>,
 Cc: Uday Shankar <ushankar@purestorage.com>,
 	linux-block@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v4 4/5] ublk: support device recovery without I/O queueing
-Date: Mon,  7 Oct 2024 12:24:17 -0600
-Message-Id: <20241007182419.3263186-5-ushankar@purestorage.com>
+Subject: [PATCH v4 5/5] Documentation: ublk: document UBLK_F_USER_RECOVERY_FAIL_IO
+Date: Mon,  7 Oct 2024 12:24:18 -0600
+Message-Id: <20241007182419.3263186-6-ushankar@purestorage.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241007182419.3263186-1-ushankar@purestorage.com>
 References: <20241007182419.3263186-1-ushankar@purestorage.com>
@@ -95,261 +95,58 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ublk currently supports the following behaviors on ublk server exit:
-
-A: outstanding I/Os get errors, subsequently issued I/Os get errors
-B: outstanding I/Os get errors, subsequently issued I/Os queue
-C: outstanding I/Os get reissued, subsequently issued I/Os queue
-
-and the following behaviors for recovery of preexisting block devices by
-a future incarnation of the ublk server:
-
-1: ublk devices stopped on ublk server exit (no recovery possible)
-2: ublk devices are recoverable using start/end_recovery commands
-
-The userspace interface allows selection of combinations of these
-behaviors using flags specified at device creation time, namely:
-
-default behavior: A + 1
-UBLK_F_USER_RECOVERY: B + 2
-UBLK_F_USER_RECOVERY|UBLK_F_USER_RECOVERY_REISSUE: C + 2
-
-The behavior A + 2 is currently unsupported. Add support for this
-behavior under the new flag combination
-UBLK_F_USER_RECOVERY|UBLK_F_USER_RECOVERY_FAIL_IO.
-
 Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 ---
-Changes since v3 (https://lore.kernel.org/linux-block/20241002220949.3087902-5-ushankar@purestorage.com/):
-- Do ub->dev_info.state = UBLK_S_DEV_FAIL_IO state update while queue is
-  quiesced
+ Documentation/block/ublk.rst | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
- drivers/block/ublk_drv.c      | 78 ++++++++++++++++++++++++++++-------
- include/uapi/linux/ublk_cmd.h | 18 ++++++++
- 2 files changed, 81 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index d5edef7bde43..60f6d86ea1e6 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -60,10 +60,12 @@
- 		| UBLK_F_UNPRIVILEGED_DEV \
- 		| UBLK_F_CMD_IOCTL_ENCODE \
- 		| UBLK_F_USER_COPY \
--		| UBLK_F_ZONED)
-+		| UBLK_F_ZONED \
-+		| UBLK_F_USER_RECOVERY_FAIL_IO)
+diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
+index ff74b3ec4a98..51665a3e6a50 100644
+--- a/Documentation/block/ublk.rst
++++ b/Documentation/block/ublk.rst
+@@ -199,24 +199,36 @@ managing and controlling ublk devices with help of several control commands:
  
- #define UBLK_F_ALL_RECOVERY_FLAGS (UBLK_F_USER_RECOVERY \
--		| UBLK_F_USER_RECOVERY_REISSUE)
-+		| UBLK_F_USER_RECOVERY_REISSUE \
-+		| UBLK_F_USER_RECOVERY_FAIL_IO)
+ - user recovery feature description
  
- /* All UBLK_PARAM_TYPE_* should be included here */
- #define UBLK_PARAM_TYPE_ALL                                \
-@@ -146,6 +148,7 @@ struct ublk_queue {
- 	bool force_abort;
- 	bool timeout;
- 	bool canceling;
-+	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
- 	unsigned short nr_io_ready;	/* how many ios setup */
- 	spinlock_t		cancel_lock;
- 	struct ublk_device *dev;
-@@ -690,7 +693,8 @@ static inline bool ublk_nosrv_should_reissue_outstanding(struct ublk_device *ub)
-  */
- static inline bool ublk_nosrv_dev_should_queue_io(struct ublk_device *ub)
- {
--	return ub->dev_info.flags & UBLK_F_USER_RECOVERY;
-+	return (ub->dev_info.flags & UBLK_F_USER_RECOVERY) &&
-+	       !(ub->dev_info.flags & UBLK_F_USER_RECOVERY_FAIL_IO);
- }
- 
- /*
-@@ -700,7 +704,8 @@ static inline bool ublk_nosrv_dev_should_queue_io(struct ublk_device *ub)
-  */
- static inline bool ublk_nosrv_should_queue_io(struct ublk_queue *ubq)
- {
--	return ubq->flags & UBLK_F_USER_RECOVERY;
-+	return (ubq->flags & UBLK_F_USER_RECOVERY) &&
-+	       !(ubq->flags & UBLK_F_USER_RECOVERY_FAIL_IO);
- }
- 
- /*
-@@ -714,6 +719,12 @@ static inline bool ublk_nosrv_should_stop_dev(struct ublk_device *ub)
- 	return !(ub->dev_info.flags & UBLK_F_USER_RECOVERY);
- }
- 
-+static inline bool ublk_dev_in_recoverable_state(struct ublk_device *ub)
-+{
-+	return ub->dev_info.state == UBLK_S_DEV_QUIESCED ||
-+	       ub->dev_info.state == UBLK_S_DEV_FAIL_IO;
-+}
+-  Two new features are added for user recovery: ``UBLK_F_USER_RECOVERY`` and
+-  ``UBLK_F_USER_RECOVERY_REISSUE``.
+-
+-  With ``UBLK_F_USER_RECOVERY`` set, after one ubq_daemon(ublk server's io
++  Three new features are added for user recovery: ``UBLK_F_USER_RECOVERY``,
++  ``UBLK_F_USER_RECOVERY_REISSUE``, and ``UBLK_F_USER_RECOVERY_FAIL_IO``. To
++  enable recovery of ublk devices after the ublk server exits, the ublk server
++  should specify the ``UBLK_F_USER_RECOVERY`` flag when creating the device. The
++  ublk server may additionally specify at most one of
++  ``UBLK_F_USER_RECOVERY_REISSUE`` and ``UBLK_F_USER_RECOVERY_FAIL_IO`` to
++  modify how I/O is handled while the ublk server is dying/dead (this is called
++  the ``nosrv`` case in the driver code).
 +
- static void ublk_free_disk(struct gendisk *disk)
- {
- 	struct ublk_device *ub = disk->private_data;
-@@ -1275,6 +1286,10 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	struct request *rq = bd->rq;
- 	blk_status_t res;
++  With just ``UBLK_F_USER_RECOVERY`` set, after one ubq_daemon(ublk server's io
+   handler) is dying, ublk does not delete ``/dev/ublkb*`` during the whole
+   recovery stage and ublk device ID is kept. It is ublk server's
+   responsibility to recover the device context by its own knowledge.
+   Requests which have not been issued to userspace are requeued. Requests
+   which have been issued to userspace are aborted.
  
-+	if (unlikely(ubq->fail_io)) {
-+		return BLK_STS_TARGET;
-+	}
+-  With ``UBLK_F_USER_RECOVERY_REISSUE`` set, after one ubq_daemon(ublk
+-  server's io handler) is dying, contrary to ``UBLK_F_USER_RECOVERY``,
++  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after one ubq_daemon
++  (ublk server's io handler) is dying, contrary to ``UBLK_F_USER_RECOVERY``,
+   requests which have been issued to userspace are requeued and will be
+   re-issued to the new process after handling ``UBLK_CMD_END_USER_RECOVERY``.
+   ``UBLK_F_USER_RECOVERY_REISSUE`` is designed for backends who tolerate
+   double-write since the driver may issue the same I/O request twice. It
+   might be useful to a read-only FS or a VM backend.
+ 
++  With ``UBLK_F_USER_RECOVERY_FAIL_IO`` additionally set, after the ublk server
++  exits, requests which have issued to userspace are failed, as are any
++  subsequently issued requests. Applications continuously issuing I/O against
++  devices with this flag set will see a stream of I/O errors until a new ublk
++  server recovers the device.
 +
- 	/* fill iod to slot in io cmd buffer */
- 	res = ublk_setup_iod(ubq, rq);
- 	if (unlikely(res != BLK_STS_OK))
-@@ -1625,6 +1640,7 @@ static void ublk_nosrv_work(struct work_struct *work)
- {
- 	struct ublk_device *ub =
- 		container_of(work, struct ublk_device, nosrv_work);
-+	int i;
- 
- 	if (ublk_nosrv_should_stop_dev(ub)) {
- 		ublk_stop_dev(ub);
-@@ -1634,7 +1650,18 @@ static void ublk_nosrv_work(struct work_struct *work)
- 	mutex_lock(&ub->mutex);
- 	if (ub->dev_info.state != UBLK_S_DEV_LIVE)
- 		goto unlock;
--	__ublk_quiesce_dev(ub);
-+
-+	if (ublk_nosrv_dev_should_queue_io(ub)) {
-+		__ublk_quiesce_dev(ub);
-+	} else {
-+		blk_mq_quiesce_queue(ub->ub_disk->queue);
-+		ub->dev_info.state = UBLK_S_DEV_FAIL_IO;
-+		for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-+			ublk_get_queue(ub, i)->fail_io = true;
-+		}
-+		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	}
-+
-  unlock:
- 	mutex_unlock(&ub->mutex);
- 	ublk_cancel_dev(ub);
-@@ -2387,8 +2414,13 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
- 		return -EPERM;
- 
- 	/* forbid nonsense combinations of recovery flags */
--	if ((info.flags & UBLK_F_USER_RECOVERY_REISSUE) &&
--	    !(info.flags & UBLK_F_USER_RECOVERY)) {
-+	switch (info.flags & UBLK_F_ALL_RECOVERY_FLAGS) {
-+	case 0:
-+	case UBLK_F_USER_RECOVERY:
-+	case (UBLK_F_USER_RECOVERY | UBLK_F_USER_RECOVERY_REISSUE):
-+	case (UBLK_F_USER_RECOVERY | UBLK_F_USER_RECOVERY_FAIL_IO):
-+		break;
-+	default:
- 		pr_warn("%s: invalid recovery flags %llx\n", __func__,
- 			info.flags & UBLK_F_ALL_RECOVERY_FLAGS);
- 		return -EINVAL;
-@@ -2720,14 +2752,18 @@ static int ublk_ctrl_start_recovery(struct ublk_device *ub,
- 	 *     and related io_uring ctx is freed so file struct of /dev/ublkcX is
- 	 *     released.
- 	 *
-+	 * and one of the following holds
-+	 *
- 	 * (2) UBLK_S_DEV_QUIESCED is set, which means the quiesce_work:
- 	 *     (a)has quiesced request queue
- 	 *     (b)has requeued every inflight rqs whose io_flags is ACTIVE
- 	 *     (c)has requeued/aborted every inflight rqs whose io_flags is NOT ACTIVE
- 	 *     (d)has completed/camceled all ioucmds owned by ther dying process
-+	 *
-+	 * (3) UBLK_S_DEV_FAIL_IO is set, which means the queue is not
-+	 *     quiesced, but all I/O is being immediately errored
- 	 */
--	if (test_bit(UB_STATE_OPEN, &ub->state) ||
--			ub->dev_info.state != UBLK_S_DEV_QUIESCED) {
-+	if (test_bit(UB_STATE_OPEN, &ub->state) || !ublk_dev_in_recoverable_state(ub)) {
- 		ret = -EBUSY;
- 		goto out_unlock;
- 	}
-@@ -2751,6 +2787,7 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	const struct ublksrv_ctrl_cmd *header = io_uring_sqe_cmd(cmd->sqe);
- 	int ublksrv_pid = (int)header->data[0];
- 	int ret = -EINVAL;
-+	int i;
- 
- 	pr_devel("%s: Waiting for new ubq_daemons(nr: %d) are ready, dev id %d...\n",
- 			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
-@@ -2765,18 +2802,29 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	if (ublk_nosrv_should_stop_dev(ub))
- 		goto out_unlock;
- 
--	if (ub->dev_info.state != UBLK_S_DEV_QUIESCED) {
-+	if (!ublk_dev_in_recoverable_state(ub)) {
- 		ret = -EBUSY;
- 		goto out_unlock;
- 	}
- 	ub->dev_info.ublksrv_pid = ublksrv_pid;
- 	pr_devel("%s: new ublksrv_pid %d, dev id %d\n",
- 			__func__, ublksrv_pid, header->dev_id);
--	blk_mq_unquiesce_queue(ub->ub_disk->queue);
--	pr_devel("%s: queue unquiesced, dev id %d.\n",
--			__func__, header->dev_id);
--	blk_mq_kick_requeue_list(ub->ub_disk->queue);
--	ub->dev_info.state = UBLK_S_DEV_LIVE;
-+
-+	if (ublk_nosrv_dev_should_queue_io(ub)) {
-+		ub->dev_info.state = UBLK_S_DEV_LIVE;
-+		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+		pr_devel("%s: queue unquiesced, dev id %d.\n",
-+				__func__, header->dev_id);
-+		blk_mq_kick_requeue_list(ub->ub_disk->queue);
-+	} else {
-+		blk_mq_quiesce_queue(ub->ub_disk->queue);
-+		ub->dev_info.state = UBLK_S_DEV_LIVE;
-+		for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-+			ublk_get_queue(ub, i)->fail_io = false;
-+		}
-+		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	}
-+
- 	ret = 0;
-  out_unlock:
- 	mutex_unlock(&ub->mutex);
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index c8dc5f8ea699..a2b3ea344639 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -147,8 +147,18 @@
-  */
- #define UBLK_F_NEED_GET_DATA (1UL << 2)
- 
-+/*
-+ * - Block devices are recoverable if ublk server exits and restarts
-+ * - Outstanding I/O when ublk server exits is met with errors
-+ * - I/O issued while there is no ublk server queues
-+ */
- #define UBLK_F_USER_RECOVERY	(1UL << 3)
- 
-+/*
-+ * - Block devices are recoverable if ublk server exits and restarts
-+ * - Outstanding I/O when ublk server exits is reissued
-+ * - I/O issued while there is no ublk server queues
-+ */
- #define UBLK_F_USER_RECOVERY_REISSUE	(1UL << 4)
- 
- /*
-@@ -184,10 +194,18 @@
-  */
- #define UBLK_F_ZONED (1ULL << 8)
- 
-+/*
-+ * - Block devices are recoverable if ublk server exits and restarts
-+ * - Outstanding I/O when ublk server exits is met with errors
-+ * - I/O issued while there is no ublk server is met with errors
-+ */
-+#define UBLK_F_USER_RECOVERY_FAIL_IO (1ULL << 9)
-+
- /* device state */
- #define UBLK_S_DEV_DEAD	0
- #define UBLK_S_DEV_LIVE	1
- #define UBLK_S_DEV_QUIESCED	2
-+#define UBLK_S_DEV_FAIL_IO 	3
- 
- /* shipped via sqe->cmd of io_uring command */
- struct ublksrv_ctrl_cmd {
+ Unprivileged ublk device is supported by passing ``UBLK_F_UNPRIVILEGED_DEV``.
+ Once the flag is set, all control commands can be sent by unprivileged
+ user. Except for command of ``UBLK_CMD_ADD_DEV``, permission check on
 -- 
 2.34.1
 
