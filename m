@@ -1,177 +1,122 @@
-Return-Path: <linux-block+bounces-12351-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12354-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F00C995287
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 16:55:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4B3099530D
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 17:14:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A73D51C254FC
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 14:55:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE0D62813DF
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 15:14:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEEB1E0498;
-	Tue,  8 Oct 2024 14:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0FA5B1FB;
+	Tue,  8 Oct 2024 15:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bjorling.me header.i=@bjorling.me header.b="U/vQRSjy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jl2f0yGv"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="U2TTpDQL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4351E00AA;
-	Tue,  8 Oct 2024 14:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98111DE4FC
+	for <linux-block@vger.kernel.org>; Tue,  8 Oct 2024 15:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728399329; cv=none; b=A3XVddJoCqFRHEHrTDrkqRV823h2abEBnVdxEpEyuTFI7kQNK+U5OGSDkOSR/KtfhBYfYPTVZh9pvRJz336ZErPcyZ9v/SDp8DUXH7KpBgJQTjCaN+vug62GLV30chioJ48rqH1BUsh10wfE346WHhysdhyd8gs4nf79kasvKI8=
+	t=1728400449; cv=none; b=TaZgRNmDKViHjlqJrLhw6eG29x83XHruI1ROt8FWGWgOBb+RQ2gBAjDE7sVU1et88SsIW1BseOgQY8PT3PeOG4a3Jw+Ot5Z08n63Sn7FRSIXYkDpDmnAmqAmuD8dDqpwxTNmWvLBKg7DI3cCuLl8/Sak5jtrWl0oEc+98CA0T7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728399329; c=relaxed/simple;
-	bh=Bk7QM+rVFv2wXy/wHI+36XVT2XALN+uWLT7lljS6dPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ax4Y7dVtYT79hZZODAdX/Zk2fDK/PZ8tGzFq4CDoYLrnCHpVMVh8CZz9Iylv1HBB02fC3uXlhBomwC26PVBDoWn2pmS0qH+m0GDr6naOG3VqAYPQRiL2MC6Beo7bhmCQSV1OtclUWxgYiol8cOD4SnZ9M9D8E9kO1eCpXNoZwvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bjorling.me; spf=pass smtp.mailfrom=bjorling.me; dkim=pass (2048-bit key) header.d=bjorling.me header.i=@bjorling.me header.b=U/vQRSjy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jl2f0yGv; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bjorling.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bjorling.me
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id DF83C114022E;
-	Tue,  8 Oct 2024 10:55:24 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Tue, 08 Oct 2024 10:55:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bjorling.me; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1728399324;
-	 x=1728485724; bh=js32dkdye8YTfXqTgEmAVBWITQHNETUK2Lpip3icE50=; b=
-	U/vQRSjy+i77DB0y59gXsJjy04HUktwLx1/zz/Uy3qdatQ2pVrIoo6h3lFeVyd21
-	VJthMFWmKCdURq4rvawwAWj+10p+9W4xgYIymldvbyjxWgXjp9MjcbuHuKCVIGFZ
-	mmNBoi8iaOI0IJ8Xe14InMdkwKwQ26BCBV6YavZG4jhf6mFiudNQQAjafQb4B995
-	7WS7qXu2bHJ6jOIZEAQ8wqGQnqVye8LyahU9/Zx3YZpIp+uUxkBwNuFlL9qOnA7p
-	KBaS9eoqpW8wfwNghej8kXljtxv4shJ81HFdNpd8u1koWELVPrtGhFM7q7Q7acyn
-	UtRQmn2ZI7lJ9gatOHC6OQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728399324; x=
-	1728485724; bh=js32dkdye8YTfXqTgEmAVBWITQHNETUK2Lpip3icE50=; b=j
-	l2f0yGv7QaJeZIMh0Wxb2CDHkn801m9dbgtu93nMIGmDk0RJcfXvbjm3vRktepTp
-	PoaHBwb6Ny2tJJju4TVZ7TKb7yiFtIxiugJTOwjol4UiFJCrN9th5/Nnt/gZsSIp
-	q3m0yIFNdEgNgB0WUkzJ8IKIEzAhgGDP/YRzsyP//gTqg7cOGJe9ykNb9fLCVH7k
-	BvbKUPmEOjks/8vhQ1zVySI/9/OI3wNm/smdLCPAU4xAvxheUWmemtYtZU5ndHg4
-	rJFLZlqvpXZvMyV45uHqbw8SAHIcm8rEJxb5CLjI6NWZFfgyhhfxalttTdNRsikw
-	yjhskx3q2oeGib+lK2cqw==
-X-ME-Sender: <xms:3EcFZ1jUxECZGujcz_LRrWC6Z9qe2DZF6sPbN3-0r1PmFh993CkwGQ>
-    <xme:3EcFZ6CVq8Mjx0nDJKGx4U21CW_DewbDbbL-7JykEV6WgDRPXj-Ih1FXtvbSODbBJ
-    Hnumn3shC27OeiYe3g>
-X-ME-Received: <xmr:3EcFZ1HNXB8YzVR1oeku7IwgJy5PDShNQc94WSI9N2wGe1cofcpL-gAf8LZpmBA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdefuddgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
-    ffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepofgrthhirghsuceujhpprhhl
-    ihhnghcuoehmsegsjhhorhhlihhnghdrmhgvqeenucggtffrrghtthgvrhhnpeffkeegvd
-    fggeefgfffteeghfetteetudeiteejgfevudeifeelffeuiedvueelheenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmsegsjhhorhhlihhngh
-    drmhgvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehksghushgthheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgthheslhhsthdrug
-    gvpdhrtghpthhtohepughlvghmohgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    tggrshhsvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvhhmvg
-    eslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdgs
-    lhhotghksehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
-    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhirghs
-    rdgsjhhorhhlihhnghesfigutgdrtghomh
-X-ME-Proxy: <xmx:3EcFZ6SdiYQSvbNRzBIjwZ_59iz2r8quBIwOIFFYHTLW3jklb2AYkg>
-    <xmx:3EcFZyw7rdmq9A23ed60GBkG3yPL4wYIDyKpUC9VoE7XpKOGaf4qTQ>
-    <xmx:3EcFZw5WYocDuBFBoXWXU_A1GzLPe3L8BlyUoCX4ykCVBC1ar9E2PQ>
-    <xmx:3EcFZ3zJtOk2tv7ETt7hEbFbu2yK6-_tHyVHeTtY93uDHlhpdZ_eSA>
-    <xmx:3EcFZxmsjVBuOMVcIWPzxCaOQqtxDI2cdpieks5W2IZA7lit0MY-rLk7>
-Feedback-ID: if4314918:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Oct 2024 10:55:23 -0400 (EDT)
-From: =?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>
-To: kbusch@kernel.org,
-	hch@lst.de,
-	dlemoal@kernel.org,
-	cassel@kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
-Subject: [PATCH 2/2] nvme: add rotational support
-Date: Tue,  8 Oct 2024 16:55:03 +0200
-Message-ID: <20241008145503.987195-3-m@bjorling.me>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20241008145503.987195-1-m@bjorling.me>
-References: <20241008145503.987195-1-m@bjorling.me>
+	s=arc-20240116; t=1728400449; c=relaxed/simple;
+	bh=+RBeccNF54Oyb9OZCGBEuaZVGC5uRYeWsUsB0zlMSj0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Py2/AvLJqIHMV+l01P6P/cXh6m1rVx2a80nB60QKqpXr0M7P8ZoSqzxVSPKy5V1+mQbshGwhaOpUXdb9nTNxefFv0WD2toMjpchTZSqMbZlkoAdI1mZQfUx4BADbTaEGPPxzcviwGqbB0oBYkVcpUnMiL70m2MtyaUwLRMI6lf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=U2TTpDQL; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-27e1f62e30eso3115570fac.0
+        for <linux-block@vger.kernel.org>; Tue, 08 Oct 2024 08:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1728400446; x=1729005246; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p9unpiJCmaM/90BIThnIApTXc7RW1tNCFD+q7FeSDSU=;
+        b=U2TTpDQLr7lRIPeGZeTBYfftm68oXR12aX5kQCPiK2JYaWP44nP7xlKt+8WVBgBU52
+         9aMG6knEs/cHBhr37dN2cahbLUfdLld5wf0shwOptPMwAbSDTWQUs1O0R+ERS5JLvx7J
+         lN8Y571qXIOijMbQFd4G4q+d+NBKNcA7gSI00A1NpM0teOZNKbYfsqav5pjZlMX/aYnf
+         i7OsFbhBOR3N5qLYPVvEWHNbkmd94Ww47gFOyS1J7Lr7HrkCpCVeCQZSHoAk2OrpID7J
+         B57sQodfKJVGxdxbgFSs1tjogKh5RTf1nfWNC4fJ67hSOAN5/I53Xj75cHCakCqfLIlp
+         d94w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728400446; x=1729005246;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p9unpiJCmaM/90BIThnIApTXc7RW1tNCFD+q7FeSDSU=;
+        b=AnNnCcRu9ZoVg1AHsM8UQsDOB8qhLVgPbkzqahxkXCRwUVgWzf8OFbjXvelKA3yPeX
+         mLqXCW8kokvYsyXVjlO3vhMIbu8KAEt6vqR/nCCrxDt/lsWfmgTvUwETzNnsNJgP3ujI
+         +bHJ2nN8ZuiJU0JKIM/YBPf+ab9/gq/sGq5RJbzDAemd9e/CMdgyaYXsacCZRmr+TVxL
+         7kYcNMoHl87kby2RNaWwV9uPnR3VbqBqoL9SKh5p9Tc8OmQEXQPNmxg7vTOhKwyGoDDu
+         c7UQj4dBA02qCzIUFJV6i1+wOXFOk6U9BQO4870Lb9d/BkPQIvxwQOblx9DQrSe98nOP
+         VtNw==
+X-Gm-Message-State: AOJu0YyXM0WKAnGoPhTtHNVw9AGkPS5NyZ9LCVpM1myIeLwMxXWT8w9I
+	fAr/TPtoYl5nlpvPl7M9DlrYYj6TU1TSiaRcZrR8gCiyJ+SOs6OqyX2yb7UdywjeJP66SvShTY8
+	AZfE=
+X-Google-Smtp-Source: AGHT+IGQp8oawiSk///+k6L8FedBDQ4FI1tKggdewW0vHRrgMWOym1S89gmStWTP+W03dFRHRMl/FQ==
+X-Received: by 2002:a05:6e02:1d84:b0:3a3:637f:1012 with SMTP id e9e14a558f8ab-3a38af7899bmr30255855ab.12.1728400076614;
+        Tue, 08 Oct 2024 08:07:56 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4db84c47434sm1071055173.43.2024.10.08.08.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 08:07:56 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Ming Lei <ming.lei@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Uday Shankar <ushankar@purestorage.com>
+Cc: linux-block@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <20241007182419.3263186-1-ushankar@purestorage.com>
+References: <20241007182419.3263186-1-ushankar@purestorage.com>
+Subject: Re: [PATCH v4 0/5] ublk: support device recovery without I/O
+ queueing
+Message-Id: <172840007574.12645.10207244713759182674.b4-ty@kernel.dk>
+Date: Tue, 08 Oct 2024 09:07:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-From: Matias Bjørling <matias.bjorling@wdc.com>
 
-Rotational devices, such as hard-drives, can be detected using
-the rotational bit in the namespace independent identify namespace
-data structure. Make the bit visible to the block layer through the
-rotational queue setting.
+On Mon, 07 Oct 2024 12:24:13 -0600, Uday Shankar wrote:
+> ublk currently supports the following behaviors on ublk server exit:
+> 
+> A: outstanding I/Os get errors, subsequently issued I/Os get errors
+> B: outstanding I/Os get errors, subsequently issued I/Os queue
+> C: outstanding I/Os get reissued, subsequently issued I/Os queue
+> 
+> and the following behaviors for recovery of preexisting block devices by
+> a future incarnation of the ublk server:
+> 
+> [...]
 
-Note that rotational devices typically can be used to generate random
-entropy, the device is therefore also added as a block device that adds
-entropy.
+Applied, thanks!
 
-Signed-off-by: Matias Bjørling <matias.bjorling@wdc.com>
----
- drivers/nvme/host/core.c | 5 +++++
- include/linux/nvme.h     | 1 +
- 2 files changed, 6 insertions(+)
+[1/5] ublk: check recovery flags for validity
+      commit: 0a4f884510c68ac48d853a1d89ddb5c2f0a2db39
+[2/5] ublk: refactor recovery configuration flag helpers
+      commit: 20f2939cbcc5a1792b71130bad626b19345a23d1
+[3/5] ublk: merge stop_work and quiesce_work
+      commit: dbe142123bd713eeadb129f66a1357d0719ec853
+[4/5] ublk: support device recovery without I/O queueing
+      commit: 4aef53b1cd32f61ee2bd67c764c2bf299358e740
+[5/5] Documentation: ublk: document UBLK_F_USER_RECOVERY_FAIL_IO
+      commit: a463281eb2796a63000e0d528c1b712fdad452d0
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 9cbef6342c39..a445f13f5a28 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -41,6 +41,7 @@ struct nvme_ns_info {
- 	bool is_readonly;
- 	bool is_ready;
- 	bool is_removed;
-+	bool is_rotational;
- };
- 
- unsigned int admin_timeout = 60;
-@@ -1623,6 +1624,7 @@ static int nvme_ns_info_from_id_cs_indep(struct nvme_ctrl *ctrl,
- 		info->is_shared = id->nmic & NVME_NS_NMIC_SHARED;
- 		info->is_readonly = id->nsattr & NVME_NS_ATTR_RO;
- 		info->is_ready = id->nstat & NVME_NSTAT_NRDY;
-+		info->is_rotational = id->nsfeat & NVME_NS_ROTATIONAL;
- 	}
- 	kfree(id);
- 	return ret;
-@@ -2170,6 +2172,9 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
- 	else
- 		lim.features &= ~(BLK_FEAT_WRITE_CACHE | BLK_FEAT_FUA);
- 
-+	if (info->is_rotational)
-+		lim.features |= BLK_FEAT_ROTATIONAL | BLK_FEAT_ADD_RANDOM;
-+
- 	/*
- 	 * Register a metadata profile for PI, or the plain non-integrity NVMe
- 	 * metadata masquerading as Type 0 if supported, otherwise reject block
-diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index 7b2ae2e43544..6d0eebb57544 100644
---- a/include/linux/nvme.h
-+++ b/include/linux/nvme.h
-@@ -560,6 +560,7 @@ enum {
- 	NVME_NS_FLBAS_LBA_SHIFT	= 1,
- 	NVME_NS_FLBAS_META_EXT	= 0x10,
- 	NVME_NS_NMIC_SHARED	= 1 << 0,
-+	NVME_NS_ROTATIONAL	= 1 << 4,
- 	NVME_LBAF_RP_BEST	= 0,
- 	NVME_LBAF_RP_BETTER	= 1,
- 	NVME_LBAF_RP_GOOD	= 2,
+Best regards,
 -- 
-2.46.0
+Jens Axboe
+
+
 
 
