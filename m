@@ -1,74 +1,96 @@
-Return-Path: <linux-block+bounces-12353-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12355-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 393E399530C
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 17:13:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2D3995351
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 17:23:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B4251C24AA1
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 15:13:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03E541F277AA
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2024 15:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F8C1DFE2A;
-	Tue,  8 Oct 2024 15:13:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E09D1DFE2D;
+	Tue,  8 Oct 2024 15:23:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOB8vn8M"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqQTV6dd"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3856B1DFD84;
-	Tue,  8 Oct 2024 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA3F4C97
+	for <linux-block@vger.kernel.org>; Tue,  8 Oct 2024 15:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728400432; cv=none; b=dNhIXqVY61PPGJ3gxFDAdWXV6cOyakhl9ljKQI0CmToESaIMbScjafR4Tkt5fB1fxS8vaWjcs3vK+p+83Ze4ZCzqsIskHHsK/GlybJkDUkglVFrwD2TcYo7GnO4t7Kb/ItqX6wBkcsXLHgB2YOeBxjou/SDHSuhfhysiu0F84fY=
+	t=1728401017; cv=none; b=kE5J8ndjon2clZiH1N0aIp6IzIgCHf9qA0RqLgwHQZyewwIhTBw8Xbggr+FyHtSKzjvRwYGqZw6ZxhY111uG8yFfmJFqJk4bABTVgelYQ+LGd/cdCry4eP9z4R1Y2gL+VM/x5B1VLS6V4nVpglqjVka/zPIoIMcaO2F/W0a7e6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728400432; c=relaxed/simple;
-	bh=RaxqMyiV7n8pTDKGMindcS0hrojM1IZNbUWaYp1cp34=;
+	s=arc-20240116; t=1728401017; c=relaxed/simple;
+	bh=no0ft86ZIRH05p/cHAmvC03LZtaaa8aJYqCDRHwuvdo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PBFR+OSaze9q9J0nrQdDLjBaXEAz/GHbsFXBTXOhA746ohxHqXfa+1lmyGjftIFKkeEs/N752PSQ3xgfnxYsIrCnjhS66E3kaCASQaCpsSaQvnshjWTyGJzAKQyPCueePmTgcmv3bSAeJ84MmYBcHGKebw1DgU/pK2uEpEXjIjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOB8vn8M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A53C4FE96;
-	Tue,  8 Oct 2024 15:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728400431;
-	bh=RaxqMyiV7n8pTDKGMindcS0hrojM1IZNbUWaYp1cp34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GOB8vn8MM0fQ1Yzw42fQ815SS4enmVBSTs86VzkBAAni1P2iuDRI1CvTw7nF7QUK5
-	 0O9mzE9PF+eaPoCBBQjElsETSjUw6oVjRGU5ccQgEGfMdGj0+B/73/UpYIsXpVRSSC
-	 wUNSIxUcjS+fYha7TJCyfR+3Xj3UOIKuPKwqGQgBuhaOa7L5FjO1Nm0Vp6u49J2o4k
-	 P72wyCFqo/Lvc44GxClzEtAc5I+bHg+0+R3dYYfCJp1tNqCPFrvd3Rv93ErfksK+3n
-	 Vzir4FMATlL3IdtrgZKKuQhDWheeD6ghAGToGRjF49JZZ85ljHpoHrEpuEL9RSkSqi
-	 2fFsDTD2TYtKQ==
-Date: Tue, 8 Oct 2024 09:13:48 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Matias =?iso-8859-1?Q?Bj=F8rling?= <m@bjorling.me>
-Cc: hch@lst.de, dlemoal@kernel.org, cassel@kernel.org,
-	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matias =?iso-8859-1?Q?Bj=F8rling?= <matias.bjorling@wdc.com>
-Subject: Re: [PATCH 0/2] nvme: add rotational support
-Message-ID: <ZwVMLIt4iFX9MUjV@kbusch-mbp>
-References: <20241008145503.987195-1-m@bjorling.me>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHz9npz6OnVG95KmjfO0HfwGOs4FdM37XHireZjd4bq25xRuz7kcUmq4dolyuRiW+LWg/i7/aJTX7sjATIFwqouwz53qcmeeLyYewd2jb2SppRMJzG4JQW+USjd3ryZxUSRctZRB/W7FPS+NHxBRVmF67etcjj1U42t5R0BCgkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FqQTV6dd; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e221a7e7baso1950822a91.0
+        for <linux-block@vger.kernel.org>; Tue, 08 Oct 2024 08:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1728401015; x=1729005815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ok/VBy+V7sT6XIn/apworm3lRazIE74IkyeWk1rUaVQ=;
+        b=FqQTV6ddAeptyQNjIHeezWPA0bxMbeZdKhjOg9ysO6IytSwqXT47dWeFZXYWT1amGy
+         XHXxmS8ajw0ngp7e7VxGXeKwSzal+tHqu1CM99qyp5X9r5oQUvhhM4o+OMZnTscHcXki
+         LFP94HbE3Nlm2KmguJzplTtXT9OZfDvq2a9hM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728401015; x=1729005815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ok/VBy+V7sT6XIn/apworm3lRazIE74IkyeWk1rUaVQ=;
+        b=AQiwgIKPU/L8S8EtNwFBIace87MIuZLMQKj4BRuXM65dUOuy9mS0Qv/V7n/acRVPhJ
+         B6WTGscYuTXWNs0WW5R14QxERtUHtqx2HWOWYJeT/a3oZdKZSVgWfnBd/TXUFZGucI2j
+         oGdkeUfHurnyhEAIS/re5INygtR41Xmju4slanJq+0t9kwolLt68Vzlc42+aEfcbUU1v
+         zl9MZZrz/DkQ1A0sVZFDQFe6NA4qzCK65gAKRXxNc5b1GQO7fW2LY1d86Kc5IqWs4cOG
+         QFIVk2NKYNv6q2hnvr5bpxJvjPrFZgMTlLzNtVa2sQ3OQP/Xx0Fgp/rXU7MQTlQ/lL9N
+         5IuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVg46vPug6fGnYRTAgYAtbLBqfz7/g/oEq8yST+QWoQzIgWjXLYgGBMQP1OmeyZei18SBra0DoC9JliJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzRqSNfGVfBthxIdnbRzPbaTQCZ+AaXSilwlKXm7fsVzporazc
+	D3nan4hcx+uyRCuJit4/u4G+dijt5iwByKOs8i8E7DZ7nQqH8VwY5M59Pf33DA==
+X-Google-Smtp-Source: AGHT+IGWjX4teTRGoQE9b5AMhbxEJKM9YT1zUQGR6pDt/8OJVvux0M1wIumTIV/KLzhX41TS5iEozg==
+X-Received: by 2002:a17:90a:71c4:b0:2e0:8733:6c78 with SMTP id 98e67ed59e1d1-2e1e62283d1mr17724219a91.15.1728401015477;
+        Tue, 08 Oct 2024 08:23:35 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:7cab:8c3d:935:cbd2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e1e86a9400sm9455576a91.47.2024.10.08.08.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 08:23:35 -0700 (PDT)
+Date: Wed, 9 Oct 2024 00:23:31 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	YangYang <yang.yang@vivo.com>, linux-block@vger.kernel.org
+Subject: Re: RFC: try to avoid del_gendisk vs passthrough from ->release
+ deadlocks
+Message-ID: <20241008152331.GA565009@google.com>
+References: <20241008115756.355936-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241008145503.987195-1-m@bjorling.me>
+In-Reply-To: <20241008115756.355936-1-hch@lst.de>
 
-On Tue, Oct 08, 2024 at 04:55:01PM +0200, Matias Bjørling wrote:
-> From: Matias Bjørling <matias.bjorling@wdc.com>
+On (24/10/08 13:57), Christoph Hellwig wrote:
+> Hi all,
 > 
-> Enable support for NVMe devices that identifies as rotational.
+> this is my attempted fix for the problem reported by Sergey in the
+> "block: del_gendisk() vs blk_queue_enter() race condition" thread.  As
+> I don't have a reproducer this is all just best guest so far, so handle
+> it with care!
 
-Thanks, this looks good to me.
-
-I still hope to see nvmet report this. It would be great to test this
-with HDD backed nvme-loop target.
+This looks promising.  Thanks for working on this.
+Let me try to test it (albeit without a reproducer).
 
