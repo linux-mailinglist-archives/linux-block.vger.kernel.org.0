@@ -1,150 +1,111 @@
-Return-Path: <linux-block+bounces-12482-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12479-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B76199A9A2
-	for <lists+linux-block@lfdr.de>; Fri, 11 Oct 2024 19:13:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CE8F99A991
+	for <lists+linux-block@lfdr.de>; Fri, 11 Oct 2024 19:12:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA9311F23705
-	for <lists+linux-block@lfdr.de>; Fri, 11 Oct 2024 17:13:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98989283D7A
+	for <lists+linux-block@lfdr.de>; Fri, 11 Oct 2024 17:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3891CBE94;
-	Fri, 11 Oct 2024 17:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3F001A3BD7;
+	Fri, 11 Oct 2024 17:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JuOkg6Fp"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="lTngIVMy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901201C7B6F;
-	Fri, 11 Oct 2024 17:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8361B1A0AE1
+	for <linux-block@vger.kernel.org>; Fri, 11 Oct 2024 17:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728666756; cv=none; b=bBgXCINiE/w0LwkPvThzzTdFCeoPTEX1E+fPQJephbAJ3x2M38YpaX92CzPB4wU/GDJXiDqmOom6DqDjRc8CL4XeP6snytWa9Do7ImLMnrDWVmiJ61ySBeTpwnux4mA2x2JRIxS6dzyGQyf58+gkKoyLa36F5QIGCXyI/hL51VA=
+	t=1728666712; cv=none; b=BUZsBCu4IcvjMbm0VT6667CQlFabrMpL+efSWef9fuPTky/Mm4i59FzPcl2sC8hIwK4zgvZ5abIne2L+VWHF8IUCk0UDLmwop32bcWWuMl9xX+0FZCyGC0/EGP4qrrcfuFF2he0aYdvuVXLMRADn+1rZZ4Xkjn+ZwS93ulzl97A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728666756; c=relaxed/simple;
-	bh=bp3RXhYCSr41eXrHdNkF5Ty/7bBo7bu9rMhEzmkm/5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D6HMdc4i/xtjQ7HCDpiYzIHiTBmTH7dg4wTS+LRWb61/4A1jhEtrYh7D6ImT/Jm75vZLjZ4rZlEF+ysvsmL6N3LFTk22xCalK8kOrwB7Dq9Je+icl1m7BwVM9XGCNBAgSzJr4exwp9RP987en8nGB5bswmsTjuUUr3Ddupkv6Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JuOkg6Fp; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728666755; x=1760202755;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bp3RXhYCSr41eXrHdNkF5Ty/7bBo7bu9rMhEzmkm/5A=;
-  b=JuOkg6FpjN++bVpl3O2yAfKl2XoLeCRSDCL+5P029aPGfOAQDDI/C23E
-   uPIdN3e4wQsEsVkc661SzznPoSw1P/3rkOX+5LVs+I/TnNl/q1CQJGccz
-   JMazewSzcLVKXHvGA3Y6abzlt84S5PYL8w0eweLn6dw7BFLQ74EGen6yE
-   lmMlUzXC1g/LfHRLDuXqaafhHixPU/h0UiKEE2fC8ye7/Jsf1OnOJ+8+a
-   mSEH9serCfouxo2P99z0yCr+otYmyrx9hQIy5xVj+yvI5ITMcS0uaeORe
-   RMoKBYNZZZ7lecc61vPE1s+Egb7GY04W5vHQmFqSbG95nS6b07L6DGS4i
-   Q==;
-X-CSE-ConnectionGUID: 3zxrOv9HSYWmnhnH9jSnTw==
-X-CSE-MsgGUID: a/kVu/h8TFGpj5PrEhLN6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39199841"
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="39199841"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:12:32 -0700
-X-CSE-ConnectionGUID: PTlI3y8yRcS0Sxbx54d+1Q==
-X-CSE-MsgGUID: HDc5vyy2Q/WeJAj6ESrd0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="114426529"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 11 Oct 2024 10:12:28 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1szJBi-000CXb-1G;
-	Fri, 11 Oct 2024 17:12:26 +0000
-Date: Sat, 12 Oct 2024 01:11:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matias =?iso-8859-1?Q?Bj=F8rling?= <m@bjorling.me>, kbusch@kernel.org,
-	hch@lst.de, dlemoal@kernel.org, cassel@kernel.org,
-	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, wangyugui@e16-tech.com,
-	martin.petersen@oracle.com, hare@suse.de
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 3/3 v2] nvmet: add rotational support
-Message-ID: <202410120113.A3HaEkbg-lkp@intel.com>
-References: <20241010123951.1226105-4-m@bjorling.me>
+	s=arc-20240116; t=1728666712; c=relaxed/simple;
+	bh=l4ybPLuzwshIo6CiUP3SYCkZBT0nRbnqGQ88b5ZHn6w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rXlu+MtnH6crrRdEBKxIzdzyYqAXd62QOy+PxrTlKeS+fLb3TJdKqGNc/GZttcIfNLIb+eK/5Sa2I3sxHIAoOiDcOpU0GYThBXCD45HbDWjyL5/wdHsSpSqYkCCoXucceeExKRQ6pPr0bEr51mcn7O3pjXUFwuaZMUANabl2rvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=lTngIVMy; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-836d2437852so71326639f.1
+        for <linux-block@vger.kernel.org>; Fri, 11 Oct 2024 10:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1728666709; x=1729271509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sek4vbxL3f/NlFo8Be6u5iyw5TmCpBli89Nh7BpIveQ=;
+        b=lTngIVMyKD+4r/aC6k/y/iuvOr7tNnx0xFCCLGmprVWtnpxJEyGlNzc056QweGBWHb
+         mWrLfYWosPlZvH2gbJk0UI1zpejMAU5r53vjRiLcJmSlivegunLDyoM+LWjxdhAZur1X
+         Qi4sPdYfktMHaSpYOLaZ/ZaLFsrXGVeC5q3rYGuZIpGVhOYR9D+1077OwDoM+LmuzpRY
+         c9C0JnzyRFNHEJr5EDIMGiMPFOpi9KPEji2pBt5NbF9h3u9zXCodJqgsUfPGE5i2OLJk
+         xUYnpJ14dXt9oWsdYD3qjinqiX5dATY8RHlrVZpol5g6Hk/9vN8Z5nFe9dOo35N5rwQH
+         jrsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728666709; x=1729271509;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sek4vbxL3f/NlFo8Be6u5iyw5TmCpBli89Nh7BpIveQ=;
+        b=Q9HvklkWyI4V+2D5p48EWaRaBWma3CMJhWU1gmBcDbQD5DcB5Z7IsqjWQa9XMaNJKY
+         0NTSB101oaWcj6mBLg9biVoLyAl7TlNwK/WYaSqyiFgLtrmE8pOpEf3WXNY/xtusOPBO
+         ZU+aSQYUCJPxmzVic6Urqyy/tqHk8jWVg3k2cZexJv7z0h23MIlboI9fjFLMspQXPN4G
+         1Vicy9pZC63qboJtbqqHHU1yiFlJml6q9MmjbhLEHH/iWpZblXSQsSZlMvHTDHL9B4wq
+         0ag7Cxm2yvxOcDSWheWoJV387BJNXMILC8tnhhAVIKuDmMkboD4zNWUZRBGp6ph4oHsq
+         b3MA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0gGmDmx6yxZQ0WP/7yjLEnIt+WpDkbAZJGjRYmaNCWDNZ4LfgCKP9lA8G+4cezEtQ3BqREMfw38dXEw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDuzXa6oj3ZV6IZNECEiNe0mYNQNxAXG2HdOIwS8r+Gw0j4Bsl
+	nGEpVyn5tzeyJ3ssK5pL+UCz+olvKDsAFGlSZY6Dj86RCyL7bJVMRnHDDVfVt8FI/gIpIrlUTcs
+	ZDS0=
+X-Google-Smtp-Source: AGHT+IFuLm7s+TM3bvNQuo9LBJxVCafKSGcTPgBInu3ziFlc6P2leOeLbuC8vpArWI2WY/La7CZstQ==
+X-Received: by 2002:a05:6602:6d06:b0:803:5e55:ecb2 with SMTP id ca18e2360f4ac-8378f64c49dmr450291539f.0.1728666709101;
+        Fri, 11 Oct 2024 10:11:49 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbada846dcsm713654173.89.2024.10.11.10.11.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2024 10:11:48 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: philipp.reisner@linbit.com, lars.ellenberg@linbit.com, 
+ christoph.boehmwalder@linbit.com, linux@treblig.org
+Cc: drbd-dev@lists.linbit.com, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20241010204426.277535-1-linux@treblig.org>
+References: <20241010204426.277535-1-linux@treblig.org>
+Subject: Re: [PATCH] drbd: Remove unused conn_lowest_minor
+Message-Id: <172866670811.255755.445033429638947954.b4-ty@kernel.dk>
+Date: Fri, 11 Oct 2024 11:11:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010123951.1226105-4-m@bjorling.me>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Hi Matias,
 
-kernel test robot noticed the following build warnings:
+On Thu, 10 Oct 2024 21:44:26 +0100, linux@treblig.org wrote:
+> conn_lowest_minor() last use was removed by 2011 commit
+> 69a227731a37 ("drbd: Pass a peer device to a number of fuctions")
+> 
+> Remove it.
+> 
+> 
 
-[auto build test WARNING on v6.12-rc2]
-[also build test WARNING on linus/master next-20241011]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Applied, thanks!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Matias-Bj-rling/nvme-make-independent-ns-identify-default/20241010-204205
-base:   v6.12-rc2
-patch link:    https://lore.kernel.org/r/20241010123951.1226105-4-m%40bjorling.me
-patch subject: [PATCH 3/3 v2] nvmet: add rotational support
-config: i386-randconfig-062-20241011 (https://download.01.org/0day-ci/archive/20241012/202410120113.A3HaEkbg-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241012/202410120113.A3HaEkbg-lkp@intel.com/reproduce)
+[1/1] drbd: Remove unused conn_lowest_minor
+      commit: 1e3fc2000035ffea0b1b7ec2423706715ab2e7f6
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410120113.A3HaEkbg-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/nvme/target/admin-cmd.c:704:22: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] anagrpid @@     got unsigned int [usertype] anagrpid @@
-   drivers/nvme/target/admin-cmd.c:704:22: sparse:     expected restricted __le32 [usertype] anagrpid
-   drivers/nvme/target/admin-cmd.c:704:22: sparse:     got unsigned int [usertype] anagrpid
-
-vim +704 drivers/nvme/target/admin-cmd.c
-
-   687	
-   688	static void nvmet_execute_id_cs_indep(struct nvmet_req *req)
-   689	{
-   690		struct nvme_id_ns_cs_indep *id;
-   691		u16 status;
-   692	
-   693		status = nvmet_req_find_ns(req);
-   694		if (status)
-   695			goto out;
-   696	
-   697		id = kzalloc(sizeof(*id), GFP_KERNEL);
-   698		if (!id) {
-   699			status = NVME_SC_INTERNAL;
-   700			goto out;
-   701		}
-   702	
-   703		id->nstat = NVME_NSTAT_NRDY;
- > 704		id->anagrpid = req->ns->anagrpid;
-   705		id->nmic = NVME_NS_NMIC_SHARED;
-   706		if (req->ns->readonly)
-   707			id->nsattr |= NVME_NS_ATTR_RO;
-   708		if (req->ns->bdev && !bdev_nonrot(req->ns->bdev))
-   709			id->nsfeat |= NVME_NS_ROTATIONAL;
-   710	
-   711		status = nvmet_copy_to_sgl(req, 0, id, sizeof(*id));
-   712		kfree(id);
-   713	out:
-   714		nvmet_req_complete(req, status);
-   715	}
-   716	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jens Axboe
+
+
+
 
