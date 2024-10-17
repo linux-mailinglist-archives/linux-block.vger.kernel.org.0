@@ -1,175 +1,174 @@
-Return-Path: <linux-block+bounces-12713-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12717-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAF3B9A2109
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 13:36:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF2F19A21A3
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 13:58:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A793E2837B5
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 11:36:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40C661F26932
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 11:58:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3803134A8;
-	Thu, 17 Oct 2024 11:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912231DD553;
+	Thu, 17 Oct 2024 11:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhcJzcIq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ijp/IOI1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE8E1DA112
-	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 11:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0E31DD549
+	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 11:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729164998; cv=none; b=PvVmfhf0IGwvKgFDTujYsEORJiSaTsQI/KixbmYdznaArHjN7vlTWL775njSo4KYqzYnQY+Kynqoa4ek1eAMNsHQnPfhV21hLUYl63f/UZtBt22b6IHnok4O4vzmTmfVx+OBmIkG5m2jdz5ui1XeVYG1t6Y+7JB/WaSSEnp5zus=
+	t=1729166241; cv=none; b=eL+/xQxGcN5TpKASqHkMDgxVe+Xn2iCZOvjWk+KDq6W6+OI0QGjtdonAmIaLgGXJiXu6q4Ja+BRVQbi7AZ2fHPGKZKq5g0qfNd6I5+UJDgrD2dFYv9V0Id+mwddgxjl0QOY2vmvow5x4/WTVmiSnTu3RYgeviWBXhbZtw/J8Jbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729164998; c=relaxed/simple;
-	bh=i6w8ieQcXW1K6B7GzLm0kqGCyIC97IVhovqIAIro8Wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gFeq2g1Vbpb6Kunktdzjvrw6N43rVBqNg1jKRn6iANu6yFATpG+W/2uzym+VP1/ktu07PqMB4mD8x8GFLRHwVeBEkI/F8VIohzOugRGxod6OSHrDaB25l0ejXt3rZuq/y/8srFyYmPXH8hCeHJ+w/aZpsSPvAhUrpwINEn6HbqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MhcJzcIq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729164994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=n0WSr1WmF7RA4Fe9ll4u+vzJx+IjPh5Yd91Xl29OH1Q=;
-	b=MhcJzcIqoBUi/3wgBvJoyq+ZSevSeA+DZw8s0j4/hOV9A5+yXzqgjU/3KQAy+KhV1G7FVI
-	L09P1HIWPiztoYIX5WfJ3qODcKe1PtyVIDmxyFsUAQCrzOngb06V/J1gSzKXQLEMY9lhnr
-	+gkLRcHIqiIVEpaeZ17icGv9nL7Bdz8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-Ri7peXqmOdOR5cjOSO91rQ-1; Thu,
- 17 Oct 2024 07:36:31 -0400
-X-MC-Unique: Ri7peXqmOdOR5cjOSO91rQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C1516195609F;
-	Thu, 17 Oct 2024 11:36:29 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.161])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 826AB19560AD;
-	Thu, 17 Oct 2024 11:36:27 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Cc: josef@toxicpanda.com,
-	nbd@other.debian.org,
-	eblake@redhat.com,
-	Ming Lei <ming.lei@redhat.com>,
-	vincent.chen@sifive.com,
-	Leon Schuermann <leon@is.currently.online>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Kevin Wolf <kwolf@redhat.com>
-Subject: [PATCH] nbd: fix partial sending
-Date: Thu, 17 Oct 2024 19:36:14 +0800
-Message-ID: <20241017113614.2964389-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1729166241; c=relaxed/simple;
+	bh=Wvobxwk10eyYL3VqO3KmPO3FLWGsG64YhxPc6/akDoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=GGp5fZf3py6qMr/FBxOzmHSuJpwrpfS7vmsl84Y/B2BBZgCcREI5aassvDULTSelSVlKdKm2bTrSdGozytPUNmBlVit+Y62nKuSs79I5MRiD5+8RE9HsuVhp5hjNiERiNaX7C3sxBmeXLSGdfU3unTZMj44SoSdlHjeqmbzm5AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ijp/IOI1; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20241017115716epoutp0163499995026b340da9af31a1c45a4b05~-O4flCLwz0812108121epoutp01F
+	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 11:57:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20241017115716epoutp0163499995026b340da9af31a1c45a4b05~-O4flCLwz0812108121epoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1729166236;
+	bh=Q4hHKn1fvmxyFIMMGNPMj5Q2BqLJbwWcipMK/6ZRwgo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ijp/IOI1AwDIK2TNyWMKfEdXI1C7ikx5cmnK8HiR04kTXjWSEIdQNmFft5WqU9gud
+	 byJcA9q4Df8qRi81a9hW/O9iKrcTvijVun5S/kIgL42979FzyuE/qG+e3nBUtdiwYH
+	 fL8kEfNxo2s7IYv9IlP/IbE/FsV8leIKx6vdliV4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20241017115715epcas5p3a3266c9f18db518c2ea85fb8f3e619da~-O4e1ekmR2518825188epcas5p3F;
+	Thu, 17 Oct 2024 11:57:15 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4XTmXp2hbMz4x9Pp; Thu, 17 Oct
+	2024 11:57:14 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C5.F1.18935.A9BF0176; Thu, 17 Oct 2024 20:57:14 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20241017114701epcas5p257951decab3610f0fb7b77a5104ea23f~-OviwUmc73273832738epcas5p2q;
+	Thu, 17 Oct 2024 11:47:01 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20241017114701epsmtrp20cd6a46e1646a64b8308ce8f6164173b~-OviviJJ12251122511epsmtrp2J;
+	Thu, 17 Oct 2024 11:47:01 +0000 (GMT)
+X-AuditID: b6c32a50-a99ff700000049f7-0f-6710fb9a11e6
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A8.E1.07371.539F0176; Thu, 17 Oct 2024 20:47:01 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241017114659epsmtip26cdaf5998c8ff6fe84d6b4a62d72f3a2~-Ovg5udWI2791127911epsmtip2c;
+	Thu, 17 Oct 2024 11:46:59 +0000 (GMT)
+Date: Thu, 17 Oct 2024 17:09:23 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
+	martin.petersen@oracle.com, asml.silence@gmail.com, anuj1072538@gmail.com,
+	krisman@suse.de
+Cc: io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, gost.dev@samsung.com,
+	linux-scsi@vger.kernel.org, vishak.g@samsung.com
+Subject: Re: [PATCH v4 11/11] scsi: add support for user-meta interface
+Message-ID: <20241017113923.GC1885@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20241016112912.63542-12-anuj20.g@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te1BUVRzHOXcvdy8My1xA6rgmj+sYQQK7tWwXhMCJ4s5ktWaNyjStd5Y7
+	u8S+2oeZ0rSTrg0UCkghKxaN8XAxIlRcMggXdOPZ8JCSaW1iWM1lwlhCGxGnZe/S+N/n9zvf
+	7znf88J50UOYEC/WmliDllGTWDja2ZeckmpbJpSi4QtR1MLSMkrV2zsB1eo+hlHXe7sQ6kzr
+	FYSat46iVLVzClAXhxt5VPf009SXTR4+9ckvDoxqdj1EqJ9t9fw8Ad1lc/PpiREz3WEvw+hz
+	X39IX7puwegFzzRKHz1vB/S5oYP0YkecLKywJFvFMkWsIYHVKnRFxVplDvnyTvkL8gypSJwq
+	zqSeIxO0jIbNIfO3y1JfKlb7Q5MJ+xi12d+SMUYjmf58tkFnNrEJKp3RlEOy+iK1XqJPMzIa
+	o1mrTNOypiyxSPRMhl+4t0Q12tfG118O3z9ia8IsYB4vB2E4JCTQV/U5Wg7C8WjiBwAtY0PB
+	wgdg3+0KhCvuAnjI60LXLMeXWzFuoBvA6r6bQctNAN1z4wEVSmyGTlcLf5UxIgn237KCVV5H
+	VAN4a+LNVeYRjQCu9EtXOYYogCd6fg9oBMQWeNQxFspxFByomw3MGUZshUuTrYF+LLEJ9na6
+	AvEg0YvDOw+cGBcvH9ae9PA4joFe13k+x0K4ON8d1CjhvxMehGM9PHS1B3CcC62Dx3hcOBWc
+	uvNjsL8RfjbYhnD9SFixPBv0CqDjizUm4cdn6oMMYfeoxc+4n2k4fa2UO6AeANuv1IBKEG97
+	ZG+2R5bjeAtsuOTDbH47j9gAmx/iHCbDb79PbwChdiBk9UaNklVk6MWpWva9/69codN0gMCr
+	TpE5QGv7SpoTIDhwAojzyHWC6nKBMlpQxLx/gDXo5AazmjU6QYb/sqp4wliFzv8ttCa5WJIp
+	kkilUknms1Ix+bhgznqqKJpQMia2hGX1rGHNh+BhQgtyBG38Zzy0IaRwV78jrm5S0f4A/GmA
+	yLvzF67dd6+cteS+XlMadfmA7+53cscrvVhNqeSrxrLJ0LxXTSfy9qHRjzFldHxFZPKYdGD9
+	Ju8eW899Xcsf3/zkThk5vfCB7eyNd2bQmW5EkeaTDcXQE7ufarae8tzLKiCyey7exmd3fKo6
+	/VG2cLDpKnv8XsJYCDu+oeO10VlZ4Vt7I+B8ftXf1Iw8fXgw8Qnz1j1D8W+rdtX+tW1qzm7O
+	Tc/11b5Y0BZxOCLOMOCNity41IxVmvYT20yJaVimNssrrxMtJN44KdzRrH6jsquat5iUE7vb
+	upD0q+Zw05Pr535bbDkSclBet9NOokYVI07hGYzMf39EGGZeBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42LZdlhJXtf0p0C6wbddqhYfv/5msZizahuj
+	xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02H5mKbPF3lvaFvOXPWW36L6+g81i+fF/TBbn
+	Z81hd+D12DnrLrvH5bOlHptWdbJ5bF5S77H7ZgObx8ent1g8+rasYvTYfLra4/MmuQDOKC6b
+	lNSczLLUIn27BK6Mnwua2QsaOSre/OthbmA8ztbFyMkhIWAiMfn3aiCbi0NIYDejxNfdl5kh
+	EhISp14uY4SwhSVW/nvODlH0hFFi8dbD7CAJFgFViUPHV4DZbALqEkeetzKCFIkITGKUmDfp
+	JgtIgllgKaPE3yNmILawgLvEjH33wabyCuhI9O24yAoxdR+jxM7Jn9ghEoISJ2c+gWrWkrjx
+	7yVTFyMHkC0tsfwfB0iYU8Ba4uuV1awgtqiAssSBbceZJjAKzkLSPQtJ9yyE7gWMzKsYJVML
+	inPTc5MNCwzzUsv1ihNzi0vz0vWS83M3MYJjTEtjB+O9+f/0DjEycTAeYpTgYFYS4Z3UxZsu
+	xJuSWFmVWpQfX1Sak1p8iFGag0VJnNdwxuwUIYH0xJLU7NTUgtQimCwTB6dUA9Ob4KivNZKP
+	7IT539id3BNTmb44/LTH39A7Gq0MSZk79j/ffq782rawl1apt3f/vbt1ikX+9jcThbfc5TYJ
+	70n7FSHgHJrz1/TQZD4e15zo869j0wTLPyn6iq3uP+8zS6En2Jn5961rJj8Yeqx28l26Xi/y
+	w7SD+fqVL7K2+5Zvcu2LcS9zEnjyZH1qj9XLX9vtdm0+ukRjxcXQ7PPfko4Hmtexsss6hl3Z
+	ylws/MFzhXLKbKsVe67oWRiaLpxu5za9T072z4NLjXck8ubtljhnFszVrn77afpSy8tr3FcV
+	RUlvbHBL0WMVyV4+nTkvT+PsoVcmGXc89XWu8AvX3zxqsfHybjtBRw97HQs+XSWW4oxEQy3m
+	ouJEAEGkjKAgAwAA
+X-CMS-MailID: 20241017114701epcas5p257951decab3610f0fb7b77a5104ea23f
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_50325_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e
+References: <20241016112912.63542-1-anuj20.g@samsung.com>
+	<CGME20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e@epcas5p4.samsung.com>
+	<20241016112912.63542-12-anuj20.g@samsung.com>
 
-nbd driver sends request header and payload with multiple call of
-sock_sendmsg, and partial sending can't be avoided. However, nbd driver
-returns BLK_STS_RESOURCE to block core in this situation. This way causes
-one issue: request->tag may change in the next run of nbd_queue_rq(), but
-the original old tag has been sent as part of header cookie, this way
-confuses nbd driver reply handling, since the real request can't be
-retrieved any more with the obsolete old tag.
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_50325_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Fix it by retrying sending directly, this way is reasonable & safe since
-nothing can move on if the current hw queue(socket) has pending request,
-and unnecessary requeue can be avoided in this way.
+> +/*
+> + * Can't check reftag alone or apptag alone
+> + */
+> +static bool sd_prot_flags_valid(struct scsi_cmnd *scmd)
+> +{
+> +	struct request *rq = scsi_cmd_to_rq(scmd);
+> +	struct bio *bio = rq->bio;
+> +
+> +	if (bio_integrity_flagged(bio, BIP_CHECK_REFTAG) &&
+> +	    !bio_integrity_flagged(bio, BIP_CHECK_APPTAG))
+> +		return false;
+> +	if (!bio_integrity_flagged(bio, BIP_CHECK_REFTAG) &&
+> +	    bio_integrity_flagged(bio, BIP_CHECK_APPTAG))
+> +		return false;
+> +	return true;
+> +}
+> +
 
-Cc: vincent.chen@sifive.com
-Cc: Leon Schuermann <leon@is.currently.online>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Reported-by: Kevin Wolf <kwolf@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-Kevin,
-	Please test this version, thanks!
+Martin, Christoph, and all,
 
- drivers/block/nbd.c | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
+This snippet prevents a scenario where a apptag check is specified without
+a reftag check and vice-versa, which is not possible for scsi[1]. But for
+block layer generated integrity apptag check (BIP_CHECK_APPTAG) is not
+specified. When scsi drive is formatted with type1/2 PI, block layer would
+specify refcheck but not appcheck. Hence, these I/O's would fail. Do you
+see how we can handle this?
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b852050d8a96..ef84071041e3 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -701,8 +701,9 @@ static blk_status_t nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd,
- 			if (sent) {
- 				nsock->pending = req;
- 				nsock->sent = sent;
-+			} else {
-+				set_bit(NBD_CMD_REQUEUED, &cmd->flags);
- 			}
--			set_bit(NBD_CMD_REQUEUED, &cmd->flags);
- 			return BLK_STS_RESOURCE;
- 		}
- 		dev_err_ratelimited(disk_to_dev(nbd->disk),
-@@ -743,7 +744,6 @@ static blk_status_t nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd,
- 					 */
- 					nsock->pending = req;
- 					nsock->sent = sent;
--					set_bit(NBD_CMD_REQUEUED, &cmd->flags);
- 					return BLK_STS_RESOURCE;
- 				}
- 				dev_err(disk_to_dev(nbd->disk),
-@@ -778,6 +778,35 @@ static blk_status_t nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd,
- 	return BLK_STS_OK;
- }
- 
-+/*
-+ * Send pending nbd request and payload, part of them have been sent
-+ * already, so we have to send them all with current request, and can't
-+ * return BLK_STS_RESOURCE, otherwise request tag may be changed in next
-+ * retry
-+ */
-+static blk_status_t nbd_send_pending_cmd(struct nbd_device *nbd,
-+		struct nbd_cmd *cmd)
-+{
-+	struct request *req = blk_mq_rq_from_pdu(cmd);
-+	unsigned long deadline = READ_ONCE(req->deadline);
-+	unsigned int wait_ms = 2;
-+	blk_status_t res;
-+
-+	WARN_ON_ONCE(test_bit(NBD_CMD_REQUEUED, &cmd->flags));
-+
-+	while (true) {
-+		res = nbd_send_cmd(nbd, cmd, cmd->index);
-+		if (res != BLK_STS_RESOURCE)
-+			return res;
-+		if (READ_ONCE(jiffies) + msecs_to_jiffies(wait_ms) >= deadline)
-+			break;
-+		msleep(wait_ms);
-+		wait_ms *= 2;
-+	}
-+
-+	return BLK_STS_IOERR;
-+}
-+
- static int nbd_read_reply(struct nbd_device *nbd, struct socket *sock,
- 			  struct nbd_reply *reply)
- {
-@@ -1111,6 +1140,8 @@ static blk_status_t nbd_handle_cmd(struct nbd_cmd *cmd, int index)
- 		goto out;
- 	}
- 	ret = nbd_send_cmd(nbd, cmd, index);
-+	if (ret == BLK_STS_RESOURCE && nsock->pending == req)
-+		ret = nbd_send_pending_cmd(nbd, cmd);
- out:
- 	mutex_unlock(&nsock->tx_lock);
- 	nbd_config_put(nbd);
--- 
-2.44.0
+[1] https://lore.kernel.org/linux-block/yq1ttgz5l6d.fsf@ca-mkp.ca.oracle.com/
 
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_50325_
+Content-Type: text/plain; charset="utf-8"
+
+
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_50325_--
 
