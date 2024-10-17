@@ -1,216 +1,176 @@
-Return-Path: <linux-block+bounces-12697-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12699-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CFFB9A18D0
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 04:53:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0797F9A1A4D
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 07:59:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32DDD286C1B
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 02:53:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B433B24E28
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2024 05:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02EBC69959;
-	Thu, 17 Oct 2024 02:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F5E16E892;
+	Thu, 17 Oct 2024 05:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWIveLhh"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mm6UqU8q"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B6157333
-	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 02:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B616DC28
+	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 05:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729133595; cv=none; b=EID0EyE32B8bMEZahztkSi1H5Q7T9SrGK+yQ3sAvbX3Tbu3x23TtTmj+HnCD0NkzWG/W/z+jwiS9IFpLFwusdCaExE2AwUsVCFjpb46D3Bz8ibcx5PeF0JEmtLZvtB4K6H/Ty/wYRBjR93mJ/WW8GbkC2hEM/vUBE9OWwxhgzu0=
+	t=1729144777; cv=none; b=oR2jRaTjPNq+XWqWb6VJKGcGdJdj1OoECXv5TTHUgSvliOz+n1Qpmyrsr0sYYGQu+MDa3+2QxeJ0+r/GiMDr0m8ilPSbYiMu8uaveyWLrw9RVRrGTpOH3700ol5R9dTYI0NxDd+nIvex3Pw6kZxLduF0kJTzfs6QgDmXXrTd4jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729133595; c=relaxed/simple;
-	bh=IJBOqx9NxMc5WLmAbznCKcLk1C+IHZ233gR4dWXfIWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWqXwKWo30AfKt+yeD0NEThAM0V4nVYJzvux7huq5Sf2WTVk4wObuCwUSqtMg8eYzzqMngZ/A1J909Ch1AJuMK/ifrx2c8bntnV6nljhZusQ+1sCWL1f2dNKQtWQIod/362oI9gIFAnjlvt2VLTFu9eNVzxDqUECsUZwc0QkC9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FWIveLhh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729133592;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TeRLjSI0AOSasWyGX5bnzaoVT8qPALildZa2sqGx5c4=;
-	b=FWIveLhh5kx10MxN0fmFP9kTsPzI1lBtdc7BVvChpOQ6Zr6sBA2mcJqh2nzWKzIqOOJdtA
-	xTbpB/Yc1nJ/T94HlmXtB1HqWsNcsMDnOuW48WBH6ZRQJ60AMv84XDzJSkYeZFjLkMhNU+
-	6dGRUy1iqE0NwamhmFUJNwVrm8HM4yQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-vwd2APulMXqcm3viW8maXA-1; Wed,
- 16 Oct 2024 22:53:11 -0400
-X-MC-Unique: vwd2APulMXqcm3viW8maXA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C425119560BA;
-	Thu, 17 Oct 2024 02:53:09 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.46])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F91630001A5;
-	Thu, 17 Oct 2024 02:53:03 +0000 (UTC)
-Date: Thu, 17 Oct 2024 10:52:58 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Kevin Wolf <kwolf@redhat.com>
-Cc: josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
-	nbd@other.debian.org, eblake@redhat.com, leon@is.currently.online
-Subject: Re: Kernel NBD client waits on wrong cookie, aborts connection
-Message-ID: <ZxB8Cpc8ZCdY1HdQ@fedora>
-References: <Zw5CNDIde6xkq_Sf@redhat.com>
- <CAFj5m9LXwcH7vc2Fk_i+VhfUA+tevzhciJzKc1am49y_5jgC2Q@mail.gmail.com>
- <Zw5b1mwk3aG01NTg@fedora>
- <CAFj5m9+x+tiAAKj3dX_WcFczkdSNaR6nguDHm9FXuYjQHd8YcA@mail.gmail.com>
- <Zw5nMQoPrSIq9axl@fedora>
- <Zw6S6RoKWzUnNVpu@redhat.com>
- <Zw8i6-DVDsLk3sq9@fedora>
- <Zw_xHyXkl9eUftst@redhat.com>
- <ZxBlV_qZ54S3sFum@fedora>
+	s=arc-20240116; t=1729144777; c=relaxed/simple;
+	bh=nZi3N87Fn7GyL3h5GSDsr0TyuokvD5sBHPSu2+vgW08=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=LKIMBMtLUO+NXMIUjZPWW+7MaMogOMMrwEeu0q7odUymcV4LySg0qukVeUJgCqRFz4OtnUYCMlinfwDDgdyo5fYcLmpTQfwlVADJG28XwlzOBWCNvFVK48A0qxhy3S27vBRVNqnb6DkTD8BDZg24zsZ4vbv9rx2ZrDDqSwlUfnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mm6UqU8q; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20241017055932epoutp04a9bc1416449d77b0079ba2df858ee9cf~-KAJTSF7H1709017090epoutp04V
+	for <linux-block@vger.kernel.org>; Thu, 17 Oct 2024 05:59:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20241017055932epoutp04a9bc1416449d77b0079ba2df858ee9cf~-KAJTSF7H1709017090epoutp04V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1729144772;
+	bh=rl4urkME/xxgsKsWdB43j5AWH/MmKc4JwHpXxRIbew4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mm6UqU8qlxepvJDRG7jVJIKoW7elohNkfIQyLOIzCMfAiyYZm946SA6KV2ybfpdpp
+	 MhutC/pTS5ouILO30r+cHo5bEuO0DOIviem3ljmd+L0BHuTJNdh+Xman+TVB7h9jgq
+	 nU3D5BF74ckGEYRBPsI7Qcmn7BWnu38td3MgQC+Q=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20241017055931epcas5p2a67fb46e7e19b82a81ade31e60aeda88~-KAIp2HuV2775827758epcas5p2J;
+	Thu, 17 Oct 2024 05:59:31 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4XTcc00Cqtz4x9Pt; Thu, 17 Oct
+	2024 05:59:28 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	54.BD.09770.FB7A0176; Thu, 17 Oct 2024 14:59:27 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20241017055641epcas5p48ca0552614a6056d4a11ded041fb4e28~-J9qfSEwB1644216442epcas5p4m;
+	Thu, 17 Oct 2024 05:56:41 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20241017055641epsmtrp2af3196895d0402ffdce5e2fe9f3223a0~-J9qeNQb31041410414epsmtrp2_;
+	Thu, 17 Oct 2024 05:56:41 +0000 (GMT)
+X-AuditID: b6c32a4a-44cd5a800000262a-b2-6710a7bf983a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A4.B5.08227.917A0176; Thu, 17 Oct 2024 14:56:41 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241017055639epsmtip2c1fdc0bb6dff263556b25947391e3414~-J9oiDPV90559305593epsmtip2i;
+	Thu, 17 Oct 2024 05:56:39 +0000 (GMT)
+Date: Thu, 17 Oct 2024 11:19:00 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: Keith Busch <kbusch@kernel.org>
+Cc: axboe@kernel.dk, hch@lst.de, martin.petersen@oracle.com,
+	asml.silence@gmail.com, anuj1072538@gmail.com, krisman@suse.de,
+	io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, gost.dev@samsung.com,
+	linux-scsi@vger.kernel.org, vishak.g@samsung.com, Kanchan Joshi
+	<joshi.k@samsung.com>
+Subject: Re: [PATCH v4 04/11] block: define meta io descriptor
+Message-ID: <20241017054900.alfiqn3o37f4kkxb@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <ZxAVlFfF-gjzFLwr@kbusch-mbp.dhcp.thefacebook.com>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPJsWRmVeSWpSXmKPExsWy7bCmuu7+5QLpBvcfWVt8/PqbxWLOqm2M
+	Fqvv9rNZ3Dywk8li5eqjTBbvWs+xWBz9/5bNYtKha4wW288sZbbYe0vbYv6yp+wW3dd3sFks
+	P/6PyeL8rDnsDnweO2fdZfe4fLbUY9OqTjaPzUvqPXbfbGDz+Pj0FotH35ZVjB6bT1d7fN4k
+	F8AZlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3S5
+	kkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8vtcTK0MDAyBSo
+	MCE74/Cew4wFp3kqfpzfz9LAeJGri5GTQ0LAROLzo1MsILaQwG5GiaubjbsYuYDsT4wSE/+8
+	YoJwvjFKPLrznx2mY/Om24wQib2MEh8f/mOCaH8G1PI7GMRmEVCVOPzzIlgDm4C6xJHnrYwg
+	toiAssTd+TNZQZqZBU4ySRw7/RRst7CAnUTPkX1gDbwCZhKfFhxhhLAFJU7OfAJWwylgL/Gr
+	q4cNxBYVkJGYsfQrM8ggCYEjHBL79/9jgzjPRaL/6VJmCFtY4tXxLVBnS0l8frcXqiZd4sfl
+	p0wQdoFE87F9jBC2vUTrqX6wXmaBDIlz3YugemUlpp5axwQR55Po/f0EqpdXYsc8GFtJon3l
+	HChbQmLvuQYo20Oi6UALGyJQv0xkmsAoPwvJc7OQ7IOwrSQ6PzSxzmLkALKlJZb/44AwNSXW
+	79JfwMi6ilEytaA4Nz212LTAKC+1HB7jyfm5mxjBKVvLawfjwwcf9A4xMnEwHmKU4GBWEuGd
+	1MWbLsSbklhZlVqUH19UmpNafIjRFBhbE5mlRJPzgVkjryTe0MTSwMTMzMzE0tjMUEmc93Xr
+	3BQhgfTEktTs1NSC1CKYPiYOTqkGpt0tS6x7av+qN6pw+nhNvrP76CRfu0Pr+e2M/2/U7voj
+	/e7CDhvNtv59Jzk9P6z08u9lvZZ32P7/StXkncfOi6y23xrhP1d/9f12rTS9OW+uHO6e9mvK
+	v6ypmgp/Ratz7Lq0Ht3T8fvDynhM44zxxD25Rzx1pazl51ecuM21LeeRaMEyIXNBz1Mm8RcX
+	7T7wmINv1lm+IyVPb1yr06lYPNXeddt+t/fvnkwRYLnl4X1U0uSO0qU5y9w2BxwTa7vBv/sG
+	u6Oz49R1h5a4r9x281FRwO07JooVH2QvlO9/Or0g48s3eVkGZw67sp6a4lnKQTGJazPOm2b7
+	L6q21WToyb1jPGVirsAi9dqXwodjdimxFGckGmoxFxUnAgCkk4qFYgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWy7bCSvK7kcoF0g4l3dCw+fv3NYjFn1TZG
+	i9V3+9ksbh7YyWSxcvVRJot3redYLI7+f8tmMenQNUaL7WeWMlvsvaVtMX/ZU3aL7us72CyW
+	H//HZHF+1hx2Bz6PnbPusntcPlvqsWlVJ5vH5iX1HrtvNrB5fHx6i8Wjb8sqRo/Np6s9Pm+S
+	C+CM4rJJSc3JLEst0rdL4Mp4v28VU8FfzopzfceYGhjncnQxcnJICJhIbN50m7GLkYtDSGA3
+	o8SklbMYIRISEqdeLoOyhSVW/nvODlH0hFHi27b7YAkWAVWJwz8vsoPYbALqEkeet4LFRQSU
+	Je7On8kKYjMLnGSS+PKAH8QWFrCT6DmyD6yeV8BM4tOCI1CbPzFK7GnqZIJICEqcnPmEBaLZ
+	TGLe5ofMXYwcQLa0xPJ/YFdzCthL/OrqYQOxRQVkJGYs/co8gVFwFpLuWUi6ZyF0L2BkXsUo
+	mVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERxrWlo7GPes+qB3iJGJg/EQowQHs5II76Qu
+	3nQh3pTEyqrUovz4otKc1OJDjNIcLErivN9e96YICaQnlqRmp6YWpBbBZJk4OKUamNwbHW14
+	qvdMN7Paacq4ZXXDr3zTFm01vhe/f3pObhNe8uIo0+IyDsMQhkdPX6x5aa7dc/BOe8pCxqcG
+	nz6fX3DSOvrf0RKBUEHmfYkXi92CfvooH3TvFp3p9+jTF5FX91liue/PUxS6zzSrkuHu7mDx
+	tvAZ1vxzllTI9k0VTZDQ5T4UWb7vmeNTIwNmsZW9sT9c1Qoqvh/XFY3cvdVaR7bjfVRuu/aU
+	Ra2sMUvC/rpu9jYIF9L/MKNGQuvkTQPNv0e/6fMzF9exNGjfPmkhHnfggb3X/adXIg7MysgN
+	evCzOK/absv0CTsuc59pv3L8QFgzX/FM18irkt0zL86RPFzLkO9nrZpTc+6/j857JZbijERD
+	Leai4kQAqW/9jSQDAAA=
+X-CMS-MailID: 20241017055641epcas5p48ca0552614a6056d4a11ded041fb4e28
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_4e3b9_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241016113741epcas5p3b90adb3b43b6b443ffd00df29d63d289
+References: <20241016112912.63542-1-anuj20.g@samsung.com>
+	<CGME20241016113741epcas5p3b90adb3b43b6b443ffd00df29d63d289@epcas5p3.samsung.com>
+	<20241016112912.63542-5-anuj20.g@samsung.com>
+	<ZxAVlFfF-gjzFLwr@kbusch-mbp.dhcp.thefacebook.com>
+
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_4e3b9_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZxBlV_qZ54S3sFum@fedora>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, Oct 17, 2024 at 09:16:07AM +0800, Ming Lei wrote:
-> On Wed, Oct 16, 2024 at 07:00:15PM +0200, Kevin Wolf wrote:
-> > Am 16.10.2024 um 04:20 hat Ming Lei geschrieben:
-> > > On Tue, Oct 15, 2024 at 06:06:01PM +0200, Kevin Wolf wrote:
-> > > > Am 15.10.2024 um 14:59 hat Ming Lei geschrieben:
-> > > > > On Tue, Oct 15, 2024 at 08:15:17PM +0800, Ming Lei wrote:
-> > > > > > On Tue, Oct 15, 2024 at 8:11 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On Tue, Oct 15, 2024 at 08:01:43PM +0800, Ming Lei wrote:
-> > > > > > > > On Tue, Oct 15, 2024 at 6:22 PM Kevin Wolf <kwolf@redhat.com> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi all,
-> > > > > > > > >
-> > > > > > > > > the other day I was running some benchmarks to compare different QEMU
-> > > > > > > > > block exports, and one of the scenarios I was interested in was
-> > > > > > > > > exporting NBD from qemu-storage-daemon over a unix socket and attaching
-> > > > > > > > > it as a block device using the kernel NBD client. I would then run a VM
-> > > > > > > > > on top of it and fio inside of it.
-> > > > > > > > >
-> > > > > > > > > Unfortunately, I couldn't get any numbers because the connection always
-> > > > > > > > > aborted with messages like "Double reply on req ..." or "Unexpected
-> > > > > > > > > reply ..." in the host kernel log.
-> > > > > > > > >
-> > > > > > > > > Yesterday I found some time to have a closer look why this is happening,
-> > > > > > > > > and I think I have a rough understanding of what's going on now. Look at
-> > > > > > > > > these trace events:
-> > > > > > > > >
-> > > > > > > > >         qemu-img-51025   [005] ..... 19503.285423: nbd_header_sent: nbd transport event: request 000000002df03708, handle 0x0000150c0000005a
-> > > > > > > > > [...]
-> > > > > > > > >         qemu-img-51025   [008] ..... 19503.285500: nbd_payload_sent: nbd transport event: request 000000002df03708, handle 0x0000150c0000005d
-> > > > > > > > > [...]
-> > > > > > > > >    kworker/u49:1-47350   [004] ..... 19503.285514: nbd_header_received: nbd transport event: request 00000000b79e7443, handle 0x0000150c0000005a
-> > > > > > > > >
-> > > > > > > > > This is the same request, but the handle has changed between
-> > > > > > > > > nbd_header_sent and nbd_payload_sent! I think this means that we hit one
-> > > > > > > > > of the cases where the request is requeued, and then the next time it
-> > > > > > > > > is executed with a different blk-mq tag, which is something the nbd
-> > > > > > > > > driver doesn't seem to expect.
-> > > > > > > > >
-> > > > > > > > > Of course, since the cookie is transmitted in the header, the server
-> > > > > > > > > replies with the original handle that contains the tag from the first
-> > > > > > > > > call, while the kernel is only waiting for a handle with the new tag and
-> > > > > > > > > is confused by the server response.
-> > > > > > > > >
-> > > > > > > > > I'm not sure yet which of the following options should be considered the
-> > > > > > > > > real problem here, so I'm only describing the situation without trying
-> > > > > > > > > to provide a patch:
-> > > > > > > > >
-> > > > > > > > > 1. Is it that blk-mq should always re-run the request with the same tag?
-> > > > > > > > >    I don't expect so, though in practice I was surprised to see that it
-> > > > > > > > >    happens quite often after nbd requeues a request that it actually
-> > > > > > > > >    does end up with the same cookie again.
-> > > > > > > >
-> > > > > > > > No.
-> > > > > > > >
-> > > > > > > > request->tag will change, but we may take ->internal_tag(sched) or
-> > > > > > > > ->tag(none), which won't change.
-> > > > > > > >
-> > > > > > > > I guess was_interrupted() in nbd_send_cmd() is triggered, then the payload
-> > > > > > > > is sent with a different tag.
-> > > > > > > >
-> > > > > > > > I will try to cook one patch soon.
-> > > > > > >
-> > > > > > > Please try the following patch:
-> > > > > > 
-> > > > > > Oops, please ignore the patch, it can't work since
-> > > > > > nbd_handle_reply() doesn't know static tag.
-> > > > > 
-> > > > > Please try the v2:
-> > > > 
-> > > > It doesn't fully work, though it replaced the bug with a different one.
-> > > > Now I get "Unexpected request" for the final flush request.
-> > > 
-> > > That just shows the approach is working.
-> > > 
-> > > Flush request doesn't have static tag, that is why it is failed.
-> > > It shouldn't be hard to cover it, please try the attached & revised
-> > > patch.
-> > 
-> > Any other request types that are unusual, or is flush the only one?
-> 
-> Flush is the only one.
-> 
-> > 
-> > > Another solution is to add per-nbd-device map for retrieving nbd_cmd
-> > > by the stored `index` in cookie, and the cost is one such array for
-> > > each device.
-> > 
-> > Yes, just creating the cookie another way and having an explicit mapping
-> > back is the obvious naive solution (my option 2). It would be nice to
-> > avoid this.
-> > 
-> > > > 
-> > > > Anyway, before talking about specific patches, would this even be the
-> > > > right solution or would it only paper over a bigger issue?
-> > > > 
-> > > > Is getting a different tag the only thing that can go wrong if you
-> > > > handle a request partially and then requeue it?
-> > > 
-> > > Strictly speaking it is BLK_STS_RESOURCE.
-> > > 
-> > > Not like userspace implementation, kernel nbd call one sock_sendmsg()
-> > > for sending either request header, or each single data bvec, so
-> > > partial xmit can't be avoided. This kind of handling is fine, given
-> > > TCP is just byte stream, nothing difference is observed from nbd
-> > > server side if data is correct.
-> > 
-> > I wasn't questioning the partial submission, but only if it's a good
-> > idea to return the request to the queue in this case, or if the nbd
-> > driver should use another mechanism to keep working on the request
-> > without returning it. But if this is accepted and a common pattern in
-> > other drivers, too (is it?), I don't have a problem with it.
-> 
-> It is one common pattern to retrieve request with tag in many storage
-> drivers(scsi, nvme, ...), also it should be the only way.
-> 
-> But userspace implementation needn't it, with async/.await the io
-> request or whatever can be defined as one local variable.
+On 16/10/24 01:35PM, Keith Busch wrote:
+>On Wed, Oct 16, 2024 at 04:59:05PM +0530, Anuj Gupta wrote:
+>> +struct uio_meta {
+>> +	meta_flags_t	flags;
+>> +	u16		app_tag;
+>> +	u32		seed;
+>> +	struct iov_iter iter;
+>> +};
+>
+>Is the seed used for anything other than the kernel's t10 generation and
+>verification? It looks like that's all it is for today, and that part is
+>skipped for userspace metadata, so I'm not sure we need it.
+>
+>I know it's been used for passthrough commands since nvme started
+>supporitng it, but I don't see why the driver ever bothered. I think it
+>wasn't necessary and we've been carrying it forward ever since.
 
-Thinking of further, we shouldn't bother blk-mq to add static tag
-related APIs, which not only involves implementation detail, but also
-not necessarily.
+Not for generation/verfication, but seed is used to remap the ref tag when
+submitting metadata on a partition (see blk_integrity_prepare/complete).
+For cases like partitioning, MD/DM cloning, where virtual start sector is
+different from physical sector remapping is required.
 
-nbd shouldn't return BLK_STS_RESOURCE to ask blk-mq to retry in case of
-partial send, and driver has to do it by itself.
+It is skipped for passthrough, but we require it for this series where I/O
+can be done on partition too. Christoph [1], Martin [2] also expressed
+the need for it in the previous version.
 
-Thanks,
-Ming
+[1] https://lore.kernel.org/linux-block/20240824084430.GG8805@lst.de/
+[2] https://lore.kernel.org/linux-block/yq17cc0c9p5.fsf@ca-mkp.ca.oracle.com/
 
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_4e3b9_
+Content-Type: text/plain; charset="utf-8"
+
+
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_4e3b9_--
 
