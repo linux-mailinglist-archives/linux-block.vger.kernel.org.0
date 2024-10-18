@@ -1,205 +1,232 @@
-Return-Path: <linux-block+bounces-12765-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12767-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FDE69A37B3
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 09:55:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F32599A3912
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 10:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2810C284047
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 07:55:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE104284720
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 08:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C93018C031;
-	Fri, 18 Oct 2024 07:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DF218EFDC;
+	Fri, 18 Oct 2024 08:50:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+qzlvoN"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QiowE7/n"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DDB18CBEC;
-	Fri, 18 Oct 2024 07:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E4917839C
+	for <linux-block@vger.kernel.org>; Fri, 18 Oct 2024 08:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729238074; cv=none; b=WFdjAPObL+FndS7FmLmrcBNfuf31yK9w113yxyBdMT9XgK0vjRmKjUcLRGEi0/d34oFRsRfUVtQcHJV30MMtFQUBy+92gyzc3QEpl6SvJzNqy3c6sR8js/hLgs0i0u+ixibqICbau458zUSXaPK7gCXe/nFaThPTBFtBKNdyqdI=
+	t=1729241423; cv=none; b=krZvGmFhFcKojM67RQEjVJtIgsV4PSr95Xn0AcQf5SJOBH0bbopsnKe4nk/wJASim0rQ13IwOfIJEf17GbDLMJkYPaGGt/dRpkJ+pxgDmqpZ1aKWwVgjxsGTWrPl/GoH/fdE0bHZ+34HHbuP3j43sSvZZhc5195z00VYX99CJX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729238074; c=relaxed/simple;
-	bh=VYb4AXeRfDuSPexQUmqF2/JPGM2xgfoqbX7SzxfRB5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pqAFbJf9FeJty9iwG7lIdNIr4YMJOU4gxx5Bm65MJ1S4Bqx0BHakhYIjuTspIuqgr6um4rhRtFFQ2NA6973HZuTgQ2suWl4ByzfEug7tviVu0qJE2FhctarsNY0L46lZv3j7kqMnjJZkMKmiARfQjHABiEaQOIUZDpADpJO1V5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K+qzlvoN; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729238073; x=1760774073;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VYb4AXeRfDuSPexQUmqF2/JPGM2xgfoqbX7SzxfRB5g=;
-  b=K+qzlvoNWCRTFXp5eODqoCih4+AHIFc2LOeur3PVWAvFYuf1bAkgrSqW
-   ZrHOWhyDlu4uM2wg1F8fSEtrlJa2E8OHMEC3o13HrsmCh0Fr7JDrFVO8H
-   lZgombz3OV4rGBzbxkoYYhv9Lvc6DpP/WDCMdlF/Yh0uVGGqr5uH/NKau
-   YRytlhMyBC+hyTweHapXB8rX1YSuqqV4i9joaP4ESlTdATGAyu39J4sZW
-   U4hBw0o/iNZxiapLEAPM/ZrmmPszGbzPnJ94qrK9aP/m/3D41jhsJhPc/
-   1hO/pYz1MH+M6af+oO/XPE3bqtHQimU9HSE62zxef7f4Zb5uVX4CoFWaW
-   Q==;
-X-CSE-ConnectionGUID: beZaYOjEQDW1uktY6jFqOg==
-X-CSE-MsgGUID: 3QgOGX5/RcOgwCZhz6HWew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28549560"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28549560"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 00:54:33 -0700
-X-CSE-ConnectionGUID: C6HyQPG8RaaWj0C89faR3g==
-X-CSE-MsgGUID: f1pdlETeRN6DD9MxxgeLWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,213,1725346800"; 
-   d="scan'208";a="79604071"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.169])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 00:54:27 -0700
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: axboe@kernel.dk
-Cc: hch@lst.de,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHv2 2/2] blk-mq: add support for CPU latency limits
-Date: Fri, 18 Oct 2024 10:30:38 +0300
-Message-ID: <20241018075416.436916-3-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241018075416.436916-1-tero.kristo@linux.intel.com>
-References: <20241018075416.436916-1-tero.kristo@linux.intel.com>
+	s=arc-20240116; t=1729241423; c=relaxed/simple;
+	bh=dXAGNRNvKCH5gnbwI7IXcGCoTQyL7L1FPojjzghzptw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=WcGM7W3SXytOMwZJaYWzRUotddpyLiJ4mTUwfnYtf9j5uHdIMsqpHpNUTBuE5nMkQ5ggjx/vOWvGZhFhdA7/3EjQc2kx04KEpPUZduSvTioH4KT6ocHIRiFAVxrPfVVsF5ioZnIDvV+6fA1mBMyMew2wmUxt0ZTFt9PRS0d7rMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QiowE7/n; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241018085013epoutp034ba99da5045caf968220a2e2741ba37f~-f_dJLfVJ0635206352epoutp03c
+	for <linux-block@vger.kernel.org>; Fri, 18 Oct 2024 08:50:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241018085013epoutp034ba99da5045caf968220a2e2741ba37f~-f_dJLfVJ0635206352epoutp03c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1729241413;
+	bh=ncVCmNC5q9sLwvQGITeEvX2kPlF4Nabnk4kf+n1iovs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QiowE7/ndjk/lmriSZhyzCKXAstwezuQZSUZsrse5RTEq5GhrJEiZxJ/AqPvjkInh
+	 QHFq38oQZ+Qw/IXwbSULv70OIGxvJLU1Bg+XB3nPmCWjybXOPCGXjmUmSgCL8Kso4/
+	 J9BpVi2sGvUAO91HvSOlhX2oAOg1OdIhcVgLqO2I=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20241018085012epcas5p2b93800cfdb671b6362bc3d6ab1791ab4~-f_cpBkVQ2265822658epcas5p2X;
+	Fri, 18 Oct 2024 08:50:12 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4XVJLV6lLwz4x9QG; Fri, 18 Oct
+	2024 08:50:10 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A6.DA.08574.D3122176; Fri, 18 Oct 2024 17:50:05 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20241018083430epcas5p138473638c4aea07ac9320900406c8d52~-fwvEfi5F1491014910epcas5p1u;
+	Fri, 18 Oct 2024 08:34:30 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20241018083430epsmtrp12783beedb848e16be51a982002df02be~-fwvA2Blx2774327743epsmtrp1w;
+	Fri, 18 Oct 2024 08:34:30 +0000 (GMT)
+X-AuditID: b6c32a44-93ffa7000000217e-f2-6712213dd6a9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	40.82.07371.69D12176; Fri, 18 Oct 2024 17:34:30 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241018083428epsmtip20018145a4091d5b02fc61d03210c7b85~-fwtNvBXG0587105871epsmtip2k;
+	Fri, 18 Oct 2024 08:34:28 +0000 (GMT)
+Date: Fri, 18 Oct 2024 13:56:48 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: axboe@kernel.dk, kbusch@kernel.org, martin.petersen@oracle.com,
+	asml.silence@gmail.com, anuj1072538@gmail.com, krisman@suse.de,
+	io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, gost.dev@samsung.com,
+	linux-scsi@vger.kernel.org, vishak.g@samsung.com
+Subject: Re: [PATCH v4 11/11] scsi: add support for user-meta interface
+Message-ID: <20241018082648.GA32006@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241017143918.GC21905@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbdRTH87u39LFYvRQYZ11UvA7Yg1dZ6S6Mx+Zwq8ElRBMXMYZd6E2L
+	QFv78DGnK7pCHAyESeIqo0zZkC5jC1SkECgwEIbARghDGDBCAB3LnGB4yLDa9jKz/z7n/L7n
+	/M7j9+PjoptcMT9LbWB0ajqH5G7hNN7YFRqe8JJIGTU8H00tLj/mUBW2RkRdmSzhUmPtDoyq
+	vdKNUX+YBzlUWecdRP3UfwmnWsf3UNbLczyqcLSJS9X0uDDqlqWCd0Aod1gmefLhAaO83vYl
+	V95QfUreMmbiyhfnxjnyYrsNyRt++UT+V/0LqYK07HgVQysYXRCjztQostTKBDLlzfRD6TGy
+	KEm4JJbaRwap6VwmgUx+PTX8cFaOu2gy6AM6x+h2pdJ6PRmZGK/TGA1MkEqjNySQjFaRo5Vq
+	I/R0rt6oVkaoGUOcJCoqOsYtPJ6tspcVYdoV8UdDD8t5JmTdegYJ+EBIwXa6iOdhEdGCYOT7
+	4DNoi5uXEBR2tSLWWEHQ0VHmVvG9ETN1h1h/KwJH9xjOGvMIHi1MYJ5UHCIYfqhrRh7mEqHQ
+	9ZvZy/4ECXMLA96sOFGLQeuIBfcc+BFH4Ju2e16RkAgHh72Xw7Iv3Dw/62UBEQYdE/U+Hg4g
+	Xob2xh7MkwiIXj6ce9jGYRtKhrWpPxHLfrDQY+exLIb7JfmbrIS14TmMZS188XPbpj4JzH0l
+	3oJwQgXn+mY2Nc9DeV8dxvqfhbOPZzf9QmiqfMIkFNRWbDJA66AJY8clh/GRk+yE8jCY6xjk
+	foVetDzVm+Wp61gOg6qWJa7FHY4T26HGxWdxF1xrjqxCPja0jdHqc5VMZoxWomY+/H/hmZrc
+	euR907uTm9CvVldEJ8L4qBMBHyf9hRmnfJUioYL++ASj06TrjDmMvhPFuJdViosDMjXuT6E2
+	pEuksVFSmUwmjd0rk5CBwgfmCwoRoaQNTDbDaBndkziMLxCbMMtB53rpwLvk/pXi4SS/jaP8
+	R5ff8FUFmsz5sB596/M980UJKV1DLok00DJ0oHm25GSIoL+4JKM6YweZNnwhYnX1HnVwZrTM
+	Nap5zb8urtkKwcdqhkLT9ieVChLDbwhfOdvoHIyti8/rne32iSvsr7r+XEpzaPXVjel9y1//
+	Pr36/k7V2wVSY/fiM41c51rL5N6MxLTIqenK0VfPLxSETF7PbuH4VdF3Y5aPvzMufBBmzL/Y
+	cMmuwLXOHxeUpb1XJ6XffbvzX7j/t/liBnkt79jWbRvVlUenAj4tdxKHezT/TOTetq6HOe5y
+	rOj07HboYALbRbKl90JcXSea3lq/feczguToVbRkN67T0/8B6liBHlwEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmkeLIzCtJLcpLzFFi42LZdlhJXnearFC6wdK9ghYfv/5msZizahuj
+	xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02H5mKbPF3lvaFvOXPWW36L6+g81i+fF/TBbn
+	Z81hd+D12DnrLrvH5bOlHptWdbJ5bF5S77H7ZgObx8ent1g8+rasYvTYfLra4/MmuQDOKC6b
+	lNSczLLUIn27BK6M83M+MRZsk6hoW3CQsYHxh3AXIweHhICJxKN1zl2MnBxCArsZJXYcyQax
+	JQQkJE69XMYIYQtLrPz3nL2LkQuo5gmjxLU1p1lBEiwCqhIr1u0CK2ITUJc48rwVzBYRUJJ4
+	+uosI0gDs8BKJom9V2cxgySEBdwlZuy7D1bEK6ArsXPLCRaIqc1MEke+3IVKCEqcnPmEBcRm
+	FtCSuPHvJRPIpcwC0hLL/3GAhDkFdCQO3tkEdoSogLLEgW3HmSYwCs5C0j0LSfcshO4FjMyr
+	GCVTC4pz03OTDQsM81LL9YoTc4tL89L1kvNzNzGC40tLYwfjvfn/9A4xMnEwHmKU4GBWEuFN
+	qhdMF+JNSaysSi3Kjy8qzUktPsQozcGiJM5rOGN2ipBAemJJanZqakFqEUyWiYNTqoEp85zV
+	Ub4JR+/+/3hVPpr/sIJ57EPDP+XrP5lON45XMssRFxEKzzaVep/P/P2HvJF/N7Nb4NLHbvtF
+	Nq2QX5W1/KwMh86f70w8ekcrXwqud5VsFk1kFnl6835A/gbh5TcFdPqVnWN+6fbeYNL7+fCt
+	oubkprWTGdd3lxU+lytJ5BOZeyP/n7SUSTvbnSmf7Lt/TGb61KF/SeDeGYm35YXVXOwLVDT/
+	rmaQvf7ltfNzq1ju6dN/Tp43e7mDhXaHcfiRN7EBDKVzbr/xjDh/xLs+6Fy0xEobqRV3rvOv
+	fve/4a6zzwZNh9t+dbLL97C0GZ61Xp+ska+3Qvf+ma1rnl4S2GYX+Or58c/S+1fkTbFXYinO
+	SDTUYi4qTgQAECi23R4DAAA=
+X-CMS-MailID: 20241018083430epcas5p138473638c4aea07ac9320900406c8d52
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_54f87_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e
+References: <20241016112912.63542-1-anuj20.g@samsung.com>
+	<CGME20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e@epcas5p4.samsung.com>
+	<20241016112912.63542-12-anuj20.g@samsung.com>
+	<20241017113923.GC1885@green245> <20241017143918.GC21905@lst.de>
 
-Add support for setting CPU latency limits when a request is dispatched
-to driver layer, and removing it once the device is idle. The latency
-limits use the dev PM QoS framework for setting per-cpu limits for
-active CPUs. The feature is user configurable via sysfs knobs under the
-block device.
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_54f87_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
- block/blk-mq.c         | 54 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/blk-mq.h | 12 ++++++++++
- 2 files changed, 66 insertions(+)
+On Thu, Oct 17, 2024 at 04:39:18PM +0200, Christoph Hellwig wrote:
+> On Thu, Oct 17, 2024 at 05:09:23PM +0530, Anuj Gupta wrote:
+> > This snippet prevents a scenario where a apptag check is specified without
+> > a reftag check and vice-versa, which is not possible for scsi[1].
+> > But for
+> > block layer generated integrity apptag check (BIP_CHECK_APPTAG) is not
+> > specified. When scsi drive is formatted with type1/2 PI, block layer would
+> > specify refcheck but not appcheck. Hence, these I/O's would fail. Do you
+> > see how we can handle this?
+> 
+> Well, this is also related to difference in capability checking.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4b2c8e940f59..f8906e2aff6d 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -29,6 +29,7 @@
- #include <linux/blk-crypto.h>
- #include <linux/part_stat.h>
- #include <linux/sched/isolation.h>
-+#include <linux/pm_qos.h>
+Right.
+
+> Just curious, do you have any user of the more fine grained checking
+> in NVMe?  If not we could support the SCSI semantics only and emulate
+> them using the fine grained NVMe semantics and have no portability
+> problems.
  
- #include <trace/events/block.h>
- 
-@@ -2700,11 +2701,62 @@ static void blk_mq_plug_issue_direct(struct blk_plug *plug)
- static void __blk_mq_flush_plug_list(struct request_queue *q,
- 				     struct blk_plug *plug)
+We can choose to support scsi semantics only and expose only the valid
+scsi combinations to userspace i.e.
+
+1. no check
+2. guard check only
+3. ref + app check only
+4. guard + ref + app check
+
+Something like this [*] on top of this series, untested though. Does
+this align with what you have in mind?
+
+[*]
+
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 24fad9b6f3ec..2ca27910770b 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -308,12 +308,10 @@ static void bio_uio_meta_to_bip(struct bio *bio, struct uio_meta *meta)
  {
-+	struct request *req, *next;
-+	struct blk_mq_hw_ctx *hctx;
-+	int cpu;
-+
- 	if (blk_queue_quiesced(q))
- 		return;
-+
-+	rq_list_for_each_safe(&plug->mq_list, req, next) {
-+		hctx = req->mq_hctx;
-+
-+		if (next && next->mq_hctx == hctx)
-+			continue;
-+
-+		if (q->disk->cpu_lat_limit < 0)
-+			continue;
-+
-+		hctx->last_active = jiffies + msecs_to_jiffies(q->disk->cpu_lat_timeout);
-+
-+		if (!hctx->cpu_lat_limit_active) {
-+			hctx->cpu_lat_limit_active = true;
-+			for_each_cpu(cpu, hctx->cpumask) {
-+				struct dev_pm_qos_request *qos;
-+
-+				qos = per_cpu_ptr(hctx->cpu_lat_qos, cpu);
-+				dev_pm_qos_add_request(get_cpu_device(cpu), qos,
-+						       DEV_PM_QOS_RESUME_LATENCY,
-+						       q->disk->cpu_lat_limit);
-+			}
-+			schedule_delayed_work(&hctx->cpu_latency_work,
-+					      msecs_to_jiffies(q->disk->cpu_lat_timeout));
-+		}
-+	}
-+
- 	q->mq_ops->queue_rqs(&plug->mq_list);
+ 	struct bio_integrity_payload *bip = bio_integrity(bio);
+ 
+-	if (meta->flags & BLK_INTEGRITY_CHK_GUARD)
++	if (meta->flags & IO_INTEGRITY_CHK_GUARD)
+ 		bip->bip_flags |= BIP_CHECK_GUARD;
+-	if (meta->flags & BLK_INTEGRITY_CHK_APPTAG)
+-		bip->bip_flags |= BIP_CHECK_APPTAG;
+-	if (meta->flags & BLK_INTEGRITY_CHK_REFTAG)
+-		bip->bip_flags |= BIP_CHECK_REFTAG;
++	if (meta->flags & IO_INTEGRITY_CHK_REF_APP)
++		bip->bip_flags |= BIP_CHECK_REFTAG | BIP_CHECK_APPTAG;
+ 
+ 	bip->app_tag = meta->app_tag;
  }
+@@ -329,9 +327,9 @@ int bio_integrity_map_iter(struct bio *bio, struct uio_meta *meta)
+ 		return -EINVAL;
  
-+static void blk_mq_cpu_latency_work(struct work_struct *work)
-+{
-+	struct blk_mq_hw_ctx *hctx = container_of(work, struct blk_mq_hw_ctx,
-+						  cpu_latency_work.work);
-+	int cpu;
-+
-+	if (time_after(jiffies, hctx->last_active)) {
-+		for_each_cpu(cpu, hctx->cpumask) {
-+			struct dev_pm_qos_request *qos;
-+
-+			qos = per_cpu_ptr(hctx->cpu_lat_qos, cpu);
-+			dev_pm_qos_remove_request(qos);
-+		}
-+		hctx->cpu_lat_limit_active = false;
-+	} else {
-+		schedule_delayed_work(&hctx->cpu_latency_work,
-+				      msecs_to_jiffies(hctx->queue->disk->cpu_lat_timeout));
-+	}
-+}
-+
- static void blk_mq_dispatch_plug_list(struct blk_plug *plug, bool from_sched)
- {
- 	struct blk_mq_hw_ctx *this_hctx = NULL;
-@@ -3729,6 +3778,11 @@ static int blk_mq_init_hctx(struct request_queue *q,
- 	if (xa_insert(&q->hctx_table, hctx_idx, hctx, GFP_KERNEL))
- 		goto exit_flush_rq;
+ 	/* should fit into two bytes */
+-	BUILD_BUG_ON(BLK_INTEGRITY_VALID_FLAGS >= (1 << 16));
++	BUILD_BUG_ON(IO_INTEGRITY_VALID_FLAGS >= (1 << 16));
  
-+	hctx->cpu_lat_qos = alloc_percpu(struct dev_pm_qos_request);
-+	if (!hctx->cpu_lat_qos)
-+		goto exit_flush_rq;
-+	INIT_DELAYED_WORK(&hctx->cpu_latency_work, blk_mq_cpu_latency_work);
-+
- 	return 0;
+-	if (meta->flags && (meta->flags & ~BLK_INTEGRITY_VALID_FLAGS))
++	if (meta->flags && (meta->flags & ~IO_INTEGRITY_VALID_FLAGS))
+ 		return -EINVAL;
  
-  exit_flush_rq:
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index b751cc92209b..2b61942490d6 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -435,6 +435,18 @@ struct blk_mq_hw_ctx {
- 	/** @kobj: Kernel object for sysfs. */
- 	struct kobject		kobj;
+ 	/*
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 753971770733..714700f9826e 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -40,6 +40,15 @@
+ #define BLOCK_SIZE_BITS 10
+ #define BLOCK_SIZE (1<<BLOCK_SIZE_BITS)
  
-+	/** @cpu_latency_work: Work to handle CPU latency PM limits. */
-+	struct delayed_work	cpu_latency_work;
++/*
++ * flags for integrity meta
++ */
++#define IO_INTEGRITY_CHK_GUARD		(1U << 0) /* enforce guard check */
++#define IO_INTEGRITY_CHK_REF_APP	(1U << 1) /* enforce ref and app check */
 +
-+	/** @cpu_lat_limit_active: If CPU latency limits are active or not. */
-+	bool			cpu_lat_limit_active;
++#define IO_INTEGRITY_VALID_FLAGS (IO_INTEGRITY_CHK_GUARD | \
++				  IO_INTEGRITY_CHK_REF_APP)
 +
-+	/** @last_active: Jiffies value when the queue was last active. */
-+	unsigned long		last_active;
-+
-+	/** @cpu_lat_qos: PM QoS latency limits for individual CPUs. */
-+	struct dev_pm_qos_request __percpu *cpu_lat_qos;
-+
- #ifdef CONFIG_BLK_DEBUG_FS
- 	/**
- 	 * @debugfs_dir: debugfs directory for this hardware queue. Named
--- 
-2.43.1
+ #define SEEK_SET	0	/* seek relative to beginning of file */
+ #define SEEK_CUR	1	/* seek relative to current file position */
+ #define SEEK_END	2	/* seek relative to end of file */
 
+
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_54f87_
+Content-Type: text/plain; charset="utf-8"
+
+
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_54f87_--
 
