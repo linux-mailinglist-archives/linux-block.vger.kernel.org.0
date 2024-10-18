@@ -1,99 +1,109 @@
-Return-Path: <linux-block+bounces-12788-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12790-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F9E39A45FC
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 20:37:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 543459A460F
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 20:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 281A91F244C0
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 18:37:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E864C285ABB
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 18:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 575C02038D8;
-	Fri, 18 Oct 2024 18:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19413204942;
+	Fri, 18 Oct 2024 18:45:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="GdkdNWiM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pCWm9W6j"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B9B2022D7
-	for <linux-block@vger.kernel.org>; Fri, 18 Oct 2024 18:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F34204018;
+	Fri, 18 Oct 2024 18:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729276666; cv=none; b=MpD0Vg/Vye0Yy8uj8d2Zj9BhwV79R4fUoRqr6p6Ngwmm9UFnAkUYEn8eUeKBXyc4rcx6tWGStKMJpQEGLiHTJEKnoBfDSZ42XSaDh70NfQiXeBewkKFyvWeoslXALThqeYeYcwv755idHvlNDQR6u0Q1r44AIE6w8z7VX/BwBgA=
+	t=1729277105; cv=none; b=TRnoUqxd5EkqjTWZt+goNO7RWMYuDd+s8yjloVy4Bemccakiwu3s37v0TXzLjX5Popul1FxDMlFxHZK+qpDy2gn6Tx3hoRXMIiq43CFGsn9dyTYQooMCDlR68meNeJ9RxYBD7jbtkzK7vDztAmuw8FIQuOeaYa1AJviyia1ztYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729276666; c=relaxed/simple;
-	bh=z8kDWqhG2fmnZedjpf541nKe3HliQPz2iUenl16evKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gMz4BxJT8lJQ93BCQcvTdBULkw2GzrtZwbUWNU7gpawMQYSwdn7woMRtS44Fh4vCod1m6ZkuX6hFUjohvJkzjxk8PMeujMqISWOFhQ0y2BjKsoDvziL9qsL8lQPDyfGUvTSg+7Trmk+npPrfLjGFScp2NYwX0oKqabZjnZ3oCqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=GdkdNWiM; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-83ab94452a7so54046839f.3
-        for <linux-block@vger.kernel.org>; Fri, 18 Oct 2024 11:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729276662; x=1729881462; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r55aFScCQCKYzeuHI9JCFe0M0hPUYU+7y9691CsGG+E=;
-        b=GdkdNWiMXQhPQ6vVuxQnIEwkFTnTcFX/VqL13ys8Pnv7L3Hq+GvOHjNtJB65jfkPjt
-         A9Tc8n8GP8DFplVx51ZETbEbSFRxAf2KuqhSIvrewFbYoi3aRi9yyvbaP4PP3/hm1IMN
-         qeTaBIRL4xBDlLbfBxSoWetVbJRVNtxQHuQq+24IYhXJWy9mUFI/7YHF8QK1BVUYh4Dc
-         B9nymh0e+Y+KJPomEG4IEymNoBuLfUlTXps1HFvU1wYGgJpB5hWY66uNpHnOUojPz11f
-         d1rj0MgVhlpLiq6mYta9D6tHDH1WVfUW1DuEB0JZbgs5oC3pHEyu7niK0PHZKEDQnbBp
-         sN6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729276662; x=1729881462;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r55aFScCQCKYzeuHI9JCFe0M0hPUYU+7y9691CsGG+E=;
-        b=VnCqLysUZKFFqrt1yWEmT/j2zMFZAVHQ2XKA0gA3j/rVLFUqiKYBtQmPerzMdOTVQf
-         K36VYho+dXzEVEkwSIyhEzVI68bKmTCIO5zFRF8hSne5CTTYXXJp4UElgFfwlVe4lq/r
-         MAWyp0nzYqYkUe8POkug9l4sx8YQZGvOnev3fT9Hoy0WUnPbZvfSr3g7z0YK8hGOJn8Y
-         bev4GtgWI4IOgR+99g5R62FiDQxZTQ8wl22YasFK+U8oDNFQdM7mp19C/VKM1MVOEgrn
-         lqk0d0wk9yporovM6gwPdhqXygeqvYRVQoio+xe8E6kkKX9PVhLDMm4+Ykw9uR1IwuGL
-         aZkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiyfvsGRkduwTyBh4Hvbj61nA0959hrMgebjwaL9eYG/IaXsdheWW3O033jdNz0hZU4dg4NDlesV5MaA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2QR5bz0Ruv6i+A9ua26MV7OfsxTGigCBFnjtKfPNn95nUaVbK
-	P9VBJw/DXzdrkOZ9mqIo8q2JxKDaGwqEhJIu7aAMQabOjcAGpjJqBPiFf08Xf8s=
-X-Google-Smtp-Source: AGHT+IE7JQ6o6nHEPPiVQjaZeCUeX+uAosWMPjbh09es2FKmyiZvmZCyf8gQ5l035yHNKtbpYhbRJw==
-X-Received: by 2002:a05:6602:3fc4:b0:83a:97e7:8bcf with SMTP id ca18e2360f4ac-83aba649c24mr274489639f.11.1729276661935;
-        Fri, 18 Oct 2024 11:37:41 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dc10b5b0e4sm550282173.11.2024.10.18.11.37.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2024 11:37:41 -0700 (PDT)
-Message-ID: <17db11b6-16aa-499e-ad2a-da0575aaf334@kernel.dk>
-Date: Fri, 18 Oct 2024 12:37:40 -0600
+	s=arc-20240116; t=1729277105; c=relaxed/simple;
+	bh=ezUq8Gu+1gxpe+LETiT3thtchxlc506pUFTtsAKJMHY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d6XOWs1o9eS+pvVMoAXu2tNFpqGzyQJHq1eEtRQKwbYRKVcu58OVqZOWtHwkhFuG3Q+WC4YIQdZ9mwCmcvZZfMGjA/860RHUV+8flDrZxUA3gm1Kg4Ny88me+j78BZYJu1qZTn9NxJCknSDTxoppTBBmvopjG5M/zHnMM2QUiXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pCWm9W6j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14439C4CEC3;
+	Fri, 18 Oct 2024 18:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729277104;
+	bh=ezUq8Gu+1gxpe+LETiT3thtchxlc506pUFTtsAKJMHY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pCWm9W6j1rRPWi/RGVpopSxu3ME0YjjlmGkuaCHtilbMI1n5K/lgFXujKcxZnVOgP
+	 Z+vXZ0iwvbcZ5E4GN3qQ7nn2jZOliV130WPq95w6cfhKn1Nlv+iwaLQPy+lyPPM75O
+	 NdvkdEXUJURhHQ7+IVOPEtTDnu/CXYF81uv5ndOwn/itHHNFFZksshsRGq5Gu53Jvz
+	 GoTO+HvohehDrrO7b1/c1+gEpjy2Rgok0knackTkbYqgPkbe4Lhq3JVa3++EMzou/K
+	 YMtOpONL0Pmkhfzx9qOgs9EA3kJq3cvfdOM/S54m43F4DShItmMIsCucWQTupUAwTT
+	 fszVNEg8x4hGg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: dm-devel@lists.linux.dev
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Israel Rukshin <israelr@nvidia.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Adrian Vovk <adrianvovk@gmail.com>
+Subject: [RFC PATCH 0/4] dm-default-key: target for filesystem metadata encryption
+Date: Fri, 18 Oct 2024 11:43:35 -0700
+Message-ID: <20241018184339.66601-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH for-next] nvme: use helpers to access io_uring cmd space
-To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc: Kanchan Joshi <joshi.k@samsung.com>, linux-block@vger.kernel.org
-References: <c274d35f441c649f0b725c70f681ec63774fce3b.1729265044.git.asml.silence@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <c274d35f441c649f0b725c70f681ec63774fce3b.1729265044.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/18/24 10:16 AM, Pavel Begunkov wrote:
-> Command implementations shouldn't be directly looking into io_uring_cmd
-> to carve free space. Use an io_uring helper, which will also do build
-> time size sanitisation.
+This series adds "metadata encryption" support to ext4 and f2fs via a
+new device-mapper target dm-default-key.  dm-default-key encrypts all
+data on a block device that isn't already encrypted by the filesystem.
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Except for the passthrough support, dm-default-key is basically the same
+as the proposed dm-inlinecrypt which omits that feature
+(https://lore.kernel.org/dm-devel/20241016232748.134211-1-ebiggers@kernel.org/).
 
+I am sending this out for reference, as dm-default-key (which Android
+has been using for a while) hasn't previously been sent to the lists in
+full, and there has been interest in it.  However, my current impression
+is that this feature will need to be redesigned as a filesystem native
+feature in order to make it upstream.  If that is indeed the case, then
+IMO it would make sense to merge dm-inlinecrypt in the mean time instead
+(or add its functionality to dm-crypt) so that anyone who just wants
+"dm-crypt + inline encryption hardware" gets a solution for that.
+
+Eric Biggers (4):
+  block: export blk-crypto symbols required by dm-default-key
+  block: add the bi_skip_dm_default_key flag
+  dm-default-key: add target for filesystem metadata encryption
+  ext4,f2fs: support metadata encryption via dm-default-key
+
+ block/bio.c                 |   3 +
+ block/blk-crypto-fallback.c |   2 +
+ block/blk-crypto.c          |   3 +
+ drivers/md/Kconfig          |  20 ++
+ drivers/md/Makefile         |   1 +
+ drivers/md/dm-default-key.c | 431 ++++++++++++++++++++++++++++++++++++
+ fs/crypto/inline_crypt.c    |  14 +-
+ fs/f2fs/data.c              |   6 +-
+ include/linux/blk-crypto.h  |  36 +++
+ include/linux/blk_types.h   |   3 +
+ include/linux/fscrypt.h     |  14 ++
+ 11 files changed, 531 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/md/dm-default-key.c
+
+
+base-commit: c964ced7726294d40913f2127c3f185a92cb4a41
 -- 
-Jens Axboe
+2.47.0
 
 
