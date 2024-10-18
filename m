@@ -1,86 +1,146 @@
-Return-Path: <linux-block+bounces-12789-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-12795-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 831429A460E
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 20:44:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C89059A4638
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 20:47:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AD401C222D9
-	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 18:44:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EEFF1F248B0
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2024 18:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 469722038D8;
-	Fri, 18 Oct 2024 18:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21D6204092;
+	Fri, 18 Oct 2024 18:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EB2sAJbv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3yhixbK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520842038BD;
-	Fri, 18 Oct 2024 18:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D1C1B6D10
+	for <linux-block@vger.kernel.org>; Fri, 18 Oct 2024 18:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729277073; cv=none; b=daqXYCouPjW4dSoU2JlF7B5Qd9v0pgT5o3RzlZsbS8abP56pOtMcCXk7+7NlWbC2Vs+ubv7bxYoYSozYLU3t5cD0LzD2cs8Rw1DPHOSJ+aVdhXLZyWLOPd1emwm+f8hgMzwQubE2v2x51g8Xz/vkDl5Lkz0KQ4UmaSUxDaamvlI=
+	t=1729277161; cv=none; b=ffVHVCk668iadiNhz8HVPqeYXS9PdFT2Q2oGwvkfSz8DUTA+k2Afuk8HwZCvBzl3hinyGDM5dIh+l2gpk4PAMbnbVOt8f1dLitGIcGs864Ac7NJBuc3PMFuqeuks+4gUmoh0Ijeh5UDRfaKS33q3KcQN3BZpQTFjSy79pPV4rzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729277073; c=relaxed/simple;
-	bh=O/Pd0MtD0eJiwbPuzLhvxnxopeoCFeBWmTgyugx7VjQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DrmnjIJDLNFF9qxbcbhAbwH3F0fQRSexKybG1xZ8dcrKIAXLxr8AxGOdSBIc0KKPHgekBktTlZMri3vUsYP3eYkqCLyifKvRxd3j3kwN/iT+/kP+a3Y8nFV9thADswLneaHX7HaC30TuNBbO2AX4uhEGjAcmwpU91cdI6tKLSdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EB2sAJbv; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c40aea5c40so4375317a12.0;
-        Fri, 18 Oct 2024 11:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729277069; x=1729881869; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/Pd0MtD0eJiwbPuzLhvxnxopeoCFeBWmTgyugx7VjQ=;
-        b=EB2sAJbvUreS5OnRLlDjb0pjyzau6Q6A+JxkMl2RZNrWy16FetEvFi/54LPw2yBKMr
-         EF3H1mekEdnAQvo/1dU5V5pMiCvYqjRv2fXeReGbMAIK//RqxEel9kPMz0obHds5LYon
-         EsUfXn4jtYcyzGPSlzoiQ0hrclzef1lu3FEhgOzQInpBaY+IJkjYM+26a7EAdifYdRYW
-         J1KX//1Pugw0R9+Mrrjx8flXKpkOo1MAdZWMiZwxa98ri5HkMBwcqg5D8A99Aoe1JvuF
-         tm8sfeMsXd4dKIj2lPyoEy0rt138raSHq15HXliS0B48mtLh8/GmdHQsHLsqhvW/xN3s
-         rTEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729277069; x=1729881869;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O/Pd0MtD0eJiwbPuzLhvxnxopeoCFeBWmTgyugx7VjQ=;
-        b=DXddNU+Cwpu0CQdNI6FUc6zjJ5EvxFMg/5GMRwcu+xRUdb9gsxY6MkvE3r1pej9+cH
-         uLeuVk5WkS1JVl0se4cBpNohbPLKPkb0A0MvMUFVILUtcY8N8RnJCh81i9hFK3CJQqyR
-         zV+Rgff/VKCmkyReEs9d4iExxrM3kXvqQYNIZRkezdYjQM0KEQcihP9f7C+XYjz5+4hG
-         IyyMHJMtfLzEatRXzDBz9uga7GF1IErF4BWSQaqvjIOcv1teewig0fy9SvuPx++JgPlP
-         ZmPB00tJXGmY9D6Zm3sCCFxvWmk5ahsPrBPfAEaboacnaZSu5s6n/Umo/aT4c8ZmB1fg
-         U4hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlFkTXd/Djrdaphu/jhf7zJqWgZBI5DNOpzwuRKG1TPaRQtwBOgysIoe6g6Exd97HKE/bC0wmDj2Gyag==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHbbsOOW9+66raCIGaVPw0zrKvB2U6PJvdCad37+1ISOmXw8FB
-	vvBF6sKRpvVZ0P5qjEctQ5A/gUM9qFeEL3WgjYK7CvHnbGuztewCEN0gF4sBMspqNwqgx1epKJH
-	Sh+jxgT2xPDV5DvojEgXpIZBpMA==
-X-Google-Smtp-Source: AGHT+IHHW6d2BwI20vTw3bL79dV1JBvE1L2wF7p7qJZ7DPM9wWwxfLJvqtw7jR3OEKHBedug0VZ1O3UfHh1pFrPBhDw=
-X-Received: by 2002:a05:6402:3594:b0:5c9:85ce:d9cd with SMTP id
- 4fb4d7f45d1cf-5ca0b083da2mr3770993a12.3.1729277069427; Fri, 18 Oct 2024
- 11:44:29 -0700 (PDT)
+	s=arc-20240116; t=1729277161; c=relaxed/simple;
+	bh=phEX9ymVimk2sUfotD4QxcaLIVr47XMFLKtpw5UFHlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbgLl/0vnB6X7syyv+2rdFd4/eh/fJT1EMqM5zu2tkP45P4oLVFIdzZsKzlcX9uQHzUbosDTweAvo2DoQPdoRjGNu5BSlqfHZcjVx2+fU/gmk6/uc72sOeFOIH41qYjSB7RwXPCep4rsHrmqwOtY0luvuCjjN/37iChplTsc1dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3yhixbK; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729277160; x=1760813160;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=phEX9ymVimk2sUfotD4QxcaLIVr47XMFLKtpw5UFHlw=;
+  b=W3yhixbKkCiPnHCrW+PpeqCGOPKxKqRTYjb+5G4OyFi5D9TDJDa7aH7O
+   HOpyMwzgd6NHydzlnD02CiIfvgSmnfjZ9cmAFiacz1UKnctIAH2yIbfJE
+   XkvxrH5yKUtJSsPvFpXZ6ZQsdB5vVquA58eA5yy3TY1s8MlByOAf/y4ld
+   ImL/LR7sfLVIo27O81dvx18hnZ+0NVKrQM4YL559JbLyH+je8Ue3QatEb
+   F9D3+c3gwVMLgMznCfETbSrBtf06oIeXzx/tk0GllAaQdNGsQC8+8jRHZ
+   u+8h1emO3sUU+qXnr7ZwNS7HwhOJgOLP93In6zLod9gZxa7EKVkV79GJu
+   Q==;
+X-CSE-ConnectionGUID: wI8heA0uSUyTvOzSprEIag==
+X-CSE-MsgGUID: zQwbeqjpR52gbPBmCOG6QA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="40182402"
+X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
+   d="scan'208";a="40182402"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 11:45:59 -0700
+X-CSE-ConnectionGUID: gfyqjxktSYqWipjgpQmU9g==
+X-CSE-MsgGUID: 8/lcsv35T3iOGWVLfp224w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
+   d="scan'208";a="83571247"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Oct 2024 11:45:57 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t1rz1-000OBt-2L;
+	Fri, 18 Oct 2024 18:45:55 +0000
+Date: Sat, 19 Oct 2024 02:45:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] block: model freeze & enter queue as rwsem for
+ supporting lockdep
+Message-ID: <202410190214.KgZovHXy-lkp@intel.com>
+References: <20241018013542.3013963-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c274d35f441c649f0b725c70f681ec63774fce3b.1729265044.git.asml.silence@gmail.com>
-In-Reply-To: <c274d35f441c649f0b725c70f681ec63774fce3b.1729265044.git.asml.silence@gmail.com>
-From: Anuj gupta <anuj1072538@gmail.com>
-Date: Sat, 19 Oct 2024 00:13:52 +0530
-Message-ID: <CACzX3Atv=iXPvGVLyZinh64AF=tSivoxxGDAzy34Bz+Lg8+KZQ@mail.gmail.com>
-Subject: Re: [PATCH for-next] nvme: use helpers to access io_uring cmd space
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
-	Kanchan Joshi <joshi.k@samsung.com>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241018013542.3013963-1-ming.lei@redhat.com>
 
-Looks good:
-Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
+Hi Ming,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on axboe-block/for-next]
+[also build test WARNING on linus/master v6.12-rc3 next-20241018]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Lei/block-model-freeze-enter-queue-as-rwsem-for-supporting-lockdep/20241018-093704
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20241018013542.3013963-1-ming.lei%40redhat.com
+patch subject: [PATCH] block: model freeze & enter queue as rwsem for supporting lockdep
+config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20241019/202410190214.KgZovHXy-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241019/202410190214.KgZovHXy-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410190214.KgZovHXy-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> block/blk-mq.c:125:6: warning: variable 'sub_class' set but not used [-Wunused-but-set-variable]
+     125 |         int sub_class;
+         |             ^
+   1 warning generated.
+
+
+vim +/sub_class +125 block/blk-mq.c
+
+   122	
+   123	void blk_freeze_queue_start(struct request_queue *q)
+   124	{
+ > 125		int sub_class;
+   126	
+   127		mutex_lock(&q->mq_freeze_lock);
+   128		sub_class = q->mq_freeze_depth;
+   129		if (++q->mq_freeze_depth == 1) {
+   130			percpu_ref_kill(&q->q_usage_counter);
+   131			mutex_unlock(&q->mq_freeze_lock);
+   132			if (queue_is_mq(q))
+   133				blk_mq_run_hw_queues(q, false);
+   134		} else {
+   135			mutex_unlock(&q->mq_freeze_lock);
+   136		}
+   137		/*
+   138		 * model as down_write_trylock() so that two concurrent freeze queue
+   139		 * can be allowed
+   140		 */
+   141		if (blk_queue_freeze_lockdep(q))
+   142			rwsem_acquire(&q->q_usage_counter_map, sub_class, 1, _RET_IP_);
+   143	}
+   144	EXPORT_SYMBOL_GPL(blk_freeze_queue_start);
+   145	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
