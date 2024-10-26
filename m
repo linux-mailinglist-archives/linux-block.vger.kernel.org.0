@@ -1,114 +1,148 @@
-Return-Path: <linux-block+bounces-13004-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13006-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD9619B11CA
-	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2024 23:40:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2489B13FE
+	for <lists+linux-block@lfdr.de>; Sat, 26 Oct 2024 03:21:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 699CAB21B63
-	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2024 21:40:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A23E31F22F61
+	for <lists+linux-block@lfdr.de>; Sat, 26 Oct 2024 01:21:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F3161D8E07;
-	Fri, 25 Oct 2024 21:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="mQ1IgskG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75F98488;
+	Sat, 26 Oct 2024 01:21:42 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C8520BB42
-	for <linux-block@vger.kernel.org>; Fri, 25 Oct 2024 21:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B1B217F2E
+	for <linux-block@vger.kernel.org>; Sat, 26 Oct 2024 01:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729892390; cv=none; b=DTX0B4zj/gmi8lIsoVydoUB9GvbbdVRVCylbvaNYMVT06mhNsKnhZ/CvV0rSC2cd3mH65xEsaOaojwNuM7pjOJIyLoOtjnORnRB3P5hbSsk2AYcu+Ss2iLoYNMhVtcC/U44g51Xgmlq7sFd5boA+sd2MWtdQ80uvTTzWUnWN6sg=
+	t=1729905702; cv=none; b=HvKW+JPY0B/6vFFqxY6BYNGaMke0N1unQ9BDF3jvk1Pmti3HbxflUYZqv6eXmU8v917609GG8DgpANsB2+brNf/CU1o+Mrr9JviKF3b9wsIIiYbH/jzLks/RehvXhrlOH3gbGR+6OfSCx33gAP9vnptAmFif6AkooLlyJ/ru0Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729892390; c=relaxed/simple;
-	bh=QNBnH7bi6WbGlj2rf3vDcTyaJMrmau3H7p98DlJvp0U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G/3W2ysbXccWcmz5MMXMY3NULL/0fizvrzP5MGYRTSh64eGzByqkcqSNrLzAZcoI9xE6z5rH/f+n+dZzqtfbiHH415Pg2skmGxgYd07MNeKWomzqxq507vojoX2c3xonzGHTh7bgc44fpKhRevRCvQyLwIhWnF3e21GJYXd953g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=mQ1IgskG; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 49PKXPhX022992
-	for <linux-block@vger.kernel.org>; Fri, 25 Oct 2024 14:39:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=QDSowptOyZLvK9oAHCxfP0iFBCixlqbp/+dl8U+g3G0=; b=mQ1IgskGRUZF
-	aHWIeAvxdctEjZ1ozlJxEG/DMeww3ySl+lsIJ/kdShKTO5W63NGWopSwifiIeuLr
-	NjMrYPvALK8GNbcTbZnWtwsAxHqOQ8nYuub97UWRdkCxKAjOEkAfLrt1yCY4m10J
-	kotD3iBXuL5/I5kA71zbLcMmVicPJ7cCfBg6tJsvvNFJpBQzpbX4ipirCOjJdCoc
-	r7PbUdHzE14HEc2/mmhOBWFzIa0YRTnLRDKX+CR/L13/CtXR6FvbYlq3leSgdFxI
-	7SRXa09EVoqgafM6OLC6aIf+2evSaRsXITQHTFDxJ+G2Uyh2VlRpQp4TZnfQehY1
-	4xHhFHwbkQ==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 42gdaau1ds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Fri, 25 Oct 2024 14:39:47 -0700 (PDT)
-Received: from twshared10900.35.frc1.facebook.com (2620:10d:c0a8:1b::8e35) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Fri, 25 Oct 2024 21:39:46 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id B3E041476D744; Fri, 25 Oct 2024 14:37:06 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <linux-scsi@vger.kernel.org>, <io-uring@vger.kernel.org>
-CC: <linux-fsdevel@vger.kernel.org>, <hch@lst.de>, <joshi.k@samsung.com>,
-        <javier.gonz@samsung.com>, <bvanassche@acm.org>,
-        Keith Busch
-	<kbusch@kernel.org>
-Subject: [PATCHv9 7/7] scsi: set permanent stream count in block limits
-Date: Fri, 25 Oct 2024 14:36:45 -0700
-Message-ID: <20241025213645.3464331-8-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20241025213645.3464331-1-kbusch@meta.com>
-References: <20241025213645.3464331-1-kbusch@meta.com>
+	s=arc-20240116; t=1729905702; c=relaxed/simple;
+	bh=g9mKErK/mQ/hhN1sq44PPWG3gUnqta159UnSw0Xecpw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FEI4CE6Y8mz1SxlOi1n2Aeg9m0JFz6gFOzU/TX/7XHY9v4fjDMvVROaD/mOjlVowFOWBkbCMah0nV9WV+KzCrw22p0T7s/v7wGXJJLjhTHikX+hTYvyZPJ2j852E8sid9YnHSvHRuGBbiXBKIP9DViwZY88Tsuspq/q9ObViT/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xb20s5Nfxz4f3k5Y
+	for <linux-block@vger.kernel.org>; Sat, 26 Oct 2024 09:21:17 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 309521A058E
+	for <linux-block@vger.kernel.org>; Sat, 26 Oct 2024 09:21:30 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgDH+sYYRBxnDVKJFA--.12434S3;
+	Sat, 26 Oct 2024 09:21:29 +0800 (CST)
+Subject: Re: [PATCH] brd: fix null pointer when modprobe brd
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Yang Erkun <yangerkun@huaweicloud.com>
+Cc: linux-block@vger.kernel.org, yangerkun@huawei.com, axboe@kernel.dk,
+ ulf.hansson@linaro.org, hch@lst.de, houtao1@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20241025070511.932879-1-yangerkun@huaweicloud.com>
+ <a55c8d7e-cfd7-4ab9-ab45-bd7fdecaaf3c@I-love.SAKURA.ne.jp>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <05915eac-e5c7-c293-d960-a781e91fd23d@huaweicloud.com>
+Date: Sat, 26 Oct 2024 09:21:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: JCZOg0S1YgkkMMzXYmOR76sDM2dKdfkf
-X-Proofpoint-GUID: JCZOg0S1YgkkMMzXYmOR76sDM2dKdfkf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
+In-Reply-To: <a55c8d7e-cfd7-4ab9-ab45-bd7fdecaaf3c@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDH+sYYRBxnDVKJFA--.12434S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF4kCr4fGFWrKF43CryUKFg_yoW8WFW8pr
+	yxGayakw4kXa1qyFsFy3Z29rW8taySy3yxWr92gr1Skay5Zrnaqa17tayYva4DGr18CayI
+	k398Way8JryrA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
+	DUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Keith Busch <kbusch@kernel.org>
+Hi,
 
-The block limits exports the number of write hints, so set this limit if
-the device reports support for the lifetime hints. Not only does this
-inform the user of which hints are possible, it also allows scsi devices
-supporting the feature to utilize the full range through raw block
-device direct-io.
+在 2024/10/25 18:40, Tetsuo Handa 写道:
+> On 2024/10/25 16:05, Yang Erkun wrote:
+>> From: Yang Erkun <yangerkun@huawei.com>
+>>
+>> My colleague Wupeng found the following problems during fault injection:
+>>
+>> BUG: unable to handle page fault for address: fffffbfff809d073
+> 
+> Excuse me, but subject says "null pointer" whereas dmesg says
+> "not a null pointer dereference". Is this a use-after-free bug?
+> Also, what verb comes after "when modprobe brd" ?
+> 
+> Is this problem happening with parallel execution? If yes, parallelly
+> running what and what?
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/scsi/sd.c | 2 ++
- 1 file changed, 2 insertions(+)
+The problem is straightforward, to be short,
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index ca4bc0ac76adc..235dd6e5b6688 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3768,6 +3768,8 @@ static int sd_revalidate_disk(struct gendisk *disk)
- 		sd_config_protection(sdkp, &lim);
- 	}
-=20
-+	lim.max_write_hints =3D sdkp->permanent_stream_count;
-+
- 	/*
- 	 * We now have all cache related info, determine how we deal
- 	 * with flush requests.
---=20
-2.43.5
+T1: morprobe brd
+brd_init
+  brd_alloc
+   add_disk
+		T2: open brd
+		bdev_open
+		 try_module_get
+   // err path
+   brd_cleanup
+  		 // dereference brd_fops() while module is freed.
+
+Thanks,
+Kuai
+
+> 
+> Is this problem happening with what fault injection?
+> What function (exact location in source code with call trace) has
+> failed due to fault injection?
+> 
+>> Call Trace:
+>>   <TASK>
+>>   blkdev_put_whole+0x41/0x70
+>>   bdev_release+0x1a3/0x250
+>>   blkdev_release+0x11/0x20
+>>   __fput+0x1d7/0x4a0
+>>   task_work_run+0xfc/0x180
+>>   syscall_exit_to_user_mode+0x1de/0x1f0
+>>   do_syscall_64+0x6b/0x170
+>>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> This suggests that a userspace process has open()ed the device
+> before brd_init() from modprobe completed?
+> 
+> Please show more context including execution flow until crash.
+> 
+>    CPU0: (or Process1)    CPU1: (or Process2)
+>      does what?
+>                             does what?
+>      does what?
+>                             does what and is wrong?
+> 
+> Also, you don't need to embed brd_cleanup() into the caller
+> just because the caller becomes 1 by this change.
+> 
+> .
+> 
 
 
