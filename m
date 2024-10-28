@@ -1,235 +1,239 @@
-Return-Path: <linux-block+bounces-13071-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13074-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 305689B3462
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 16:05:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FC619B34D0
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 16:28:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52C391C21E6C
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 15:05:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58BD2B21914
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 15:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DA81DE4C3;
-	Mon, 28 Oct 2024 15:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 097001DE4DE;
+	Mon, 28 Oct 2024 15:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BfqvQfWS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YboRh6Cl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QmpzuKXY"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492B41DE3A4
-	for <linux-block@vger.kernel.org>; Mon, 28 Oct 2024 15:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730127929; cv=none; b=cZC0QLx3FEmkjMxJoTZItBdE9zbS0R5cTVC2c4sP4xUWid6wDHC5fUXgCU6W1m8CPrcOLBXjUeUQKo9/sqQb2Wt1yc1cEXwc0DHdWKbBHlckDeVPc/0kx813HcFOCWKSRgamxjUfjm1hbszGYtYv6vIruYPACPsiCDHoE9A3n/A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730127929; c=relaxed/simple;
-	bh=H4+ylYQ1hEj3PJm4OyIODNElBXSkUCICb1o0jm3z+jQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h2n+kAdPHc+rWul5IzvYA5NlgrT7cNx5DUp4EJphq7B+fUiZJRqvNwuUalupOdCLUBZ3A/XKAtQhNwPiHDCkFAaofO+zgQEmvgrCujnuNQYtMW1nSUPc8zycNJVof9C6z8NLeep+WUsat2/K8kecDy0DXESZufDxyvnx+wq/8cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BfqvQfWS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730127926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H4+ylYQ1hEj3PJm4OyIODNElBXSkUCICb1o0jm3z+jQ=;
-	b=BfqvQfWSpX30u+c42JlnlN2NHNMlUjFikUC2M/x+VXNAoDtXS2OyphLu5yENAWhGGsUnZm
-	YF4y3XBQkVXYtMaQkgVwkczwsLGLx5T0AhgXDxBocOF7VjwLqdVvYTVaPLC3TE57GN+Wh+
-	8khfIVvKnt85hFwWLLQTvCDfwl0SsyA=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-NYm2M4JsP7a3a6t9tPP_EA-1; Mon, 28 Oct 2024 11:05:22 -0400
-X-MC-Unique: NYm2M4JsP7a3a6t9tPP_EA-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b1473a4640so837909785a.0
-        for <linux-block@vger.kernel.org>; Mon, 28 Oct 2024 08:05:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730127922; x=1730732722;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H4+ylYQ1hEj3PJm4OyIODNElBXSkUCICb1o0jm3z+jQ=;
-        b=ZDxI8dOUOZGRXi8RilOx0+7Vt+H36rVDilBzHnDZhnuKD/VcmxYVPLlU6cbekgeN0F
-         Lb8hSOfSSpnBG2YP5OqAthoDvKueW3Qm7FlibhXf7La7QhgD0TQ8+NtRRYsOKJyI3ASv
-         eG4fiTDxNYTVRhFRx+nqPl7TSzzVAaPzw1TGkm1E0xQRnbTofz2qA9bwgl5HCy1ZUSrq
-         00ZHMDlj46S0kPq6r31rlTtkYBhvM3CbXR0DTSY0Gbl9HAV2lFk6oPX1i74j7w0Ikc6e
-         DGPwl5O21DXDuOlKbBe3/nxEM/3+D8OSwIHLpjIAQL1Shm2w5HZTgNvthxydZbNfFXlz
-         5j2Q==
-X-Gm-Message-State: AOJu0YyjuX3sQFrQd3e6L8yCVkJLq5GeZtAHqSifA6weGOxZZ7g3JE0e
-	CPHgboPxXZODpziJPPMD1GzCYcHxLWLnZm+QlriFqTCm/ZbmsIOCjx8sSV3a0UXUa0n/dSFNbTd
-	3MeSMOOgtOxGLvR9X56iKqizrc+i07mb6n3AxnJaUIridwRTz+3EsFGkP2hTXZa8wXtHP
-X-Received: by 2002:a05:620a:1992:b0:7a4:d56a:a928 with SMTP id af79cd13be357-7b1a7dfc070mr21045185a.21.1730127921810;
-        Mon, 28 Oct 2024 08:05:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcOyMqz9vSNaECCD5Jog/jP+S1JE0g9vBbOaYmAJuZixiPu4F1kf2Bp8UpkY+b+0W9NOOMaA==
-X-Received: by 2002:a05:6214:3c8c:b0:6d1:6fae:6451 with SMTP id 6a1803df08f44-6d19e8862f8mr2136586d6.10.1730127910992;
-        Mon, 28 Oct 2024 08:05:10 -0700 (PDT)
-Received: from dhcp-64-113.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d179a0c4f2sm32929126d6.95.2024.10.28.08.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 08:05:10 -0700 (PDT)
-Message-ID: <f1ecab3f7703cd251275ecb141cbb4a24acafa2b.camel@redhat.com>
-Subject: Re: [PATCH v8 0/6] PCI: Remove most pcim_iounmap_regions() users
-From: Philipp Stanner <pstanner@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
- <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>,  Andy Shevchenko <andy@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Richard Cochran <richardcochran@gmail.com>, Damien
- Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Chaitanya
- Kulkarni <kch@nvidia.com>,  Al Viro <viro@zeniv.linux.org.uk>, Li Zetao
- <lizetao1@huawei.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org,  linux-pci@vger.kernel.org
-Date: Mon, 28 Oct 2024 16:05:06 +0100
-In-Reply-To: <20241016094911.24818-2-pstanner@redhat.com>
-References: <20241016094911.24818-2-pstanner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF31DDA1B;
+	Mon, 28 Oct 2024 15:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730129285; cv=fail; b=Qdmb2pYsy2gq/E12rq82T0jrhBOzQKVn0RKfFAIhaYVmkMBviHyi9s9JOX61zCsLA/oLL2qBLoar36W7XafJoLFwqZNzKhmIyrofofHCXmK5EYK7CfWIfb/lmPueQbOfhbgOhqDMMtk5XhdBd3UNju9QM5F0B7mNW0g2xhCDlX0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730129285; c=relaxed/simple;
+	bh=AboCSbDj81va4V0uGz2nPLf8Kg+k+uwjVXq/ZJCFxKk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bLY5Msprivfu3kmyEQ7Pv54PgopIfkZo7CChJgeof/S++khXQfKD+XwzJQ4seiae1VtU0af0O/ns9tjFT6iS6804VKsgzOKOMqmlWy19e8p8IWDceAZXnEkQVJemmhW71EPu14D12ui1Y0JP+miF6CEzojWVtnjI8d1w3re2wwY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YboRh6Cl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QmpzuKXY; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49SEtdIK016733;
+	Mon, 28 Oct 2024 15:27:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=M8D96QJf6Ikjbhe/
+	A4+r1434ZGXvGUHDV51tY+zCk9k=; b=YboRh6ClXBnzmwNMWxtH910nfTnd9rEF
+	CzyZVn1PMtlgBPuixJmdoIb/94zgu/fbLz6IQ36q1uIiIM+iumTINQAdmL2KjJUL
+	HPuVuDhxzYTcjD1unUZGhPk9pTB0J9LMTTkqKr3uLnWAwv8o+0XGMVKJfUphAold
+	I2m+egNBCoRa+LLU4DwMwNAC1nZPypDHxJ+w0P6Xz75nmi7qFP4mKU/ItvVKZdiA
+	Frygp17OojdZEWOTn9orYRNO4tzkfJrl4faCVYqSpX0Et9tIIugfFJNxW5EWpbkK
+	9InQqPN6jGyRsvcrh7DvK2Uy8wY/j1RxKmZfcNedTNdF2CBaCHymeA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42grc8u5r3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Oct 2024 15:27:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49SEEpN2004866;
+	Mon, 28 Oct 2024 15:27:45 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42jb2spn0n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Oct 2024 15:27:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hlqJDXTYg8hN1Dj05G+yaZ9zx52FsrumiTfhpkX9nu6Z6egNr5lkIVcpEmajwbKhYYwnX3mLHEsfh2EXBSvd/DXG7Vgd27+L90T9z0uM4y5/1mQ0BnEjLCN5FKVNZbNSEfDKlz1Ob9vyECvXT2q93uK3dmX6iHpUMzZ1w8zSZW5EE4nhConZV0fraT7W1+8xhMTlrlrJW+elLCg14HbS+h0JLg/6yL7eZmu/arBz5IlTEVCbXyuQyf0+uwAepRh5Wird2qOl5J4qahj1yjUEeYoBZLZ3Cf2xGQbzJnkfBX1tGB7g9aGq+b/bTIDs6VgHx/HklNYVfpPLwQeDSjDBSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M8D96QJf6Ikjbhe/A4+r1434ZGXvGUHDV51tY+zCk9k=;
+ b=CLbFCrz9tANRY1xkT92p6rV5WkojDzg7AiJuJi/GK+J9ZrkmshNNgDXWqAFF0rHcfabqgl4VrVNsC0mQ2wAOYGD8InRqN8419gAzX/gWbG5hhkd4fmvvuud/iCJEdLM4CMgIeS8ZmJ7dLongR4xi/GvSPnzbsRWXIyXFz1fox+XwtytaHQYBMJiDqrwYi4V/FgfXcCQxTFPDJijgR4tz7XO7IMpGLosccpuKloRY+9THN+0vDl/8FYnKZbaso5Z08rj6BtJyXESeTkUOq6ou/7tfAZ4US3EWf4Wzk9BCsVXCN6Dx/wqTfaVc+67rkOq90cmKyM56rIdvpce0Sw9KIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M8D96QJf6Ikjbhe/A4+r1434ZGXvGUHDV51tY+zCk9k=;
+ b=QmpzuKXYn2UFvluaVRyRvFLFq8RFe6nRBSgcZB099eeiI++9PDIsL+xYe4xZ1R+7IpjR1Zpy714nn5GXKkVNslFJ7vYYKRdQLdXZOMkOa7KbydjuzmHHZCXNpyxusAXsB1D60AahOCDnKBsgb6L8/WPrCymilE4Frf4ssMb/a5I=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by DM6PR10MB4170.namprd10.prod.outlook.com (2603:10b6:5:213::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.27; Mon, 28 Oct
+ 2024 15:27:43 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.8093.024; Mon, 28 Oct 2024
+ 15:27:43 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, hch@lst.de
+Cc: martin.petersen@oracle.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, hare@suse.de,
+        Johannes.Thumshirn@wdc.com, John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v2 0/7] bio_split() error handling rework
+Date: Mon, 28 Oct 2024 15:27:23 +0000
+Message-Id: <20241028152730.3377030-1-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0124.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::9) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DM6PR10MB4170:EE_
+X-MS-Office365-Filtering-Correlation-Id: 87a5cebb-1e74-4e0a-a271-08dcf76510f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?x5Yr9VeAtzzTf/oZD/ZV3iPK1BKaV5SFsaY/ZFYIu65L/Xz8BCBSwAk0b4fs?=
+ =?us-ascii?Q?vc4Vc0GF57FN0BWltAmNyrsZAhdkAGOjbkX2vK6Kt4B+6wRbfX9gqj3Kw/vk?=
+ =?us-ascii?Q?94Kp/PBPff/NsPQnpCN6Oal79DYsB84zElekRkA1qq5V7WJ+a3lZFVYmlChE?=
+ =?us-ascii?Q?zu36JuEZWwfulFqDpBLBu79aDFW8MG5LmbIEJJAtsQ6UR1xf8s8cMEVmwHfT?=
+ =?us-ascii?Q?GNIheq1pqFfpUB/n0TY7PNnKU8FZIKMSidE/zzW7GnJmDmTXw3xwl0pqXkcC?=
+ =?us-ascii?Q?TQpnNimv3+IVO19VNLfQc5xAVtd4g14TNfFHUsg8oLPKjjXLSsaLBaNF76Vb?=
+ =?us-ascii?Q?Ypli21Qh7tGOvVtJ9pzfsnbg+Qpttqg2roSn8ux7gQKQMucc2anMakiWPhPI?=
+ =?us-ascii?Q?4zgCFJplxz9p3exzm+s634qh8Fk5gioKJ4wQWjjr2e8SpFjzTH89COJOayDo?=
+ =?us-ascii?Q?HZymkyM089ZRNhxKHsH6gGnO8SOlkpDtNh9zbCyIH2zKMNzRQRqu4ar6JpXh?=
+ =?us-ascii?Q?pG6nUzfcbdXJgWQQuaXiJrDBFtTJBGuXs7Rd7YYqedrd9kyUaEk6BZuO0UuM?=
+ =?us-ascii?Q?ehu6WfqYUNnu2CI0tPreI/Rr49gGYPnazpkTg+JykwXyNbm2p4GuyEtTfcL/?=
+ =?us-ascii?Q?ZRCKsNvKjzHmbW9cUqO4jat8v87+Hpl+ORvI0Pm0BVvCU3UD4cSqXh5DwmeQ?=
+ =?us-ascii?Q?x2V8ZUqmIXRzsjJnwNM/7dGh2i83eDF54FFhcgnizY63V/pplE++9/k550mY?=
+ =?us-ascii?Q?l5xfC/OoVGjgZ5QT6b2MO9pQswJAv9z82swc8uDFA3ZNGqjB9Xa7qScL5bqV?=
+ =?us-ascii?Q?RQtjmMskfh5PpTkvkM38zTjm6bcHpCR+sB/zNx+cXQU7HqPqSRyg6MqFK8G7?=
+ =?us-ascii?Q?LM2HGbQoGhjwVbYvoa7hwI80XHgh4KYrjPlOv1TEVztR2jSQGcdtKar9kzh2?=
+ =?us-ascii?Q?xfGzqFWivOBF629pfbgzvDOErDNqXruQ7bfXE1PGWgp969kK3t8nciAp0SAy?=
+ =?us-ascii?Q?zKWhcnVYeFeA6glkFmCeTdfkEL6ZHfvJ+uvVTI9VwiW3lBqwDpTfYLS1nzf6?=
+ =?us-ascii?Q?n3TfTazyUrTeKKCEOjmZnVfquHVN/Q6PCKjCYWPW9cA+PrCe3Yd3QT6qrx+O?=
+ =?us-ascii?Q?7vmCrAjjkgsznmNSLXqW9yz+MWFrhH9wqDj8g3Jfa6AoZIfA+a8XiU2D8muq?=
+ =?us-ascii?Q?VzlJ6UekBgOhIH4rpXZK+gw7KXq0E9oyFIYhJ8+fnxn6OIRXVDZYmen3ZHSZ?=
+ =?us-ascii?Q?S3MRRCNl5ioy+rgSygm9T/vLetUmm4ayxywFVjokbXdIUWn/9zDf2QQpRWIR?=
+ =?us-ascii?Q?i+RvBwhcstc/U45alVEiQ6zu?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hVO361Aa4mZ6Eo4WHMHDqi2qGH1vwAaEVirUl8mG11+XWyfzhkxo+cXMlF8g?=
+ =?us-ascii?Q?NyW45E8lCHAYTjcpPTZ1pXxY4dDVvnffkw5ndr0o273a+JcV8/uspby//N0P?=
+ =?us-ascii?Q?y7wXMRf7bStamXZi0q0sgZMOFUSUnUHtQ4oPkIIGnGovOjjPdfkL4GTtYG2T?=
+ =?us-ascii?Q?MgQ6M4B4zjIHSX84ijdCtPn+OjgUcn4kLwKk9TeUGMwX97N9DbFx/p6NGXyL?=
+ =?us-ascii?Q?98Vdvhj/8tqvPFVgoCoVUFNjXQLW9e61Fj6p79BD9L2UDlKmkXSw/GUP3MWa?=
+ =?us-ascii?Q?NIzn4r1umHO7ZW+Z70gnv4tcuh1hCfsCXudwRoQZ/ojfNgq1+uaVSkPt2lVJ?=
+ =?us-ascii?Q?uPvJfCsSJij8sQS8+miEBwak+gtOCYDrB6BvkV+3He6OnJfOQcn8XvSW5O9C?=
+ =?us-ascii?Q?j0fE/ThJjYh0/TdgK83OX+Xl3e6RcSZcmZl7Y5ufD7dQDqup46rPTjf8IfpK?=
+ =?us-ascii?Q?JoVD2wPzz+bt0sYMzkVSmQ2QqL8iwlh/aMTe5pXybOzZh8pp840eTc04Fto6?=
+ =?us-ascii?Q?GP7WbrZRz32FSHsEMTHCJUEOtbVz+w/IlnsD96yAkaph/0XZqv7le0ogL2JU?=
+ =?us-ascii?Q?gmhmJZmOzygr/yGryUNzJ6VQe0W4tnJlTV4wkx+zBWEiM6n+AkDYLqpLHkyL?=
+ =?us-ascii?Q?vUrbCUpkzvRK1BjsqRgbbKOjBNUhmRv3xLBgdy0WXYygqDoijQHqUM844rPp?=
+ =?us-ascii?Q?DY2RzqBgfQkZSL5dsGzcgHk7Mq7qg0VY5dDZW4xKJ84Uq0oyOQYAqnczwJ/o?=
+ =?us-ascii?Q?d7AUKr6F/1K5C5bb5ttSCYmpcFRjRaBWIOM5HDo5GgRJvslF5b+zCDK9372O?=
+ =?us-ascii?Q?pa0lP+tg49CxNWabijcDTwcQkwB1eBa+xAebWRQLTjfqfdAzr1jg2pGa3az/?=
+ =?us-ascii?Q?tig+kvtY8QDN/WcAjk7BKJQ37ezIRuwyU0Erb1h3ptmeitushV0gu1lW6bYk?=
+ =?us-ascii?Q?TWYiu6Jo9eU1T8uyYozBm5YC4IXM5Xbdnm8yk2ric0tPa8Wp+HK6+O4R0h2X?=
+ =?us-ascii?Q?acMRwLqI0COJb45ximPPasdKrbTsO1MeknL4S83v1DxJfwXARUms7hM8e54k?=
+ =?us-ascii?Q?XCQWLr/typV8Euv/WCD4LCwWrzjChEEAFbpv59A008j9qf78bSgXFUZderSA?=
+ =?us-ascii?Q?RzJKonIdC/B0O2ASxiT0YtH2bAiQN+uuxHmJoKVL6oplA6rcOGgBSZjBmec0?=
+ =?us-ascii?Q?wKEC6Kmkc9TNMNDY7KBRSoY896Kfb3ro/hUspuoMABjtaEJGeOGcBiWfgyCp?=
+ =?us-ascii?Q?kCXnPjQmKpfZGORoH6FyBczpgKEF+VntQLQI0uwLEZogpEadY491k+nlRwtz?=
+ =?us-ascii?Q?KsTjsZpF8IIMTrMcOE3zPz5i8yyB9H4AaQGageTMgqDxgnsI3lehWE4XCfz4?=
+ =?us-ascii?Q?brffijE4EE4twVSXy87jmFzGWaW5456txkQNTaZw69pnjzzHcxxR+/0xobRp?=
+ =?us-ascii?Q?rR0AkPHR3QSgQS4VZRfkH21DMkyZU537J1i/UQ4FL9sKAUl7pYdmn77HqN57?=
+ =?us-ascii?Q?UfDDzq+z5Wz1DuVAX4kdAAcdzSJ6FsK1wB1N540oNfhYsK9qrplbkHNRuW1e?=
+ =?us-ascii?Q?CoWPVjRaIHPsLG5FxFdv8t23fuypdHO7LFDcfCM1eEEu8KQpP6XFiAerR2lw?=
+ =?us-ascii?Q?Dg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	yhf3MAvFQJOxrqkqOIp9B0F+7t/ewhXA/2/pBwtcOtFQ53myrOb3hBDawoxyMdTIxjBh4NvP8f7Y+PJAgiL6hXDbEQgctQ2z87g7cy8VOZV2wJMqZufEOrkZruaomTnvtC5FyJx+x1yc2tZZRwTZVdinzxl8cvDSYv1VHm7iun9F/gT1BVfEGoJHLBFwOUOC5Y0Z6HKTsiV4m+6fwC2A+vckLcXAIDaanqbdMPyvUl7/HavoiRtDgmKA3Mg5SUtL9n/D6F6xZx8T8M0ri4t3wWkPg3P+uhj6re0ETX2GxoEaApcVHET1oKgfYxu/VVnovcY25gb6yYm8RqoMHhdr3uVsy6Zk6TRTMPoMgy26Zm+mXO2r7H1zN43WiqKl7mqNlbciU/eFO0fQ6gN4Vm5cgTod0fx+PQyhb0X9gJOz3ZWwAMywvjBhBiKhU+z8I7kSe6cnD7nAhf8S5hPMaASfzbwL8xePz6qU6EDtD9UmHqlVG0s72PjYjqm5HGmWK1jykb7gtqkiMKIyiUVXCg06HLeaKUMh25VBgXHFr7SHEJW87MOX7/n5SxzmKiB31D8ocHCT/ZFpiGcKByiA3eWv4T7fOOqdXFD/fZADVmQvxvY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87a5cebb-1e74-4e0a-a271-08dcf76510f9
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 15:27:42.9663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dIpo/UnmcvE28W7GQ5I2jTI62L0JNNr3NNnJPhXgahfO5/hxgLvI9CuBLdhs8WowfbQ+qlS1af6zDB6YKu2IdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4170
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-28_04,2024-10-28_02,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2410280123
+X-Proofpoint-GUID: LiodT0djtVeOmBzPYw7Q7vUoSoQHjGwT
+X-Proofpoint-ORIG-GUID: LiodT0djtVeOmBzPYw7Q7vUoSoQHjGwT
 
-@Bjorn:
-Are you OK with taking this?
 
-Regards,
-P.
 
-On Wed, 2024-10-16 at 11:49 +0200, Philipp Stanner wrote:
-> Merge plan for this is the PCI-Tree.
->=20
-> After this series, only two users (net/ethernet/stmicro and
-> vdpa/solidrun) will remain to be ported in the subsequent merge
-> window.
-> Doing them right now proved very difficult because of various
-> conflicts
-> as they are currently also being reworked.
->=20
-> Changes in v8:
-> =C2=A0 - Patch "gpio: ..": Fix a bug: don't print the wrong error code.
-> (Simon)
-> =C2=A0 - Split patch 1 into two patches to make adding of the new public
-> API
-> =C2=A0=C2=A0=C2=A0 obvious (Bartosz)
-> =C2=A0 - Patch "ethernet: cavium: ...": Remove outdated sentences from th=
-e
-> =C2=A0=C2=A0=C2=A0 commit message.
->=20
-> Changes in v7:
-> =C2=A0 - Add Paolo's Acked-by.
-> =C2=A0 - Rebase on current master; drop patch No.1 which made
-> =C2=A0=C2=A0=C2=A0 pcim_request_region() public.
->=20
-> Changes in v6:
-> =C2=A0 - Remove the patches for "vdpa: solidrun" since the maintainer
-> seems
-> =C2=A0=C2=A0=C2=A0 unwilling to review and discuss, not to mention approv=
-e, anything
-> =C2=A0=C2=A0=C2=A0 that is part of a wider patch series across other subs=
-ystems.
-> =C2=A0 - Change series's name to highlight that not all callers are
-> removed
-> =C2=A0=C2=A0=C2=A0 by it.
->=20
-> Changes in v5:
-> =C2=A0 - Patch "ethernet: cavium": Re-add accidentally removed
-> =C2=A0=C2=A0=C2=A0 pcim_iounmap_region(). (Me)
-> =C2=A0 - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
->=20
-> Changes in v4:
-> =C2=A0 - Drop the "ethernet: stmicro: [...] patch since it doesn't apply
-> to
-> =C2=A0=C2=A0=C2=A0 net-next, and making it apply to that prevents it from=
- being
-> =C2=A0=C2=A0=C2=A0 applyable to PCI ._. (Serge, me)
-> =C2=A0 - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
-> =C2=A0=C2=A0=C2=A0 stimicro" as the last user for now.
-> =C2=A0 - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
-> =C2=A0 - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet"
-> instead of
-> =C2=A0=C2=A0=C2=A0 "snet"). (Christophe)
-> =C2=A0 - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
-> =C2=A0 - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
-> =C2=A0 - Apply Reviewed-by's from Andy and Xu Yilun.
->=20
-> Changes in v3:
-> =C2=A0 - fpga/dfl-pci.c: remove now surplus wrapper around
-> =C2=A0=C2=A0=C2=A0 pcim_iomap_region(). (Andy)
-> =C2=A0 - block: mtip32xx: remove now surplus label. (Andy)
-> =C2=A0 - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
-> =C2=A0=C2=A0=C2=A0 occurs. (Andy, Christophe)
-> =C2=A0 - Some minor wording improvements in commit messages. (Me)
->=20
-> Changes in v2:
-> =C2=A0 - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
-> =C2=A0=C2=A0=C2=A0 patch, put stable kernel on CC. (Christophe, Andy).
-> =C2=A0 - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
-> =C2=A0 - Consequently, drop patch "PCI: Make pcim_release_region() a
-> public
-> =C2=A0=C2=A0=C2=A0 function", since there's no user anymore. (obsoletes t=
-he squash
-> =C2=A0=C2=A0=C2=A0 requested by Damien).
-> =C2=A0 - vdap/solidrun:
-> =C2=A0=C2=A0=C2=A0 =E2=80=A2 make 'i' an 'unsigned short' (Andy, me)
-> =C2=A0=C2=A0=C2=A0 =E2=80=A2 Use 'continue' to simplify loop (Andy)
-> =C2=A0=C2=A0=C2=A0 =E2=80=A2 Remove leftover blank line
-> =C2=A0 - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
->=20
->=20
-> Important things first:
-> This series is based on [1] and [2] which Bjorn Helgaas has currently
-> queued for v6.12 in the PCI tree.
->=20
-> This series shall remove pcim_iounmap_regions() in order to make way
-> to
-> remove its brother, pcim_iomap_regions().
->=20
-> Regards,
-> P.
->=20
-> [1]
-> https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
-> [2]
-> https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
->=20
-> Philipp Stanner (6):
-> =C2=A0 PCI: Make pcim_iounmap_region() a public function
-> =C2=A0 PCI: Deprecate pcim_iounmap_regions()
-> =C2=A0 fpga/dfl-pci.c: Replace deprecated PCI functions
-> =C2=A0 block: mtip32xx: Replace deprecated PCI functions
-> =C2=A0 gpio: Replace deprecated PCI functions
-> =C2=A0 ethernet: cavium: Replace deprecated PCI functions
->=20
-> =C2=A0drivers/block/mtip32xx/mtip32xx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 18 ++++++++--------
-> --
-> =C2=A0drivers/fpga/dfl-pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 16 ++++------------
-> =C2=A0drivers/gpio/gpio-merrifield.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 15 ++++++++-=
-------
-> =C2=A0.../net/ethernet/cavium/common/cavium_ptp.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 7 +++----
-> =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 8 ++++++--
-> =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> =C2=A06 files changed, 30 insertions(+), 35 deletions(-)
->=20
+bio_split() error handling could be improved as follows:
+- Instead of returning NULL for an error - which is vague - return a
+  PTR_ERR, which may hint what went wrong.
+- Remove BUG_ON() calls - which are generally not preferred - and instead
+  WARN and pass an error code back to the caller. Many callers of
+  bio_split() don't check the return code. As such, for an error we would
+  be getting a crash still from an invalid pointer dereference.
+
+Most bio_split() callers don't check the return value. However, it could
+be argued the bio_split() calls should not fail. So far I have just
+fixed up the md RAID code to handle these errors, as that is my interest
+now.
+
+The motivator for this series was initial md RAID atomic write support in
+https://lore.kernel.org/linux-block/21f19b4b-4b83-4ca2-a93b-0a433741fd26@oracle.com/
+
+There I wanted to ensure that we don't split an atomic write bio, and it
+made more sense to handle this in bio_split() (instead of the bio_split()
+caller).
+
+Based on f1be1788a32e (block/for-6.13/block) block: model freeze & enter
+queue as lock for supporting lockdep
+
+Changes since RFC:
+- proper handling to end the raid bio in all cases, and also pass back
+  proper error code (Kuai)
+- Add WARN_ON_ERROR in bio_split() (Johannes, Christoph)
+- Add small patch to use BLK_STS_OK in bio_init()
+- Change bio_submit_split() error path (Christoph)
+
+John Garry (7):
+  block: Use BLK_STS_OK in bio_init()
+  block: Rework bio_split() return value
+  block: Error an attempt to split an atomic write in bio_split()
+  block: Handle bio_split() errors in bio_submit_split()
+  md/raid0: Handle bio_split() errors
+  md/raid1: Handle bio_split() errors
+  md/raid10: Handle bio_split() errors
+
+ block/bio.c                 | 16 +++++++++----
+ block/blk-crypto-fallback.c |  2 +-
+ block/blk-merge.c           | 15 ++++++++----
+ drivers/md/raid0.c          | 12 ++++++++++
+ drivers/md/raid1.c          | 32 +++++++++++++++++++++++--
+ drivers/md/raid10.c         | 47 ++++++++++++++++++++++++++++++++++++-
+ 6 files changed, 110 insertions(+), 14 deletions(-)
+
+-- 
+2.31.1
 
 
