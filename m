@@ -1,101 +1,210 @@
-Return-Path: <linux-block+bounces-13050-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13052-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A94539B2740
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 07:46:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB2649B2AA6
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 09:44:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEE391C21460
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 06:46:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 606181F21A3C
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 08:44:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E00E18FC83;
-	Mon, 28 Oct 2024 06:46:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EAE918C91F;
+	Mon, 28 Oct 2024 08:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXfr6iuk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IBs0bFui"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AC118A924;
-	Mon, 28 Oct 2024 06:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD0818E04D
+	for <linux-block@vger.kernel.org>; Mon, 28 Oct 2024 08:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730097998; cv=none; b=J3ZtHsAZyrH8qGEVw+MaJQv9SHD0kf5mw//1+ssxKo/DvDrFAiZMCX0Wxg88ujEV4HIcDwuoQNtwPi6Rj5yorl8526qHnrQJvlCfpxH2YBDcd/zAAd8dy+1xngecpo/G5lXlok0KIBbaYpOuRq/8pova5ks7UJNcK/rK/i7lppk=
+	t=1730105092; cv=none; b=ECqoGxoLzkXQrEH4rRv7vKtgUeM9gKNvMyblrcvCMDJga+fa48aZMwalzEuoVFVI1j+xWIVyxQUeBuJcaccoczo7VfgwTdBbZ3Q+FRaOXjMmFWmpKNoeAUxyLq1FiPaXOq2zzbuNC8M5ZHw7fsBE4XXrYoDQFhsdST2Fq8c0xfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730097998; c=relaxed/simple;
-	bh=JxpLCeEPUhJrMkdL0TYudbC/XbTxYSrHktHQOg5tBzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pajR0/ucKNIQXo/E8COdMX0upwc/8LRvqEdlN1DPHe3PvwIBxvHrdcJgyZVhaAbyaEiRtpSxQuiGXN2OTXcnm8WUid/G/JObx3NVF3ToBjf6LZSiAF1IenFBisuWbL8HC9T3pElTmPKXM+2hP0ROzci1+tLjYsooP8wvZLS3KcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXfr6iuk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA05C4CEC3;
-	Mon, 28 Oct 2024 06:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730097998;
-	bh=JxpLCeEPUhJrMkdL0TYudbC/XbTxYSrHktHQOg5tBzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pXfr6iukpFNitgAKIIVSyCYtDDCh3B1GaWuseUbNm4XLfuvHiPNIEI1RqzgXGCn+r
-	 T8x3ffU9NvEGqhEZOlcisSCjWlq5PsrCdXVG8sEw7pR+jCveH56xttouEjDQJDV8WY
-	 bx5SFdkmU/eJH7Hrzmkv07xrrIzZ4Y8X8n46X7ryPLmoTBBwUTYHLhLxEw9x3XHUY1
-	 Sze57dE6qj3rdN/EwuSVQ8/g13tIxT1HqDmg5aZ6q77NA2Bid5WHDDtaexWJgT2Sgx
-	 tKYkFMMAg8RNVBv4t74ApVds33Nr2L4PoRFdOrDOZnsgk8sPPHU+TQP6pn8GBLAoZx
-	 12xZsB0TjAqdA==
-Date: Mon, 28 Oct 2024 08:46:34 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Srinivasulu Thanneeru <dev.srinivasulu@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 05/18] dma: Provide an interface to allow allocate IOVA
-Message-ID: <20241028064634.GE1615717@unreal>
-References: <cover.1730037276.git.leon@kernel.org>
- <844f3dcf9c341b8178bfbc90909ef13d11dd2193.1730037276.git.leon@kernel.org>
- <CAMtOeKJeVrELCp5JpYTC64KdfKpbnW9a8QrnL6ziCYL48nc=qQ@mail.gmail.com>
+	s=arc-20240116; t=1730105092; c=relaxed/simple;
+	bh=psGOAh1xDaVlwmbZcuHH+an4/P6ezHhtJBNPJeQCvTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=Bwsi9XrlGncuSFoHvbqU+3u767k83MzvBCzZ/jev6GU5qLaeXTq/2dDqA35WE8ASg0VUI85ZJp8wAhxgwAvVbRhecfMg2+Sqf+x965/QG5EW+VpaTJVA1npqNrTQ148/O4PR/Wie18qc9UYnFbz0NZXzPi2vEebUPDOUfhG6jww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IBs0bFui; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20241028084447epoutp02f075bff63edb93cee3d1a598fc3cfa7a~CkWkyc7oT2966829668epoutp02R
+	for <linux-block@vger.kernel.org>; Mon, 28 Oct 2024 08:44:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20241028084447epoutp02f075bff63edb93cee3d1a598fc3cfa7a~CkWkyc7oT2966829668epoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1730105087;
+	bh=4YWjdESAaWOHQLDRBkDBnjjpfp6/Oe/mnF/yA4Ua2Kg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IBs0bFuiSaxg+yIcmJOKwhKx1aMro2eRZGZAHoUbedep3q+zqX3ybLev3rDFipVKx
+	 UjK7ACfpLscH8BiCPtdJDUtNeMwrY7vBI7dWCdmNwBTqrRPD/3jz9HfHtPneqiSjWQ
+	 I9XU7F9fLb3d9myHp1AvmQu6A/L/ztQwMPf4IDfU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20241028084447epcas5p2f2f402718354850a4c53a830de020189~CkWkWUczT2138821388epcas5p2y;
+	Mon, 28 Oct 2024 08:44:47 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4XcRld2Swvz4x9QC; Mon, 28 Oct
+	2024 08:44:45 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	02.1C.09420.DFE4F176; Mon, 28 Oct 2024 17:44:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20241028074350epcas5p3146ecfc1b74ffb86a12ad15fc84c36f8~CjhWnjS_w0185901859epcas5p3t;
+	Mon, 28 Oct 2024 07:43:50 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20241028074350epsmtrp1dd556e6d979ff05b57d73a2b9472a7a2~CjhWmqjwx1621716217epsmtrp1S;
+	Mon, 28 Oct 2024 07:43:50 +0000 (GMT)
+X-AuditID: b6c32a49-0d5ff700000024cc-e6-671f4efd9782
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	09.46.07371.6B04F176; Mon, 28 Oct 2024 16:43:50 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241028074348epsmtip100cb7f832806c698c1f6920688a6c71b~CjhU0x6sY2630526305epsmtip1R;
+	Mon, 28 Oct 2024 07:43:48 +0000 (GMT)
+Date: Mon, 28 Oct 2024 13:06:10 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org, asml.silence@gmail.com,
+	anuj1072538@gmail.com, krisman@suse.de, io-uring@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+	gost.dev@samsung.com, linux-scsi@vger.kernel.org, vishak.g@samsung.com
+Subject: Re: [PATCH v4 11/11] scsi: add support for user-meta interface
+Message-ID: <20241028073610.GB18956@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <yq1sesolxa6.fsf@ca-mkp.ca.oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTdxTH87u3lluy6h2U7awEYdeQTcejldJdplWzGXvJGCFjM5nL1nX0
+	pjDgtuttfc1sMAMKmyAgDAoMshfYGiQFWaXjIeIq9YERmYOFIZmgDMOUOSPgcC0ti/99ft9z
+	vr9zTs7vR+Ah54VSIoszsyZOm0MJgwUdZ9e/GPtvaqReNp8vpu/9syig62wdiLaPlQrpkd7T
+	GH3cfg6jZwsuC+jyvl8Q/ePF73G6a/QluuGHySD6i+tOId3kXsLoQWtd0DYxc9o6FsQMXbIw
+	DluRkGn77jPGNZInZO5NjgqYknYbYtoufML87VibJtqVvTmT1epYUxTLZRh0WZxeRb2ernlN
+	k6iUyWPlSfTLVBSnzWVV1PaUtNgdWTnepqmo3doci1dK0/I8Fb9ls8lgMbNRmQberKJYoy7H
+	qDDG8dpc3sLp4zjW/IpcJtuY6E38IDuztKYZM3aE7p0bHkd5aH5NMRIRQCrgsLMIK0bBRAjp
+	QnCnqhb3H+YQtFxtCxweIGjoasRWLLUnigOBLgSHr/we8E8h6JxdWFWMCEJARsOFwRSfQUi+
+	AP23CpCPJWQiVMydEvrycfIrDIqrHi4HQkk1VHePL7OYjIWZiz/hfn4aBmpuCnx3isgEaB7k
+	fHIYuQ56O9zLdYHsJ2Dh81mBv7vtcPVSG/JzKPzpbg/ysxSmSwsDrIeHQ5OBaYxw8OfuQP5W
+	KPCULtfFyUy4UlUe0COg0tOC+fXVcGTxZsArBufXK0zBoeN1AQboupyH+XoGkoHR4QM+OYS8
+	hSDfHX0URVqfmMz6RDU/x0Cja05o9bpxMhyalgg/roeTnfGNaJUNPcca+Vw9yyca5Ry75/99
+	ZxhyHWj5SW9IdqKxG3fj+hBGoD4EBE5JxPb3IvQhYp12337WZNCYLDks34cSvZsqw6VhGQbv
+	n+DMGrkiSaZQKpWKpASlnHpWPFNQrwsh9Vozm82yRta04sMIkTQPK+v+q0AmAfP01EBketNU
+	UT/Xgmf/uvRNbE/lznxigjnpMn4YLk5wSthjjw+Uf/SM2jNw39KTqtK/MVn/oE43PaqIaB6u
+	a3h7TbQcnSM179rkrvkdFmJtnGePa+atkl3dEqwsImbqVaV1i0J1XdL6zjXx6l7ZofT9R26f
+	v51uVqea38QXgkdbS659W/1l+InJibCarjORteqou++De8ThTobC8fuenQsZ+36bc3IHpWlD
+	1lPDDWN4dMXuvRLdphuOVokkxdYqibFU9EoLtw07Pj1Wf7Zzq6Xk46ZN1Y8jLZV/3FlUxz/v
+	edQm6tvYQ9hVj9rrDTqNPVkdceboxFM8JeAztfINuInX/gemvdR1WwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmkeLIzCtJLcpLzFFi42LZdlhJTnebg3y6we11khYfv/5msZizahuj
+	xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02H5mKbPF3lvaFvOXPWW36L6+g81i+fF/TBbn
+	Z81hd+D12DnrLrvH5bOlHptWdbJ5bF5S77H7ZgObx8ent1g8+rasYvTYfLra4/MmuQDOKC6b
+	lNSczLLUIn27BK6Mnwf+shV8E6g4+3YRWwPjJd4uRk4OCQETidlrupi7GLk4hAR2M0p8OHyN
+	GSIhIXHq5TJGCFtYYuW/5+wQRU8YJS6unALkcHCwCKhKnD7vA1LDJqAuceR5K1i9iICpxORP
+	W9lA6pkFZjJJrJqwlB0kISzgLjFj332wIl4BXYnXZ/ZAbX7OKLHh5UGohKDEyZlPWEBsZgEt
+	iRv/XjKBLGMWkJZY/o8DxOQUMJZYcT4PpEJUQFniwLbjTBMYBWchaZ6FpHkWQvMCRuZVjJKp
+	BcW56bnJhgWGeanlesWJucWleel6yfm5mxjB8aWlsYPx3vx/eocYmTgYDzFKcDArifCujpVN
+	F+JNSaysSi3Kjy8qzUktPsQozcGiJM5rOGN2ipBAemJJanZqakFqEUyWiYNTqoGJ04ZvTYhm
+	hRlz2Wo/75TTvRrtR8oNlrSVfevvvZfK9HJy3AaPydcWrn3Y3dPxJC9u6bSNt5uEE3M279+l
+	Xe490/+69k69ZfMuT0l6w7nedumS9d23P/DyzVD21LQ/ynvfYO+sZHnB6VKr1q0xc/0dc+K2
+	2IyAiW0p2Ux5J2PVlx82tJLVbxDacP5hlblqg9fxyyktW9UO+N8VLJol6d71wa1A5MrFqMUH
+	uV66s7OofbFwrDL6tW/nyte8Xv7XI+dyO+Xby/Xl/jhS4fA1nmf76YQJN3yeNM2L3JHo7rFC
+	Y9XFl1sag6J5cu3eVb7Ic3u4ZuGtAw0F77urj3+x7oo6terPsUfee5c2Ny/XEHFXYinOSDTU
+	Yi4qTgQAtCYN/R4DAAA=
+X-CMS-MailID: 20241028074350epcas5p3146ecfc1b74ffb86a12ad15fc84c36f8
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_7f461_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e
+References: <20241016112912.63542-1-anuj20.g@samsung.com>
+	<CGME20241016113757epcas5p42b95123c857e5d92d9cdec55e190ce4e@epcas5p4.samsung.com>
+	<20241016112912.63542-12-anuj20.g@samsung.com>
+	<yq1sesolxa6.fsf@ca-mkp.ca.oracle.com>
+
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_7f461_
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMtOeKJeVrELCp5JpYTC64KdfKpbnW9a8QrnL6ziCYL48nc=qQ@mail.gmail.com>
 
-On Mon, Oct 28, 2024 at 09:54:49AM +0530, Srinivasulu Thanneeru wrote:
-> On Sun, Oct 27, 2024 at 10:23 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > The existing .map_page() callback provides both allocating of IOVA
-> > and linking DMA pages. That combination works great for most of the
-> > callers who use it in control paths, but is less effective in fast
-> > paths where there may be multiple calls to map_page().
+On Mon, Oct 21, 2024 at 09:58:57PM -0400, Martin K. Petersen wrote:
 > 
-> Can you please share perf stats with this patch in fast path, if available?
+> Anuj,
+> 
+> > +/*
+> > + * Can't check reftag alone or apptag alone
+> > + */
+> > +static bool sd_prot_flags_valid(struct scsi_cmnd *scmd)
+> > +{
+> > +	struct request *rq = scsi_cmd_to_rq(scmd);
+> > +	struct bio *bio = rq->bio;
+> > +
+> > +	if (bio_integrity_flagged(bio, BIP_CHECK_REFTAG) &&
+> > +	    !bio_integrity_flagged(bio, BIP_CHECK_APPTAG))
+> > +		return false;
+> > +	if (!bio_integrity_flagged(bio, BIP_CHECK_REFTAG) &&
+> > +	    bio_integrity_flagged(bio, BIP_CHECK_APPTAG))
+> > +		return false;
+> > +	return true;
+> > +}
+> 
+> This breaks reading the partition table.
+> 
+> The BIP_CHECK_* flags should really only control DIX in the SCSI case.
+> Filling out *PROTECT is left as an exercise for the SCSI disk driver.
+> It's the only way we can sanely deal with this. Especially given ATO,
+> GRD_CHK, REF_CHK, and APP_CHK. It just gets too complicated.
+> 
+> You should just drop sd_prot_flags_valid() and things work fine. And
+> then with BIP_CHECK_* introduced we can drop BIP_CTRL_NOCHECK.
 
-I don't have this data for HMM and VFIO as they have other benefits from this
-series except performance. For NVMe, I don't have the data yet, but it will
-come https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/,
-as it is the main performant user of this API.
+So I will keep the fine grained userspace/bip flags (which we have in
+this version). And drop the sd_prot_flags_valid() and BIP_CTRL_NOCHECK
+like below [1]. Hope that looks fine
 
-This is the main reason why NVMe series is marked as RFC yet.
+[1]
 
-Thanks
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index ca4bc0ac76ad..0913bd43f48a 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -814,14 +814,14 @@ static unsigned char sd_setup_protect_cmnd(struct scsi_cmnd *scmd,
+ 		if (bio_integrity_flagged(bio, BIP_IP_CHECKSUM))
+ 			scmd->prot_flags |= SCSI_PROT_IP_CHECKSUM;
+ 
+-		if (bio_integrity_flagged(bio, BIP_CTRL_NOCHECK) == false)
++		if (bio_integrity_flagged(bio, BIP_CHECK_GUARD)
+ 			scmd->prot_flags |= SCSI_PROT_GUARD_CHECK;
+ 	}
+ 
+ 	if (dif != T10_PI_TYPE3_PROTECTION) {	/* DIX/DIF Type 0, 1, 2 */
+ 		scmd->prot_flags |= SCSI_PROT_REF_INCREMENT;
+ 
+-		if (bio_integrity_flagged(bio, BIP_CTRL_NOCHECK) == false)
++		if (bio_integrity_flagged(bio, BIP_CHECK_REFTAG))
+ 			scmd->prot_flags |= SCSI_PROT_REF_CHECK;
+ 	}
+ 
+-- 
+2.25.1
+> 
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
+> 
+
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_7f461_
+Content-Type: text/plain; charset="utf-8"
+
+
+------w5-2f3KIOrSunQhSxAIo7Dy_B_SBAQB3Xz8aCSUoiMSFB8w5=_7f461_--
 
