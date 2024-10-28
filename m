@@ -1,47 +1,46 @@
-Return-Path: <linux-block+bounces-13080-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13081-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C28899B35CD
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 17:08:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91EA49B3606
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 17:12:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88A11281C43
-	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 16:08:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 421321F230C4
+	for <lists+linux-block@lfdr.de>; Mon, 28 Oct 2024 16:12:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B8CD1DE4D0;
-	Mon, 28 Oct 2024 16:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6670E1DF251;
+	Mon, 28 Oct 2024 16:11:35 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C2B15C13A;
-	Mon, 28 Oct 2024 16:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758FA1DE88D;
+	Mon, 28 Oct 2024 16:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730131695; cv=none; b=D1GQazZ50Yz/4uTCJrTyEpj1YwCED/wIjXrNtmDTFmwIlYAOfxRYScfjctiPUSLlSKJ93olkgbSSxGK9XUsPb4czbbAaqmjtrm0xkqSajrH9bH4ksnnxhdkkVxm7PUtWhg/a7fs7QQn/K5iDMGQUDbdFS1cTUjjcbeVwDkireC4=
+	t=1730131895; cv=none; b=tR6i8G1pWK2Or1ObzpV+qSSex/TZJH9MyUusb3hsodNh3Q/vuNpBtBTWrXxMaEwPS7Ot50Pe0To7um55BN75H9muMlgZojuVDP00K0V6rPbuZk1oNHLVstB3CdWgQ4Z/OJG5UBX3Ps+JNn8CGR2J+OYBd4+B8pdI/66M3KfBkT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730131695; c=relaxed/simple;
-	bh=cD+tVOPgBP2aUOkOS5fVCdYhB3T4AyVqCU57n9MzTM4=;
+	s=arc-20240116; t=1730131895; c=relaxed/simple;
+	bh=34f/7hgZE5uqGQBXPVNcfIRZLX6rC13d7zC/uBNENY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bH+2ivsLj3EQvh+FCxIzZ7U8/mrRpt/A/L737KS5l4qLhPHIY8EViDfyvpcXJ/wpc9Ud4akohe7qDPN6Z/FBCpf4Z/U+lQGhgCxW5/QvE3O3gMgH6eaVEXkrAlz3MFKsh2lliVRGaoHTpiohqQZ47qFMYr5FpINSnE841HXKM6k=
+	 Content-Type:Content-Disposition:In-Reply-To; b=LsKyXTZZQHd3Y4ZKnJ3X3m+iuDwT8Hv/q+Y2JjyGkQMmymnBhm5+FipnUbIIYDS/5q27shB5lQAaxQz0XVhpLc0MOLzSzrhjrxBLbxGOrfjh80mn6S5icQo5IJPoSNeUYuK+QTOpgkhFaHBwISS3xw7ozgN807lEZRsk9UhnjlU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7922068BEB; Mon, 28 Oct 2024 17:08:08 +0100 (CET)
-Date: Mon, 28 Oct 2024 17:08:08 +0100
+	id DEE3768BEB; Mon, 28 Oct 2024 17:11:28 +0100 (CET)
+Date: Mon, 28 Oct 2024 17:11:28 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>,
-	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org, io-uring@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, joshi.k@samsung.com,
-	javier.gonz@samsung.com, bvanassche@acm.org
-Subject: Re: [PATCHv9 4/7] block, fs: add write hint to kiocb
-Message-ID: <20241028160808.GA28077@lst.de>
-References: <20241025213645.3464331-1-kbusch@meta.com> <20241025213645.3464331-5-kbusch@meta.com> <20241028115932.GE8517@lst.de> <Zx-hzSwkkUMeuA5C@kbusch-mbp>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, hch@lst.de,
+	martin.petersen@oracle.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+	hare@suse.de, Johannes.Thumshirn@wdc.com
+Subject: Re: [PATCH v2 1/7] block: Use BLK_STS_OK in bio_init()
+Message-ID: <20241028161128.GA28829@lst.de>
+References: <20241028152730.3377030-1-john.g.garry@oracle.com> <20241028152730.3377030-2-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,30 +49,15 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zx-hzSwkkUMeuA5C@kbusch-mbp>
+In-Reply-To: <20241028152730.3377030-2-john.g.garry@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Oct 28, 2024 at 08:38:05AM -0600, Keith Busch wrote:
-> > > +	if (bdev_is_partition(bdev) &&
-> > > +	    !test_bit(hint - 1, bdev->write_hint_mask))
-> > > +		return file_inode(iocb->ki_filp)->i_write_hint;
-> > 
-> > I would have expected an error when using an invalid stream identifier.
-> 
-> It's a hint. fcntl doesn't error if you give an unusable hint, so
-> neither should this. You get sane default behavior.
+On Mon, Oct 28, 2024 at 03:27:24PM +0000, John Garry wrote:
+> Use the proper blk_status_t value to init the bi_status.
 
-Well, why does it have to be a hint?
+I think 0 as ok is a very wide spread assumption and intentional.
+Personally I think 0 is fine, as it also is special case by
+__bitwise types, but if Jens prefers it this way I'm fine with that
+too.
 
-If I have a data placement aware application I really want to know
-into how many buckets I can sort and adjust my algorithm for it.
-And I'd rather have an error checked interface to pass that down
-as far as I can.
-
-Same for my file system use case.  I guess you have a use case where
-a hint would be enough, at least with good enough knowledge of the
-underlying implementation.  But would there be an actual downside
-in not having a hint?  Because historically speaking everything we've
-done as a not error checked vaguely defined hint has not been all
-the useful, but it in hardware or software interfaces.
 
