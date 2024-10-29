@@ -1,226 +1,158 @@
-Return-Path: <linux-block+bounces-13126-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13128-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C8C9B48C5
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 12:57:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD0A99B4915
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 13:07:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 567311F21BDD
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 11:57:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BE361C239D7
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 12:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D3AC205ACA;
-	Tue, 29 Oct 2024 11:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61AA206050;
+	Tue, 29 Oct 2024 12:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HKW8Qy5i"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AF0205AD9;
-	Tue, 29 Oct 2024 11:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFDB205AB2
+	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 12:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730202957; cv=none; b=tzFNyFAzwRQ2H5Ox07K1X2hlTHlCHaCf+hToXMjX2YXl3paKwkGOiJgGrhPWPcMXgP/X3yutlWs+aNQt0yraEGln01CgiJL5WRVOrQpGvzOEoM/uOj7MFv1e/zR2JBY/nnHKtSA9YhgSk8kRBEe1Ey8NYIyZxlc6hT7LxW807wI=
+	t=1730203622; cv=none; b=O2WHZrXGH9iFuN1TqAjqLou+GyFUleGnP+XI6t3rJJGlmoqMZS4ti/M8AxPZWB81kI3AlT5RvpO3V8ycbWcGVkiO3Wp0DvEiejDARDoiYmSRK3S5wOFFqMCuAniHs0JIlFdUGuKeyVEgBl9aQPEc/CwTCC8SjgAZuABTZfsWYH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730202957; c=relaxed/simple;
-	bh=rZsjMciENEV62jXsM76VErNU1uGLDGuef1gv72HLLSo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=k32Y5ySfqPYqOnxVVAuf/FWBBkbO2gcpQ0ksQ7FkoW/Am4sBdGi7+V7VXaNTlkkYm96PCEMalVdDzyNERZZh6PTrDrfCyV2TkgKkeCh1Je8SkV0u2Mv1tunW5MHzlfRDdL3wymq4t5LiCcnXh+SqVAWVlFocIRung8ZFMJnHqE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xd7xH3gqKz4f3nby;
-	Tue, 29 Oct 2024 19:55:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 024121A0568;
-	Tue, 29 Oct 2024 19:55:50 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgCHY4dEzSBnfhYaAQ--.54352S3;
-	Tue, 29 Oct 2024 19:55:49 +0800 (CST)
-Subject: Re: [PATCH v2 7/7] md/raid10: Handle bio_split() errors
-To: John Garry <john.g.garry@oracle.com>, axboe@kernel.dk, song@kernel.org,
- hch@lst.de
-Cc: martin.petersen@oracle.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, hare@suse.de,
- Johannes.Thumshirn@wdc.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20241028152730.3377030-1-john.g.garry@oracle.com>
- <20241028152730.3377030-8-john.g.garry@oracle.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <eeb9ca32-6862-6a07-bc51-7bd05430f018@huaweicloud.com>
-Date: Tue, 29 Oct 2024 19:55:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1730203622; c=relaxed/simple;
+	bh=Dvb8iE6WsFvOiHVxthhNAr/sE3AtgKRxvbj1MsoM64o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=pbCalqobVuxtuPREOLx7VmqYe5PIz0ISnLKFJiaU4Tv9ABkhGOTMdh337kkNhzGsgQOyN3MArwtwj59RGbO6B3CZOn8AsC9ztJS01/Uv65yy2SCYHX5dP5FHPYEPB5fM2vV/ghxJ5m6XZ58rQtbHRvSEWv+8x/Aoi0teNBrYf2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HKW8Qy5i; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20241029120651epoutp02c86da36c5599132ffa6dd9831c11b993~C6wSfI5pl2147821478epoutp02f
+	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 12:06:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20241029120651epoutp02c86da36c5599132ffa6dd9831c11b993~C6wSfI5pl2147821478epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1730203611;
+	bh=+N9xNxcRiyZbnIppftSwJNIxmvNHQi1WtyZiPy4I7wY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HKW8Qy5ir7b0hJreaIFRhpZrRrzRPwxSxtnrrsx6Qi4il4qOB+bRF5goueb9hCEjx
+	 dG+uMPy4qxV+bb3i27aDReX+3ZLq1rcZk9VFnfFiono54wRd8yUEYhI6HnqUS2RyRG
+	 XE2NasqYYz1Mck3cWbvkOm8R3zba4brjFaR2Pj4Q=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20241029120651epcas5p421e7f1f7a1e9140df1e86ed233c417fb~C6wR_pJh_0675006750epcas5p4V;
+	Tue, 29 Oct 2024 12:06:51 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Xd8BL07VSz4x9Pv; Tue, 29 Oct
+	2024 12:06:50 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	31.5B.09800.9DFC0276; Tue, 29 Oct 2024 21:06:49 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20241029120623epcas5p1a6a1a190b252cd2be568a08e9ffd9457~C6v4TDX4R1417314173epcas5p1B;
+	Tue, 29 Oct 2024 12:06:23 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20241029120623epsmtrp22e73a1d129cc45e5af406200e27bb3b9~C6v4JroUw2161321613epsmtrp22;
+	Tue, 29 Oct 2024 12:06:23 +0000 (GMT)
+X-AuditID: b6c32a4b-23fff70000002648-e8-6720cfd9bf80
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DC.60.07371.FBFC0276; Tue, 29 Oct 2024 21:06:23 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241029120622epsmtip1c38cdcf61c2e13292cf9d27070aa1044~C6v3Fqf_U2272722727epsmtip1T;
+	Tue, 29 Oct 2024 12:06:22 +0000 (GMT)
+Date: Tue, 29 Oct 2024 17:27:25 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: Keith Busch <kbusch@meta.com>
+Cc: hch@lst.de, axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, martin.petersen@oracle.com, Keith Busch
+	<kbusch@kernel.org>
+Subject: Re: [PATCH] blk-integrity: remove seed for user mapped buffers
+Message-ID: <20241029115725.GA20732@green245>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241028152730.3377030-8-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCHY4dEzSBnfhYaAQ--.54352S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF4UtryDAr4kuFWDtr43Jrb_yoWrKF13pr
-	Wqq3WfArW5JFZI9wnxtanFgasYvryvqFW2yrWxG347XwnIqr98KF1UWrWYgry5ury5u343
-	X3Z5Wr4DCa9rtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <20241016201309.1090320-1-kbusch@meta.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIJsWRmVeSWpSXmKPExsWy7bCmlu7N8wrpBo+3mVqsvtvPZrFy9VEm
+	i0mHrjFanLm6kMVi7y1ti/nLnrJbLD/+j8mB3ePy2VKPTas62Tw2L6n32H2zgc3j3MUKj49P
+	b7F4fN4kF8AelW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg
+	65aZA3SMkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8vtcTK
+	0MDAyBSoMCE7Y/KV7YwF69gqzvyfy9LAuI61i5GTQ0LARGLj1J3MXYxcHEICuxklrr0CSYA4
+	nxglvq14ygRSJSTwjVHi/8sMmI5lS2ZDxfcySrSsqoFoeMYosevlTnaQBIuAqsSu5RMZQWw2
+	AXWJI89bwWwRAUWJ88CQAGlgFpjLKPFzwWMWkISwgLvE07UdbCA2r4CuxPHFrcwQtqDEyZlP
+	wGo4Bcwl5q/cDbZAVEBZ4sC240wQF7VySPQ/VISwXSTaP61ggbCFJV4d38IOYUtJfH63lw3C
+	Tpf4cfkpVG+BRPOxfYwQtr1E66l+sL3MAhkSs1+uhpojKzH11DomiDifRO/vJ1C9vBI75sHY
+	ShLtK+dA2RISe881QNkeEt/bTkCDtItR4vbCeWwTGOVnIfltFpJ9ELaOxILdn9hmMXIA2dIS
+	y/9xQJiaEut36S9gZF3FKJlaUJybnlpsWmCcl1oOj/Dk/NxNjOC0quW9g/HRgw96hxiZOBgP
+	MUpwMCuJ8K6OlU0X4k1JrKxKLcqPLyrNSS0+xGgKjKyJzFKiyfnAxJ5XEm9oYmlgYmZmZmJp
+	bGaoJM77unVuipBAemJJanZqakFqEUwfEwenVAOT7tpdRY8434aGdBk9v5yQ/Jn55alfl/L7
+	eaZdFpdwOH7wtvW7X2vv3eT68/PUz6l2R5ikA/ztOdR+61wKbOB7dCsv8w7fdD2/z7I1O/5k
+	169z1+9I9biXHvzmk8Gh0zcUFIrmXZtz/O+Fb0lLZv5buDhyF3dWxLN4jw2LkvJmeHzjN5V/
+	OkVmXb2DZvP2YPmtPVuzHqWqblvPq6f84cjFU4VWDMcFGpMvVOoKaQov3PrpcY7D2clZdfsj
+	T28+1JXQfGTt+VXmZpfOTJut7P2ZISwr4/dsIY/o7sn6zo9Din/l711zkCslxiNzad62KGND
+	M7bStCa+v3x7rYW/cB16sr1L6YRxicQ3xWyhQ8mXlViKMxINtZiLihMBr7typjQEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnO7+8wrpBlOeKlusvtvPZrFy9VEm
+	i0mHrjFanLm6kMVi7y1ti/nLnrJbLD/+j8mB3ePy2VKPTas62Tw2L6n32H2zgc3j3MUKj49P
+	b7F4fN4kF8AexWWTkpqTWZZapG+XwJUx82JRwTvmimfTDrE1MLYzdzFyckgImEgsWzKbqYuR
+	i0NIYDejRHNnEyNEQkLi1MtlULawxMp/z9khip4wSiz4Mp0JJMEioCqxa/lEsCI2AXWJI89b
+	wWwRAUWJ80DngDQwC8xllFhxZyFYg7CAu8TTtR1sIDavgK7E8cWtzBBTuxglphz8zAqREJQ4
+	OfMJC4jNLKAlcePfS6BmDiBbWmL5Pw6QMKeAucT8lbvZQWxRAWWJA9uOM01gFJyFpHsWku5Z
+	CN0LGJlXMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefnbmIER4SWxg7Ge/P/6R1iZOJgPMQo
+	wcGsJMK7OlY2XYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv4YzZKUIC6YklqdmpqQWpRTBZJg5O
+	qQamlxE3Cy9M7s5aUGnIe6hMcaFP8GQzHyaBiaL31QM3Klwyn7B6699aedWvypkHJ68ql0hJ
+	8t0YnbE1oStNd17UcbkZZqqn+Vb+lu0XEjwZYL3c/VvRErWqqnibw4dO/fX85HejOlryUZDT
+	vKCowI1G1eer/iSUHPa2nPuQ64KFsNrySKvWBie/Cge1zfqF7x7w3F296/hr/SM/q6/K5J4I
+	emEbds9N1nXFylmvq82PMS2YnOnfrrq9OfnNwq0nFgYtLOjhSvzXcEw8z1JXUzw0eWmHQpTp
+	m/k5rbI+4gtes9ZMO+bfusv26xfFGR2a1yInqb09oKnVcn1+y4ufsv9efS91vOrfV7Vi4YrX
+	+54qsRRnJBpqMRcVJwIAlrrnxfcCAAA=
+X-CMS-MailID: 20241029120623epcas5p1a6a1a190b252cd2be568a08e9ffd9457
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_86545_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241016201330epcas5p33226adcbff73f7df7cced504aea64a13
+References: <CGME20241016201330epcas5p33226adcbff73f7df7cced504aea64a13@epcas5p3.samsung.com>
+	<20241016201309.1090320-1-kbusch@meta.com>
 
-Hi,
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_86545_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-ÔÚ 2024/10/28 23:27, John Garry Ð´µÀ:
-> Add proper bio_split() error handling. For any error, call
-> raid_end_bio_io() and return. Except for discard, where we end the bio
-> directly.
+On Wed, Oct 16, 2024 at 01:13:09PM -0700, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
 > 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->   drivers/md/raid10.c | 47 ++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 46 insertions(+), 1 deletion(-)
+> The seed is only used for kernel generation and verification. That
+> doesn't happen for user buffers, so passing the seed around doesn't
+> accomplish anything.
+
+Looks fine. I can do the seed handling for io_uring metadata series
+in the upper block layer functions, and hence won't rely on this
+infra.
+
+Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
+
+> -- 
+> 2.43.5
 > 
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index f3bf1116794a..9c56b27b754a 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -1159,6 +1159,7 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
->   	int slot = r10_bio->read_slot;
->   	struct md_rdev *err_rdev = NULL;
->   	gfp_t gfp = GFP_NOIO;
-> +	int error;
->   
->   	if (slot >= 0 && r10_bio->devs[slot].rdev) {
->   		/*
-> @@ -1206,6 +1207,10 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
->   	if (max_sectors < bio_sectors(bio)) {
->   		struct bio *split = bio_split(bio, max_sectors,
->   					      gfp, &conf->bio_split);
-> +		if (IS_ERR(split)) {
-> +			error = PTR_ERR(split);
-> +			goto err_handle;
-> +		}
->   		bio_chain(split, bio);
->   		allow_barrier(conf);
->   		submit_bio_noacct(bio);
-> @@ -1236,6 +1241,12 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
->   	mddev_trace_remap(mddev, read_bio, r10_bio->sector);
->   	submit_bio_noacct(read_bio);
->   	return;
-> +err_handle:
-> +	atomic_dec(&rdev->nr_pending);
-
-I just realized that for the raid1 patch, this is missed. read_balance()
-from raid1 will increase nr_pending as well. :(
-
-> +
-> +	bio->bi_status = errno_to_blk_status(error);
-> +	set_bit(R10BIO_Uptodate, &r10_bio->state);
-> +	raid_end_bio_io(r10_bio);
->   }
->   
->   static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
-> @@ -1347,9 +1358,10 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
->   				 struct r10bio *r10_bio)
->   {
->   	struct r10conf *conf = mddev->private;
-> -	int i;
-> +	int i, k;
->   	sector_t sectors;
->   	int max_sectors;
-> +	int error;
->   
->   	if ((mddev_is_clustered(mddev) &&
->   	     md_cluster_ops->area_resyncing(mddev, WRITE,
-> @@ -1482,6 +1494,10 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
->   	if (r10_bio->sectors < bio_sectors(bio)) {
->   		struct bio *split = bio_split(bio, r10_bio->sectors,
->   					      GFP_NOIO, &conf->bio_split);
-> +		if (IS_ERR(split)) {
-> +			error = PTR_ERR(split);
-> +			goto err_handle;
-> +		}
->   		bio_chain(split, bio);
->   		allow_barrier(conf);
->   		submit_bio_noacct(bio);
-> @@ -1503,6 +1519,25 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
->   			raid10_write_one_disk(mddev, r10_bio, bio, true, i);
->   	}
->   	one_write_done(r10_bio);
-> +	return;
-> +err_handle:
-> +	for (k = 0;  k < i; k++) {
-> +		struct md_rdev *rdev, *rrdev;
-> +
-> +		rdev = conf->mirrors[k].rdev;
-> +		rrdev = conf->mirrors[k].replacement;
-
-This looks wrong, r10_bio->devs[k].devnum should be used to deference
-rdev from mirrors.
-> +
-> +		if (rdev)
-> +			rdev_dec_pending(conf->mirrors[k].rdev, mddev);
-> +		if (rrdev)
-> +			rdev_dec_pending(conf->mirrors[k].rdev, mddev);
-
-This is not correct for now, for the case that rdev is all BB in the
-write range, continue will be reached in the loop and rrdev is skipped(
-This doesn't look correct to skip rrdev). However, I'll suggest to use:
-
-int d = r10_bio->devs[k].devnum;
-if (r10_bio->devs[k].bio == NULL)
-	rdev_dec_pending(conf->mirrors[d].rdev);
-if (r10_bio->devs[k].repl_bio == NULL)
-	rdev_dec_pending(conf->mirrors[d].replacement);
-
-Thanks,
-Kuai
-
-> +		r10_bio->devs[k].bio = NULL;
-> +		r10_bio->devs[k].repl_bio = NULL;
-> +	}
-> +
-> +	bio->bi_status = errno_to_blk_status(error);
-> +	set_bit(R10BIO_Uptodate, &r10_bio->state);
-> +	raid_end_bio_io(r10_bio);
->   }
->   
->   static void __make_request(struct mddev *mddev, struct bio *bio, int sectors)
-> @@ -1644,6 +1679,11 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
->   	if (remainder) {
->   		split_size = stripe_size - remainder;
->   		split = bio_split(bio, split_size, GFP_NOIO, &conf->bio_split);
-> +		if (IS_ERR(split)) {
-> +			bio->bi_status = errno_to_blk_status(PTR_ERR(split));
-> +			bio_endio(bio);
-> +			return 0;
-> +		}
->   		bio_chain(split, bio);
->   		allow_barrier(conf);
->   		/* Resend the fist split part */
-> @@ -1654,6 +1694,11 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
->   	if (remainder) {
->   		split_size = bio_sectors(bio) - remainder;
->   		split = bio_split(bio, split_size, GFP_NOIO, &conf->bio_split);
-> +		if (IS_ERR(split)) {
-> +			bio->bi_status = errno_to_blk_status(PTR_ERR(split));
-> +			bio_endio(bio);
-> +			return 0;
-> +		}
->   		bio_chain(split, bio);
->   		allow_barrier(conf);
->   		/* Resend the second split part */
 > 
 
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_86545_
+Content-Type: text/plain; charset="utf-8"
+
+
+------Q5hryimWBrG20CTDo2Cycv07rC8cEZ5s1mVzGfufIajJO9l9=_86545_--
 
