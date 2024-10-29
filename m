@@ -1,65 +1,140 @@
-Return-Path: <linux-block+bounces-13140-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13147-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 045C49B4D68
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 16:17:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21E1A9B4D97
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 16:21:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A360C1F25F9B
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 15:17:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8E8A1B25106
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 15:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E5E10957;
-	Tue, 29 Oct 2024 15:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 445FD198E74;
+	Tue, 29 Oct 2024 15:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="EkBldLnO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0046E192D9E
-	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 15:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46538197A82
+	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 15:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730215026; cv=none; b=SuUVZeo9gSRIusB6PFc66Zy/ob3OMZ5nD09lkuZYnQw3763hlo/KKxy/HHC1hnpoiS3DPi3UHKSZuSXwW8dLktCIe9gkqOL0UHLk3ZXgRZBOtXkig+KiNoQ/DP/vNTijBfSXwIR2pFXRUSGZGNz9upnkJMwtowo2esw59xQ61/U=
+	t=1730215204; cv=none; b=N+f4xv3t5uGYnHKLMzieVN9cLT1n2+KYteFg4eTa5ra8TXYsWg1AXvu/llvURbrAlk3bApvj3y9yxqfQmO2gkk4QbFvD816dH2qbLcUYKxlyK7HWV5mY7zYwYmTdMVnVl/cYS3szRuiM1IvHztApVw3VtEnV+yAc1eDMJYZONi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730215026; c=relaxed/simple;
-	bh=/gWzMUnZsR3O3NKmth6ezd1td4Cs94Ri/Z29vp/+G84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUUrOdrb48OM9XZkzfho4OghAN3Roi+vZisCPaAW6SB/P8An5WE4I2ZG1yLg7w2r48pOzUBIfA5MtMi3+1LvA/5K+uVz90GGaJ57kYGFi65qyBnnxMMAyhXIMja2Drk0TPsI+SSGMXdytUSTh5l8l2JpNKAbaDEJcfikMnOotCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 31F1B227A88; Tue, 29 Oct 2024 16:16:54 +0100 (CET)
-Date: Tue, 29 Oct 2024 16:16:54 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH] block: add a bdev_limits helper
-Message-ID: <20241029151654.GA25946@lst.de>
-References: <20241029141937.249920-1-hch@lst.de> <70d23933-a9ee-45a5-8805-75f477abccec@oracle.com>
+	s=arc-20240116; t=1730215204; c=relaxed/simple;
+	bh=u5K3D5yLSkHuUgTsOePWDLML5bOnFkPsgBx7WMm9Kok=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AsdLsbFe81xP9uYFMMDqBeIXOv2NIEjrsVjIX+HqYeB5VE504m4lQkYmGYJHfLN/5wZ1gW3XI/4uNR5kmIxdDRwngqzBNmXfVy5YWryFMa56vU23EPad9Q4mK6IWmN5MW1b2zCaV1+yfGsloxOjRqVvrkjsZxp/iYz6CJPypyrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=EkBldLnO; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49T72Trt012612
+	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 08:20:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=XgvQBUxMc4oBRDRyps
+	Eh3gf2mVo+uaeROl5mqKEtNEM=; b=EkBldLnO1a5HwaERD48j8+tJYInobYCnto
+	+7gK6kCnzA59H/PerqdNJH6U57UXRpA4P265FoAfDfBvquW4SsqUAf5bwseHRogt
+	GNm2UQseW/y1/FI6TVRnHIlTrwl4QyDP028+Pa5WSrtYsoETwdCIbRKIYrG4jysk
+	1s5MTTyxmeHVTFXstQalE8mUKJSHB+9MhSBjgAWo2IYYcj0bGf6KaNfaML12mw/I
+	stlMrECM7iIqHeb2R8SbLqg4nf1qnIPeSVi8XfuEzan3LBxv3nMUs9sI+vALdfmK
+	QgBOe7Lu8P/1YchdWUt9SMoKE9RbPsQKcatwmHxw87SeazTjAThA==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 42jty7asby-17
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 29 Oct 2024 08:20:01 -0700 (PDT)
+Received: from twshared10900.35.frc1.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Tue, 29 Oct 2024 15:19:58 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id D97AA14920E9A; Tue, 29 Oct 2024 08:19:43 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-scsi@vger.kernel.org>, <io-uring@vger.kernel.org>
+CC: <linux-fsdevel@vger.kernel.org>, <hch@lst.de>, <joshi.k@samsung.com>,
+        <javier.gonz@samsung.com>, <bvanassche@acm.org>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv10 0/9] write hints with nvme fdp, scsi streams
+Date: Tue, 29 Oct 2024 08:19:13 -0700
+Message-ID: <20241029151922.459139-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70d23933-a9ee-45a5-8805-75f477abccec@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: -LEN1ALTGY8SwWBllUULf4ic8HaqOBIU
+X-Proofpoint-GUID: -LEN1ALTGY8SwWBllUULf4ic8HaqOBIU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
 
-On Tue, Oct 29, 2024 at 03:13:10PM +0000, John Garry wrote:
-> I do note that there still seems to be patterns of calling bdev_get_queue() 
-> and then examining the queue limits directly outside block/, like 
-> do_region() in dm-io.c or lots of other drivers/md/ stuff or 
-> loop_config_discard
->
-> I can try to help clean some up when I get a chance
+From: Keith Busch <kbusch@kernel.org>
 
-I'm slowly going through them.  Have been a bit busy lately, but as
-I have some pending code that can make use of bdev_limits() I expedited
-them.  If you want to take some on go for it, I have no immediate plans
-as I'm pretty busy at the moment.
+Changes from v9:
+
+  Document the partition hint mask
+
+  Use bitmap_alloc API
+
+  Fixup bitmap memory leak
+
+  Return invalid value if user requests an invalid write hint
+
+  Added and exported a block device feature flag for indicating generic
+  placement hint support
+
+  Added statx write hint max field
+
+  Added BUILD_BUG_ON check for new io_uring SQE fields.
+
+  Added reviews
+
+Kanchan Joshi (2):
+  io_uring: enable per-io hinting capability
+  nvme: enable FDP support
+
+Keith Busch (7):
+  block: use generic u16 for write hints
+  block: introduce max_write_hints queue limit
+  statx: add write hint information
+  block: allow ability to limit partition write hints
+  block, fs: add write hint to kiocb
+  block: export placement hint feature
+  scsi: set permanent stream count in block limits
+
+ Documentation/ABI/stable/sysfs-block | 13 +++++
+ block/bdev.c                         | 18 ++++++
+ block/blk-settings.c                 |  5 ++
+ block/blk-sysfs.c                    |  6 ++
+ block/fops.c                         | 31 +++++++++-
+ block/partitions/core.c              | 44 ++++++++++++++-
+ drivers/nvme/host/core.c             | 84 ++++++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h             |  5 ++
+ drivers/scsi/sd.c                    |  2 +
+ fs/stat.c                            |  1 +
+ include/linux/blk-mq.h               |  3 +-
+ include/linux/blk_types.h            |  4 +-
+ include/linux/blkdev.h               | 15 +++++
+ include/linux/fs.h                   |  1 +
+ include/linux/nvme.h                 | 19 +++++++
+ include/linux/stat.h                 |  1 +
+ include/uapi/linux/io_uring.h        |  4 ++
+ include/uapi/linux/stat.h            |  3 +-
+ io_uring/io_uring.c                  |  2 +
+ io_uring/rw.c                        |  3 +-
+ 20 files changed, 253 insertions(+), 11 deletions(-)
+
+--=20
+2.43.5
+
 
