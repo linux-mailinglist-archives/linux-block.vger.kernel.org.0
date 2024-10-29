@@ -1,113 +1,142 @@
-Return-Path: <linux-block+bounces-13178-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13181-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5902A9B50C5
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 18:32:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13D999B522F
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 19:54:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E22E9B24D03
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 17:32:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B48581F24539
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2024 18:54:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB57A1EE017;
-	Tue, 29 Oct 2024 17:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF6B205159;
+	Tue, 29 Oct 2024 18:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="P1foUjoL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ffX1zRQu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pEc+vx35"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A865A1E32D5;
-	Tue, 29 Oct 2024 17:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AAB1DB37A;
+	Tue, 29 Oct 2024 18:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730222721; cv=none; b=jX55j3C1N2pwlVpad/wmElE1IbAOIeooDPOLotGXHTITzhEl0VdZ6WnWtDGwERf9wNVSnhv5G8a7D3YgM2tQ10iB8n7qs7X/910AfbJcPopNI7iB9se+E32YCBfYHDF53UOWraVdbdEpcGGkGN48nwV+99rlvv4kPObyVDE4lsM=
+	t=1730228056; cv=none; b=P3L4UFXXAhmhDeycP8VDlAWQ4WNiE6HYVN5FBaD+SuYWMWOy3D+hyhVhSOV5uySgNDOawYeZCr2J6HJb6eYi/uLSTrPtxQzZlKlriaTIwsQZ/jbKuify6INUHEnm3mld5lxQkVqgXcq6EyBi3T3x4Na1uUR7987b4rdavia1h0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730222721; c=relaxed/simple;
-	bh=VefMPqHdKs48yVqeNGQvsFvjWt+HqUxQSA/xr2DTZEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BoCodt/EzfLe1X1Emz3XwMW2QNxeEljOg5LMifKXQ5um91UHjmjncY7eez9B/sat8PtKPn2q4CRiRhYTRClH43vGYwRwBnAxsHzAyUf8IncMCiBcQSLi31bZzsWhY0vuhQ+4ghXKhfO7PRk7P7Bubn7FRI17SftzpTtKnrhoDkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=P1foUjoL; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4XdHFq01vdz6CmQwQ;
-	Tue, 29 Oct 2024 17:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1730222715; x=1732814716; bh=hXDe+tdRwT/FF9z8Lg1MKoXd
-	RHtft5T0vnCZA5690oA=; b=P1foUjoLaYTOdPwbnT8wjp0jVgHHgT7aFqFr8aUL
-	lZek+KvMCYfO161JiFBa3dExIzCo7Otdl5Wcnq5j61p/OFoOUgUWwu+AHtTI+fQk
-	uTaj7s0rgi2A9FfoZFCmyOTJrTuLghUOPQR1c9iRTK2gkmQI69bVmL7ChEdfd4hH
-	95+hqxaF7GevIzW6bWOgFRcXyASV69WG5f28U0M8h10We/+pMhjSGFZNJXjMD9xJ
-	/mmkLQ7efYsaV+HVJkXnedBsczWVDC//u6NIUIov+aUrvdG0524N6kzJT2Sfs3xD
-	CvV+zaHKwT2QX9oyDLgfitvJJPWw62ReU54EkOfhee4tYQ==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 5G4_p2--gGG8; Tue, 29 Oct 2024 17:25:15 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4XdHFj2LCXz6CmQwN;
-	Tue, 29 Oct 2024 17:25:12 +0000 (UTC)
-Message-ID: <a1ff3560-4072-4ecf-8501-e353b1c98bf0@acm.org>
-Date: Tue, 29 Oct 2024 10:25:11 -0700
+	s=arc-20240116; t=1730228056; c=relaxed/simple;
+	bh=zn7PZW4n3kySNBlFmDmbgJXfh8wj3gXDPwYY1lCMGls=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kqRxkqcSwRm0lHWdyBbSbhm6+RZEF2zKUjccQr0pBMphD0fFFy9GBRtQ9rQmjnrikTT4iJvOMsdomfcGs2bo5b52oCiQIJHkkCkjfCySHO1eUN3rG2HHK+UHUXI9WkfC5deVSG6B0W/H3bPXfGdp3jyIEAz+zfFQ5VQ8lFJgR6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ffX1zRQu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pEc+vx35; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1730228052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wjko7eOTjNCaKUVt6NyN0ek4f+g4AUdfFDp2yMrN8f8=;
+	b=ffX1zRQuijJ5YCDe1nRAHciPrVxKrvIW8FlPReAqTRMooIUpLLcWr2aavwDZjmbBF0rEQz
+	wOkKAmNPLBtFlsQln7ygVI2iUlwnEzOt9x856Hgu0aZgGk/mRO7KO1IqYpzYuJgN2VDwDn
+	ZMPEi7tWkwKcSKdzV6XrFNFelTHtetUF8CUk6ZYf3FglSKkgDFS39WCWGwhxNAmfgqSGdy
+	+D4r++rD+ibus8fLCLkMMOK1v1WQfaw7TVs0NixaiEpHcryZzNpAzdku6o6c6YvGFVXlRK
+	VsKA087ePF8nfW5XB4/qFJ2UEd0DFXIfO0FxQj0qucMWa/S4AGTdxHxxMP4S9A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1730228052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wjko7eOTjNCaKUVt6NyN0ek4f+g4AUdfFDp2yMrN8f8=;
+	b=pEc+vx35vTZoOd3ja48aHiKYvUZD6d4ocpbJOcEpZeSF+7O1yel6cfIuUGCdOT7dzvJHnn
+	9BlMxkLTtkFVtwDA==
+To: Costa Shulyupin <costa.shul@redhat.com>, longman@redhat.com,
+ ming.lei@redhat.com, pauld@redhat.com, juri.lelli@redhat.com,
+ vschneid@redhat.com, Jens Axboe <axboe@kernel.dk>, Peter Zijlstra
+ <peterz@infradead.org>, Zefan Li <lizefan.x@bytedance.com>, Tejun Heo
+ <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?K?=
+ =?utf-8?Q?outn=C3=BD?=
+ <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Costa Shulyupin <costa.shul@redhat.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org
+Subject: Re: [RFC PATCH v3 3/3] genirq/cpuhotplug: Adjust managed irqs
+ according to change of housekeeping CPU
+In-Reply-To: <20241029120534.3983734-4-costa.shul@redhat.com>
+References: <20241029120534.3983734-1-costa.shul@redhat.com>
+ <20241029120534.3983734-4-costa.shul@redhat.com>
+Date: Tue, 29 Oct 2024 19:54:12 +0100
+Message-ID: <87bjz2210r.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv10 4/9] block: allow ability to limit partition write
- hints
-To: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- io-uring@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, hch@lst.de, joshi.k@samsung.com,
- javier.gonz@samsung.com, Keith Busch <kbusch@kernel.org>
-References: <20241029151922.459139-1-kbusch@meta.com>
- <20241029151922.459139-5-kbusch@meta.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20241029151922.459139-5-kbusch@meta.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 10/29/24 8:19 AM, Keith Busch wrote:
-> +static ssize_t part_write_hint_mask_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	struct block_device *bdev = dev_to_bdev(dev);
-> +	unsigned short max_write_hints = bdev_max_write_hints(bdev);
-> +	unsigned long *new_mask;
-> +
-> +	if (!max_write_hints)
-> +		return count;
-> +
-> +	new_mask = bitmap_alloc(max_write_hints, GFP_KERNEL);
-> +	if (!new_mask)
-> +		return -ENOMEM;
-> +
-> +	bitmap_parse(buf, count, new_mask, max_write_hints);
-> +	bitmap_copy(bdev->write_hint_mask, new_mask, max_write_hints);
-> +	bitmap_free(new_mask);
-> +
-> +	return count;
-> +}
+On Tue, Oct 29 2024 at 14:05, Costa Shulyupin wrote:
+> index afc920116d42..44c7da0e1b8d 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -171,7 +171,7 @@ static bool cpuhp_step_empty(bool bringup, struct cpuhp_step *step)
+>   *
+>   * Return: %0 on success or a negative errno code
+>   */
+> -static int cpuhp_invoke_callback(unsigned int cpu, enum cpuhp_state state,
+> +int cpuhp_invoke_callback(unsigned int cpu, enum cpuhp_state state,
+>  				 bool bringup, struct hlist_node *node,
+>  				 struct hlist_node **lastp)
 
-bitmap_copy() is not atomic. Shouldn't the bitmap_copy() call be
-serialized against the code that tests bits in bdev->write_hint_mask?
+This is deep internal functionality of cpu hotplug and only valid when
+the hotplug lock is write held or if it is read held _and_ the state
+mutex is held.
+
+Otherwise it is completely unprotected against a concurrent state or
+instance insertion/removal and concurrent invocations of this function.
+
+And no, we are not going to expose the state mutex just because. CPU
+hotplug is complex enough already and we really don't need more side
+channels into it.
+
+There is another issue with this approach in general:
+
+   1) The 3 block states are just the tip of the iceberg. You are going
+      to play a whack a mole game to add other subsystems/drivers as
+      well.
+
+   2) The whole logic has ordering constraints. The states have strict
+      ordering for a reason. So what guarantees that e.g. BLK_MQ_ONLINE
+      has no dependencies on non BLK related states to be invoked before
+      that. I'm failing to see the analysis of correctness here.
+
+      Just because it did not explode right away does not make it
+      correct. We've had enough subtle problems with ordering and
+      dependencies in the past. No need to introduce new ones.
+
+CPU hotplug solves this problem without any hackery. Take a CPU offline,
+change the mask of that CPU and bring it online again. Repeat until all
+CPU changes are done.
+
+If some user space component cannot deal with that, then fix that
+instead of inflicting fragile and unmaintainable complexity on the
+kernel. That kubernetes problem is known since 2018 and nobody has
+actually sat down and solved it. Now we waste another 6 years to make it
+"work" in the kernel magically.
+
+This needs userspace awareness anyway. If you isolate a CPU then tasks
+or containers which are assigned to that CPU need to move away and the
+container has to exclude that CPU. If you remove the isolation then what
+is opening the CPU for existing containers magically?
+
+I'm not buying any of this "will" just work and nobody notices
+handwaving.
 
 Thanks,
 
-Bart.
-
+        tglx
 
