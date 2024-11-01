@@ -1,193 +1,73 @@
-Return-Path: <linux-block+bounces-13405-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13400-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 558E29B8A68
-	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2024 06:23:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3862F9B8A5E
+	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2024 06:22:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 799BF1C21495
-	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2024 05:23:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1C372828BE
+	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2024 05:22:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58131474B7;
-	Fri,  1 Nov 2024 05:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56ED8467;
+	Fri,  1 Nov 2024 05:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YYD9qxns"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZubWK61t"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64074142624;
-	Fri,  1 Nov 2024 05:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176329CA;
+	Fri,  1 Nov 2024 05:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730438576; cv=none; b=BjTU3MQOIv+ollAFSG/uvmLI0bYJG56QrJIIzkn3i5v1o/NLC7603GbRAjzuAesFki0MqNZ4g+N8N78enxFVLrqFArpc2SUC1lMA1PjvjHBeXHe/2DHito3q4B3QPdVQ+AsiCmofgANBVtrkwCuTYumv3zTlwQgRm9zVOItS9lo=
+	t=1730438538; cv=none; b=W+the6dYPlh0dnYfNjRV3T4PyGCfkQfj/4vxaOpptBIMx4Wy1kS2fGzKhiAvJgUnI2HXNpGCnyTsAUNmyexc3Vy+FQry/b3Fmyx430gMgtvnbHET7VEDO0sZzdv9p3uHecH9r/rjzS2omFFDAIFzCJOYcD5fHuGFh7FUyA+ensY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730438576; c=relaxed/simple;
-	bh=pGNjlh/5TANRkDFAanOu/LKbRP8oaSiAvvCfhO4t6yI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6Kcvv3qxJLw+YOwTM2OafQK8pwIiHp4QQvy9RW6fnDxoR5duxlf2jtPFP5kcaKMZSLR7lyuTUAk7QJALXGKKNLYTUbHRzoNRuDcet4nBbLk1aSGUaDpDjThdonkf26bLJQ8e0jYhkL9vf1mTEUB2ySNutK5m/BYuVti3Sp9TW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YYD9qxns; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730438574; x=1761974574;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pGNjlh/5TANRkDFAanOu/LKbRP8oaSiAvvCfhO4t6yI=;
-  b=YYD9qxns7tfTKNWnEINwY5oeJvXljPRcGawyhfCWqzP3K7nexPS+Kdm2
-   U1wKHQXNqFeYLkksa+mzqGjct60JItoDsUcQTWH+QggQzUbUDHJtsCBap
-   trIDOL6eVYYIC2YufcRnYU5RT4A8uV4tH8NywAnZpQviOV7/QNbBbYVN/
-   Wf96U5njp8QgfXkEYfuJPQ8ItGlrpGs/xzDuCSgZ7W5S6u/sn8RCcT+Xw
-   9LFYYKltlTM0LHoY0BggSSFiM9/33emXHC/JvwAMbnevER1UI8tov4pcB
-   ACVCn918QNYGdEQVZMR1MZSPpVrrlg25JW7spIdn5HyBnnzfduiKlRTmu
-   Q==;
-X-CSE-ConnectionGUID: jA2xccugSsu1flMsUGDkeQ==
-X-CSE-MsgGUID: E8OGjcz2QgarRGZ/LjKR8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30314687"
-X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
-   d="scan'208";a="30314687"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 22:22:51 -0700
-X-CSE-ConnectionGUID: TVbU//UlQUCwNIzd8pgqTg==
-X-CSE-MsgGUID: R6mTecEmTzu92S+st927WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
-   d="scan'208";a="83678534"
-Received: from qz-dev1.sh.intel.com (HELO localhost) ([10.239.147.28])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 22:22:44 -0700
-Date: Fri, 1 Nov 2024 13:20:11 +0800
-From: Qiang Zhang <qiang4.zhang@linux.intel.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Jens Axboe <axboe@kernel.dk>, Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Gonglei <arei.gonglei@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	"Chen, Jian Jun" <jian.jun.chen@intel.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Qiang Zhang <qiang4.zhang@intel.com>,
-	virtualization@lists.linux.dev, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2] virtio: only reset device and restore status if
- needed in device resume
-Message-ID: <ZyRlC-5V_NTKgzXh@dev-qz>
-References: <20241031030847.3253873-1-qiang4.zhang@linux.intel.com>
- <20241101015101.98111-1-qiang4.zhang@linux.intel.com>
- <CACGkMEtvrBRd8BaeUiR6bm1xVX4KUGa83s03tPWPHB2U0mYfLA@mail.gmail.com>
+	s=arc-20240116; t=1730438538; c=relaxed/simple;
+	bh=V+eFzDKq9RKGR/ZXdPb5tuI4SL75F6O6c6HS6dY+Olg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VN7Elj4sOtXcpflxsTXXWJR+XqZjooOLSDi/8YyEnjCtKycx1FkOS1Vmh/Tj5TQ2VhETOXMME51LhSbqomM/1EbmKQ3tH/KODrPR+rywUv+sicBOqOh7co2N1fH8Rxq11xfMhlv0BluIqK1cXd7GmxmEoigMkkS/aE3qQugPQTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZubWK61t; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=V+eFzDKq9RKGR/ZXdPb5tuI4SL75F6O6c6HS6dY+Olg=; b=ZubWK61tcIpEP1byOGU3OZHrHc
+	UpDz0lTYhsdxaSOKm1VxgIZz8xZeHIwTpSH8WRElAqzlVO39x7Q3diNzoaC80anMB21Ufkr0Jm74M
+	SYj7V2gWAKm+bBHuZc7Xxg0T5YNUlNQVax+WrV/vZENr+tZsbeUqFSgh8JgtJ8Gr6QcslVQzU/2Nq
+	gRwlUUzb7AMpfbVRqgyOrqGC/uZ/LnDO/XQRYOhIabQvftbpPuX4t91/ztg+hvu2Qf3H4+mQbeZoA
+	3xacItvNXrGItaxAEA60Q15HvrgyM+PyDRyN7/tqrONGkP/Ta41qLFBmJydLgPAQPc7xw5kE9XOt5
+	D9ZnIzCg==;
+Received: from 2a02-8389-2341-5b80-5ae8-ad80-e9c6-3f1e.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:5ae8:ad80:e9c6:3f1e] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t6k6q-00000005pGX-2eV7;
+	Fri, 01 Nov 2024 05:22:09 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>,
+	Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Damien Le Moal <damien.lemoal@wdc.com>
+Cc: linux-block@vger.kernel.org,
+	linux-btrfs@vger.kernel.org
+Subject: fix a few zoned append issues
+Date: Fri,  1 Nov 2024 06:21:43 +0100
+Message-ID: <20241101052206.437530-1-hch@lst.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEtvrBRd8BaeUiR6bm1xVX4KUGa83s03tPWPHB2U0mYfLA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Nov 01, 2024 at 10:11:11AM +0800, Jason Wang wrote:
-> On Fri, Nov 1, 2024 at 9:54 AM <qiang4.zhang@linux.intel.com> wrote:
-> >
-> > From: Qiang Zhang <qiang4.zhang@intel.com>
-> >
-> > Virtio core unconditionally reset and restore status for all virtio
-> > devices before calling restore method. This breaks some virtio drivers
-> > which don't need to do anything in suspend and resume because they
-> > just want to keep device state retained.
-> 
-> The challenge is how can driver know device doesn't need rest.
+Hi Jens, hi Damien, hi btrfs maintainers,
 
-Hi,
-
-Per my understanding to PM, in the suspend flow, device drivers need to
-1. First manage/stop accesses from upper level software and
-2. Store the volatile context into in-memory data structures.
-3. Put devices into some low power (suspended) state.
-The resume process does the reverse.
-If a device context won't loose after entering some low power state
-(optional), it's OK to skip step 2.
-
-For virtio devices, spec doesn't define whether their states will lost
-after platform entering suspended state. So to work with different
-hypervisors, virtio drivers typically trigger a reset in suspend/resume
-flow. This works fine for virtio devices if following conditions are met:
-- Device state can be totally recoverable.
-- There isn't any working behaviour expected in suspended state, i.e. the
-  suspended state should be sub-state of reset.
-However, the first point may be hard to implement from driver side for some
-devices. The second point may be unacceptable for some kind of devices.
-
-For your question, for devices whose suspended state is alike reset state,
-the hypervisor have the flexibility to retain its state or not, kernel
-driver can unconditionally reset it with proper re-initialization to
-accomplish better compatibility. For others, hypervisor *must* retain
-device state and driver just keeps using it.
-
-> 
-> For example, PCI has no_soft_reset which has been done in the commit
-> "virtio: Add support for no-reset virtio PCI PM".
-> 
-> And there's a ongoing long discussion of adding suspend support in the
-> virtio spec, then driver know it's safe to suspend/resume without
-> reset.
-
-That's great! Hopefully it can fill the gap.
-Currently, I think we can safely move the reset to drivers' freeze methods,
-virtio core has no reason to take it as a common action required by all
-devices. And the reset operation can be optional skipped if driver have
-hints from device that it can retain state.
-
-> 
-> >
-> > Virtio GPIO is a typical example. GPIO states should be kept unchanged
-> > after suspend and resume (e.g. output pins keep driving the output) and
-> > Virtio GPIO driver does nothing in freeze and restore methods. But the
-> > reset operation in virtio_device_restore breaks this.
-> 
-> Is this mandated by GPIO or virtio spec? If yes, let's quote the revelant part.
-
-No. But in actual hardware design (e.g. Intel PCH GPIO), or from the
-requirement perspective, GPIO pin state can be (should support) retained
-in suspended state.
-If Virtio GPIO is used to let VM operate such physical GPIO chip indirectly,
-it can't be reset in suspend and resume. Meanwhile the hypervisor will
-retain pin states after suspension.
-
-> 
-> >
-> > Since some devices need reset in suspend and resume while some needn't,
-> > create a new helper function for the original reset and status restore
-> > logic so that virtio drivers can invoke it in their restore method
-> > if necessary.
-> 
-> How are those drivers classified?
-
-I think this depends whether hypervisor will keep devices state in platform
-suspend process. I think hypervisor should because suspend and reset are
-conceptually two different things.
-
-
-Thanks
-Qiang
+this fixes a few issues found with zoned xfs testing that affect block
+layer interfaces used by file systems, and the btrfs code making use
+of them.
 
