@@ -1,148 +1,144 @@
-Return-Path: <linux-block+bounces-13619-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13631-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ACCA9BF017
-	for <lists+linux-block@lfdr.de>; Wed,  6 Nov 2024 15:27:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFC389BF0C6
+	for <lists+linux-block@lfdr.de>; Wed,  6 Nov 2024 15:54:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1CE41F248A4
-	for <lists+linux-block@lfdr.de>; Wed,  6 Nov 2024 14:27:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38C3FB2287D
+	for <lists+linux-block@lfdr.de>; Wed,  6 Nov 2024 14:54:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9E220126D;
-	Wed,  6 Nov 2024 14:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0625203718;
+	Wed,  6 Nov 2024 14:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=owltronix-com.20230601.gappssmtp.com header.i=@owltronix-com.20230601.gappssmtp.com header.b="K0ELk7ZO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhPh6hAm"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF97201278
-	for <linux-block@vger.kernel.org>; Wed,  6 Nov 2024 14:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D611B202F8D
+	for <linux-block@vger.kernel.org>; Wed,  6 Nov 2024 14:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730903200; cv=none; b=p279td9BVXk0kxz1IaUNTzsm3aqeI2GEdWDUup7hbqMSv2YqmA908QKRCWbDfDebJWYw2cKiRLGm19gv7iGvtn469HjQLjdsJcfw1En4zkRiH79Ul61O79mim9N1NDUK+NTRSwjHYdi3ZYDDd9MqCwLkSXJnzo50kreHsJIgyfA=
+	t=1730904813; cv=none; b=RJDeDZikChS/n8VbtCPuIFhxN/bFXy8H52RjC0yyyCgjWvWSH3+jiz9317Pl5JuozwXXuu7zLN00QZbr5DshDKsqYULme2YaDAlWqxbiCeAvtiaRJDS5ADVr5sOVIjkWtyMOYRLKAwujtqHfNOLreUwkgfOJY/fCcD4mBRNXzC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730903200; c=relaxed/simple;
-	bh=ipqB5GhZfhZeP6+Fw73KMpW7vTqNOHY4wT9od9XDnNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HU7TLHq9E8OtSEuzZig3797UoF/AxVhraWLERVKKq1y+6kvvCTRS4uww0NhkETcNfLTOnCaz4z9orz7V7XB6T3Mzn4zLQPUDO3TdBY+IdaUPoNwbn+/T+6lDA2VNnE/AXodLFf9Uy303Ar3M4CtOYDagQeChis/pMclulnU1T5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=owltronix.com; spf=none smtp.mailfrom=owltronix.com; dkim=pass (2048-bit key) header.d=owltronix-com.20230601.gappssmtp.com header.i=@owltronix-com.20230601.gappssmtp.com header.b=K0ELk7ZO; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=owltronix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=owltronix.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9a0c7abaa6so792934666b.2
-        for <linux-block@vger.kernel.org>; Wed, 06 Nov 2024 06:26:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=owltronix-com.20230601.gappssmtp.com; s=20230601; t=1730903197; x=1731507997; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ipqB5GhZfhZeP6+Fw73KMpW7vTqNOHY4wT9od9XDnNU=;
-        b=K0ELk7ZOqojBpwfYYFVtlhrgVqwWO9F5XOz+slzrpH7whuThi5sFINpU1Uz2YObfRL
-         RdopoaQbBe9AIueM/xK9qkRcpHa4xbkp9sQ1ZgrPkDzzmE6dLuYVXBoLaa6zn4ZF0Por
-         aMkFouowSW3zErpN1orbPemdy6YLrb8rvl6H36Mru773Dx3Alieh0RZkjYs3iM53nH21
-         8dKWaSlRjYHBC2QXhw1BILFPGFrs3nbW/kufRc7QIZUFCc7FI/o1OFoXFUAe2c9bWdp/
-         qg5rqdNPPloEYVDahsor2ScfawUvljWuiK9BhvMKOazWXD1ys8NY8ELcl7iP6fOW5snV
-         Y5Ng==
+	s=arc-20240116; t=1730904813; c=relaxed/simple;
+	bh=VnePaPHmlv7i/nnnyChjq6x43YKF5Ar7+3PST2zxv8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V78faF7n4An0RhJBrPTDeWZDRJYedbl1CqZY66dxrtMD32Xh/PeV4VO6ih5H50iQtAzUHHIG6TrXMCCB9qmDuBNxidGOMBD7et5K2zFccXccTXgIM2r1U4479z3w1+l16TTAAp5BFTn5AL/jAhra0buTrBzcDHK0VecBfgFOw6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhPh6hAm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730904809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zhNdkFjEuaL+ue96DDquelqda/uA2K1QZKXu3ul/egA=;
+	b=DhPh6hAmrleixfpy7mNdCk8NyaFSI72k7QQprGLmjPK6ckRFvKn8SBhfUwkPd4kJoanuxY
+	cWTFNvGnmr+3xfMv6GEB365sUAUH9peHrBZcsEcAPVQuIOJZmcnEsZwMTSHLfqYfYYzqc9
+	1qh6yzNTDoirxyceDnFNNE3nqaV3mwU=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-7ve69LrVM1qrvvgg2ZNzWA-1; Wed, 06 Nov 2024 09:53:28 -0500
+X-MC-Unique: 7ve69LrVM1qrvvgg2ZNzWA-1
+X-Mimecast-MFC-AGG-ID: 7ve69LrVM1qrvvgg2ZNzWA
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-7092f2d50ceso5282432a34.2
+        for <linux-block@vger.kernel.org>; Wed, 06 Nov 2024 06:53:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730903197; x=1731507997;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ipqB5GhZfhZeP6+Fw73KMpW7vTqNOHY4wT9od9XDnNU=;
-        b=oWjTmq+R7nJ3ezguTWS8YfDCIRo7CxZQKqkeCuF556hYoagy2UXcbR2Tk8syjh1VAS
-         5oA6qPgkYOk7cWgNfV0Q1lWwoouxpeqfbVoP3vItN7IJP/a+DFPhUIXb1Q7tlUpmI7NA
-         cpEGLSOkpb6JJrRQs5B+Aaz63PgAbd6zZyoW2oRKup9qHZR9dWgdb1fFJED2a0FbS1PK
-         +VWknAwspbr/4IjlcHiY2Ys0Ei5B55eavZbB6UFfNCjs7M26sQWFShx1DVh5RShWbbDQ
-         pZKFpUwmeMXXjGaZDDEwUD6AyYylKN3j45t+3b8waRSxZHoB9VSb00giFcbtJoYDwJ1S
-         Zl1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWtsTzBfwmMVsjd6xaP8oveaLr2YpW5R4E+Z8GPpqLR2q2PcGByLV3KHk3KySQ3me6/A0arrwjRyhYIkw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqXTl0eAfu2NdS+nn271IuQDVqtCv62pxRvJ7upDfoPUeTHxnp
-	TAFFfSGh0lh3FzYoObGGzCiDc7fk+ubZKCFinFfRCMa/yBPrcG7cje+JEZlK0e9hC3rm7E1OU14
-	b0KiPdGW+r8SlRybti8q+lfnIf65/qdYYQdkStg==
-X-Google-Smtp-Source: AGHT+IGTNjawymGmZtRv6kzFPFouB6jfAmX0w1MWjwjaaSmC15ADSV9RR263VUeTaevgARYiFWCXry3+rk2bBInzbBw=
-X-Received: by 2002:a17:907:2dac:b0:a99:6791:5449 with SMTP id
- a640c23a62f3a-a9e6587df7fmr2121988466b.52.1730903196776; Wed, 06 Nov 2024
- 06:26:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730904808; x=1731509608;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zhNdkFjEuaL+ue96DDquelqda/uA2K1QZKXu3ul/egA=;
+        b=Tq6zd4dchOtBvlYb8vc1SopBz+s8CCtG1HRVGRkbftrq/VxqGYDaSP96J1xrcQiS90
+         emxP9EXAbMGO+GalCeBd6LpmL2t9BcTqEhN/9fxnZx6WYYoIj5S5wUDhyma6XMcma0Kk
+         JtXXSsqAkOKtTKaGZmKNIZaeCPdUAfdp83zvtcIbM8liXNoIRPkRg1/BRpo3lL+itUy1
+         uDcrh/vbgHobRscue38DcFnWrQX0genWxqF6YAhROhDXaPcAHGWSC2Bq457SN7nXO5QP
+         V0pJbXsCO3PIiq1+wlnwqn0tTQsBbG/1T+Ax2eAXJ3xjeT7Jnra2EKE2nOzDl/gAXlOO
+         dO4g==
+X-Gm-Message-State: AOJu0YzlHIjK+X9YdM0gjXdTE7qWVfGzMhFY9f4tAi2xCYFMNjAa3kr2
+	DL7BumMnkZSHGi02eox5jRpkojpEncFeJEk1IAt2BS/2naCzJcb9GgiBgmV0/dBbGZ8O4wtZKsl
+	WgTnsAHaevRV4pR4o7CFuSssZ10UwJ1cxksj7SJs/93CcmesepUge+Ddvn+p8
+X-Received: by 2002:a05:6830:350a:b0:710:f879:a15a with SMTP id 46e09a7af769-719ca25bec7mr20442523a34.27.1730904808168;
+        Wed, 06 Nov 2024 06:53:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGsq51w47iT662Km72nLQPeQu8djAs8QboqY5C1WT4nq+oW7/h0uMI2jzD2Ad6z5rq3DVB1ng==
+X-Received: by 2002:a05:6830:350a:b0:710:f879:a15a with SMTP id 46e09a7af769-719ca25bec7mr20442500a34.27.1730904807836;
+        Wed, 06 Nov 2024 06:53:27 -0800 (PST)
+Received: from eisenberg.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7189cc69cf6sm2910192a34.26.2024.11.06.06.53.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 06:53:27 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	John Garry <john.g.garry@oracle.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mtip32xx: Replace deprecated PCI functions
+Date: Wed,  6 Nov 2024 15:52:50 +0100
+Message-ID: <20241106145249.108996-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZyJTsyDjn6ABVbV0@kbusch-mbp.dhcp.thefacebook.com>
- <20241030154556.GA4449@lst.de> <ZyJVV6R5Ei0UEiVJ@kbusch-mbp.dhcp.thefacebook.com>
- <20241030155052.GA4984@lst.de> <ZyJiEwZwjevelmW2@kbusch-mbp.dhcp.thefacebook.com>
- <20241030165708.GA11009@lst.de> <ZyK0GS33Qhkx3AW-@kbusch-mbp.dhcp.thefacebook.com>
- <CANr-nt35zoSijRXYr+ommmWGfq0+Ye0tf3SfHfwi0cfpvwB0pg@mail.gmail.com>
- <ZyOO4PojaVIdmlOA@kbusch-mbp.dhcp.thefacebook.com> <CANr-nt30gQzFFsnJt9Tzs1kRDWSj=2w0iTC1qYfu+7JwpszwQQ@mail.gmail.com>
- <ZyTqZ3UR39VTHSA2@kbusch-mbp.dhcp.thefacebook.com>
-In-Reply-To: <ZyTqZ3UR39VTHSA2@kbusch-mbp.dhcp.thefacebook.com>
-From: Hans Holmberg <hans@owltronix.com>
-Date: Wed, 6 Nov 2024 15:26:25 +0100
-Message-ID: <CANr-nt0stXUn38EawwQPa+fGmgvHE7Ch8LH7tGyNp5NPpm1m0w@mail.gmail.com>
-Subject: Re: [PATCHv10 9/9] scsi: set permanent stream count in block limits
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org, 
-	io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org, joshi.k@samsung.com, 
-	javier.gonz@samsung.com, bvanassche@acm.org, Hannes Reinecke <hare@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 1, 2024 at 3:49=E2=80=AFPM Keith Busch <kbusch@kernel.org> wrot=
-e:
->
-> On Fri, Nov 01, 2024 at 08:16:30AM +0100, Hans Holmberg wrote:
-> > On Thu, Oct 31, 2024 at 3:06=E2=80=AFPM Keith Busch <kbusch@kernel.org>=
- wrote:
-> > > On Thu, Oct 31, 2024 at 09:19:51AM +0100, Hans Holmberg wrote:
-> > > > No. The meta data IO is just 0.1% of all writes, so that we use a
-> > > > separate device for that in the benchmark really does not matter.
-> > >
-> > > It's very little spatially, but they overwrite differently than other
-> > > data, creating many small holes in large erase blocks.
-> >
-> > I don't really get how this could influence anything significantly.(If =
-at all).
->
-> Fill your filesystem to near capacity, then continue using it for a few
-> months. While the filesystem will report some available space, there
-> may not be many good blocks available to erase. Maybe.
+pcim_iomap_table() and pcim_request_regions() have been deprecated in
+commit e354bb84a4c1 ("PCI: Deprecate pcim_iomap_table(),
+pcim_iomap_regions_request_all()") and commit d140f80f60358 ("PCI:
+Deprecate pcim_iomap_regions() in favor of pcim_iomap_region()"),
+respectively.
 
-For *this* benchmark workload, the metadata io is such a tiny fraction
-so I doubt the impact on wa could be measured.
-I completely agree it's a good idea to separate metadata from data
-blocks in general. It is actually a good reason for letting the file
-system control write stream allocation for all blocks :)
+Replace these functions with pcim_iomap_region().
 
-> > I believe it would be worthwhile to prototype active fdp data
-> > placement in xfs and evaluate it. Happy to help out with that.
->
-> When are we allowed to conclude evaluation? We have benefits my
-> customers want on well tested kernels, and wish to proceed now.
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/block/mtip32xx/mtip32xx.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-Christoph has now wired up prototype support for FDP on top of the
-xfs-rt-zoned work + this patch set, and I have had time to look over
-it and started doing some testing on HW.
-In addition to the FDP support, metadata can also be stored on the
-same block device as the data.
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 223faa9d5ffd..43701b7b10a7 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -2701,7 +2701,12 @@ static int mtip_hw_init(struct driver_data *dd)
+ 	int rv;
+ 	unsigned long timeout, timetaken;
+ 
+-	dd->mmio = pcim_iomap_table(dd->pdev)[MTIP_ABAR];
++	dd->mmio = pcim_iomap_region(dd->pdev, MTIP_ABAR, MTIP_DRV_NAME);
++	if (IS_ERR(dd->mmio)) {
++		dev_err(&dd->pdev->dev, "Unable to request / ioremap PCI region\n");
++		return PTR_ERR(dd->mmio);
++	}
++
+ 
+ 	mtip_detect_product(dd);
+ 	if (dd->product_type == MTIP_PRODUCT_UNKNOWN) {
+@@ -3710,13 +3715,6 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+ 		goto iomap_err;
+ 	}
+ 
+-	/* Map BAR5 to memory. */
+-	rv = pcim_iomap_regions(pdev, 1 << MTIP_ABAR, MTIP_DRV_NAME);
+-	if (rv < 0) {
+-		dev_err(&pdev->dev, "Unable to map regions\n");
+-		goto iomap_err;
+-	}
+-
+ 	rv = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (rv) {
+ 		dev_warn(&pdev->dev, "64-bit DMA enable failed\n");
+-- 
+2.47.0
 
-Now that all placement handles are available, we can use the full data
-separation capabilities of the underlying storage, so that's good.
-We can map out the placement handles to different write streams much
-like we assign open zones for zoned storage and this opens up for
-supporting data placement heuristics for a wider range use cases (not
-just the RocksDB use case discussed here).
-
-The big pieces that are missing from the FDP plumbing as I see it is
-the ability to read reclaim unit size and syncing up the remaining
-capacity of the placement units with the file system allocation
-groups, but I guess that can be added later.
-
-I've started benchmarking on the hardware I have at hand, iterating on
-a good workload configuration. It will take some time to get to some
-robust write amp measurements since the drives are very big and
-require a painfully long warmup time.
 
