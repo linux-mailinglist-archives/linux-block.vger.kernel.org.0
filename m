@@ -1,118 +1,160 @@
-Return-Path: <linux-block+bounces-13717-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13719-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0B1A9C0DB3
-	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 19:27:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E542C9C0DBD
+	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 19:28:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB2A61C21F8A
-	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 18:27:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A94312838F8
+	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 18:28:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E59FD215C6D;
-	Thu,  7 Nov 2024 18:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE75A20F5DA;
+	Thu,  7 Nov 2024 18:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gjT+5qAO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zx73TQEF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E60366
-	for <linux-block@vger.kernel.org>; Thu,  7 Nov 2024 18:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2296216A15;
+	Thu,  7 Nov 2024 18:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731004059; cv=none; b=JobkK1NDkCcAICabAlaYrL0+vifbZ0hzt1akg6NON4JQUmEW44JTKBXzOlDm/9by7EavBq4GpsGUvpxsAZdcEPdIKALpscaf6BgAy/dN2zkZwV5S9qQETrOXAaacNokAIw5ea6dakCtMIwD98YfA3Qe6CG6THk/h9VJryLQKeeI=
+	t=1731004114; cv=none; b=UGNDL68mmyNRsW+ahPqPMdxqaSAlHvwHAPemMRwOBrMYnpsl5keLT6OsxE7Hk+S80ThepGb+kcdYOIblYqqn33rn6O01TDU4SzfzqLbFr2CVrenw8fH7DnH3LkNOk6mvqssRFZ6N4e34TDzgomnO4kHw4D2VEUpTsfwU+IRWl0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731004059; c=relaxed/simple;
-	bh=20LrKDdXKwohLrR7m/+QaoGSjbWanGlIA0WTQG1VuBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLYvVX2ScsbkQeFjpPBno7KDjfgFPtKXLkye9TsXF1djdX31fJptRb23Xf4QCqcgCerNTkFXcqmv4peG3FwLCEkViQRaMjLc6xOxbwAFxevL40xxAGM/semGKBk6iT+FqwGW5J3tOG+gGuNFg31crm8pRdO0gdGjeB3A+GdIPSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gjT+5qAO; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-29538198f2fso852415fac.1
-        for <linux-block@vger.kernel.org>; Thu, 07 Nov 2024 10:27:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731004057; x=1731608857; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uVnaoenE/nrPuz7L1JcnZlXT27mO9irch1BC/+wWZcY=;
-        b=gjT+5qAOs6q+hOnTQLfvkunfI2tkPZ9VwKkZIDzUu2L0pYWahtTs8cwco7Pf2qe0sM
-         mx7+dQaKkcwEpx6cq6+3VeVOJgBThU4Yx0TSL2CvOI1xNLYjl7oikVhmSCFNKyTj5MFw
-         VU6z8LSL4lMtVha4IyXb41aT1LcvQ+f87OsIUlRpX43S3z6sUSEHOv+ghc7ggObIx/z7
-         wdPRKnNx9coOdSrl3Tzg8OkeqYwpVoLsbNOBDbfsogk0/txzNVM8gIGT/Q555/+CUb4x
-         1Cz9CkvESPRyz5SHYrUNKMbstSRlUI14EKnIpG0MbYqt4+D2j1cBUF19sl+L4spzDyxY
-         q/rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731004057; x=1731608857;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVnaoenE/nrPuz7L1JcnZlXT27mO9irch1BC/+wWZcY=;
-        b=i+zmFbFv7ByfQkCI3zldCU2l7TtYp2ctl6Cl1Zy2fcCeyfLQSNSmcORL4Mdl8quH5y
-         lTFiL5D57BcC7FYRRCiM5Bq3HJ8OFRncCIz7Wd/35Rlmt/oZUaaQNRb4UsnmT6s1jdT3
-         xWB99XA7pHfw1T6cKZJcxE77+KpjYZYKpBS6DyCLxDyy/N0Ug1uCiKoOp7ppKKKg1Nj8
-         6NjR1ox4vzhqRtows42W618DVmmoHC6qPSYiLsZxbNfx/4khsZBHNjHFjumyiKltDfXY
-         shRXC54vmbwf16laWM2dZjTxts6XlF0xvLxtTJZ2HEpwnpWrUjfNthYr6812kggamG0W
-         n1OA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7+ijoZ88UAaL3uP8HkO0ha51g4GA8ENgIsH6CNXCyV8b2P6iJGbIhtIcgFNUqv4hja8HySyQJYPwSKw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyEzWxf/lJS6oBwoveGMp0dEp1Xm2srMsQlkPba0biovTTBskg
-	Y+NbVWuWOoUI5TDt5pjFQKo3MhN05qKBq81DhEbn1AgTNiIucfvHEmGOKSn436E=
-X-Google-Smtp-Source: AGHT+IHmQOgwVXtosc5C3zjOqsrNAr1v/lfSp7QNRqpm1iXYwNBCmnKvsMh+W3pIhyccXko0ObQGvA==
-X-Received: by 2002:a05:6871:5891:b0:288:59d3:2a03 with SMTP id 586e51a60fabf-2949f07a886mr21485563fac.39.1731004056679;
-        Thu, 07 Nov 2024 10:27:36 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-29546f3f58dsm490090fac.49.2024.11.07.10.27.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2024 10:27:35 -0800 (PST)
-Message-ID: <26049689-238e-4f04-9a68-db002ed5c1e0@kernel.dk>
-Date: Thu, 7 Nov 2024 11:27:34 -0700
+	s=arc-20240116; t=1731004114; c=relaxed/simple;
+	bh=+Wo6r82THbUjNXMk4MeQeta3Cu/1ECzHE0kWbvDojkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7bGvil6enXac/5gff9t0qvx+qcKtAAsuUvxybGn/6+c6URzD9GlBjhbU1yZgh5f9Tdc/+ItD6/h621vbAQ7YNWuweWp6ve/d6sy/NeccsNHzArOn7LfWb77pBLnjHNPu2ryQ/C+mD5xHNj6B9GliT2xNEiXnx7zEB5HnZlhDQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zx73TQEF; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731004112; x=1762540112;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+Wo6r82THbUjNXMk4MeQeta3Cu/1ECzHE0kWbvDojkQ=;
+  b=Zx73TQEF16YHYX2GUNQI+E4egK3tFzSpXEgO6wma4wYC/9bod4jPV7AK
+   V/+eDkGaCxfdsa0cASC+xkkNNfSzl9FFlm7LZk5/MKIYhRAifGADtRID9
+   s49Fqwq7Ux0vuQc9WlYLrj6IrgbKfgogsQWo44qyXJRkVeVIzoH6/r+xT
+   GtyBVAd7n4EJJOoXnzmuSAekmRi0fyzJfeZyKNf2OdoY56ehaI3dktYKJ
+   D/5a7847ECiwLp1bzoGortKjHMoXEmPSPDFvZCJf4544oidPV2+QlNrhH
+   Amgk/5/GdaKU8mS0WB94IJ/CrcjkasyIJshE3f+XO+Bz+8XkPpHme533z
+   g==;
+X-CSE-ConnectionGUID: tlONnJXGTzyoVTGB2g19vQ==
+X-CSE-MsgGUID: olUyjysCSTKeX58uz4Tycw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="48380865"
+X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
+   d="scan'208";a="48380865"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 10:28:31 -0800
+X-CSE-ConnectionGUID: zurYR6BgQBuTRkxzKAxxFg==
+X-CSE-MsgGUID: jgQgNA92TbqFNgqvtzw1+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
+   d="scan'208";a="85984316"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 07 Nov 2024 10:28:29 -0800
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t97F3-000qZq-3B;
+	Thu, 07 Nov 2024 18:28:25 +0000
+Date: Fri, 8 Nov 2024 02:27:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	io-uring@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-block@vger.kernel.org,
+	Uday Shankar <ushankar@purestorage.com>,
+	Akilesh Kailash <akailash@google.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH V10 11/12] io_uring/uring_cmd: support leasing device
+ kernel buffer to io_uring
+Message-ID: <202411080218.NHuzJ77W-lkp@intel.com>
+References: <20241107110149.890530-12-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] bio_split() error handling rework
-To: John Garry <john.g.garry@oracle.com>, song@kernel.org,
- yukuai3@huawei.com, hch@lst.de
-Cc: martin.petersen@oracle.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, hare@suse.de,
- Johannes.Thumshirn@wdc.com
-References: <20241031095918.99964-1-john.g.garry@oracle.com>
- <e0a82859-6c9e-43d4-b6ee-4b96fa193fa9@oracle.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <e0a82859-6c9e-43d4-b6ee-4b96fa193fa9@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241107110149.890530-12-ming.lei@redhat.com>
 
-On 11/6/24 11:49 PM, John Garry wrote:
-> On 31/10/2024 09:59, John Garry wrote:
-> 
-> Hi Jens,
-> 
-> Could you kindly consider picking up this series via the block tree?
-> 
-> Please note that the raid 0/1/10 atomic write support in https://lore.kernel.org/linux-block/20241101144616.497602-1-john.g.garry@oracle.com/ depends on this series, so maybe you would also be willing to pick that one up (when it's fully reviewed). Or create a branch with all the block changes, like which was done for the atomic writes XFS support.
+Hi Ming,
 
-The series doesn't apply to for-6.13/block - the 3rd patch for bio
-splitting conflicts with:
+kernel test robot noticed the following build errors:
 
-commit b35243a447b9fe6457fa8e1352152b818436ba5a
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Mon Aug 26 19:37:54 2024 +0200
+[auto build test ERROR on axboe-block/for-next]
+[also build test ERROR on next-20241107]
+[cannot apply to linus/master v6.12-rc6]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-    block: rework bio splitting
+url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Lei/io_uring-rsrc-pass-struct-io_ring_ctx-reference-to-rsrc-helpers/20241107-190456
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20241107110149.890530-12-ming.lei%40redhat.com
+patch subject: [PATCH V10 11/12] io_uring/uring_cmd: support leasing device kernel buffer to io_uring
+config: arc-randconfig-001-20241108 (https://download.01.org/0day-ci/archive/20241108/202411080218.NHuzJ77W-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241108/202411080218.NHuzJ77W-lkp@intel.com/reproduce)
 
-which was in long before for-6.13/block, which it's supposed to be based
-on?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411080218.NHuzJ77W-lkp@intel.com/
 
-Please double check and resend a v4.
+All error/warnings (new ones prefixed by >>):
+
+   In file included from block/fops.c:20:
+>> include/linux/io_uring/cmd.h:89:1: error: expected identifier or '(' before '{' token
+      89 | {
+         | ^
+>> include/linux/io_uring/cmd.h:87:19: warning: 'io_uring_cmd_lease_kbuf' declared 'static' but never defined [-Wunused-function]
+      87 | static inline int io_uring_cmd_lease_kbuf(struct io_uring_cmd *ioucmd,
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +89 include/linux/io_uring/cmd.h
+
+    62	
+    63	int io_uring_cmd_lease_kbuf(struct io_uring_cmd *ioucmd,
+    64				    struct io_rsrc_node *node);
+    65	#else
+    66	static inline int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
+    67				      struct iov_iter *iter, void *ioucmd)
+    68	{
+    69		return -EOPNOTSUPP;
+    70	}
+    71	static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
+    72			ssize_t ret2, unsigned issue_flags)
+    73	{
+    74	}
+    75	static inline void __io_uring_cmd_do_in_task(struct io_uring_cmd *ioucmd,
+    76				    void (*task_work_cb)(struct io_uring_cmd *, unsigned),
+    77				    unsigned flags)
+    78	{
+    79	}
+    80	static inline void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
+    81			unsigned int issue_flags)
+    82	{
+    83	}
+    84	static inline void io_uring_cmd_issue_blocking(struct io_uring_cmd *ioucmd)
+    85	{
+    86	}
+  > 87	static inline int io_uring_cmd_lease_kbuf(struct io_uring_cmd *ioucmd,
+    88						  struct io_rsrc_node *node);
+  > 89	{
+    90		return -EOPNOTSUPP;
+    91	}
+    92	#endif
+    93	
 
 -- 
-Jens Axboe
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
