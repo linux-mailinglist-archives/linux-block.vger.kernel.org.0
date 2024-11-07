@@ -1,105 +1,149 @@
-Return-Path: <linux-block+bounces-13718-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13720-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDAF19C0DBC
-	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 19:28:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 146BA9C0DDF
+	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 19:35:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2C28283B6B
-	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 18:28:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6FDC280EC8
+	for <lists+linux-block@lfdr.de>; Thu,  7 Nov 2024 18:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35393216E10;
-	Thu,  7 Nov 2024 18:28:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739FA188A3B;
+	Thu,  7 Nov 2024 18:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="So5HkojA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDOjt9bn"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8749820F5DA
-	for <linux-block@vger.kernel.org>; Thu,  7 Nov 2024 18:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0FB21501F
+	for <linux-block@vger.kernel.org>; Thu,  7 Nov 2024 18:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731004112; cv=none; b=QO6siK3w6drkhxF5Ylg6NSzCB8bj7VgwENvNqcXIWUrBbvcw+fcT/9R+aqNhi54fiumW6yDfYoFXWRtCOwiPT4Yqz3mDpdEhVw18sa50e6zJMzHI2LA9nYSCA13MgMEeG1RstcOiDA7/wLX11bC3iPcZ+cD5oYx/rIJno550X1s=
+	t=1731004517; cv=none; b=CkFggr9x1LMMN8cLxidOWdiKQFpgIXXG9rt1A5Jw54HLNXWGekIZFzKZ452vZjdUWfG8udjTW5bmWqN410OCvkHxRyrzbEgpg+vjiGK14tQ1B+2ym6CB2+qP+jviEW17ndi5ZxWGyT/z7vvRZl9NKmmtJmB4+0Psb1BEZGJIHcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731004112; c=relaxed/simple;
-	bh=wC/oWyNcX/2qw/vu1KXDTflHxEgJiDzIcD0RLaEM3XE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BsSlX/TSak01aTnlidYT2HMJJOj3KRrP44/mtBibo4+GqbL8XdnUsJ/v3wZKQmaEPO3ivt0h861xSThyWpbIIp9tIkP+Jrc6+X4klvojLuyukOme8nRyrsf9uTGnveWKFA1Hwrn77PQfocf0qEy2PIM/ljO/iGTQ/j2Ltp90J9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=So5HkojA; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5ee53b30470so241222eaf.3
-        for <linux-block@vger.kernel.org>; Thu, 07 Nov 2024 10:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731004109; x=1731608909; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RfkZ5vVPRthfg8DCWHf1TRm0P4AJoRMsICGEYROxCeA=;
-        b=So5HkojAYk0W5gdaPquCXmAt4gqo3tLTF8uMlBgASG8/B7xMNSsHel5MvY1TysBh1n
-         j0kiYudSKCJplwWIDFIVQLG1Ut2lYNfiHVjnMNjJ8AG4uRjkobzdzOAtxgy80vCCMImy
-         rtKKwlEMax8vcgiyy4RiiDMtuqR34S0k3i2YQ3Bqu0jz+6OvhIojqsOF828Rb/xmI5+d
-         0xITVzNrtEJNRlu2JkvmbckK4Xf67yozYaVfQqWsTkr+7q18XWB2o6VwW34VoxrpN8/B
-         FWYUxKVTjC+gWFbE27y4azjU9eS6MPOL9KNLguf4RNfMqSaq3l536HBT2U5z3TsEkFsG
-         FwAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731004109; x=1731608909;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RfkZ5vVPRthfg8DCWHf1TRm0P4AJoRMsICGEYROxCeA=;
-        b=s1aa6YjbO1FXOcgt1/Yde27NS3JVCALFP8pBtxQVw2FFVb9u1f7z5/Ga7uzDBLNKt+
-         EQT5GOxSiUnOs0vD8dEJ3c6/pZLE0nyHLvxLEJEe/2rgtfalnsi1zfg+vE8odc/xF/E6
-         nUT5yumIhLyzjNgQJsz1S0duOr5WuWlpy0S0PmNiuzFQGawqph69DKVTej62oSzJPOMP
-         bR/1BNXQs61bAOKYf9k7xaZmKTeZTkVgGtBx+vy5DcqO8ewA7T9X70ahTPjpD2E7qWBb
-         ud7vy8xhQs1gzeZP/SIDaVRDb4+nFRcUJK3QiM68QNgpCr+p2bFwQtrjOx2dt5jgBhlW
-         dJ5Q==
-X-Gm-Message-State: AOJu0Yx9KGC0qXOip828xnfw60wAZWDd5B5Hto//Xf2V5wJRdxDD9VsE
-	GTMJQdRs6MUWM6Ql/Oem8UOT+WnFGTt9l21PDqP/BvupG6clByQLA9b9VuCBCsM=
-X-Google-Smtp-Source: AGHT+IEaJbCM1Zp0ALVPFRY2YG9piHnZCsfYwBEzR/BBe3g7PcJVulRrLVG1fwQZgkFbGktMPTiiPA==
-X-Received: by 2002:a05:6820:1f08:b0:5eb:c72e:e29c with SMTP id 006d021491bc7-5ee57d296eemr61006eaf.8.1731004109632;
-        Thu, 07 Nov 2024 10:28:29 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5ee4970a150sm318578eaf.36.2024.11.07.10.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 10:28:29 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-In-Reply-To: <20241107065438.236348-1-dlemoal@kernel.org>
-References: <20241107065438.236348-1-dlemoal@kernel.org>
-Subject: Re: [PATCH] block: Switch to using refcount_t for zone write plugs
-Message-Id: <173100410869.752525.9713906876157995574.b4-ty@kernel.dk>
-Date: Thu, 07 Nov 2024 11:28:28 -0700
+	s=arc-20240116; t=1731004517; c=relaxed/simple;
+	bh=Dr3iBqAxUkSSUIfdL2QO5ZpRjAKqgwn4ITBFIpDTva0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e4xOdaOIAr82VTJnEmgxfdbuM+lNd5SMDMPaP4IZtaMrvTGoHsI4+VQMoaFPFQ7SVHiaOt61BdIwVmZwnys36XfDIgRkD/uyLlFhrRIJ4mCIXjdIrrTDNMg7+ym/Y8+YqOxLd1apked+efmO60RJjl5Ipvw4bKqSxbyPEAEqLIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EDOjt9bn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731004514;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0BV4cQjK6r4k+nnOA3H++TZCIX5jl2A4n+o/usvE3U4=;
+	b=EDOjt9bnoRQr9DH5X9PqRiT/4RwoY08buS96+G5gb/JSPZM2tSQuwzptc6+emIPkl9XEgz
+	YK8SUzMSTW6dlLXJh3v75h28ebFNsi+neS76WG/0iM8FK5Sx/1/7Q4zq0V9uaRrLaH+8NA
+	H/YKkTSHUKpfW3SisgSoDbAR9kt5rd8=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-594-hY2Lgo2jObuaFFDtiQ22ow-1; Thu,
+ 07 Nov 2024 13:35:13 -0500
+X-MC-Unique: hY2Lgo2jObuaFFDtiQ22ow-1
+X-Mimecast-MFC-AGG-ID: hY2Lgo2jObuaFFDtiQ22ow
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 505F819792FC;
+	Thu,  7 Nov 2024 18:35:09 +0000 (UTC)
+Received: from [10.22.88.108] (unknown [10.22.88.108])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC8651956054;
+	Thu,  7 Nov 2024 18:35:05 +0000 (UTC)
+Message-ID: <643e61a8-b0cb-4c9d-831a-879aa86d888e@redhat.com>
+Date: Thu, 7 Nov 2024 13:35:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: DMMP request-queue vs. BiO
+To: linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-scsi@vger.kernel.org
+Cc: Chris Leech <cleech@redhat.com>, Hannes Reinecke <hare@suse.de>,
+ Christoph Hellwig <hch@lst.de>, snitzer@kernel.org,
+ Ming Lei <minlei@redhat.com>, Benjamin Marzinski <bmarzins@redhat.com>,
+ Jonathan Brassow <jbrassow@redhat.com>, Ewan Milne <emilne@redhat.com>,
+ Mikulas Patocka <mpatocka@redhat.com>, bmarson@redhat.com,
+ Jeff Moyer <jmoyer@redhat.com>, "spetrovi@redhat.com" <spetrovi@redhat.com>,
+ Rob Evers <revers@redhat.com>
+References: <2d5fe016-2941-43a4-8b7c-850b8ee1d6ce@redhat.com>
+ <20241104073547.GA20614@lst.de>
+ <d9733713-eb7b-4efa-ad6b-e6b41d1df93b@suse.de> <20241105103307.GA1385@lst.de>
+Content-Language: en-US
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <20241105103307.GA1385@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+I've been asked to move this conversation to a public thread on the upstream email distros.
 
-On Thu, 07 Nov 2024 15:54:38 +0900, Damien Le Moal wrote:
-> Replace the raw atomic_t reference counting of zone write plugs with a
-> refcount_t.  No functional changes.
+Background:
+
+At ALPSS last month (Sept. 2024) Hannes and Christoph spoke with Chris and I about how they'd like to remove the 
+request-interface from DMMP and asked if Red Hat would be willing to help out by running some DMMP/Bio vs. DMMP/req performance 
+tests and share the results.The idea was: with some of the recent performance improvements in the BIO path upstream we believe 
+there may not be much of a performance difference between these two code paths and would like Red Hat's help in demonstrating that.
+
+So Chris and I returned to Red Hat and broached this subject here internally. The Red Hat performance team has agreed to work 
+work with us on an ad hoc basis to do this and we've made some preliminary plans to build a test bed that can used to do some 
+performance tests with DMMP on an upstream kernel using iSCSI and FCP. Then we talked to the DMMP guys about it. They have some 
+questions and asked me discuss this topic in an email thread on linux-scsi, linux-block and dm-devel.
+
+Some questions are:
+
+What are the exact patches which make us think the BIO path is now performant?
+
+Is it Ming's immutable bvecs and moving the splitting down to the driver?
+
+I've been told these changes are only applicable if a filesystem is involved. Databases can make direct use of the dmmp device, 
+so late bio splitting not applicable for them. It is filesystems that are building larger bios. See the comments from Hannes and 
+Christoph below.
+
+I think Red Hat can help out with the performance testing but we will need to answer some of these questions. It will also be 
+important to determine exactly what kind of workload we should use with any DMMP performance tests. Will a simple workload 
+generated with fio work, or do we need to test some actual data base work loads as well?
+
+Please reply to this public thread with your thoughts and ideas.
+
+Thanks,
+
+John A. Meneghini
+Senior Principal Platform Storage Engineer
+RHEL SST - Platform Storage Group
+jmeneghi@redhat.com
+
+On 11/5/24 05:33, Christoph Hellwig wrote:
+> On Tue, Nov 05, 2024 at 08:44:45AM +0100, Hannes Reinecke wrote:
+>>> I think the big change is really Ming's immutable bvecs and moving the
+>>> splitting down to the driver.  This means bios are much bigger (and
+>>> even bigger now with large folios for file systems supporting it).
+>>>
+>> Exactly. With the current code we should never merge requests; all
+>> data should be assembled in the bio already.
+>> (I wonder if we could trigger a WARN_ON if request merging is
+>> attempted ...)
 > 
-> 
-
-Applied, thanks!
-
-[1/1] block: Switch to using refcount_t for zone write plugs
-      commit: 4122fef16b172f7c1838fcf74340268c86ed96db
-
-Best regards,
--- 
-Jens Axboe
-
-
+> Request merging is obviosuly still pretty common.  For one because
+> a lot of crappy file systems submit a buffer_head per block (none of
+> the should be relevant for multipathing), but also because we reach
+> the bio size at some point and just need to split.  While large folios
+> reduce that a lot, not all file systems that matter support that.
+> (that what the plug callback would fix IFF it turns out to be an
+> issue) and last but not least I/O schedulers delay I/O to be able to
+> do better merging.  My theory is that this not important for the kind
+> of storage we use multipathing for, or rather not for the pathing
+> decisions.
 
 
