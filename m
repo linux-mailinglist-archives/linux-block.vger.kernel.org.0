@@ -1,125 +1,138 @@
-Return-Path: <linux-block+bounces-13768-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13770-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA1F39C259D
-	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2024 20:34:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4891B9C25B9
+	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2024 20:43:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1ED331C236CA
-	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2024 19:34:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D202928223D
+	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2024 19:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB1B01AA1E0;
-	Fri,  8 Nov 2024 19:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7511C1F02;
+	Fri,  8 Nov 2024 19:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="dnsz5YfG"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="RhE734Fe"
 X-Original-To: linux-block@vger.kernel.org
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A786233D79;
-	Fri,  8 Nov 2024 19:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDD41AA1FD
+	for <linux-block@vger.kernel.org>; Fri,  8 Nov 2024 19:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731094464; cv=none; b=i/+n+UOmpYgHvq0ZprUE369CeVOoxJiLHPFhlSIWN5CHcalR7Vj2RgIgKh1KZ8qxBEWwYUFE08fLKJMCEG2ktsELhOEsHsNVbLMGMwNiC1ZSmAutjAx+WfOvzbIl+0wDnKfz8oI8G2MciDZPr5v/dIsxOyODGu8bhVxbFw2robM=
+	t=1731094990; cv=none; b=QAwD5tI01kJ4LbZ1TayTZhBxevVuRBAQoZmgeR7vOcZwhMkAJw/sZsaJ0IvoGMhQUnZZimONyf03nGkvfbuLxxsv/BlGcqy1MW8w+eZkh0lcieYl096SUIhMSR8RgcgzBgA3rmbX7lYxDo8CG7wEeKxiZpf+ZfXv6FOpK+Dpt0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731094464; c=relaxed/simple;
-	bh=C3uvS5ZTq0aLuBTlnvNbPqplUhDEa0uq5Q6Z92WD/yE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=h8nLlObSDSThwHelbvAKc0PmG72n10fPLiscQ2eIik98h9NVF9YplOpjleGb1XLq/desXZVGIuab4ri2KFjmftdiL2ynsIJ/Xy++W2+dIJqqhh1m3065pTvIyotaCf0I6H8ufVCOmeYyxsaGROQJIVwzq64bMP0QzdgBU3LYzy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=dnsz5YfG; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 443C842C17
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1731094462; bh=2mf7KL6RauZLJCGVMslddkfvUkwUMRQBSzo8JS8PbOo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dnsz5YfGWANp6sFnIUKjORH9aQENZDGixeRFgCKU+EHYtfew50seKAGvAytaFY9oj
-	 05nxCVWbEfcD++04BAkjYS67T71ZQKhzyu6q3WZ8JM+Nq5axZuGUldvxslQ6IDBgXj
-	 4TWkgRvZmPQDP4+rVCptcrXwBOfBXoMDeUZRH8Wp3ugkYqZvGKmWHOgN92MEiBDxr5
-	 9u5STRUt+O2euSBwkgcMhfsaH0RnwMEO/iN2P0oM2sZd22f5AUcPoAVVdjXDvknK/o
-	 T3zwqzKkVrYA3KBU7u+ycHZvQ7dYicPF4vGfmge7fq9Ntn0IbVNJL2+Ng+Nux9U4bj
-	 j2d2WZj3WBcbQ==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 443C842C17;
-	Fri,  8 Nov 2024 19:34:22 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>, Jason
- Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>, Joerg
- Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Christoph Hellwig
- <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
- <kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>, =?utf-8?B?SsOpcsO0bWU=?=
- Glisse
- <jglisse@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 09/17] docs: core-api: document the IOVA-based API
-In-Reply-To: <881ef0bcf9aa971e995fbdd00776c5140a7b5b3d.1730298502.git.leon@kernel.org>
-References: <cover.1730298502.git.leon@kernel.org>
- <881ef0bcf9aa971e995fbdd00776c5140a7b5b3d.1730298502.git.leon@kernel.org>
-Date: Fri, 08 Nov 2024 12:34:21 -0700
-Message-ID: <87ttchwmde.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1731094990; c=relaxed/simple;
+	bh=kJHUOkZq4OqxDP2m8gl/HfwIZuznYWslLepJFC+6drU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LkGQUFo9HDHUqRT/jTzYfyrxRPFC+Ss46dSbZBQVP5FQgLHoGW256gDTLeLMjsiHN//G2VxCzbGHHxALWrGAWqN/pb4XlWPG31Dci9qkxfc7XcMHIIqfhYFErrZaG8d+UtoDR8/PIuvrSBjLN1uyr4MdrO24VguGMM32KKx3dGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=RhE734Fe; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A8HPiFY014433
+	for <linux-block@vger.kernel.org>; Fri, 8 Nov 2024 11:43:07 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=6okj447WixbNNhNQHa
+	A9DEOarhvhg3oKtVsSwQCEn3Y=; b=RhE734FeexQvP2U1/uC+/vT3UbmmyFSZTM
+	t6gNuFDeljwFO4jwyriPVo/Z3MCFa2XrL5kQJeuxBIkYwLR/mfpEC6mdWzISpHeF
+	BLc70a91dCVA6Mj51ps0q4sHzLVLoRGMWdevQ2ZF8SWqiwEw/KANbr3Lg/apws1i
+	bFW8XpENiSQmwfY652E+abHV8lxjGQ4zGTwBNQbVnM81IHgPIhPZMyNi1aL00Box
+	JyXPtvbD/KIwwQ6dO2KSs9bSvt/x92rzotW2OymXKnZ0yhfDBkO1qfA8l6exs7ct
+	NV7N1daP8VwsO2MOwRABrflZdZTdDI4XFIyPvZxHqY98amJToO/Q==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 42sp2t9mrh-11
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Fri, 08 Nov 2024 11:43:07 -0800 (PST)
+Received: from twshared29075.03.ash8.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Fri, 8 Nov 2024 19:43:00 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 35FAE14E3A027; Fri,  8 Nov 2024 11:36:58 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-scsi@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <io-uring@vger.kernel.org>, <axboe@kernel.dk>
+CC: <hch@lst.de>, <martin.petersen@oracle.com>, <asml.silence@gmail.com>,
+        <javier.gonz@samsung.com>, <joshi.k@samsung.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv11 0/9] write hints with nvme fdp and scsi streams
+Date: Fri, 8 Nov 2024 11:36:20 -0800
+Message-ID: <20241108193629.3817619-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
 Content-Type: text/plain
+X-Proofpoint-GUID: OfhuazCJvf_DkXn4HPAINpOOzQKVpxX2
+X-Proofpoint-ORIG-GUID: OfhuazCJvf_DkXn4HPAINpOOzQKVpxX2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
 
-Leon Romanovsky <leon@kernel.org> writes:
+From: Keith Busch <kbusch@kernel.org>
 
-> From: Christoph Hellwig <hch@lst.de>
->
-> Add an explanation of the newly added IOVA-based mapping API.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  Documentation/core-api/dma-api.rst | 70 ++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->
-> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-> index 8e3cce3d0a23..6095696a65a7 100644
-> --- a/Documentation/core-api/dma-api.rst
-> +++ b/Documentation/core-api/dma-api.rst
-> @@ -530,6 +530,76 @@ routines, e.g.:::
->  		....
->  	}
->  
-> +Part Ie - IOVA-based DMA mappings
-> +---------------------------------
-> +
-> +These APIs allow a very efficient mapping when using an IOMMU.  They are an
-> +optional path that requires extra code and are only recommended for drivers
-> +where DMA mapping performance, or the space usage for storing the DMA addresses
-> +matter.  All the consideration from the previous section apply here as well.
-> +
-> +::
-> +
-> +    bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
-> +		phys_addr_t phys, size_t size);
-> +
-> +Is used to try to allocate IOVA space for mapping operation.  If it returns
-> +false this API can't be used for the given device and the normal streaming
-> +DMA mapping API should be used.  The ``struct dma_iova_state`` is allocated
-> +by the driver and must be kept around until unmap time.
+Changes from v10:
 
-So, I see that you have nice kernel-doc comments for these; why not just
-pull them in here with a kernel-doc directive rather than duplicating
-the information?
+  Fixed FDP max handle size calculations (wrong type)
 
-Thanks,
+  Defined and used FDP constants instead of literal numbers
 
-jon
+  Moved io_uring write_hint to the end of the SQE so as not to overlap
+  with other defined fields except uring_cmd
+
+  Default partition split so partition one gets all the write hints
+  exclusively
+
+  Folded in the fix for stacking block stream feature for nvme-multipath
+  (from hch xfs-zoned-streams branch)
+
+Kanchan Joshi (2):
+  io_uring: enable per-io hinting capability
+  nvme: enable FDP support
+
+Keith Busch (7):
+  block: use generic u16 for write hints
+  block: introduce max_write_hints queue limit
+  statx: add write hint information
+  block: allow ability to limit partition write hints
+  block, fs: add write hint to kiocb
+  block: export placement hint feature
+  scsi: set permanent stream count in block limits
+
+ Documentation/ABI/stable/sysfs-block | 14 ++++++
+ block/bdev.c                         | 22 +++++++++
+ block/blk-settings.c                 |  5 ++
+ block/blk-sysfs.c                    |  6 +++
+ block/fops.c                         | 31 +++++++++++--
+ block/partitions/core.c              | 45 +++++++++++++++++-
+ drivers/nvme/host/core.c             | 69 ++++++++++++++++++++++++++++
+ drivers/nvme/host/multipath.c        |  3 +-
+ drivers/nvme/host/nvme.h             |  5 ++
+ drivers/scsi/sd.c                    |  2 +
+ fs/stat.c                            |  1 +
+ include/linux/blk-mq.h               |  3 +-
+ include/linux/blk_types.h            |  4 +-
+ include/linux/blkdev.h               | 15 ++++++
+ include/linux/fs.h                   |  1 +
+ include/linux/nvme.h                 | 37 +++++++++++++++
+ include/linux/stat.h                 |  1 +
+ include/uapi/linux/io_uring.h        |  4 ++
+ include/uapi/linux/stat.h            |  3 +-
+ io_uring/io_uring.c                  |  2 +
+ io_uring/rw.c                        |  2 +-
+ 21 files changed, 263 insertions(+), 12 deletions(-)
+
+--=20
+2.43.5
+
 
