@@ -1,74 +1,63 @@
-Return-Path: <linux-block+bounces-13855-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13857-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B6AF9C4301
-	for <lists+linux-block@lfdr.de>; Mon, 11 Nov 2024 17:52:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 137429C4403
+	for <lists+linux-block@lfdr.de>; Mon, 11 Nov 2024 18:46:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D787CB26783
-	for <lists+linux-block@lfdr.de>; Mon, 11 Nov 2024 16:44:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C08881F22EFD
+	for <lists+linux-block@lfdr.de>; Mon, 11 Nov 2024 17:46:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF441A256F;
-	Mon, 11 Nov 2024 16:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38AB81A2567;
+	Mon, 11 Nov 2024 17:46:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfDIbyPF"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="mX9ZYwAQ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9040418A6BD
-	for <linux-block@vger.kernel.org>; Mon, 11 Nov 2024 16:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F1080034;
+	Mon, 11 Nov 2024 17:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731343430; cv=none; b=NdAsE9BMTGcRFig1uGSZfplCeD3RWa+TwA/hrC4bmBAyO52xM7JtpJJ9TXGJCFopE8WRAdern3lXKoJNBdUbfK+/+CgKuaFxPbyLGti2APqRDo7sMeWhr/uRzisHV4+M5sE1fBAqBDHhN9mXtbH4z4ICx6uvvwOhA1ky9Bdg+2E=
+	t=1731347172; cv=none; b=L4sp2epDaTQphVmCaKxSFcNb7Q3oDYmG8BE7WwFukGGJT9JHgX33wj2Ykmkvq3XzlhQITPrvn5XVtj2c5AOK/1wfLXLa3uWZCGFN1paB04hH+QEXsgMGVHs6slZU4zxEanyfFWeCkUkEk4c2+ba2DDPgZN1xmc3GpdIjb1qvHMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731343430; c=relaxed/simple;
-	bh=sVQCtohcGK0/fAlU1SOcgZuqMvZCOlvnUR5qbzGRXEI=;
+	s=arc-20240116; t=1731347172; c=relaxed/simple;
+	bh=6ppk20l+MIKGQy5QjkyHIsmJX4tQUn28i+WnIW20g4w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlTCRrPf+SsYQSIRY2Z38Z3C5M4lqhKNaBCK5SLAV6Idk5J1a8cnp9ZIvF7NYVVV9sKGR+vbXIXfvHdUaac/78+5cMU1sXmyLvSPeBuw63MiS0bgJto2TXzgEMoMq/OpS3GgDUdD8GYrj/dm/BGsr6vkuImlqMOpUnkZh8S4oTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lfDIbyPF; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9f1c590ecdso240473166b.1
-        for <linux-block@vger.kernel.org>; Mon, 11 Nov 2024 08:43:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731343427; x=1731948227; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cTdD7QysOJTqQ3CRzqhbna3iriQuo3cuHHiOE2WfJCw=;
-        b=lfDIbyPFqtyqSlWi4fE2DGgBPLLs6F/qCkYANTgh8225qtB8iPn+nliMm1CBw+GEmg
-         vMeOx7iRBNL80XToedGsrveOt/3o8u26h0X0JEbgJwFGbeSdVfJvr6QjotGdBjOqaQGp
-         TS6t+j95Jmju4W+pQbus+gWep6TJ1vnBZpmGbqlkQvBKdkslP+yzJ1fvhEOhJvv6xXxN
-         sRd5nEV8uZBj8Iz65SLTxfZOPTH3YRq59mumeckxUflF7tBL9sVfaaL6lzLhiRgSFeXa
-         RrkFsYj2D9bF5IJvIz9wmEym0TyR/DCd0E1w/6vPtJlp7vA8oYSBPCcLTCUUKkEGYbyB
-         FL5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731343427; x=1731948227;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cTdD7QysOJTqQ3CRzqhbna3iriQuo3cuHHiOE2WfJCw=;
-        b=psGGWvEfPUcX9Q+zNdu0Rshjbc+g84uIF962WnGlPCLw74eN+F9pzMkw1Nj0r3hMDU
-         9sxF3NnXWjYEGEi+U+daSFT9S8XDnaYw+bvtHbIzQdBp2vclha52YInUc4W0qTuaA3Xo
-         MOAawJdLg66sb9/8YRIWJpKDMAuE5ZPcDHEh/hEZLve4jjZZGW7Id8lP1NGptN57dfep
-         80tJkMnsUg5dR7y947aBL5lPb4i7Cat78PRHfdyz8GFI4ExyH0FTanLg6vgBvKyliu7V
-         cIY36IRZE6vscgzD3Kolb0XnBAQY17WuwsiSCNB9H7/mPC1vw3Rz/je5E5v4aHgI0smz
-         d0pA==
-X-Forwarded-Encrypted: i=1; AJvYcCUO0UNlxXtr+yonjxF9jTTgKl8NraXDBEcK3vIJUVKSWc1rYo9kv9xr9Ehdz8NZeL/x5NK1vf0rPMK2yg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ0WpkGiDdxw5s045FBX4lm+LtAvgC4QHvSNBRyPazxOpzmH5C
-	leUkARwJcgfoizHIRZ+9qNff7bj7S447IiTXU3yLC0giez56N7R1
-X-Google-Smtp-Source: AGHT+IG+pyWNBu+SfCu0aqNLnvyakYpTQxl3ePgpwKjSUtklRFNhnK3xfZR6ecdqSLB/E0KaRNGDpA==
-X-Received: by 2002:a17:907:72c3:b0:a9e:c947:d5e5 with SMTP id a640c23a62f3a-a9eeff445b3mr1266994266b.28.1731343426569;
-        Mon, 11 Nov 2024 08:43:46 -0800 (PST)
-Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::4:975d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0a46119sm610041866b.46.2024.11.11.08.43.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2024 08:43:46 -0800 (PST)
-Message-ID: <28446805-f533-44fe-988a-71dcbdb379ab@gmail.com>
-Date: Mon, 11 Nov 2024 16:43:45 +0000
+	 In-Reply-To:Content-Type; b=i7AgUUVFaP9xlPasNKE8UkEdFwpe4t15IyuVTc9XRpEvK558FV+XuLxh6fXQ4X1nft7EJV++QaYKisu3P33khr1PO9Y5yEDe8xgiYRo3r1BwJOwoyPSrwBvw+cWiHx/2xaFWMKD+nWgWIU3rJziX9lpATt4mfrwZlwD54Hy1nZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=mX9ZYwAQ; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4XnH5s4cJ7zlgT1M;
+	Mon, 11 Nov 2024 17:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1731347165; x=1733939166; bh=EQ/YSyflFEK19dUNwksnyjAZ
+	emqpoYotz99gNmDJJn4=; b=mX9ZYwAQ12bes+QJxHZczpD/MW1jRHfypLnkeTdB
+	k0Efuu2qex5Us0NBWkQxjuTwVNsVzvgjhNuNQ6zReqbUcYPKUZmkbnvWKTAWm4at
+	QGP4Mz4eA0g2yL7QZD+pY7yN3J8/PJjwwt3QibPgwKvaiHfKDvG+i+MrI1b1Rz2a
+	eHouoKmM7l7wBGgVxxnhFibo1NYIq8vCHCVIoK6Cv5ut+XueS1VI4vHg8SJ6vmlq
+	WvVBb3KRZ1ZZInrKrR7adRI71uGvrSpCJdNF7MIfYqbG4syzoiH1RdHxCALcisbC
+	S8GaW0PJtFza68WV4T+GMU8wZGXWoHvCl2t2cFHFG6VqEw==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id lK5eOCQPE44g; Mon, 11 Nov 2024 17:46:05 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4XnH5h3H2BzlgTWG;
+	Mon, 11 Nov 2024 17:46:00 +0000 (UTC)
+Message-ID: <a7ebd158-692c-494c-8cc0-a82f9adf4db0@acm.org>
+Date: Mon, 11 Nov 2024 09:45:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -76,135 +65,53 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 0/2] mTHP-friendly compression in zsmalloc and zram
- based on multi-pages
-To: Barry Song <21cnbao@gmail.com>, "Huang, Ying" <ying.huang@intel.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, axboe@kernel.dk,
- bala.seshasayee@linux.intel.com, chrisl@kernel.org, david@redhat.com,
- hannes@cmpxchg.org, kanchana.p.sridhar@intel.com, kasong@tencent.com,
- linux-block@vger.kernel.org, minchan@kernel.org, nphamcs@gmail.com,
- senozhatsky@chromium.org, surenb@google.com, terrelln@fb.com,
- v-songbaohua@oppo.com, wajdi.k.feghali@intel.com, willy@infradead.org,
- yosryahmed@google.com, yuzhao@google.com, zhengtangquan@oppo.com,
- zhouchengming@bytedance.com, ryan.roberts@arm.com
-References: <20241107101005.69121-1-21cnbao@gmail.com>
- <87iksy5mkh.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAGsJ_4wOGPbGQgqDidnYUCCpAT8sw+S92NEU+trAQL_rnC10ZA@mail.gmail.com>
+Subject: Re: [PATCHv10 0/9] write hints with nvme fdp, scsi streams
+To: Javier Gonzalez <javier.gonz@samsung.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "joshi.k@samsung.com" <joshi.k@samsung.com>
+References: <20241029151922.459139-1-kbusch@meta.com>
+ <20241105155014.GA7310@lst.de> <Zy0k06wK0ymPm4BV@kbusch-mbp>
+ <20241108141852.GA6578@lst.de> <Zy4zgwYKB1f6McTH@kbusch-mbp>
+ <CGME20241108165444eucas1p183f631e2710142fbbc7dee9300baf77a@eucas1p1.samsung.com>
+ <Zy5CSgNJtgUgBH3H@casper.infradead.org>
+ <d7b7a759dd9a45a7845e95e693ec29d7@CAMSVWEXC02.scsc.local>
+ <2b5a365a-215a-48de-acb1-b846a4f24680@acm.org>
+ <20241111093154.zbsp42gfiv2enb5a@ArmHalley.local>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CAGsJ_4wOGPbGQgqDidnYUCCpAT8sw+S92NEU+trAQL_rnC10ZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20241111093154.zbsp42gfiv2enb5a@ArmHalley.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 08/11/2024 06:51, Barry Song wrote:
-> On Fri, Nov 8, 2024 at 6:23 PM Huang, Ying <ying.huang@intel.com> wrote:
+On 11/11/24 1:31 AM, Javier Gonzalez wrote:
+> On 08.11.2024 10:51, Bart Van Assche wrote:
+>> On 11/8/24 9:43 AM, Javier Gonzalez wrote:
+>>> If there is an interest, we can re-spin this again...
 >>
->> Hi, Barry,
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->>> From: Barry Song <v-songbaohua@oppo.com>
->>>
->>> When large folios are compressed at a larger granularity, we observe
->>> a notable reduction in CPU usage and a significant improvement in
->>> compression ratios.
->>>
->>> mTHP's ability to be swapped out without splitting and swapped back in
->>> as a whole allows compression and decompression at larger granularities.
->>>
->>> This patchset enhances zsmalloc and zram by adding support for dividing
->>> large folios into multi-page blocks, typically configured with a
->>> 2-order granularity. Without this patchset, a large folio is always
->>> divided into `nr_pages` 4KiB blocks.
->>>
->>> The granularity can be set using the `ZSMALLOC_MULTI_PAGES_ORDER`
->>> setting, where the default of 2 allows all anonymous THP to benefit.
->>>
->>> Examples include:
->>> * A 16KiB large folio will be compressed and stored as a single 16KiB
->>>   block.
->>> * A 64KiB large folio will be compressed and stored as four 16KiB
->>>   blocks.
->>>
->>> For example, swapping out and swapping in 100MiB of typical anonymous
->>> data 100 times (with 16KB mTHP enabled) using zstd yields the following
->>> results:
->>>
->>>                         w/o patches        w/ patches
->>> swap-out time(ms)       68711              49908
->>> swap-in time(ms)        30687              20685
->>> compression ratio       20.49%             16.9%
->>
->> The data looks good.  Thanks!
->>
->> Have you considered the situation that the large folio fails to be
->> allocated during swap-in?  It's possible because the memory may be very
->> fragmented.
+>> I'm interested. Work is ongoing in JEDEC on support for copy offloading
+>> for UFS devices. This work involves standardizing which SCSI copy
+>> offloading features should be supported and which features are not
+>> required. Implementations are expected to be available soon.
 > 
-> That's correct, good question. On phones, we use a large folio pool to maintain
-> a relatively high allocation success rate. When mTHP allocation fails, we have
-> a workaround to allocate nr_pages of small folios and map them together to
-> avoid partial reads.  This ensures that the benefits of larger block compression
-> and decompression are consistently maintained.  That was the code running
-> on production phones.
-> 
+> Do you have any specific blockers on the last series? I know you have
+> left comments in many of the patches already, but I think we are all a
+> bit confused on where we are ATM.
 
-Thanks for sending the v2!
+Nobody replied to this question that was raised 4 months ago:
+https://lore.kernel.org/linux-block/4c7f30af-9fbc-4f19-8f48-ad741aa557c4@acm.org/
 
-How is the large folio pool maintained. I dont think there is something in upstream
-kernel for this? The only thing that I saw on the mailing list is TAO for pmd-mappable
-THPs only? I think that was about 7-8 months ago and wasn't merged?
-The workaround to allocate nr_pages of small folios and map them
-together to avoid partial reads is also not upstream, right?
-
-Do you have any data how this would perform with the upstream kernel, i.e. without
-a large folio pool and the workaround and if large granularity compression is worth having
-without those patches?
+I think we need to agree about the answer to that question before we can
+continue with implementing copy offloading.
 
 Thanks,
-Usama
 
-> We also previously experimented with maintaining multiple buffers for
-> decompressed
-> large blocks in zRAM, allowing upcoming do_swap_page() calls to use them when
-> falling back to small folios. In this setup, the buffers achieved a
-> high hit rate, though
-> I don’t recall the exact number.
-> 
-> I'm concerned that this fault-around-like fallback to nr_pages small
-> folios may not
-> gain traction upstream. Do you have any suggestions for improvement?
-> 
->>
->>> -v2:
->>>  While it is not mature yet, I know some people are waiting for
->>>  an update :-)
->>>  * Fixed some stability issues.
->>>  * rebase againest the latest mm-unstable.
->>>  * Set default order to 2 which benefits all anon mTHP.
->>>  * multipages ZsPageMovable is not supported yet.
->>>
->>> Tangquan Zheng (2):
->>>   mm: zsmalloc: support objects compressed based on multiple pages
->>>   zram: support compression at the granularity of multi-pages
->>>
->>>  drivers/block/zram/Kconfig    |   9 +
->>>  drivers/block/zram/zcomp.c    |  17 +-
->>>  drivers/block/zram/zcomp.h    |  12 +-
->>>  drivers/block/zram/zram_drv.c | 450 +++++++++++++++++++++++++++++++---
->>>  drivers/block/zram/zram_drv.h |  45 ++++
->>>  include/linux/zsmalloc.h      |  10 +-
->>>  mm/Kconfig                    |  18 ++
->>>  mm/zsmalloc.c                 | 232 +++++++++++++-----
->>>  8 files changed, 699 insertions(+), 94 deletions(-)
->>
->> --
->> Best Regards,
->> Huang, Ying
-> 
-> Thanks
-> barry
+Bart.
+
 
 
