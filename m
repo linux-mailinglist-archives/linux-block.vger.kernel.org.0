@@ -1,134 +1,118 @@
-Return-Path: <linux-block+bounces-13931-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13935-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C25A9C6299
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 21:30:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AD309C63AA
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 22:43:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 91E07B28BD7
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 18:25:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 427C91F23677
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 21:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 579A9215C68;
-	Tue, 12 Nov 2024 18:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 036E8219E34;
+	Tue, 12 Nov 2024 21:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elNpQcgX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="upHQI7Dt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elNpQcgX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="upHQI7Dt"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dUzpt4r8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB0C20EA5B;
-	Tue, 12 Nov 2024 18:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B04420C460
+	for <linux-block@vger.kernel.org>; Tue, 12 Nov 2024 21:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731435946; cv=none; b=PRG2B4PVRYP4R+IAMMi8HIC5qLQMQ/bXL+zOKjs2/KEk1KG6PANEAFWV9bfniqZw+dUCsGD5s8kbvoJ5XFknz10doKnmt7ocVqhnw6dVs26mtjCeXN9Ho10ZRDENBpDUaQehdefE3jS6+gTvwWehTySfIGcbOwkuU1cicy+1WWk=
+	t=1731447802; cv=none; b=fDAczhRa/WntZkW2sstZLuwDEpeS2nP+yHC/7g2bIQUbBY0xNJ3oAT6PhIm77hs22//zXeH9sUZzuOxyGsjAY2KSh9wmvW7Hz910lqFIs7A0rK25cPr0VOXdSDpc9vbx2jg2AZTfYWnspcmbFYcyUZtP3a7z73ZZhtIoHdWywjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731435946; c=relaxed/simple;
-	bh=SI3LsDcyGw/407Mz5RJai+Quoq3UgIX/1kn5EwodWv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rn8qBXba9BHwcfu8/KMBuXjXayCjL3YW/2e6lLSt3uFlzjmOi9B07zJfz1fnZaR3BD8ZnmC0qGVSHhrDG7KGPVyQum85c40Bh+E6Yxn0kjWxva3DSaL0mga2BmK4KHyWyCdF+58120xnybZGsw14o/NPtMawjuQqJ3GqNiX3ks0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elNpQcgX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=upHQI7Dt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elNpQcgX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=upHQI7Dt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E13B11F74A;
-	Tue, 12 Nov 2024 18:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731435942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SI3LsDcyGw/407Mz5RJai+Quoq3UgIX/1kn5EwodWv4=;
-	b=elNpQcgXmLRkPqJA301k3uLorPvi2Xxojc5xDYob+0TUKXa9+5i9pXw7v9f9Zz424NDXq9
-	5i4DovSowO0VFzLB7DDPd6uOeS1ljK89W2FM8wH3lhL0ZmdrTinvQdKY91T5UzbYV9P5bd
-	IeJm7qrejOX9KQo1Ppaho3NMP9MRJy4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731435942;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SI3LsDcyGw/407Mz5RJai+Quoq3UgIX/1kn5EwodWv4=;
-	b=upHQI7DtYNeYGXVigZl7tWevH/muN1LRM9QDvL7HEu2k4yEALj0/HYUSUECpBe7xXJ6LZJ
-	XLXEwCmwQNtyUuBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731435942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SI3LsDcyGw/407Mz5RJai+Quoq3UgIX/1kn5EwodWv4=;
-	b=elNpQcgXmLRkPqJA301k3uLorPvi2Xxojc5xDYob+0TUKXa9+5i9pXw7v9f9Zz424NDXq9
-	5i4DovSowO0VFzLB7DDPd6uOeS1ljK89W2FM8wH3lhL0ZmdrTinvQdKY91T5UzbYV9P5bd
-	IeJm7qrejOX9KQo1Ppaho3NMP9MRJy4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731435942;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SI3LsDcyGw/407Mz5RJai+Quoq3UgIX/1kn5EwodWv4=;
-	b=upHQI7DtYNeYGXVigZl7tWevH/muN1LRM9QDvL7HEu2k4yEALj0/HYUSUECpBe7xXJ6LZJ
-	XLXEwCmwQNtyUuBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B355613301;
-	Tue, 12 Nov 2024 18:25:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gYx9KaadM2dmQQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Tue, 12 Nov 2024 18:25:42 +0000
-Date: Tue, 12 Nov 2024 19:25:42 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Daniel Wagner <wagi@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
-	mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, 
-	linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v3 4/8] blk-mp: introduce blk_mq_hctx_map_queues
-Message-ID: <07662901-1100-4d03-9033-26ea16cfc54e@flourine.local>
-References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
- <20241112-refactor-blk-affinity-helpers-v3-4-573bfca0cbd8@kernel.org>
+	s=arc-20240116; t=1731447802; c=relaxed/simple;
+	bh=J+RldWsZqsESI2PuHeRabDXgnmVLtr2MD+8L5LtDxY8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jw72sNeP5fSWtDG5i/ug8esQdlCgaaIC4dp+P+agomZqu+ZzNLz+PZThjsHOQqEyOseh6I/Dk1Y9MbGPY9o9SJdjPbwJ6Vp7bvMKN79BVST9rg/eYotn/Dz34nlowgO3T8lck/jLiqw2qr1ngtHEox5Xs2wXp/KupcZvmnzPlog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=dUzpt4r8; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-718123ec383so3570885a34.3
+        for <linux-block@vger.kernel.org>; Tue, 12 Nov 2024 13:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731447798; x=1732052598; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YGtSC//+KuLVSTWwwIoXtxU4RZI/DGnC9v/9JMzPnU8=;
+        b=dUzpt4r81/uMZiH7uAneonK6a96UxOXwMNYG/4D2C7FmHhTjfhtxzseLMrhlJSafYC
+         6DcF2HJZqFwbGwRvsZJ9b4WGx42/H23nmsL+VMvrLLbaMa45b2770PFMO3kLlHF0cD9t
+         oBSl2g5p4XacL578cbKF3vAdr7n1CSOVa/zTsGAl82LCEQZjOVx+DjsKhO412/eXfZSA
+         TDK/wr38oHhmfWvj6QZiUIkNz+ehK/Xp7SFPZvZUFpIxHOC9zAUeJIE/QO6/TOPlihHg
+         EM7QDpe/JA2J/7o+PjmXYWmu799ncMOOO+qtd2oLe9jy/UjPwvhdXnxMOUzAXh+ftqv9
+         GVqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731447798; x=1732052598;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YGtSC//+KuLVSTWwwIoXtxU4RZI/DGnC9v/9JMzPnU8=;
+        b=DOD82VBkz4FJ0pQUJznIH9ExsbI0f9UvtgncOkmxyTHJ3EwZmR0npGvfWJLtICO848
+         DGGuuQvGMpNEzbQUy2u8bZwPrxZ5r7gzdOZgrqb6Zost82ByhWS239DvaGfWtnwFUpyZ
+         ++qRDi5TabdXAaC8FFaxtlz/3TPd9hGbUpETbBN2m78WyI7i1O7exob/3drVmMzqV9xy
+         UjzrzI8CuJMNJ91GzcMcp4KrftPExsx80/fxERhjnvXfgxrGy7g59GXxWOt0f92FAA9M
+         AUWRwRvmygqGmy0yQovTaHN33eptnVTTiyk7B6Pt/1ddhWvUGrnJB5dOx77Z19nC1jHh
+         HzKg==
+X-Gm-Message-State: AOJu0YzMEiwge6nFsmR0NkHvE1u/s8DMirez4DQJxx7RMLG8VhC5dfLM
+	S+oU5xItg5mbsfhc8Y6b4k6g2ZNe8TjurpPkvEZtsnhUfgYMFtOpUkqkMZG9grL4RpFYFZGAR3n
+	OfxA=
+X-Google-Smtp-Source: AGHT+IHdA1/BLcE+I0xAd42S/ugK3+MkiErPSWS8lopm+4vQfH1OaBpVpP2E7ccFbc0W+eDDTRko5w==
+X-Received: by 2002:a05:6830:b88:b0:70f:716c:7d4a with SMTP id 46e09a7af769-71a516f6a54mr4411368a34.27.1731447798267;
+        Tue, 12 Nov 2024 13:43:18 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71a6009dfb9sm81837a34.61.2024.11.12.13.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2024 13:43:17 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
+In-Reply-To: <20241112170050.1612998-1-hch@lst.de>
+References: <20241112170050.1612998-1-hch@lst.de>
+Subject: Re: remove two fields from struct request
+Message-Id: <173144779750.2202563.2182339299519835938.b4-ty@kernel.dk>
+Date: Tue, 12 Nov 2024 14:43:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-4-573bfca0cbd8@kernel.org>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.992];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-The subject prefix has obviously a typo, should start with 'blk-mq:'
+
+On Tue, 12 Nov 2024 18:00:37 +0100, Christoph Hellwig wrote:
+> this series removes two fields from struct request that just duplicate
+> information in the bios.  As-is it doesn't actually shrink the structure
+> size but instead just creates a 4 byte hole, but that will probably
+> become useful sooner or later.
+> 
+> Diffstat:
+>  block/blk-merge.c            |   26 ++++++++++++++------------
+>  block/blk-mq.c               |    5 +----
+>  drivers/scsi/sd.c            |    6 +++---
+>  include/linux/blk-mq.h       |    8 +++-----
+>  include/trace/events/block.h |    6 +++---
+>  5 files changed, 24 insertions(+), 27 deletions(-)
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] block: remove the write_hint field from struct request
+      commit: 61952bb73486fff0f5550bccdf4062d9dd0fb163
+[2/2] block: remove the ioprio field from struct request
+      commit: 6975c1a486a40446b5bc77a89d9c520f8296fd08
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
 
