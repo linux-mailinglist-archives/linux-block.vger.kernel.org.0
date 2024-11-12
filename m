@@ -1,139 +1,110 @@
-Return-Path: <linux-block+bounces-13899-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13902-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E7F99C586A
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 13:59:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C339C58E9
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 14:27:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E723E285B01
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 12:59:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8034B1F21FAF
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 13:27:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC4D81ADA;
-	Tue, 12 Nov 2024 12:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26DD415853D;
+	Tue, 12 Nov 2024 13:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nu6Zo9qX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RD0N/FH4"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CF170831
-	for <linux-block@vger.kernel.org>; Tue, 12 Nov 2024 12:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64C5157494;
+	Tue, 12 Nov 2024 13:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731416352; cv=none; b=r5PkjXiXAAUh9fT4wbZX6SFvQkB31rQmqwZEl8PLkgO9+NprTPp6Ra2ajfQzMvwGp9ynaxFJYPUAORIb698PX1BDmUQgPUQmob3lUS2skCQVg6Q7yeYlgNt3e9JmSsXM/+1e4D8JTNOFOTbRSwgm9Cp43ordWPoPMmktPEgkAKc=
+	t=1731417997; cv=none; b=XGmfwygpGDRdTecBX1/wqbuQ9CFJeDS7uO2ROmgihMStk37a7WRuteBZ2iKC4s5gW63p7tX3yEZ1c8jJjHne5Joyk53yYZNCPjAziM0wi0U2ZlUHu5AV9yKdX7/nTdK5vFUw1tUlvRybWw4KGNY2JoqhWggnZrOr4XcPmJLxAZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731416352; c=relaxed/simple;
-	bh=1vbxq5fT9J6QY/YtVQ9Yjav2Qr4N+rl9SPUs0pVnCC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AW4pyqWsrb3/A2+36Fm/5lhsDaazBNC/tMXMdSdB2RJODS8v1K+7K/u5ZlsPtABxdHMiMcydpge2oj7MZJdqp9MhJFZ317mzxHBCaxDKQCN7ow0yHm6XWn+4w8Rdto2yK2a6K9Z7rXDQlB1H4JypeF3buJuTlwaKefux+X6QxMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nu6Zo9qX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731416350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qEpwcMR888T/fdKl57hnA0eznf4rvVS3n72MHv4ya/g=;
-	b=Nu6Zo9qX4ePTLzOaxKWdC7TwmB75Okz70kgQpi88daKYPtQ84xC71kQoJHBJJQ9XiHUs6Y
-	DG5rSAF9YqS/Nuo6lFMlCTzNfy6W5URfDlanSv+6jNPLYI+4ZlnULBn7V0K9Yk6WlB52dv
-	oRTzbj2UHTWhk6xeGWt7z1DTDF9L+EI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-178-z4sXu5h1O8Ov2pYmR0jq4g-1; Tue,
- 12 Nov 2024 07:59:07 -0500
-X-MC-Unique: z4sXu5h1O8Ov2pYmR0jq4g-1
-X-Mimecast-MFC-AGG-ID: z4sXu5h1O8Ov2pYmR0jq4g
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A69B1955BEF;
-	Tue, 12 Nov 2024 12:59:05 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.29])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4366F1956086;
-	Tue, 12 Nov 2024 12:59:02 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Yi Sun <yi.sun@unisoc.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	virtualization@lists.linux.dev,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] virtio-blk: don't keep queue frozen during system suspend
-Date: Tue, 12 Nov 2024 20:58:21 +0800
-Message-ID: <20241112125821.1475793-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1731417997; c=relaxed/simple;
+	bh=TtWlAiC4IkXsj/3hib63zoCZd73AMtE9BF7/XoMzkf4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Fl35FozlFg4iuEPecHfirdevJDyLB++Qh4qgTIUgW6qSGeGxbv1m0b2JZ7dT6fMIolxGIRX0WokuDS9jKkl0p0ytpcb/+5s5mEF67OT8VMRlEFA2hIXJgRakc60KMHvQGD35zqRMTaMvjFYTTFTiN5O6NuHqD07UJ3LCBHV3hwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RD0N/FH4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206FEC4CED5;
+	Tue, 12 Nov 2024 13:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731417996;
+	bh=TtWlAiC4IkXsj/3hib63zoCZd73AMtE9BF7/XoMzkf4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RD0N/FH4ofVoZJX7eibNoMfJN5mHuobCy0Lmhle5DbJOR1LTalRqmqDV1Ygma74ut
+	 u16egC204lgYmJ6If+B/5QzAcn3M/oqNYHHUvGWoKO68QJdbTXElNXSna1y8CBe0D1
+	 IO8ggJS3dE9CPqfYsRdyN7dMqclXuCpfiSHWBlB33LVK8eqfHSoxeC+DUtvhLn7dI2
+	 1DcprriozAUN6Dp5Y4t5NGB6p5KVneqmhSmaTjt9mTLRlW77YAGJFHA+Jmq2elNMgZ
+	 LNBjlLuqhWRj/1kwf1/K9JFV3VUcSnVn1xBv4yU4NjyhNrDoXOsfyJVbr3/Qz+uaCl
+	 yeZT+Gc1Sk9bg==
+From: Daniel Wagner <wagi@kernel.org>
+Date: Tue, 12 Nov 2024 14:26:16 +0100
+Subject: [PATCH v3 1/8] driver core: bus: add irq_get_affinity callback to
+ bus_type
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241112-refactor-blk-affinity-helpers-v3-1-573bfca0cbd8@kernel.org>
+References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-Commit 4ce6e2db00de ("virtio-blk: Ensure no requests in virtqueues before
-deleting vqs.") replaces queue quiesce with queue freeze in virtio-blk's
-PM callbacks. And the motivation is to drain inflight IOs before suspending.
+Introducing a callback in struct bus_type so that a subsystem
+can hook up the getters directly. This approach avoids exposing
+random getters in any subsystems APIs.
 
-block layer's queue freeze looks very handy, but it is also easy to cause
-deadlock, such as, any attempt to call into bio_queue_enter() may run into
-deadlock if the queue is frozen in current context. There are all kinds
-of ->suspend() called in suspend context, so keeping queue frozen in the
-whole suspend context isn't one good idea. And Marek reported lockdep
-warning[1] caused by virtio-blk's freeze queue in virtblk_freeze().
-
-[1] https://lore.kernel.org/linux-block/ca16370e-d646-4eee-b9cc-87277c89c43c@samsung.com/
-
-Given the motivation is to drain in-flight IOs, it can be done by calling
-freeze & unfreeze, meantime restore to previous behavior by keeping queue
-quiesced during suspend.
-
-Cc: Yi Sun <yi.sun@unisoc.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: virtualization@lists.linux.dev
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
 ---
- drivers/block/virtio_blk.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/device/bus.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 0e99a4714928..25a0a85a19fc 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -1591,9 +1591,12 @@ static void virtblk_remove(struct virtio_device *vdev)
- static int virtblk_freeze(struct virtio_device *vdev)
- {
- 	struct virtio_blk *vblk = vdev->priv;
-+	struct request_queue *q = vblk->disk->queue;
+diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+index cdc4757217f9bb4b36b5c3b8a48bab45737e44c5..b18658bce2c3819fc1cbeb38fb98391d56ec3317 100644
+--- a/include/linux/device/bus.h
++++ b/include/linux/device/bus.h
+@@ -48,6 +48,7 @@ struct fwnode_handle;
+  *		will never get called until they do.
+  * @remove:	Called when a device removed from this bus.
+  * @shutdown:	Called at shut-down time to quiesce the device.
++ * @irq_get_affinity:	Get IRQ affinity mask for the device on this bus.
+  *
+  * @online:	Called to put the device back online (after offlining it).
+  * @offline:	Called to put the device offline for hot-removal. May fail.
+@@ -87,6 +88,8 @@ struct bus_type {
+ 	void (*sync_state)(struct device *dev);
+ 	void (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
++	const struct cpumask *(*irq_get_affinity)(struct device *dev,
++			unsigned int irq_vec);
  
- 	/* Ensure no requests in virtqueues before deleting vqs. */
--	blk_mq_freeze_queue(vblk->disk->queue);
-+	blk_mq_freeze_queue(q);
-+	blk_mq_quiesce_queue_nowait(q);
-+	blk_mq_unfreeze_queue(q);
- 
- 	/* Ensure we don't receive any more interrupts */
- 	virtio_reset_device(vdev);
-@@ -1617,8 +1620,8 @@ static int virtblk_restore(struct virtio_device *vdev)
- 		return ret;
- 
- 	virtio_device_ready(vdev);
-+	blk_mq_unquiesce_queue(vblk->disk->queue);
- 
--	blk_mq_unfreeze_queue(vblk->disk->queue);
- 	return 0;
- }
- #endif
+ 	int (*online)(struct device *dev);
+ 	int (*offline)(struct device *dev);
+
 -- 
-2.44.0
+2.47.0
 
 
