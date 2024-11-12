@@ -1,216 +1,230 @@
-Return-Path: <linux-block+bounces-13892-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13894-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E8019C56ED
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 12:48:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8621E9C5812
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 13:43:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5B931F21EAE
-	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 11:48:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12B901F2269C
+	for <lists+linux-block@lfdr.de>; Tue, 12 Nov 2024 12:43:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B0181CBE8F;
-	Tue, 12 Nov 2024 11:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF361F77AD;
+	Tue, 12 Nov 2024 12:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U236BPwI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fyG7KD2k";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="g49ZDPUs"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECD62309AD
-	for <linux-block@vger.kernel.org>; Tue, 12 Nov 2024 11:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731412122; cv=none; b=IUfduk/0XZCP2a1ZDu5ghEfDXwnDgmjVQM121gon0+NMufZygRDnb3jeahotWsw3UqSiJMFtbPPPnxoZ8r4Mmj1amYr6t9j2Xi5tTt+ICetedTUHyX5l2Q9Yw/tpQuF2B0BLdCKHJ/xqrJYm6O2mNydsQ3qsyTFOWMlLV0vDq3M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731412122; c=relaxed/simple;
-	bh=7eIJGXBtIMGCxFiT2JlnYA9gOa8LYpASyyHiISpfOvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I52LAMugtfDM4LqZUJHj8fpaDPjKapHGMxElCua36jqHDbms/ePc4eQ9RgMNofu+EB5EydIiWP9Syu2lDVYwbvHgJ9tD0Wen0NFGydasTXXMj9s4BJvydt/nlYbreT5+N7cFd1IKlrGseOIlyGNtI5ig7lAIKMopH51Ogwtnxzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U236BPwI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731412118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AqgahQBkmrbTkXxLRsD+SK1IIUPbSi6lXHN1UXa8waw=;
-	b=U236BPwII0FAhukPGqmtDr8xNn9cKpcn5qjwG77KSJZTNv7Ngk0U5fkrLzi6dvJwyhQZpa
-	pOxUIzfjAV5tD/vWbWee0Udm6w9wiSY0cYux8thgeIjjmu/6PdXes5V25CIT9w6fDl9/hb
-	WsiRuImYaSzTLf89KEm1GdQO5dANStI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-g3NNCdoJN2GUUZsrvy1naQ-1; Tue,
- 12 Nov 2024 06:48:35 -0500
-X-MC-Unique: g3NNCdoJN2GUUZsrvy1naQ-1
-X-Mimecast-MFC-AGG-ID: g3NNCdoJN2GUUZsrvy1naQ
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 717011955F69;
-	Tue, 12 Nov 2024 11:48:33 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.29])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9092F1956086;
-	Tue, 12 Nov 2024 11:48:26 +0000 (UTC)
-Date: Tue, 12 Nov 2024 19:48:20 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH V2 3/3] block: model freeze & enter queue as lock for
- supporting lockdep
-Message-ID: <ZzNAhGjZVgMtIIYD@fedora>
-References: <20241025003722.3630252-1-ming.lei@redhat.com>
- <20241025003722.3630252-4-ming.lei@redhat.com>
- <CGME20241029111338eucas1p2bd56c697b825eef235604e892569207e@eucas1p2.samsung.com>
- <ca16370e-d646-4eee-b9cc-87277c89c43c@samsung.com>
- <ZyEGLdg744U_xBjp@fedora>
- <6551c33f-b9e1-45ab-b420-d022d6e4e402@samsung.com>
- <ZzMqsmCVwfSHC7Vb@fedora>
- <d86a4cfc-ea64-4d95-af6a-186c02d2a162@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7511F7555;
+	Tue, 12 Nov 2024 12:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731415419; cv=fail; b=jhVjDXxGExfvrl3pui6JyP/0wVwjggBYosx2IbeA7vfwmZBpof7HHPXn0LgvmWPQpCNdjKziJ+hSfOXIa1NlD/HeeNFjuGa4/yA6eYDs00a+WLBeiF4wErB4Bj/tXF/P/gnov00f1UBRSrUkShfPN99t8W2F9cSEqQXD8CX0FxE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731415419; c=relaxed/simple;
+	bh=GzBn6DsZG0F3yOhU4+gFN0pAV3ZY6VdRn6hKI2bEsmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=M/wSkHQqTQoVKHhnHE4QsyCW+hhE2WveSOXR9cXt9SMyNnF0PLWHvhAGTIdSFwANH0IwtA1kLVz/gZN7nIaIwb/mPl9cPEmLdEI8oFWTnTxcKT6X/7/5UBcrSKKx472K9ZgX22szMUvd0d0xvojWTSBnmvC2LpC4hfWJLmk+xa8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fyG7KD2k; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=g49ZDPUs; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ACCfi1s030414;
+	Tue, 12 Nov 2024 12:43:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=/GdC+r0WTA5yBONR
+	B5h0C5uGmuFkE7K32bwY+Q164L4=; b=fyG7KD2kN/1tJKwM3tQwGl/xO/2rE2BF
+	7J4L6QM2wso9LxXd7RPcWJgW0GHHpFAlMlffTAsd1j/X/abmlsG20VT7+lKCgWDO
+	8mzoNBXeGtcpRSv42PxR3+GtgjMZu9qRGDg2z+dfodUMZzjBWk6ajYzCzm8YqPI8
+	Gj2zf6p1DEL9cwwury9FbHYMGixJpNERDdmJv++X1cj3925v3u/nx1hzpAFQJEH3
+	v/iMbIARTti5btzYFt9IRixtpph5uqbvhRkko4VDwvJP8Y+GRGnK7yRokQNxXLuk
+	KD+d4cgtXpkXp/kSMhCT7pf3G+P/bYHx4pi5ZCv3oQ2aRtYtCpA+EQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42t0kbv922-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Nov 2024 12:43:09 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4ACCUS3F036106;
+	Tue, 12 Nov 2024 12:43:09 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2047.outbound.protection.outlook.com [104.47.56.47])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42sx67u7r0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Nov 2024 12:43:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LNWuC25KsyqZ8JQwL+yWebRgAanjxk/kFgQwT36HVPb0rS4UQMzeQGxcnFkhk5uBTZVw6rfHxlvNg0mJaFUar/o9FLdZpj9pTJ1ipymMMtrLTY5E9a9FQ+DfxsSChd7bGNUNT9GFZjZV/yZLbXXdjAenAs9OrADk//FKnzN+1CgzHeJHTxiQr+/YO5JRWbx++tKXt42yBGillQ/g9mdKcKASuQUcF5FRJ78jV7sAoH1Lxy8/ty2qXcD5F8XrFay+W7yCXd40nD5a5tuhSCENFXKnVJuxnRNLnkFQLabCxvO4CoL0bOe6W9rJ9sSLtn0qvh8pqLS8Dq2rdObghsc2MQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/GdC+r0WTA5yBONRB5h0C5uGmuFkE7K32bwY+Q164L4=;
+ b=M0lPgoeXAOU+IIJpwnccMn2JmXFtAPXTvJZsPZuG9/jAc1PgIM9Hj+eiWR6//YPMlor6TlpeKjhlUhXeRCALzySTmEx1AUWw4bfnSAp7orWhKLBoqI07s3ygNdyVJpR4X7AQfJwJCtQX1YEGsW6qJpjCk6g5A8RTbcwWYzQAL/eHTwXy7aS+Gpu3IgfB2A/acX4NOS3XlnxiDMv16gq85c6cNKwk+2MkPK77hzUsBBIqm94hykVFWdK7OBhRVgf4Mgvs2mxSYCGnuevrklabjB4NCdY4JOH7AFWD2IVwO37A4FqZfnu/1LK9BaPEgz+YAY3XqQzxUIFGGp7ushK9kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/GdC+r0WTA5yBONRB5h0C5uGmuFkE7K32bwY+Q164L4=;
+ b=g49ZDPUsPi3eegHV0GrCTCIehzZVIhIxE20jyKYPux3uqNtmliuiRDGH7xDTdIdlOfBU2oWOZConuuEgucv58KduBUHAOSgCqrZmW89HXRJoOhBZKLLYu3mhj9DeUenPyovB1udrwzpWT1ed66OTZ53Q4rSSAkEZeRrKVCw9uZU=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SA2PR10MB4809.namprd10.prod.outlook.com (2603:10b6:806:113::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.29; Tue, 12 Nov
+ 2024 12:43:06 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.8137.027; Tue, 12 Nov 2024
+ 12:43:06 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, hch@lst.de
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, martin.petersen@oracle.com,
+        John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v4 0/5] RAID 0/1/10 atomic write support
+Date: Tue, 12 Nov 2024 12:42:51 +0000
+Message-Id: <20241112124256.4106435-1-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0220.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::15) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d86a4cfc-ea64-4d95-af6a-186c02d2a162@samsung.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA2PR10MB4809:EE_
+X-MS-Office365-Filtering-Correlation-Id: e072b229-e2d2-4825-c3b0-08dd03178e17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jgRcLFhOAexprObfUMYFuQUtyF7tq36LdXrYi/b4jdzuSZkdJF6wOXoA+KuY?=
+ =?us-ascii?Q?YVJCxOAo+h5YSW2kLC0Yb+9z5m8o2dknFqXtIPrVKsHtbBLHzjV8GDpYBtet?=
+ =?us-ascii?Q?23sIqDayo3W99+C4vgQ3KJTZSX18frdgfxDpP416qxaD5mdAuqHw0euE8p9+?=
+ =?us-ascii?Q?l7C20qzRUVMTd5RpBc3DCsgB9uTbEQ/1uewLOFVVQeaCI9XuhU4P4+uN5ExP?=
+ =?us-ascii?Q?tIKxmCZ+ky9Z3uwt9et3FnxNuNSR2j539mZXka+dTbKbxiAwGFYwQArEvfKZ?=
+ =?us-ascii?Q?DfhfQSO0BtdaAmLhdkMWMtsDoaw9ZKwmcVkDHulG3VQUcBolFagEUW8R0e2c?=
+ =?us-ascii?Q?9Pv8sDLKAZj1Sr/IEERSHM+OP6fAJ3Y9ctrXKy9zlI7AfJI+53gXU9M1NDVG?=
+ =?us-ascii?Q?QYvtYtJnKU3HZS5BuFO0Ynf0LZrX3jE1onngiWqJQPGbQRBdS/C4nSREi7vJ?=
+ =?us-ascii?Q?IVCJlC2aCT6dpNwYQn6DLTHBF4aWCU06AaHufcv8f2HKSEUZcwncy/v26AiZ?=
+ =?us-ascii?Q?Rm0UXia8iRO6U9xYVHlFQ2nWlkzGytkwN+JGFveGvOLBt2miJ76jsMoycX3Y?=
+ =?us-ascii?Q?LuPacqZkYU24KfQyrNq7FStkuLVUfBtQUiiwZYot+sBU3dEMuzRubTStHNtE?=
+ =?us-ascii?Q?UgcnqTRQmm2O18b5QdDNh72XDHyVGSWEhFRrQhbTn3JMml+emZ+JPHygNGa9?=
+ =?us-ascii?Q?vKICsZ/nQz6nGHMnxM9dBDxoteIYVC8kIWS6lrtl5DjYJzcEV1O0qPZ262+A?=
+ =?us-ascii?Q?eNoJ+j3FReSbUszxsQa/ALqvvK2JGB+wqlWu2fLQDrX8RUH/KQRkxCcCMg7j?=
+ =?us-ascii?Q?7Yma20/RMdGckJea4b7N1V/zaOj+zJ34JAHgHoJe0cmiLuE3+XCWHRs4/ofs?=
+ =?us-ascii?Q?2KLUfGfDA40hSMgUNC7/dtL5NCTpt/zg8KWvIrvBr0DMYI/EN+JD08JPAdPd?=
+ =?us-ascii?Q?vPbGjFXw0xvPszodJeit4mwc+QvH73r3kS9aWITeHF82JPb3FIOkR3dwfRsG?=
+ =?us-ascii?Q?AQPHyXGKYKOOa7vJavAwv0mvU69w84BaQJlcsq+zqXqieAOlxr6VYDGe68lA?=
+ =?us-ascii?Q?6qfBE5d8GD73gASK9E6qbDFnWaypAzTyNKaiwKOgo9pUQg6UMwWsGkAU2lts?=
+ =?us-ascii?Q?xT4gDLN32YSP21K7RUfcD0y8k18+oBAKFnSFY3zieEoUIUZ5VJLkfu0KeTkd?=
+ =?us-ascii?Q?Zoe1ayMB1OCdxZmpOsGuEry2HNfx/LBdcobI402DAaPC6NtCWJntxo8WhJgK?=
+ =?us-ascii?Q?w9rlmgVd4JmTn7J5ibFzyw9IUuyxk/5gCbeJEL6EE8/owP3HHx8k2edCUwiK?=
+ =?us-ascii?Q?X30TCiwddUFzHAJhtkWFiUPN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5IYaT2Vi1bbS26LOHznzMZ6lZhMRLkp59vEk3BUpQiD27UShAANWZyUvC6w0?=
+ =?us-ascii?Q?5NHV9I3Lvu7PaeJRDeO9ANIvDdEBnWdHZ77TQ/BPC63MSxBYJohZRrB0Plni?=
+ =?us-ascii?Q?+bivr+a+kXcN3MUbLvBw1OJIpiBNE7haMo5mc603fy83W1RZGxyt8wlYnLdy?=
+ =?us-ascii?Q?VQOeP5+unUUmXcWY9hJtOJxuVUdCVsMxg+XOhhF/1hHgR1DEB9tIEPOh8iED?=
+ =?us-ascii?Q?J4CPA1qkl5bHLaIPl/Fu1YKZgKBKBFSHjx2wBhdjRBvjYxwY/8/iiLgiLIie?=
+ =?us-ascii?Q?V8DAFrvQPQWF1hLO6EIRlO3ktRWuJvMjarMmMsdLCH91HcP+MixFUQMXFi8X?=
+ =?us-ascii?Q?tllu8zpiK9h02y6XTi1evD6T3kO2hcunuPhQ71I8+LQBrovYy4tGVffvXtAn?=
+ =?us-ascii?Q?d32RZrMGJAwrXnng8DYJ7w3x+tKw2JX/CZtL2Qm0swfTrV9mDu5eowkKLj0t?=
+ =?us-ascii?Q?STw0F/lj9m8aEwQ1LwNSOuPtEJwwEYpkkMIwePTVoVDpoRihn1RUjaMqGqhI?=
+ =?us-ascii?Q?UaHHHiSgEj8E9RxsbtX11SB/TIBo6TPFWfKh1X/YqT3va02vHK4MOi95ttLV?=
+ =?us-ascii?Q?4hgGHmGMTrya0M95pknmVm3DzF3dw0UqT0z8hhulA47NVsHRgIoNxdoxyoZA?=
+ =?us-ascii?Q?bbbPOqZpz27XLUT9faWeMpr2JqvUCOOdQHWdJTZ/FaUQF8BBZ3c79wgVodE3?=
+ =?us-ascii?Q?CtatKYCueyXFr4uFdCLf7Kz+puF1HZduax4XKOviVAyfFH8W/gJGJpV8Nppi?=
+ =?us-ascii?Q?f4tpefrVe+w8P06gyJ1lY3v/HZS16rE3sV+DU0BLuJWsa4lITJFC7CA4Vi+5?=
+ =?us-ascii?Q?UHErK3wSqQvPBwdApSi5AcjHWHbBCRTL84hOAEnDn5WuPHWydDVoy9n6OQaK?=
+ =?us-ascii?Q?akgkvD25Lkq+UZFE9FBCPndrjpMCUIzurEQdgJj2vfQWxetYzxTfgZaWE3DK?=
+ =?us-ascii?Q?dx7V+URSCFLPjGyYRRoR4XjTan2WDqB/EScOqs732vfVWaFBnlV6GBmNDHfy?=
+ =?us-ascii?Q?3GXKDVNRhIMgDLW1Jul046w95VvgbqfaOOsb5mC3tDWrc6nG/frenAgG15fk?=
+ =?us-ascii?Q?0BnTUZ4UAXAsYS1u+PRXntP8575X/X1xXkAA0TtJSgxYPApk+9Yjl6xXXTdp?=
+ =?us-ascii?Q?pQQ1ymK2Azm3KoEDaPAmdwHL8RM+WEuqfOM1txlMbtAHcHoSR4zzycIJZ+eJ?=
+ =?us-ascii?Q?3o1wbviVMwNXEa1uqvh8Amxvyk1ojOdD/8fk3ZunhHuCgZ5+NU0ZK+eg6XNJ?=
+ =?us-ascii?Q?4M8l86lNmgDTBHk6zRpoTNTSZTZvbgMm6w+6uQRBLnUY7vTMKsExRQnEnVwr?=
+ =?us-ascii?Q?j5pHZPDbE2UY384jYezZfJvLDt56kRzNhrQHKQOSby2n2t4NrpgJRfdwLZrI?=
+ =?us-ascii?Q?w5njyJwqC3/NxLmtcypR1f/+rTWzRCFrgoXBX3B997AVjAOD1pZwje8tl94y?=
+ =?us-ascii?Q?7VmMpLb1xOP1hPTcp++6lI43DdfFmmlZeyZoB5mirMBcs17wXt5AF6fSVaem?=
+ =?us-ascii?Q?+KemKiPSvcqGPV7Q0BiCPcZi4TsVKfhiNYnPwMpku9gI1jYlM38H3iM1zxJ3?=
+ =?us-ascii?Q?j1fH5d8xLhfCZwWIwjytbSdinrpEZwqKO2p+DHlpET+NiZN623yQxh9kcZoL?=
+ =?us-ascii?Q?cA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	cOsqFn1sXM+hWLfkzHFYDP8TF90XA+ocZTv4AyfPqxlz424dNV2qCyLwmFLHMuiNsjO4STbatMm1m4S+ZtRy6f8CemIocFoilzkw10KYxPiAw64DVArQg7XdJDBQyIjDsAzW2OaLgq/gjcoUoLMF1KgcSpbeh0ydyyhk/Ziywz1hCyfYJb2ru2HWTisLAwD1GvUFd8U7P4apFvt/YJnmgRFAUgvnultD46YEjdFPgzT+GvI+sV5NN15CPK3EJ0cFlxTpSgzbCcQn0BNDr/U7eefp48GFlNGLOKnpl4qZq4oQOMXaMFolTl9wwv9eUXPsM/S+VhgmhhpUKziGvnetByFwyFJDPG9A14RYIM4azNWWsTIoDxjC9cck6syodX0E4IWLCPWEFqfix4I4lPsuTUHUYPpLGRftpZkKhslBraHoc9wyUyjKYE2vUzBKyyd9+dsx4mnhisGqs8BpeUorApXqBtBhM7kXEnoJYPfrTmlZ/Hc3OTKqgAdw63JCrpleHjM98E8fZ0/ur82x7AlmJ1B/XNcyIn4C4YPA8/Q5BNxR/DOSmi9L+66i8qd74OZgfhFxJOUHkGk4rebF72s98XNZwIc7DQHx9Q/xEHDhxDk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e072b229-e2d2-4825-c3b0-08dd03178e17
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 12:43:06.0956
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VsJNZfebx/poJ1Dq7WSm8BequLkuL3/Jk1sfielxghC4M5SvHn6eTfW77a4OG/QEAh1V+GQOD5zt5Jqn54y1Bg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4809
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-12_05,2024-11-08_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 mlxlogscore=984 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2411120102
+X-Proofpoint-GUID: pm32M1Zhhuhyyn-NhdCp6z3hUbEGWDlD
+X-Proofpoint-ORIG-GUID: pm32M1Zhhuhyyn-NhdCp6z3hUbEGWDlD
 
-On Tue, Nov 12, 2024 at 12:32:29PM +0100, Marek Szyprowski wrote:
-> On 12.11.2024 11:15, Ming Lei wrote:
-> > On Tue, Nov 12, 2024 at 09:36:40AM +0100, Marek Szyprowski wrote:
-> >> On 29.10.2024 16:58, Ming Lei wrote:
-> >>> On Tue, Oct 29, 2024 at 12:13:35PM +0100, Marek Szyprowski wrote:
-> >>>> On 25.10.2024 02:37, Ming Lei wrote:
-> >>>>> Recently we got several deadlock report[1][2][3] caused by
-> >>>>> blk_mq_freeze_queue and blk_enter_queue().
-> >>>>>
-> >>>>> Turns out the two are just like acquiring read/write lock, so model them
-> >>>>> as read/write lock for supporting lockdep:
-> >>>>>
-> >>>>> 1) model q->q_usage_counter as two locks(io and queue lock)
-> >>>>>
-> >>>>> - queue lock covers sync with blk_enter_queue()
-> >>>>>
-> >>>>> - io lock covers sync with bio_enter_queue()
-> >>>>>
-> >>>>> 2) make the lockdep class/key as per-queue:
-> >>>>>
-> >>>>> - different subsystem has very different lock use pattern, shared lock
-> >>>>>     class causes false positive easily
-> >>>>>
-> >>>>> - freeze_queue degrades to no lock in case that disk state becomes DEAD
-> >>>>>      because bio_enter_queue() won't be blocked any more
-> >>>>>
-> >>>>> - freeze_queue degrades to no lock in case that request queue becomes dying
-> >>>>>      because blk_enter_queue() won't be blocked any more
-> >>>>>
-> >>>>> 3) model blk_mq_freeze_queue() as acquire_exclusive & try_lock
-> >>>>> - it is exclusive lock, so dependency with blk_enter_queue() is covered
-> >>>>>
-> >>>>> - it is trylock because blk_mq_freeze_queue() are allowed to run
-> >>>>>      concurrently
-> >>>>>
-> >>>>> 4) model blk_enter_queue() & bio_enter_queue() as acquire_read()
-> >>>>> - nested blk_enter_queue() are allowed
-> >>>>>
-> >>>>> - dependency with blk_mq_freeze_queue() is covered
-> >>>>>
-> >>>>> - blk_queue_exit() is often called from other contexts(such as irq), and
-> >>>>> it can't be annotated as lock_release(), so simply do it in
-> >>>>> blk_enter_queue(), this way still covered cases as many as possible
-> >>>>>
-> >>>>> With lockdep support, such kind of reports may be reported asap and
-> >>>>> needn't wait until the real deadlock is triggered.
-> >>>>>
-> >>>>> For example, lockdep report can be triggered in the report[3] with this
-> >>>>> patch applied.
-> >>>>>
-> >>>>> [1] occasional block layer hang when setting 'echo noop > /sys/block/sda/queue/scheduler'
-> >>>>> https://bugzilla.kernel.org/show_bug.cgi?id=219166
-> >>>>>
-> >>>>> [2] del_gendisk() vs blk_queue_enter() race condition
-> >>>>> https://lore.kernel.org/linux-block/20241003085610.GK11458@google.com/
-> >>>>>
-> >>>>> [3] queue_freeze & queue_enter deadlock in scsi
-> >>>>> https://lore.kernel.org/linux-block/ZxG38G9BuFdBpBHZ@fedora/T/#u
-> >>>>>
-> >>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> >>>>> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> >>>> This patch landed yesterday in linux-next as commit f1be1788a32e
-> >>>> ("block: model freeze & enter queue as lock for supporting lockdep").
-> >>>> In my tests I found that it introduces the following 2 lockdep warnings:
-> >>>>
-> >>>>> ...
-> >>>>
-> >>>> 2. On QEMU's ARM64 virt machine, observed during system suspend/resume
-> >>>> cycle:
-> >>>>
-> >>>> # time rtcwake -s10 -mmem
-> >>>> rtcwake: wakeup from "mem" using /dev/rtc0 at Tue Oct 29 11:54:30 2024
-> >>>> PM: suspend entry (s2idle)
-> >>>> Filesystems sync: 0.004 seconds
-> >>>> Freezing user space processes
-> >>>> Freezing user space processes completed (elapsed 0.007 seconds)
-> >>>> OOM killer disabled.
-> >>>> Freezing remaining freezable tasks
-> >>>> Freezing remaining freezable tasks completed (elapsed 0.004 seconds)
-> >>>>
-> >>>> ======================================================
-> >>>> WARNING: possible circular locking dependency detected
-> >>>> 6.12.0-rc4+ #9291 Not tainted
-> >>>> ------------------------------------------------------
-> >>>> rtcwake/1299 is trying to acquire lock:
-> >>>> ffff80008358a7f8 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock+0x1c/0x28
-> >>>>
-> >>>> but task is already holding lock:
-> >>>> ffff000006136d68 (&q->q_usage_counter(io)#5){++++}-{0:0}, at:
-> >>>> virtblk_freeze+0x24/0x60
-> >>>>
-> >>>> which lock already depends on the new lock.
-> >>>>
-> >>>>
-> >>>> the existing dependency chain (in reverse order) is:
-> >>> This one looks a real thing, at least the added lockdep code works as
-> >>> expected, also the blk_mq_freeze_queue() use in virtio-blk's ->suspend()
-> >>> is questionable. I will take a further look.
-> >> Did you find a way to fix this one? I still observe such warnings in my
-> >> tests, even though your lockdep fixes are already merged to -next:
-> >> https://lore.kernel.org/all/20241031133723.303835-1-ming.lei@redhat.com/
-> > The lockdep fixes in ->next is just for making the added lockdep work
-> > correctly, and virtio-blk is another story.
-> >
-> > It might be fine to annotate it with blk_mq_freeze_queue_no_owner(),
-> > but it looks very fragile to call freeze queue in ->suspend(), and the lock
-> > is just kept as being grabbed in the whole suspend code path.
-> >
-> > Can you try the following patch?
-> 
-> Yes, this hides this lockdep warning, but imho it looks like a 
-> workaround, not a final fix.
-> 
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+This series introduces atomic write support for software RAID 0/1/10.
 
-Thanks for the test!
+The main changes are to ensure that we can calculate the stacked device
+request_queue limits appropriately for atomic writes. Fundamentally, if
+some bottom does not support atomic writes, then atomic writes are not
+supported for the top device. Furthermore, the atomic writes limits are
+the lowest common supported limits from all bottom devices.
 
-It is actually not workaround, because what virtblk_freeze() needs is to drain
-all in-flight IOs. One thing missed is to mark the queue as quiesced,
-and I will post one formal patch with queue quiesce covered.
+Flag BLK_FEAT_ATOMIC_WRITES_STACKED is introduced to enable atomic writes
+for stacked devices selectively. This ensures that we can analyze and test
+atomic writes support per individual md/dm personality (prior to
+enabling).
 
+Based on 0b4ace9da58d (for-6.13/block) nvme-multipath: don't bother
+clearing max_hw_zone_append_sectors
 
-Thanks,
-Ming
+Differences to v3:
+- Add RB tags from Christoph and Kuai (thanks!)
+- Rebase
+
+Differences to v2:
+- Refactor blk_stack_atomic_writes_limits() (Christoph)
+- Relocate RAID 1/10 BB check (Kuai)
+- Add RB tag from Christoph (Thanks!)
+- Set REQ_ATOMIC for RAID 1/10
+
+John Garry (5):
+  block: Add extra checks in blk_validate_atomic_write_limits()
+  block: Support atomic writes limits for stacked devices
+  md/raid0: Atomic write support
+  md/raid1: Atomic write support
+  md/raid10: Atomic write support
+
+ block/blk-settings.c   | 132 +++++++++++++++++++++++++++++++++++++++++
+ drivers/md/raid0.c     |   1 +
+ drivers/md/raid1.c     |  14 ++++-
+ drivers/md/raid10.c    |  14 ++++-
+ include/linux/blkdev.h |   4 ++
+ 5 files changed, 161 insertions(+), 4 deletions(-)
+
+-- 
+2.31.1
 
 
