@@ -1,145 +1,95 @@
-Return-Path: <linux-block+bounces-14005-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14007-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F94B9C7919
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 17:43:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5AB9C79DC
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 18:22:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D4ADB32866
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 15:55:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5B44284A95
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 17:22:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874E912DD8A;
-	Wed, 13 Nov 2024 15:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="helnGw1z";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vw07JzBJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="helnGw1z";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vw07JzBJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 816CC201113;
+	Wed, 13 Nov 2024 17:22:07 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5797083B;
-	Wed, 13 Nov 2024 15:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740661632F2
+	for <linux-block@vger.kernel.org>; Wed, 13 Nov 2024 17:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731513298; cv=none; b=Wc9a7c2ssw3pkZtodityT7wHV3VMU2xWlkQa26dNJLJKe/cSysuyFEVZV1QIGMD+7opqPLbUT/zRHgQmN3+G0QbH3XBv30Uh18gcBPd3TsRRJEvNwr0CAGD3vd6qNFzpi48XkWD+JAALZIE3YDV+D7B75LXtQKzcpbQaAY3Tz24=
+	t=1731518527; cv=none; b=Lfsj0rhtm7sVUhBsYommB4rfxpg+uVUxzhyVBxO6BiExFxYt5ULG0EnOs12CmKHasd2Ow0f5mXzGdPFmGFyw5yjQakKiBP5nqD04buHEv/gTaGpA5LefcOhSWViEh4pH7//dZ+MhbeBal9KSzvI4J91GABrQPRVOizv9CWZFAWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731513298; c=relaxed/simple;
-	bh=FeA4bpgiNidNL2opV8gP3BBCHF0vODranb5dontX6+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcVXsUQZ9qzNd0WNiT6xr1mCsAP6Zve31MTpjTT8R2g7mK24If7V2YvcpQhrS5hhZKD/MBGEBoBLazEFr4qwozYFmoNIIHwc42Dyy93bAGy0xNjxwzgKwVK3Uvny1E9dSpuuaGFnBEfNyRvlGgo7iI9F8+61QGBUEv1QD0BzCsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=helnGw1z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vw07JzBJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=helnGw1z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vw07JzBJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C0CD421166;
-	Wed, 13 Nov 2024 15:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1731513294;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uUuf4uNap9rncTSP9UYbe3/HtwXFGkUWLN9x+qDvWY8=;
-	b=helnGw1zmqop/3BeWJzx15qvaVwjv9XUtWObsZPNLMHLjOFL1vHkm1VgZbTavkN/efibla
-	M23rsRgERwxgWWm7Q4DF6QQ3BDgeLPQt7QAcHHJOPOowy18U8ZC30DiTw7Afn5OtMOrOvc
-	sRTMcSnS9YuxA0DFcykxwLnLYd8QWag=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1731513294;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uUuf4uNap9rncTSP9UYbe3/HtwXFGkUWLN9x+qDvWY8=;
-	b=vw07JzBJnECEu6LJJQo6/NYeTo9IomdrtKlZcxfJFWY1MpTIJ/MHt8d2/2bujebEb7uMtV
-	DiAVKlsm1F9wymDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1731513294;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uUuf4uNap9rncTSP9UYbe3/HtwXFGkUWLN9x+qDvWY8=;
-	b=helnGw1zmqop/3BeWJzx15qvaVwjv9XUtWObsZPNLMHLjOFL1vHkm1VgZbTavkN/efibla
-	M23rsRgERwxgWWm7Q4DF6QQ3BDgeLPQt7QAcHHJOPOowy18U8ZC30DiTw7Afn5OtMOrOvc
-	sRTMcSnS9YuxA0DFcykxwLnLYd8QWag=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1731513294;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uUuf4uNap9rncTSP9UYbe3/HtwXFGkUWLN9x+qDvWY8=;
-	b=vw07JzBJnECEu6LJJQo6/NYeTo9IomdrtKlZcxfJFWY1MpTIJ/MHt8d2/2bujebEb7uMtV
-	DiAVKlsm1F9wymDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9EF5013A6E;
-	Wed, 13 Nov 2024 15:54:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1G1FJs7LNGfLJgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 13 Nov 2024 15:54:54 +0000
-Date: Wed, 13 Nov 2024 16:54:49 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Yi Zhang <yi.zhang@redhat.com>, linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org
-Subject: Re: validate queue limits in btrfs
-Message-ID: <20241113155449.GQ31418@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20241113084541.34315-1-hch@lst.de>
+	s=arc-20240116; t=1731518527; c=relaxed/simple;
+	bh=Z2yvubv1C3jHp6QXvOC/+j9/4t0h3OAD2jGZoHdUtJo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=POxvbsKHTKOeIXIAjWOKMBSV8cQ7BDcVesKDqybU/NleS+nIvpD9qpq9KPrCPQFu5oqNeMIq/AiqM6eozLVbLKSaeUX3nYhP/BTLrLvCkQrqTvym9bLmX8SaEStDXBfbQQBEsphk5pHTGoDIE8KU1bokOEmSdPJTNjfqRkKc1jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-83ac0354401so877987239f.3
+        for <linux-block@vger.kernel.org>; Wed, 13 Nov 2024 09:22:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731518524; x=1732123324;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JnOf36aP94RKBx0LKLDwa8vZa06z4Rk+yvwFlv0FEFc=;
+        b=s46V8AupFIi4jO8DSD3qNpsYDZiLi3wkyZGYdpmdaaFZOWeLFjQFaWazz27gUm893E
+         4va1AT1ysWxMAE7guHbT9KqqJ+INJOXGjFxWWcG7mPPl+8T2hx63RhyHy8DASPP/3vFP
+         Dcpc8eU9gLkPcvn3P7fWOVv2y8qHJYP+fQwsz3QzH+VQjzUTQvrea3QKI93xzeB6iMvo
+         7fLbquDtEMbEey5ViP4C27mo9swcygkR5t/heFfKc0d0FIaGZPs1zs9yUb9VeI5kpZXZ
+         iIwTP59mfH9bdg/wp3n3y6kuvKG2Zwmb7Mv9YSbveXXSPBfoqCAp5YEFUkEeXWKGRY9T
+         fIeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbhDObDVMYqsZWk3OOU8msto8P9N7DDLYbSi7fIWwfAjkTAqhfJENSVERIyf6k1o0tFCPRyOtXo5glyw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDrMk0FIq/cElub6Evs08eFX1L1MEgCvHWTbuF3QZEHDRLNlO8
+	+HPR+VfxBRz1ffMmGMnTRcdfOj4YCP10rkV3wNWHabrnbF45AQFFt/EdaQx+kiAOzkDQ/seNUO2
+	a0KG1aMW6mwN+Rns2pVJguqwS7kAa4J1OiLoKbITNEeeZDxOSp68jxOA=
+X-Google-Smtp-Source: AGHT+IEgQtmLGOHg1sQ01VClhxTRs9K7Qj21K5aCs/Tm8TEIqRm/Hmmz09IzpN/8iP4SWCVdpKm4EOH9JWYpabOweVUk1mKlM+KS
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113084541.34315-1-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
+X-Received: by 2002:a05:6e02:3082:b0:3a7:1de2:1d9f with SMTP id
+ e9e14a558f8ab-3a71de21df7mr2684235ab.13.1731518524539; Wed, 13 Nov 2024
+ 09:22:04 -0800 (PST)
+Date: Wed, 13 Nov 2024 09:22:04 -0800
+In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6734e03c.050a0220.2a2fcc.0045.GAE@google.com>
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, andreyknvl@gmail.com, axboe@kernel.dk, 
+	dvyukov@google.com, eadavis@qq.com, elver@google.com, glider@google.com, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, pengfei.xu@intel.com, peterz@infradead.org, 
+	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Nov 13, 2024 at 09:45:34AM +0100, Christoph Hellwig wrote:
-> Hi Jens, hi btrfs maintainers,
-> 
-> a recent patch from me exposed the fact that btrfs did call the helper
-> to validate the queue limits, which is also used to fill in precalculated
-> values.  This series fixes that and is needed to fix a blktests regression
-> in the current block tree.   I'd thus recommend to merge it through the
-> block tree ASAP.
+syzbot suspects this issue was fixed by commit:
 
-Ok, ack for the btrfs patch, thanks.
+commit ae94b263f5f69c180347e795fbefa051b65aacc3
+Author: Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue Jun 11 07:50:33 2024 +0000
+
+    x86: Ignore stack unwinding in KCOV
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=174bc1a7980000
+start commit:   7a396820222d Merge tag 'v6.8-rc-part2-smb-client' of git:/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4059ab9bf06b6ceb
+dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14669c6fe80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d23ae3e80000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: x86: Ignore stack unwinding in KCOV
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
