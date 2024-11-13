@@ -1,166 +1,138 @@
-Return-Path: <linux-block+bounces-13949-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-13959-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15DAC9C6BB8
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 10:47:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90D239C6BD7
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 10:48:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 62C4BB26832
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 09:47:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 490B31F239AD
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2024 09:48:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25E818B49B;
-	Wed, 13 Nov 2024 09:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58DE81F8F0D;
+	Wed, 13 Nov 2024 09:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="buhMb819";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yDbbnAly";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="buhMb819";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yDbbnAly"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="snFQ0Z5P"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1949D165EE3;
-	Wed, 13 Nov 2024 09:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4467118A951;
+	Wed, 13 Nov 2024 09:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731491221; cv=none; b=DO27v5vRBK4QHp9SBo1AkUPDSfGJDRYzAkr9jm0xCVSnUTkB392n2UezDitbDXdGZYrckoj8SY3vdUPjkSrIsAv0gpd+kGQpJ9WZ8WQwJ4AmonpSw3Tk4a0J1eYkNN66+BjhA0VYWdS7rMjHp31q9ZDuoOp9iejpWLgWQ80NBDU=
+	t=1731491256; cv=none; b=L7w8tPRe81sJ1knP2PHMvGvKd8W7Obw5Qk60TumPMb92wMvzWTmqP08I57rrRhWDfgVVAVWUvcUQIzjkJZsMEV6ObA+223kNvZxZ13ybhRFpIFSMCYVjysXfpR15lAoGeCrGT3Rn+EfRDczhsXNS/H9OUH2QWVGXwsVMf+mPLg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731491221; c=relaxed/simple;
-	bh=IGZBxUf6j8Fre9U4gMPDk+vI2SZImVE4LQ5NSf7swnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AUTJhBs0zlK+Ac9zOAaxM8u6DTfUScpKJ65re6/lTfCkRbiOb4wMXy6gtPq+/8DG55BCRVarv+wy3S5SY14U6OhIHGZuXk1Z4zGxOPNzpJNzsFwKeITGscrK/Z7FBHoOuJ1FYhXfh9R/X9Hd3M9FU3NDcqUDYnOIRYMbtXdhh/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=buhMb819; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yDbbnAly; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=buhMb819; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yDbbnAly; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 40C641F37C;
-	Wed, 13 Nov 2024 09:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731491217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eWkg1hOqi+ycsd64ANkNglK3giwDFCmogHKWtrMRowk=;
-	b=buhMb819wZHU/8iqf/q4eAXXZ66+XnK0O9RtpFEbzsRnuZKFR/vQ9XNEHpi4PQ+SDjQYxh
-	3omCBb0a5uhojNHRXGnAinSk560ZVg7A4pxDGXEPRUpkJxU3iirp+4ZByUaCA3ofpYFVNs
-	+MFT4aXkNxijSPRa/QI2UwbMQBQAABk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731491217;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eWkg1hOqi+ycsd64ANkNglK3giwDFCmogHKWtrMRowk=;
-	b=yDbbnAlyF2GKghvTsSyOgC73RfRuK0CmRznxsYAEyAh7MPWFuUpakA1CP7JMuTqVqtx8tI
-	o3BlYDuKhMn48kDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731491217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eWkg1hOqi+ycsd64ANkNglK3giwDFCmogHKWtrMRowk=;
-	b=buhMb819wZHU/8iqf/q4eAXXZ66+XnK0O9RtpFEbzsRnuZKFR/vQ9XNEHpi4PQ+SDjQYxh
-	3omCBb0a5uhojNHRXGnAinSk560ZVg7A4pxDGXEPRUpkJxU3iirp+4ZByUaCA3ofpYFVNs
-	+MFT4aXkNxijSPRa/QI2UwbMQBQAABk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731491217;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eWkg1hOqi+ycsd64ANkNglK3giwDFCmogHKWtrMRowk=;
-	b=yDbbnAlyF2GKghvTsSyOgC73RfRuK0CmRznxsYAEyAh7MPWFuUpakA1CP7JMuTqVqtx8tI
-	o3BlYDuKhMn48kDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0AE5C13A6E;
-	Wed, 13 Nov 2024 09:46:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wZs+ApF1NGcpFAAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 13 Nov 2024 09:46:57 +0000
-Message-ID: <d73f8c20-27c1-4c13-9be3-7f127f9f093d@suse.de>
-Date: Wed, 13 Nov 2024 10:46:56 +0100
+	s=arc-20240116; t=1731491256; c=relaxed/simple;
+	bh=UzCj71djHnVlmhrgagbZpakgyKKeaOyqPK2azzUEczc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pp4NvZVyM+Ji/6dInbV3V4nRef2teni6oA1uw5RMOll8Uc2oig8N98Oe3LY1j4AJHyTOXNi/8ghuGJGd8dNxHi6bj2+W6nyieltpAvQnwovZLoLTK3xkcnRsq2C2PRXPjjBs5Oi7c/yKlGSV7YWlCG6ukH+LMf6z3Vh3/De68GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=snFQ0Z5P; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=NogMAPzoSN85DvPt0N/0Cgk6QQiG18HIcIcgH/liG3k=; b=snFQ0Z5PJlY9VkqMDtEFeSYgtD
+	yMAPbpE4RgPcakyuL+8kKQyVKgjQ4rrp1V3uqsOWk6Nl53SQ3BZMdGLPQwiYA3iPjoR6fCmd7DaMb
+	vamzErL4wJKX3d3LT5lvxfltNLq1g3j8gqFKiMbGhqsZV1s/RpohfYHIxH+luNGY7yMz0c1bs6kRe
+	cpNKeilWuyF4a2Q8OQEy+FsWwCnS6M4Ld4IzUL7OEpDir3YxTWYoqW4nXJYfFTC/kwanqtuOiPgNJ
+	zXhY/HPqdplSCnzxWhplwraESdUvvGzBj62+DaxWaV60NodWOsXDi7/YCaZ0XAkj1UoAlh/v+xh5N
+	KLakTrOw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tB9yC-00000006Hcw-32MC;
+	Wed, 13 Nov 2024 09:47:28 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: willy@infradead.org,
+	hch@lst.de,
+	hare@suse.de,
+	david@fromorbit.com,
+	djwong@kernel.org
+Cc: john.g.garry@oracle.com,
+	ritesh.list@gmail.com,
+	kbusch@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [RFC 0/8] enable bs > ps for block devices
+Date: Wed, 13 Nov 2024 01:47:19 -0800
+Message-ID: <20241113094727.1497722-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] driver core: bus: add irq_get_affinity callback to
- bus_type
-To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
- linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
- mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
- storagedev@microchip.com, linux-nvme@lists.infradead.org
-References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
- <20241112-refactor-blk-affinity-helpers-v3-1-573bfca0cbd8@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-1-573bfca0cbd8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On 11/12/24 14:26, Daniel Wagner wrote:
-> Introducing a callback in struct bus_type so that a subsystem
-> can hook up the getters directly. This approach avoids exposing
-> random getters in any subsystems APIs.
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   include/linux/device/bus.h | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+The last time this was addressed was at LFSMM this year in May [0] and
+before LBS was on its way upstream. LBS is now on v6.12 and so the delta
+required is much smaller now.
 
-Cheers,
+Before the turkey massacre slows part of the world down, here's a refresh.
 
-Han nes
+Although Hannes' patches were in PATCH form, testing showed quickly that
+it wasn't quite ready yet. I've only done cursory testing so far but have
+also incorporated all of the fixes and feedback we could accumulate over
+time. And so I'm sticking to RFC to reflect that this still needs thorough
+testing. It at least does not crash for me yet and its a major rebase
+onto v6.12-rc7.
+
+The biggest changes now are these last patches:
+
+  - block/bdev: lift block size restrictions and use common definition
+  - nvme: remove superfluous block size check
+  - bdev: use bdev_io_min() for statx block size
+
+The buffer-head pathces I think should be ready.
+
+If the consolidation of the max block size is good, perhaps we just also use it
+for the iomap max zero page too. Note that in theory we should be able to get
+up to a block size of 1 << (PAGE_SHIFT + MAX_PAGECACHE_ORDER), in practice
+testing that shows we need much more love [1] although prospects indeed show
+we should be able to get up to 2 MiB on x86_64. And so I think we should first
+reduce scope up to 64k for now, test all this, and then embark on the next
+64k --> 2 MiB journey next.
+
+Thoughts?
+
+If you want this in a tree you can get this from the kdevops branch
+large-block-buffer-heads-for-next [2]
+
+[0] https://lore.kernel.org/all/20240514173900.62207-1-hare@kernel.org/
+[1] https://github.com/linux-kdevops/linux/commit/266f2c700be55bdb5626d521230597673c83c91d#diff-79b436371fdb3ddf0e7ad9bd4c9afe05160f7953438e650a77519b882904c56bL272
+[2] https://github.com/linux-kdevops/linux/tree/large-block-buffer-heads-for-next
+
+Hannes Reinecke (4):
+  fs/mpage: use blocks_per_folio instead of blocks_per_page
+  fs/mpage: avoid negative shift for large blocksize
+  fs/buffer: restart block_read_full_folio() to avoid array overflow
+  block/bdev: enable large folio support for large logical block sizes
+
+Luis Chamberlain (4):
+  fs/buffer fs/mpage: remove large folio restriction
+  block/bdev: lift block size restrictions and use common definition
+  nvme: remove superfluous block size check
+  bdev: use bdev_io_min() for statx block size
+
+ block/bdev.c             |  9 +++++---
+ drivers/nvme/host/core.c | 10 ---------
+ fs/buffer.c              | 21 ++++++++++++++----
+ fs/mpage.c               | 47 +++++++++++++++++++---------------------
+ fs/stat.c                |  2 +-
+ include/linux/blkdev.h   |  6 ++++-
+ 6 files changed, 51 insertions(+), 44 deletions(-)
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+2.43.0
+
 
