@@ -1,244 +1,174 @@
-Return-Path: <linux-block+bounces-14048-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14053-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17DBF9C893A
-	for <lists+linux-block@lfdr.de>; Thu, 14 Nov 2024 12:48:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3C629C897C
+	for <lists+linux-block@lfdr.de>; Thu, 14 Nov 2024 13:06:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D03CB29A97
-	for <lists+linux-block@lfdr.de>; Thu, 14 Nov 2024 11:20:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83155281353
+	for <lists+linux-block@lfdr.de>; Thu, 14 Nov 2024 12:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC9D18C02F;
-	Thu, 14 Nov 2024 11:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFF6D1F8F15;
+	Thu, 14 Nov 2024 12:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PF0mD+1U"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0VIAq/Z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XzbcY6XL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0VIAq/Z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XzbcY6XL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E6F1F77B8
-	for <linux-block@vger.kernel.org>; Thu, 14 Nov 2024 11:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B68018BC2C;
+	Thu, 14 Nov 2024 12:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731583215; cv=none; b=banmgA+RV2nDwLm/bm8eBlAanysOnsMXBtRdYKbgcFCoofeDvVMntVjbPv8Q1uKe4YQJjkYnXYxtjeSEbfWFDI/e342dNcy9UzWblxY5nAT7OoUI335pLX7WynE+P/eNqccA1BRcw2Xyr4gJmtzlH8dIap45ZAt8KJxpj9ovHns=
+	t=1731586013; cv=none; b=PIr3+L3FUV2KgbBBjcrFWcmiXcS4NpPM3fpD/iaiI3FHAAUHeie81I0/SRfk0ZcZoOtQo4W6pry2+S7hYHqGSFvwJR2TxnMghXVRk5lFS/S1zMVQgklUkwRdhmEqrMYLT1C/5zdRbW+VZCHWFPtVfFr2r8Dzmw0HxeoelUlmPZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731583215; c=relaxed/simple;
-	bh=ZIkdyJlOm3c2bE0cQ6pelSYB5Gra8HNzZg1GmGSloUY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=YOX4FGGUWg1+h4/TKfCUt5AIOTriDuBtD8d5bISc1faNkdTKuWwxusR7qbVLx3nmD3/nl4bDr8e5wlGbfQIuGB9xA2s1B2EnvsefOh6weFAbG1KUh19rwTQo8yt/x5kypPBLLRsWVUpNRRwPwwYgmtF5YDj+OQO9cvfcbNLCRd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PF0mD+1U; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241114112010epoutp03780bf2fea6340a9dd248689b0e36b02c~H0cGCDA410035700357epoutp03Q
-	for <linux-block@vger.kernel.org>; Thu, 14 Nov 2024 11:20:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241114112010epoutp03780bf2fea6340a9dd248689b0e36b02c~H0cGCDA410035700357epoutp03Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1731583210;
-	bh=r23oSTZl50mKsH838ytL5lDlNxkmkMYy4oR7U1Ruz2Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PF0mD+1Uc3ABHp9igVRJZyx9VaORGt6+h0rso+f6Mcecfr7dCmURgXPMzqR0FXF3i
-	 BY/+AAww+r/cFmJQ79gWtASLesNIoEKUxQmzSzdmgeGtMUXKL3x7a6hMXJZxK7RwFP
-	 CDnbpAkXajupTBxeMhm3Gp2lMYUULrUmZiGhrLqU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20241114112010epcas5p2c05eedd7aade60c18125b1c28d7d0e6c~H0cFvN30Z0550505505epcas5p2J;
-	Thu, 14 Nov 2024 11:20:10 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4XpyP45js1z4x9Px; Thu, 14 Nov
-	2024 11:20:08 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0B.DA.09420.44CD5376; Thu, 14 Nov 2024 20:17:24 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20241114105357epcas5p41fd14282d4abfe564e858b37babe708a~H0FMtRb9B0515805158epcas5p4n;
-	Thu, 14 Nov 2024 10:53:57 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20241114105357epsmtrp1348781fd0532b9999f94192cc2b3c546~H0FMsY4QM1621616216epsmtrp1M;
-	Thu, 14 Nov 2024 10:53:57 +0000 (GMT)
-X-AuditID: b6c32a49-0d5ff700000024cc-e0-6735dc44f93e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	00.C6.18937.5C6D5376; Thu, 14 Nov 2024 19:53:57 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20241114105354epsmtip256d59d467f449bb7ec6122186b09da67~H0FKKnhPi1403514035epsmtip2R;
-	Thu, 14 Nov 2024 10:53:54 +0000 (GMT)
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
-	martin.petersen@oracle.com, asml.silence@gmail.com, anuj1072538@gmail.com,
-	brauner@kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk
-Cc: io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-block@vger.kernel.org, gost.dev@samsung.com,
-	linux-scsi@vger.kernel.org, vishak.g@samsung.com,
-	linux-fsdevel@vger.kernel.org, Anuj Gupta <anuj20.g@samsung.com>, Kanchan
-	Joshi <joshi.k@samsung.com>
-Subject: [PATCH v9 03/11] block: modify bio_integrity_map_user to accept
- iov_iter as argument
-Date: Thu, 14 Nov 2024 16:15:09 +0530
-Message-Id: <20241114104517.51726-4-anuj20.g@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20241114104517.51726-1-anuj20.g@samsung.com>
+	s=arc-20240116; t=1731586013; c=relaxed/simple;
+	bh=FNcTQoUmRoStCmk8rcMy5T71OIia2xR3uqGNl1es7G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=thDXmyIbkzAx1rn4/b5v84ZSQM5K5EUd0qdgWW9FjNRL46bUCixVG0IQBxIQzVFkge24rG7HgX8pjp5ZYW1Sn6p/eGw6CXzD7/DbviVutXH2wN2kWHvOrCR5nMpWKSJ4vDFwtWW2T54GrcSJ0sWYEq3jvndxNpyxTbxLU0GI2H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0VIAq/Z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XzbcY6XL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0VIAq/Z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XzbcY6XL; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A0D551F7D3;
+	Thu, 14 Nov 2024 12:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731586010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=0VIAq/Z1zWsxunVwtmQk8eFXwQ3Wk7OxJVvVmLKA0qLE5Df6BnOCpERT2Ndxrsz5b7cs05
+	L1Wpt98+DLywcAIM/G3y2sgPNFLq+U0v0QfS3sRcOG1n9jckxFXaTNQtgoUa/kO5b8oykm
+	iLKShhT3wjy0JpRU2PixX45cEu+kbUc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731586010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=XzbcY6XLq/bVltPYJ6+zyOzgJiO0RvkBcUV23UCxFGniMN43TmHPgN8rfjsQ8bAGTM7syQ
+	808ssY14QUCvEyBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731586010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=0VIAq/Z1zWsxunVwtmQk8eFXwQ3Wk7OxJVvVmLKA0qLE5Df6BnOCpERT2Ndxrsz5b7cs05
+	L1Wpt98+DLywcAIM/G3y2sgPNFLq+U0v0QfS3sRcOG1n9jckxFXaTNQtgoUa/kO5b8oykm
+	iLKShhT3wjy0JpRU2PixX45cEu+kbUc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731586010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=XzbcY6XLq/bVltPYJ6+zyOzgJiO0RvkBcUV23UCxFGniMN43TmHPgN8rfjsQ8bAGTM7syQ
+	808ssY14QUCvEyBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 79CE713721;
+	Thu, 14 Nov 2024 12:06:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YoW0HdrnNWfrQgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 14 Nov 2024 12:06:50 +0000
+Date: Thu, 14 Nov 2024 13:06:49 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	John Garry <john.g.garry@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, 
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com, 
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v4 05/10] blk-mq: introduce blk_mq_hctx_map_queues
+Message-ID: <4bd491e5-fab5-4e94-8719-560b5a4de01e@flourine.local>
+References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
+ <20241113-refactor-blk-affinity-helpers-v4-5-dd3baa1e267f@kernel.org>
+ <ZzVZQbZOYhNF08LX@fedora>
+ <9fa26099-1922-4b99-883e-bd5f6c58162a@flourine.local>
+ <ZzW-9rWvKBxFZU1E@fedora>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbVRzHPfde2gux27WAHjBjeKfOzgAta7vLhE0tw6vz0ekSnXF2HdwV
-	pLRNH+pM1ApjZGwUEAysKwNlDikGoXY8hPLoeGTgHhm4V4QsAgEcMKBhDyvTllt0/33O7/v7
-	5vc45+Aof4QTiWdojIxeo1STnBCs6axAEDPxu0QlzOt8llpY8mJUdtEyStnsTYCqGynkULfO
-	LgLqelcrQtXW9SLUXO4FjDpRloNQvf/Mcqiv3VcA5brxPNXuOodRlacnuNTRqy0cqqb/AUJd
-	XO4Poi5abdwX+XSrdYRLD5030Q77EQ7986kv6bbrZg69MHEDoy1OO6B/rerh0h5HFO0Yn0Xk
-	Ie9nJqYzyjRGH81oUrVpGRpVErnzHYVMIZEKRTGiBGoLGa1RZjFJZPLr8piUDLVvJjL6Y6Xa
-	5AvJlQYDGbctUa81GZnodK3BmEQyujS1TqyLNSizDCaNKlbDGLeKhMJ4iS9xX2b6xJQH0bVH
-	fdo2RJtBU0Q+CMYhIYZDU71IPgjB+UQbgN6/plC/wCcWAWzw7GEFH1flD3NWHd2j5iBWaAXQ
-	2fcbyh48Pru7BPFncYiNsGcyF/iFMKIdwIJvBzH/ASWKEJhXbOPmAxwPJRTw5D2h34ARz8CS
-	q3lcP/OIBDja/FWg3Hp4/PLdlXgwsRX+YD6DsjmPwXPHxzE/o76cnDMnVrqAxDUcFk/NA9ac
-	DI/dsWAsh8I/+51cliPhdOHhAKvgvaEJhGUdzOnrCHi3w9yBQtTfJ0oI4E+/xLHhdfCbgXqE
-	rbsGFnjHA1YebDm5yiTMq7UFGELXBXOAaXiq+j7GbqsAwPaiHqwIRFsfmsf60DzW/0tXAdQO
-	IhidIUvFGCQ6kYb55L9bTtVmOcDKO9/0agsYuTkf6wYIDtwA4igZxhuQbVbxeWnKg58xeq1C
-	b1IzBjeQ+BZejEaGp2p9H0VjVIjECUKxVCoVJ2yWisgneLdyK9L4hEppZDIZRsfoV30IHhxp
-	RpCZ8hG5Y21Iu/eoydn8ON147NDgLjgcXzNTXtP895oHtre+B9aX1J9nWfd0yyLIxdu2He9+
-	IHPxfsx2binbN/dacL+cH18d9xF9SePdXzxTEeF6eekO8gZHFiJYqm7b9cd8sNxUXictTQ7d
-	HYVfU51vsKe3vjdoZ17ZMGYxXc7e8KGlcpYrrjdVPHq6KKOv+83Opw7vvd9svCLcSeY6cZnl
-	tvtJzyOlXTq6wzN3KRGGq8Mbb36x97uNtcmlkwfC5NP7D1WNlXldfNfajueeVkUN3317YSou
-	Luzg9PaUhhcm14U1HxitXy5J2b0t1jRmHq4UdFUf6dTxJEMpDgpfH9S4g8QM6UrRJlRvUP4L
-	Q/aJu3AEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LZdlhJXvfoNdN0g5Y2fouPX3+zWDRN+Mts
-	MWfVNkaL1Xf72SxeH/7EaHHzwE4mi5WrjzJZvGs9x2Ixe3ozk8XR/2/ZLCYdusZosfeWtsWe
-	vSdZLOYve8pu0X19B5vF8uP/mCzO/z3OanF+1hx2ByGPnbPusntcPlvqsWlVJ5vH5iX1Hrtv
-	NrB5fHx6i8Wjb8sqRo8zC46we3zeJOex6clbpgCuKC6blNSczLLUIn27BK6Mpy8+MxXskavY
-	fdmjgXGbZBcjJ4eEgInEwXsNrCC2kMB2Ronb72wg4hISp14uY4SwhSVW/nvO3sXIBVTzkVFi
-	0vpLLCAJNgF1iSPPW8GKRAROMErMn+gGUsQsMINJoufXCjaQhLBArMSOY3PBNrAIqEpMvt7O
-	DmLzClhK3NveyAaxQV5i5qXvYHFOASuJFQ1bmbsYOYC2WUp8Xy8CUS4ocXLmE7C9zEDlzVtn
-	M09gFJiFJDULSWoBI9MqRtHUguLc9NzkAkO94sTc4tK8dL3k/NxNjOAo0wrawbhs/V+9Q4xM
-	HIyHGCU4mJVEeE85G6cL8aYkVlalFuXHF5XmpBYfYpTmYFES51XO6UwREkhPLEnNTk0tSC2C
-	yTJxcEo1MDUWp14xbfkppsni9sziS/CE+Se+yV11mTbBNzr5iYTjkgO/KgSuBtgu3JeevVL0
-	4/23E3rv1X19t1r3b/kB07NMBzz+9PL7TFoRstI2rcJL+LI2/+8d3X6zbYIf7rJmPHA6cp5G
-	GrdGGPPOANaOXCmfbKErcxTPpJ9/+muzS8qJ3JfZghNXL/01Idc3NnjVUelzvP35P13TnP8/
-	+b7rTLni0TINp186n5/yel7eoHj6PePm71MzVvImnM5ZemLFE+e/RzcdcVSZ6vp1yz/F3F1s
-	t/vntjTZ88RtSHN+d+pvpUguG2dnk++CU/VF3VKsrCtmTphdtWtPkUXgjKfJRhltt+coK+f2
-	TSlIlROO7VZiKc5INNRiLipOBAClUBqXIQMAAA==
-X-CMS-MailID: 20241114105357epcas5p41fd14282d4abfe564e858b37babe708a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20241114105357epcas5p41fd14282d4abfe564e858b37babe708a
-References: <20241114104517.51726-1-anuj20.g@samsung.com>
-	<CGME20241114105357epcas5p41fd14282d4abfe564e858b37babe708a@epcas5p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZzW-9rWvKBxFZU1E@fedora>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-This patch refactors bio_integrity_map_user to accept iov_iter as
-argument. This is a prep patch.
+On Thu, Nov 14, 2024 at 05:12:22PM +0800, Ming Lei wrote:
+> I feel driver should get higher priority, but in the probe() example,
+> call_driver_probe() actually tries bus->probe() first.
+> 
+> But looks not an issue for this patchset since only hisi_sas_v2_driver(platform_driver)
+> defines ->irq_get_affinity(), but the platform_bus_type doesn't have
+> the callback.
 
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
----
- block/bio-integrity.c         | 12 +++++-------
- block/blk-integrity.c         | 10 +++++++++-
- include/linux/bio-integrity.h |  5 ++---
- 3 files changed, 16 insertions(+), 11 deletions(-)
+Oh, I was not aware of this ordering. And after digging this up here:
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 4341b0d4efa1..f56d01cec689 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -302,16 +302,15 @@ static unsigned int bvec_from_pages(struct bio_vec *bvec, struct page **pages,
- 	return nr_bvecs;
- }
- 
--int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t bytes)
-+int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
- {
- 	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
- 	unsigned int align = blk_lim_dma_alignment_and_pad(&q->limits);
- 	struct page *stack_pages[UIO_FASTIOV], **pages = stack_pages;
- 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec = stack_vec;
-+	size_t offset, bytes = iter->count;
- 	unsigned int direction, nr_bvecs;
--	struct iov_iter iter;
- 	int ret, nr_vecs;
--	size_t offset;
- 	bool copy;
- 
- 	if (bio_integrity(bio))
-@@ -324,8 +323,7 @@ int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t bytes)
- 	else
- 		direction = ITER_SOURCE;
- 
--	iov_iter_ubuf(&iter, direction, ubuf, bytes);
--	nr_vecs = iov_iter_npages(&iter, BIO_MAX_VECS + 1);
-+	nr_vecs = iov_iter_npages(iter, BIO_MAX_VECS + 1);
- 	if (nr_vecs > BIO_MAX_VECS)
- 		return -E2BIG;
- 	if (nr_vecs > UIO_FASTIOV) {
-@@ -335,8 +333,8 @@ int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t bytes)
- 		pages = NULL;
- 	}
- 
--	copy = !iov_iter_is_aligned(&iter, align, align);
--	ret = iov_iter_extract_pages(&iter, &pages, bytes, nr_vecs, 0, &offset);
-+	copy = !iov_iter_is_aligned(iter, align, align);
-+	ret = iov_iter_extract_pages(iter, &pages, bytes, nr_vecs, 0, &offset);
- 	if (unlikely(ret < 0))
- 		goto free_bvec;
- 
-diff --git a/block/blk-integrity.c b/block/blk-integrity.c
-index b180cac61a9d..4a29754f1bc2 100644
---- a/block/blk-integrity.c
-+++ b/block/blk-integrity.c
-@@ -115,8 +115,16 @@ EXPORT_SYMBOL(blk_rq_map_integrity_sg);
- int blk_rq_integrity_map_user(struct request *rq, void __user *ubuf,
- 			      ssize_t bytes)
- {
--	int ret = bio_integrity_map_user(rq->bio, ubuf, bytes);
-+	int ret;
-+	struct iov_iter iter;
-+	unsigned int direction;
- 
-+	if (op_is_write(req_op(rq)))
-+		direction = ITER_DEST;
-+	else
-+		direction = ITER_SOURCE;
-+	iov_iter_ubuf(&iter, direction, ubuf, bytes);
-+	ret = bio_integrity_map_user(rq->bio, &iter);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/linux/bio-integrity.h b/include/linux/bio-integrity.h
-index 0f0cf10222e8..58ff9988433a 100644
---- a/include/linux/bio-integrity.h
-+++ b/include/linux/bio-integrity.h
-@@ -75,7 +75,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio, gfp_t gfp,
- 		unsigned int nr);
- int bio_integrity_add_page(struct bio *bio, struct page *page, unsigned int len,
- 		unsigned int offset);
--int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t len);
-+int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter);
- void bio_integrity_unmap_user(struct bio *bio);
- bool bio_integrity_prep(struct bio *bio);
- void bio_integrity_advance(struct bio *bio, unsigned int bytes_done);
-@@ -101,8 +101,7 @@ static inline void bioset_integrity_free(struct bio_set *bs)
- {
- }
- 
--static inline int bio_integrity_map_user(struct bio *bio, void __user *ubuf,
--					 ssize_t len)
-+static int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
- {
- 	return -EINVAL;
- }
--- 
-2.25.1
+https://lore.kernel.org/all/20060105142951.13.01@flint.arm.linux.org.uk/
 
+I don't think we it's worthwhile to add the callback to device_driver
+just for hisi_sas_v2. So I am going to drop this part again.
+
+> > This brings up another topic I left out in this series.
+> > blk_mq_map_queues does almost the same thing except it starts with the
+> > mask returned by group_cpus_evenely. If we figure out how this could be
+> > combined in a sane way it's possible to cleanup even a bit more. A bunch
+> > of drivers do
+> > 
+> > 		if (i != HCTX_TYPE_POLL && offset)
+> > 			blk_mq_hctx_map_queues(map, dev->dev, offset);
+> > 		else
+> > 			blk_mq_map_queues(map);
+> > 
+> > IMO it would be nice just to have one blk_mq_map_queues() which handles
+> > this correctly for both cases.
+> 
+> I guess it is doable, and the driver just setup the tag_set->map[], then call
+> one generic map_queues API to do everything?
+
+Yes, that is my idea. Just having one function which handles what
+blk_mq_map_queues and blk_mq_hctx_map_queues/blk_mq_map_hw_queues
+currently do.
 
