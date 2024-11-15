@@ -1,89 +1,127 @@
-Return-Path: <linux-block+bounces-14095-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14098-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A276A9CF393
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 19:05:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3659A9CF451
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 19:51:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0AA5FB645F8
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 16:54:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6104DB2C41E
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 17:45:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7471D63D1;
-	Fri, 15 Nov 2024 16:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF531D8DE4;
+	Fri, 15 Nov 2024 17:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vBAo++Yz"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5981BC069;
-	Fri, 15 Nov 2024 16:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769611D63C9
+	for <linux-block@vger.kernel.org>; Fri, 15 Nov 2024 17:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731689643; cv=none; b=TumnVHPonYDAE0yHFC6kw7//Yx2r7+UeOLDWfJTBS0x1kTGzZMpv+qDY8JdsfwxoxASHa4iy8/gejPSkD0dhG5+nneBQk+ESE022agxxvAxU+BR1izm+bYNFKVL53+XtKZwAUe83WgEKZEULVZuG7FSJ5pfyZlsodRNg44TkT9g=
+	t=1731692703; cv=none; b=c17mcInp3kgm4orgRSCLsmvlh9+zb3kwFYcJZI/Rm3Ib7/TXd9e4ji4pumivySahyhfpvP/eWZjGsPDM9UY24zKSQ1oilAUrvaB1ClmZVQMDk8ARmdCNiSXZZ32QQxI12uLXuZOTDENIXfLDsFvCfUr61wxJhFvxaSyap6wJyPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731689643; c=relaxed/simple;
-	bh=yDXkpXU6/IAPVs2ZLps/GO7tZ5rNTL5loe+l0zKWTb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7Oo+wN38CVw/Mav1bXRmEaRGUA97Sy4vQcrv9NHtT+qdr3agJ1a+3Z50eM3M8AfJSXqsYWybjF4uGJX9B92KPPgCRdzENP82xthzplq2Gm/jHhDPowlGxmCjBl7mYvq+r7iRw5Q9uS645HKhrCl2t4IItDC9GXk1ay4FxybUwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8B41D67373; Fri, 15 Nov 2024 17:53:49 +0100 (CET)
-Date: Fri, 15 Nov 2024 17:53:48 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>,
-	Pierre Labat <plabat@micron.com>,
-	Kanchan Joshi <joshi.k@samsung.com>, Keith Busch <kbusch@meta.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-	"axboe@kernel.dk" <axboe@kernel.dk>,
-	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-	"asml.silence@gmail.com" <asml.silence@gmail.com>,
-	"javier.gonz@samsung.com" <javier.gonz@samsung.com>
-Subject: Re: [EXT] Re: [PATCHv11 0/9] write hints with nvme fdp and scsi
- streams
-Message-ID: <20241115165348.GA22628@lst.de>
-References: <CGME20241111103051epcas5p341a23ed677f2dfd6bc6d4e5c4826327b@epcas5p3.samsung.com> <20241111102914.GA27870@lst.de> <7a2f6231-bb35-4438-ba50-3f9c4cc9789a@samsung.com> <20241112133439.GA4164@lst.de> <ZzNlaXZTn3Pjiofn@kbusch-mbp.dhcp.thefacebook.com> <DS0PR08MB854131CDA4CDDF2451CEB71DAB592@DS0PR08MB8541.namprd08.prod.outlook.com> <20241113044736.GA20212@lst.de> <ZzU7bZokkTN2s8qr@dread.disaster.area> <20241114060710.GA11169@lst.de> <Zzd2lfQURP70dAxu@kbusch-mbp>
+	s=arc-20240116; t=1731692703; c=relaxed/simple;
+	bh=xqENlfIbZ6oxYGPT3ENwgUPz7q+WvgG+QMg5G0GrWJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hv+ERfXFYjiLL1VSIoZ+FtkM+xkBsirWuL9KbbLCX7B+QQjs0Z0ZJUS00skXMDjKh98xN04750XSzOztyPebRi6o3P2GaoldD/6WXpgL4ItyLQDu7JEzWSiX1LPNmad3AMgfWQThb+x1HISM0O1EnIEFZgrMotxtk9kZppSUkpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vBAo++Yz; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3e60f6ea262so1032733b6e.1
+        for <linux-block@vger.kernel.org>; Fri, 15 Nov 2024 09:45:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731692700; x=1732297500; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GX5wJ6oLxec3STDa1FVtfsmqMbzKtWScheytSQkT1U8=;
+        b=vBAo++Yzi2hDov/7+u0KWx6DifVjZDKRweV1NSDXXlfOAglgIZwxXj8Rttz1OgbpNH
+         Qwy58xHUTEXJurOnc4tY67CioMNZwfjT5HmY8Hw9ZZVumaUGZBeQuFS+ZP9sA6kGemql
+         OJ15Mn4WEJORwJVSLTSr3vsoxRDw0p1g4tCxTya+pmQ3mqNOD9G25XXad6gcOVyTKNav
+         T0sSk7AvxB3OQb9wjU0ybdXXfTKkwsdY7AD9uFx2Y8wZNwgoH1FJdr74/lBpCDOl2NLu
+         Y9Q5h9pIIq6hzvGgHk992fqL4SeA+QdUUEqxwCQk/IlG2wP0TWAmwSwtdOX8hs/81Jtw
+         qIrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731692700; x=1732297500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GX5wJ6oLxec3STDa1FVtfsmqMbzKtWScheytSQkT1U8=;
+        b=EwTZxnx5yMv+C4umN8tm0zHbw+if4KntQPbi1dyW6o4iTWBIxCkjriuPx9OHr6clKs
+         lVAP0tOyd25R7Rf7UmQkuC2ZmHcDoYDbFN4ZTLNLFpJYk5sByiYkKkk3+CzcIAAfGGuj
+         hA+wO1kg3X84bsFkY/mOsCzOkgZeA+CUOTnoeb/2Kvu1/h2Lu0accYCKz7Nq9Nc87cON
+         l8gjFyqO8tZDC9XRRalMWyNsB0ZmbauIcyVPW0Dbis4zUaaNswZ8CvZ6QW+ajFuVer5e
+         OWXqRJpRlC45loEdD5hkMgNvXZktPgAemKT6XIQNA84cTbjrcjJ8zYXOYm5Hq7etRAnx
+         1Sug==
+X-Forwarded-Encrypted: i=1; AJvYcCXoHYnwdyBtOMlpkKNQWhih0cSS+bNQw+8ElU1J/i8edn2VxKZPI3mfjjLPEZa98rtX0+942w7P+zL6fg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsAw+tHbeRBoFyr1S+cRKTo8PDNDNJGidUacR7GSPb5PQMcfqO
+	v6olnBAHX2VoitoQo9XXG7gaQ4PaMlsE6T5O4FbZjMaEubJ6QpLjPywxML5/ES/R08AYyNo7uEj
+	YxKc=
+X-Google-Smtp-Source: AGHT+IE7u0RxmsRL3LQWgWu6xddXzAE9XDdBJ1jPG6HxqNvh9lsaMK0XyjGjnH4cynjuaCDt1FSOiA==
+X-Received: by 2002:a05:6808:4401:b0:3e7:c366:d17f with SMTP id 5614622812f47-3e7c366d358mr1389370b6e.38.1731692700454;
+        Fri, 15 Nov 2024 09:45:00 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e7bcd12fbasm661744b6e.21.2024.11.15.09.44.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2024 09:44:59 -0800 (PST)
+Message-ID: <97b3061c-430d-4fc0-9b62-ab830010568e@kernel.dk>
+Date: Fri, 15 Nov 2024 10:44:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zzd2lfQURP70dAxu@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 06/11] io_uring: introduce attributes for read/write
+ and PI support
+To: Christoph Hellwig <hch@lst.de>, Pavel Begunkov <asml.silence@gmail.com>
+Cc: Anuj Gupta <anuj20.g@samsung.com>, kbusch@kernel.org,
+ martin.petersen@oracle.com, anuj1072538@gmail.com, brauner@kernel.org,
+ jack@suse.cz, viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+ gost.dev@samsung.com, linux-scsi@vger.kernel.org, vishak.g@samsung.com,
+ linux-fsdevel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>
+References: <20241114104517.51726-1-anuj20.g@samsung.com>
+ <CGME20241114105405epcas5p24ca2fb9017276ff8a50ef447638fd739@epcas5p2.samsung.com>
+ <20241114104517.51726-7-anuj20.g@samsung.com> <20241114121632.GA3382@lst.de>
+ <3fa101c9-1b38-426d-9d7c-8ed488035d4a@gmail.com>
+ <20241114151921.GA28206@lst.de>
+ <f945c1fc-2206-45fe-8e83-ebe332a84cb5@gmail.com>
+ <20241115171205.GA23990@lst.de>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20241115171205.GA23990@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 15, 2024 at 09:28:05AM -0700, Keith Busch wrote:
-> SSDs operates that way. FDP just reports more stuff because that's what
-> people kept asking for. But it doesn't require you fundamentally change
-> how you acces it. You've singled out FDP to force a sequential write
-> requirement that that requires unique support from every filesystem
-> despite the feature not needing that.
+On 11/15/24 10:12 AM, Christoph Hellwig wrote:
+> On Fri, Nov 15, 2024 at 04:40:58PM +0000, Pavel Begunkov wrote:
+>>> So?  If we have a strong enough requirement for something else we
+>>> can triviall add another opcode.  Maybe we should just add different
+>>> opcodes for read/write with metadata so that folks don't freak out
+>>> about this?
+>>
+>> IMHO, PI is not so special to have a special opcode for it unlike
+>> some more generic read/write with meta / attributes, but that one
+>> would have same questions.
+> 
+> Well, apparently is one the hand hand not general enough that you
+> don't want to give it SQE128 space, but you also don't want to give
+> it an opcode.
+> 
+> Maybe we just need make it uring_cmd to get out of these conflicting
+> requirements.
 
-No I haven't.  If you think so you are fundamentally misunderstanding
-what I'm saying.
+Let's please lay off the hyperbole here, uring_cmd would be a terrible
+way to do this. We're working through the flags requirements. Obviously
+this is now missing 6.13, but there's no reason why it's not on track to
+make 6.14 in a saner way.
 
-> We have demonstrated 40% reduction in write amplifcation from doing the
-> most simplist possible thing that doesn't require any filesystem or
-> kernel-user ABI changes at all. You might think that's not significant
-> enough to let people realize those gains without more invasive block
-> stack changes, but you may not buying NAND in bulk if that's the case.
-
-And as iterared multiple times you are doing that by bypassing the
-file system layer in a forceful way that breaks all abstractions and
-makes your feature unavailabe for file systems.
-
-I've also thrown your a nugget by first explaining and then even writing
-protype code to show how you get what you want while using the proper
-abstractions.  But instead of a picking up on that you just whine like
-this.  Either spend a little bit of effort to actually get the interface
-right or just shut up.
+-- 
+Jens Axboe
 
