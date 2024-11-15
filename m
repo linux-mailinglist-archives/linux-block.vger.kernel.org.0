@@ -1,165 +1,182 @@
-Return-Path: <linux-block+bounces-14082-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14085-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5240A9CF11F
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 17:10:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B02849CF1A2
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 17:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F263D1F235F2
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 16:10:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6778F1F226BE
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2024 16:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F5B1BD507;
-	Fri, 15 Nov 2024 16:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E3961D515E;
+	Fri, 15 Nov 2024 16:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="M9cglWs3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ci0n79GX"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489D0188CD8
-	for <linux-block@vger.kernel.org>; Fri, 15 Nov 2024 16:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C61E4A6;
+	Fri, 15 Nov 2024 16:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731687012; cv=none; b=np6CBNFxeBCKjSu2XZFRd0HoN7ODb2e/LUMUKyduYtdSbMcN4n0KdM51b7NOPp09jRYWGrfnkKt6sTBwF0cUDI8r3pzZOI29EfAuOYK1NtimTPL0n/5qlShJxARRbB/fcycQNUSLyG2DdetXE1/JziaLlRsbSC22/USt3zpbVqY=
+	t=1731688672; cv=none; b=HShJ6/cMsPBVYg+2QdOdDZR7VoZK7Gr2Lg58mclqNQt/grDNOr2Ga1kQIgcR9XB99U2lWgruUW/FXhYRhzmP2Md7krgD3HVq6rOP0rNntvRMnqdz8oCGmzzjHx+Su4XxkQj6dX0qPEk3KBzzyuzfdUU7d5JHIdsFYbMxjxaGY+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731687012; c=relaxed/simple;
-	bh=vmWeSZlPyuAPHl7bkcFDFWthS0bpQDeyutDPFhJM7O0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UrIAdtTiKbSBVhkbSXEWfhGe4/+kd4nGyCZf7aYwnGT0WZQCksWl04qVIhLrGV8UaoxGjXMijDOAVLo6PwwTE2z9HksZP6jZaB+g8ZfvXCPoaV2+jNDzbjyhfg91icMmFVmWoIBi9bLr2Bjtx7/tDvg/TtMcHyFlo60gqNY9eHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=M9cglWs3; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-29538198f2fso1074487fac.1
-        for <linux-block@vger.kernel.org>; Fri, 15 Nov 2024 08:10:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731687009; x=1732291809; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x7TALngXZSHnANqevaSkMoczViCSyBm7hpmNZQzIthE=;
-        b=M9cglWs3CmP0nNeC1SbYCdCuvBpRsCrq4mv+P4S7ut8fGPzOO4f/Sy5X3zda7bhyIQ
-         FDyq+M0KSEzGdCx3UNqNfCjXJcXa+RRx1Z7+yO9/XkIh7tckP9xk1hhrxDPc5tGhlv2e
-         ce0BSyqpGAO5xk2Vx1DR2ycGOsgUCKxtEcup+Z+QweY6+zX1/P8GL/XKa74WvQr3NAC+
-         e6fNbDdQM3pHRD0BlaGGMrFpy3jpiVaWDKgmmpc+yZ+mkVqIIAZmYDevQW3tsurJyz7A
-         OLddghcKUjyFLXI5w+gE9ZUT6hCbJ5PhHylTT52gp/PyWS/1q8CSVkCjzvEVe2YEL4T8
-         e+fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731687009; x=1732291809;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x7TALngXZSHnANqevaSkMoczViCSyBm7hpmNZQzIthE=;
-        b=LXc2kVWFRjRpcEIx8PSbw3KvPjOQ+3N8P7ZPLRjkufM5WBgRpnm5rfQSuOH6atDsjN
-         gn9bBGowbKixDfKFCc7EhSqD4cvAbMpRERdWCJ8TcC/zJhn2zSvMJGp+sSyjJBDay+bI
-         XEyMU/+YTzJNwbJshHbuIcAibyWyros/TNU5RfBNj8AbIXFFzplXo/lYrf1TW1pk2hQH
-         2EZEpL8NY2LFsuS6zERBn87/5Ct+8+BYwFN4MFyuIfqN7ErXngXxYUAsdP3p8O4avAqI
-         kWGa4yCndRXuonGeSKEz04m2ENJBZE7rzStpoKRo0/ia1Bwytt+SOJudYNBwr9pzMk7t
-         Pjkg==
-X-Gm-Message-State: AOJu0Yy6u3yphOpYIVJS0u5x5JmaxJ27GIGdYdy/PVzXt2m05GbsVhPF
-	aT0j7wwIkgQVNmurG3BkcFTxY6n7fX7qpXWeWpYnjoX1X6DIx4u+/ohiC723tNtZPq2iN2RlOyj
-	F51E=
-X-Google-Smtp-Source: AGHT+IELHseqXG68WXiQMEPK0xyw/tcLQI37dl4CQZSHJAkjkbb1bGtFEMBMTP84dYtmQLbI5kdy8w==
-X-Received: by 2002:a05:6870:6188:b0:27b:580f:3bdd with SMTP id 586e51a60fabf-2962dc91bc2mr3345666fac.9.1731687009252;
-        Fri, 15 Nov 2024 08:10:09 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-29610803f82sm1559962fac.2.2024.11.15.08.10.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2024 08:10:08 -0800 (PST)
-Message-ID: <f6a50924-e3f8-4175-a97e-4e77ed24b72b@kernel.dk>
-Date: Fri, 15 Nov 2024 09:10:07 -0700
+	s=arc-20240116; t=1731688672; c=relaxed/simple;
+	bh=xPIEzNMgELR96A8fMGWEUYtmUX8fIT/IURHsLtPs3dE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=peUanB6/7XSZAIRlQedxKtdtUa/SeuGs1mUkGV75k9S1CiRrSvrRGQOjm9cEQAmYUwdBd06l2PJKj+L5iogK0VMReq/TVV1HVj28hTJhNsnSAGVoa+FZGFwX08VyH9ugqKL/b4IKhUWdfgNF529Ydk3D3nGfsriC/1iTOs7P/Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ci0n79GX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC11C4CED0;
+	Fri, 15 Nov 2024 16:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731688671;
+	bh=xPIEzNMgELR96A8fMGWEUYtmUX8fIT/IURHsLtPs3dE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ci0n79GXpD+jm0+r+F9HkavA5zO439RHVREHGgBezDSJywcwC8KeVPR4au0Y1sYTJ
+	 HJDSqAwJmQCITjKfF3xHy8cFlmW+EGi/mikoxmbtiNSW8oPHDVV9D44sOjBJ8LaFlJ
+	 d5J6hTkAq+ewYBE/A5z7RZwyPbxlnu46xg1pmS8KEAemlhufP8hw6IOZbGY7ApNBPo
+	 iBa4g2n5umIxHgJZRWtVWxHRxRYZXhDuxgvBX9Cb2s7Auy54QvYNxZXd4L3OVzVl6S
+	 26c7LlRuD9PBCtt34ywkFmUA/u/e9c5JvwlhIjy6V50k55ypwhP2ZZaJgTp3nTY5vs
+	 69P07L8RWI0fw==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH v5 0/8] blk: refactor queue affinity helpers
+Date: Fri, 15 Nov 2024 17:37:44 +0100
+Message-Id: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] block: Fix uninitialized symbol 'bio' in
- blk_rq_prep_clone
-To: Suraj Sonawane <surajsonawane0215@gmail.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- hch@infradead.org
-References: <20241004100842.9052-1-surajsonawane0215@gmail.com>
- <20241008175215.23975-1-surajsonawane0215@gmail.com>
- <70996029-be8a-4f97-88fc-a27cff4f5df4@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <70996029-be8a-4f97-88fc-a27cff4f5df4@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANh4N2cC/4XQza7CIBAF4FcxrMXw00rryvcwLoYyWGLTKlRyj
+ em731Gj1xsXZXcm5DsMN5YwBkxss7ixiDmkMPQUyuWCNS30B+TBUWZKqELUUvGIHppxiNx2Rw7
+ ehz6MV95id8KYuBFVbevSFlYKRsaJroefh7/bP3PE84Vqxr9hGxKB18cbsrxPX3V6pi5LLniFo
+ qy8MeCl2qZLwpVDdnezeluSzpylyPJ6LZwDp7SE7RFjj91qiIcnpz+5uZ/ImrjSaOsbEI111Rd
+ XfHKzmxbEOactgES1Nv4fN03TLx+3iBnKAQAA
+X-Change-ID: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-On 11/15/24 9:07 AM, Suraj Sonawane wrote:
-> On 08/10/24 23:22, SurajSonawane2415 wrote:
->> Fix the uninitialized symbol 'bio' in the function blk_rq_prep_clone
->> to resolve the following error:
->> block/blk-mq.c:3199 blk_rq_prep_clone() error: uninitialized symbol 'bio'.
->>
->> Signed-off-by: SurajSonawane2415 <surajsonawane0215@gmail.com>
->> ---
->> V1 - Initialize 'bio' to NULL.
->> V2 - Move bio_put(bio) into the bio_ctr error handling block,
->> ensuring memory cleanup occurs only when the bio_ctr fail.
->> V3 - Moved the bio declaration into the loop scope, eliminating
->> the need to set it to NULL at the end of the loop.
->> V4 - Adjusted position of arguments of bio_alloc_clone.
->>
->>   block/blk-mq.c | 13 ++++++-------
->>   1 file changed, 6 insertions(+), 7 deletions(-)
->>
->> diff --git a/block/blk-mq.c b/block/blk-mq.c
->> index 4b2c8e940..89c9a6c4d 100644
->> --- a/block/blk-mq.c
->> +++ b/block/blk-mq.c
->> @@ -3156,19 +3156,21 @@ int blk_rq_prep_clone(struct request *rq, struct request *rq_src,
->>                 int (*bio_ctr)(struct bio *, struct bio *, void *),
->>                 void *data)
->>   {
->> -    struct bio *bio, *bio_src;
->> +    struct bio *bio_src;
->>         if (!bs)
->>           bs = &fs_bio_set;
->>         __rq_for_each_bio(bio_src, rq_src) {
->> -        bio = bio_alloc_clone(rq->q->disk->part0, bio_src, gfp_mask,
->> -                      bs);
->> +        struct bio *bio = bio_alloc_clone(rq->q->disk->part0, bio_src,
->> +                    gfp_mask, bs);
->>           if (!bio)
->>               goto free_and_out;
->>   -        if (bio_ctr && bio_ctr(bio, bio_src, data))
->> +        if (bio_ctr && bio_ctr(bio, bio_src, data)) {
->> +            bio_put(bio);
->>               goto free_and_out;
->> +        }
->>             if (rq->bio) {
->>               rq->biotail->bi_next = bio;
->> @@ -3176,7 +3178,6 @@ int blk_rq_prep_clone(struct request *rq, struct request *rq_src,
->>           } else {
->>               rq->bio = rq->biotail = bio;
->>           }
->> -        bio = NULL;
->>       }
->>         /* Copy attributes of the original request to the clone request. */
->> @@ -3196,8 +3197,6 @@ int blk_rq_prep_clone(struct request *rq, struct request *rq_src,
->>       return 0;
->>     free_and_out:
->> -    if (bio)
->> -        bio_put(bio);
->>       blk_rq_unprep_clone(rq);
->>         return -ENOMEM;
-> 
-> Hello Jens!
-> 
-> I wanted to follow up on this patch I submitted. I have done all the
-> suggested changes till v4. I was wondering if you had a chance to
-> review it and if there are any comments or feedback.
+It turns out, it's just not worth to add bits to the core just for
+hisi_sas_v2 driver. I dropped those changes.
 
-Sorry missed this one. Is this a legit case of it being used
-uninitialized, or is it just cleaning up the code so that smatch is
-happy? The commit is woefully non-descriptive, unfortunately. So perhaps
-resend this one and improve the commit message.
+BTW, this series is based on linux-block/for-next from 2024-11-11. Not
+sure if this is the right base, if not please let me know which branch I
+should use.
 
+Original cover letter:
+
+These patches were part of 'honor isolcpus configuration' [1] series. To
+simplify the review process I decided to send this as separate series
+because I think it's a nice cleanup independent of the isolcpus feature.
+
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in v5:
+- dropped the irq_get_affinity callback from struct device_driver
+  again.
+- s/blk_mq_hctx_map_queues/blk_mq_map_hw_queues/
+- collected tags
+- Link to v4: https://lore.kernel.org/r/20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org
+
+Changes in v4:
+- added irq_get_affinity callback to struct device_driver
+- hisi_sas use dev pointer directly from hisi_hba.
+- blk_mq_hctx_map_queues: ty irq_get_affinity callback
+  from device_driver first then from bus_type
+- collected tags
+- fixed typos
+- Link to v3: https://lore.kernel.org/r/20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org
+
+Changes in v3:
+- dropped the additinal argument in blk_mq_hctx_map_queues.
+  leave open coded version in hisi_sas_v2.
+- splitted "blk-mp: introduce blk_mq_hctx_map_queues" patch into
+  three patches.
+- dropped local variable in pci_device_irq_get_affinity
+- Link to v2: https://lore.kernel.org/r/20241111-refactor-blk-affinity-helpers-v2-0-f360ddad231a@kernel.org
+
+Changes in v2:
+- added new callback to struct bus_type and call directly the affinity
+  helpers from there.
+- Link to v1: https://lore.kernel.org/r/20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de
+
+Changes in v1:
+- renamed blk_mq_dev_map_queues to blk_mq_hctx_map_queues
+- squased 'virito: add APIs for retrieving vq affinity' into
+  'blk-mq: introduce blk_mq_hctx_map_queues'
+- moved hisi_sas changed into a new patch
+- hisi_sas use define instead of hard coded value
+- moved helpers into their matching subsystem, removed
+  blk-mq-pci and blk-mq-virtio files
+- fix spelling/typos
+- fixed long lines in docu (yep new lines in brief descriptions are
+  supported, tested ti)
+- based on the first part of
+  [1] https://lore.kernel.org/all/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
+
+---
+Daniel Wagner (8):
+      driver core: bus: add irq_get_affinity callback to bus_type
+      PCI: hookup irq_get_affinity callback
+      virtio: hookup irq_get_affinity callback
+      blk-mq: introduce blk_mq_map_hw_queues
+      scsi: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      nvme: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      virtio: blk/scsi: replace blk_mq_virtio_map_queues with blk_mq_map_hw_queues
+      blk-mq: remove unused queue mapping helpers
+
+ block/Makefile                            |  2 --
+ block/blk-mq-cpumap.c                     | 37 +++++++++++++++++++++++++
+ block/blk-mq-pci.c                        | 46 -------------------------------
+ block/blk-mq-virtio.c                     | 46 -------------------------------
+ drivers/block/virtio_blk.c                |  4 +--
+ drivers/nvme/host/fc.c                    |  1 -
+ drivers/nvme/host/pci.c                   |  3 +-
+ drivers/pci/pci-driver.c                  | 14 ++++++++++
+ drivers/scsi/fnic/fnic_main.c             |  3 +-
+ drivers/scsi/hisi_sas/hisi_sas.h          |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  4 +--
+ drivers/scsi/megaraid/megaraid_sas_base.c |  3 +-
+ drivers/scsi/mpi3mr/mpi3mr.h              |  1 -
+ drivers/scsi/mpi3mr/mpi3mr_os.c           |  2 +-
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  3 +-
+ drivers/scsi/pm8001/pm8001_init.c         |  2 +-
+ drivers/scsi/pm8001/pm8001_sas.h          |  1 -
+ drivers/scsi/qla2xxx/qla_nvme.c           |  3 +-
+ drivers/scsi/qla2xxx/qla_os.c             |  4 +--
+ drivers/scsi/smartpqi/smartpqi_init.c     |  7 ++---
+ drivers/scsi/virtio_scsi.c                |  3 +-
+ drivers/virtio/virtio.c                   | 19 +++++++++++++
+ include/linux/blk-mq-pci.h                | 11 --------
+ include/linux/blk-mq-virtio.h             | 11 --------
+ include/linux/blk-mq.h                    |  2 ++
+ include/linux/device/bus.h                |  3 ++
+ 26 files changed, 92 insertions(+), 144 deletions(-)
+---
+base-commit: c9af98a7e8af266bae73e9d662b8341da1ec5824
+change-id: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+
+Best regards,
 -- 
-Jens Axboe
+Daniel Wagner <wagi@kernel.org>
+
 
