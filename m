@@ -1,61 +1,61 @@
-Return-Path: <linux-block+bounces-14282-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14279-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAE759D1C60
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:29:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7E919D1C59
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:29:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19A5AB22A47
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:29:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CE171F222EB
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:29:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7231C1804E;
-	Tue, 19 Nov 2024 00:28:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A7F610B;
+	Tue, 19 Nov 2024 00:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ey/eLbQg"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="JbHXPfCA"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E75138FA6;
-	Tue, 19 Nov 2024 00:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0488A93D;
+	Tue, 19 Nov 2024 00:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731976130; cv=none; b=FYv91CZ/Q7PrJSeLL3bykLyH0fYh645/QNCM1DmzNMmi/8Bm36OFi/1iysqPzWQoHy3S4iWGCeBctsN/K13ZV2QXD/prpmGjYb3/KGttYBt1qzwzMm3JfEeFxhCAn1X1PZ+et/O0F4YiKjkAL9sdoV95qKMd/FaGg1qqFEtLq3c=
+	t=1731976126; cv=none; b=JKezkuEeRMjouFC6tmHXykhqduZ5AOMJaXnhXwryDp2oGDGI4WN83qMC+QedlGoV1lcoA1NVz7v000q8kbxRBN0Dvtm3WWRsh6G8Ff7mQCfWiMYTq8y9HFtgBxsdH114j6WnP+2hK556VUObjhrfa+Npj+vEwAN5lqLAIPqbA2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731976130; c=relaxed/simple;
-	bh=2HcQmdgi8D0gbNiFbXQIisgIrCR0OGjMywbyhS/VZ+M=;
+	s=arc-20240116; t=1731976126; c=relaxed/simple;
+	bh=55CfKNm0m6d840UXU3+xco443Ng4vf0jVKA4Rb3WTKw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p+bYqlXrI52AaZ4wrUy1mkQSDXKT1f/vSHU42LgC7cpsU1mtLrghy+wuXnclVSbfper/OBdUEQiASNwY3i5rjUQQJIhySNmfzaqvaCmGs7tDd/cUXMGtIJ9y5q2TFGjI2AU3qTd54cfOxUMADC64W3Dn5oXuzBc6jNH7FFhk78g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ey/eLbQg; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=DJ2T6gBLVb461UZrQbul2VHtC8PXsrFt5GG1znpFMTN0pI4q8Av+53JsnIO8hRTM60wQIJxlTUHfSpswVA4fQ1PiuJAbVo0YMHRVGFihnT994iocInvlM19LPw6BMuoyjN1HmcKAwF/LTx/8aWJ4lvGgbVSfdkz/nTd6C5nXr1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=JbHXPfCA; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4XsljB4HhyzlgVnY;
-	Tue, 19 Nov 2024 00:28:46 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Xslj829NkzlgMVQ;
+	Tue, 19 Nov 2024 00:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1731976116; x=1734568117; bh=ApTxr
-	KLlqtUOcY6Efmc/C8s1lOktZwRB41eCGj+9khg=; b=ey/eLbQgNVjWJwXGnTn4v
-	mKxiTwTXMCZFqGcEPNYYv6XJhlFTwE/Kvlh9Eku6pjLUWbfsUvrM13+xv46hyX0U
-	CcTb4ZqAdQBPwLjeAJNqS9xEN5mohIuf1F+2TSg1KArm0Y5lbiPxpG1V9aJIoldj
-	draoHqLVbrpMBWa8pAmiF6PpwRPC0JgrbaWfVMZeTvd0tu/+nzC+KJ0c0ETpg0U/
-	kiJUoeh5JUAmXnTn5Kozo9Wc4gIkwxfxnw3QDnUs3I0bYJ2h44EaRHOz1QnDAACP
-	kP7t3gukqyQX7y2tgk0lxj9gZbPzY8dQwRi+F3bsUygOBZUzYtrMpakn2iCkS+xt
-	w==
+	:received:received; s=mr01; t=1731976117; x=1734568118; bh=stSQS
+	fUIRjbG+lH//eK5AJt7SRvcFvSCywnt/x9hkjU=; b=JbHXPfCATXNWsFYvfo9Lq
+	ES687hZ/4/9llslZl/pC+oD/NL3d9QCyFWVPYbdq8/tQzrYu5jF+4Qt2AaPP5L6g
+	+qk09N3nEmAR6fGs0H4+gNNJCE3n61RlY3jnXeWDFyvQP69Nh3PBH1U6ttwxGYuJ
+	6OCI+ZlG5V8utbUfcjpuiRjehA1UC4haM7KFrZum9HaWt6DFdcVVz4GCkgwfYVsc
+	zIfzzHniu6zNuXa0WAttG7/RJEZMvAo2xcAWf35lg35Klbnpfz8yeyfGQSidXyHu
+	MFt1kBdqq1GDIBktCM8U/QGe4J5wJ4CNJ1Vo/jsUh4L/S21tYhjdRdcxMWLc+kBO
+	A==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id RUa2xrTqqH-7; Tue, 19 Nov 2024 00:28:36 +0000 (UTC)
+ id uiu7UU1BmcJ3; Tue, 19 Nov 2024 00:28:37 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Xslhy57BMzlgVXv;
-	Tue, 19 Nov 2024 00:28:34 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Xslj02MD2zlgT1M;
+	Tue, 19 Nov 2024 00:28:36 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc: linux-block@vger.kernel.org,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v16 04/26] blk-zoned: Only handle errors after pending zoned writes have completed
-Date: Mon, 18 Nov 2024 16:27:53 -0800
-Message-ID: <20241119002815.600608-5-bvanassche@acm.org>
+Subject: [PATCH v16 05/26] blk-zoned: Fix a deadlock triggered by unaligned writes
+Date: Mon, 18 Nov 2024 16:27:54 -0800
+Message-ID: <20241119002815.600608-6-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241119002815.600608-1-bvanassche@acm.org>
 References: <20241119002815.600608-1-bvanassche@acm.org>
@@ -78,402 +78,218 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Instead of handling write errors immediately, only handle these after all
-pending zoned write requests have completed or have been requeued. This
-patch prepares for changing the zone write pointer tracking approach.
+If the queue is filled with unaligned writes then the following
+deadlock occurs:
+
+Call Trace:
+ <TASK>
+ __schedule+0x8cc/0x2190
+ schedule+0xdd/0x2b0
+ blk_queue_enter+0x2ce/0x4f0
+ blk_mq_alloc_request+0x303/0x810
+ scsi_execute_cmd+0x3f4/0x7b0
+ sd_zbc_do_report_zones+0x19e/0x4c0
+ sd_zbc_report_zones+0x304/0x920
+ disk_zone_wplug_handle_error+0x237/0x920
+ disk_zone_wplugs_work+0x17e/0x430
+ process_one_work+0xdd0/0x1490
+ worker_thread+0x5eb/0x1010
+ kthread+0x2e5/0x3b0
+ ret_from_fork+0x3a/0x80
+ </TASK>
+
+Fix this deadlock by removing the disk->fops->report_zones() call and by
+deriving the write pointer information from successfully completed zoned
+writes.
 
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c         |   9 +++
- block/blk-zoned.c      | 154 +++++++++++++++++++++++++++++++++++++++--
- block/blk.h            |  29 ++++++++
- include/linux/blk-mq.h |  18 +++++
- 4 files changed, 203 insertions(+), 7 deletions(-)
+ block/blk-zoned.c | 69 +++++++++++++++++++----------------------------
+ block/blk.h       |  4 ++-
+ 2 files changed, 31 insertions(+), 42 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 270cfd9fc6b0..a45077e187b5 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -793,6 +793,9 @@ void blk_mq_free_request(struct request *rq)
- 	rq_qos_done(q, rq);
-=20
- 	WRITE_ONCE(rq->state, MQ_RQ_IDLE);
-+
-+	blk_zone_free_request(rq);
-+
- 	if (req_ref_put_and_test(rq))
- 		__blk_mq_free_request(rq);
- }
-@@ -1189,6 +1192,9 @@ void blk_mq_end_request_batch(struct io_comp_batch =
-*iob)
- 			continue;
-=20
- 		WRITE_ONCE(rq->state, MQ_RQ_IDLE);
-+
-+		blk_zone_free_request(rq);
-+
- 		if (!req_ref_put_and_test(rq))
- 			continue;
-=20
-@@ -1507,6 +1513,7 @@ static void __blk_mq_requeue_request(struct request=
- *rq)
- 	if (blk_mq_request_started(rq)) {
- 		WRITE_ONCE(rq->state, MQ_RQ_IDLE);
- 		rq->rq_flags &=3D ~RQF_TIMED_OUT;
-+		blk_zone_requeue_work(q);
- 	}
- }
-=20
-@@ -1542,6 +1549,8 @@ static void blk_mq_requeue_work(struct work_struct =
-*work)
- 	list_splice_init(&q->flush_list, &flush_list);
- 	spin_unlock_irq(&q->requeue_lock);
-=20
-+	blk_zone_requeue_work(q);
-+
- 	while (!list_empty(&rq_list)) {
- 		rq =3D list_entry(rq_list.next, struct request, queuelist);
- 		/*
 diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index 7e6e6ebb6235..b570b773e65f 100644
+index b570b773e65f..284820b29285 100644
 --- a/block/blk-zoned.c
 +++ b/block/blk-zoned.c
-@@ -608,6 +608,8 @@ static inline void disk_zone_wplug_set_error(struct g=
-endisk *disk,
- 	if (zwplug->flags & BLK_ZONE_WPLUG_ERROR)
- 		return;
-=20
-+	zwplug->flags |=3D BLK_ZONE_WPLUG_PLUGGED;
-+	zwplug->flags |=3D BLK_ZONE_WPLUG_ERROR;
- 	/*
- 	 * At this point, we already have a reference on the zone write plug.
- 	 * However, since we are going to add the plug to the disk zone write
-@@ -616,7 +618,6 @@ static inline void disk_zone_wplug_set_error(struct g=
-endisk *disk,
- 	 * handled, or in disk_zone_wplug_clear_error() if the zone is reset or
- 	 * finished.
- 	 */
--	zwplug->flags |=3D BLK_ZONE_WPLUG_ERROR;
- 	refcount_inc(&zwplug->ref);
-=20
- 	spin_lock_irqsave(&disk->zone_wplugs_lock, flags);
-@@ -642,6 +643,7 @@ static inline void disk_zone_wplug_clear_error(struct=
- gendisk *disk,
- 	spin_lock_irqsave(&disk->zone_wplugs_lock, flags);
- 	if (!list_empty(&zwplug->link)) {
- 		list_del_init(&zwplug->link);
-+		zwplug->flags &=3D ~BLK_ZONE_WPLUG_PLUGGED;
- 		zwplug->flags &=3D ~BLK_ZONE_WPLUG_ERROR;
- 		disk_put_zone_wplug(zwplug);
- 	}
-@@ -746,6 +748,70 @@ static bool blk_zone_wplug_handle_reset_all(struct b=
-io *bio)
- 	return false;
- }
-=20
-+struct all_zwr_inserted_data {
-+	struct blk_zone_wplug *zwplug;
-+	bool res;
-+};
-+
-+/*
-+ * Changes @data->res to %false if and only if @rq is a zoned write for =
-the
-+ * given zone and if it is owned by the block driver.
-+ *
-+ * @rq members may change while this function is in progress. Hence, use
-+ * READ_ONCE() to read @rq members.
-+ */
-+static bool blk_zwr_inserted(struct request *rq, void *data)
-+{
-+	struct all_zwr_inserted_data *d =3D data;
-+	struct blk_zone_wplug *zwplug =3D d->zwplug;
-+	struct request_queue *q =3D zwplug->disk->queue;
-+	struct bio *bio =3D READ_ONCE(rq->bio);
-+
-+	if (rq->q =3D=3D q && READ_ONCE(rq->state) !=3D MQ_RQ_IDLE &&
-+	    blk_rq_is_seq_zoned_write(rq) && bio &&
-+	    bio_zone_no(bio) =3D=3D zwplug->zone_no) {
-+		d->res =3D false;
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * Report whether or not all zoned writes for a zone have been inserted =
-into a
-+ * software queue, elevator queue or hardware queue.
-+ */
-+static bool blk_zone_all_zwr_inserted(struct blk_zone_wplug *zwplug)
-+{
-+	struct gendisk *disk =3D zwplug->disk;
-+	struct request_queue *q =3D disk->queue;
-+	struct all_zwr_inserted_data d =3D { .zwplug =3D zwplug, .res =3D true =
-};
-+	struct blk_mq_hw_ctx *hctx;
-+	long unsigned int i;
-+	struct request *rq;
-+
-+	scoped_guard(spinlock_irqsave, &q->requeue_lock) {
-+		list_for_each_entry(rq, &q->requeue_list, queuelist)
-+			if (blk_rq_is_seq_zoned_write(rq) &&
-+			    bio_zone_no(rq->bio) =3D=3D zwplug->zone_no)
-+				return false;
-+		list_for_each_entry(rq, &q->flush_list, queuelist)
-+			if (blk_rq_is_seq_zoned_write(rq) &&
-+			    bio_zone_no(rq->bio) =3D=3D zwplug->zone_no)
-+				return false;
-+	}
-+
-+	queue_for_each_hw_ctx(q, hctx, i) {
-+		struct blk_mq_tags *tags =3D hctx->sched_tags ?: hctx->tags;
-+
-+		blk_mq_all_tag_iter(tags, blk_zwr_inserted, &d);
-+		if (!d.res || blk_mq_is_shared_tags(q->tag_set->flags))
-+			break;
-+	}
-+
-+	return d.res;
-+}
-+
- static inline void blk_zone_wplug_add_bio(struct blk_zone_wplug *zwplug,
- 					  struct bio *bio, unsigned int nr_segs)
- {
-@@ -1096,6 +1162,29 @@ static void disk_zone_wplug_schedule_bio_work(stru=
-ct gendisk *disk,
- 	queue_work(disk->zone_wplugs_wq, &zwplug->bio_work);
- }
-=20
-+/*
-+ * Change the zone state to "error" if a request is requeued to postpone
-+ * processing of requeued requests until all pending requests have eithe=
-r
-+ * completed or have been requeued.
-+ */
-+void blk_zone_write_plug_requeue_request(struct request *rq)
-+{
-+	struct gendisk *disk =3D rq->q->disk;
-+	struct blk_zone_wplug *zwplug;
-+
-+	if (!disk->zone_wplugs_hash_bits || !blk_rq_is_seq_zoned_write(rq))
-+		return;
-+
-+	zwplug =3D disk_get_zone_wplug(disk, blk_rq_pos(rq));
-+	if (WARN_ON_ONCE(!zwplug))
-+		return;
-+
-+	scoped_guard(spinlock_irqsave, &zwplug->lock)
-+		disk_zone_wplug_set_error(disk, zwplug);
-+
-+	disk_put_zone_wplug(zwplug);
-+}
-+
- static void disk_zone_wplug_unplug_bio(struct gendisk *disk,
- 				       struct blk_zone_wplug *zwplug)
- {
-@@ -1202,6 +1291,33 @@ void blk_zone_write_plug_finish_request(struct req=
-uest *req)
- 	disk_put_zone_wplug(zwplug);
- }
-=20
-+/*
-+ * Schedule zone_plugs_work if a zone is in the error state and if no re=
-quests
-+ * are in flight. Called from blk_mq_free_request().
-+ */
-+void blk_zone_write_plug_free_request(struct request *rq)
-+{
-+	struct gendisk *disk =3D rq->q->disk;
-+	struct blk_zone_wplug *zwplug;
-+
-+	/*
-+	 * Do nothing if this function is called before the zone information
-+	 * has been initialized.
-+	 */
-+	if (!disk->zone_wplugs_hash_bits)
-+		return;
-+
-+	zwplug =3D disk_get_zone_wplug(disk, blk_rq_pos(rq));
-+
-+	if (!zwplug)
-+		return;
-+
-+	if (zwplug->flags & BLK_ZONE_WPLUG_ERROR)
-+		kblockd_schedule_work(&disk->zone_wplugs_work);
-+
-+	disk_put_zone_wplug(zwplug);
-+}
-+
- static void blk_zone_wplug_bio_work(struct work_struct *work)
- {
+@@ -56,6 +56,8 @@ static const char *const zone_cond_name[] =3D {
+  * @zone_no: The number of the zone the plug is managing.
+  * @wp_offset: The zone write pointer location relative to the start of =
+the zone
+  *             as a number of 512B sectors.
++ * @wp_offset_compl: End offset for completed zoned writes as a number o=
+f 512
++ *		     byte sectors.
+  * @bio_list: The list of BIOs that are currently plugged.
+  * @bio_work: Work struct to handle issuing of plugged BIOs
+  * @rcu_head: RCU head to free zone write plugs with an RCU grace period=
+.
+@@ -69,6 +71,7 @@ struct blk_zone_wplug {
+ 	unsigned int		flags;
+ 	unsigned int		zone_no;
+ 	unsigned int		wp_offset;
++	unsigned int		wp_offset_compl;
+ 	struct bio_list		bio_list;
+ 	struct work_struct	bio_work;
+ 	struct rcu_head		rcu_head;
+@@ -531,6 +534,7 @@ static struct blk_zone_wplug *disk_get_and_lock_zone_=
+wplug(struct gendisk *disk,
+ 	zwplug->flags =3D 0;
+ 	zwplug->zone_no =3D zno;
+ 	zwplug->wp_offset =3D sector & (disk->queue->limits.chunk_sectors - 1);
++	zwplug->wp_offset_compl =3D 0;
+ 	bio_list_init(&zwplug->bio_list);
+ 	INIT_WORK(&zwplug->bio_work, blk_zone_wplug_bio_work);
+ 	zwplug->disk =3D disk;
+@@ -1226,6 +1230,7 @@ void blk_zone_write_plug_bio_endio(struct bio *bio)
+ 	struct gendisk *disk =3D bio->bi_bdev->bd_disk;
  	struct blk_zone_wplug *zwplug =3D
-@@ -1343,14 +1459,15 @@ static void disk_zone_wplug_handle_error(struct g=
-endisk *disk,
-=20
- static void disk_zone_process_err_list(struct gendisk *disk)
- {
--	struct blk_zone_wplug *zwplug;
-+	struct blk_zone_wplug *zwplug, *next;
+ 		disk_get_zone_wplug(disk, bio->bi_iter.bi_sector);
++	unsigned int end_sector;
  	unsigned long flags;
 =20
- 	spin_lock_irqsave(&disk->zone_wplugs_lock, flags);
-=20
--	while (!list_empty(&disk->zone_wplugs_err_list)) {
--		zwplug =3D list_first_entry(&disk->zone_wplugs_err_list,
--					  struct blk_zone_wplug, link);
-+	list_for_each_entry_safe(zwplug, next, &disk->zone_wplugs_err_list,
-+				 link) {
-+		if (!blk_zone_all_zwr_inserted(zwplug))
-+			continue;
- 		list_del_init(&zwplug->link);
- 		spin_unlock_irqrestore(&disk->zone_wplugs_lock, flags);
-=20
-@@ -1361,6 +1478,12 @@ static void disk_zone_process_err_list(struct gend=
-isk *disk)
+ 	if (WARN_ON_ONCE(!zwplug))
+@@ -1243,11 +1248,24 @@ void blk_zone_write_plug_bio_endio(struct bio *bi=
+o)
+ 		bio->bi_opf |=3D REQ_OP_ZONE_APPEND;
  	}
 =20
- 	spin_unlock_irqrestore(&disk->zone_wplugs_lock, flags);
-+
-+	/*
-+	 * If one or more zones have been skipped, this work will be requeued
-+	 * when a request is requeued (blk_zone_requeue_work()) or freed
-+	 * (blk_zone_write_plug_free_request()).
-+	 */
+-	/*
+-	 * If the BIO failed, mark the plug as having an error to trigger
+-	 * recovery.
+-	 */
+-	if (bio->bi_status !=3D BLK_STS_OK) {
++	if (bio->bi_status =3D=3D BLK_STS_OK) {
++		switch (bio_op(bio)) {
++		case REQ_OP_WRITE:
++		case REQ_OP_ZONE_APPEND:
++		case REQ_OP_WRITE_ZEROES:
++			end_sector =3D bdev_offset_from_zone_start(disk->part0,
++				     bio->bi_iter.bi_sector + bio_sectors(bio));
++			if (end_sector > zwplug->wp_offset_compl)
++				zwplug->wp_offset_compl =3D end_sector;
++			break;
++		default:
++			break;
++		}
++	} else {
++		/*
++		 * If the BIO failed, mark the plug as having an error to
++		 * trigger recovery.
++		 */
+ 		spin_lock_irqsave(&zwplug->lock, flags);
+ 		disk_zone_wplug_set_error(disk, zwplug);
+ 		spin_unlock_irqrestore(&zwplug->lock, flags);
+@@ -1388,30 +1406,10 @@ static unsigned int blk_zone_wp_offset(struct blk=
+_zone *zone)
+ 	}
  }
 =20
- static void disk_zone_wplugs_work(struct work_struct *work)
-@@ -1371,6 +1494,20 @@ static void disk_zone_wplugs_work(struct work_stru=
-ct *work)
- 	disk_zone_process_err_list(disk);
- }
-=20
-+/* May be called from interrupt context and hence must not sleep. */
-+void blk_zone_requeue_work(struct request_queue *q)
-+{
-+	struct gendisk *disk =3D q->disk;
-+
-+	if (!disk)
-+		return;
-+
-+	if (in_interrupt())
-+		kblockd_schedule_work(&disk->zone_wplugs_work);
-+	else
-+		disk_zone_process_err_list(disk);
-+}
-+
- static inline unsigned int disk_zone_wplugs_hash_size(struct gendisk *di=
-sk)
+-static int blk_zone_wplug_report_zone_cb(struct blk_zone *zone,
+-					 unsigned int idx, void *data)
+-{
+-	struct blk_zone *zonep =3D data;
+-
+-	*zonep =3D *zone;
+-	return 0;
+-}
+-
+ static void disk_zone_wplug_handle_error(struct gendisk *disk,
+ 					 struct blk_zone_wplug *zwplug)
  {
- 	return 1U << disk->zone_wplugs_hash_bits;
-@@ -1854,8 +1991,11 @@ static void queue_zone_wplug_show(struct blk_zone_=
-wplug *zwplug,
+-	sector_t zone_start_sector =3D
+-		bdev_zone_sectors(disk->part0) * zwplug->zone_no;
+-	unsigned int noio_flag;
+-	struct blk_zone zone;
+ 	unsigned long flags;
+-	int ret;
+-
+-	/* Get the current zone information from the device. */
+-	noio_flag =3D memalloc_noio_save();
+-	ret =3D disk->fops->report_zones(disk, zone_start_sector, 1,
+-				       blk_zone_wplug_report_zone_cb, &zone);
+-	memalloc_noio_restore(noio_flag);
+=20
+ 	spin_lock_irqsave(&zwplug->lock, flags);
+=20
+@@ -1425,19 +1423,8 @@ static void disk_zone_wplug_handle_error(struct ge=
+ndisk *disk,
+=20
+ 	zwplug->flags &=3D ~BLK_ZONE_WPLUG_ERROR;
+=20
+-	if (ret !=3D 1) {
+-		/*
+-		 * We failed to get the zone information, meaning that something
+-		 * is likely really wrong with the device. Abort all remaining
+-		 * plugged BIOs as otherwise we could endup waiting forever on
+-		 * plugged BIOs to complete if there is a queue freeze on-going.
+-		 */
+-		disk_zone_wplug_abort(zwplug);
+-		goto unplug;
+-	}
+-
+ 	/* Update the zone write pointer offset. */
+-	zwplug->wp_offset =3D blk_zone_wp_offset(&zone);
++	zwplug->wp_offset =3D zwplug->wp_offset_compl;
+ 	disk_zone_wplug_abort_unaligned(disk, zwplug);
+=20
+ 	/* Restart BIO submission if we still have any BIO left. */
+@@ -1446,7 +1433,6 @@ static void disk_zone_wplug_handle_error(struct gen=
+disk *disk,
+ 		goto unlock;
+ 	}
+=20
+-unplug:
+ 	zwplug->flags &=3D ~BLK_ZONE_WPLUG_PLUGGED;
+ 	if (disk_should_remove_zone_wplug(disk, zwplug))
+ 		disk_remove_zone_wplug(disk, zwplug);
+@@ -1978,7 +1964,7 @@ EXPORT_SYMBOL_GPL(blk_revalidate_disk_zones);
+ static void queue_zone_wplug_show(struct blk_zone_wplug *zwplug,
+ 				  struct seq_file *m)
+ {
+-	unsigned int zwp_wp_offset, zwp_flags;
++	unsigned int zwp_wp_offset, zwp_wp_offset_compl, zwp_flags;
+ 	unsigned int zwp_zone_no, zwp_ref;
+ 	unsigned int zwp_bio_list_size;
+ 	unsigned long flags;
+@@ -1988,14 +1974,15 @@ static void queue_zone_wplug_show(struct blk_zone=
+_wplug *zwplug,
+ 	zwp_flags =3D zwplug->flags;
+ 	zwp_ref =3D refcount_read(&zwplug->ref);
+ 	zwp_wp_offset =3D zwplug->wp_offset;
++	zwp_wp_offset_compl =3D zwplug->wp_offset_compl;
  	zwp_bio_list_size =3D bio_list_size(&zwplug->bio_list);
  	spin_unlock_irqrestore(&zwplug->lock, flags);
 =20
--	seq_printf(m, "%u 0x%x %u %u %u\n", zwp_zone_no, zwp_flags, zwp_ref,
--		   zwp_wp_offset, zwp_bio_list_size);
-+	bool all_zwr_inserted =3D blk_zone_all_zwr_inserted(zwplug);
-+
-+	seq_printf(m, "zone_no %u flags 0x%x ref %u wp_offset %u bio_list_size =
+ 	bool all_zwr_inserted =3D blk_zone_all_zwr_inserted(zwplug);
+=20
+-	seq_printf(m, "zone_no %u flags 0x%x ref %u wp_offset %u bio_list_size =
 %u all_zwr_inserted %d\n",
-+		   zwp_zone_no, zwp_flags, zwp_ref, zwp_wp_offset,
-+		   zwp_bio_list_size, all_zwr_inserted);
++	seq_printf(m, "zone_no %u flags 0x%x ref %u wp_offset %u wp_offset_comp=
+l %u bio_list_size %u all_zwr_inserted %d\n",
+ 		   zwp_zone_no, zwp_flags, zwp_ref, zwp_wp_offset,
+-		   zwp_bio_list_size, all_zwr_inserted);
++		   zwp_wp_offset_compl, zwp_bio_list_size, all_zwr_inserted);
  }
 =20
  int queue_zone_wplugs_show(void *data, struct seq_file *m)
 diff --git a/block/blk.h b/block/blk.h
-index 2c26abf505b8..be945db6298d 100644
+index be945db6298d..88a6e258eafe 100644
 --- a/block/blk.h
 +++ b/block/blk.h
-@@ -473,6 +473,18 @@ static inline void blk_zone_update_request_bio(struc=
+@@ -470,8 +470,10 @@ static inline void blk_zone_update_request_bio(struc=
 t request *rq,
- 	if (req_op(rq) =3D=3D REQ_OP_ZONE_APPEND || bio_zone_write_plugging(bio=
+ 	 * the original BIO sector so that blk_zone_write_plug_bio_endio() can
+ 	 * lookup the zone write plug.
+ 	 */
+-	if (req_op(rq) =3D=3D REQ_OP_ZONE_APPEND || bio_zone_write_plugging(bio=
 ))
++	if (req_op(rq) =3D=3D REQ_OP_ZONE_APPEND || bio_zone_write_plugging(bio=
+)) {
  		bio->bi_iter.bi_sector =3D rq->__sector;
- }
-+
-+void blk_zone_write_plug_requeue_request(struct request *rq);
-+static inline void blk_zone_requeue_request(struct request *rq)
-+{
-+	if (!blk_rq_is_seq_zoned_write(rq))
-+		return;
-+
-+	blk_zone_write_plug_requeue_request(rq);
-+}
-+
-+void blk_zone_requeue_work(struct request_queue *q);
-+
- void blk_zone_write_plug_bio_endio(struct bio *bio);
- static inline void blk_zone_bio_endio(struct bio *bio)
- {
-@@ -490,6 +502,14 @@ static inline void blk_zone_finish_request(struct re=
-quest *rq)
- 	if (rq->rq_flags & RQF_ZONE_WRITE_PLUGGING)
- 		blk_zone_write_plug_finish_request(rq);
- }
-+
-+void blk_zone_write_plug_free_request(struct request *rq);
-+static inline void blk_zone_free_request(struct request *rq)
-+{
-+	if (blk_queue_is_zoned(rq->q))
-+		blk_zone_write_plug_free_request(rq);
-+}
-+
- int blkdev_report_zones_ioctl(struct block_device *bdev, unsigned int cm=
-d,
- 		unsigned long arg);
- int blkdev_zone_mgmt_ioctl(struct block_device *bdev, blk_mode_t mode,
-@@ -515,12 +535,21 @@ static inline void blk_zone_update_request_bio(stru=
-ct request *rq,
- 					       struct bio *bio)
- {
- }
-+static inline void blk_zone_requeue_request(struct request *rq)
-+{
-+}
-+static inline void blk_zone_requeue_work(struct request_queue *q)
-+{
-+}
- static inline void blk_zone_bio_endio(struct bio *bio)
- {
- }
- static inline void blk_zone_finish_request(struct request *rq)
- {
- }
-+static inline void blk_zone_free_request(struct request *rq)
-+{
-+}
- static inline int blkdev_report_zones_ioctl(struct block_device *bdev,
- 		unsigned int cmd, unsigned long arg)
- {
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index c596e0e4cb75..ac05974f08f9 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -1169,4 +1169,22 @@ static inline int blk_rq_map_sg(struct request_que=
-ue *q, struct request *rq,
- }
- void blk_dump_rq_flags(struct request *, char *);
-=20
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static inline bool blk_rq_is_seq_zoned_write(struct request *rq)
-+{
-+	switch (req_op(rq)) {
-+	case REQ_OP_WRITE:
-+	case REQ_OP_WRITE_ZEROES:
-+		return bdev_zone_is_seq(rq->q->disk->part0, blk_rq_pos(rq));
-+	default:
-+		return false;
++		bio->bi_iter.bi_size =3D rq->__data_len;
 +	}
-+}
-+#else /* CONFIG_BLK_DEV_ZONED */
-+static inline bool blk_rq_is_seq_zoned_write(struct request *rq)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_BLK_DEV_ZONED */
-+
- #endif /* BLK_MQ_H */
+ }
+=20
+ void blk_zone_write_plug_requeue_request(struct request *rq);
 
