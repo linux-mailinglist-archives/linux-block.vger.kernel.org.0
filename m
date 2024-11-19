@@ -1,61 +1,61 @@
-Return-Path: <linux-block+bounces-14294-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14296-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D3D49D1C78
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:30:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F96E9D1C7B
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:30:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 044B0B233E8
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:30:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDC311F211A8
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E5E101EE;
-	Tue, 19 Nov 2024 00:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704C22E3EB;
+	Tue, 19 Nov 2024 00:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="t2LccxBM"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="TxF25nA+"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09388DDD9;
-	Tue, 19 Nov 2024 00:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF22F136337;
+	Tue, 19 Nov 2024 00:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731976150; cv=none; b=m4ymKYP2PrYOhwqADtRE9c1+WPogR4w3wIUtN7bLlAzqHVsKfPFEo92XDbgLjo58WzTnyOpag6kaY7ZE6g/hfChWnNFvbBLNyzMYg+La7KxnSFttVzPZHuPi/1YHV4zAPof0QI1ho9KllkwOzfLXgU7jolVj7EgwWD7KzbmOg18=
+	t=1731976152; cv=none; b=fCP9bfid1zBOX8kYIpHX89y6mR/QnmM3u2aaDOROkcBWPsqM+/k5eH1UtHd22zk+jDcrRMn9jo6vUyZ/13Wk3oa/iU8yncXvjRvO9ikdlfYQmqYurFX71Yq14HBnCRAj0VgVDISRyFfyv1eOp9HqdSp6Bm202PjwZ55UQ4wr7wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731976150; c=relaxed/simple;
-	bh=kLLkt4Fs0e4m0K2fT+/PzOsB07T/v4pilQwrgq8wzs0=;
+	s=arc-20240116; t=1731976152; c=relaxed/simple;
+	bh=QkqlwuuNYl4VVEnHfU3DWlFW7oW9V0AIugQBhAHScm8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rE1lsH0RHDl9d7A53kJNAnkpg04+70XB1/SGh81vxgdrg+1hDG4w16/mqgmSO7PX3ySe2VZA+7H1Gip7oWSx0GnTN3acy37GJ12WobaZ3xv7Sto5gSOXP09dqADvFqecYYtry2Q4t74LfmNWpl5cmeWneHOeB9OL1gQmrDuniAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=t2LccxBM; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=CNiuwuRAoYbfCPFm+LGzsuwEaLqVGvvo5OrOondKVDh/NpEdrsWBzLCbUsBdXbe3HS02HLtQTr84zmbHHD8MwMkUzci2I2T6o9/W7pixsR9PuoR0HRStRACmIJ1lolpChuiFTPcQFm0Mwiv724upeNOIZGbPeT7yFqQiqC2bIwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=TxF25nA+; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Xsljc5dj7zlgMVP;
-	Tue, 19 Nov 2024 00:29:08 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Xsljf36xwzlgMVj;
+	Tue, 19 Nov 2024 00:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1731976144; x=1734568145; bh=nx4KB
-	RxMaCf8LrtAVRN8jammCUAU/H3BD9B61OciwYM=; b=t2LccxBMxnagLI07+TFDz
-	MpuXTCRcaMkJNi0AkSFi7NrcNgn2uwQnNfLBWgy02AhfssCyByRoYPvL61j48WIg
-	I+pp1KRrF5AdRGB4n0cuhU0V+F5DDwP1TxkZvc0tlX1zJC3xR/CrKmJQmtICcB59
-	Gw9rclRJwWVdKXpbGCAQ1q+yLwUmLzqYquuyGExGXPeXgIzZRxiJAp8UEaNYioL/
-	hOt895qOyq9TH5qbPBP3aTYmxPLVw47WQINPbJ+X0w0c9RX+WAnuniszMWtSZijc
-	4sLNDCgz6k+IOsYvZeAp+zWCi/JnR6cWpB27Rrh/MlaLPEsGWf6/IbmKatQRfoyy
-	A==
+	:received:received; s=mr01; t=1731976146; x=1734568147; bh=Q5vhR
+	0hiuCOQ1QAEux5brr8vJyia4iEYYO5oL+JQtLk=; b=TxF25nA+F7GnthN1miS21
+	3ZKAeWSrW6sFwc42w8cz50cApIeFOreu2HZ1rMaBN2uQL5TiDpq/Rp2s4oUWmAhA
+	blkz536QOkGfZ1Qvt8VMDi5oujNlWuCdrRPui5knQcX91wck9HLmnqwlIP0iH5O3
+	61M4o+pmwUUyV5L61D0M9hOxDE8gffq+0/kNT3Xp8wBK/duIk/NMS+hhtRS23s4B
+	qhXmBsljKkk1+eMOJS3x5tCAfP2V4u1MrVQ4PXjc8a/RTJw+3Lv59JQZlsPIm2K6
+	wkKkxWd8cIeixTC5sudX1tUKhkmk/telxRBPl79VNoqqvc8h19IeyV9LAQyffeb0
+	Q==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id MVrqmIfq7uqQ; Tue, 19 Nov 2024 00:29:04 +0000 (UTC)
+ id kL_jt8GtTVzZ; Tue, 19 Nov 2024 00:29:06 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4XsljV5PW1zlgMVV;
-	Tue, 19 Nov 2024 00:29:02 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4XsljX5jSLzlgMVd;
+	Tue, 19 Nov 2024 00:29:04 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc: linux-block@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v16 21/26] scsi: core: Retry unaligned zoned writes
-Date: Mon, 18 Nov 2024 16:28:10 -0800
-Message-ID: <20241119002815.600608-22-bvanassche@acm.org>
+Subject: [PATCH v16 22/26] scsi: sd: Increase retry count for zoned writes
+Date: Mon, 18 Nov 2024 16:28:11 -0800
+Message-ID: <20241119002815.600608-23-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241119002815.600608-1-bvanassche@acm.org>
 References: <20241119002815.600608-1-bvanassche@acm.org>
@@ -80,54 +80,39 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If zoned writes (REQ_OP_WRITE) for a sequential write required zone have
-a starting LBA that differs from the write pointer, e.g. because zoned
-writes have been reordered, then the storage device will respond with an
-UNALIGNED WRITE COMMAND error. Retry commands that failed with an
-unaligned write error. The block layer core will sort the SCSI commands
-per LBA before these are resubmitted.
-
 If the write order is preserved, increase the number of retries for
 write commands sent to a sequential zone to the maximum number of
 outstanding commands because in the worst case the number of times
 reordered zoned writes have to be retried is (number of outstanding
 writes per sequential zone) - 1.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_error.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/scsi/sd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 10154d78e336..24cd8e8538e5 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -700,6 +700,22 @@ enum scsi_disposition scsi_check_sense(struct scsi_c=
-mnd *scmd)
- 		fallthrough;
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 8947dab132d7..117fce3b1c7b 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1408,6 +1408,13 @@ static blk_status_t sd_setup_read_write_cmnd(struc=
+t scsi_cmnd *cmd)
+ 	cmd->transfersize =3D sdp->sector_size;
+ 	cmd->underflow =3D nr_blocks << 9;
+ 	cmd->allowed =3D sdkp->max_retries;
++	/*
++	 * Increase the number of allowed retries for zoned writes if the drive=
+r
++	 * preserves the command order.
++	 */
++	if (rq->q->limits.driver_preserves_write_order &&
++	    blk_rq_is_seq_zoned_write(rq))
++		cmd->allowed +=3D rq->q->nr_requests;
+ 	cmd->sdb.length =3D nr_blocks * sdp->sector_size;
 =20
- 	case ILLEGAL_REQUEST:
-+		/*
-+		 * Unaligned write command. This may indicate that zoned writes
-+		 * have been received by the device in the wrong order. If write
-+		 * pipelining is enabled, retry.
-+		 */
-+		if (sshdr.asc =3D=3D 0x21 && sshdr.ascq =3D=3D 0x04 &&
-+		    req->q->limits.driver_preserves_write_order &&
-+		    blk_rq_is_seq_zoned_write(req) &&
-+		    scsi_cmd_retry_allowed(scmd)) {
-+			SCSI_LOG_ERROR_RECOVERY(1,
-+				sdev_printk(KERN_WARNING, scmd->device,
-+				"Retrying unaligned write at LBA %#llx.\n",
-+				scsi_get_lba(scmd)));
-+			return NEEDS_RETRY;
-+		}
-+
- 		if (sshdr.asc =3D=3D 0x20 || /* Invalid command operation code */
- 		    sshdr.asc =3D=3D 0x21 || /* Logical block address out of range */
- 		    sshdr.asc =3D=3D 0x22 || /* Invalid function */
+ 	SCSI_LOG_HLQUEUE(1,
 
