@@ -1,61 +1,61 @@
-Return-Path: <linux-block+bounces-14278-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14281-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A4649D1C58
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:29:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 531809D1C5D
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 01:29:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D684AB22A4E
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:29:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF5151F221B7
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2024 00:29:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F46DDAB;
-	Tue, 19 Nov 2024 00:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5FAF3CF73;
+	Tue, 19 Nov 2024 00:28:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="aNrbEK3d"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="0UwpC/BD"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C75610B;
-	Tue, 19 Nov 2024 00:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E3533991;
+	Tue, 19 Nov 2024 00:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731976124; cv=none; b=oGOOKlO6clDWBYYsM6nYubmiEZcvmGdMMzHmQkEIAkOYI6DigyEEqpU8l9jz8S0JxTPWeTkuJY/Ku5fiUDFC/YL54Y0tg3EcbWRnB9dr9Dt4Q1cwK7Yq+2TZ9hpIt+g6WxVIIUU+t10NNLrSlLYlZO7DLLmNq8F5rJVqvYhGiVM=
+	t=1731976128; cv=none; b=ev1C9dK+PFUPw/pxThCG+jgxaZ5BwxrxroUZi3Z1jIBMBlfw5FHATBUGYLLob5VQeH4deyAZqnQGdO1lPvMDc0k1fEgA/q/ZZ0Ev/q8UItwDAfFtMJmLTodnqGAbgvssTvRVp9vBn+GubkMyg5Y0aerc3DHrsoBJs4sx16xt8IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731976124; c=relaxed/simple;
-	bh=dx+OfJ7J7hMc9ed8wbmXnUYBuEtk3Cw23r4yFfCtulA=;
+	s=arc-20240116; t=1731976128; c=relaxed/simple;
+	bh=bMQkL84IxjkXmmPRY6YMAlz/aLP/ZnxOX+IgNNanzjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ti/nuy3GsCNdiEK1LBLz80fNTBZwMcGRNlZu8qmfLjhYXMVGF0XdCO/gTfPNmWjO/1vyoJ0MbewR+GfiryJxlsuR+CImv3B9qnoAH5TJfgeaEKOLUYWcYuFYybNzhwzWFWtYB7flw4mTt2A0RVJ/PMZSxWtzzdD8zJ4ssCAU51U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=aNrbEK3d; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=cPcQH05OTEGkGILhKrlDdE6dTRZPKkvXIusbG01yDyRnsyn8O3RjAl1E3/pQCiXfDdLDoNcbe/lLGOXz3iKDeD8uZMgF1HfC23GWlnyS9STTWdf1tCAfbvwCEd/Hz0mWAY6pR4/QfC2BJjZTBAE5ouZcZBAQAzrZQN2m6MN5C1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=0UwpC/BD; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Xslj71ZxdzlgVnN;
-	Tue, 19 Nov 2024 00:28:43 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4XsljB2GQLzlgMVR;
+	Tue, 19 Nov 2024 00:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1731976119; x=1734568120; bh=mI8SH
-	BvMkiBxhT++X6Sv40oLp6cQRq+UeWcjKu1tp9I=; b=aNrbEK3dwBafDI9vRt3ZC
-	e22roAu06AEDefe/e4tQM6RkTBaRaDJ0HyWJSm37faiv5XKuDfDoTgHOf2utrwPS
-	k469Dz7TA68o84QHoVp/Y6wBpkPNPHRbKqpcuJbQkxAuvE9/tFWrgSgC2j8gwbOn
-	6z4UZs4AlcCMc323GJHOtjOIgEL5e2EMvsImcfvjWSoO+rI2uOphAVdtPaQqC48T
-	lLdVO+mC6CFWfqFcg/akXl8UOoLlTkGJHO2G2RGlyz82Bo4B0CCnS2ot9tGQ7b9g
-	/1aVj6wLjSjkwBlNI6mpi+RzCNRYs0eK3wa3hIVVoX+KB2L3rKPwYZBNW2Rx/eqi
-	Q==
+	:received:received; s=mr01; t=1731976121; x=1734568122; bh=5SJWf
+	5W2tyHPoFL/qgha2Dp6Z4cagmvWNWMma2DsGxg=; b=0UwpC/BDj5q586/vN759a
+	lgzzxOC+jI1NvbHM8aloF/ErAqvbLbeyJjraaINqDLRmydAvYvqjhpwz/Q+DMu3J
+	7WsDYxVza+ha3ILmmYvAdZFw9LzV9yy+MHwNeSiMyCb5CcmSKdLluFg4g9NwqAET
+	AnX3rk8HfOtDskVRoOW/HvPsKVCWoFAvUeFLF74FYXB/xSW0mmdhhPTdeG+R4HBG
+	fjf7U6HbOO/TRX5YCZcQNvFsofHc0K6wju9QdICDIlTSpDDu//Am4w/H1UwzHNzH
+	JTLAmJwtr95G8Tt6Kq2D/FJDIXGpXTeQYV7t+YLPbXScjP0VU6hEVozokkAxs9Eq
+	A==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id RgX2fBwLongY; Tue, 19 Nov 2024 00:28:39 +0000 (UTC)
+ id f4KXGpne-O9z; Tue, 19 Nov 2024 00:28:41 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Xslj16gFvzlgTWQ;
-	Tue, 19 Nov 2024 00:28:37 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Xslj33qnnzlgVnY;
+	Tue, 19 Nov 2024 00:28:39 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -63,10 +63,13 @@ Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v16 06/26] blk-zoned: Fix requeuing of zoned writes
-Date: Mon, 18 Nov 2024 16:27:55 -0800
-Message-ID: <20241119002815.600608-7-bvanassche@acm.org>
+	Bart Van Assche <bvanassche@acm.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Nitesh Shetty <nj.shetty@samsung.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH v16 07/26] block: Support block drivers that preserve the order of write requests
+Date: Mon, 18 Nov 2024 16:27:56 -0800
+Message-ID: <20241119002815.600608-8-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 In-Reply-To: <20241119002815.600608-1-bvanassche@acm.org>
 References: <20241119002815.600608-1-bvanassche@acm.org>
@@ -78,80 +81,53 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Make sure that unaligned writes are sent to the block driver. This
-allows the block driver to limit the number of retries of unaligned
-writes. Remove disk_zone_wplug_abort_unaligned() because it only examines
-the bio plug list. Pending writes can occur either on the bio plug list
-or on the request queue requeue list.
+Many but not all storage controllers require serialization of zoned
+writes. Introduce a new request queue limit member variable related to
+write serialization. 'driver_preserves_write_order' allows block drivers
+to indicate that the order of write commands is preserved per hardware
+queue and hence that serialization of writes per zone is not required if
+all pending writes are submitted to the same hardware queue.
 
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Nitesh Shetty <nj.shetty@samsung.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-zoned.c | 36 ------------------------------------
- 1 file changed, 36 deletions(-)
+ block/blk-settings.c   | 2 ++
+ include/linux/blkdev.h | 5 +++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index 284820b29285..ded38fa9ae3d 100644
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -577,33 +577,6 @@ static void disk_zone_wplug_abort(struct blk_zone_wp=
-lug *zwplug)
- 		blk_zone_wplug_bio_io_error(zwplug, bio);
- }
-=20
--/*
-- * Abort (fail) all plugged BIOs of a zone write plug that are not align=
-ed
-- * with the assumed write pointer location of the zone when the BIO will
-- * be unplugged.
-- */
--static void disk_zone_wplug_abort_unaligned(struct gendisk *disk,
--					    struct blk_zone_wplug *zwplug)
--{
--	unsigned int wp_offset =3D zwplug->wp_offset;
--	struct bio_list bl =3D BIO_EMPTY_LIST;
--	struct bio *bio;
--
--	while ((bio =3D bio_list_pop(&zwplug->bio_list))) {
--		if (disk_zone_is_full(disk, zwplug->zone_no, wp_offset) ||
--		    (bio_op(bio) !=3D REQ_OP_ZONE_APPEND &&
--		     bio_offset_from_zone_start(bio) !=3D wp_offset)) {
--			blk_zone_wplug_bio_io_error(zwplug, bio);
--			continue;
--		}
--
--		wp_offset +=3D bio_sectors(bio);
--		bio_list_add(&bl, bio);
--	}
--
--	bio_list_merge(&zwplug->bio_list, &bl);
--}
--
- static inline void disk_zone_wplug_set_error(struct gendisk *disk,
- 					     struct blk_zone_wplug *zwplug)
- {
-@@ -982,14 +955,6 @@ static bool blk_zone_wplug_prepare_bio(struct blk_zo=
-ne_wplug *zwplug,
- 		 * so that we can restore its operation code on completion.
- 		 */
- 		bio_set_flag(bio, BIO_EMULATES_ZONE_APPEND);
--	} else {
--		/*
--		 * Check for non-sequential writes early because we avoid a
--		 * whole lot of error handling trouble if we don't send it off
--		 * to the driver.
--		 */
--		if (bio_offset_from_zone_start(bio) !=3D zwplug->wp_offset)
--			goto err;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index f1d4dfdc37a7..329d8b65a8d7 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -633,6 +633,8 @@ int blk_stack_limits(struct queue_limits *t, struct q=
+ueue_limits *b,
  	}
+ 	t->max_secure_erase_sectors =3D min_not_zero(t->max_secure_erase_sector=
+s,
+ 						   b->max_secure_erase_sectors);
++	t->driver_preserves_write_order =3D t->driver_preserves_write_order &&
++		b->driver_preserves_write_order;
+ 	t->zone_write_granularity =3D max(t->zone_write_granularity,
+ 					b->zone_write_granularity);
+ 	if (!(t->features & BLK_FEAT_ZONED)) {
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index a1fd0ddce5cf..72be33d02d1f 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -397,6 +397,11 @@ struct queue_limits {
 =20
- 	/* Advance the zone write pointer offset. */
-@@ -1425,7 +1390,6 @@ static void disk_zone_wplug_handle_error(struct gen=
-disk *disk,
+ 	unsigned int		max_open_zones;
+ 	unsigned int		max_active_zones;
++	/*
++	 * Whether or not the block driver preserves the order of write
++	 * requests. Set by the block driver.
++	 */
++	bool			driver_preserves_write_order;
 =20
- 	/* Update the zone write pointer offset. */
- 	zwplug->wp_offset =3D zwplug->wp_offset_compl;
--	disk_zone_wplug_abort_unaligned(disk, zwplug);
-=20
- 	/* Restart BIO submission if we still have any BIO left. */
- 	if (!bio_list_empty(&zwplug->bio_list)) {
+ 	/*
+ 	 * Drivers that set dma_alignment to less than 511 must be prepared to
 
