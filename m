@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-14451-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14452-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4010F9D4645
-	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 04:35:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97F129D4648
+	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 04:36:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE499283153
-	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 03:35:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DFBA282F35
+	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 03:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1671D3C0B;
-	Thu, 21 Nov 2024 03:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69CF13A3F2;
+	Thu, 21 Nov 2024 03:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCBjZuMr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJzW1hSQ"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADE523098E;
-	Thu, 21 Nov 2024 03:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC99623098E;
+	Thu, 21 Nov 2024 03:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732160097; cv=none; b=S2mWqlgfrLGe5hYdAWa6sLIxkhONjby5ZMaIgdx1HMRjpbk3b2QN9Ovbdt94cSd/trdVHBP6gvqAPbqxLWtEmOSUONbki0ksaohRXI7ATSOXDt2lo18wYCB+IIn1lNIm+H3DaMiTIs4Tl9VPQnvNkA//XY6uQFV9R+dMajxmBZA=
+	t=1732160175; cv=none; b=HxISM9j8ep+an4/KH9tC4KN+g2ZJP49Xkd6BYcXdFzD3/LqZ/O9AjAbYQp0oL7I3bmjgj0P+zn8P9YuVfKgzAwJRcQKg6QgtSj5VDUXZQLIeLGh3SAcG5o4AfQlpM9/kRZ3zg1YYwM+1H0tWpJ7bwC1geXe+UKhiStEjo/8LuK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732160097; c=relaxed/simple;
-	bh=/Y4KvNRq167kbne3VuMD4PWIcV76vuRXf2HcJWPlbeI=;
+	s=arc-20240116; t=1732160175; c=relaxed/simple;
+	bh=ojDAgE6ET3xq5uXlQ+cUKjtsix9D/L5aVGcIzb9qoto=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r3f3U4xW6PwxO+UVcE7IuYWLlq3q6tzehZRpdmQ7Zjs8FHvy+mrBIEqHkozRPPJu/TsyEpD32MXcNGgunmwXYhSWNkDzrsmD350vC8CQpal10PbSGvEkpKcchYw7UQ2uMb5jGCFxHnO13s65QIZ6xFJjERxr2SEoxqP8SNBXtYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCBjZuMr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAABC4CECD;
-	Thu, 21 Nov 2024 03:34:55 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pMsUbWaBdn7lA1IJkeje1huQ/ijYN4clkSomwboG18OTEaB9O/HPpNUJEFY1LNB4pm0W+Qz4lmySywSyzkd4g/nGP8MBobNF2fV0WkHatpGvqPEF9yPqPhnSrFHPc8Y1vpy+jlh8sM/U0akBS8VbaslTvEFkxBdMg9zGR3cVgXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJzW1hSQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E33C4CECD;
+	Thu, 21 Nov 2024 03:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732160096;
-	bh=/Y4KvNRq167kbne3VuMD4PWIcV76vuRXf2HcJWPlbeI=;
+	s=k20201202; t=1732160175;
+	bh=ojDAgE6ET3xq5uXlQ+cUKjtsix9D/L5aVGcIzb9qoto=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tCBjZuMrkhI2UlsriH6I8H5O/TV5Jy2/YsFlWnoHMEV8Hvv3+0lTjmq5PumoA9x5c
-	 nKSzniKaZgQiNkoKu6mCQdO6U+5QGyLZCjIDKo+6sgiNxgNyGrCdx3zLlqiQBxpNwl
-	 /eeOb2wV3nCUFwEYbmimqOqR8DTu5agexgDM6kieaduL3kwoEF34qjUU00uvKEAHzx
-	 RJM0aL58/hNbM6Yxl7bfEum82az+9kJsC2+KLclj+VAwP+2VsyGCwHWQb05qLMIemg
-	 YvVKD7VMThhXsIHwQOh6u7giJnf4ux1akk+h0/vkvo1uPvJ8h6xLJFrYeNor9rB2wG
-	 EaP3a5WgLS3AQ==
-Message-ID: <bc3230e9-ed68-4ea0-8900-bb02f0886b39@kernel.org>
-Date: Thu, 21 Nov 2024 12:34:54 +0900
+	b=gJzW1hSQv5IQ7nubb9/tq8I9XFi8NjBxaFcNDyST3q6p0DnGxP7U9Pbs/++DPg/JB
+	 6nf9VXYhXrGigVmpRFNBaNWUrTNZZRIYUgZuOqptEUYImPc0I1Ig4NMetwFQENMP39
+	 VBxxZlB4Qqkm15znQi7KGlpbH5/LuK9tgSeDDmNH6QCPs9tpupRMkkZpMa84R2OxAx
+	 /RwDXJnGsSxruiWVYule7n1MqML0A/GPH8+QLZQbIZNQ2wsxrhbtbxh+piCFrspIO5
+	 LGEhDOqdTYCCNPHZ+sVxYCTLGT1cTsYH0Xh4Wrpjs8/ZHPpn2tg97lPdkb8xtZTRl9
+	 Is5q++7xyDFxQ==
+Message-ID: <fae2ad97-2269-48fe-884d-bda3617126fe@kernel.org>
+Date: Thu, 21 Nov 2024 12:36:13 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,41 +50,40 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 16/26] blk-zoned: Document locking assumptions
+Subject: Re: [PATCH v16 17/26] blk-zoned: Uninline functions that are not in
+ the hot path
 To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
  Christoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>
 References: <20241119002815.600608-1-bvanassche@acm.org>
- <20241119002815.600608-17-bvanassche@acm.org>
- <9defe57a-8a40-4f63-85d8-b30f4da79768@kernel.org>
- <2aca0072-cfa9-4929-addb-cc28560f2786@acm.org>
+ <20241119002815.600608-18-bvanassche@acm.org>
+ <c8cd9037-4487-48b5-80dc-2ee35c1fc972@kernel.org>
+ <c95b067d-b39f-49b2-8428-1897609041c3@acm.org>
 From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <2aca0072-cfa9-4929-addb-cc28560f2786@acm.org>
+In-Reply-To: <c95b067d-b39f-49b2-8428-1897609041c3@acm.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/20/24 06:18, Bart Van Assche wrote:
-> On 11/18/24 11:53 PM, Damien Le Moal wrote:
->> On 11/19/24 09:28, Bart Van Assche wrote:
->>> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
->>
->> The patch title seems incorrect. This is not documenting anything but adding
->> lockdep checks.
+On 11/20/24 06:20, Bart Van Assche wrote:
+> On 11/18/24 11:55 PM, Damien Le Moal wrote:
+>> I do not really see the point... Anyway, looks OK.
+> Hi Damien,
 > 
-> Hmm ... what this patch does is to document what the locking assumptions
-> are for the modified functions. So I'm not sure why the patch title is
-> considered incorrect?
+> One of the approaches I used to debug this patch series is to add
+> trace_printk() calls to track zwplug state changes. trace_printk()
+> reports the function name in front of the information in its argument
+> list. I noticed that the function name reported by trace_printk() is
+> incorrect for inlined functions. Hence this patch.
 
-Seeing the word "Document" in the patch title, I expected text/comments. These
-are lockdep checks so may be just state that, e.g. "Add lockdep checks..."
+Maybe add this explanation to the commit message ? It does make sense to no
+inline these function with tracing.
 
 > 
 > Thanks,
 > 
 > Bart.
-> 
 
 
 -- 
