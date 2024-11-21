@@ -1,78 +1,78 @@
-Return-Path: <linux-block+bounces-14470-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14472-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30EDE9D4E08
-	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 14:45:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C18EA9D4FFF
+	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 16:44:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACA881F22A10
-	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 13:45:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5045C1F217D6
+	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2024 15:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E19A61D9A79;
-	Thu, 21 Nov 2024 13:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3416142633;
+	Thu, 21 Nov 2024 15:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIE48Exk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcfmLjbD"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44A01D90DC;
-	Thu, 21 Nov 2024 13:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B0013E898;
+	Thu, 21 Nov 2024 15:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732196710; cv=none; b=WkAXzJw/DgmJMkc0qW+EjevTdC5anyElDKEXwzJ3hMMh1AeP50AlQga3K/DKt5vOO/HGXjvhERtST3fBdNRcuKJjSCA8Wi+W90WRuILGa46Nv8tX6OW6wpRydkK2kWmqf5aFrqI7khj2S9OYRHoczrjbNOfUQ8b9yeemRv8zXqA=
+	t=1732203890; cv=none; b=NNMmloW3URj93Gw6Z8wqnvuGv1AxzIjAhofcbgRt79YLs2ZYIhSEwqBtu+Qlo9H/0oYkpVigMfwJ5Vq8lPdTMybfSN4jJwPlpS3OaZaclTpGE3L4x+RRQMKV/ZGMcbnG/NrZdZxpI0BYEdMGyvSuXeTFvs/ZWdEGNxHJSBEpGak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732196710; c=relaxed/simple;
-	bh=7xbOEIACai6GTHxKu2K+0Xjk6pLvs8k4GffFn7gJ+Ig=;
+	s=arc-20240116; t=1732203890; c=relaxed/simple;
+	bh=MB6iJnnXYaZmNl56XT3EwoAa/w2SBxfGpUrAsPhuyX4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pyBxtkuK8OeH8nTjWlLwWsP7isZWeEHRInMQEHYLGrUdrO4KHLEFUOGcHtsOwOlzkus426AKZWPoyLFRCSEecQozv8oi+0EFc5RAQP5j5wpin3OKx4zRcTqh6XbVQx6xTSNzOKF/38bqFQFHqdgAUY+qFxanJKF6SqdNpCtPO6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIE48Exk; arc=none smtp.client-ip=209.85.218.44
+	 In-Reply-To:Content-Type; b=JlpSFEMpVb995iKYZ2OD3Oq7gAM2np9dUX0scdIoPu7+HQBwQOwgRzWsDU1KwuyGkK1qLTUjNVGuM8Vh2N2qN6WcbH057oInP+XQpyf5BaNgP0wrOHBMTniBuE/5qLhMP/ZdXl5lUiI61CpoFCYxDjmy8iNj3Oyohq8d/F+slLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcfmLjbD; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa20c733e92so127715466b.0;
-        Thu, 21 Nov 2024 05:45:08 -0800 (PST)
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53da353eb2eso1763386e87.3;
+        Thu, 21 Nov 2024 07:44:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732196707; x=1732801507; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732203887; x=1732808687; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4pq/XM0SZEFy5gATevhzqMaAH7wNKf6n+SB2NmScqXs=;
-        b=VIE48Exk7rhFjzNzJfSWAoZ0MSpwvS96SV+MTAb5MOLHcE4/Z8U6BWN7ikP9dKjdwW
-         4CBstLc4GYX2mrcv4h8gEpqmUVculvc4Dpe4AKW6wiNdvMoTCqM78slpE3dWC12WFly5
-         UbzNLVNeCjSVNm2GlqHomRjpQHRx8iNJFPl2YK1GNWwZhgoED1/17kFPvilp17qLhibu
-         hLDB2MWMru34GoqUTTGEbFcYu0d1+LPTEeei7N7+EfQKzPEfIowlBnoR9ri7oJIdtmLN
-         tLC+grw1NHCoBlwVOfsmhU6W/VttTEzDA9JpPUWxJ5uV6sGTrW2G3rSmm+Il4Yx1DiBk
-         XbpA==
+        bh=Yq70YJzrFfkaT6vO9+6QOQ5rfwZ7sR/Fpz34vhs1TzQ=;
+        b=YcfmLjbDeg66naza7X6STJigEBriur9xptPGujJR+V3z6VB4JHvuTY8yLxORIEIV4s
+         U9RYnrj3vrJd/zgVFI3KVRDqZ+7RqQgz+JfUEDiRKGDgZ7GxizBQno/6qdlVuPGdey9b
+         E1qZcZ/5vs0F1LeGD69q+asMGfw5Gz/JmwkHp+BWee5piVG4W0qCuyl/EDnSqRy2h7ON
+         hJzSkiKfQgXBOmOd9pMkZJVwWHPWdeob/iclISYrbMKPo5F4saBlUI9sR0bu4l2ZyisV
+         bBHX/6oZpVAjUeeAk3YrYUhkpGnxxeOmx+sM6PdO9HzfIa5KG9ftJmCjjh+RD0Sreszr
+         sHuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732196707; x=1732801507;
+        d=1e100.net; s=20230601; t=1732203887; x=1732808687;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4pq/XM0SZEFy5gATevhzqMaAH7wNKf6n+SB2NmScqXs=;
-        b=DTis3cKDokQ8RabqXvSoYGxP3gX4WG7IRVJpE6PgWvj6RAWmPFI49eUOIxq3jvwwt2
-         ow49Aw8VexYPM2Iht43khHpVSV++ghVcKYYfSQ5G7QvsOoM55B3kSPoloV1raQDKGHlf
-         +XeiBZJ2Ed983QHkAct27iz0iiQGLw8gatGXiUgN3bjKsNdDe0ATKr4U8JSfcdpzeCNO
-         RhHIRa3yyIwynD+/mKCjUE9QuR91wdbutX8jkfXeAMkOhvurWVS/YrQnN2X9PuGp/Y/t
-         +P4AFNbmEy4VhyWzjDCuYDwrmAl6XMfZwfX1G7F8ULTuJhbYRqypuJVcCewjgDBWW36x
-         /Xvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzfRVBtETtal5+cQtUgr7q5yWUcHvs+hqipKy16JxZHxnYrd7wBqBLkR4/nCOACHwx3womk+lnN2cqtCYsbw==@vger.kernel.org, AJvYcCVxGNqYWvPFkJ8KbT9MW25NbfUNTQFM791KzT2REqHaU2emrID4EpC7ZRlmi+JIVL7iljj8JtscbA==@vger.kernel.org, AJvYcCWuDFPupk1HWNMBL3o5DLPy2L94K/arLXe+YzXEikiR9/h1Gjp54tI+jAxvYr9jJZ2POZN6DKCq1psV/g==@vger.kernel.org, AJvYcCXqqmAhQbB5kie6kBw8kJ5Sc4mk2XFy7onsYAgSMo8I0OzB51XUEiP6Y6Sxh8iskrwp2hXuv20fckBqBQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm+X/vATfmNS++LUQk1IDxKBqPW/5IiKAcKCmtZlA5u8bJFYMU
-	MTfxCGohAPMYwd3bTAQynpcByD5T1iBaS4FiJXyYtMlD3E9b0i7t
-X-Gm-Gg: ASbGncscbkBHnG57+bh0c0qf1gf9ptF9cCeFn3HNDXjdClJCRTith1teWJ/p6PUmH9H
-	bbG8M2cRiQNgJLsonF+yRggvH6yDfnuaJ59n8KbP/i6WQLr2cgXh9JgRkiY+RqlG3M4pIGNklEb
-	Hihv3fZVnnUOoGYwmaxgIH95Qbhe9r+fq7Y89hh+yRgjn5joHnSlVbmeNZd6uvI8J0571oLlvkS
-	U56rVmXe1oewZx+SSmLpIt45dlX+d59ldFzio1Hd5bDUfcA/s2vKu0KEmwTMw==
-X-Google-Smtp-Source: AGHT+IFbrl+oIuZ5/IgECuefc9devB61urmQnzBxxeqoidxHMM0dOzQmgj0ok1K5viTP+eBfwwX3YQ==
-X-Received: by 2002:a17:907:1c1e:b0:a9e:b08e:b02d with SMTP id a640c23a62f3a-aa4dd552153mr705616066b.18.1732196707044;
-        Thu, 21 Nov 2024 05:45:07 -0800 (PST)
-Received: from [192.168.42.195] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa4f431b3b6sm82710766b.171.2024.11.21.05.45.06
+        bh=Yq70YJzrFfkaT6vO9+6QOQ5rfwZ7sR/Fpz34vhs1TzQ=;
+        b=Xvdb35BOvkkK+32ZmA+uPRclcfqdGuMfPeYG/zxFb0QXjIo8IGRM5DwlyELSvvxw/n
+         V3DW//cA/zAZaIP/cPBHdKBukkiD/AumqIaWygg3M6rIW+uukcQqlxKTyGjrrJCMlVj+
+         uDi9xLtLWVb49fBYm+/o9u2k9lJEkOR4dbNxHdki0LcPixcbjBaqZ5RnQVCumFWgXASy
+         qOs7VE1EKMFTkIjZm+S/XVk17/J/ZMLcY524snbhCrL0Rw0j3PijROcz3z7zod4cWBJL
+         KaDE5QtWZiI2cgP0lKewUWLuP1BDUTZSsdJMpmsrpnmUXi6P+/es9KvWQD2dMYLqP22s
+         RdSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUVi1YwvnhcO9JfK4cTqLFqj+RuIqkkBm9Fh8gQwVzVgiYqqfB1TD574vR2Y3Vgdj2LBrfMeDK5eOG4Q==@vger.kernel.org, AJvYcCWRikq9ntiwj4+3BKevlsUabH2W+AmMcdapDnKrVX0aifHQWwQzrm79zIOTebuuzR6A0c83t5uN70Zxg8omiQ==@vger.kernel.org, AJvYcCWc3ieakZ6cug5KHBvPyBn7cwERmYAsMdlHhVs7XoEo4FmImqOSJ6UBiJzJh78n+gEc9+h0+t9oYohyThk=@vger.kernel.org, AJvYcCXUebid6tj+qHDw5TgWM9fHGm7gCiXhRRNVXWpHkI4b4NMM5XRPA/6ZlTWTyQIrW5NQrCYPi7/+0Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCQUO/PRY/nU2rTt9iCjdcPfGrcU1lB/fP5y8ibKhJTzuTJMXE
+	vhOrRSRp5c+O29NAfYdo0kgpmSeaoTdMrEyAlHLt/cJpZHr9iZGm
+X-Gm-Gg: ASbGnctCOFphGJpIgpIaA0dz00SawXrx0fKhgi5kT3LPuZqc9dUY5KRdH/etO+NlkSD
+	rG9crNq9xT0ROi2MjLCq7CBxzkt1JQub0Cj8X/gV3x8YVvFcJUNrJSM0FenB2lcXpl/oMaFaPvr
+	uD7N2/7jCEzbrYNRyh/hShypwLMCT7Tuw89PSqPLSrRxnvyfGQEcfTVCN3TvJPCfX6G2UMF4afv
+	H+BP2Qp0ZsyB/UZpYOQrggsOT/rSGZOX+bAy79bULyIjpXBYVKDDdEeugZZCQ==
+X-Google-Smtp-Source: AGHT+IF++NRQF74gXAH6xM1W4Qh3AQIH8KSN5zEQe3RTf9TGDltr4dR/aWa+g/x4zzyWxju6+0KAMw==
+X-Received: by 2002:a05:6512:1195:b0:535:6a34:b8c3 with SMTP id 2adb3069b0e04-53dc13230b4mr6167738e87.5.1732203886812;
+        Thu, 21 Nov 2024 07:44:46 -0800 (PST)
+Received: from [192.168.42.120] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa4f43801f5sm93964866b.190.2024.11.21.07.44.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2024 05:45:06 -0800 (PST)
-Message-ID: <9081b86c-1496-4d03-8063-18637e14be49@gmail.com>
-Date: Thu, 21 Nov 2024 13:45:58 +0000
+        Thu, 21 Nov 2024 07:44:46 -0800 (PST)
+Message-ID: <506ca9ff-40c2-49eb-bcc3-e1735a4f4cd9@gmail.com>
+Date: Thu, 21 Nov 2024 15:45:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -82,62 +82,86 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v9 06/11] io_uring: introduce attributes for read/write
  and PI support
-To: "Darrick J. Wong" <djwong@kernel.org>,
- Matthew Wilcox <willy@infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>, Anuj Gupta <anuj20.g@samsung.com>,
- axboe@kernel.dk, kbusch@kernel.org, martin.petersen@oracle.com,
- anuj1072538@gmail.com, brauner@kernel.org, jack@suse.cz,
- viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
+To: Anuj Gupta <anuj20.g@samsung.com>
+Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, kbusch@kernel.org,
+ martin.petersen@oracle.com, anuj1072538@gmail.com, brauner@kernel.org,
+ jack@suse.cz, viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
  linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
  gost.dev@samsung.com, linux-scsi@vger.kernel.org, vishak.g@samsung.com,
  linux-fsdevel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>
 References: <20241114104517.51726-1-anuj20.g@samsung.com>
  <CGME20241114105405epcas5p24ca2fb9017276ff8a50ef447638fd739@epcas5p2.samsung.com>
- <20241114104517.51726-7-anuj20.g@samsung.com> <20241114121632.GA3382@lst.de>
- <3fa101c9-1b38-426d-9d7c-8ed488035d4a@gmail.com>
- <ZzeNEcpSKFemO30g@casper.infradead.org>
- <20241120173517.GQ9425@frogsfrogsfrogs>
+ <20241114104517.51726-7-anuj20.g@samsung.com>
+ <c622ee8c-82f0-44d4-99da-91357af7ecac@gmail.com>
+ <b61e1bfb-a410-4f5f-949d-a56f2d5f7791@gmail.com>
+ <20241118125029.GB27505@lst.de>
+ <2a98aa33-121b-46ed-b4ae-e4049179819a@gmail.com>
+ <20241121085935.GA3851@green245>
 Content-Language: en-US
 From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20241120173517.GQ9425@frogsfrogsfrogs>
+In-Reply-To: <20241121085935.GA3851@green245>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/20/24 17:35, Darrick J. Wong wrote:
-> On Fri, Nov 15, 2024 at 06:04:01PM +0000, Matthew Wilcox wrote:
->> On Thu, Nov 14, 2024 at 01:09:44PM +0000, Pavel Begunkov wrote:
->>> With SQE128 it's also a problem that now all SQEs are 128 bytes regardless
->>> of whether a particular request needs it or not, and the user will need
->>> to zero them for each request.
+On 11/21/24 08:59, Anuj Gupta wrote:
+> On Mon, Nov 18, 2024 at 04:59:22PM +0000, Pavel Begunkov wrote:
+>> On 11/18/24 12:50, Christoph Hellwig wrote:
+>>> On Sat, Nov 16, 2024 at 12:32:25AM +0000, Pavel Begunkov wrote:
+...
+>> Do we have technical arguments against the direction in the last
+>> suggestion? It's extendible and _very_ simple. The entire (generic)
+>> handling for the bitmask approach for this set would be sth like:
 >>
->> The way we handled this in NVMe was to use a bit in the command that
->> was called (iirc) FUSED, which let you use two consecutive entries for
->> a single command.
+>> struct sqe {
+>> 	u64 attr_type_mask;
+>> 	u64 attr_ptr;
+>> };
+>> if (sqe->attr_type_mask) {
+>> 	if (sqe->attr_type_mask != TYPE_PI)
+>> 		return -EINVAL;
 >>
->> Some variant on that could surely be used for io_uring.  Perhaps a
->> special opcode that says "the real opcode is here, and this is a two-slot
->> command".  Processing gets a little spicy when one slot is the last in
->> the buffer and the next is the the first in the buffer, but that's a SMOP.
+>> 	struct uapi_pi_structure pi;
+>> 	copy_from_user(&pi, sqe->attr_ptr, sizeof(pi));
+>> 	hanlde_pi(&pi);
+>> }
+>>
+>> And the user side:
+>>
+>> struct uapi_pi_structure pi = { ... };
+>> sqe->attr_ptr = &pi;
+>> sqe->attr_type_mask = TYPE_PI;
+>>
 > 
-> I like willy's suggestion -- what's the difficulty in having a SQE flag
-> that says "...and keep going into the next SQE"?  I guess that
-> introduces the problem that you can no longer react to the observation
-> of 4 new SQEs by creating 4 new contexts to process those SQEs and throw
-> all 4 of them at background threads, since you don't know how many IOs
-> are there.
+> How about using this, but also have the ability to keep PI inline.
+> Attributes added down the line can take one of these options:
+> 1. If available space in SQE/SQE128 is sufficient for keeping attribute
+> fields, one can choose to keep them inline and introduce a TYPE_XYZ_INLINE
+> attribute flag.
+> 2. If the available space is not sufficient, pass the attribute information
+> as pointer and introduce a TYPE_XYZ attribute flag.
+> 3. One can choose to support a attribute via both pointer and inline scheme.
+> The pointer scheme can help with scenarios where user wants to avoid SQE128
+> for whatever reasons (e.g. mixed workload).
 
-Some variation on "variable size SQE" was discussed back in the day
-as an option instead of SQE128. I don't remember why it was refused
-exactly, but I'd think it was exactly the "spicy" moment Matthew
-mentioned, especially since nvme passthrough was spanning its payload
-across both parts of the SQE.
+Right, the idea would work. It'd need to be not type specific but
+rather a separate flag covering all attributes of a request, though.
+IOW, either all of them are in user memory or all optimised. We probably
+don't have a good place for a flag, but then you can just chip away a
+bit from attr_type_mask as you're doing for INLINE.
 
-I'm pretty sure I can find more than a couple of downsides, like for
-it to be truly generic you need a flag in each SQE and finding a bit
-is not that easy, and also in terms of some overhead to everyone else
-while this extension is not even needed. By the end of the day, the
-main concern is how it's placed and not where specifically,
-SQE / user memory / etc.
+enum {
+	TYPE_PI = 1,
+	...
+	TYPE_FLAG_INLINE = 1 << 63,
+};
+
+// sqe->attr_type_mask = TYPE_PI | TYPE_FLAG_INLINE;
+
+Another question is whether it's better to use SQE or another mapping
+like reg-wait thing does. My suggestion is, send it without the INLINE
+optimisation targeting 6.14 (I assume block bits are sorted?). We'll
+figure that optimisation separately and target the same release, there
+is plenty of time for that.
 
 -- 
 Pavel Begunkov
