@@ -1,200 +1,203 @@
-Return-Path: <linux-block+bounces-14580-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14578-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0847A9D95DF
-	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2024 11:55:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8F8E9D95C9
+	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2024 11:47:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDC182830DE
-	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2024 10:55:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81B80282599
+	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2024 10:47:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42F61CCEED;
-	Tue, 26 Nov 2024 10:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6891B218F;
+	Tue, 26 Nov 2024 10:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="r5YzjVUn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2672vf6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8993F1C4A3D
-	for <linux-block@vger.kernel.org>; Tue, 26 Nov 2024 10:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A32C17C7B1
+	for <linux-block@vger.kernel.org>; Tue, 26 Nov 2024 10:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732618499; cv=none; b=iak5rcs2hMGfpb9nRPfHi+5wmJw9aZLA0cP/KszBPYHyjsbzH/MuKf414TcvSmtYJliF7vfbgWw6Z2I9ZHv9J29NyQ3/rckFVIKr4/IzNndASCcNFB54pLNKhj0S6vXdkPaZKSIHJxvlCbnta54zLS4SpXu/tpmFu0wU8dD2XNo=
+	t=1732618041; cv=none; b=cKFi7DNbEJSe3WignopvFb6Qwj3DIDCsN/9BxS+r9qY0QMPgAa07SA5Hr5ZdjmYg+sr1mWs2o+KNzt+U1Of6tNBf8ku7qgdlFcxSzZ0giUAXbV2KEkx0uUynSPIPkHKpGwH4jrqwM1eOhVUc8P1cBka7MWJuoME8l+2YdNUGQp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732618499; c=relaxed/simple;
-	bh=tZ974RW9AUv+NuVLNE+vVbBMYcQ2vSB5JDeMR0yl8cQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=lG9Jt/Ff42YZodNCejPq3CKKJceIwh/1b3qarpTAQL18JoRJFRC5toQnbD+4jV1oIMmv0m9LxZf/HUVmU80bewR1BzZmKXa3KgyqXgyzxBMgGAYAfe4KOZVdKd3kQMVmMLVKDWyET5i7MCIO1jhfqcYtzmTerTEwxAeFaFVBGOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=r5YzjVUn; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241126105450epoutp0327638affa46647f7368545b92e2fee59~Lf1ZC1YvK3043630436epoutp03M
-	for <linux-block@vger.kernel.org>; Tue, 26 Nov 2024 10:54:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241126105450epoutp0327638affa46647f7368545b92e2fee59~Lf1ZC1YvK3043630436epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1732618490;
-	bh=k+0BqZF1ChaDe8890ovcJaZ1K9CV9Mo6R5Hpp1BGuOQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r5YzjVUnQY0LD2jnUvbhdskcxB2kEjebQI9Ubx8mUudOKMfVQORMlWvMVwtNbuldW
-	 tjUH8W4G+kaJFieeytFwvIUFSDRxbPAdrGmJDaDa/3+MTwqiMKm0qZWEdgX7C8VsmI
-	 uJfjBHKWsYVrbMh5A8L5k53NUYvVqvueRr2t5VwU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20241126105449epcas5p21cc42b22d52099f70f408e93d9aa7daa~Lf1YdQRAz0284302843epcas5p2m;
-	Tue, 26 Nov 2024 10:54:49 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4XyKGH5SfCz4x9Pq; Tue, 26 Nov
-	2024 10:54:47 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FA.16.19956.7F8A5476; Tue, 26 Nov 2024 19:54:47 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20241126104844epcas5p32e5daec6d0ea68da92a2700c0b0227d2~LfwE5JIZG0979309793epcas5p3l;
-	Tue, 26 Nov 2024 10:48:44 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20241126104844epsmtrp2a2753bac8d9c3138192609efedb80f1d~LfwE3pIgX0346103461epsmtrp2V;
-	Tue, 26 Nov 2024 10:48:44 +0000 (GMT)
-X-AuditID: b6c32a4b-fd1f170000004df4-79-6745a8f7e207
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3D.05.19220.C87A5476; Tue, 26 Nov 2024 19:48:44 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20241126104841epsmtip164d5a7e57201074fb4fc09633e5aa812~LfwCDBKRu0773507735epsmtip1T;
-	Tue, 26 Nov 2024 10:48:41 +0000 (GMT)
-Date: Tue, 26 Nov 2024 16:10:50 +0530
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
-	martin.petersen@oracle.com, anuj1072538@gmail.com, brauner@kernel.org,
-	jack@suse.cz, viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-	gost.dev@samsung.com, linux-scsi@vger.kernel.org, vishak.g@samsung.com,
-	linux-fsdevel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>
-Subject: Re: [PATCH v10 06/10] io_uring: introduce attributes for read/write
- and PI support
-Message-ID: <20241126104050.GA22537@green245>
+	s=arc-20240116; t=1732618041; c=relaxed/simple;
+	bh=CLjmaIIBa1/lMI9xoEweiRtmHs89tUXgakLl44q6zco=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cQX/DRVMd8kgRnGzYbcQ75a22qJgYVWuaWQsq1SgRvRc7RH7SbkcqcYB8JFzX382G7vFexgbDGczLiy0I/wgziTWUYQUdIrWFnnM64H1ZuzZ0Tu5LgymovqLj/UqaZREtrmrckNaT9b6BZnuH9F9wDn5v5F8RRg3ddJyvC+Co04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2672vf6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3C2C4CECF;
+	Tue, 26 Nov 2024 10:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732618039;
+	bh=CLjmaIIBa1/lMI9xoEweiRtmHs89tUXgakLl44q6zco=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D2672vf6L0LYE0lz92VKwd44zvK+/WmCIt6ZF6sb0A7sH+fCpqWrUClLvOMSR8A4Y
+	 TejAnRU0bghv5WgeFkzFW5gSPqmZahaGckO4IwIX9hvlYGTCsIBiDqlG2N8baCBz2y
+	 d2vpPoc9S0GF0rPCfQN7zJjPWM7rRDObCTErbZTIcMLKVcphOx+9jBkOevIQXUESLa
+	 q9hHiDo8Zw5jw4OhBu59O9AWep9M+fqtIa8Ttp6zKq2wl/jSZ/DTN1DVZUq9f8/oc9
+	 XUhNbkW8Oe9hKKRXBI3E2dBgvuX6fH/UHBL18OmRZfx+GVyINNSiuevZHp1sREIdmj
+	 VFzg1Ea7aMXcQ==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v2] block: Prevent potential deadlock in blk_revalidate_disk_zones()
+Date: Tue, 26 Nov 2024 19:47:05 +0900
+Message-ID: <20241126104705.183996-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a28b46a0-9eb5-45db-80ec-93fdc0eec35e@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTdxTH87stt7dkxcsr/ugisjuNooLtaLtbHkImmLuBGQvL2JwKN/Su
-	ZUDb9THcyBiOsCGoTBZ0PHSMOCtlwwQEUaiPglZFIKyZChF04yUwiNTBusBgLbcs/vc553y/
-	+f3OOb8fxvEbRYVYptrA6NR0NoF6c1s7Q7eG/X0+QSmacoaSc/OLXLLG3ArIhqEylJzudABy
-	4PplhKxvuImQs0W9XLL6VCFC3lyZQcly631AWga3kx2WO1zyh3NjPLL0QRtKmmzLCNn3r82L
-	7Kuq4cX5UperhniUvcdINZmPoFTz2S+p9oEClJobG+RSxy+aAXWvtotHPW8KpppGZ5Bk731Z
-	0SqGVjC6EEadoVFkqpUxRGJK2u40qUwkDhPLydeJEDWdw8QQ8UnJYXsys13tECGf0tlGVyqZ
-	1uuJnbuidRqjgQlRafSGGILRKrK1Em24ns7RG9XKcDVjiBSLRK9JXcL0LFX5tQGgHV53qObH
-	Ra8CcFhQAvgYxCXQVjHPLQHemB/eDuDCXK8XGzgAnOyeAGywAGBHwSPOmsUx14myBQuA5Y02
-	TzAO4KC9DCkBGMbFN8OVyWS3AcW3wK6JIuDmAHw7nH5g5bn1HPwYBzY7jyLugj9+AJ5bGFsV
-	CfAw+GfpcYRlX3incpTrZj4eAy/M/4O6ORB/FV5vtSHsjZ5i8K/6LSzHw6n+Sk/eH07ZLvJY
-	FsLnsxaUZSV02sc8Gi0svHUVsBwLi+6WrXbJwVWwvKWdy+Y3wIq7jQib94HHFkc9XgFsO7PG
-	BPymvsbDEFp6CzxMwdumDs+AZwE88X0X8i3YWPVCb1UvnMfyDljb7kCrXHPk4C9D0zLGYii8
-	cGVnLfAygyBGq89RMnqpNkLN5P6/8QxNThNYfe7bEtvAH0+ehVsBggErgBiHCBD4rN+t9BMo
-	6M8+Z3SaNJ0xm9FbgdS1qxMcYWCGxvVf1IY0sUQukshkMok8QiYm1gumi04r/HAlbWCyGEbL
-	6NZ8CMYXFiB5qY8TSvc5vxAebN5QF8VvWbwxld9TvLHGxzR8/qHJXP9wbDJa2uOIjdw83j6d
-	sNeUWj8S8UnwaLFPTFnv8Mmg9+I2vTt8SbJE2GuvpgSs636y41Tkz9aovIxGKFmIHfldGnVm
-	1/umFO2zXNycXzfz9V7Zx1lf9Xph/vmFcYj81+8OjPOFZb7vVMS/be/rVlT3VWNLy3mV6dWL
-	H6UkP06nD791JDHvBpXbOSL3abHXpjY2CvcnDXxweqL72qU3fzFvfUV2T+scCko6mFjE2VOZ
-	Gwhvt4oUlvvKEhy7Qr50trx/MmdJVXdo4tajN4p/6pBHGxv4sYVPV5z9pg8NGZbfgkv3E1y9
-	ihZv4+j09H/a1ImmdwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsWy7bCSnG7Pctd0gz9X9Sw+fv3NYjFn1TZG
-	i9V3+9ksXh/+xGhx88BOJouVq48yWbxrPcdiMXt6M5PF0f9v2SwmHbrGaLH3lrbFnr0nWSzm
-	L3vKbtF9fQebxfLj/5gszv89zmpxftYcdgdBj52z7rJ7XD5b6rFpVSebx+Yl9R67bzaweXx8
-	eovFo2/LKkaPMwuOsHt83iTnsenJW6YArigum5TUnMyy1CJ9uwSujF3PD7EXzOOtWDz9KVsD
-	4y2uLkZODgkBE4lPHw+zdTFycQgJ7GaU6Fp5iQ0iISFx6uUyRghbWGLlv+fsEEVPGCUu7P4C
-	VMTBwSKgKvH/ZQBIDZuAusSR561g9SIC2hKvrx8Cq2cW6GeW2PvtPhNIQlggVmLZt6dgRbwC
-	uhJvuvuYIIa+Y5T4uuwUK0RCUOLkzCcsIDazgJbEjX8vmUCWMQtISyz/xwES5hSwlVj/9SfY
-	oaICyhIHth1nmsAoOAtJ9ywk3bMQuhcwMq9ilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/d
-	xAiOSi2tHYx7Vn3QO8TIxMF4iFGCg1lJhJdP3DldiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+3
-	170pQgLpiSWp2ampBalFMFkmDk6pBqaNkR1enlVaO/1tbp1eF7Y/d+m+Uy0pzJVvNy90OGZc
-	q5P7ZI71XccvCzvcZ/c8+Fa6mYXfNrmfeZrLzZlJawR4ex+sZnvNFWSyqWKp2TWlVxyPPiZZ
-	qc583cJb1DlzyfYexfdBn93y54RufhKZyWKzfwOHJL+bQ7n7zwP9ly5rlf+YwzyxIbI4+51I
-	i1lfiLJiq6StZs72CdEeM6yrdxruDQg8YjGDQ2Dz7ln/J8msKNTIcZ4TE7oq7G5FzZryxm+p
-	ORJuD/3iWaez7F+g3O9bbyFS81PnxM6c1oJJDxz5Tk/SXKVRUBe09XnQ7SitvaLZB/3O9d6X
-	NK9a6H5JUcnqo/ZD8dWPTqr8Tc/QVWIpzkg01GIuKk4EAJwwAuE5AwAA
-X-CMS-MailID: 20241126104844epcas5p32e5daec6d0ea68da92a2700c0b0227d2
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_33907_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20241125071502epcas5p46c373574219a958b565f20732797893f
-References: <20241125070633.8042-1-anuj20.g@samsung.com>
-	<CGME20241125071502epcas5p46c373574219a958b565f20732797893f@epcas5p4.samsung.com>
-	<20241125070633.8042-7-anuj20.g@samsung.com>
-	<a28b46a0-9eb5-45db-80ec-93fdc0eec35e@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_33907_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+The function blk_revalidate_disk_zones() calls the function
+disk_update_zone_resources() after freezing the device queue. In turn,
+disk_update_zone_resources() calls queue_limits_start_update() which
+takes a queue limits mutex lock, resulting in the ordering:
+q->q_usage_counter check -> q->limits_lock. However, the usual ordering
+is to always take a queue limit lock before freezing the queue to commit
+the limits updates, e.g., the code pattern:
 
-On Mon, Nov 25, 2024 at 02:58:19PM +0000, Pavel Begunkov wrote:
-> On 11/25/24 07:06, Anuj Gupta wrote:
-> 
-> ATTR_TYPE sounds too generic, too easy to get a symbol collision
-> including with user space code.
-> 
-> Some options: IORING_ATTR_TYPE_PI, IORING_RW_ATTR_TYPE_PI.
-> If it's not supposed to be io_uring specific can be
-> IO_RW_ATTR_TYPE_PI
-> 
+lim = queue_limits_start_update(q);
+...
+blk_mq_freeze_queue(q);
+ret = queue_limits_commit_update(q, &lim);
+blk_mq_unfreeze_queue(q);
 
-Sure, will change to a different name in the next iteration.
+Thus, blk_revalidate_disk_zones() introduces a potential circular
+locking dependency deadlock that lockdep sometimes catches with the
+splat:
 
-> > +
-> > +/* attribute information along with type */
-> > +struct io_uring_attr {
-> > +	enum io_uring_attr_type	attr_type;
-> 
-> I'm not against it, but adding a type field to each attribute is not
-> strictly needed, you can already derive where each attr placed purely
-> from the mask. Are there some upsides? But again I'm not against it.
-> 
+[   51.934109] ======================================================
+[   51.935916] WARNING: possible circular locking dependency detected
+[   51.937561] 6.12.0+ #2107 Not tainted
+[   51.938648] ------------------------------------------------------
+[   51.940351] kworker/u16:4/157 is trying to acquire lock:
+[   51.941805] ffff9fff0aa0bea8 (&q->limits_lock){+.+.}-{4:4}, at: disk_update_zone_resources+0x86/0x170
+[   51.944314]
+               but task is already holding lock:
+[   51.945688] ffff9fff0aa0b890 (&q->q_usage_counter(queue)#3){++++}-{0:0}, at: blk_revalidate_disk_zones+0x15f/0x340
+[   51.948527]
+               which lock already depends on the new lock.
 
-The mask indicates what all attributes have been passed. But while
-processing we would need to know where exactly the attributes have been
-placed, as attributes are of different sizes (each attribute is of
-fixed size though) and they could be placed in any order. Processing when
-multiple attributes are passed would look something like this:
+[   51.951296]
+               the existing dependency chain (in reverse order) is:
+[   51.953708]
+               -> #1 (&q->q_usage_counter(queue)#3){++++}-{0:0}:
+[   51.956131]        blk_queue_enter+0x1c9/0x1e0
+[   51.957290]        blk_mq_alloc_request+0x187/0x2a0
+[   51.958365]        scsi_execute_cmd+0x78/0x490 [scsi_mod]
+[   51.959514]        read_capacity_16+0x111/0x410 [sd_mod]
+[   51.960693]        sd_revalidate_disk.isra.0+0x872/0x3240 [sd_mod]
+[   51.962004]        sd_probe+0x2d7/0x520 [sd_mod]
+[   51.962993]        really_probe+0xd5/0x330
+[   51.963898]        __driver_probe_device+0x78/0x110
+[   51.964925]        driver_probe_device+0x1f/0xa0
+[   51.965916]        __driver_attach_async_helper+0x60/0xe0
+[   51.967017]        async_run_entry_fn+0x2e/0x140
+[   51.968004]        process_one_work+0x21f/0x5a0
+[   51.968987]        worker_thread+0x1dc/0x3c0
+[   51.969868]        kthread+0xe0/0x110
+[   51.970377]        ret_from_fork+0x31/0x50
+[   51.970983]        ret_from_fork_asm+0x11/0x20
+[   51.971587]
+               -> #0 (&q->limits_lock){+.+.}-{4:4}:
+[   51.972479]        __lock_acquire+0x1337/0x2130
+[   51.973133]        lock_acquire+0xc5/0x2d0
+[   51.973691]        __mutex_lock+0xda/0xcf0
+[   51.974300]        disk_update_zone_resources+0x86/0x170
+[   51.975032]        blk_revalidate_disk_zones+0x16c/0x340
+[   51.975740]        sd_zbc_revalidate_zones+0x73/0x160 [sd_mod]
+[   51.976524]        sd_revalidate_disk.isra.0+0x465/0x3240 [sd_mod]
+[   51.977824]        sd_probe+0x2d7/0x520 [sd_mod]
+[   51.978917]        really_probe+0xd5/0x330
+[   51.979915]        __driver_probe_device+0x78/0x110
+[   51.981047]        driver_probe_device+0x1f/0xa0
+[   51.982143]        __driver_attach_async_helper+0x60/0xe0
+[   51.983282]        async_run_entry_fn+0x2e/0x140
+[   51.984319]        process_one_work+0x21f/0x5a0
+[   51.985873]        worker_thread+0x1dc/0x3c0
+[   51.987289]        kthread+0xe0/0x110
+[   51.988546]        ret_from_fork+0x31/0x50
+[   51.989926]        ret_from_fork_asm+0x11/0x20
+[   51.991376]
+               other info that might help us debug this:
 
-attr_ptr = READ_ONCE(sqe->attr_ptr);
-attr_mask = READ_ONCE(sqe->attr_type_mask);
-size = total_size_of_attributes_passed_from_attr_mask;
+[   51.994127]  Possible unsafe locking scenario:
 
-copy_from_user(attr_buf, attr_ptr, size);
+[   51.995651]        CPU0                    CPU1
+[   51.996694]        ----                    ----
+[   51.997716]   lock(&q->q_usage_counter(queue)#3);
+[   51.998817]                                lock(&q->limits_lock);
+[   52.000043]                                lock(&q->q_usage_counter(queue)#3);
+[   52.001638]   lock(&q->limits_lock);
+[   52.002485]
+                *** DEADLOCK ***
 
-while (size > 0) {
-	if (sizeof(io_uring_attr_type) > size)
-		break;
+Prevent this issue by moving the calls to blk_mq_freeze_queue() and
+blk_mq_unfreeze_queue() around the call to queue_limits_commit_update()
+in disk_update_zone_resources(). In case of revalidation failure, the
+call to disk_free_zone_resources() in blk_revalidate_disk_zones()
+is still done with the queue frozen as before.
 
-	attr_type = get_type(attr_buf);
-	attr_size = get_size(attr_type);
+Fixes: 843283e96e5a ("block: Fake max open zones limit when there is no limit")
+Cc: stable@vger.kernel.org
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ block/blk-zoned.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-	process_attr(attr_type, attr_buf);
-	attr_buf += attr_size;
-	size -= attr_size;
-}
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 70211751df16..263e28b72053 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -1551,6 +1551,7 @@ static int disk_update_zone_resources(struct gendisk *disk,
+ 	unsigned int nr_seq_zones, nr_conv_zones;
+ 	unsigned int pool_size;
+ 	struct queue_limits lim;
++	int ret;
+ 
+ 	disk->nr_zones = args->nr_zones;
+ 	disk->zone_capacity = args->zone_capacity;
+@@ -1601,7 +1602,11 @@ static int disk_update_zone_resources(struct gendisk *disk,
+ 	}
+ 
+ commit:
+-	return queue_limits_commit_update(q, &lim);
++	blk_mq_freeze_queue(q);
++	ret = queue_limits_commit_update(q, &lim);
++	blk_mq_unfreeze_queue(q);
++
++	return ret;
+ }
+ 
+ static int blk_revalidate_conv_zone(struct blk_zone *zone, unsigned int idx,
+@@ -1816,14 +1821,15 @@ int blk_revalidate_disk_zones(struct gendisk *disk)
+ 	 * Set the new disk zone parameters only once the queue is frozen and
+ 	 * all I/Os are completed.
+ 	 */
+-	blk_mq_freeze_queue(q);
+ 	if (ret > 0)
+ 		ret = disk_update_zone_resources(disk, &args);
+ 	else
+ 		pr_warn("%s: failed to revalidate zones\n", disk->disk_name);
+-	if (ret)
++	if (ret) {
++		blk_mq_freeze_queue(q);
+ 		disk_free_zone_resources(disk);
+-	blk_mq_unfreeze_queue(q);
++		blk_mq_unfreeze_queue(q);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.47.0
 
-We cannot derive where exactly the attribute information is placed
-purely from the mask, so we need the type field. Do you see it
-differently?
-
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_33907_
-Content-Type: text/plain; charset="utf-8"
-
-
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_33907_--
 
