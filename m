@@ -1,99 +1,197 @@
-Return-Path: <linux-block+bounces-14674-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14676-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 296C49DB282
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 06:28:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FA8A9DB29B
+	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 06:50:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB12B166140
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 05:27:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F41C1640F9
+	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 05:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C6E136349;
-	Thu, 28 Nov 2024 05:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6153613DB9F;
+	Thu, 28 Nov 2024 05:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjS7KFtz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF5ATNJ7"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD04AD4B
-	for <linux-block@vger.kernel.org>; Thu, 28 Nov 2024 05:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1356134BD;
+	Thu, 28 Nov 2024 05:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732771676; cv=none; b=khjUxbaOxAEyQU9kzoztwPNkNV9INXXqHbrCJ11L0PxrbtVsDFD8R/kAST7sX3hoXJtRfBS/gDN9qfX5SfB9kygM8Ke4QJqz93TGgp3vsrU2TPkHBxcBSIs+IRlZmnsmRjdHNwFPYplRUPxGdBcqfUdN47Jt/Z2RqMf3fCJS5sY=
+	t=1732773036; cv=none; b=IbNhNxRY7hMTihUrv7BuNbiDsXHGf39UHpXa5rduJ5j7ynY5h6WhLuHz9arxNoz+xa3bGr3jvepl7oHihJqakCuuNgUZ8YqerFb5TLnKUDWi7EI36A9WLrSi6BHCUt9ZdCU7FAoj2hLPzAqKsGyjfrkZZCHfGowZ6Gc3ozE7fdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732771676; c=relaxed/simple;
-	bh=YSrQzcQI32kqAAjbVhZoMwvAqd5AGtnfM3GFWBkuFps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dIdQs/Rw2/vKVTwVrh4RO3IQrDz7FW6XlZu/KjVqPF1vMCDNpQ+KYMppkcvSKlDA/cl0QKZO/5vsWPLzzcNlZnCx6u7cnwVvOeFXv5fqWaaRkez1p+xmGYYrBI1PUCBMdzXH6c7HDq70AuORuYk+cxCqPvTMX2lCH7pVr9qYvyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjS7KFtz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877F2C4CECE;
-	Thu, 28 Nov 2024 05:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732771676;
-	bh=YSrQzcQI32kqAAjbVhZoMwvAqd5AGtnfM3GFWBkuFps=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PjS7KFtzw/MoLMrBmdbQlhwFPsV7+jGjgGvr8vNU3qzqoac9ixBMUqDgwjkA7El/7
-	 r+hZUqq3rHBLNCuF+ssNY6ycuIYWeqQi4/WeVtfy8Lbm6HLU934jxYZ4GDuC85wk2h
-	 7lbv/XT4q9Jc9Og/ivIXROk5ZJ74jeHScg8BacB0MdZ/xygi5AW9ET3WAQoexEuUSs
-	 gBkNcIJu52m0eXiNLmQ3TspfEsitfQLBIiTzousbAY8Q3pc18OyjfazzSURkgZ4z3y
-	 aX9fakVlZCMLhNafD0XiDLNhLrCG9JGsCFNd/HewHs+iTMup15mJU2tEm2j2lMdzWo
-	 Ms3dRjcSaAMiw==
-Message-ID: <e82c10b5-cf68-4418-b060-862496367dc5@kernel.org>
-Date: Thu, 28 Nov 2024 14:27:54 +0900
+	s=arc-20240116; t=1732773036; c=relaxed/simple;
+	bh=jy02W4fUSO/ynBhM1FmXmxBPyqudopqiVK8oLXZwHgY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-version:Content-type; b=Uu16RnZ9wzWHSmfGjQpm2F06NOuXieJTcdAxW5+VeUyQh3kqzAUvvcdYOtPq2LL9kwKwBHTeNxPOjtF0VninVIJS2z0fJPp+iGq3sFwvb6fHrswK8uDDKECO6f5O833Xzm+MV7fZg48o4neeF//Id7PEnzggZhAbebgChjJPKR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZF5ATNJ7; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2eb1433958dso352003a91.2;
+        Wed, 27 Nov 2024 21:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732773034; x=1733377834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:message-id:date
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JLjeQx75L3lYmciLRB+c43uodhAABK8j/Hm5E1oeO90=;
+        b=ZF5ATNJ7vivdlYfQlTUkIEigKH4qkCiW7aoX1AVt6N28sFMqTwNzAwsrwPtTm3cR4F
+         0uv2olTsxREnCg5v9V30ptbMQybhrUXPr9K19lNbxa9EKm9xGXiswRbUsP4tK7N54ycv
+         5lf+QlxsMLBcBeMy/HqsdFy5dT2w+OYidO5qSy+AYrToGDOHZXSiTFRsxX6FZ5N4kFdp
+         XGNcVil/+XXLRYw5BR5KINCvMXBWH9DxxdWpvstgB27O4izcBLn/rXV8+SLHjXAAx7k2
+         +pKqgdjtFp5akFjIY+oY99PiQXXjRvZ6lc81G2KiUmjjWY/a5PRCfvzlAkoBVhfcF6Gg
+         Z5hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732773034; x=1733377834;
+        h=content-transfer-encoding:mime-version:references:message-id:date
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JLjeQx75L3lYmciLRB+c43uodhAABK8j/Hm5E1oeO90=;
+        b=kFGdU+6v6b+ObHoQc6h9hQGbhCBC0dLolrAoRkLBG1WJzWW5+zsPkSjRY/ooninF7o
+         F22z/s0hIZN3PwPB32UIWBW8smxBYakREFfZdNsUmwG8zCVzeSK6mFlejycKMFNYmPh3
+         a+Rxo13FC3aVK/slJpBPJxnddp1ezdQNSIGD9USuihVcHIQzPtU1rjo9NLhZKoDLBz2G
+         dqOlNc6GY0dHZk2fYpUOPTkcEh3Kwcj/hkO8akzeNTcHaC6Ai2CYKgYnpHWOC2tBA26k
+         WhUcvP4xUK9GRdLOQiIfK4qMf+wIdZ5vigNCm1NsQgDEzVrVkB4P1eGZNYL+2mCtk/Wb
+         9uPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUD6GnKTwsC2ATMjK8JZGXScEn8EikyMspCw8pLyT1YfRB/akyxeFM0EUKAMzZuKz1A6BacEqg9CxXyPDMG@vger.kernel.org, AJvYcCUYYbupx0JUr+OHtT0V7lLwIIas0/4h4lwIIjfrKg47L/pJYS1a9Vt3KcKV4WBUkud+nAJKCLFRfCwISg==@vger.kernel.org, AJvYcCVU78qt0RIccRNDXBKd6/yw8PKYXlWqX4rb+Qf+z6hwXNCR5urku0SzeI7hq3eBSrMRuRSC6DVVdEg+Nyc2CA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh/0DraHbpDjQHVqeBFfZ/fssKGzxWLfeg9I8Z0mM6QRSzDzJd
+	Tcy9n7/tqEyOmdeXxCf4ds7avMP1sE63iFVeZkwpd1YfsN5pS6VD
+X-Gm-Gg: ASbGncsnE+V6uZw1DyMoLVzzy3tE0PW9Tx/CCH8Kynxn6Td80Y7T6WcGpPJe2fLUSqC
+	sONv2sq+esH1MyBpjD1FpYQFu5u/VIklxfgqwoNi4zk5UNS9QvVQ+1j7FuCJvRVTtlkSc0RP5Ze
+	JUYo4d9GZ6zTyDHP5mSUmXlqlPTtZsZHfrV17X68evV8cBKchRhSjaJwF9BNjIpPsT211QA5fPR
+	paG6M6XM80KBaaSUshjCKGFa7JAR4VlhvpR3LNZg0U=
+X-Google-Smtp-Source: AGHT+IGvcaRwwg7Z6lX7Dj/twWMoZA67eSUPjEvK6r1tl4fqPwjizLPoPiL2oxPD3RSEg5ww+ZcLUQ==
+X-Received: by 2002:a17:90b:4b82:b0:2ea:7329:46 with SMTP id 98e67ed59e1d1-2ee08e9f0c6mr8602080a91.5.1732773033915;
+        Wed, 27 Nov 2024 21:50:33 -0800 (PST)
+Received: from dw-tp ([171.76.82.126])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee2b22dd01sm588999a91.27.2024.11.27.21.50.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2024 21:50:33 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Jan Kara <jack@suse.cz>, Mateusz Guzik <mjguzik@gmail.com>
+Cc: Bharata B Rao <bharata@amd.com>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nikunj@amd.com, willy@infradead.org, vbabka@suse.cz, david@redhat.com, akpm@linux-foundation.org, yuzhao@google.com, axboe@kernel.dk, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, joshdon@google.com, clm@meta.com
+Subject: Re: [RFC PATCH 0/1] Large folios in block buffered IO path
+In-Reply-To: <20241127120235.ejpvpks3fosbzbkr@quack3>
+Date: Thu, 28 Nov 2024 11:10:35 +0530
+Message-ID: <87plmf3oh8.fsf@gmail.com>
+References: <20241127054737.33351-1-bharata@amd.com> <CAGudoHGup2iLPUONz=ScsK1nQsBUHf_TrTrUcoStjvn3VoOr7Q@mail.gmail.com> <CAGudoHEvrML100XBTT=sBDud5L2zeQ3ja5BmBCL2TTYYoEC55A@mail.gmail.com> <20241127120235.ejpvpks3fosbzbkr@quack3>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [blktests] zbd/012: Test requeuing of zoned writes and queue
- freezing
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Bart Van Assche <bvanassche@acm.org>,
- Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- linux-block@vger.kernel.org
-References: <Z0dPn46YnLaYQcSP@infradead.org>
- <2b7afce4-fa13-47b6-a3ed-722e0c11e79f@kernel.org>
- <Z0fhc8i-IbxY6pQr@infradead.org>
- <16e543dd-c4e6-4f79-b401-8030d7ba1514@kernel.org>
- <Z0f0B6Xf-jdc_fx-@infradead.org>
- <43c0f15e-7f3b-4ed9-bde9-dca2cff57afa@kernel.org>
- <Z0f47wft_sVto7pM@infradead.org>
- <a9ad27f7-b799-4322-ba05-944abfc0fa88@kernel.org>
- <Z0f8uAFz5C60fung@infradead.org>
- <684a3b59-776a-466a-8323-d92c0502e7a3@kernel.org>
- <Z0f92dX_0_eQlDbL@infradead.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <Z0f92dX_0_eQlDbL@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On 11/28/24 14:21, Christoph Hellwig wrote:
-> On Thu, Nov 28, 2024 at 02:19:23PM +0900, Damien Le Moal wrote:
->> Sounds good. What do you think of adding the opportunistic "update zone wp"
->> whenever we execute a user report zones ? It is very easy to do and should not
->> slow down significantly report zones itself because we usually have very zone
->> write plugs and the hash search is fast.
-> 
-> Just user or any report zones?  But I think updating it is probably a
-> good thing.  When the zone state is requested there is no excuse to
-> not have the write plug information in sync
+Jan Kara <jack@suse.cz> writes:
 
-All report zones. That would cover things like an FS mkfs report zones putting
-everything in sync and an FS or dm-zoned doing a report zones after a write
-error syncing single zones.
+> On Wed 27-11-24 07:19:59, Mateusz Guzik wrote:
+>> On Wed, Nov 27, 2024 at 7:13 AM Mateusz Guzik <mjguzik@gmail.com> wrote:
+>> >
+>> > On Wed, Nov 27, 2024 at 6:48 AM Bharata B Rao <bharata@amd.com> wrote:
+>> > >
+>> > > Recently we discussed the scalability issues while running large
+>> > > instances of FIO with buffered IO option on NVME block devices here:
+>> > >
+>> > > https://lore.kernel.org/linux-mm/d2841226-e27b-4d3d-a578-63587a3aa4f3@amd.com/
+>> > >
+>> > > One of the suggestions Chris Mason gave (during private discussions) was
+>> > > to enable large folios in block buffered IO path as that could
+>> > > improve the scalability problems and improve the lock contention
+>> > > scenarios.
+>> > >
+>> >
+>> > I have no basis to comment on the idea.
+>> >
+>> > However, it is pretty apparent whatever the situation it is being
+>> > heavily disfigured by lock contention in blkdev_llseek:
+>> >
+>> > > perf-lock contention output
+>> > > ---------------------------
+>> > > The lock contention data doesn't look all that conclusive but for 30% rwmixwrite
+>> > > mix it looks like this:
+>> > >
+>> > > perf-lock contention default
+>> > >  contended   total wait     max wait     avg wait         type   caller
+>> > >
+>> > > 1337359017     64.69 h     769.04 us    174.14 us     spinlock   rwsem_wake.isra.0+0x42
+>> > >                         0xffffffff903f60a3  native_queued_spin_lock_slowpath+0x1f3
+>> > >                         0xffffffff903f537c  _raw_spin_lock_irqsave+0x5c
+>> > >                         0xffffffff8f39e7d2  rwsem_wake.isra.0+0x42
+>> > >                         0xffffffff8f39e88f  up_write+0x4f
+>> > >                         0xffffffff8f9d598e  blkdev_llseek+0x4e
+>> > >                         0xffffffff8f703322  ksys_lseek+0x72
+>> > >                         0xffffffff8f7033a8  __x64_sys_lseek+0x18
+>> > >                         0xffffffff8f20b983  x64_sys_call+0x1fb3
+>> > >    2665573     64.38 h       1.98 s      86.95 ms      rwsem:W   blkdev_llseek+0x31
+>> > >                         0xffffffff903f15bc  rwsem_down_write_slowpath+0x36c
+>> > >                         0xffffffff903f18fb  down_write+0x5b
+>> > >                         0xffffffff8f9d5971  blkdev_llseek+0x31
+>> > >                         0xffffffff8f703322  ksys_lseek+0x72
+>> > >                         0xffffffff8f7033a8  __x64_sys_lseek+0x18
+>> > >                         0xffffffff8f20b983  x64_sys_call+0x1fb3
+>> > >                         0xffffffff903dce5e  do_syscall_64+0x7e
+>> > >                         0xffffffff9040012b  entry_SYSCALL_64_after_hwframe+0x76
+>> >
+>> > Admittedly I'm not familiar with this code, but at a quick glance the
+>> > lock can be just straight up removed here?
+>> >
+>> >   534 static loff_t blkdev_llseek(struct file *file, loff_t offset, int whence)
+>> >   535 {
+>> >   536 │       struct inode *bd_inode = bdev_file_inode(file);
+>> >   537 │       loff_t retval;
+>> >   538 │
+>> >   539 │       inode_lock(bd_inode);
+>> >   540 │       retval = fixed_size_llseek(file, offset, whence,
+>> > i_size_read(bd_inode));
+>> >   541 │       inode_unlock(bd_inode);
+>> >   542 │       return retval;
+>> >   543 }
+>> >
+>> > At best it stabilizes the size for the duration of the call. Sounds
+>> > like it helps nothing since if the size can change, the file offset
+>> > will still be altered as if there was no locking?
+>> >
+>> > Suppose this cannot be avoided to grab the size for whatever reason.
+>> >
+>> > While the above fio invocation did not work for me, I ran some crapper
+>> > which I had in my shell history and according to strace:
+>> > [pid 271829] lseek(7, 0, SEEK_SET)      = 0
+>> > [pid 271829] lseek(7, 0, SEEK_SET)      = 0
+>> > [pid 271830] lseek(7, 0, SEEK_SET)      = 0
+>> >
+>> > ... the lseeks just rewind to the beginning, *definitely* not needing
+>> > to know the size. One would have to check but this is most likely the
+>> > case in your test as well.
+>> >
+>> > And for that there is 0 need to grab the size, and consequently the inode lock.
+>> 
+>> That is to say bare minimum this needs to be benchmarked before/after
+>> with the lock removed from the picture, like so:
+>
+> Yeah, I've noticed this in the locking profiles as well and I agree
+> bd_inode locking seems unnecessary here. Even some filesystems (e.g. ext4)
+> get away without using inode lock in their llseek handler...
+>
 
-To do that, all that is needed is a default report zones callback that syncs
-write plugs that have the "need update" flag and then call the user specified
-report zones callback.
+Right, we don't need an inode_lock() for i_size_read(). i_size_write()
+still needs locking for serialization, mainly for 32bit SMP case, due
+to use of seqcounts.
+I guess it would be good to maybe add this in Documentation too rather
+than this info just hanging on top of i_size_write()?
 
--- 
-Damien Le Moal
-Western Digital Research
+References
+===========
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/filesystems/locking.rst#n557
+[2]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/fs.h#n932
+[3]: https://lore.kernel.org/all/20061016162729.176738000@szeredi.hu/
+
+-ritesh
 
