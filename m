@@ -1,95 +1,180 @@
-Return-Path: <linux-block+bounces-14675-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14677-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D78649DB295
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 06:43:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE4239DB444
+	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 09:52:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7136AB22ACC
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 05:43:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E319280D77
+	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2024 08:51:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8919E13D8B4;
-	Thu, 28 Nov 2024 05:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F95B14D44D;
+	Thu, 28 Nov 2024 08:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SHB88Wus"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huPUraNV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708D212C7FD;
-	Thu, 28 Nov 2024 05:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAE014BF92;
+	Thu, 28 Nov 2024 08:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732772625; cv=none; b=lf9A7m3teIazZyR+lNaG1DhDCw6IohBY9Tsag0nUykS9pp8RLss5l5BPoaVQb380Yr16Ndiq24cOXDSkcpXWWv8OnGJEX4I8DzBBTuKP9F6uCFldY67/x1m3Fh/7KP3QDqb2MoR0qSAHN25aA60isNIElJC6ICyq8BcPb+IWkqk=
+	t=1732783916; cv=none; b=LbogJqZF67/rrMTVF5XX0i0F3CB9SJsL3YPYaVCherYApewDtofP2SP8AVj5//E4xKdn5pDSdvgAGpc6QWbFcfsDYsXcjeBmeGPdVbkApLQna6lrpFPpet2s8IzqSnJ1FXSZ4kwFopRNCnnmUKbI6r5G3CB5RtaTrFjYTtLX7n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732772625; c=relaxed/simple;
-	bh=KwOilkyvsWRIg+rSVQRJ19Fkv2nNhKGizjf472lxEeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSLhvdu+QFtHARpOVEt5bVsr95JANYQ5qs8oCUiO3iSiOeMuobz4ag4Epyn5GtsgCCwao82mnnHzAinno6//vNBW/6/EONVEMGtldIHJv4jZBMPW7+7bT7GdAoOmUuEwD6RnIFy9Cg7WAe9h9ymzZXyNK7AxBmoSU7KDevQB4Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SHB88Wus; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KwOilkyvsWRIg+rSVQRJ19Fkv2nNhKGizjf472lxEeI=; b=SHB88WushSxBQxj/5ON4lFxtYR
-	tfms5WkfuGvdo3JjMsH7iSj5QgIN4oNJdiru1ljGniVmIac+TTSUhmK3iLd/kPzNErN+otaaYgQ8M
-	QDFlTYMxWhMB1bkPrxABPGVzjxUIOzp2VNjZn75V6Un72GqvVz6GnWQEr58wYkmDosHqnBviJfUCQ
-	vrBtDm8sGgNPvYn+/6be4pxJM7dofCkHUIoQiu4aRYejIE2ibVM1Cgkm8j4nXem3l2HXrUfi3V0Tr
-	wFbeJ+XNAi3fik+am5fZaImsYWVwUVldjYV/9WcydkXrF8TZWpSl9adqkXlez27JJ28ltzSHCsl/R
-	3WT172xQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGXJT-0000000EkGL-1rWv;
-	Thu, 28 Nov 2024 05:43:39 +0000
-Date: Wed, 27 Nov 2024 21:43:39 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Bharata B Rao <bharata@amd.com>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, nikunj@amd.com, willy@infradead.org,
-	vbabka@suse.cz, david@redhat.com, akpm@linux-foundation.org,
-	yuzhao@google.com, mjguzik@gmail.com, axboe@kernel.dk,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	joshdon@google.com, clm@meta.com
-Subject: Re: [RFC PATCH 1/1] block/ioctl: Add an ioctl to enable large folios
- for block buffered IO path
-Message-ID: <Z0gDCxiv2VLQkCR_@infradead.org>
-References: <20241127054737.33351-1-bharata@amd.com>
- <20241127054737.33351-2-bharata@amd.com>
- <Z0a7f9T5lRPO_sEC@infradead.org>
- <c3b1b233-841f-482b-b269-7445d9f541c2@amd.com>
+	s=arc-20240116; t=1732783916; c=relaxed/simple;
+	bh=IvK1zy/sYlcAsuAagh9WHWt5pI9LVrBWaIhMoNQD9O4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iGcWJ+DduiJJ7YnagSbbDXEAVdwu2frrAnzIJJW1TFsciwt6rHH+Zy6dHc5eYWK6CPNlwmZmNf+qT9phMhsShHNCQLfQHOrC8jDYaaBA/L3C7Gf8WWJtqZreIbYNJZQz2DufJPHfzej3+2RI+Z+Bp/LSUTsXuNT3lRBf7ABOWK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huPUraNV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FE4C4CECE;
+	Thu, 28 Nov 2024 08:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732783915;
+	bh=IvK1zy/sYlcAsuAagh9WHWt5pI9LVrBWaIhMoNQD9O4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=huPUraNVdlRnc/8SRCQCbFMy8iYIjMB3PAVtxdtrPxXEKBIuk8JVyvQSXKpsyKWuo
+	 SvcCUUNE7HC9Ow0pgQqrcSsjRWVD1P/g2f9kgyvtxjXhKVQQl/WoCSjhSVqKvly84z
+	 +qbNSYVsjzMQgKzuLerNaymQkOu7/fWI3nFulGMiuFWVjbrMT24B6c3AJbjRYBI9+k
+	 2CtCUhK0Q8s7rUZJyzmT8ZAu2XK9xcYNoRWhvchpzCiitbGPplCghEKZHDly179oyw
+	 92xIUGP8xGw+tApw4velQg0xPNtB+McQCWkzpwfXXOLdLYy+5+ZsUJFbkvIjOuZIee
+	 lCIVOIxNTujeQ==
+Message-ID: <9e9ca761-6356-4a97-a314-d08bd5ea0916@kernel.org>
+Date: Thu, 28 Nov 2024 17:51:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3b1b233-841f-482b-b269-7445d9f541c2@amd.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv10 0/9] write hints with nvme fdp, scsi streams
+To: "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Bart Van Assche <bvanassche@acm.org>
+Cc: Nitesh Shetty <nj.shetty@samsung.com>,
+ Javier Gonzalez <javier.gonz@samsung.com>,
+ Matthew Wilcox <willy@infradead.org>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "joshi.k@samsung.com" <joshi.k@samsung.com>
+References: <20241105155014.GA7310@lst.de> <Zy0k06wK0ymPm4BV@kbusch-mbp>
+ <20241108141852.GA6578@lst.de> <Zy4zgwYKB1f6McTH@kbusch-mbp>
+ <CGME20241108165444eucas1p183f631e2710142fbbc7dee9300baf77a@eucas1p1.samsung.com>
+ <Zy5CSgNJtgUgBH3H@casper.infradead.org>
+ <d7b7a759dd9a45a7845e95e693ec29d7@CAMSVWEXC02.scsc.local>
+ <2b5a365a-215a-48de-acb1-b846a4f24680@acm.org>
+ <20241111093154.zbsp42gfiv2enb5a@ArmHalley.local>
+ <a7ebd158-692c-494c-8cc0-a82f9adf4db0@acm.org>
+ <20241112135233.2iwgwe443rnuivyb@ubuntu>
+ <yq1ed38roc9.fsf@ca-mkp.ca.oracle.com>
+ <9d61a62f-6d95-4588-bcd8-de4433a9c1bb@acm.org>
+ <yq1plmhv3ah.fsf@ca-mkp.ca.oracle.com>
+ <8ef1ec5b-4b39-46db-a4ed-abf88cbba2cd@acm.org>
+ <yq1jzcov5am.fsf@ca-mkp.ca.oracle.com>
+ <7835e7e2-2209-4727-ad74-57db09e4530f@acm.org>
+ <yq1ed2wupli.fsf@ca-mkp.ca.oracle.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <yq1ed2wupli.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 27, 2024 at 04:07:02PM +0530, Bharata B Rao wrote:
-> I believe you are referring to the patchset that enables bs > ps for block
-> devices - https://lore.kernel.org/linux-fsdevel/20241113094727.1497722-1-mcgrof@kernel.org/
+On 11/28/24 11:09, Martin K. Petersen wrote:
+> 
+> Bart,
+> 
+>> What if the source LBA range does not require splitting but the
+>> destination LBA range requires splitting, e.g. because it crosses a
+>> chunk_sectors boundary? Will the REQ_OP_COPY_IN operation succeed in
+>> this case and the REQ_OP_COPY_OUT operation fail?
+> 
+> Yes.
+> 
+> I experimented with approaching splitting in an iterative fashion. And
+> thus, if there was a split halfway through the COPY_IN I/O, we'd issue a
+> corresponding COPY_OUT up to the split point and hope that the write
+> subsequently didn't need a split. And then deal with the next segment.
+> 
+> However, given that copy offload offers diminishing returns for small
+> I/Os, it was not worth the hassle for the devices I used for
+> development. It was cleaner and faster to just fall back to regular
+> read/write when a split was required.
+> 
+>> Does this mean that a third operation is needed to cancel
+>> REQ_OP_COPY_IN operations if the REQ_OP_COPY_OUT operation fails?
+> 
+> No. The device times out the token.
+> 
+>> Additionally, how to handle bugs in REQ_OP_COPY_* submitters where a
+>> large number of REQ_OP_COPY_IN operations is submitted without
+>> corresponding REQ_OP_COPY_OUT operation? Is perhaps a mechanism
+>> required to discard unmatched REQ_OP_COPY_IN operations after a
+>> certain time?
+> 
+> See above.
+> 
+> For your EXTENDED COPY use case there is no token and thus the COPY_IN
+> completes immediately.
+> 
+> And for the token case, if you populate a million tokens and don't use
+> them before they time out, it sounds like your submitting code is badly
+> broken. But it doesn't matter because there are no I/Os in flight and
+> thus nothing to discard.
+> 
+>> Hmm ... we may each have a different opinion about whether or not the
+>> COPY_IN/COPY_OUT semantics are a requirement for token-based copy
+>> offloading.
+> 
+> Maybe. But you'll have a hard time convincing me to add any kind of
+> state machine or bio matching magic to the SCSI stack when the simplest
+> solution is to treat copying like a read followed by a write. There is
+> no concurrency, no kernel state, no dependency between two commands, nor
+> two scsi_disk/scsi_device object lifetimes to manage.
 
-I actually thought of:
+And that also would allow supporting a fake copy offload with regular read/write
+BIOs very easily, I think. So all block devices can be presented as supporting
+"copy offload". That is nice for FSes.
 
-https://www.spinics.net/lists/linux-ext4/msg98151.html
+> 
+>> Additionally, I'm not convinced that implementing COPY_IN/COPY_OUT for
+>> ODX devices is that simple. The COPY_IN and COPY_OUT operations have
+>> to be translated into three SCSI commands, isn't it? I'm referring to
+>> the POPULATE TOKEN, RECEIVE ROD TOKEN INFORMATION and WRITE USING
+>> TOKEN commands. What is your opinion about how to translate the two
+>> block layer operations into these three SCSI commands?
+> 
+> COPY_IN is translated to a NOP for devices implementing EXTENDED COPY
+> and a POPULATE TOKEN for devices using tokens.
+> 
+> COPY_OUT is translated to an EXTENDED COPY (or NVMe Copy) for devices
+> using a single command approach and WRITE USING TOKEN for devices using
+> tokens.
 
-but yes, the one you pointed to is more relevant.
+ATA WRITE GATHERED command is also a single copy command. That matches and while
+I have not checked SAT, translation would likely work.
 
-> In fact I was trying to see if it is possible to advertise large folio
-> support in bdev mapping only for those block devices which don't have FS
-> mounted on them. But apparently it was not so straight forward and my
-> initial attempt at this resulted in FS corruption. Hence I resorted to the
-> current ioctl approach as a way to showcase the problem and the potential
-> benefit.
+While I was initially worried that the 2 BIO based approach would be overly
+complicated, it seems that I was wrong :)
 
-Well, if you use the ioctl and then later mount a file system, you'll
-still see the same corruption.
+> 
+> There is no need for RECEIVE ROD TOKEN INFORMATION.
+> 
+> I am not aware of UFS devices using the token-based approach. And for
+> EXTENDED COPY there is only a single command sent to the device. If you
+> want to do power management while that command is being processed,
+> please deal with that in UFS. The block layer doesn't deal with the
+> async variants of any of the other SCSI commands either...
+>
 
+
+-- 
+Damien Le Moal
+Western Digital Research
 
