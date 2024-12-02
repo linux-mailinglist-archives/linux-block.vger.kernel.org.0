@@ -1,115 +1,201 @@
-Return-Path: <linux-block+bounces-14770-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14778-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8926F9E0749
-	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2024 16:41:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DD789E084C
+	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2024 17:21:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A425AB34B15
-	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2024 14:00:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4A7328623D
+	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2024 16:21:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFC7F203707;
-	Mon,  2 Dec 2024 14:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F222187843;
+	Mon,  2 Dec 2024 16:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gihYJs6s"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ahqwgH8C";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RNGkqSZy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fyYYPtB3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jWlh3xnw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B534A203704;
-	Mon,  2 Dec 2024 14:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4C517D366;
+	Mon,  2 Dec 2024 16:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733148029; cv=none; b=mBCgZbdS8S4mT1CaiDNuPGinUx8KPaqoXFQKT7Ru1Qk+Fn8h9g/AtWVbwTRq6FuaCdc3bAiyIpxFstnBqUqmKoEmzx+QFI7YD/vC1IknGOO5KuDmkgBXYWILrl1Pij8+ZMNlZ2AYA8TQbKJs1lGavusyRiHR5gVcThYCDnRbnE8=
+	t=1733156482; cv=none; b=eqQvhRpnstC5bcw/5uBKqa8t75MLqR0xJzHtA6biUWFSoXYeaX6Jh9e3uyc8Ce7PLJid8WxWDjb4A/wPBagOaOK8Ty2UgCCdVfbvuRheasF8m5JsM+fvZu0OuLL1/KYoJeNbMAMvgdurCKrxVNaaNgcAqz9iWthY5dTgZkL1k1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733148029; c=relaxed/simple;
-	bh=Xnjsn5CeW974ObCQuqa0Z+CwPGGhRk0jK5nChV5JWhY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qIIrQT/v6LxPUqtgC2IteqS422kRynwq0MCkU5Vx2u00ZBIGq+l78atDSR7ODgRyWMdWRS39WMARnCStL39XR0zEjwIddKd4rM4UWIErzJEY15dpnLDBy9rZkgfAtGAjg2qsVjkYB8TNw8S0TY92oyUsnQGCUdD+bfQEljmDef4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gihYJs6s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186D2C4CEDE;
-	Mon,  2 Dec 2024 14:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733148029;
-	bh=Xnjsn5CeW974ObCQuqa0Z+CwPGGhRk0jK5nChV5JWhY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gihYJs6sH7FsUEhZ3dC//xkdgTQZEZbG7ECwDNLCsp+1vwwn3L1qyEARC5IajXlRS
-	 k/Ij4ocvkgn/mwbu6I9aCr1n6U3p6br1g8/VIZp8Ik+DwO7qxB0Y8djvLO2rKHMZdz
-	 Rs5ZemFdzb5wtsiY7rpcpGMi86imiZP1CUCyHDVqIGSQMQIiyJ8xa/ExCoY51MU01z
-	 B3Jh4+amo328tKSoSKYQzrGD44+RvZ8hb4AT5RbfyyghHV57B3/Pr4fJzSW5tzQd3M
-	 C5fCVO/lB3e4or3al7+CQ/jbVcXN08NYb2WaeXVCfRLzzajbgJq34JRUs16b6n2bYq
-	 f80Oqmiwo5Wxg==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Mon, 02 Dec 2024 15:00:09 +0100
-Subject: [PATCH v6 1/8] driver core: bus: add irq_get_affinity callback to
- bus_type
+	s=arc-20240116; t=1733156482; c=relaxed/simple;
+	bh=GepOY+2bSH0E/kWJpHBLyw1FRYVtuWSxRHGQ1U8w1N0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLgbKsIif0Ob7zViez+otTGXYwqPFvPoCRkoy21eJknXplvvSu3eWIXG8F2K0Vfspprmlt2wXbCnLafq4xoU1t9vR1nOede4o58YtGdjzkpfeaULEImbQFcvMDYxD1DITIbuZl4ev2/5Z50OWYUOxAS0Z+XZnQ9DuGm45EdADpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ahqwgH8C; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RNGkqSZy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fyYYPtB3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jWlh3xnw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D2ECD2116E;
+	Mon,  2 Dec 2024 16:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733156478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1z4TbU/Qkr/jvGw5g0HDhjUZVdLmjABAsTzcryF/YSQ=;
+	b=ahqwgH8Cm7IMlLSR5xUALMENPXVrfiVZYRM2EnGvSOz1cHJn9o4PPUF31fVJKP26sNONwj
+	/BNFGzGzx2KvFNH68BSPa82uwszqyhuxmMfZg0NiV6dsoXiMkakgIXNSzxpQyoJGdSyuHV
+	egZjdixQ7CgOiRl41c70hLgOAilmCFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733156478;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1z4TbU/Qkr/jvGw5g0HDhjUZVdLmjABAsTzcryF/YSQ=;
+	b=RNGkqSZyu8FikIALm4xcffpc0Mp2YnxHSUWMw1XbaLWfFmW1tJoLw/O/RE7tPPdsu5Di9g
+	MwNpvhoDhZ5MxiCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fyYYPtB3;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=jWlh3xnw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733156477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1z4TbU/Qkr/jvGw5g0HDhjUZVdLmjABAsTzcryF/YSQ=;
+	b=fyYYPtB3IU3lSwDkK02nZlnsUkmLxcj3SJs69Ykiq83EpNod6P26mmQtjYymLOBE4pLYRP
+	Md6K1iSYMs+S6z+/SQxqOCDp29VJHyb6AONouXiCHMsbUhJWbMr5Se7zFdgEZm3uJSSykP
+	6tt3BE+ZeN49klRPVsjp1FTcAbbc7zo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733156477;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1z4TbU/Qkr/jvGw5g0HDhjUZVdLmjABAsTzcryF/YSQ=;
+	b=jWlh3xnwkmNY4Q/NgVKE3IcFrN09XgEpMmPNnHxrnv3XnjUq1MMnges55t4yysr2tZ8j3h
+	X8uhfoPaiadUgJCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D865713A31;
+	Mon,  2 Dec 2024 16:21:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5Q0oJXneTWfUQgAAD6G6ig
+	(envelope-from <colyli@suse.de>); Mon, 02 Dec 2024 16:21:13 +0000
+Date: Tue, 3 Dec 2024 00:21:07 +0800
+From: Coly Li <colyli@suse.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, haris.iqbal@ionos.com, jinpu.wang@ionos.com, 
+	kent.overstreet@linux.dev, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org, 
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, hch@lst.de
+Subject: Re: [PATCH 2/2] block: Delete bio_set_prio()
+Message-ID: <xrrvym37rltbopjxuz2cozkladm7nlklms46dnddexlpxva373@xrsrq3y54qsv>
+References: <20241202111957.2311683-1-john.g.garry@oracle.com>
+ <20241202111957.2311683-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241202-refactor-blk-affinity-helpers-v6-1-27211e9c2cd5@kernel.org>
-References: <20241202-refactor-blk-affinity-helpers-v6-0-27211e9c2cd5@kernel.org>
-In-Reply-To: <20241202-refactor-blk-affinity-helpers-v6-0-27211e9c2cd5@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
- linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
- mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
- storagedev@microchip.com, linux-nvme@lists.infradead.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241202111957.2311683-3-john.g.garry@oracle.com>
+X-Rspamd-Queue-Id: D2ECD2116E
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MISSING_XM_UA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:dkim,oracle.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Introducing a callback in struct bus_type so that a subsystem
-can hook up the getters directly. This approach avoids exposing
-random getters in any subsystems APIs.
+On Mon, Dec 02, 2024 at 11:19:57AM +0000, John Garry wrote:
+> Since commit 43b62ce3ff0a ("block: move bio io prio to a new field"), macro
+> bio_set_prio() does nothing but set bio->bi_ioprio. All other places just
+> set bio->bi_ioprio directly, so replace bio_set_prio() remaining
+> callsites with setting bio->bi_ioprio directly and delete that macro.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  drivers/block/rnbd/rnbd-srv.c | 2 +-
+>  drivers/md/bcache/movinggc.c  | 2 +-
+>  drivers/md/bcache/writeback.c | 2 +-
+>  fs/bcachefs/move.c            | 6 +++---
+>  include/linux/bio.h           | 2 --
+>  5 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+> index 08ce6d96d04c..2ee6e9bd4e28 100644
+> --- a/drivers/block/rnbd/rnbd-srv.c
+> +++ b/drivers/block/rnbd/rnbd-srv.c
+> @@ -167,7 +167,7 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>  	bio->bi_iter.bi_sector = le64_to_cpu(msg->sector);
+>  	prio = srv_sess->ver < RNBD_PROTO_VER_MAJOR ||
+>  	       usrlen < sizeof(*msg) ? 0 : le16_to_cpu(msg->prio);
+> -	bio_set_prio(bio, prio);
+> +	bio->bi_ioprio = prio;
+>  
+>  	submit_bio(bio);
+>  
+> diff --git a/drivers/md/bcache/movinggc.c b/drivers/md/bcache/movinggc.c
+> index ef6abf33f926..45ca134cbf02 100644
+> --- a/drivers/md/bcache/movinggc.c
+> +++ b/drivers/md/bcache/movinggc.c
+> @@ -82,7 +82,7 @@ static void moving_init(struct moving_io *io)
+>  	bio_init(bio, NULL, bio->bi_inline_vecs,
+>  		 DIV_ROUND_UP(KEY_SIZE(&io->w->key), PAGE_SECTORS), 0);
+>  	bio_get(bio);
+> -	bio_set_prio(bio, IOPRIO_PRIO_VALUE(IOPRIO_CLASS_IDLE, 0));
+> +	bio->bi_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_IDLE, 0);
+>  
+>  	bio->bi_iter.bi_size	= KEY_SIZE(&io->w->key) << 9;
+>  	bio->bi_private		= &io->cl;
+> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+> index c1d28e365910..453efbbdc8ee 100644
+> --- a/drivers/md/bcache/writeback.c
+> +++ b/drivers/md/bcache/writeback.c
+> @@ -334,7 +334,7 @@ static void dirty_init(struct keybuf_key *w)
+>  	bio_init(bio, NULL, bio->bi_inline_vecs,
+>  		 DIV_ROUND_UP(KEY_SIZE(&w->key), PAGE_SECTORS), 0);
+>  	if (!io->dc->writeback_percent)
+> -		bio_set_prio(bio, IOPRIO_PRIO_VALUE(IOPRIO_CLASS_IDLE, 0));
+> +		bio->bi_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_IDLE, 0);
+>  
+>  	bio->bi_iter.bi_size	= KEY_SIZE(&w->key) << 9;
+>  	bio->bi_private		= w;
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- include/linux/device/bus.h | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index cdc4757217f9bb4b36b5c3b8a48bab45737e44c5..b18658bce2c3819fc1cbeb38fb98391d56ec3317 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -48,6 +48,7 @@ struct fwnode_handle;
-  *		will never get called until they do.
-  * @remove:	Called when a device removed from this bus.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-+ * @irq_get_affinity:	Get IRQ affinity mask for the device on this bus.
-  *
-  * @online:	Called to put the device back online (after offlining it).
-  * @offline:	Called to put the device offline for hot-removal. May fail.
-@@ -87,6 +88,8 @@ struct bus_type {
- 	void (*sync_state)(struct device *dev);
- 	void (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
-+	const struct cpumask *(*irq_get_affinity)(struct device *dev,
-+			unsigned int irq_vec);
- 
- 	int (*online)(struct device *dev);
- 	int (*offline)(struct device *dev);
+For bcache part, Acked-by: Coly Li <colyli@suse.de>
 
--- 
-2.47.0
+Thanks.
 
+Coly Li
 
