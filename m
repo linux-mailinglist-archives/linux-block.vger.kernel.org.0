@@ -1,141 +1,134 @@
-Return-Path: <linux-block+bounces-14857-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14859-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563B89E45DD
-	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2024 21:36:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 481AF9E44F4
+	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2024 20:44:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F1DDBE5FDE
-	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2024 18:08:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E10C7B684C2
+	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2024 18:28:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7EF1C3BF0;
-	Wed,  4 Dec 2024 18:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4mC2dhz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FB31B6CF9;
+	Wed,  4 Dec 2024 18:27:06 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15EB1B81B2;
-	Wed,  4 Dec 2024 18:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB471A8F61
+	for <linux-block@vger.kernel.org>; Wed,  4 Dec 2024 18:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733335356; cv=none; b=WaP9qfNpTPMUNi6hDQlmQRcWb/ddRQuxF5Uzo7zy/t51xOknJyfaOKwRqDfcl8nSgsNFdMC5zqXzHppqGOa4MWp7OSTbDToUN4Q0IOgc0og/bSYKMXEKHTu6xEztfpWqqXB/xYijEJvIeRJ0MPPN/dqY6Nx1D0O/OdoMc8+4L5w=
+	t=1733336826; cv=none; b=setXiE9b3nnj6gNGGfupSMpPfJsKY/B5G26XnEXDy/e22LZaKGgBR8z4pdjZzR8kTcqSts4ABwtrWekMx99LCgRnq8qR5rP5liFOkuYEltM39H00xP7+Zdlsbi9QeU2sgkPbenJTx4TCw+NOLXINem6fpZkkGsKnybuamTdaAnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733335356; c=relaxed/simple;
-	bh=EWlGeWIZlGf9L/T7F3lAx08YDAcTTUnCbhcrX18fs7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b6rfbqJIttM8DnjAY6jFz3SDZNSu6q4ee7ZYfOhHP7OyBZzLWiqfN2c28Vgr+STTrgcalgVYBQTBa26WSnaXOWGsaCv2JybDrYmh1CDERlgEVAg4oNQuyZqu358xCIGmeGkz3Mhp7KlNwytKOl3ihT7LROV6IoSJYw3q3gYGpI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c4mC2dhz; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7e6cbf6cd1dso40611a12.3;
-        Wed, 04 Dec 2024 10:02:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733335354; x=1733940154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7V53GFvkYgl3GGn7NQiYaXdsYVvKlvlq6z/L7Et1GuE=;
-        b=c4mC2dhzix4yYqLOwA4Oe12TzeJiiiG9I0iAiwVRtiJGtH1zTKg5BHAVpzrW8voNOm
-         cQhX0IjWdRz52doJXc+ZfJSBlMF+0zxSxHF4pB49s2nsAwCaiKVA8AEJ9CcSM7SsmwXE
-         Pb+k1LqfM8rnOaLik+toPwYq+9YuRCQx+ew2YIwcI10Wwc2FAtkJPvlPaKw86FW9l2Al
-         ILyftEtZ9VckbNama/D0XYNMGKTNP+FBUEtBbHj/tyxpN4deeolMt99CspaM40TQkZAU
-         9VH1zc8RKbM5cxRwDr9IJqfLNGZgFgYx8pvU0BeQsXVF0vVFGK9yTwkMXsjAH8yU3Vsk
-         46QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733335354; x=1733940154;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7V53GFvkYgl3GGn7NQiYaXdsYVvKlvlq6z/L7Et1GuE=;
-        b=sCBPbiyKqbyQwWFHoLhXSo5n4CVoblzEq3o3G+VqWsQkbZK9Ah6u+aTDLvGUzHCmxx
-         ACfc9XFCy58WjYkq07AYJpedumxzzmK9PVo/rscD9asq4SIPcOSGwzu2nRvx3/CLhVsG
-         FJU0R8HUsbm/XKuCGSy3SEd19UL6U7Pqpf7QLLc4XfJb3jVzGd4wmzIhgsOYVZIxzdj8
-         mCSV1XOs7T5t/IWeeVYYI0snqy/ZC8i2cEWdHuRZJF79IByv1DVBxb9oB4jrtG2D8VUL
-         T95oRKooLQKEqYtd2h/WFeFHZTnOo1EDrU0+UeIpnd7j7nLJ6e+EDuOlbibHqmuTD7m6
-         pOAg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8XY44m76YQKKHpQSap/RMnp7LJJNIEXiAcP29rkj8UH7NIvKICTE72bgFOZg2yNaCsy6fjgzPg2VA7w==@vger.kernel.org, AJvYcCX0Xfkt7lyzkqGOOP5ZcVzl3Jd15wElk4IKBIuT9YMYnS5/NYFvxjGKrl0KJL/HIxSlWpx9BLK0@vger.kernel.org, AJvYcCXjN1fqZxT9fwaRajhExXtKGMvhsRvnxDaRRQZ74z5H3cSF/wuG5UnUTCU7AZmEuSd7f9reujtUJYqpe8Qv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWHMVVFyd0j82EH2txHKonmzM6VoJmOYEwltmYY9xDzbbYlCBS
-	mGZSvWcSMp2Xvs2scz2bZMA10Ck3vG4rp4bS6meWtllhyopd2B+5
-X-Gm-Gg: ASbGnct1FuCUerMnYOya1eq+/QffbThsXwCn/Z2Kz50ZV1VDVAfiWG73Zo+jmD+FZ00
-	tUKeqI2/BMij/MlWiKmlFKtNzhTeQ8CzrXa0BoYEextSO+W63upLV7KIeySJIGYM8RmWE2UMPsq
-	ebT2xfCTjTqwIkXwsUbc3Bdz2SeXI44MfzeG+lundiiICOA69Af5tbzRfqc/L1y07E4NYitgr7P
-	hdkkZGUdnifjwnDD7wKEjynRntUd8/Z8zcHZHdPxrz6xfYUj61Yh/XzEqmkp6g9S2StfB8=
-X-Google-Smtp-Source: AGHT+IGfGswqHPS+sVCVBRyy6YYEmMkEmFcHRdeKF8fO4AaC3KytnZpu1qaS+nFgVW1qeM0JFQPoRQ==
-X-Received: by 2002:a05:6a21:330b:b0:1e0:d837:c929 with SMTP id adf61e73a8af0-1e16bdd32cemr8217439637.9.1733335353855;
-        Wed, 04 Dec 2024 10:02:33 -0800 (PST)
-Received: from KASONG-MC4.tencent.com ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7258947b48fsm2064736b3a.47.2024.12.04.10.02.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 04 Dec 2024 10:02:33 -0800 (PST)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>,
-	Desheng Wu <deshengwu@tencent.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] zram: refuse to use zero sized block device as backing device
-Date: Thu,  5 Dec 2024 02:02:23 +0800
-Message-ID: <20241204180224.31069-2-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241204180224.31069-1-ryncsn@gmail.com>
-References: <20241204180224.31069-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	s=arc-20240116; t=1733336826; c=relaxed/simple;
+	bh=LfnACZY+IGBSKQrkb+/ytdtTyFyom5OHVAQ3TPIPS3I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=MqNMaNd9ik866j89PFoCZx26j2ya1tn2ysQcxQ4K4MwON+jr90imdiwCG6b4MVRD0DxZcelTu6Ba5DQLk4Dt1x6ebiqQkXWO1jrGI7WORhzBUhh+MXyAO4/TAqb1LKkmthgFexFosx+YNOrmoIMR0ZEtFcxeZ9N3Mbwss4uvEFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-232-kuq-hB3BMVmopGaamRm1bQ-1; Wed, 04 Dec 2024 18:26:55 +0000
+X-MC-Unique: kuq-hB3BMVmopGaamRm1bQ-1
+X-Mimecast-MFC-AGG-ID: kuq-hB3BMVmopGaamRm1bQ
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 4 Dec
+ 2024 18:26:16 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Wed, 4 Dec 2024 18:26:16 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Tejun Heo' <tj@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+CC: Naresh Kamboju <naresh.kamboju@linaro.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>,
+	linux-block <linux-block@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>, "lkft-triage@lists.linaro.org"
+	<lkft-triage@lists.linaro.org>, Linux Regressions
+	<regressions@lists.linux.dev>, Anders Roxell <anders.roxell@linaro.org>,
+	"Arnd Bergmann" <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Jens
+ Axboe <axboe@kernel.dk>
+Subject: RE: s390: block/blk-iocost.c:1101:11: error: call to
+ '__compiletime_assert_557' declared with 'error' attribute: clamp() low limit
+ 1 greater than high limit active
+Thread-Topic: s390: block/blk-iocost.c:1101:11: error: call to
+ '__compiletime_assert_557' declared with 'error' attribute: clamp() low limit
+ 1 greater than high limit active
+Thread-Index: AQHbRlpA05groSrCOUKR/Ly6shl2PrLWPxCwgAAbZJCAAAuyAA==
+Date: Wed, 4 Dec 2024 18:26:16 +0000
+Message-ID: <be025b385bb94e0c92cd02ab57dc984b@AcuMS.aculab.com>
+References: <CA+G9fYsD7mw13wredcZn0L-KBA3yeoVSTuxnss-AEWMN3ha0cA@mail.gmail.com>
+ <5ffa868f-cbf0-42ae-ae10-5c39b0de05e7@stanley.mountain>
+ <7920126775c74fa5915afbeedcfe2058@AcuMS.aculab.com>
+ <c795c090-430a-45a6-88b2-94033d50dea2@stanley.mountain>
+ <Z1CUIT8zAqWOnot-@slm.duckdns.org>
+In-Reply-To: <Z1CUIT8zAqWOnot-@slm.duckdns.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: o24EsyK4Otz0EN3WMHeT6Hl8NyECK9T1qy7QYSr3dzs_1733336814
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Kairui Song <kasong@tencent.com>
+From: Tejun Heo
+> Sent: 04 December 2024 17:41
+>=20
+> Hello,
+>=20
+> On Wed, Dec 04, 2024 at 07:50:14PM +0300, Dan Carpenter wrote:
+> > Tejun probably reads everything to linux-block, but let's CC him explic=
+itly.
+>=20
+> Oh, I'm not. Thanks for cc'ing.
+>=20
+> > block/blk-iocost.c
+> >   2222                          TRACE_IOCG_PATH(iocg_idle, iocg, now,
+> >   2223                                          atomic64_read(&iocg->ac=
+tive_period),
+> >   2224                                          atomic64_read(&ioc->cur=
+_period), vtime);
+> >   2225                          __propagate_weights(iocg, 0, 0, false, =
+now);
+> >                                                           ^
+> > Why is "active" zero?  __propagate_weights() does a clamp() to 1 as min=
+imum and
+> > we've added new build time asserts so this breaks the build.
+> >
+> >   2226                          list_del_init(&iocg->active_list);
+> >
+...
+>=20
+> This is a good catch. It's impressive that this can be caught at compile
+> time. The upper limit can become zero but the lower limit should win as
+> that's there to protect against divide by zero, so I think the right thin=
+ig
+> to do is replacing clamp() with max(min()). Is someone interested in writ=
+ing
+> up the patch and sending it Jens' way?
 
-Setting a zero sized block device as backing device is pointless, and
-one can easily create a recursive loop by setting the uninitialized
-ZRAM device itself as its own backing device by (zram0 is uninitialized):
+Perhaps if written as:
+=09inuse =3D min(inuse, active) ?: 1;
+it might stop someone changing it back.
 
-    echo /dev/zram0 > /sys/block/zram0/backing_dev
+=09David
 
-It's definitely a wrong config, and the module will pin itself,
-kernel should refuse doing so in the first place.
+=09
 
-By refusing to use zero sized device we avoided misuse cases
-including this one above.
-
-Fixes: 013bf95a83ec ("zram: add interface to specif backing device")
-Reported-by: Desheng Wu <deshengwu@tencent.com>
-Signed-off-by: Kairui Song <kasong@tencent.com>
-Cc: stable@vger.kernel.org
----
- drivers/block/zram/zram_drv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 0ca6d55c9917..dd48df5b97c8 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -614,6 +614,12 @@ static ssize_t backing_dev_store(struct device *dev,
- 	}
- 
- 	nr_pages = i_size_read(inode) >> PAGE_SHIFT;
-+	/* Refuse to use zero sized device (also prevents self reference) */
-+	if (!nr_pages) {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
- 	bitmap_sz = BITS_TO_LONGS(nr_pages) * sizeof(long);
- 	bitmap = kvzalloc(bitmap_sz, GFP_KERNEL);
- 	if (!bitmap) {
--- 
-2.47.0
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
 
