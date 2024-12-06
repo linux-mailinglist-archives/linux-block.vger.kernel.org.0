@@ -1,199 +1,143 @@
-Return-Path: <linux-block+bounces-14975-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14967-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABABE9E6EA4
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 13:55:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 360639E6CC3
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 12:08:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2F77166F8E
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 12:53:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE203188384D
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 11:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2804820125F;
-	Fri,  6 Dec 2024 12:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCE01FBC88;
+	Fri,  6 Dec 2024 11:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fwvESw4z"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="MgjiqdzZ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A264201019
-	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 12:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C541FC0E1
+	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733489605; cv=none; b=G6yHQfoHHR0gaaRoJzRemk1LCYMjwFlQ5NHrcAPMmhPYG1O9ts4E7LDOuPrMIFBA0cDVEkCSit6uvYyY2aWKdCgxbZb79YeuxWdDzU9tJaUtL7HvvCuw/exFkIyt9cGuVUx6DGbnqXBN1IZVCYkU+WxjiGALpmkTu7RtncpOaak=
+	t=1733483333; cv=none; b=VH3z14kodM5H/CFIHhHbZ2MWXGVhke0omDe6P4mdBN9gmWmtZ+vIHl3QkHHML1NT+aVx7nb3VhD1GZZ1hH8Q1tgsTm87fn8L7Jxccsh3nEfdQXLgBtz4BVLSwRRYfiCh3ZUDeDzowroR+WD+uByAzAZ++Nf4SGMK/utRaORgVMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733489605; c=relaxed/simple;
-	bh=3gyn0P2WBGi8VdVYfuLo1gQO5OT3TgYcL5YCwlOpEnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=EGvmFzLjlRO5rHa79SeaAlRrNCFn8nc9sKNO1n6khbytSponM/CFMjlOEnNDUJV/l1ut+jKNLtAttinsMAlFTFLZhaKfXa0W8AbD9dp/x6N38n74D33fkpWKnNYZOKfnrMzvcvy71Z7POCuq6pzJpw2Q7B/Jojw+WYAxVLU7BZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fwvESw4z; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20241206125314epoutp0198aa7bfa5f071ceda3f3f2892e9585b2~Ol5ogJ4bd1686016860epoutp01L
-	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 12:53:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20241206125314epoutp0198aa7bfa5f071ceda3f3f2892e9585b2~Ol5ogJ4bd1686016860epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1733489594;
-	bh=r0eb+1efv9hue/wz6nmaPD5kfRQiRJaq4jva+IfysW0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fwvESw4zNiq3NLNBrbRJjgXfIhBgYKtTOyZ2q67KGRHLmeOOxL0PKoZAtiR37qOt5
-	 fDp/DbyBCKxdbq65tkzXbKNmz8Dt0D9kpyAjY+IKI6dc5TyHlnFPjhaqoIL/7jLFJ5
-	 DvQTQBFz5nklmydT6JYnb5bXZFZ7ojiolHpu0mok=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20241206125314epcas5p2d4513540aec6da02541338747e6d2156~Ol5n_IMSa3164331643epcas5p25;
-	Fri,  6 Dec 2024 12:53:14 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Y4WQK11Vzz4x9Pp; Fri,  6 Dec
-	2024 12:53:13 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C2.38.19933.8B3F2576; Fri,  6 Dec 2024 21:53:13 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20241206100326epcas5p17d4dad663ccc6c6f40cfab98437e63f3~OjlYLUq262561725617epcas5p1Q;
-	Fri,  6 Dec 2024 10:03:26 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20241206100326epsmtrp1adc8403b8ba8b2f0edff705221848541~OjlYKdIiS3264032640epsmtrp1M;
-	Fri,  6 Dec 2024 10:03:26 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-c4-6752f3b81d45
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D9.D0.18729.EEBC2576; Fri,  6 Dec 2024 19:03:26 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20241206100325epsmtip119b3f07b19ba66c4ef8dd431a5ef4e75~OjlWi51oG0795007950epsmtip1K;
-	Fri,  6 Dec 2024 10:03:24 +0000 (GMT)
-Date: Fri, 6 Dec 2024 15:25:36 +0530
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: Keith Busch <kbusch@meta.com>
-Cc: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-	io-uring@vger.kernel.org, sagi@grimberg.me, asml.silence@gmail.com, Keith
-	Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv11 03/10] io_uring: add write stream attribute
-Message-ID: <20241206095536.pxnjbsaxg5jfaixo@green245>
+	s=arc-20240116; t=1733483333; c=relaxed/simple;
+	bh=W4VuhT+Jm07xuaoOKTSneZ6zXj4xO3p37XsQxo6QhR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NmcrlLNHC+kNug5KOAa2BbqNEbU6zGLgQKiMH7X9woqCjtGQQDpCDC6P7+Do5KFYF74vszzos3jxBVqmZ4v5szhKI3s7RoZyPMx97aRffZh64IysAE2EzmaX8mkSXXbJd6oEd2F/F8w7/Jpxi2ZmQRGB78+69sEn7o4EVOM2ieU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=MgjiqdzZ; arc=none smtp.client-ip=17.58.6.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733483330;
+	bh=NhyG+EmDBcuL7ITc5tFv2+rP51hoW90ADGxMFzERI+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=MgjiqdzZfTmb/mVFTbzsypOWruuPXKPmqalwnrapBSSPRX9ZBXWuKx/rXEQNHK2pa
+	 Owdt0fT/DfIcknjmrc9RiPQm03DTgyCIfZaA0Ct84DRgRPn41GH/9ATt9WarD4oB7Z
+	 kp1tye/lvFsVtcUt9wEaRY3KIi4c4XR2lvGXACZO95dn1BzrfkmojzfeVy6LNqPP4n
+	 cuKwE61BSO3ibR5Zaj2OZLFYfkZ3aOGDENNFUeS+do+P7PcdFzPCx3SylOoxqhlQzu
+	 3vBrnTd0dnstMjHvqU/2HZ8ig8tIq43Kbs7RsrkBBEg+Xa3q76Kaj+3nG3pAqDsniz
+	 8LIg8qyWiAoMg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 604B31801BD;
+	Fri,  6 Dec 2024 11:08:42 +0000 (UTC)
+Message-ID: <71d9c99f-aa7d-4697-8561-17b54cfe97c6@icloud.com>
+Date: Fri, 6 Dec 2024 19:08:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241206015308.3342386-4-kbusch@meta.com>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRmVeSWpSXmKPExsWy7bCmuu7Oz0HpBoeOM1rMWbWN0WL13X42
-	i5WrjzJZvGs9x2Ix6dA1RoszVxeyWOy9pW2xZ+9JFov5y56yW6x7/Z7Fgctj56y77B7n721k
-	8bh8ttRj06pONo/NS+o9dt9sYPM4d7HC4/MmuQCOqGybjNTElNQihdS85PyUzLx0WyXv4Hjn
-	eFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKADlRTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2
-	SqkFKTkFJgV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGZv27mIsWCFYce3LYtYGxvd8XYwcHBIC
-	JhJ/nmp3MXJxCAnsZpSYM/sxI4TziVGibf87NgjnG6PE2rMTmbsYOcE67i1qYIJI7GWUeLl3
-	MSuE8wyof9YsFpAqFgEViZ49J9lBbDYBdYkjz1sZQWwRAUWJ88BQALGZQRoWnooBsYUFnCSu
-	zn4GFucVMJOYu3s2lC0ocXLmE7CZnALmEiuvtzKB2KICMhIzln6Fumgph8TK9eYQ/7hIvFwT
-	DhEWlnh1fAs7hC0l8bK/DcpOl/hx+SkThF0g0XxsHyOEbS/ReqqfGeK0DIk/q89D1chKTD21
-	jgkizifR+/sJVJxXYsc8GFtJon3lHChbQmLvuQYo20Pi9aXn0CDdzihx40Y30wRG+VlIXpuF
-	ZB+EbSXR+aGJdRbQO8wC0hLL/3FAmJoS63fpL2BkXcUomVpQnJueWmxaYJSXWg6P7+T83E2M
-	4OSr5bWD8eGDD3qHGJk4GA8xSnAwK4nwVoYFpgvxpiRWVqUW5ccXleakFh9iNAVG1URmKdHk
-	fGD6zyuJNzSxNDAxMzMzsTQ2M1QS533dOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgUlGi0fVycU1
-	SmP5ERnBLRYSPQY36g7OmGD+tDKz94udhGRq1rHH3M/4YlaZdL+XK7k3I4uP64jjtIt/PqUz
-	zH/lvWVa2DLbxTeFl7Bu06vg2Vc8YdLGlayph3YKe/qbfrnUMTspfrGEUa18oLdUPd+WuPWm
-	R/ur1j7w8CjkWayidPeU288dhgIpS+deZH0Qr7vR5T/XTi/z6Dk3XrabqTm6VL15M2sX+y1x
-	LYYZzjvNzhxlnL5O8nvO3A+ro0OXZv5icXT/9Hn7tNDHrFP1qmdP4L16yPnxjckzuG9yaB+4
-	+vdUhcnvBc9i2Lg45j1hOyAi6NNoyD+n2TTSxvWdxQqGPYGWMjtFs1OFS38dv6XEUpyRaKjF
-	XFScCADZvOB4RwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBLMWRmVeSWpSXmKPExsWy7bCSnO6700HpBjd/q1vMWbWN0WL13X42
-	i5WrjzJZvGs9x2Ix6dA1RoszVxeyWOy9pW2xZ+9JFov5y56yW6x7/Z7Fgctj56y77B7n721k
-	8bh8ttRj06pONo/NS+o9dt9sYPM4d7HC4/MmuQCOKC6blNSczLLUIn27BK6M3t19TAW3+Cq+
-	XD/L3MC4m6eLkZNDQsBE4t6iBqYuRi4OIYHdjBLdc5rYIRISEqdeLmOEsIUlVv57zg5R9IRR
-	4vzzbWBFLAIqEj17ToLZbALqEkeet4I1iAgoSpwHOgWkgVngGaPErj0rmEESwgJOEldnP2MD
-	sXkFzCTm7p4NZgsJJEvc27eEESIuKHFy5hMWEJsZqGbe5odAvRxAtrTE8n8cIGFOAXOJlddb
-	mUBsUQEZiRlLvzJPYBSchaR7FpLuWQjdCxiZVzFKphYU56bnFhsWGOallusVJ+YWl+al6yXn
-	525iBEeOluYOxu2rPugdYmTiYDzEKMHBrCTCWxkWmC7Em5JYWZValB9fVJqTWnyIUZqDRUmc
-	V/xFb4qQQHpiSWp2ampBahFMlomDU6qByZXHNYLBSrfJ8H/sqbLEGS1Lzm+8GL7srNHaM8qS
-	DdryO1i9Vwt3fD3xeNd/1U/5d59MkeaPfnphV+Ld01oyW34I/2o4b7NGt7lofdNP5l2fpKYJ
-	151ap655M3du+bnDDzcY70vXWfFd4OvSOr2N/w+KKt8J+HHv1V0D5flubq25Ky29249vYYnp
-	+ML2dutp1szZO+Kr33PVKkYpSOVnf3/4vvFrTdVDy+WT+bwTlx0X0lm7/W1X2mnWSRY/FRKN
-	QusnPlvM1nUnrnpNMafm1l+L2LgNz3TcPcHekLl01RdBWXPJpBc8Wur+Hv+P2O3a+O6y1dS5
-	Sr9Y2m85uHS/D5zXGOgo578wSHbS4mcnDiuxFGckGmoxFxUnAgDti1QBCwMAAA==
-X-CMS-MailID: 20241206100326epcas5p17d4dad663ccc6c6f40cfab98437e63f3
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_63789_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20241206100326epcas5p17d4dad663ccc6c6f40cfab98437e63f3
-References: <20241206015308.3342386-1-kbusch@meta.com>
-	<20241206015308.3342386-4-kbusch@meta.com>
-	<CGME20241206100326epcas5p17d4dad663ccc6c6f40cfab98437e63f3@epcas5p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
+ then adapt for various usages
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+ netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+ <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+ <7ylfj462lf6g3ej6d2cmsxadawsmajogbimi7cl4pjemb7df4h@snr73pd7vaid>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <7ylfj462lf6g3ej6d2cmsxadawsmajogbimi7cl4pjemb7df4h@snr73pd7vaid>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: UViy4Z1HSo-8jLvn8-7u7fwR8c_nYln5
+X-Proofpoint-GUID: UViy4Z1HSo-8jLvn8-7u7fwR8c_nYln5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-06_07,2024-12-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 suspectscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2412060082
 
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_63789_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On 2024/12/6 15:21, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Thu, Dec 05, 2024 at 08:10:13AM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Constify the following API:
+>> struct device *device_find_child(struct device *dev, void *data,
+>> 		int (*match)(struct device *dev, void *data));
+>> To :
+>> struct device *device_find_child(struct device *dev, const void *data,
+>>                                  device_match_t match);
+>> typedef int (*device_match_t)(struct device *dev, const void *data);
+>> with the following reasons:
+>>
+>> - Protect caller's match data @*data which is for comparison and lookup
+>>   and the API does not actually need to modify @*data.
+>>
+>> - Make the API's parameters (@match)() and @data have the same type as
+>>   all of other device finding APIs (bus|class|driver)_find_device().
+>>
+>> - All kinds of existing device match functions can be directly taken
+>>   as the API's argument, they were exported by driver core.
+>>
+>> Constify the API and adapt for various existing usages by simply making
+>> various match functions take 'const void *' as type of match data @data.
+> 
+> With the discussion that a new name would ease the conversion, maybe
+> consider device_find_child_device() to also align the name (somewhat) to
+> the above mentioned (bus|class|driver)_find_device()?
+> i finally select this squashing method after considerations as shown by
+link below:
+https://lore.kernel.org/all/3a4de1bb-3eb2-469a-8ff7-ff706804f5bb@icloud.com
 
-On 05/12/24 05:53PM, Keith Busch wrote:
->From: Keith Busch <kbusch@kernel.org>
->
->Adds a new attribute type to specify a write stream per-IO.
->
->Signed-off-by: Keith Busch <kbusch@kernel.org>
->---
-> include/uapi/linux/io_uring.h |  9 ++++++++-
-> io_uring/rw.c                 | 28 +++++++++++++++++++++++++++-
-> 2 files changed, 35 insertions(+), 2 deletions(-)
->
->diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->index 5fa38467d6070..263cd57aae72d 100644
->--- a/include/uapi/linux/io_uring.h
->+++ b/include/uapi/linux/io_uring.h
->@@ -123,7 +123,14 @@ struct io_uring_attr_pi {
-> 	__u64	rsvd;
-> };
->
->-#define IORING_RW_ATTR_FLAGS_SUPPORTED (IORING_RW_ATTR_FLAG_PI)
->+#define IORING_RW_ATTR_FLAG_WRITE_STREAM (1U << 1)
->+struct io_uring_write_stream {
-Nit:
-You can consider keeping a io_uring_attr_* prefix here, so that it aligns
-with current attribute naming style.
-s/io_uring_write_stream/io_uring_attr_write_stream
+device_find_child() is consist with existing device_find_child_by_name()
+and device_find_any_child, device's child is also a device, so we may
+not need the tail _device().
 
->+	__u16	write_stream;
->+	__u8	rsvd[6];
->+};
->+
->+#define IORING_RW_ATTR_FLAGS_SUPPORTED (IORING_RW_ATTR_FLAG_PI | 	\
->+					IORING_RW_ATTR_FLAG_WRITE_STREAM)
->
-> /*
->  * If sqe->file_index is set to this for opcodes that instantiate a new
->diff --git a/io_uring/rw.c b/io_uring/rw.c
->index a2987aefb2cec..69b566e296f6d 100644
->--- a/io_uring/rw.c
->+++ b/io_uring/rw.c
->@@ -299,6 +299,22 @@ static int io_prep_rw_pi(struct io_kiocb *req, struct io_rw *rw, int ddir,
-> 	return ret;
-> }
->
->+static int io_prep_rw_write_stream(struct io_rw *rw, u64 *attr_ptr)
->+{
->+	struct io_uring_write_stream write_stream;
->+
->+	if (copy_from_user(&write_stream, u64_to_user_ptr(*attr_ptr),
->+			   sizeof(write_stream)))
->+		return -EFAULT;
->+
->+	if (!memchr_inv(write_stream.rsvd, 0, sizeof(write_stream.rsvd)))
-This should be:
-	if (memchr_inv(write_stream.rsvd, 0, sizeof(write_stream.rsvd)))
+> Do you have a merge plan already? I guess this patch will go through
+> Greg's driver core tree?
+> 
 
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_63789_
-Content-Type: text/plain; charset="utf-8"
+this patch series is already squashing solution.
 
+yes. hope it move toward mainline by Greg's driver core tree.
 
-------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_63789_--
+(^^)(^^)
+
+> Best regards
+> Uwe
+
 
