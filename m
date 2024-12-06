@@ -1,128 +1,184 @@
-Return-Path: <linux-block+bounces-14966-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14973-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED569E6CB6
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 12:04:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 902139E6E9F
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 13:55:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4EED18842D7
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 11:04:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7E8A18841A9
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 12:53:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DDE11FC7E9;
-	Fri,  6 Dec 2024 11:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1059F20125F;
+	Fri,  6 Dec 2024 12:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DLcv7mZx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="APm+a/HL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311F21B6D04
-	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 11:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021A7201019
+	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 12:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733483081; cv=none; b=rBcvun3v6f4usmoSFChbZaQIkAUw74UpjI1OOOY867viQ1AVgIFzGVJ0JTUZWgcpPTk/N1kX73+Bx+O9igsi7WHp/RRu2C6P08Dju1YybGtIWO7T/wVYKp9hG5uTO3bm+4xp1qM1vmBE2VUkBXVpFeVMyhoXRvHNfwGAQK/n10M=
+	t=1733489585; cv=none; b=UcUGulx/zyvD9Rawsa1j17KDtesSDwiAKGiKprkAl0/K+HTUmRRTcKjrtdI4udyYMLV0L8tgTL3LsMZmTdLj3SLlDYMSMv5QtwCR+5o4s8mufpKgZ1t8rZUkyKOMTMWWsAYEiZi9GRhZIGMnZ/LtUO9tnuvTqS958YsSnaqnUAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733483081; c=relaxed/simple;
-	bh=csTNFJhnxls1cv0z247gJ0fo4gjRdpnf5Qd2cSuxSYc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J/8J/cAkJbAli2WVI5tOBfF1anG8hJFqGVySxW/92IL/zwDo81VSt4d/mFccYKftUYTZ5/lytyLZkhrjIIwZlybeIDrq5xVWyuWUk5ZfQ63lJioKevjfwdAa5a9oMBEtkbfMG7VNQSPwbNXtKE0f4awaRQ7yxj3h4dFPYx1kW7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DLcv7mZx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733483078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4DhosPWwOMnmyw0oxcd0Zk04TO0yhwigr4VF/94iATo=;
-	b=DLcv7mZxal+OWPh0MGYw49FsJtc1afdgG0GbEOZW4k/v8RGme1YQA+YAShoIuN4tdYHeUL
-	RVZfLybHNLD63A8voMpIqxzgRaVQKxu4igjLz/Bgssx6okAb10I4dOtnlh2hRGo6TqotKB
-	PbnazjehfuK+Dqc9lP4WEd40uUGB5os=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-0LW-d8tSPDyPj6ZS520sCg-1; Fri,
- 06 Dec 2024 06:04:36 -0500
-X-MC-Unique: 0LW-d8tSPDyPj6ZS520sCg-1
-X-Mimecast-MFC-AGG-ID: 0LW-d8tSPDyPj6ZS520sCg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C76891955F42;
-	Fri,  6 Dec 2024 11:04:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 96BFE19560AD;
-	Fri,  6 Dec 2024 11:04:34 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: linux-block@vger.kernel.org,
-	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH] blktests: src/miniublk.c: fix unaligned mmap offset for 64K page size
-Date: Fri,  6 Dec 2024 19:04:27 +0800
-Message-ID: <20241206110427.976391-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1733489585; c=relaxed/simple;
+	bh=y0VIUwCi8/N4ph10yDOD/b8sjOJPAahtMDBwy8x/ljI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=hfAGPKd5IMu+n3I8pvaayx43gIHB+RP2IdSmUldErwdfYDtIDUWnPMJKkr2JaRmgYd4sa5YUPX5BMf5O8yXsGOx6qN56CW2innbgx0FPLVi7KbYfo4bifnFdEQc4Xzz9GUeWJw0lI5u6tXx1UTAJ8SUg7wFPiaXApNZOvdW/MCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=APm+a/HL; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241206125300epoutp0354c0e7847a374ebe0f97d6936018de34~Ol5a05xXD2576625766epoutp03F
+	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 12:53:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241206125300epoutp0354c0e7847a374ebe0f97d6936018de34~Ol5a05xXD2576625766epoutp03F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1733489580;
+	bh=4OJNnJBnwH5AjkM8+6MaCQIawqKuE3Tt2t5ExJemeYU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=APm+a/HLcxur9e0N1hOPpn/p+A6jCuAAPpdBGOrvzplDFWqZPQOKqTlFg06GNBXwE
+	 fUrD1QJLPfjk7MwbRdvWB9eLf1w5kGeKYu1T+kBQ7RsN/rPHJ2SLzKx8c+P3JM6Qsl
+	 4IfEUN7CzJilfmPah57wp3ytjImObHibre5Zkx44=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20241206125259epcas5p38639ea186fdca74c41747a056eb5474f~Ol5aJWY6e3108231082epcas5p3h;
+	Fri,  6 Dec 2024 12:52:59 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Y4WQ14zLWz4x9Pt; Fri,  6 Dec
+	2024 12:52:57 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D1.92.29212.9A3F2576; Fri,  6 Dec 2024 21:52:57 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20241206091949epcas5p14a01e4cfe614ddd04e23b84f8f1036d5~Oi-S5sHXU0626906269epcas5p1c;
+	Fri,  6 Dec 2024 09:19:49 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20241206091949epsmtrp1f1c692623e4680623a5ad602cea05e40~Oi-S4rbEU0642506425epsmtrp1b;
+	Fri,  6 Dec 2024 09:19:49 +0000 (GMT)
+X-AuditID: b6c32a50-7ebff7000000721c-32-6752f3a91565
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1A.2B.18729.5B1C2576; Fri,  6 Dec 2024 18:19:49 +0900 (KST)
+Received: from ubuntu (unknown [107.99.41.245]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241206091947epsmtip1092b8be5ed88966e574960ec54ce5b15~Oi-Q9uuRY0867508675epsmtip1_;
+	Fri,  6 Dec 2024 09:19:47 +0000 (GMT)
+Date: Fri, 6 Dec 2024 14:41:55 +0530
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Keith Busch <kbusch@meta.com>
+Cc: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+	io-uring@vger.kernel.org, sagi@grimberg.me, asml.silence@gmail.com, Keith
+	Busch <kbusch@kernel.org>
+Subject: Re: [PATCHv11 07/10] block: expose write streams for block device
+ nodes
+Message-ID: <20241206091155.lems7wdnc4t5tvlf@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20241206015308.3342386-8-kbusch@meta.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmlu7Kz0HpBjPnKVnMWbWN0WL13X42
+	i5WrjzJZvGs9x2Ix6dA1RoszVxeyWOy9pW2xZ+9JFov5y56yW6x7/Z7Fgctj56y77B7n721k
+	8bh8ttRj06pONo/NS+o9dt9sYPM4d7HC4/MmuQCOqGybjNTElNQihdS85PyUzLx0WyXv4Hjn
+	eFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKADlRTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2
+	SqkFKTkFJgV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGZeu/WMsWM1bcW/tWbYGxnXcXYycHBIC
+	JhKrjv5l7mLk4hAS2MMocX7vdDYI5xOjxO2F16Ey3xglfu97zwTTcvBWG1TVXkaJswf6oJwn
+	jBJdrzrBqlgEVCR6Jp1g7GLk4GAT0JY4/Z8DJCwioChxHhgKIDazwDNGiYWnYkBsYYEgiZub
+	5rOC2LxAC97u+8oCYQtKnJz5BMzmFDCX6G6cyQiyS0JgKofE/q+PweZLCLhIXD1aBHGcsMSr
+	41vYIWwpiZf9bVB2ucTKKSvYIHpbGCVmXZ/FCJGwl2g91c8McVCGxMrJt1gg4rISU0+tY4KI
+	80n0/n4C9T2vxI55MLayxJr1C9ggbEmJa98b2SDu8ZCY8S0KEibbgcF45wLrBEa5WUj+mYVk
+	HYRtJdH5oYl1FlA7s4C0xPJ/HBCmpsT6XfoLGFlXMUqlFhTnpqcmmxYY6uallsNjOTk/dxMj
+	ONFqBexgXL3hr94hRiYOxkOMEhzMSiK8lWGB6UK8KYmVValF+fFFpTmpxYcYTYHxM5FZSjQ5
+	H5jq80riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnNTk0tSC2C6WPi4JRqYOL+IdUT+D3Z
+	8ozv7LVaDKGbUrZ/m++uLHMhwbhJ3iC9u7RbY8fXL3+4za7I2e378NSwIP3GqhN5E69tT3bj
+	Evn+ff250+kFUVICHofUS0sunkhd0ejG0/j+Zfv88yfnLJxxV2LmMr2J1lF8mpIu17MtPZ49
+	Ldgfqy+8Ltvbgk3htdNmoYnP9AwfnP5jfcR+tlFKy/NJ8w/xSKwKbNysdf/Mx+7O3/k+W+vv
+	cPS1GH3Ze9hEY0FKbvqSVpeabQJnwsNP3VQ3+VShZNvntEhn44bpS4Xnq5xt4Nk8WyNgeU7W
+	w9fxM92+b74tP8fr1IfFsbtXtf5k4JvM5jqh4OI3w9a70r6PmndV7u4q1RTul1RiKc5INNRi
+	LipOBABn7+M3PQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsWy7bCSnO7Wg0HpBj8ma1vMWbWN0WL13X42
+	i5WrjzJZvGs9x2Ix6dA1RoszVxeyWOy9pW2xZ+9JFov5y56yW6x7/Z7Fgctj56y77B7n721k
+	8bh8ttRj06pONo/NS+o9dt9sYPM4d7HC4/MmuQCOKC6blNSczLLUIn27BK6MzunTWAvuclX8
+	nn+YtYHxF0cXIyeHhICJxMFbbWxdjFwcQgK7GSWm3v3ACpGQlFj29wgzhC0ssfLfc3aIokeM
+	Etsu7GMESbAIqEj0TDoBZHNwsAloS5z+DzZUREBR4jzQJSD1zALPGCV27VkBNkhYIEji5qb5
+	YAt4gTa/3feVBcQWEkiWWN17gxEiLihxcuYTsDizgJnEvM0PmUHmMwtISyz/BzafU8Bcortx
+	JuMERoFZSDpmIemYhdCxgJF5FaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcHxoae5g
+	3L7qg94hRiYOxkOMEhzMSiK8lWGB6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5xV/0pggJpCeW
+	pGanphakFsFkmTg4pRqY6tff+e7Ft0fb/JkuZ4e34Iv0SYt5aj5sLTcp07/89KuFj7V+3B3/
+	ZTmaZx2ZNGUKt96PUqvIPlvxTVk+3/rFY8Gv+4+EbL5svPz207dHXr47bSB8vWL/+/AHtz+r
+	uGWZP5DVzE/Y1+R6mPXexnTd412LA9d2vn5cqr5EVXuXz2vvHVJnv0hsWl08rzKg5NAO4Yjp
+	XK4iFn/kn8xcaCXY5TH/0eyK7B+Pt/z4YJYTFn42Sf7A92Wsmw5Itu8t01tzv9k0/HANs3pz
+	65tejZ9xO3jyP3RME5xoH9Jy6/XUuSxBPeJzD+7LZgxt/H364LrTkqWFB2L9i5Pzrp078W/5
+	1OwXQmIe4g2V1ZwWdzfwKbEUZyQaajEXFScCABCLxzD+AgAA
+X-CMS-MailID: 20241206091949epcas5p14a01e4cfe614ddd04e23b84f8f1036d5
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----x2Ox1x5iNi7PYvDn9sIpGVgpr3_-t8l_a8xeGFysXFeU9Shi=_633c9_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241206091949epcas5p14a01e4cfe614ddd04e23b84f8f1036d5
+References: <20241206015308.3342386-1-kbusch@meta.com>
+	<20241206015308.3342386-8-kbusch@meta.com>
+	<CGME20241206091949epcas5p14a01e4cfe614ddd04e23b84f8f1036d5@epcas5p1.samsung.com>
 
-The 'offset' passed to mmap() has to be PAGE_SIZE aligned, which is
-always true for 4K page size, but not true for 64K page size.
+------x2Ox1x5iNi7PYvDn9sIpGVgpr3_-t8l_a8xeGFysXFeU9Shi=_633c9_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Fix it by adding helper of ublk_queue_max_cmd_buf_sz().
+On 05/12/24 05:53PM, Keith Busch wrote:
+>From: Christoph Hellwig <hch@lst.de>
+>
+>Export statx information about the number and granularity of write
+>streams, use the per-kiocb write hint and map temperature hints to write
+>streams (which is a bit questionable, but this shows how it is done).
+>
+>Signed-off-by: Christoph Hellwig <hch@lst.de>
+>Signed-off-by: Keith Busch <kbusch@kernel.org>
+>---
+> block/bdev.c |  6 ++++++
+> block/fops.c | 23 +++++++++++++++++++++++
+> 2 files changed, 29 insertions(+)
+>
+>diff --git a/block/bdev.c b/block/bdev.c
+>index 738e3c8457e7f..c23245f1fdfe3 100644
+>--- a/block/bdev.c
+>+++ b/block/bdev.c
+>@@ -1296,6 +1296,12 @@ void bdev_statx(struct path *path, struct kstat *stat,
+> 		stat->result_mask |= STATX_DIOALIGN;
+> 	}
+>
+>+	if ((request_mask & STATX_WRITE_STREAM) &&
+Need to remove a check for at the start of the function for this to
+work,
+something like this,
+-	if (!(request_mask & (STATX_DIOALIGN | STATX_WRITE_ATOMIC)))
++	if (!(request_mask & (STATX_DIOALIGN | STATX_WRITE_ATOMIC |
++		STATX_WRITE_STREAM)))
+		return;
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- src/miniublk.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/src/miniublk.c b/src/miniublk.c
-index 565aa60..73791fd 100644
---- a/src/miniublk.c
-+++ b/src/miniublk.c
-@@ -472,14 +472,24 @@ static struct ublk_dev *ublk_ctrl_init()
- 	return dev;
- }
- 
--static int ublk_queue_cmd_buf_sz(struct ublk_queue *q)
-+static int __ublk_queue_cmd_buf_sz(unsigned depth)
- {
--	int size =  q->q_depth * sizeof(struct ublksrv_io_desc);
-+	int size =  depth * sizeof(struct ublksrv_io_desc);
- 	unsigned int page_sz = getpagesize();
- 
- 	return round_up(size, page_sz);
- }
- 
-+static int ublk_queue_max_cmd_buf_sz(void)
-+{
-+	return __ublk_queue_cmd_buf_sz(UBLK_MAX_QUEUE_DEPTH);
-+}
-+
-+static int ublk_queue_cmd_buf_sz(struct ublk_queue *q)
-+{
-+	return __ublk_queue_cmd_buf_sz(q->q_depth);
-+}
-+
- static void ublk_queue_deinit(struct ublk_queue *q)
- {
- 	int i;
-@@ -516,8 +526,7 @@ static int ublk_queue_init(struct ublk_queue *q)
- 	q->tid = gettid();
- 
- 	cmd_buf_size = ublk_queue_cmd_buf_sz(q);
--	off = UBLKSRV_CMD_BUF_OFFSET +
--		q->q_id * (UBLK_MAX_QUEUE_DEPTH * sizeof(struct ublksrv_io_desc));
-+	off = UBLKSRV_CMD_BUF_OFFSET + q->q_id * ublk_queue_max_cmd_buf_sz();
- 	q->io_cmd_buf = (char *)mmap(0, cmd_buf_size, PROT_READ,
- 			MAP_SHARED | MAP_POPULATE, dev->fds[0], off);
- 	if (q->io_cmd_buf == MAP_FAILED) {
--- 
-2.47.0
+>+	    bdev_max_write_streams(bdev)) {
+>+		stat->write_stream_max = bdev_max_write_streams(bdev);
+I think write_stream_granularity needs to be added.
+stat->write_stream_granularity = bdev_write_stream_granularity(bdev); 
 
+Otherwise, patch looks good to me.
+
+--Nitesh Shetty
+
+------x2Ox1x5iNi7PYvDn9sIpGVgpr3_-t8l_a8xeGFysXFeU9Shi=_633c9_
+Content-Type: text/plain; charset="utf-8"
+
+
+------x2Ox1x5iNi7PYvDn9sIpGVgpr3_-t8l_a8xeGFysXFeU9Shi=_633c9_--
 
