@@ -1,118 +1,138 @@
-Return-Path: <linux-block+bounces-14991-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-14995-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DBEC9E7A41
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 21:58:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B0509E7BAE
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 23:24:26 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A65318819E8
-	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 20:58:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5B63283C77
+	for <lists+linux-block@lfdr.de>; Fri,  6 Dec 2024 22:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029C51F239D;
-	Fri,  6 Dec 2024 20:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408731F4706;
+	Fri,  6 Dec 2024 22:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="opdIpAAC"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="eEBHxEti"
 X-Original-To: linux-block@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EADF1F236B;
-	Fri,  6 Dec 2024 20:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAE21D04A4
+	for <linux-block@vger.kernel.org>; Fri,  6 Dec 2024 22:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733518706; cv=none; b=Y1RwqErzoq6ACEd300/kcYN3oX4EV5lZ9B8De2uIPS4LgjuYgwDRaFZnzklNFrK+KbfurHan5GJVEya2SDUSzvO2Cj6o3jbtAcrZAQP81ZPaXqc+BmjlIq7Z+pkJ5vfl+yMvH4PGkY6m+0W6qTSMCVFYiqXtslZa4KvuT/fso3w=
+	t=1733523853; cv=none; b=UMspn412sRzTP/2mkBuADiZu/XqMczEzs54Y3BsY6WeG7XNfuQ3NOnwVe3aJvtf4nng+4dbiWcyuth0B+af7pmqE5vUvG0IcRQUU8BLmT6zrahFjLdLF5AX/tUFSiIJeHsoLLNmas1utiIDcOa5fF33qN1pUrBOYc94Qyu646KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733518706; c=relaxed/simple;
-	bh=AoYJEduDKAfmUXw66punVqpLvMHGpz/t+LVYPT/z7pE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PTE0LzgcEYhomE5+EfGy48xWLh+cLZxNq/uwTh6WHo6tb9XM1IEmlg6u+0XGOJLMFhShkwNNrnNwypY5CtJyUJCH1WfybwbICchqnIEwswWtdePDXwWQzRero4wKc5NeTVo0coPRFPDKgTxf35um/u/bVOhntIbNICecjFd5/s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=opdIpAAC; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.128.154] (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8B63620ACD7A;
-	Fri,  6 Dec 2024 12:58:18 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8B63620ACD7A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1733518699;
-	bh=M9PuEUd7fHK0twjnpmT4sQ2WiGKSyXN5nPrU+06sRxI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=opdIpAACnQeStJ33oACe6p52ZM8f0Sws7Fv8oVZEtnJ34oxYkj2Ifncn0UBE7+8VM
-	 /Rer5IHWNKL+Om4cBhthsawIs+kQdevr3ykVw21CBvfVnNLhAZ1lcWLQbVr0aJDoH2
-	 0Lv+tHrW7mbf2ysXMzyMfTT7x/zNVB+cEVkkvmJU=
-Message-ID: <dab77729-682f-4182-9fb2-cd522ac29b5f@linux.microsoft.com>
-Date: Fri, 6 Dec 2024 12:58:17 -0800
+	s=arc-20240116; t=1733523853; c=relaxed/simple;
+	bh=r3koaxsuV7KRYMQQuL1iABt/DZExJ5OsjL7aJy+EW8s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G/ecFXEB8GzQM8b7bMXX/4IxAdHFxcWre2ABnLFhoaXqjdZ+R5miCf2g0WHzzw0xxFTZdLj4BYtI+ZkZ+BCjcCa5EaHJBEh00Fs43vxEBT1laThiR7H8/BOSm47m9GSyiRWKqzbMDuUXdgVbOQJpuuhqonkh9vpvlkhZjimuWLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=eEBHxEti; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B6Lh9qM030333
+	for <linux-block@vger.kernel.org>; Fri, 6 Dec 2024 14:24:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=eoz5xj3OlJBjoZHpah
+	qecFAxl1o6Z2RPCniU5IcA/qM=; b=eEBHxEti/bAnRVfXulFldRSKPWw0qFq2x3
+	c3Pd8K+teNcXkJ43y4Rvw15j6ngrp0yz+2/71PSPPGQ5Q5bI942kZ1oHYMzxAvWn
+	3m+AW+p3fSTvcbOnF6luXY34LojeckIwR+c92lK4sxzzjwvLdNqF8gTd+8vgyxRa
+	YccmM14u33WBk9tWtmRmSt6+GHtjhEHP59Bvbry4R1VWyTt/m4kRhZsDCMrGPrX9
+	KogTkr6c1+Wk/ngVKg9tM+8tsas+SZMQGRysb64IqssiCGNYbpoG9rVrGUV6T3Xq
+	VS1p1TLllBFmv0khgSvNLB22T7fpU9hMZ1BTORyh87wynNYE7bPw==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 43c592taq2-15
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Fri, 06 Dec 2024 14:24:10 -0800 (PST)
+Received: from twshared3815.08.ash9.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Fri, 6 Dec 2024 22:24:03 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id E2A8015B8CB67; Fri,  6 Dec 2024 14:18:26 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <axboe@kernel.dk>, <hch@lst.de>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+        <io-uring@vger.kernel.org>
+CC: <sagi@grimberg.me>, <asml.silence@gmail.com>, <anuj20.g@samsung.com>,
+        <joshi.k@samsung.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv12 00/12] block write streams with nvme fdp
+Date: Fri, 6 Dec 2024 14:17:49 -0800
+Message-ID: <20241206221801.790690-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, cocci@inria.fr,
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
- dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- linux-scsi@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-block@vger.kernel.org, linux-wireless@vger.kernel.org,
- ath11k@lists.infradead.org, linux-mm@kvack.org,
- linux-bluetooth@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-rpi-kernel@lists.infradead.org, ceph-devel@vger.kernel.org,
- live-patching@vger.kernel.org, linux-sound@vger.kernel.org,
- etnaviv@lists.freedesktop.org, oss-drivers@corigine.com,
- linuxppc-dev@lists.ozlabs.org, Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [PATCH v2 00/21] Converge on using secs_to_jiffies()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-References: <20241115-converge-secs-to-jiffies-v2-0-911fb7595e79@linux.microsoft.com>
- <b9fcb12a-b7a4-4c33-836e-67109ce07deb@intel.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <b9fcb12a-b7a4-4c33-836e-67109ce07deb@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: O1Yyu9TcnErH0vAUkNbZc1l2VPVzSUeD
+X-Proofpoint-ORIG-GUID: O1Yyu9TcnErH0vAUkNbZc1l2VPVzSUeD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
 
-On 11/29/2024 4:57 AM, Przemek Kitszel wrote:
-> 
-> [removed most non-list recipients, it's just too much]
-> 
-> On 11/15/24 10:26 PM, Easwar Hariharan wrote:
-<snip>
->>
->> ---
->> Changes in v2:
->> - EDITME: describe what is new in this series revision.
->> - EDITME: use bulletpoints and terse descriptions.
->> - Link to v1: https://lore.kernel.org/r/20241115-converge-secs-to-
->> jiffies-v1-0-19aadc34941b@linux.microsoft.com
-> 
-> that is not a proper changelog, you were supposed to edit those
-> placeholder entries; please look around for examples
-> 
-> There is also just too much recipients. Please split up your patches
-> into smaller pieces. You will also learn the process on a smaller
-> sample.
-> 
-> And definitively please wait for 48h before reposting such big series.
+From: Keith Busch <kbusch@kernel.org>
 
-Yes, sorry, I sent out a v2 in a moment of panic on including the
-already accepted patch in v1. I failed to edit the changelog in that
-same panic. I'll try to not panic and do better in the future.
+changes from v11:
 
-> 
-> Regarding code - you could also convert msecs_to_jiffies(const * HZ),
-> there are 10 that are greppable.
-> 
+ - Place the write hint in an unused io_uring SQE field
+   - Obviates the need to modify the external "attributes" stuff that
+     support PI
+   - Make it a u8 to match the type the block layer supports
+   - And it's just easier to use for the user
 
-Those seem to be mistakes. const*HZ is a seconds-denominated timeout,
-being passed to msecs_to_jiffies() which will treat it as a
-millisecond-denominated timeout resulting in an excessively long
-timeout. I suppose that's better than a too-short timeout, and
-apparently it's been working fine all along since hardware responds
-before the too-long timeout expires. Half of them are in
-drivers/scsi/arcmsr/arcmsr_hba.c and the pattern has apparently been
-there since 2010.
+ - Fix the sparse warnings from FDP definitions
+   - Just use the patches that Christoph posted a few weeks ago since
+     it already defined it in a way that makes sparse happy; I just made
+     some minor changes to field names to match what the spec calls them
 
-Thanks,
-Easwar
+ - Actually include the first patch in this series
+
+Christoph Hellwig (7):
+  fs: add a write stream field to the kiocb
+  block: add a bi_write_stream field
+  block: introduce a write_stream_granularity queue limit
+  block: expose write streams for block device nodes
+  nvme: add a nvme_get_log_lsi helper
+  nvme: pass a void pointer to nvme_get/set_features for the result
+  nvme.h: add FDP definitions
+
+Keith Busch (5):
+  fs: add write stream information to statx
+  block: introduce max_write_streams queue limit
+  io_uring: enable per-io write streams
+  nvme: register fdp parameters with the block layer
+  nvme: use fdp streams if write stream is provided
+
+ Documentation/ABI/stable/sysfs-block |  15 +++
+ block/bdev.c                         |   6 +
+ block/bio.c                          |   2 +
+ block/blk-crypto-fallback.c          |   1 +
+ block/blk-merge.c                    |   4 +
+ block/blk-sysfs.c                    |   6 +
+ block/bounce.c                       |   1 +
+ block/fops.c                         |  23 ++++
+ drivers/nvme/host/core.c             | 160 ++++++++++++++++++++++++++-
+ drivers/nvme/host/nvme.h             |   9 +-
+ fs/stat.c                            |   2 +
+ include/linux/blk_types.h            |   1 +
+ include/linux/blkdev.h               |  16 +++
+ include/linux/fs.h                   |   1 +
+ include/linux/nvme.h                 |  77 +++++++++++++
+ include/linux/stat.h                 |   2 +
+ include/uapi/linux/io_uring.h        |   4 +
+ include/uapi/linux/stat.h            |   7 +-
+ io_uring/io_uring.c                  |   2 +
+ io_uring/rw.c                        |   1 +
+ 20 files changed, 332 insertions(+), 8 deletions(-)
+
+--=20
+2.43.5
+
 
