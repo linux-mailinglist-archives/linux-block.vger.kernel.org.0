@@ -1,141 +1,141 @@
-Return-Path: <linux-block+bounces-15241-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15246-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C87D9ED5BB
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2024 20:06:20 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE4ED9ED643
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2024 20:17:22 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78F52280ED6
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2024 19:06:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D6CD1645CB
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2024 19:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C084123A1A6;
-	Wed, 11 Dec 2024 18:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6008207A25;
+	Wed, 11 Dec 2024 19:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2dpDUTf"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="JX8RI6Cw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF65825332C;
-	Wed, 11 Dec 2024 18:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7902288CE
+	for <linux-block@vger.kernel.org>; Wed, 11 Dec 2024 19:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943232; cv=none; b=KTiKF6vzAR3sRHrBfhhxA3ib20cANl8fZHUqmFW/XAEcDO2+ZiPst5uTqi6VO2F5Xfwq/wWd+7LccBiERTJ2YooFFz4OqDOF6kZKP/PgHu9HE23iEZpD5gAHGx7Vow210B6ykaUuI/2wcrKKHvmbW4T5PsYXnT60Hml1GaFPKxk=
+	t=1733944125; cv=none; b=jHa4qnKTAlFcdxg1HMQ+9GHaLhR3MeXC16oyJ75lTgaFyRHHKE4CATWfAYlD+MN7lK8wg5MAWgyEZBh6lrw8a11DMO76A8eqnv8CkyxuX7wIUpbXuvCdZolow0VqQsg3ONipsrhmjHkA0HThYBv7f937Rc2mMuqGQ7HB/FQv9pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943232; c=relaxed/simple;
-	bh=OrkWIbXM0KdIPk8HRXIAI3tRb8LvmxPMYzRl1CeF+lI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S8hVeYR9KJCUqQsw4mRfZzCeEWwbP0ajqweOjEkR+u1tW/o9poJ0xl/2LsAmBz1Ft9ysN6wIM46DXHYQgACLxb48fgIOSU7fPgo4TtfISoq2jHARQ+Z4b9B7NEz9mzxBwGWnP40TNhtJRNkGafR+0mZmHOS8adyZG+9obFU9fDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2dpDUTf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40DFC4CEDD;
-	Wed, 11 Dec 2024 18:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943230;
-	bh=OrkWIbXM0KdIPk8HRXIAI3tRb8LvmxPMYzRl1CeF+lI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X2dpDUTfm92rBgzFiiS/oasqsvuJnwOy3gBZV6xSP8aL+5n8O51FxqF4guMJbmOK3
-	 WlGn/zS50mrgr/5Uy08/CA+Bb1PzBf1f7XJ6R6zextZZFU2lDjaEORUXwONIecxWUn
-	 evWDAitR/Is+R9DclZPC0k7tWUQUNOiwLR2EGd3xz43Y2PXPGkLIyCliSRjKE/q+Ah
-	 cbECsc+pVrOzfL1jy/BSWiEOmjEKh/+shAEJLJwP/5tJMyAqyXU5SgLGjpeb39stHy
-	 D2vetDGhPpOKGPjESSiY3cNDpyLAOLtBYRfmqnqTNgsxsfvDdydB+mhMB5n2w1KoOq
-	 R+oLTCWc0Qo7w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Luck Tony <tony.luck@intel.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 15/15] blk-mq: register cpuhp callback after hctx is added to xarray table
-Date: Wed, 11 Dec 2024 13:53:07 -0500
-Message-ID: <20241211185316.3842543-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185316.3842543-1-sashal@kernel.org>
-References: <20241211185316.3842543-1-sashal@kernel.org>
+	s=arc-20240116; t=1733944125; c=relaxed/simple;
+	bh=sIHNlv58GzR8qJbuqoxtcjO1QTMLtUk280QOTIo8ols=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nqN3S9/KuFDLcN0aRspVI+qusCqypa0EnGjGSLrAOg5L/D/wtaJPXBrUCjnZ7mBgksRpGf96yDbxNYRbnauc1LGhXdB6eBgtxM2W4s93+chzqZlJkMlIgs/s4Ru1vZyRLT3N7NQMCtk/H5OfEHB31URepxGvd4yLQwVu+VS4WxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=JX8RI6Cw; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBFIAIS019540
+	for <linux-block@vger.kernel.org>; Wed, 11 Dec 2024 11:08:43 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=s8GAwMobQbYzm1WpzP
+	fIBLt+oYBnnbj6arNEC9wHIYw=; b=JX8RI6CwFXQDwtwFdYbP50iojC2l8fBcjJ
+	ZvB57GxwQ9odca3acZmX/DzDndAevyQ7vugOdzBvCC9NmQWzeBXTOGxHPy18a7nY
+	JMH6rZ7RzRmzLiFM+KGg/+I3Nj81fYQqduP2dehfBDdfF2EZ0dyX6gEP4QKIQ+Dg
+	Gxx8/pPzqfY2bx86MHi34cJnXuLc4IehQz2YCd5ZP8prr4GM1YKVVsHG5rV5h6ct
+	4wheMzhn1pa353euov2DT6t8OlTk5pIsAPzkmdvX+yN92NpTRBdX3PU4f4Zs/c8A
+	vkDMAQdOccifqH6MNJliWG+Z8B7/YnGbI5NZX/x3s9W2xjgpZ82g==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 43faw8axnc-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Wed, 11 Dec 2024 11:08:43 -0800 (PST)
+Received: from twshared55211.03.ash8.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Wed, 11 Dec 2024 19:08:40 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id C094E15DE394C; Wed, 11 Dec 2024 10:35:15 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <axboe@kernel.dk>, <hch@lst.de>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+        <io-uring@vger.kernel.org>
+CC: <sagi@grimberg.me>, <asml.silence@gmail.com>, <anuj20.g@samsung.com>,
+        <joshi.k@samsung.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv14 00/11] block write streams with nvme fdp
+Date: Wed, 11 Dec 2024 10:35:03 -0800
+Message-ID: <20241211183514.64070-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.119
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 1n49N2CFegZM5g8ljG2ORCc0AtsRbvCY
+X-Proofpoint-GUID: 1n49N2CFegZM5g8ljG2ORCc0AtsRbvCY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 4bf485a7db5d82ddd0f3ad2b299893199090375e ]
+Previous discussion:
 
-We need to retrieve 'hctx' from xarray table in the cpuhp callback, so the
-callback should be registered after this 'hctx' is added to xarray table.
+https://lore.kernel.org/linux-nvme/20241210194722.1905732-1-kbusch@meta.c=
+om/T/#u
 
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Peter Newman <peternewman@google.com>
-Cc: Babu Moger <babu.moger@amd.com>
-Cc: Luck Tony <tony.luck@intel.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20241206111611.978870-2-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-mq.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Changes from v13:
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 542b28a2e6b0f..fd289f2f83db1 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3665,16 +3665,11 @@ static int blk_mq_init_hctx(struct request_queue *q,
- {
- 	hctx->queue_num = hctx_idx;
- 
--	if (!(hctx->flags & BLK_MQ_F_STACKING))
--		cpuhp_state_add_instance_nocalls(CPUHP_AP_BLK_MQ_ONLINE,
--				&hctx->cpuhp_online);
--	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
--
- 	hctx->tags = set->tags[hctx_idx];
- 
- 	if (set->ops->init_hctx &&
- 	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
--		goto unregister_cpu_notifier;
-+		goto fail;
- 
- 	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx,
- 				hctx->numa_node))
-@@ -3683,6 +3678,11 @@ static int blk_mq_init_hctx(struct request_queue *q,
- 	if (xa_insert(&q->hctx_table, hctx_idx, hctx, GFP_KERNEL))
- 		goto exit_flush_rq;
- 
-+	if (!(hctx->flags & BLK_MQ_F_STACKING))
-+		cpuhp_state_add_instance_nocalls(CPUHP_AP_BLK_MQ_ONLINE,
-+				&hctx->cpuhp_online);
-+	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
-+
- 	return 0;
- 
-  exit_flush_rq:
-@@ -3691,8 +3691,7 @@ static int blk_mq_init_hctx(struct request_queue *q,
-  exit_hctx:
- 	if (set->ops->exit_hctx)
- 		set->ops->exit_hctx(hctx, hctx_idx);
-- unregister_cpu_notifier:
--	blk_mq_remove_cpuhp(hctx);
-+ fail:
- 	return -1;
- }
- 
--- 
-2.43.0
+  Fixed up printing size_t format (kernel test robot)
+
+  Use %d for endgid (John)
+
+  Removed bdev write stream granularity helper (no user in this series)
+  (John)
+
+  Clamp variable size FDP config log page size to max order (Hannes)
+
+  Ensure the log descriptor sizes make sense (Hannes)
+
+  Comment typos (Nitesh)
+
+  Commit log description fix for where to find the write stream
+  parameters (Nitesh).
+
+Christoph Hellwig (7):
+  fs: add a write stream field to the kiocb
+  block: add a bi_write_stream field
+  block: introduce a write_stream_granularity queue limit
+  block: expose write streams for block device nodes
+  nvme: add a nvme_get_log_lsi helper
+  nvme: pass a void pointer to nvme_get/set_features for the result
+  nvme: add FDP definitions
+
+Keith Busch (4):
+  block: introduce max_write_streams queue limit
+  io_uring: enable per-io write streams
+  nvme: register fdp parameters with the block layer
+  nvme: use fdp streams if write stream is provided
+
+ Documentation/ABI/stable/sysfs-block |  15 +++
+ block/bio.c                          |   2 +
+ block/blk-crypto-fallback.c          |   1 +
+ block/blk-merge.c                    |   4 +
+ block/blk-sysfs.c                    |   6 +
+ block/bounce.c                       |   1 +
+ block/fops.c                         |  23 ++++
+ drivers/nvme/host/core.c             | 192 ++++++++++++++++++++++++++-
+ drivers/nvme/host/nvme.h             |   7 +-
+ include/linux/blk_types.h            |   1 +
+ include/linux/blkdev.h               |  10 ++
+ include/linux/fs.h                   |   1 +
+ include/linux/nvme.h                 |  77 +++++++++++
+ include/uapi/linux/io_uring.h        |   4 +
+ io_uring/io_uring.c                  |   2 +
+ io_uring/rw.c                        |   1 +
+ 16 files changed, 341 insertions(+), 6 deletions(-)
+
+--=20
+2.43.5
 
 
