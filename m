@@ -1,68 +1,73 @@
-Return-Path: <linux-block+bounces-15293-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15295-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D14829EFE41
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 22:30:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ABB39EFE43
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 22:30:25 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DD8C1884F21
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 21:30:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B217288CD8
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 21:30:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903DB1ABEB1;
-	Thu, 12 Dec 2024 21:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B31E1D88D0;
+	Thu, 12 Dec 2024 21:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="J6m46zPC"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="OS+ZOayw"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91591A8412
-	for <linux-block@vger.kernel.org>; Thu, 12 Dec 2024 21:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5C11C2324
+	for <linux-block@vger.kernel.org>; Thu, 12 Dec 2024 21:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734039018; cv=none; b=qoS8KF4RD2XC1fAP8pemmYD7ZaEi5eeTDZgik1jK5IfF/IS25CT6K9rGFzhlFivbdtgECYod9qUbI71aT42IvkJ2SIqXja8H6XccpFqO7GPKURyhyvCM6M3rbeLn36yIFFpCH16sHedWaw8ZqgUNZdjeDnx8kMf50BWJJTLRHVA=
+	t=1734039022; cv=none; b=eLsAQzU0eo8fihnlabpGGDyw4M7eYepysLf1nDozcDfhTnA7RK4sj4/cPtI7md6Y7b1jX+g0akeFhs40q6zW7Kelj5HPZjFiYIxKW6NGgfx3Y9yf8VZiU8XA/uMJd4vYxlBDqkYkmt+ZURMPI8Z+OrBAvh0MPsdCEQL7x3Fbk7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734039018; c=relaxed/simple;
-	bh=bihH33pekKwsJyDmBMS/2pq2MW6UX7wlYVOUmVq4VNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJzkutH1VyQbk3KXAB9MpjfLYWenft6bLHnABJzSPVLljh0ANmg8m8krK+L19hGBvRrGIsQqi8Xc54DNDT2JFNkpTTKf8dppCCzZ4HeKEL40WAbYc01z7dx/QiUil0dMw8SMdPjKAddY6c2SfoIiToynjn6sFw2TbOzkUaW3z30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=J6m46zPC; arc=none smtp.client-ip=199.89.1.11
+	s=arc-20240116; t=1734039022; c=relaxed/simple;
+	bh=HD3ejPS0Vx2Z1H/RC0aQKwDUhI+QLGY16pZ7wIRaSxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rvHGX1iA9G1/k/tlONFdar6L2YUh7d6CAQQhK1tuNqym+eNTOSgGVo7ogqYk3MHGDcI9PHtYprDQf9DH5P9OlLkGywRhZyQehP+zSwP84x9mTyXye1oICk2i8DR8S3rcq9dxbTERCPIH3afUU/u2yqs/H5U6J8M4gHVg3uDemRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=OS+ZOayw; arc=none smtp.client-ip=199.89.1.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Y8Qc23g9Dz6ClGyn;
-	Thu, 12 Dec 2024 21:30:10 +0000 (UTC)
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Y8Qc61R3jz6CmQwT;
+	Thu, 12 Dec 2024 21:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from:received:received; s=mr01; t=
-	1734039008; x=1736631009; bh=XD8Z3lQfNvBc1mRVucLdgm0n63nmv1lFAqw
-	y/B3oIww=; b=J6m46zPC5QyR1Ddcm7kc5Q84xv0bqYk3AtPiGgyXKLpzzjM019P
-	kAlXvlDbQcshb//p7SQfwP/oWpQ/rXhOmv8/K0NieYI3MpoeVylLOhkOpKcbMOi/
-	RbPfCQOPile9PWikQIhbO3xPmjeucV2/xJoh5Z7iZ+Z9osqBnfZtv5cU/di0+HAQ
-	kJwUJBNsDfXW7rMDuNJhCNrPPwbN+Bx5T/OkDlLgTtLaInT7R5np2TlipRhOUzAw
-	ONnvq92WtA3noR4UO4m+lc7wUfk5gIbUqiKYW8DDy/NmR5CKY0xIrWBhKKhLXuuK
-	E7vXV/YBI0pIJAxaDRpUeF5pOVrWihv2ekA==
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from
+	:received:received; s=mr01; t=1734039011; x=1736631012; bh=1f9Sq
+	PgB0utFC7N2JbbEJFmqdSwBLEPEhCwFxMjO4YQ=; b=OS+ZOaywqKFVC2k23mnw5
+	jIEvL/0DYVYRfA6hCiOMhqVQrweOygXjyI1uwI/MH2O3690gPfbCg2exlSr8H8zk
+	e+Cw4gBULN/WTt70HR+dhICDJ0mYxfIJPw/JsIDRy4hVHKVhvAWKVu7MD4lepsm2
+	V2mlSaqpW/en8d8MFiKhl1t25dWvrIoxGG1PrcWbe8ssvCVB4ixrB5okrNWtCiIo
+	74WyRdXs4i6wjfW0rCQ4qBjJf5EYPvrUS2/2QYtPdWZ2XSrhCjJd0WIB7KTWxNAR
+	0Zc4Vqb7wOnGc0q5HPfqL/ZOAew9Z+EZFRIXMUVZSzHSmQv6vyjoZdznIkhZWdM6
+	w==
 X-Virus-Scanned: by MailRoute
 Received: from 008.lax.mailroute.net ([127.0.0.1])
  by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id xLQqpubrqOPC; Thu, 12 Dec 2024 21:30:08 +0000 (UTC)
+ id AqQd7-TzLl0I; Thu, 12 Dec 2024 21:30:11 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Y8Qbz03hdz6ClL8x;
-	Thu, 12 Dec 2024 21:30:06 +0000 (UTC)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Y8Qc06DdCz6ClH0D;
+	Thu, 12 Dec 2024 21:30:08 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
-	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH 0/3] Three small block layer patches
-Date: Thu, 12 Dec 2024 13:29:38 -0800
-Message-ID: <20241212212941.1268662-1-bvanassche@acm.org>
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: [PATCH 1/3] mq-deadline: Remove a local variable
+Date: Thu, 12 Dec 2024 13:29:39 -0800
+Message-ID: <20241212212941.1268662-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+In-Reply-To: <20241212212941.1268662-1-bvanassche@acm.org>
+References: <20241212212941.1268662-1-bvanassche@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -71,26 +76,40 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jens,
+Since commit fde02699c242 ("block: mq-deadline: Remove support for zone
+write locking"), the local variable 'insert_before' is assigned once and
+is used once. Hence remove this local variable.
 
-This series includes two code cleanup patches and one bug fix.
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/mq-deadline.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Please consider the three patches in this series for inclusion in the ups=
-tream
-kernel.
-
-Thanks,
-
-Bart.
-
-Bart Van Assche (3):
-  mq-deadline: Remove a local variable
-  blk-mq: Clean up blk_mq_requeue_work()
-  block: Fix queue_iostats_passthrough_show()
-
- block/blk-mq.c      | 10 ++++------
- block/blk-sysfs.c   |  2 +-
- block/mq-deadline.c |  5 +----
- 3 files changed, 6 insertions(+), 11 deletions(-)
-
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index 91b3789f710e..5528347b5fcf 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -698,8 +698,6 @@ static void dd_insert_request(struct blk_mq_hw_ctx *h=
+ctx, struct request *rq,
+ 		list_add(&rq->queuelist, &per_prio->dispatch);
+ 		rq->fifo_time =3D jiffies;
+ 	} else {
+-		struct list_head *insert_before;
+-
+ 		deadline_add_rq_rb(per_prio, rq);
+=20
+ 		if (rq_mergeable(rq)) {
+@@ -712,8 +710,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *h=
+ctx, struct request *rq,
+ 		 * set expire time and add to fifo list
+ 		 */
+ 		rq->fifo_time =3D jiffies + dd->fifo_expire[data_dir];
+-		insert_before =3D &per_prio->fifo_list[data_dir];
+-		list_add_tail(&rq->queuelist, insert_before);
++		list_add_tail(&rq->queuelist, &per_prio->fifo_list[data_dir]);
+ 	}
+ }
+=20
 
