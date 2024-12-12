@@ -1,70 +1,70 @@
-Return-Path: <linux-block+bounces-15294-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15296-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0779D9EFE42
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 22:30:24 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58E8C9EFE44
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 22:30:27 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C73518872E5
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 21:30:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19AD9288E43
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2024 21:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018131D79A0;
-	Thu, 12 Dec 2024 21:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D5A1C07E2;
+	Thu, 12 Dec 2024 21:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="K1ceqTrL"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="2Wd0hB/q"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D78189916
-	for <linux-block@vger.kernel.org>; Thu, 12 Dec 2024 21:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9391D88DB
+	for <linux-block@vger.kernel.org>; Thu, 12 Dec 2024 21:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734039021; cv=none; b=Pxye9h8Bip7wnpUcGr02vaC1788d3QqLUUMNQ7GyzZgf8COiN1MJNJ0n1Ub3wGu6DjVRYoBJTPEnTQA7BoOwRsm8SdHKYjBqHRUGxA7mlv9/nzVKejSUsjPWCQPu9roJ8K4GhPru3LXg1UPqWzed1eMDO8ZxRNSpUOGeJlfVwm4=
+	t=1734039023; cv=none; b=cObtOBwt5H4EiGyCtLyhIJiEoT7mV9s4qmr9i/8z7fQ5wg9VfFfj7RQcKWfobLuAQqZbPPd1IB0frj97J7/kZaxr6hTuBGS9nNCgDTUz0lyoCC8XYZpx3VgLtxwnjJ+UzwF/6SQq4E3fUiH8njuBmEnL4yyXZEsPacbDJiz+1iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734039021; c=relaxed/simple;
-	bh=JFSWsD6hdy2hfNXwqkdGkYqJGp4WrcuIGJ7cDq8eOBs=;
+	s=arc-20240116; t=1734039023; c=relaxed/simple;
+	bh=snfjKqTkVL/uV2W+5SHWqXllQb/4JX4TZ3Gn3FXE9VU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=roJi73I9g1rdozaZpRm+CyydO159eHpoBV3p/fLZtRtrw3buZFp2COFGl8yTymL9vFqLl4KmjUCJSId0DNuafB+jkHjAVY0oluzTycPKQ1o58CGTxPZpzFCWmYlAGcRDxCEJ7Y2QrRBA04VcQCZ53j1h3D6qn8coBnhC4oWaFLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=K1ceqTrL; arc=none smtp.client-ip=199.89.1.11
+	 MIME-Version; b=XG2+Ikwd+O9sEs3wS3avfNwADLtSpX7vnrHTWoFR37V5MQOJANqmSiNwmSARSDiTudxcptmDFDP1V42uV6iwt8P13mgJG3DnJwo8MkU4cGrxX/H/3XAE97vQgzaWjCJXNV1JqGm6mJCsd7uy8OARm7X1i/8nFFCBCHScX7rnSY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=2Wd0hB/q; arc=none smtp.client-ip=199.89.1.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Y8Qc874f5z6CmM6f;
-	Thu, 12 Dec 2024 21:30:16 +0000 (UTC)
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Y8QcB6bqtz6ClGyn;
+	Thu, 12 Dec 2024 21:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1734039013; x=1736631014; bh=/v/2o
-	aAhpNmFXKGucu891WTiG9lN0v0BeSsUJNzCyC0=; b=K1ceqTrL/xWJTO0UEz2ke
-	ZOCKSleho2yrbVlOhtmAeeIx5XOOaf10Exh8p6WYVAgnOGilcJL5jyCBjPxOp5Yl
-	+Gtfpv9pNo+F3nR0EK2zmzQotV4vOCUGI4u3Unu1eF/akjBp+d0s0laTblYPpIvl
-	Fs5cFkr46ESioIUXL5BY/VNY+6H5pvRv7wd5/NMCPyJON/GYsZfqjK97kGqDfp1x
-	UsXLsNe+RA76Qih5txyeA0p7gzP1TyuqFGHlitU3iaHMKIxS7rcZhzztkidPM/GF
-	YYoCWAaQ2pPfPbO1w8FOlU49IgMQI2pcjLUxYkpifGtUov3wR9w6tU2yt+hFd3NG
+	:received:received; s=mr01; t=1734039016; x=1736631017; bh=LhUdU
+	zi9MVWlR2pqU3gyxaVU3lJSD0lL003i+aKkYhI=; b=2Wd0hB/qHVY/1ZZg3wSmH
+	3f4ejIDDCWNiFxbkAqRusW5xw8JbtWkP5WhXkxQFVUQOgiQUnfwvtCGoudAYDWtD
+	CN+CwnR96JIQgP0L0oXokIsLjIY5ZvQ4hPO6OcmMQbIub5ku7ieHqs6xI8Rx85GW
+	Nm2QcOF/umQBMBGKyphG7SMEkENfyZfE6yoizGR7WVR0N7WWJJgyu1L2gnw/1NWa
+	7Sz8Vsvro4pycCRXTeD72+zO/A/uC4WD+0/a70lX6PHKVXQy4jtIVydUo6oE4P+J
+	qYDnknrZ1d7RcA7T6PhGPUpw/N2zvS+ap7AdcmGQzSnu+/HZZACXPBgw/fv/CBwt
 	Q==
 X-Virus-Scanned: by MailRoute
 Received: from 008.lax.mailroute.net ([127.0.0.1])
  by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 5ui5BFocMAwN; Thu, 12 Dec 2024 21:30:13 +0000 (UTC)
+ id vYfL6r6ilI91; Thu, 12 Dec 2024 21:30:16 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Y8Qc40185z6ClL8x;
-	Thu, 12 Dec 2024 21:30:11 +0000 (UTC)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Y8Qc62lhrz6CmQtD;
+	Thu, 12 Dec 2024 21:30:14 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: [PATCH 2/3] blk-mq: Clean up blk_mq_requeue_work()
-Date: Thu, 12 Dec 2024 13:29:40 -0800
-Message-ID: <20241212212941.1268662-3-bvanassche@acm.org>
+	Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 3/3] block: Fix queue_iostats_passthrough_show()
+Date: Thu, 12 Dec 2024 13:29:41 -0800
+Message-ID: <20241212212941.1268662-4-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
 In-Reply-To: <20241212212941.1268662-1-bvanassche@acm.org>
 References: <20241212212941.1268662-1-bvanassche@acm.org>
@@ -76,45 +76,35 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Move a statement that occurs in both branches of an if-statement in front
-of the if-statement. Fix a typo in a source code comment. No functionalit=
-y
-has been changed.
+Make queue_iostats_passthrough_show() report 0/1 in sysfs instead of 0/4.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+This patch fixes the following sparse warning:
+block/blk-sysfs.c:266:31: warning: incorrect type in argument 1 (differen=
+t base types)
+block/blk-sysfs.c:266:31:    expected unsigned long var
+block/blk-sysfs.c:266:31:    got restricted blk_flags_t
+
+Cc: Keith Busch <kbusch@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 110234da18ab ("block: enable passthrough command statistics")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ block/blk-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a6ab1757a21a..68dbac660256 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1535,19 +1535,17 @@ static void blk_mq_requeue_work(struct work_struc=
-t *work)
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 4241aea84161..767598e719ab 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -263,7 +263,7 @@ static ssize_t queue_nr_zones_show(struct gendisk *di=
+sk, char *page)
 =20
- 	while (!list_empty(&rq_list)) {
- 		rq =3D list_entry(rq_list.next, struct request, queuelist);
-+		list_del_init(&rq->queuelist);
- 		/*
--		 * If RQF_DONTPREP ist set, the request has been started by the
-+		 * If RQF_DONTPREP is set, the request has been started by the
- 		 * driver already and might have driver-specific data allocated
- 		 * already.  Insert it into the hctx dispatch list to avoid
- 		 * block layer merges for the request.
- 		 */
--		if (rq->rq_flags & RQF_DONTPREP) {
--			list_del_init(&rq->queuelist);
-+		if (rq->rq_flags & RQF_DONTPREP)
- 			blk_mq_request_bypass_insert(rq, 0);
--		} else {
--			list_del_init(&rq->queuelist);
-+		else
- 			blk_mq_insert_request(rq, BLK_MQ_INSERT_AT_HEAD);
--		}
- 	}
+ static ssize_t queue_iostats_passthrough_show(struct gendisk *disk, char=
+ *page)
+ {
+-	return queue_var_show(blk_queue_passthrough_stat(disk->queue), page);
++	return queue_var_show(!!blk_queue_passthrough_stat(disk->queue), page);
+ }
 =20
- 	while (!list_empty(&flush_list)) {
+ static ssize_t queue_iostats_passthrough_store(struct gendisk *disk,
 
