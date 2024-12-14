@@ -1,116 +1,141 @@
-Return-Path: <linux-block+bounces-15339-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15349-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A5709F1C26
-	for <lists+linux-block@lfdr.de>; Sat, 14 Dec 2024 03:44:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B289F1C4C
+	for <lists+linux-block@lfdr.de>; Sat, 14 Dec 2024 04:12:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BFCB169800
-	for <lists+linux-block@lfdr.de>; Sat, 14 Dec 2024 02:44:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC0C07A0476
+	for <lists+linux-block@lfdr.de>; Sat, 14 Dec 2024 03:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C543E17543;
-	Sat, 14 Dec 2024 02:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DEF13B58E;
+	Sat, 14 Dec 2024 03:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jn+VzRT6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5384A13FEE;
-	Sat, 14 Dec 2024 02:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5A2208A0;
+	Sat, 14 Dec 2024 03:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734144287; cv=none; b=FP8GnsHmyYNeFM3STpeQGf271rUtYeFbYPvvNPtwYdRF8lPtzCwBv1x6bv9Eii1n4ZvQn5DxEOz7h8tQT3xooU3+0BSClpaFPSEHhzK0gloOQScGwh1bOrz4L3sy6atNiE1bXLCaiIRJE2z38JGwKBhqEwTk9EuyiVkhdxoUMOE=
+	t=1734145861; cv=none; b=Mj4D/e3VauX5arVyQZ9DJ+29kdg3mnrCn/yap12OEgwbq0/701m6NeZmnvs5GfvsYYN982lQlPC51wjV9fWzSm73EfS1P75qNbGzKDjanVOLV9IJJyG5FmDirvxkYU8nA98+nPOjCVpJ56VYJMaAiR5+10cenGvd/E0TYuNWVyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734144287; c=relaxed/simple;
-	bh=LXQ424kNl0hkFT7GE2IZ60/jBTpGcgsKLpzUxMya2PI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bw78ZGDDpMiBuJckfnzhhXyTHo0uQ/gKbLgB4w+nnmWGRzpEEmQtHD0rc8OUZua/ZcAJJGrUYo7GQYYc0Wi3XpPsf+fWr03T7V45tgKjhcnRNj/OruSHEkl6F8Gkutic6J2p/rov8dESRJ4GZFukMCAGez6zTRGsc7d90nwjllo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Y99Wy4M3Zz4f3jRC;
-	Sat, 14 Dec 2024 10:44:14 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EF4FB1A0359;
-	Sat, 14 Dec 2024 10:44:33 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgDHo4cQ8VxnjzcoEg--.42921S3;
-	Sat, 14 Dec 2024 10:44:33 +0800 (CST)
-Subject: Re: [PATCH RFC 1/3] block/mq-deadline: Revert "block/mq-deadline: Fix
- the tag reservation code"
-To: Bart Van Assche <bvanassche@acm.org>, Yu Kuai <yukuai1@huaweicloud.com>,
- axboe@kernel.dk, akpm@linux-foundation.org, yang.yang@vivo.com,
- ming.lei@redhat.com, osandov@fb.com, paolo.valente@linaro.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20241209115522.3741093-1-yukuai1@huaweicloud.com>
- <20241209115522.3741093-2-yukuai1@huaweicloud.com>
- <bef7b96c-a6cc-4b83-99b2-848cecb3d3b1@acm.org>
- <6e384b29-50d2-64bd-0d08-fc0f086c1cbd@huaweicloud.com>
- <7081765f-28d7-f594-1221-6034b9e88899@huaweicloud.com>
- <d9733af5-b16b-4644-9d6d-84fbacf334e0@acm.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <2562353d-bfe3-a2b1-5427-76426cbda7b4@huaweicloud.com>
-Date: Sat, 14 Dec 2024 10:44:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1734145861; c=relaxed/simple;
+	bh=l/RbuV7mG+Q8pAYXvShoEilABA680o9Y1/+f82fwIZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dmt1snhaup2Za6ZHDDMtazg6qNx3BH89+QJQXLRDXhYAbbI0xLb0bchoAEgxqRlCxRBFnmZsiX3mG+Ch1SwSQ4PlP8zqqw7HJXOkhlqTYH0lwED7V/zASZ28KK2r5jDeCyHlny9QM5YabV74zA+PZK+uemRWz00jF3QERYFxm6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jn+VzRT6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=nVbdZFLburUKrMDxJT8VFegeQ4rw8dJVhDVUWKaEr00=; b=jn+VzRT6CVJfsvQPJRoW8mkloz
+	GoZIpq7JSMgAM6DJmg02YZeZT4X6VBzvBiaADik7dCm/qFzpx3Y3HH1iDIjyN8cSZC5CEi1k5gjxc
+	q+i72eyL65QnU8PUj4cofXYJZ2XwsGGDepXY5Q4vFrxwHW++dEgUclNB7IxTEkJrZWDiamgRa1SYc
+	d1vycqPDazUd8/H+hOIIrndCmlzG+3kvq6LG3JVMfdUN6QHQLJpvEbeLdglqz/qBnOrzNrsP2Xvsy
+	ZuByfAi2EHL26XH9FdtGWBjuewpDVKLys6UBzqDkVwqAB3Mt2HF2JiyEQ2x0ULx1qtrlod+yJwJDU
+	HY9us9Ww==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tMIYN-00000005c3V-37oA;
+	Sat, 14 Dec 2024 03:10:51 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: willy@infradead.org,
+	hch@lst.de,
+	hare@suse.de,
+	dave@stgolabs.net,
+	david@fromorbit.com,
+	djwong@kernel.org
+Cc: john.g.garry@oracle.com,
+	ritesh.list@gmail.com,
+	kbusch@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [RFC v2 00/11] enable bs > ps for block devices
+Date: Fri, 13 Dec 2024 19:10:38 -0800
+Message-ID: <20241214031050.1337920-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d9733af5-b16b-4644-9d6d-84fbacf334e0@acm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHo4cQ8VxnjzcoEg--.42921S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw47Gw1xtrWfXr4UWF4UJwb_yoWkWrXEgw
-	4qyryDGw4jqr1fCr47GayrGrZ0qrWDta4UArykKF4UX34IkwsxCF90kryfZa13XFyUKrn3
-	Xw1jyry5AwnF9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Hi, Bart
+Now that LBS is upstream on v6.12 and we have bs > ps for filesystems
+this address support for up bs > ps block devices. The first RFC v1 was
+posted [0] before the turkey massacre in the US. The changes on this v2
+addrsess all the feedback from that series.
 
-在 2024/12/11 4:33, Bart Van Assche 写道:
->> If so, following are the options that I can think of to fix this:
->>
->> 1) make async_depth read-only, if 75% tags will hurt performance in some
->> cases, user can increase nr_requests to prevent it.
->> 2) refactor elevator sysfs api, remove eq->sysfs_lock and replace it
->> with q->sysfs_lock, so deadline_async_depth_store() will be protected
->> against changing hctxs, and min_shallow_depth can be updated here.
->> 3) other options?
-> 
-> Another option is to remove the ability to configure async_depth. If it
-> is too much trouble to get the implementation right without causing
-> regressions for existing workloads, one possibility is to remove support
-> for restricting the number of asynchronous requests in flight.
+The changes on this v2:
 
-If you agree, I'll use following option in the next version:
+  - Simplfy with folio_pos() as suggested by Matthew Wilcox
+  - To address support to reduce the buffer head array of
+    size MAX_BUF_PER_PAGE to avoid stack growth growth warnings
+    on systems with large base page sizes such as Hexagon with 256 KiB
+    base page sizes I've added the async batch helper bh_read_batch_async()
+    and iterator support for block_read_full_folio().
+  - Simplify the bdev_io_min() as suggested by Christoph Hellwig
+  - Collect tags, and minor comment enhancements and remove new header
+    inclusions where not actually needed
 
-4) set min_async_depth to 64 (after treating min_shallow_depth for the
-whole sbitmap instead of one word).
+This still goes out as RFCs as I'm still not done with my testing. As part
+of my test plan I'm including a baseline of ext4 as we're mucking around with
+buffer heads and testing xfs alone won't help to ensure we don't regress
+existing buffer head users. I'm also testing XFS with 32k sector size support
+given part of this enablement is to allow filesystems to also increase their
+support sector size.
 
-The good thing is that user can still set async_depth without changing
-wake_batch, the side effect is that async_depth can't be used if
-nr_requests <= 64;
+Patches 2-4 are really the meat and bones behind these changes and careful
+review is appreciated. I suspect a bit of bike shedding potential is in order
+there as well for those patches.
 
-Thanks,
-Kuai
+If you'd like to help test this, this is available in the kdevops linux
+branch large-block-buffer-heads-for-next [1]. It is based on v6.13-rc2, and
+on that tree has a fix not yet merged on v6.13-rc2 which is required for LBS.
+That fix is already being tested and planned for v6.13-rc3, I carry since
+otherwise you wound't be able to mount any LBS filesystem with a filesystem
+block size larger than 16k.
+
+[0] https://lkml.kernel.org/r/20241113094727.1497722-1-mcgrof@kernel.org
+[1] https://github.com/linux-kdevops/linux/tree/large-block-buffer-heads-for-next
+
+Hannes Reinecke (3):
+  fs/mpage: use blocks_per_folio instead of blocks_per_page
+  fs/mpage: avoid negative shift for large blocksize
+  block/bdev: enable large folio support for large logical block sizes
+
+Luis Chamberlain (8):
+  fs/buffer: move async batch read code into a helper
+  fs/buffer: add a for_each_bh() for block_read_full_folio()
+  fs/buffer: add iteration support for block_read_full_folio()
+  fs/buffer: reduce stack usage on bh_read_iter()
+  fs/buffer fs/mpage: remove large folio restriction
+  block/bdev: lift block size restrictions and use common definition
+  nvme: remove superfluous block size check
+  bdev: use bdev_io_min() for statx block size
+
+ block/bdev.c             |  13 +--
+ drivers/nvme/host/core.c |  10 --
+ fs/buffer.c              | 209 +++++++++++++++++++++++++++------------
+ fs/mpage.c               |  47 +++++----
+ include/linux/blkdev.h   |  11 ++-
+ 5 files changed, 187 insertions(+), 103 deletions(-)
+
+-- 
+2.43.0
 
 
