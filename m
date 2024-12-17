@@ -1,70 +1,70 @@
-Return-Path: <linux-block+bounces-15524-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15525-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAEBF9F59A0
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5CB49F599F
 	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 23:38:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FE131890EB9
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 22:38:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC57316AEAB
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 22:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457E11DFDA2;
-	Tue, 17 Dec 2024 22:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E26155CB3;
+	Tue, 17 Dec 2024 22:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="SBAhjhhd"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="zJyoyMal"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE49155CB3
-	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 22:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA774EEB2
+	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 22:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734475114; cv=none; b=oZTaAXBVcA8TV4yJIxym7DEsfvDabq2r/i5RxjXTBBtUtABXxuXC7q9ReHnJNnI6e9UDWCggDfMwQ0McO0xC3tdc6U1KyK2/NMEEm1bvjD7Mk48XRfwxBlBfsJcI+AjCA/VGeBAzJs65SDvs5/kM1leSQ51c6slscyKp71Bn6+I=
+	t=1734475115; cv=none; b=j35huMvyeelC8xs9qAxmpIaci8kzzWl/kD+1ItuIH6tvVPqGgx2mjAzfbOW8ksogvY9BrSuehNYebpgqPw5bh+Ne5rt8rmSOLM5CKx2g9wN4KgwiUzGfMlBF2plYEnOnTQZJDVtzhj0Ha82ondnIibPNJggrQBhw4kvZWDigZpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734475114; c=relaxed/simple;
-	bh=autjX2BFlkh5JX3T6v+m00FmZiBEezDsQc6QmV1Bz9Y=;
+	s=arc-20240116; t=1734475115; c=relaxed/simple;
+	bh=z5e3lWEvJoLEjGnblQf1Vwqe+U3IY1nA30+a7+RYBG8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=paJySZMJB81VDHHn4nOB6h3hpW0TyVsEQtgbmi1yb/+YZnJi9EgvyZ9RlMOn/YTRZsSAb9ewlmDhgaJ+KAmK6sqA4c3HelcByHaYIqF2sPo6gj7cjuf58BkL/ZiJRdSXAEJ4H16NyBRrb7Bz3IRM3/BIs/Bq3C9l6g+EriUzfDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=SBAhjhhd; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=ZjhAPsR0dFMQAkvLqEzFuWuC1rFHIT9+7u0A3Cu7eOmCvzcjyxYn9ltli37RUW8ABaug+Icx//6wYH+MsWNQnuJyRuRPmGPlcm6LQbxKwtGX3AUcgE7vyLhe7Pvir5/wWej7NOl6XP0cRpEfdHPlNsHQOwso9+84UycUngLcwj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=zJyoyMal; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YCWtc12lYzlfflB;
-	Tue, 17 Dec 2024 22:38:32 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YCWtd27ZZzlff0H;
+	Tue, 17 Dec 2024 22:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1734475109; x=1737067110; bh=x8T0F
-	ciUE7PfSXIZC03uQcBhaMy99ac/QEXSqtplfZc=; b=SBAhjhhdWnfhssAQRHFLy
-	Ko3zFZz5EEfRfRC0PcTygSWknW5sPiv1xn679DPHMdosjicMTyvKoC8Ug8mRQ+f7
-	eIpl1/gd9t4A74jeJi/bX+5sdayPcSNhbwJgKpsfER50lpDDVT+Sb27rn6hYfczL
-	GZO/SK5FxBqSBZ7RXJMK1Ys/4C+PagCCIWynuLhBFHqFwN4dm9fOTCjJ0B6ct3q4
-	LDSmh4jrBF1YFWB48Xb1kHM7yi8GLkCDU8VWSxujfVkfWhsFjv315GdCQJK+eHnF
-	da4LETPmioNiIi5d6oF+olTzVFm4gR1WArBIgmMDEiirKWDVwjucaGfm5MkXsmqq
-	A==
+	:received:received; s=mr01; t=1734475110; x=1737067111; bh=TPb5/
+	KXYShB18AmwASozqpVFRAcEzQwxKgySnuU4wOw=; b=zJyoyMalxYjGozC/32ryz
+	K03JyXq/azZxgT0g6V+O77RfxR3JrQfyhCF23C2XZS6c9GY3GX8Aretw+AF+YZzR
+	wu5HAya4eFrH7mHMJpCRyfLGJTeIqHvXWLMLa/z08Y66WEDVnJfIWoMB/SrGFHGf
+	qqvmKCnEBqEtS8Psf2SE1x50UdSw3pa4/CEvOOhtPsnmOU4JbLQ/bKFuIggQzZKK
+	wPKb1XYaKjXHJ6PocI4DYfZaC6VNufoCet7QI5PoSarGrbXpSIeGIGHmSKnCOM0q
+	eMlkkMYzRmSCJMvg6U2TuZaWSbhmrZfvufb49dLmBwKN6v7mhafSFRZLvLYi11Ok
+	g==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Q6ebRMme55Hn; Tue, 17 Dec 2024 22:38:29 +0000 (UTC)
+ id 9693UdOJPX_Z; Tue, 17 Dec 2024 22:38:30 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YCWtX5QH1zlff0H;
-	Tue, 17 Dec 2024 22:38:28 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YCWtZ0k0Xzlff0K;
+	Tue, 17 Dec 2024 22:38:29 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v2 1/3] block: Optimize blk_mq_submit_bio() for the cache hit scenario
-Date: Tue, 17 Dec 2024 14:38:07 -0800
-Message-ID: <20241217223809.683035-2-bvanassche@acm.org>
+Subject: [PATCH v2 2/3] blk-mq: Move more error handling into blk_mq_submit_bio()
+Date: Tue, 17 Dec 2024 14:38:08 -0800
+Message-ID: <20241217223809.683035-3-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
 In-Reply-To: <20241217223809.683035-1-bvanassche@acm.org>
 References: <20241217223809.683035-1-bvanassche@acm.org>
@@ -76,34 +76,49 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Help the CPU branch predictor in case of a cache hit by handling the cach=
-e
-hit scenario first.
+The error handling code in blk_mq_get_new_requests() cannot be understood
+without knowing that this function is only called by blk_mq_submit_bio().
+Hence move the code for handling blk_mq_get_new_requests() failures into
+blk_mq_submit_bio().
 
 Cc: Damien Le Moal <dlemoal@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ block/blk-mq.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 7ee21346a41e..8d2aab4d9ba9 100644
+index 8d2aab4d9ba9..f4300e608ed8 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -3102,12 +3102,12 @@ void blk_mq_submit_bio(struct bio *bio)
- 		goto queue_exit;
+@@ -2968,12 +2968,9 @@ static struct request *blk_mq_get_new_requests(str=
+uct request_queue *q,
+ 	}
 =20
- new_request:
--	if (!rq) {
-+	if (rq) {
-+		blk_mq_use_cached_rq(rq, plug, bio);
-+	} else {
+ 	rq =3D __blk_mq_alloc_requests(&data);
+-	if (rq)
+-		return rq;
+-	rq_qos_cleanup(q, bio);
+-	if (bio->bi_opf & REQ_NOWAIT)
+-		bio_wouldblock_error(bio);
+-	return NULL;
++	if (!rq)
++		rq_qos_cleanup(q, bio);
++	return rq;
+ }
+=20
+ /*
+@@ -3106,8 +3103,11 @@ void blk_mq_submit_bio(struct bio *bio)
+ 		blk_mq_use_cached_rq(rq, plug, bio);
+ 	} else {
  		rq =3D blk_mq_get_new_requests(q, plug, bio, nr_segs);
- 		if (unlikely(!rq))
+-		if (unlikely(!rq))
++		if (unlikely(!rq)) {
++			if (bio->bi_opf & REQ_NOWAIT)
++				bio_wouldblock_error(bio);
  			goto queue_exit;
--	} else {
--		blk_mq_use_cached_rq(rq, plug, bio);
++		}
  	}
 =20
  	trace_block_getrq(bio);
