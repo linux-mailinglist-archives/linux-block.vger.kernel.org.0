@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-15527-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15528-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB989F5A86
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 00:36:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B293D9F5A8C
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 00:37:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E2B27A29D2
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 23:36:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AFF41887CB7
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 23:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38A031F4287;
-	Tue, 17 Dec 2024 23:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47C711FA840;
+	Tue, 17 Dec 2024 23:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neH84RaY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIzsF4cL"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DC614D6F6
-	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 23:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040C1FA15E
+	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 23:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734478569; cv=none; b=Xf9n9ArD5Z6/Nik00817WjnqaBFJpbEM6Z68u1ryTPpjJ/adyBDiIxWcjVBYqt8urfCksFHNSgZJnGV1vnKep2sh52dKOoZt1G+y7OULvwXpqvbv2xWgJKFjWcCIR4lLJ4PkFn7n7OEmpHP/NGjT+ItjwWbMC225WlVo7lwZZLc=
+	t=1734478658; cv=none; b=ajiq7r01Ten+rkBXeLCEHFkYOnME40CpJxe/blk39GybJentNEwyrQn2h+xQRaBsP4aOfmsLc6nVn6u2UlVRAdM5usbW0ZXl5m/u7sEXqwE4TiiN0VR3TYe+JXmBzs5SeshIOW4JFCYNyzt+83ibO7Sl++yZxhuFU6eHUGQiIUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734478569; c=relaxed/simple;
-	bh=5YSOiXqnMKmHRsUb5rF6O3kDJUKqV2swSpSQ0hyR2a0=;
+	s=arc-20240116; t=1734478658; c=relaxed/simple;
+	bh=wiFj/smh5AIfNxxey4dh9J6dL2Em2AL43D9akJSic9U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jq9IP397z9YB95aUQggQ8jOs/yjWrfs/JVV9JUArDsZss242K7OqBZqEWwhq+SH/6sCpc8TF7X1YTJPFVLV201VFMQE0CpgMi3TZqFtU9AkEYs+C/m0O4t+OTalP7fU3VO83i8dg3NCUx7dpHowgz7uHnm8xXMFw4h+MFxROpsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neH84RaY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AC0C4CED3;
-	Tue, 17 Dec 2024 23:36:08 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Y1LYpkLtXfgX4nSRx7wuyygMC5+RMVtt+IfVCHcK7mD2NsqYU0My0OWwNmTuRgXcEiTP/u+mmz8Sa0+XB0m+C7M1pLScsjYj0zE1kB+c+LISLVsxmNkQQD3crhN01dzAD5kxB1ywb592+5IFjU8bSyHLB2Z518KPxTli21ZIdvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIzsF4cL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B44C4CED3;
+	Tue, 17 Dec 2024 23:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734478568;
-	bh=5YSOiXqnMKmHRsUb5rF6O3kDJUKqV2swSpSQ0hyR2a0=;
+	s=k20201202; t=1734478657;
+	bh=wiFj/smh5AIfNxxey4dh9J6dL2Em2AL43D9akJSic9U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=neH84RaYHAQstBjubkwdNiH9FMM+wgAHs2FPnlug/NKK3T9EKpcYsoIXELonXd3KZ
-	 4x7zQzLlnXDAau80q+ZkG0sY6IWN6XhiYlsF4fXMTJDcoI/5FjUQL1JTvcSGDg11EL
-	 dptYADhrDckDMbB0wGaUIn41HJwbvIQbifcbte+4NHN5JjlVynNS8wrP3EiwqW/V2B
-	 P57me+KwWJLKnSyczc4jNC9Lpl22HUlzRVyiYHzRyNlyMLT7uJej4dSnw0sN/FI+P9
-	 cBEQXc8Zt9BV8jYum7zN82A3yk4oXeZ2YhPBqQAUwnqkbG5CIk/QMDzWA9hhCfxamb
-	 srRyVpjtneHKQ==
-Message-ID: <791f68de-3636-48ad-b35c-fca9bf88f1e9@kernel.org>
-Date: Tue, 17 Dec 2024 15:36:08 -0800
+	b=HIzsF4cLNXt3lVRNqfvw485pLSTew+/wqvIp9K9zvyMZIpEdzzCKwrKY3mKuUJR4K
+	 fLSSSUK5Fak5q30pDgm1jyDkDJtHCx7Zt8KBN5yePWFVcDUuIF7OQQcBgkyFw40HLG
+	 yjjNqUjkuYq4d5rhq4GDIBZ+mOKe11M2BARG9nMcJInYEafk204Qa/AkirxBIsJ7Rj
+	 GRJ9RPFHI1StH+LylsEvDKFKcgwMS2xYlHcqIxmhHr3II9XDgTHvUqtHQCKzUkRvru
+	 YwPUhIsHgpseO7kVnM9HrmWr6nY+Aksrc8xmzLmJwi8CEU0IhJd1MRT958urIXTv2f
+	 sXVcxQHCJ3lzg==
+Message-ID: <9c0b2f84-2562-48fb-98e8-343d68eb792d@kernel.org>
+Date: Tue, 17 Dec 2024 15:37:37 -0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,30 +50,69 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] block: Optimize blk_mq_submit_bio() for the cache
- hit scenario
+Subject: Re: [PATCH v2 2/3] blk-mq: Move more error handling into
+ blk_mq_submit_bio()
 To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
 References: <20241217223809.683035-1-bvanassche@acm.org>
- <20241217223809.683035-2-bvanassche@acm.org>
+ <20241217223809.683035-3-bvanassche@acm.org>
 Content-Language: en-US
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20241217223809.683035-2-bvanassche@acm.org>
+In-Reply-To: <20241217223809.683035-3-bvanassche@acm.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2024/12/17 14:38, Bart Van Assche wrote:
-> Help the CPU branch predictor in case of a cache hit by handling the cache
-> hit scenario first.
+> The error handling code in blk_mq_get_new_requests() cannot be understood
+> without knowing that this function is only called by blk_mq_submit_bio().
+> Hence move the code for handling blk_mq_get_new_requests() failures into
+> blk_mq_submit_bio().
 > 
 > Cc: Damien Le Moal <dlemoal@kernel.org>
 > Cc: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  block/blk-mq.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 8d2aab4d9ba9..f4300e608ed8 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2968,12 +2968,9 @@ static struct request *blk_mq_get_new_requests(struct request_queue *q,
+>  	}
+>  
+>  	rq = __blk_mq_alloc_requests(&data);
+> -	if (rq)
+> -		return rq;
+> -	rq_qos_cleanup(q, bio);
+> -	if (bio->bi_opf & REQ_NOWAIT)
+> -		bio_wouldblock_error(bio);
+> -	return NULL;
+> +	if (!rq)
 
-Looks OK to me.
+No unlikely() here ?
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> +		rq_qos_cleanup(q, bio);
+> +	return rq;
+>  }
+>  
+>  /*
+> @@ -3106,8 +3103,11 @@ void blk_mq_submit_bio(struct bio *bio)
+>  		blk_mq_use_cached_rq(rq, plug, bio);
+>  	} else {
+>  		rq = blk_mq_get_new_requests(q, plug, bio, nr_segs);
+> -		if (unlikely(!rq))
+> +		if (unlikely(!rq)) {
+> +			if (bio->bi_opf & REQ_NOWAIT)
+> +				bio_wouldblock_error(bio);
+>  			goto queue_exit;
+> +		}
+>  	}
+>  
+>  	trace_block_getrq(bio);
+
 
 -- 
 Damien Le Moal
