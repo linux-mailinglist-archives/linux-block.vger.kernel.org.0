@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-15471-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15469-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DA7E9F4EDD
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 16:08:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95CEF9F4EF0
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 16:11:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DB7916CFAE
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 15:07:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93E491883EAD
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 15:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE87A1F6694;
-	Tue, 17 Dec 2024 15:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90AD81F6680;
+	Tue, 17 Dec 2024 15:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVPXwvTU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBbFvjZe"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896971F666A
-	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 15:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8EE1F666A
+	for <linux-block@vger.kernel.org>; Tue, 17 Dec 2024 15:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734448071; cv=none; b=LeF9Tsbgx6Q0iQ/gu6p/MAhnMbG8zjrna/4bH16ojo9nU+kqZQtvYaA8MXeu6MXRtkq+IJcJwbyT/HEuCgyX+p18OaatmiR0tOE4TYBf9y4BGh4YjMVksawuegVdS25HhvRbafZigI5S7MwqkVASMG6k7jbbP9TzOUrNAXKbL44=
+	t=1734448026; cv=none; b=HG3tdF+Xv2FreY0yA3aRKyBQLMGjAA/4zhePPwBnkPm8VOt6CeqNbt28he/s9O/G1P4oUbZQNFmEkkuby4Y3ZYCQZ+o2JfBPnI7Uwsqu6hNXuZJAOb7YIuiKeBdGQJIiJ8entAmjnY6Dd629We1rfoELpdpPi1aZqUZkDMjpm/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734448071; c=relaxed/simple;
-	bh=p2lSSEYAGHUTYZBv92OlH4JgXsXntpb3HilPhHeklBs=;
+	s=arc-20240116; t=1734448026; c=relaxed/simple;
+	bh=1SM/2OuMzLUx6umxQKKRch4+IwOmxKMo6AvhI5nBHlE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FTg26735ZwC43EbeAhJhgevvjzhsNOs2Mt7onsC2iLbCt/imYeYMxXh/u9JQV/18FFNc4F+91l9+i9tYquxFK57X9Le3Dwfu/K4aKkT59uN+UHSxfnZyA5kfTGn23hNHKbi4/ZQGbk4LjdzDJpCmL2ETxS+NB1gEll5rsJvd43U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVPXwvTU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 436FCC4CED3;
-	Tue, 17 Dec 2024 15:07:51 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=AECnA8CBILeQ5JrEo7pRCU/WwHkq3wJYiotCyWUwuUK/1nmlVvo9onRckorAuMfCkvB2wPa3+K/NmenRMKWC8/EZywzQUk0aJbIkdykqUCQQ21p+5njG3U2gIcEvyK9GJu97NvjxdAGNUnyBIMujMOLy9S2rxcmijqeAufs6wLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBbFvjZe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C635CC4CED4;
+	Tue, 17 Dec 2024 15:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734448071;
-	bh=p2lSSEYAGHUTYZBv92OlH4JgXsXntpb3HilPhHeklBs=;
+	s=k20201202; t=1734448025;
+	bh=1SM/2OuMzLUx6umxQKKRch4+IwOmxKMo6AvhI5nBHlE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sVPXwvTU934pWiiGydxYQmLpT8z0mMAtHqZnd66DyczgUu2/ANjrkEpgT9piDfyz4
-	 nwUMFhnz2/TfmdGQXMPyIFS83WEaT2/nEP6HDFrmrVoy1RvufQqgdNeqMWtetlIpmY
-	 sSBt7XH1gSSkwqwPgrwjdty0N78kihcoD2BcB5Nbk8S5ManCqohBXp4kUnKnfyPd7F
-	 YXlsmQIqQXwVJKwWQ/NSTa6T8WvvYvwQe96t/zvD6v0frQ3jG5lF+e3zriGTN3NJIO
-	 qYfjVcqdbprtReljG83WkFLBwmey9IiG+oZPKNT29111R4tByzy0j1UCxs0Q3/BKIK
-	 c+HrBoxMIIF2A==
-Message-ID: <ad8ef92c-55d5-41a2-99bd-9d6f5c7ae167@kernel.org>
-Date: Tue, 17 Dec 2024 07:07:50 -0800
+	b=vBbFvjZeEw4p5QUWnro3kZj+zi2DDBOxzSA7Gj00A5LoiD/8fC9XJUBsKatDnP5PG
+	 0x+YQRAmanWgJI681qo4ZSYIE7gP+wxuLhmYFF/QqkidLmDyl67kxmSOreAhzCUvcT
+	 rYZkRJYbI9+bgvIetHCVqqidm5FAYCe0wtyYuH30LKgGLgY1fy5MrnDpczmEZgFnUK
+	 5h9Jy9PQl0l3H+SmYSBsDrOiC+hj1qMMnVEnZrhEBAjoB+xX2KhOY3Uz6mNIWi+A+T
+	 n12WOqp0HaJUZADq93hk9oZKywPkVO5E1EC2tydEF2kMvog1BFn6K74ZbMcLvaskAu
+	 fDqzvosP0OEpA==
+Message-ID: <a5190b7b-04d0-4359-b7f5-40520d7849c7@kernel.org>
+Date: Tue, 17 Dec 2024 07:07:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,20 +50,22 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] blk-zoned: Minimize #include directives
+Subject: Re: [PATCH 4/6] blk-zoned: Improve the queue reference count strategy
+ documentation
 To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
 References: <20241216210244.2687662-1-bvanassche@acm.org>
- <20241216210244.2687662-2-bvanassche@acm.org>
+ <20241216210244.2687662-5-bvanassche@acm.org>
 Content-Language: en-US
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20241216210244.2687662-2-bvanassche@acm.org>
+In-Reply-To: <20241216210244.2687662-5-bvanassche@acm.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2024/12/16 13:02, Bart Van Assche wrote:
-> Only include those header files that are necessary.
+> For the blk_queue_exit() calls, document where the corresponding code can
+> be found that increases q->q_usage_counter.
 > 
 > Cc: Damien Le Moal <dlemoal@kernel.org>
 > Cc: Christoph Hellwig <hch@lst.de>
