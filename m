@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-15411-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15407-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FE209F4100
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 03:45:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBAB59F40F9
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 03:44:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 16FFB7A2C34
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 02:44:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E7ED1688E7
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2024 02:44:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491B114A09E;
-	Tue, 17 Dec 2024 02:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48025145346;
+	Tue, 17 Dec 2024 02:44:35 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA3513DBB6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9EB84E1C;
 	Tue, 17 Dec 2024 02:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734403476; cv=none; b=HWCywPcvbh2G/PimA6PAu9v+w8vnoO0cqL7D/u68m1LW70jQklDQU9dVU+3upGBL6Uwi1AAkpT2lhbOutlpI3D6hOTaqa2gPnPhBGvoCOi1cv8v4RZMOrxF023S9QlwgpJstbrVldXMUBs9aRfwQBdDAOP274sDI2RJmN6zMlf0=
+	t=1734403475; cv=none; b=ey6Ks335GhyyDeKh7hxsIgLiWtOWYapdzBdclSN1VuC3jtWNz3Mge1auM4MNZryvEWI/XUMCaf2mYKYswJhPyUVLWdvXHOSB/j9weOaDKQMeIUQ/HlPyTep5xmKF7RtN5WfRHp3ElxDpixb5bQjNrwq/OYmHU8mTAmJPMbBsyLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734403476; c=relaxed/simple;
-	bh=fBY0IkGRzmci9c0dwhhGUl9Nsn/ahC9Wq/2R6REVevI=;
+	s=arc-20240116; t=1734403475; c=relaxed/simple;
+	bh=j+LT9LQcC+fMKtmYV6yS0Laov4aaG0UX4qIxbAPTanE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RyF1zCj+ZmZAP3wIt+47qrKa3ad3Y9eQ3ousTLAgwOe5+/pw5arOGWcYwLfNx2EUkJFynVQeO0cgCkwTGYrPilNieTRutenndnx6gFplkUXEJ7bbZnKFDscPRttRgBis6C1YLLua8vs2LzvmdlJNcrcvSWpGdfrvyl2GHUY1tbU=
+	 MIME-Version; b=kwA/ZD2eaoNzB1dVkjMJSFDB6ia2civ1gcuWSEqhU6ohFPOzbwf7cn14mTOSKbOGDApg3M6QqwCoq/qHwgJHx/wLa7BMgXr80/WP5qnSBeNzEcAtkyZ4rOJtHxGQYwOFtBWmUqYN48fGHZ4Qja0LlO6HGb/jyP9YM9DXZmBK/qU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YC1NT0p2Nz4f3jqb;
-	Tue, 17 Dec 2024 10:44:09 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YC1NM4CLSz4f3lW6;
+	Tue, 17 Dec 2024 10:44:03 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 84C1D1A018C;
-	Tue, 17 Dec 2024 10:44:23 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 137411A0196;
+	Tue, 17 Dec 2024 10:44:24 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAHMYWE5WBndhZJEw--.48443S5;
+	by APP4 (Coremail) with SMTP id gCh0CgAHMYWE5WBndhZJEw--.48443S6;
 	Tue, 17 Dec 2024 10:44:23 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -52,9 +52,9 @@ Cc: linux-block@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC v2 1/4] block/mq-deadline: Revert "block/mq-deadline: Fix the tag reservation code"
-Date: Tue, 17 Dec 2024 10:40:44 +0800
-Message-Id: <20241217024047.1091893-2-yukuai1@huaweicloud.com>
+Subject: [PATCH v2 RFC 2/4] lib/sbitmap: fix shallow_depth tag allocation
+Date: Tue, 17 Dec 2024 10:40:45 +0800
+Message-Id: <20241217024047.1091893-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241217024047.1091893-1-yukuai1@huaweicloud.com>
 References: <20241217024047.1091893-1-yukuai1@huaweicloud.com>
@@ -65,13 +65,13 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHMYWE5WBndhZJEw--.48443S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr1fJry7ZryUKry5tw4fKrg_yoW5Ww1xpr
-	4rJanFkr1rJF4q9F1Ut39xZr10gws3WryfJF1Yqw1Skr1DAa9rXF15tFWrZFyIvrWxCa1j
-	9rWqqr95JwnFvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAHMYWE5WBndhZJEw--.48443S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3WF47uFy7Wr4DKF4xGF48WFg_yoW7GF48pF
+	4xK3WxGrWFyryj9rn8G3yDZF90qw4DGwnxGF4fWw1Fkr45Janavr9YkFyaqa4xCFWkZFWU
+	ZFWrXry8G34UXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -82,78 +82,140 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWr1fJry7ZryUKry5tw4fKrg_yoW5Ww1xpr
 	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
 	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
 	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JU4OJ5UUUUU=
+	vjDU0xZFpf9x0JUQXo7UUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-This reverts commit 39823b47bbd40502632ffba90ebb34fff7c8b5e8.
+Currently, shallow_depth is used by bfq, kyber and mq-deadline, they both
+pass in the value for the whole sbitmap, while sbitmap treats the value
+for just one word. Which means, shallow_depth never work as expected,
+and there really is no such functional tests to covert it.
 
-1) Set min_shallow_depth to 1 will end up setting wake_batch to 1,
-   and this will cause performance degradation in some high concurrency
-   test, for both IO bandwidth and cpu usage.
+Consider that callers doesn't know which word will be used, and it's
+not possible to distinguish the last word and previous word. Fix this
+problem by treating shallow_depth for the whole sbitmap in
+sbitmap_find_bit().
 
-   async_depth can be changed by sysfs, and the minimal value is 1. This
-   is why min_shallow_depth is set to 1 at initialization to make sure
-   functional is correct if async_depth is set to 1. However, sacrifice
-   performance in the default scenario is not acceptable.
-
-2) dd_to_word_depth() is supposed to scale down async_depth, however, user
-   can set low nr_requests and sb->depth can be less than 1 << sb->shift,
-   then dd_to_word_depth() will end up scale up async_depth.
-
-Fixes: 39823b47bbd4 ("block/mq-deadline: Fix the tag reservation code")
+Fixes: 00e043936e9a ("blk-mq: introduce Kyber multiqueue I/O scheduler")
+Fixes: a52a69ea89dc ("block, bfq: limit tags for writes and async I/O")
+Fixes: 07757588e507 ("block/mq-deadline: Reserve 25% of scheduler tags for synchronous requests")
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/mq-deadline.c | 20 +++-----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
+ include/linux/sbitmap.h |  6 ++---
+ lib/sbitmap.c           | 55 +++++++++++++++++++++--------------------
+ 2 files changed, 31 insertions(+), 30 deletions(-)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 91b3789f710e..1f0d175a941e 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -487,20 +487,6 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- 	return rq;
+diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+index 189140bf11fc..92e77bc13cf6 100644
+--- a/include/linux/sbitmap.h
++++ b/include/linux/sbitmap.h
+@@ -213,12 +213,12 @@ int sbitmap_get(struct sbitmap *sb);
+  * sbitmap_get_shallow() - Try to allocate a free bit from a &struct sbitmap,
+  * limiting the depth used from each word.
+  * @sb: Bitmap to allocate from.
+- * @shallow_depth: The maximum number of bits to allocate from a single word.
++ * @shallow_depth: The maximum number of bits to allocate from the bitmap.
+  *
+  * This rather specific operation allows for having multiple users with
+  * different allocation limits. E.g., there can be a high-priority class that
+  * uses sbitmap_get() and a low-priority class that uses sbitmap_get_shallow()
+- * with a @shallow_depth of (1 << (@sb->shift - 1)). Then, the low-priority
++ * with a @shallow_depth of (sb->depth << 1). Then, the low-priority
+  * class can only allocate half of the total bits in the bitmap, preventing it
+  * from starving out the high-priority class.
+  *
+@@ -478,7 +478,7 @@ unsigned long __sbitmap_queue_get_batch(struct sbitmap_queue *sbq, int nr_tags,
+  * sbitmap_queue, limiting the depth used from each word, with preemption
+  * already disabled.
+  * @sbq: Bitmap queue to allocate from.
+- * @shallow_depth: The maximum number of bits to allocate from a single word.
++ * @shallow_depth: The maximum number of bits to allocate from the queue.
+  * See sbitmap_get_shallow().
+  *
+  * If you call this, make sure to call sbitmap_queue_min_shallow_depth() after
+diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+index d3412984170c..6b8b909614a5 100644
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -208,8 +208,27 @@ static int sbitmap_find_bit_in_word(struct sbitmap_word *map,
+ 	return nr;
  }
  
--/*
-- * 'depth' is a number in the range 1..INT_MAX representing a number of
-- * requests. Scale it with a factor (1 << bt->sb.shift) / q->nr_requests since
-- * 1..(1 << bt->sb.shift) is the range expected by sbitmap_get_shallow().
-- * Values larger than q->nr_requests have the same effect as q->nr_requests.
-- */
--static int dd_to_word_depth(struct blk_mq_hw_ctx *hctx, unsigned int qdepth)
--{
--	struct sbitmap_queue *bt = &hctx->sched_tags->bitmap_tags;
--	const unsigned int nrr = hctx->queue->nr_requests;
++static unsigned int __map_depth_with_shallow(const struct sbitmap *sb,
++					     int index,
++					     unsigned int shallow_depth)
++{
++	unsigned int pre_word_bits = 0;
++
++	if (shallow_depth >= sb->depth)
++		return __map_depth(sb, index);
++
++	if (index > 0)
++		pre_word_bits += (index - 1) << sb->shift;
++
++	if (shallow_depth <= pre_word_bits)
++		return 0;
++
++	return min_t(unsigned int, __map_depth(sb, index),
++				   shallow_depth - pre_word_bits);
++}
++
+ static int sbitmap_find_bit(struct sbitmap *sb,
+-			    unsigned int depth,
++			    unsigned int shallow_depth,
+ 			    unsigned int index,
+ 			    unsigned int alloc_hint,
+ 			    bool wrap)
+@@ -218,12 +237,12 @@ static int sbitmap_find_bit(struct sbitmap *sb,
+ 	int nr = -1;
+ 
+ 	for (i = 0; i < sb->map_nr; i++) {
+-		nr = sbitmap_find_bit_in_word(&sb->map[index],
+-					      min_t(unsigned int,
+-						    __map_depth(sb, index),
+-						    depth),
+-					      alloc_hint, wrap);
++		unsigned int depth = __map_depth_with_shallow(sb, index,
++							      shallow_depth);
+ 
++		if (depth)
++			nr = sbitmap_find_bit_in_word(&sb->map[index], depth,
++						      alloc_hint, wrap);
+ 		if (nr != -1) {
+ 			nr += index << sb->shift;
+ 			break;
+@@ -406,27 +425,9 @@ EXPORT_SYMBOL_GPL(sbitmap_bitmap_show);
+ static unsigned int sbq_calc_wake_batch(struct sbitmap_queue *sbq,
+ 					unsigned int depth)
+ {
+-	unsigned int wake_batch;
+-	unsigned int shallow_depth;
 -
--	return ((qdepth << bt->sb.shift) + nrr - 1) / nrr;
--}
+-	/*
+-	 * Each full word of the bitmap has bits_per_word bits, and there might
+-	 * be a partial word. There are depth / bits_per_word full words and
+-	 * depth % bits_per_word bits left over. In bitwise arithmetic:
+-	 *
+-	 * bits_per_word = 1 << shift
+-	 * depth / bits_per_word = depth >> shift
+-	 * depth % bits_per_word = depth & ((1 << shift) - 1)
+-	 *
+-	 * Each word can be limited to sbq->min_shallow_depth bits.
+-	 */
+-	shallow_depth = min(1U << sbq->sb.shift, sbq->min_shallow_depth);
+-	depth = ((depth >> sbq->sb.shift) * shallow_depth +
+-		 min(depth & ((1U << sbq->sb.shift) - 1), shallow_depth));
+-	wake_batch = clamp_t(unsigned int, depth / SBQ_WAIT_QUEUES, 1,
+-			     SBQ_WAKE_BATCH);
 -
- /*
-  * Called by __blk_mq_alloc_request(). The shallow_depth value set by this
-  * function is used by __blk_mq_get_tag().
-@@ -517,7 +503,7 @@ static void dd_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
- 	 * Throttle asynchronous requests and writes such that these requests
- 	 * do not block the allocation of synchronous requests.
- 	 */
--	data->shallow_depth = dd_to_word_depth(data->hctx, dd->async_depth);
-+	data->shallow_depth = dd->async_depth;
+-	return wake_batch;
++	return clamp_t(unsigned int,
++		       min(depth, sbq->min_shallow_depth) / SBQ_WAIT_QUEUES,
++		       1, SBQ_WAKE_BATCH);
  }
  
- /* Called by blk_mq_update_nr_requests(). */
-@@ -527,9 +513,9 @@ static void dd_depth_updated(struct blk_mq_hw_ctx *hctx)
- 	struct deadline_data *dd = q->elevator->elevator_data;
- 	struct blk_mq_tags *tags = hctx->sched_tags;
- 
--	dd->async_depth = q->nr_requests;
-+	dd->async_depth = max(1UL, 3 * q->nr_requests / 4);
- 
--	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
-+	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd->async_depth);
- }
- 
- /* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
+ int sbitmap_queue_init_node(struct sbitmap_queue *sbq, unsigned int depth,
 -- 
 2.39.2
 
