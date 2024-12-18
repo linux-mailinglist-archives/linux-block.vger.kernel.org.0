@@ -1,55 +1,56 @@
-Return-Path: <linux-block+bounces-15540-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15542-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7006E9F5C2B
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:18:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32CE39F5C3C
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:29:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FA5E1891E54
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 01:18:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 483B27A20E6
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 01:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D93E1E4A4;
-	Wed, 18 Dec 2024 01:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CB44436E;
+	Wed, 18 Dec 2024 01:28:38 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE2B1F61C;
-	Wed, 18 Dec 2024 01:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCE717C91;
+	Wed, 18 Dec 2024 01:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734484692; cv=none; b=CKvFzWSzLlLutUe7zdQ8H5YNhYviR34eOCFiAFGpLcsDAn9EbHgg3UFzrb+6OJjICSo4xiQpRBb3dPneLI0PbnTJl5DH1lOxwpB03sseZA7HY91VmrLrBM1+sub0JAdnBQ0+UQK8WG33chWJN66wR0cRTLPRxNmTRUbqewDVoO8=
+	t=1734485318; cv=none; b=c5enApFPmpg9e7FaNZ0VhO72M2eBUGYUQFuDMdqDVZ26r1+MXg5dXMpMymF/ALigcb03DC2Y+AkZzlz9vBnOoTZ5SwKUmhk/O8RLNPh2A3497sm1H6u2HOIVYLKXLn2YxhTtD3mn1WLC4AYsGPErrbItt56H/JgZRvPPqz7s7m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734484692; c=relaxed/simple;
-	bh=McfR0613Zf6/X45COIYtJP57OSX3/SO2sYfzLYb9v5o=;
+	s=arc-20240116; t=1734485318; c=relaxed/simple;
+	bh=igeJKJyQykoGC+6MnqrpdhPssj1MyB2fRgUggIenoGQ=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZCsrvplu0NKwcED14FERh8VAMN/8iU+Mjx4SLIsFfR7xO4QetGuZK4jAdu2rCQGhFPzBGTRhcxSa08O6yhszKtyrC3pA6t2A8U0lflD1IPFuWrLcPSpUjx8/iVFZfXoyks5pEehWJ0haLIDJnADBChFQunmg70R3y3JU23hUBNU=
+	 In-Reply-To:Content-Type; b=E5doeK6GdRHpxtFcODc8z3AkfFtJGD9CJk9F+aE7BmDS7WSvFDlQ9J2IGGLvytTcHM+VP3vMxO3j72HPsO7H9Ez9wOALE7ogJW6eb8HxEfwg9BWOQC39V2UbmvM10k/sxqhK9GJHf1LEHUu7lqRkrulpXc1Iwzf1SmtZcXNgrTQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YCbQQ4w1Lz4f3jt6;
-	Wed, 18 Dec 2024 09:17:50 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YCbfN1FJmz4f3lWJ;
+	Wed, 18 Dec 2024 09:28:12 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2178D1A0196;
-	Wed, 18 Dec 2024 09:18:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id AC2461A0194;
+	Wed, 18 Dec 2024 09:28:32 +0800 (CST)
 Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgDH7oLMImJngmqiEw--.60737S3;
-	Wed, 18 Dec 2024 09:18:04 +0800 (CST)
-Subject: Re: [PATCH v2 RFC 2/4] lib/sbitmap: fix shallow_depth tag allocation
+	by APP4 (Coremail) with SMTP id gCh0CgCnzoI+JWJnjBmjEw--.18993S3;
+	Wed, 18 Dec 2024 09:28:32 +0800 (CST)
+Subject: Re: [PATCH v2 3/4] block/elevator: choose none elevator for high IO
+ concurrency ability disk
 To: Bart Van Assche <bvanassche@acm.org>, Yu Kuai <yukuai1@huaweicloud.com>,
  axboe@kernel.dk, akpm@linux-foundation.org, ming.lei@redhat.com,
  yang.yang@vivo.com, osandov@fb.com, paolo.valente@linaro.org
 Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
  yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
 References: <20241217024047.1091893-1-yukuai1@huaweicloud.com>
- <20241217024047.1091893-3-yukuai1@huaweicloud.com>
- <698a01e6-cb03-43a2-a0f1-5c8555dea8c1@acm.org>
+ <20241217024047.1091893-4-yukuai1@huaweicloud.com>
+ <ac5aa72f-9944-4436-bed3-43e4e4e97f5e@acm.org>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <1b99962f-80e2-7047-acd2-c6e90c26ba81@huaweicloud.com>
-Date: Wed, 18 Dec 2024 09:18:03 +0800
+Message-ID: <292f069e-023b-2f3c-6cae-0d133190749a@huaweicloud.com>
+Date: Wed, 18 Dec 2024 09:28:30 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 Precedence: bulk
@@ -58,129 +59,88 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <698a01e6-cb03-43a2-a0f1-5c8555dea8c1@acm.org>
+In-Reply-To: <ac5aa72f-9944-4436-bed3-43e4e4e97f5e@acm.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDH7oLMImJngmqiEw--.60737S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr45GrW8JFyDZw1DAFyrWFg_yoW5AFW7pF
-	48tFy8Gry5KF10kr1DtayDXF98Aw1DJ3ZrGF1rXFyUCrWDJFnYqrn5WF9IgwnrAr48JF4j
-	yF1rXry7uw1UXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgCnzoI+JWJnjBmjEw--.18993S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xur43urWDJFyxAFy7Wrg_yoW8ur1fpr
+	s5Aa90krWDtrnakw17Jw17Xa45Ja4Sgw1DWrn2yFyUKrnrZrsF93WfWFnYgrWUJr4xGrsr
+	Zr4DXFZ7uF1UXrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoWlkDUUUU
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUpwZcUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 Hi,
 
-在 2024/12/18 5:47, Bart Van Assche 写道:
+在 2024/12/18 5:50, Bart Van Assche 写道:
 > On 12/16/24 6:40 PM, Yu Kuai wrote:
 >> From: Yu Kuai <yukuai3@huawei.com>
 >>
->> Currently, shallow_depth is used by bfq, kyber and mq-deadline, they both
-> 
-> both -> all
-> 
->> pass in the value for the whole sbitmap, while sbitmap treats the value
-> 
-> treats for -> applies to
-> 
->> for just one word. Which means, shallow_depth never work as expected,
-> 
-> work -> works
-> 
->> and there really is no such functional tests to covert it.
-> 
-> is ... tests -> is ... test or are ... tests
-> 
-> covert -> cover
-> 
->> Consider that callers doesn't know which word will be used, and it's
-> 
-> Consider -> Considering
-> doesn't -> don't
-> 
->> diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
->> index 189140bf11fc..92e77bc13cf6 100644
->> --- a/include/linux/sbitmap.h
->> +++ b/include/linux/sbitmap.h
->> @@ -213,12 +213,12 @@ int sbitmap_get(struct sbitmap *sb);
->>    * sbitmap_get_shallow() - Try to allocate a free bit from a &struct 
->> sbitmap,
->>    * limiting the depth used from each word.
->>    * @sb: Bitmap to allocate from.
->> - * @shallow_depth: The maximum number of bits to allocate from a 
->> single word.
->> + * @shallow_depth: The maximum number of bits to allocate from the 
->> bitmap.
->>    *
->>    * This rather specific operation allows for having multiple users with
->>    * different allocation limits. E.g., there can be a high-priority 
->> class that
->>    * uses sbitmap_get() and a low-priority class that uses 
->> sbitmap_get_shallow()
->> - * with a @shallow_depth of (1 << (@sb->shift - 1)). Then, the 
->> low-priority
->> + * with a @shallow_depth of (sb->depth << 1). Then, the low-priority
-> 
-> (sb->depth << 1) -> (sb->depth >> 1)
-> 
->> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
->> index d3412984170c..6b8b909614a5 100644
->> --- a/lib/sbitmap.c
->> +++ b/lib/sbitmap.c
->> @@ -208,8 +208,27 @@ static int sbitmap_find_bit_in_word(struct 
->> sbitmap_word *map,
->>       return nr;
+>> The maximal default nr_requests is 256, and if disk can handle more than
+>> 256 requests concurrently, use elevator in this case is useless, on the
+>> one hand it limits the number of requests to 256, on the other hand,
+>> it can't merge or sort IO because requests are dispatched to disk
+>> immediately and the elevator is just empty.
+>>
+>> For example, for nvme megaraid with 512 queue_depth by default, we have
+>> to change default elevator to none, otherwise deadline will lose a lot of
+>> performance.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   block/elevator.c | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/block/elevator.c b/block/elevator.c
+>> index 7c3ba80e5ff4..4cce1e7c47d5 100644
+>> --- a/block/elevator.c
+>> +++ b/block/elevator.c
+>> @@ -568,6 +568,17 @@ static struct elevator_type 
+>> *elevator_get_default(struct request_queue *q)
+>>           !blk_mq_is_shared_tags(q->tag_set->flags))
+>>           return NULL;
+>> +    /*
+>> +     * If nr_queues will be less than disk ability, requests will be
+>> +     * dispatched to disk immediately, it's useless to use elevator. 
+>> User
+>> +     * should set a bigger nr_requests or limit disk ability manually if
+>> +     * they really want to use elevator.
+>> +     */
+>> +    if (q->queue_depth && q->queue_depth >= BLKDEV_DEFAULT_RQ * 2)
+>> +        return NULL;
+>> +    if (!q->queue_depth && q->tag_set->queue_depth >= 
+>> BLKDEV_DEFAULT_RQ * 2)
+>> +        return NULL;
+>> +
+>>       return elevator_find_get("mq-deadline");
 >>   }
->> +static unsigned int __map_depth_with_shallow(const struct sbitmap *sb,
->> +                         int index,
->> +                         unsigned int shallow_depth)
->> +{
->> +    unsigned int pre_word_bits = 0;
->> +
->> +    if (shallow_depth >= sb->depth)
->> +        return __map_depth(sb, index);
->> +
->> +    if (index > 0)
->> +        pre_word_bits += (index - 1) << sb->shift;
 > 
-> Why "index - 1" instead of "index"?
+> Shouldn't this patch be submitted separately since it is independent of
+> the rest of the patches in this series?
 
-We're finding bit in the 'index' word, and pre_word_bits are the number
-of bits in previous workds.
-
-> 
->> +
->> +    if (shallow_depth <= pre_word_bits)
->> +        return 0;
->> +
->> +    return min_t(unsigned int, __map_depth(sb, index),
->> +                   shallow_depth - pre_word_bits);
->> +}
-> 
-> How about renaming pre_word_bits into lower_bound?
-
-Yes.
-> 
-> Otherwise this patch looks good to me.
-> 
+Yes, this patch was added to this set by mistake. My bad. :(
+I'm supposed to use the cleanup patch from v1 to replace this patch.
 
 Thanks,
 Kuai
 
+> 
 > Thanks,
 > 
 > Bart.
+> 
+> 
 > .
 > 
 
