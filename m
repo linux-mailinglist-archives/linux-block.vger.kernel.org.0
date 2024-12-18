@@ -1,115 +1,110 @@
-Return-Path: <linux-block+bounces-15552-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15558-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7908A9F5CCA
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 03:25:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BAAC9F5CDC
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 03:27:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 804A77A2090
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:25:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BA7118928AC
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:27:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986857081D;
-	Wed, 18 Dec 2024 02:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9079A142900;
+	Wed, 18 Dec 2024 02:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Voh8Sf3h"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263717080B
-	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 02:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF336CDAF;
+	Wed, 18 Dec 2024 02:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734488704; cv=none; b=ryH4HbVzlZWt0i+s0PTueptI2HXvf9nKfo0I6iCpyfi0g+2iN0d4+/n5hjFMUbagm4sP93Ns+90DXfx6l9cWYZ47yop00ccbE704Vguk3UZYUHyqfCba0ziUnqlZMhRqQ/oXWb5ztBqoRucA/EaEHw+H8w+RhRUpitI/YCwajbU=
+	t=1734488793; cv=none; b=faAZWCocS4eh4ZqdGQkB8zUrjeN6TuQraM0rGd2Rht6cfPM8Hz7y5ahmi14f65FoukjQye9SR2JdLbxLKsgQvAAd4PSm78FEKRbxdfnwFDmCkta7RrmxTfSsZrQujuhgeMayHCPHf9ZNL4jai8cPHAkoBNVTsMFO1wJj19aK33E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734488704; c=relaxed/simple;
-	bh=NPuWjvyeZCs+PKdpAAsn5exiv7WJwXhNNVjHh9F4cmQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=NjGqpN7SpgZrXqIyEavUJ2FteqtsCxmQC82uCpFbm67GEtEeAaSN62uul6XhoG+hBElq4v++CGFxS4tGea44JlMQZ+na1bZrb4fynnfhnwG/SOBqWKhINZR8NMUg3yzEkDSSqaf4oVgb0GpfTLCkuzvAN4M36b2YuVJtIQvanNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YCcvc0Hwvz4f3jqb
-	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 10:24:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7C5291A06DA
-	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 10:24:58 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgB3noJ4MmJn5tWmEw--.62823S3;
-	Wed, 18 Dec 2024 10:24:58 +0800 (CST)
-Subject: Re: [PATCH blktests 2/2] throtl: fix the race between submitting IO
- and setting cgroup.procs
-To: Nilay Shroff <nilay@linux.ibm.com>, linux-block@vger.kernel.org
-Cc: shinichiro.kawasaki@wdc.com, yi.zhang@redhat.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20241217131440.1980151-1-nilay@linux.ibm.com>
- <20241217131440.1980151-3-nilay@linux.ibm.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d2b28360-259a-8938-47eb-b14b5b4df754@huaweicloud.com>
-Date: Wed, 18 Dec 2024 10:24:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1734488793; c=relaxed/simple;
+	bh=9dBXmKcgLQirHI2iYSo1wb5jOOk6jjcxYvTobhrvo9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QjqnPubtocCYqoWmhHoxnxxgmEVNtBP7oh4e+g5yJEVW8Cx2/7iWHuYNYO78tlsxOEivhzIaEbDXL9Sv7Qnxs/5Az81j66eVyHjOSuJEQg3ERUMVNYpz70jH9BnoaYVdRGedzcGOR5he/nQ7sAN0ZO2OQeLRhjeA8zejAkeBVUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Voh8Sf3h; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=zQboEwj/BnkbLUHNu4i0H6IOdbozIVeO6wUMyrdIBHI=; b=Voh8Sf3hO5qNkjoK4kIPOmOgEK
+	KymmqwZVrqKkrljZN2JeD/OQLToc1A8LNRhRuBTBcPfbdAjjEzWuJ0LI2x9XlHWHr0WNa/9gP3bmK
+	zd/YOrMgYy0ipBfnPr2D5RvFIFhc+nIZlwXW24TC/hW1DZnmuFQJQHv9RyMQLlhXUmtieqhNiet0b
+	CyRsUC2rLKtSQBiFM6gspK2m69dbsrPc6kP2MdZISh3XhokfJdRGmnOFlJBIu4h3mH1CigDN/cOY2
+	ckLuHCIjOl51/DOGdhElWBRqoxI49t8/r5R74GfUuj6zq5qeTQDZOPnD3dIda6xFV7Jn/oknafRHJ
+	IFScGQ0A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNjlc-0000000FOFQ-0omO;
+	Wed, 18 Dec 2024 02:26:28 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: hare@suse.de,
+	willy@infradead.org,
+	dave@stgolabs.net,
+	david@fromorbit.com,
+	djwong@kernel.org,
+	kbusch@kernel.org
+Cc: john.g.garry@oracle.com,
+	hch@lst.de,
+	ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [PATCH 0/5] fs/buffer: strack reduction on async read
+Date: Tue, 17 Dec 2024 18:26:21 -0800
+Message-ID: <20241218022626.3668119-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241217131440.1980151-3-nilay@linux.ibm.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB3noJ4MmJn5tWmEw--.62823S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw15ZFW7Jr1rAr43KFyfZwb_yoW3KFXEk3
-	s7Kryjg3yxA3srJanakr43WrW2ya1UurWrZ3WxCF42q348Aws3uF92qw17Zr13ZayIyrs8
-	W34S9w17KwnIkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UtR6
-	wUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Hi,
+This splits up a minor enhancement from the bs > ps device support
+series into its own series for better review / focus / testing.
+This series just addresses the reducing the array size used and cleaning
+up the async read to be easier to read and maintain.
 
-ÔÚ 2024/12/17 21:14, Nilay Shroff Ð´µÀ:
-> This commit helps fix the above race condition by touching a temp file. The
-> the existence of the temp file is then polled by the background process at
-> regular interval. Until the temp file is created, the background process
-> would not forward progress and starts submitting IO and from the main
-> thread we'd touch temp file only after we write PID of the background
-> process into cgroup.procs.
+Changes on this series from the RFC v2:
 
-It's right sleep 0.1 is not appropriate here, and this can work.
-However, I think reading cgroup.procs directly is better, something
-like following:
+  - Fixes the loop by ensuring we bump counts on continue as noted by
+    Matthew Wilcox
+  - new patch to simplify the loop by using bh_offset()
+  - bike shed love on comments
+  - Testing: tested on ext4 and XFS with fstests, with no regressions found
+    after willy's suggested loop fix on continue. I'm however running a new
+    set of tests now after a rebase onto v6.13-rc3 and a bit of patch ordering
+    and the addition of bh_offset(). Prelimimary tests however show no
+    issues.
 
-  _throtl_test_io() {
--       local pid
-+       local pid="none"
+[0] https://lkml.kernel.org/r/20241214031050.1337920-1-mcgrof@kernel.org
 
-         {
-                 local rw=$1
-                 local bs=$2
-                 local count=$3
+Luis Chamberlain (5):
+  fs/buffer: move async batch read code into a helper
+  fs/buffer: simplify block_read_full_folio() with bh_offset()
+  fs/buffer: add a for_each_bh() for block_read_full_folio()
+  fs/buffer: add iteration support for block_read_full_folio()
+  fs/buffer: reduce stack usage on bh_read_iter()
 
--               sleep 0.1
-+               while ! cat $CGROUP2_DIR/$THROTL_DIR/cgroup.procs | grep 
-$pid; do
-+                       sleep 0.1
-                 _throtl_issue_io "$rw" "$bs" "$count"
-         } &
+ fs/buffer.c | 221 +++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 160 insertions(+), 61 deletions(-)
 
-
-Thanks,
-Kuai
+-- 
+2.43.0
 
 
