@@ -1,69 +1,73 @@
-Return-Path: <linux-block+bounces-15612-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15614-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ED199F6F66
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 22:23:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2459F6F68
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 22:23:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0743160727
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 21:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B11F71881D2B
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 21:23:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CCC6192D95;
-	Wed, 18 Dec 2024 21:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288FD1FBCBE;
+	Wed, 18 Dec 2024 21:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="nbfK0L+C"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="UbW3IvFP"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8C9153824
-	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 21:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846E11FBE9B
+	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 21:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734556997; cv=none; b=roINNhmPDPQJYj1IyBPY3dnLgkUr8pR9ifjc5N5UdUBTT5OWVVZiKxcY4fl0IcKRKchNrZqbXmipUwjyHtZCX7gVI+JvgFSjSuj1IgXIDoWO2jp3FO3A5t2ATTspJ7EWYAKrcWE3kFA2vOeZUzvr6T6GVI9u4lgtXpfCvS75K1E=
+	t=1734557000; cv=none; b=knbg99uhTdhiKZW1gyYEG5RrrQKdPzTVirHHH4OeWz96PDgE/rcs/MzLyvZ2uYCvNXHAqyw8zIfxMAv5eDrp/NpbhKXRavtQtJ7Ps5wLIAvYwy9yplyGalr8ycfLhrM0TBYXLcjh8re6c3Ua+ESj+l7VZFmz2MafiasIbqqXqk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734556997; c=relaxed/simple;
-	bh=BNZkmb/LAF+sP6ElkGrpZfb95162+HzX7ithY9pUsT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ogyAJBFMjTmVunEqmifs9PcD5OFTgPYLfKangcnHiE9lO9VGYATPu1RIahneGwc8+U86Vk0/C4ITKsUruwrMa2Zp6FVJzpyfdpAOvIVYz2LCUXpVl0fI04B86Lwt/XVyHnefc15wHBRFY+eGTP17scVCqBsURgCU5SJfzwJ3uWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=nbfK0L+C; arc=none smtp.client-ip=199.89.1.12
+	s=arc-20240116; t=1734557000; c=relaxed/simple;
+	bh=+cqSOxM/X75UnO0v7ha9edr48Mcut5PfZpDSq2W9LRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ug29bUJ1Fx7AJSKEVRrFSa6Lu73lnw3xfsZXhvLqAFSPCA/NUqv2l3QwW2FOIrwYre2KVe54oHMxUXciW1Z1ky9ugE0A3NXNiFtvaKhnA+QT+JsEBW8HWeIEnDkMNJPWFuPQdAQtaWrpvc2AhzpazrEDBxnKbwYipOnptcv7ATg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=UbW3IvFP; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YD6984qYZzlfflk;
-	Wed, 18 Dec 2024 21:23:08 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YD69C143Fzlff0B;
+	Wed, 18 Dec 2024 21:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from:received:received; s=mr01; t=
-	1734556986; x=1737148987; bh=MoqvsV+dr4wUyw+fazcnHf9oAqqaUGdtYCd
-	2JUuZgdo=; b=nbfK0L+CnQgyHBbLcRfk8RPggWzvybGL1o3gblzeFpchIaacKfb
-	FeKCvspOwbaaCoFuJwjyYpnr4Y+63JPtzTFa6UNs54/LiyMKhzVEhuJvP7mJuGav
-	kReW58gGU2ZpH8st3uKU5y4KFB3OXgdm3z3yXV6npLlbW9El0pMM8tWTfRrFBRoQ
-	S1VI5kQ3NJnUkgj62A7uqEr+6RrlxeHZguSB2Dm0v4Nqqdhd50z67cTpsB837zk+
-	EFMJk+CQLzG/+0yVVGMcs5NlcqJbuSwcxQjXO7nlYDvFEGFOunKouGI1qYvx5pWw
-	3Q3kMZqjIM8wBBKk+uCnkEysJ2WzH0DZNHg==
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from
+	:received:received; s=mr01; t=1734556988; x=1737148989; bh=NegsF
+	s0MNhSV8qmX3NPaBQfPPKUDrbelZseBCfeFvcI=; b=UbW3IvFPCSN2suqSWaGbT
+	WhpIGcarPpnoo1gTwp2CY5cJhrZhr7kx4gpbCzJ/Kog+iOCRNYyCOoeUyB3FOdaY
+	bJ0yh1y7/o+aSR8ACl4m1JLx2J7nMl2yCKncC+dMNpEjJk6WMsrbV5cwSFCIXRgF
+	f9u5Dhw7MlyBp9lv+tTdenMomIir0yQaNqE9OH4Tm+GMvoSc0upEZO73bfDHhm/s
+	fIRtX8KjhJ+V0RLR90AA2CGKREDivHFBK+AVOcfXG1apiGEKDUgHNHCvqCMA1seG
+	MPymVMmHuBfLeySnVcKqToz7Depq9yseKmtsx+IQ0Wt97imE8fo00NuT0xMCiQoU
+	A==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id s98Sv6QqfiET; Wed, 18 Dec 2024 21:23:06 +0000 (UTC)
+ id 2M7MqjqQpvsd; Wed, 18 Dec 2024 21:23:08 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YD6944Q7wzlfflB;
-	Wed, 18 Dec 2024 21:23:04 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YD6970VRDzlfflC;
+	Wed, 18 Dec 2024 21:23:06 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v3 0/2] Two blk_mq_submit_bio() patches
-Date: Wed, 18 Dec 2024 13:22:44 -0800
-Message-ID: <20241218212246.1073149-1-bvanassche@acm.org>
+Subject: [PATCH v3 1/2] block: Reorder the request allocation code in blk_mq_submit_bio()
+Date: Wed, 18 Dec 2024 13:22:45 -0800
+Message-ID: <20241218212246.1073149-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+In-Reply-To: <20241218212246.1073149-1-bvanassche@acm.org>
+References: <20241218212246.1073149-1-bvanassche@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -72,32 +76,35 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jens,
+Help the CPU branch predictor in case of a cache hit by handling the cach=
+e
+hit scenario first.
 
-This patch series includes two cleanup patches for blk_mq_submit_bio(). N=
-o
-functionality has been changed.
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-mq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Please consider this patch series for the next merge window.
-
-Thanks,
-
-Bart.
-
-Changes compared to v2 of this patch series:
- - Changed the title of the first patch.
- - Added unlikely() in the second patch.
- - Dropped the patch that was added as the third patch.
-
-Changes compared to v1 of this patch series:
- - Addressed Christoph's comments on patch 2/3.
- - Added patch 3/3 to this series.
-
-Bart Van Assche (2):
-  block: Reorder the request allocation code in blk_mq_submit_bio()
-  blk-mq: Move more error handling into blk_mq_submit_bio()
-
- block/blk-mq.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 7ee21346a41e..8d2aab4d9ba9 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3102,12 +3102,12 @@ void blk_mq_submit_bio(struct bio *bio)
+ 		goto queue_exit;
+=20
+ new_request:
+-	if (!rq) {
++	if (rq) {
++		blk_mq_use_cached_rq(rq, plug, bio);
++	} else {
+ 		rq =3D blk_mq_get_new_requests(q, plug, bio, nr_segs);
+ 		if (unlikely(!rq))
+ 			goto queue_exit;
+-	} else {
+-		blk_mq_use_cached_rq(rq, plug, bio);
+ 	}
+=20
+ 	trace_block_getrq(bio);
 
