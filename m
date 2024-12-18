@@ -1,56 +1,55 @@
-Return-Path: <linux-block+bounces-15543-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15540-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52E2E9F5C49
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:34:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7006E9F5C2B
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:18:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EF9216E4F3
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 01:34:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FA5E1891E54
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 01:18:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA8735965;
-	Wed, 18 Dec 2024 01:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D93E1E4A4;
+	Wed, 18 Dec 2024 01:18:12 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCD53398A;
-	Wed, 18 Dec 2024 01:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE2B1F61C;
+	Wed, 18 Dec 2024 01:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734485658; cv=none; b=EhajnpVxV8AVrMhIYTjnJUGHR8ltrNnWsKDAmExFx/qZAxUrMulNUd29zCw1hCMjUS5/rYASUlKjYCjDsie8mO05yzfb/6K3yOEi5+6nbSTn7MsHGN60a6ZqrAFF4lv6QMVvE4XARIuSNwHfbjP6iT8FpXC1YdOT4KuerGiwheA=
+	t=1734484692; cv=none; b=CKvFzWSzLlLutUe7zdQ8H5YNhYviR34eOCFiAFGpLcsDAn9EbHgg3UFzrb+6OJjICSo4xiQpRBb3dPneLI0PbnTJl5DH1lOxwpB03sseZA7HY91VmrLrBM1+sub0JAdnBQ0+UQK8WG33chWJN66wR0cRTLPRxNmTRUbqewDVoO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734485658; c=relaxed/simple;
-	bh=XhAZ5geuVVdsiME21rzxCfeZPMQDqFJa2hXhlUX0RKY=;
+	s=arc-20240116; t=1734484692; c=relaxed/simple;
+	bh=McfR0613Zf6/X45COIYtJP57OSX3/SO2sYfzLYb9v5o=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oKscPmSUk+BbhX52i5moRQ6mNiH6KhbgtAszeZT519xsXOA11TEN8HsRZyfCifomGhMZJxmEa+t0e5VB5/GzfvICSsJ/l/aIu5MxY+fu5037qf2xEr2kKQuCm/HwJt8/na4fdjzKKj+cKQk2aOGxjSA3Qosiz7YIMagRkzGADCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 In-Reply-To:Content-Type; b=ZCsrvplu0NKwcED14FERh8VAMN/8iU+Mjx4SLIsFfR7xO4QetGuZK4jAdu2rCQGhFPzBGTRhcxSa08O6yhszKtyrC3pA6t2A8U0lflD1IPFuWrLcPSpUjx8/iVFZfXoyks5pEehWJ0haLIDJnADBChFQunmg70R3y3JU23hUBNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YCbNR65GCz4f3jdP;
-	Wed, 18 Dec 2024 09:16:07 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YCbQQ4w1Lz4f3jt6;
+	Wed, 18 Dec 2024 09:17:50 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 5517C1A018D;
-	Wed, 18 Dec 2024 09:16:27 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 2178D1A0196;
+	Wed, 18 Dec 2024 09:18:05 +0800 (CST)
 Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgB3noJqImJnl06iEw--.62098S3;
-	Wed, 18 Dec 2024 09:16:27 +0800 (CST)
-Subject: Re: [PATCH RFC v2 1/4] block/mq-deadline: Revert "block/mq-deadline:
- Fix the tag reservation code"
+	by APP4 (Coremail) with SMTP id gCh0CgDH7oLMImJngmqiEw--.60737S3;
+	Wed, 18 Dec 2024 09:18:04 +0800 (CST)
+Subject: Re: [PATCH v2 RFC 2/4] lib/sbitmap: fix shallow_depth tag allocation
 To: Bart Van Assche <bvanassche@acm.org>, Yu Kuai <yukuai1@huaweicloud.com>,
  axboe@kernel.dk, akpm@linux-foundation.org, ming.lei@redhat.com,
  yang.yang@vivo.com, osandov@fb.com, paolo.valente@linaro.org
 Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
  yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
 References: <20241217024047.1091893-1-yukuai1@huaweicloud.com>
- <20241217024047.1091893-2-yukuai1@huaweicloud.com>
- <7e26bf70-3ff3-4cf0-870e-9d0d9c35491b@acm.org>
+ <20241217024047.1091893-3-yukuai1@huaweicloud.com>
+ <698a01e6-cb03-43a2-a0f1-5c8555dea8c1@acm.org>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <9809ecdd-9190-cbd9-4397-5c1f718a9f15@huaweicloud.com>
-Date: Wed, 18 Dec 2024 09:16:25 +0800
+Message-ID: <1b99962f-80e2-7047-acd2-c6e90c26ba81@huaweicloud.com>
+Date: Wed, 18 Dec 2024 09:18:03 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 Precedence: bulk
@@ -59,14 +58,14 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7e26bf70-3ff3-4cf0-870e-9d0d9c35491b@acm.org>
+In-Reply-To: <698a01e6-cb03-43a2-a0f1-5c8555dea8c1@acm.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB3noJqImJnl06iEw--.62098S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF4DXFWktr43GF1rAF4ktFb_yoW5try7pa
-	yrAanFkrW5JF1v9r18J3yDZry8tw43Xw13XF1Yq3WFkrWDZF4qqF4FqFWY9FWxZrWkGa1U
-	KF4DXr9xZ3ZrZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgDH7oLMImJngmqiEw--.60737S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr45GrW8JFyDZw1DAFyrWFg_yoW5AFW7pF
+	48tFy8Gry5KF10kr1DtayDXF98Aw1DJ3ZrGF1rXFyUCrWDJFnYqrn5WF9IgwnrAr48JF4j
+	yF1rXry7uw1UXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
 	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
@@ -76,106 +75,112 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWF4DXFWktr43GF1rAF4ktFb_yoW5try7pa
 	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
 	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
 	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUpwZcUUUUU=
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoWlkDUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 Hi,
 
-在 2024/12/18 5:39, Bart Van Assche 写道:
+在 2024/12/18 5:47, Bart Van Assche 写道:
 > On 12/16/24 6:40 PM, Yu Kuai wrote:
 >> From: Yu Kuai <yukuai3@huawei.com>
 >>
->> This reverts commit 39823b47bbd40502632ffba90ebb34fff7c8b5e8.
->>
->> 1) Set min_shallow_depth to 1 will end up setting wake_batch to 1,
->>     and this will cause performance degradation in some high concurrency
->>     test, for both IO bandwidth and cpu usage.
->>
->>     async_depth can be changed by sysfs, and the minimal value is 1. This
->>     is why min_shallow_depth is set to 1 at initialization to make sure
->>     functional is correct if async_depth is set to 1. However, sacrifice
->>     performance in the default scenario is not acceptable.
->>
->> 2) dd_to_word_depth() is supposed to scale down async_depth, however, 
->> user
->>     can set low nr_requests and sb->depth can be less than 1 << 
->> sb->shift,
->>     then dd_to_word_depth() will end up scale up async_depth.
+>> Currently, shallow_depth is used by bfq, kyber and mq-deadline, they both
 > 
-> Although this patch fixes a performance regression, it breaks the
-> async_depth functionality. If we are going to break that functionality
-> temporarily, I propose to do something like this:
+> both -> all
+> 
+>> pass in the value for the whole sbitmap, while sbitmap treats the value
+> 
+> treats for -> applies to
+> 
+>> for just one word. Which means, shallow_depth never work as expected,
+> 
+> work -> works
+> 
+>> and there really is no such functional tests to covert it.
+> 
+> is ... tests -> is ... test or are ... tests
+> 
+> covert -> cover
+> 
+>> Consider that callers doesn't know which word will be used, and it's
+> 
+> Consider -> Considering
+> doesn't -> don't
+> 
+>> diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+>> index 189140bf11fc..92e77bc13cf6 100644
+>> --- a/include/linux/sbitmap.h
+>> +++ b/include/linux/sbitmap.h
+>> @@ -213,12 +213,12 @@ int sbitmap_get(struct sbitmap *sb);
+>>    * sbitmap_get_shallow() - Try to allocate a free bit from a &struct 
+>> sbitmap,
+>>    * limiting the depth used from each word.
+>>    * @sb: Bitmap to allocate from.
+>> - * @shallow_depth: The maximum number of bits to allocate from a 
+>> single word.
+>> + * @shallow_depth: The maximum number of bits to allocate from the 
+>> bitmap.
+>>    *
+>>    * This rather specific operation allows for having multiple users with
+>>    * different allocation limits. E.g., there can be a high-priority 
+>> class that
+>>    * uses sbitmap_get() and a low-priority class that uses 
+>> sbitmap_get_shallow()
+>> - * with a @shallow_depth of (1 << (@sb->shift - 1)). Then, the 
+>> low-priority
+>> + * with a @shallow_depth of (sb->depth << 1). Then, the low-priority
+> 
+> (sb->depth << 1) -> (sb->depth >> 1)
+> 
+>> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+>> index d3412984170c..6b8b909614a5 100644
+>> --- a/lib/sbitmap.c
+>> +++ b/lib/sbitmap.c
+>> @@ -208,8 +208,27 @@ static int sbitmap_find_bit_in_word(struct 
+>> sbitmap_word *map,
+>>       return nr;
+>>   }
+>> +static unsigned int __map_depth_with_shallow(const struct sbitmap *sb,
+>> +                         int index,
+>> +                         unsigned int shallow_depth)
+>> +{
+>> +    unsigned int pre_word_bits = 0;
+>> +
+>> +    if (shallow_depth >= sb->depth)
+>> +        return __map_depth(sb, index);
+>> +
+>> +    if (index > 0)
+>> +        pre_word_bits += (index - 1) << sb->shift;
+> 
+> Why "index - 1" instead of "index"?
 
-Yes, I'll split this patch, and merge the async_depth changes into the
-last patch.
+We're finding bit in the 'index' word, and pre_word_bits are the number
+of bits in previous workds.
+
+> 
+>> +
+>> +    if (shallow_depth <= pre_word_bits)
+>> +        return 0;
+>> +
+>> +    return min_t(unsigned int, __map_depth(sb, index),
+>> +                   shallow_depth - pre_word_bits);
+>> +}
+> 
+> How about renaming pre_word_bits into lower_bound?
+
+Yes.
+> 
+> Otherwise this patch looks good to me.
+> 
 
 Thanks,
 Kuai
 
+> Thanks,
 > 
-> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-> index 20a8a3afb88b..4cc7b5db4669 100644
-> --- a/block/mq-deadline.c
-> +++ b/block/mq-deadline.c
-> @@ -487,37 +487,12 @@ static struct request *dd_dispatch_request(struct 
-> blk_mq_hw_ctx *hctx)
->       return rq;
->   }
-> 
-> -/*
-> - * 'depth' is a number in the range 1..INT_MAX representing a number of
-> - * requests. Scale it with a factor (1 << bt->sb.shift) / 
-> q->nr_requests since
-> - * 1..(1 << bt->sb.shift) is the range expected by sbitmap_get_shallow().
-> - * Values larger than q->nr_requests have the same effect as 
-> q->nr_requests.
-> - */
-> -static int dd_to_word_depth(struct blk_mq_hw_ctx *hctx, unsigned int 
-> qdepth)
-> -{
-> -    struct sbitmap_queue *bt = &hctx->sched_tags->bitmap_tags;
-> -    const unsigned int nrr = hctx->queue->nr_requests;
-> -
-> -    return ((qdepth << bt->sb.shift) + nrr - 1) / nrr;
-> -}
-> -
->   /*
->    * Called by __blk_mq_alloc_request(). The shallow_depth value set by 
-> this
->    * function is used by __blk_mq_get_tag().
->    */
->   static void dd_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
->   {
-> -    struct deadline_data *dd = data->q->elevator->elevator_data;
-> -
-> -    /* Do not throttle synchronous reads. */
-> -    if (op_is_sync(opf) && !op_is_write(opf))
-> -        return;
-> -
-> -    /*
-> -     * Throttle asynchronous requests and writes such that these requests
-> -     * do not block the allocation of synchronous requests.
-> -     */
-> -    data->shallow_depth = dd_to_word_depth(data->hctx, dd->async_depth);
->   }
-> 
->   /* Called by blk_mq_update_nr_requests(). */
-> @@ -525,11 +500,8 @@ static void dd_depth_updated(struct blk_mq_hw_ctx 
-> *hctx)
->   {
->       struct request_queue *q = hctx->queue;
->       struct deadline_data *dd = q->elevator->elevator_data;
-> -    struct blk_mq_tags *tags = hctx->sched_tags;
-> 
->       dd->async_depth = q->nr_requests;
-> -
-> -    sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
->   }
-> 
->   /* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
-> 
+> Bart.
 > .
 > 
 
