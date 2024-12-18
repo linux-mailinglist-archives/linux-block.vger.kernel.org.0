@@ -1,156 +1,97 @@
-Return-Path: <linux-block+bounces-15545-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15547-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 278FE9F5C84
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 03:01:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70C289F5C8B
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 03:02:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAA5C188A191
-	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:01:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33CC3188A9F7
+	for <lists+linux-block@lfdr.de>; Wed, 18 Dec 2024 02:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA26335976;
-	Wed, 18 Dec 2024 02:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC793594C;
+	Wed, 18 Dec 2024 02:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="io0Ef+ZC"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GTMS2yoi"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8644A3C
-	for <linux-block@vger.kernel.org>; Wed, 18 Dec 2024 02:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED2A35970;
+	Wed, 18 Dec 2024 02:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734487277; cv=none; b=g2g8NI/hUrzqK+vv7cvjj7Yx70nS2JrmC66cqoK2J8GoKuxG24/XFOG4D4DAteBzugPePUNATapQ5r4ZDvOzoWd7omzqGzQIOdmgeZ1vyLJesUP+CfkS/jArBfglbOg9bTiLHKyYvB7YEFhkC8C+NGB9eqhPYs/dYybKA3sLyLU=
+	t=1734487343; cv=none; b=BfWrD23ehCWk3bwMl8qhQrKXPVZtVAQZURkxCCW577TDLYUwJ7ofrTvyS/tVpACNa7vXy3n+ysQ58HNkU/3IjG2duPCEixs0LSEO6cgiDFuSaxUe2GEC5DCHIRCACV/+0v918tmgnUWT2Emo9kT42J+DQaiXfPnWGd8Ly+9ZzDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734487277; c=relaxed/simple;
-	bh=zh7rkqsCSw5Arb6/dJAfSpTXav0f09k60tpR678lQSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aSyyl/621QhqgDxvROreZ7ZB9MNx4zKuOPB8QJ9bGVWsTeNbVM+/TF7tLNNlVf6G6sEQu4I1PngFHrSuZMmfrxe5ShxcEMpGH+kfvTrI6viZK2ROXLNin5tG0Rf4ZTAPDXPAg4tHoroe6Yxtvapr+grtzaasAFWb+d+wR4SqDb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=io0Ef+ZC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734487274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BjAHD0qsQovEKAbmMVJhxhdPuD7DaVYyEVzO7Asas/M=;
-	b=io0Ef+ZCmACkceDwL50YYaio64842X+ZxXZH8nF5cj9oU678H/tnXHp6LM+Z8y/48fjZL/
-	mipIRrEo2xZ/OqNYClsgTYyERfB0u3fzx2q/GVyXu7MkqV6g8V3HB5P8ZGDXiZms30K+sr
-	kDHI2G7s01hLl40UHKr0sdcYW6SJ5EY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-JEjJhOseP9a1kdLgt4pqFQ-1; Tue,
- 17 Dec 2024 21:01:11 -0500
-X-MC-Unique: JEjJhOseP9a1kdLgt4pqFQ-1
-X-Mimecast-MFC-AGG-ID: JEjJhOseP9a1kdLgt4pqFQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EAD219560A7;
-	Wed, 18 Dec 2024 02:01:09 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.33])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D06BE19560AD;
-	Wed, 18 Dec 2024 02:01:01 +0000 (UTC)
-Date: Wed, 18 Dec 2024 10:00:56 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	Babu Moger <babu.moger@amd.com>, Luck Tony <tony.luck@intel.com>,
-	linux-block@vger.kernel.org
-Subject: Re: [linus:master] [blk]  22465bbac5:
- BUG:KASAN:slab-use-after-free_in__cpuhp_state_add_instance_cpuslocked
-Message-ID: <Z2Is2Ee8Me8qRPR-@fedora>
-References: <202412172217.b906db7c-lkp@intel.com>
+	s=arc-20240116; t=1734487343; c=relaxed/simple;
+	bh=Hk64SXnfRGJRi+/vHn7G8cK7dKWDRtkSs8XS8WFgCAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HqUf6Qt0tdSxKKoC6+TJ+xhbTzHAQnJDi8g5YJrnRxcox2+CGe+spY5IudRSNzc0p5PxG9RMLBKp3v+Sw1M3KzODsPPuubOy/JTNuf4Hxq+E2VQsthL0S/kghCdlhsigaUQzLSCJaYRmpM9IyqCjJdAUnjuJbzE9wwIur+VDfsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GTMS2yoi; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=3kstiw8DGy+LZqa+lbGlsyzzHfy0quVH0jm/EBxZMLU=; b=GTMS2yoiwWY0Ifhn4wiYQbNRua
+	4KJQeIDN7HDu+Dw/9OXzs10OmrFL0N5PUjsfWlXeTnUq2J5xm5niDWNDsrjodyh9mHNfXl8r7kYZZ
+	/+e6bS0hW9cRe6WljMPqgw3OZqwU5O/XhqyqnFElL+2nJ51U4kh3BeqB+r/d69iOW44m0vFDcUVPF
+	Tpxm/D6Th3cazeRtI3tewMwLx4VvY/Pjr/w02PtU8Oos0L0Eyur/SXyOkAYc1ejrt7MAhhJ1Yt6aP
+	lyC005RYEEWmOmZovoiuoL5izpFxhl34H/EOzDeVM2iaHPwdrjierO+PWKxFT7fohKUz4ogKTKEqt
+	YU9w6pCg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNjO9-0000000FLOF-1AAW;
+	Wed, 18 Dec 2024 02:02:13 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: axboe@kernel.dk,
+	hch@lst.de,
+	hare@suse.de,
+	kbusch@kernel.org,
+	sagi@grimberg.me,
+	linux-nvme@lists.infradead.org,
+	willy@infradead.org,
+	dave@stgolabs.net,
+	david@fromorbit.com,
+	djwong@kernel.org
+Cc: john.g.garry@oracle.com,
+	ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [PATCH 0/2] block size limit cleanups
+Date: Tue, 17 Dec 2024 18:02:10 -0800
+Message-ID: <20241218020212.3657139-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202412172217.b906db7c-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Tue, Dec 17, 2024 at 10:20:47PM +0800, kernel test robot wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "BUG:KASAN:slab-use-after-free_in__cpuhp_state_add_instance_cpuslocked" on:
-> 
-> commit: 22465bbac53c821319089016f268a2437de9b00a ("blk-mq: move cpuhp callback registering out of q->sysfs_lock")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> [test failed on linus/master      231825b2e1ff6ba799c5eaf396d3ab2354e37c6b]
-> [test failed on linux-next/master 3e42dc9229c5950e84b1ed705f94ed75ed208228]
-> 
-> in testcase: blktests
-> version: blktests-x86_64-3617edd-1_20241105
-> with following parameters:
-> 
-> 	disk: 1SSD
-> 	test: block-group-01
-> 
-> 
-> 
-> config: x86_64-rhel-9.4-func
-> compiler: gcc-12
-> test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake) with 32G memory
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202412172217.b906db7c-lkp@intel.com
-> 
-> 
-> [ 232.596698][ T3545] BUG: KASAN: slab-use-after-free in __cpuhp_state_add_instance_cpuslocked (include/linux/list.h:1026 kernel/cpu.c:2446)
+This spins off two change which introduces no functional changes from the
+bs > ps block device patch series [0]. These are just cleanups.
 
-Hello,
+[0] https://lkml.kernel.org/r/20241214031050.1337920-1-mcgrof@kernel.org
 
-Thanks for the report!
+Luis Chamberlain (2):
+  block/bdev: use helper for max block size check
+  nvme: use blk_validate_block_size() for max LBA check
 
-Unfortunately I can't reproduce it in my test VM by running
-'blktests block/030' with:
+ block/bdev.c             | 3 +--
+ drivers/nvme/host/core.c | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-- two numa nodes
-- enable CONFIG_BLK_DEV_NULL_BLK_FAULT_INJECTION
-
-
-But just figured out that one freed hctx still may stay in cpuhp cb list, can
-you test the following patch?
-
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 92e8ddf34575..f655b34efffe 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -4421,7 +4421,8 @@ static struct blk_mq_hw_ctx *blk_mq_alloc_and_init_hctx(
- 	/* reuse dead hctx first */
- 	spin_lock(&q->unused_hctx_lock);
- 	list_for_each_entry(tmp, &q->unused_hctx_list, hctx_list) {
--		if (tmp->numa_node == node) {
-+		if (tmp->numa_node == node &&
-+				hlist_unhashed(&tmp->cpuhp_online)) {
- 			hctx = tmp;
- 			break;
- 		}
-
-
-thanks,
-Ming
+-- 
+2.43.0
 
 
