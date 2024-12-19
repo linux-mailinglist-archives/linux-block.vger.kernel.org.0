@@ -1,45 +1,46 @@
-Return-Path: <linux-block+bounces-15625-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15626-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DF8E9F748D
-	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2024 07:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BEFD9F7494
+	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2024 07:17:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8BFC167AC0
-	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2024 06:15:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66ACA167B53
+	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2024 06:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F60C2165E4;
-	Thu, 19 Dec 2024 06:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DCD14A0AA;
+	Thu, 19 Dec 2024 06:17:20 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B67B1F868D
-	for <linux-block@vger.kernel.org>; Thu, 19 Dec 2024 06:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9988E148FE8
+	for <linux-block@vger.kernel.org>; Thu, 19 Dec 2024 06:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734588921; cv=none; b=iWx5q4PZSOFXSUelmjp1P+DdjW752pOZDcYWW395OBmVuVufdt+j9LUq9lAWHeE/veg2SmDUOI0XlGwcuehcfZ+lBnXRRcxRoQlIDJoNDEge7ClRqrtIg4s+Rn5dXhitd5cs1HHaeYf2f2CaT+geWztfWtT/dFMqvI7qNhQaMYw=
+	t=1734589040; cv=none; b=HWGpKZN01lSQE09sNVteNH/uTERNbq+WrOx5bcMgtcAgiMF7Vo8TGAaAnEc+gY/uMbhX9r1FPSNBs6zv8hV/Y5uuUhL+6BHvYg74Z1h97wAYiDKJgf40KyCGOJKrBq4jNO1McdS7oiQ4YpBadGAQZHVYj9wtPNThN3q7yUOWbE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734588921; c=relaxed/simple;
-	bh=LJehYAvQmo7ZBxCZwWRM8UOhcjGXocNsI8D5I887Txg=;
+	s=arc-20240116; t=1734589040; c=relaxed/simple;
+	bh=mwMIxPogSq9MWscre/DDzLjRXLXwexxn7/O5R7LyeQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZB7cPq7cnhRpAD70TPhJhr/fL4QqCuvEIWjRN1c4iYt8fZBOwfZ0mNPELUM5ftmBvQg03S92g6seiGstTVjAmJhO4Xai1isj0ZxRKjEzwLGtA6UAdq7aCk5GHeO40GwMl1tRTXYK3dRXJI0tTrhkNZ2N4UJbyt+s8IuDIdbWFGc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzoVhvG7hoadjZeHXBnuvIoePBz/c5dCAXqgPcrgP3Y2Vh+TJ46m02Q4OTCIfJUPD8TMB811ONF8j7v/x9cs7nT52EG3mleRousLLshnOjFg3L+PgSgYZz/QozcKUi62Aqx3dc4EP7GdsWi5+3JzPSskvcZvaCVQDt7iLeYMCAg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id C812768AFE; Thu, 19 Dec 2024 07:15:14 +0100 (CET)
-Date: Thu, 19 Dec 2024 07:15:14 +0100
+	id 4B1B868AFE; Thu, 19 Dec 2024 07:17:14 +0100 (CET)
+Date: Thu, 19 Dec 2024 07:17:13 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
 Subject: Re: [PATCH 1/2] block: avoid to hold q->limits_lock across APIs
  for atomic update queue limits
-Message-ID: <20241219061514.GA19575@lst.de>
-References: <20241216080206.2850773-1-ming.lei@redhat.com> <20241216080206.2850773-2-ming.lei@redhat.com> <20241216154901.GA23786@lst.de> <Z2DZc1cVzonHfMIe@fedora> <20241217044056.GA15764@lst.de> <Z2EizLh58zjrGUOw@fedora> <20241217071928.GA19884@lst.de> <Z2Eog2mRqhDKjyC6@fedora> <a032a3a0-0784-4260-92fd-90feffe1fe20@kernel.org> <Z2Iu1CAAC-nE-5Av@fedora>
+Message-ID: <20241219061713.GB19575@lst.de>
+References: <Z2DZc1cVzonHfMIe@fedora> <20241217044056.GA15764@lst.de> <Z2EizLh58zjrGUOw@fedora> <20241217071928.GA19884@lst.de> <Z2Eog2mRqhDKjyC6@fedora> <a032a3a0-0784-4260-92fd-90feffe1fe20@kernel.org> <Z2Iu1CAAC-nE-5Av@fedora> <f34f179a-4eaf-4f73-93ff-efb1ff9fe482@linux.ibm.com> <Z2LQ0PYmt3DYBCi0@fedora> <0fdf7af6-9401-4853-8536-4295a614e6d2@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -48,15 +49,22 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z2Iu1CAAC-nE-5Av@fedora>
+In-Reply-To: <0fdf7af6-9401-4853-8536-4295a614e6d2@linux.ibm.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Dec 18, 2024 at 10:09:24AM +0800, Ming Lei wrote:
-> This way looks good, just commit af2814149883 ("block: freeze the queue in
-> queue_attr_store") needs to be reverted, and freeze/unfreeze has to be
-> added to each queue attribute .store() handler.
+On Wed, Dec 18, 2024 at 07:35:36PM +0530, Nilay Shroff wrote:
+> One simple way I could think of would be updating queue_limit_xxx() APIs and
+> then use it,
+> 
+> queue_limits_start_update(struct request_queue *q, bool freeze) 
+> {
+>     ...
+>     mutex_lock(&q->limits_lock);
+>     if(freeze)
+>         blk_mq_freeze_queue(q);
+>     ...
 
-Actually the sysfs handlers need a lot more work, including sorting
-out the sysfs_lock mess.  Gimme a little time to work on it.
+Conditional locking (and the freeze sort of is a lock) is always a bad
+idea.  But we can do a lower level no-free API or this use case.
 
 
