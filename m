@@ -1,93 +1,93 @@
-Return-Path: <linux-block+bounces-15788-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15790-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33A8E9FF853
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2025 11:41:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBFEB9FF907
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2025 13:01:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08800162533
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2025 10:41:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0CEF1627FC
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2025 12:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECE141A83F4;
-	Thu,  2 Jan 2025 10:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E1A1AAA1C;
+	Thu,  2 Jan 2025 12:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="o0vr66/Y"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718281A08B1
-	for <linux-block@vger.kernel.org>; Thu,  2 Jan 2025 10:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90D3A1DB;
+	Thu,  2 Jan 2025 12:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735814464; cv=none; b=ux5vhb4MUzLbAp6Zs35XgT3mefsg53khrcmP1WKC5OyUoKI2ebr3FKqal/evoWCiETCEpI5ciJidBYvK9rfbM97+x3emmhp2thRAsyEgcYetqfcWALW0SCxudOZ0rpaRDs+eSlIXgM5EYZG5uQnaRinDAKUXzTDznarfXltLIos=
+	t=1735819304; cv=none; b=COsBycBaee8BYzNr/JiGT37xuITToDsfjHgTtTVaG/9Y9jVSY+q8XSCnpZIZVNw1wXvKp15c4I+I6dcprIYG+JWBK2eF1T9G71Oi/5+uVMLJPP110M9pHYIYSPTFKL7VIbfHr5HsKrkk5j0hs6VtJIBhbVvJdrwd2jEILXVucLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735814464; c=relaxed/simple;
-	bh=pMXZiRpBRPmiXly100IZhcwAkq4eNjiCbRiC92Qtw3g=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ovyPaOsxxUFA0NoYQhFN5om9tdq2czy3YKnt/pcvHJx7C0/BZoueN0srOKAhtkDLrtTrSAs9yENmWNBD2AYVKdQGiPRCcjalsx1JzmkXLKDYZ/PmGJGjefB5spKOSn3T89fnu7ntvku5fVx3Y+KiS40xLgYYNXLvSC9TL5+Y6D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a9cbe8fea1so118498385ab.3
-        for <linux-block@vger.kernel.org>; Thu, 02 Jan 2025 02:41:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735814462; x=1736419262;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hzyV7ZElCa83ikzcuqqoZD0xz4zHyxxfrWJ2R/1Mz00=;
-        b=t5WArKSDuuz2ixgxvaHuXn0e2Bpt7iTIOIlqxHgXV2q/gWW4GegaAAYhM90FefUoYn
-         ImNwn5eqHcK7nBlWphoUp7FuTqqUyN+n3YSgq3HdIKKitB7hKJfKRs/FDy84e3WqrWg0
-         qpELmbFRrMwro4vaNA6CoBCxIjHfr9hDXRO1yLNrPpXuTXtow6Gz+ZUMmEGofrjIksXT
-         UvhjabAYywOJZFOBA2K53+XydHxVB3L1dquqVymjkkuUGpfZuKVar8oUta8MUGQwAtzn
-         UuSgFYELw+KEL3fbSsyCWM+sA4s8LKrqva/XP992RW1xHQcR+IsLGQmDMtEWF1D7F5yF
-         5FXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE5U+c0UVSu7cJO9AO87VmryC781GEBe4XRLu5nN3vB+PxKHD1mWGCrfuh4eA1rNUD6iYBh3sDDXHIWw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlW+cBHq6N9gMml6L45Xwn4ky7TzKCYMpAumfx4//8YAWU83js
-	loQdCC3put0Wpouze3TRk5Zlb5gWljAJTKRVmGt0ct9YTiOx8Ib2lG7/EjKb9yhLCuxC7J4jJ9D
-	Z50TIo86hWJqIRiaUF7grqpN2WI80ER+Xv0C6QW4E8Z2IiJg2KNPZgMQ=
-X-Google-Smtp-Source: AGHT+IGA47IBOBbWR6mdnglpI3uKmGDqxXLykYJo4Q03z3y7tq1aR+ciBFlNzYQC2yO+rKBanjoFhJopRY/m7KUMI3RP96hMqXnu
+	s=arc-20240116; t=1735819304; c=relaxed/simple;
+	bh=DdEeNixq50fkHfaDHiWJWkVLsRvQVsHi5QlVFU5P5vQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=e0Z19aYaLh7Aqm/f9u4vOWPTLaLmcLP8XNoZnRqj/Ag+TA2mjNALckYu9xJ7tX9gDXnsMSKBXNqdr3LYXlJjL1SoP1ev//qUcn8ZGe0GQHQuD9Sez0LU6/UOwsxmgWYYQatiFCS61f8x3PH2NI06FHtVTv6tc0BKiGw1W/T7QtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=o0vr66/Y; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1735819292;
+	bh=DdEeNixq50fkHfaDHiWJWkVLsRvQVsHi5QlVFU5P5vQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=o0vr66/Ysxyu5cQV3TfUxbBiZsGa85dMMA1Fu+NdO7p+Jg/3znSvkrEb8R9jvLISN
+	 jmXvi0njzLx3EsWYYV5mkFGACDDwyGZJdMFJxi65p2MwwLj0KSpJhxnMGNe8LL/4p+
+	 cwZwfmObtE2cZSV1wmSrYWx4rJ3cVzIG5xEn1JAQ=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: [PATCH 0/4] elevator: Enable const sysfs attributes
+Date: Thu, 02 Jan 2025 13:01:30 +0100
+Message-Id: <20250102-sysfs-const-attr-elevator-v1-0-9837d2058c60@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1705:b0:3a7:e800:7d36 with SMTP id
- e9e14a558f8ab-3c2d2279c01mr369064545ab.10.1735814462620; Thu, 02 Jan 2025
- 02:41:02 -0800 (PST)
-Date: Thu, 02 Jan 2025 02:41:02 -0800
-In-Reply-To: <20250102102816.1261-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67766d3e.050a0220.3a8527.0038.GAE@google.com>
-Subject: Re: [syzbot] [scsi?] possible deadlock in sd_remove
-From: syzbot <syzbot+566d48f3784973a22771@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, ming.lei@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABqAdmcC/x3MQQqEMAxA0atI1gZsrahzFZlF0agBaYeklBHx7
+ haXb/H/BUrCpPCpLhDKrBxDgakrmHcfNkJeisE21hnbGtRTV8U5Bk3oUxKkg7JPUXDsB9e6wfi
+ lIyj9T2jl//uevvf9AC1xJu9rAAAA
+X-Change-ID: 20241231-sysfs-const-attr-elevator-97843481ad5e
+To: Jens Axboe <axboe@kernel.dk>, Yu Kuai <yukuai3@huawei.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735819292; l=803;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=DdEeNixq50fkHfaDHiWJWkVLsRvQVsHi5QlVFU5P5vQ=;
+ b=/9NWiAzoP/1Z/E+X5TtLVGhlOtpUxzDgYQ69JuOPR0YgRn9BmMDuuqF2bNWThYgXfEhOweaL7
+ /zcor7MKGzXDesj7NINamu/sF3tTe5bHV27P0vy4e63/CYntTOoOLHP
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Hello,
+The elevator core does not need to modify the sysfs attributes added by
+the elevators. Move the attributes into read-only memory.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+Thomas Weißschuh (4):
+      elevator: Enable const sysfs attributes
+      block: mq-deadline: Constify sysfs attributes
+      block, bfq: constify sysfs attributes
+      kyber: constify sysfs attributes
 
-block/blk.h:728:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
-block/partitions/../blk.h:728:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
-block/partitions/../blk.h:734:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
-block/blk.h:734:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
-kernel/trace/../../block/blk.h:728:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
-kernel/trace/../../block/blk.h:734:7: error: use of undeclared identifier 'queue_dying'; did you mean 'cpu_dying'?
+ block/bfq-iosched.c   | 2 +-
+ block/elevator.c      | 8 ++++----
+ block/elevator.h      | 2 +-
+ block/kyber-iosched.c | 2 +-
+ block/mq-deadline.c   | 2 +-
+ 5 files changed, 8 insertions(+), 8 deletions(-)
+---
+base-commit: 56e6a3499e14716b9a28a307bb6d18c10e95301e
+change-id: 20241231-sysfs-const-attr-elevator-97843481ad5e
 
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-Tested on:
-
-commit:         cbacbf06 block: track queue dying state automatically ..
-git tree:       https://github.com/ming1/linux v6.13/block-fix
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd7202b56d469648
-dashboard link: https://syzkaller.appspot.com/bug?extid=566d48f3784973a22771
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-
-Note: no patches were applied.
 
