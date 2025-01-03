@@ -1,43 +1,49 @@
-Return-Path: <linux-block+bounces-15806-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15808-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7CAA00478
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 07:44:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A178FA00483
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 07:49:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6721C3A36B3
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 06:44:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7309D160E63
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 06:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5741A841F;
-	Fri,  3 Jan 2025 06:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A1C1922E6;
+	Fri,  3 Jan 2025 06:49:32 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F7616F8F5
-	for <linux-block@vger.kernel.org>; Fri,  3 Jan 2025 06:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC3C18E3F;
+	Fri,  3 Jan 2025 06:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735886677; cv=none; b=YWnWeF/Fn9HQrS6iW+RwHt0FOxcu2dwJNcbwzW9aCoYuJDtgYzPj3Ox9QqjJQPdXOhl2YyjoWbsyG99IhdhtjAzUtgMV0r6fTiF6o50f7rkmwqmYpeatdnYSEReFXlhv5Tw3nCGa0JtfdoBhxwXZuDUcJo9O7MAOXKEIisU+rxM=
+	t=1735886972; cv=none; b=I6xooidL7YDiwFZp/b8A0sSEfT+tl+lFuqEiJBkgbXxCjMSlK0ABggD6jkPUSAp8Fu+C9418xpRQ6lXsRxT5jXMZ2zBpkyEjpKy5gSASkJyrFonGtI+P/S8fR3ZmwKvmxoBECYcNDw/UXYJ82uRuDOZjIisQU4X8xpuNTzrZqTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735886677; c=relaxed/simple;
-	bh=XHc8hP7UkkJt+FVbl5awJXixpANuNTTImseQF2zYzvY=;
+	s=arc-20240116; t=1735886972; c=relaxed/simple;
+	bh=hlWHq0OMSTWoCnf+7Roi9teoijwZHWsV5MnA9LcUc0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gq+MfD7mtGN8HAinDIzweDJwshzk4T7xFVj8IGHCJwxN8OAJofUsWGfE3OTMRAbxmUb/jsKIv0IuIjfwHmZttjO9xu+5lQJqqf6yIcyn5xhsBMPcZ36cA83KWlBqfjec9FGYmJkEVZt8XHR+vMZvFvM0aQ7YhM+XcM1G+bRVgog=
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZMHvlyWyp0iroB1cLwWWtro4WQj1huL6HrHgis2p4vQPRjoEk9Z5cXZjZJpn8PvlfsKJuWCqmxFK5KduVru2CDXlElbKej3WIMx1asg8Ld+8Tq35cSH25nHt94rV9xzmrin0kg+IFB7XihM4SlJ/h8HQhk1CcsJVwgymJn6MRQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id AFB8A68BFE; Fri,  3 Jan 2025 07:44:28 +0100 (CET)
-Date: Fri, 3 Jan 2025 07:44:27 +0100
+	id 03BAE68BEB; Fri,  3 Jan 2025 07:49:26 +0100 (CET)
+Date: Fri, 3 Jan 2025 07:49:25 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH v2] block: Use enum for blk-mq tagset flags
-Message-ID: <20250103064427.GA27984@lst.de>
-References: <20250102144426.24241-1-john.g.garry@oracle.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Oliver Sang <oliver.sang@intel.com>,
+	oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-nvme@lists.infradead.org,
+	Damien Le Moal <dlemoal@kernel.org>, linux-btrfs@vger.kernel.org,
+	linux-aio@kvack.org
+Subject: Re: [linus:master] [block]  e70c301fae: stress-ng.aiol.ops_per_sec
+ 49.6% regression
+Message-ID: <20250103064925.GB27984@lst.de>
+References: <202412122112.ca47bcec-lkp@intel.com> <20241213143224.GA16111@lst.de> <20241217045527.GA16091@lst.de> <Z2EgW8/WNfzZ28mn@xsang-OptiPlex-9020> <20241217065614.GA19113@lst.de> <Z3ZhNYHKZPMpv8Cz@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -46,18 +52,35 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250102144426.24241-1-john.g.garry@oracle.com>
+In-Reply-To: <Z3ZhNYHKZPMpv8Cz@ryzen>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jan 02, 2025 at 02:44:26PM +0000, John Garry wrote:
-> Use an enum for tagset flags, so that they are automatically
-> renumbered when modified and we don't potentially leave
-> unused gaps. Some may find this neater.
+On Thu, Jan 02, 2025 at 10:49:41AM +0100, Niklas Cassel wrote:
+> > > from below information, it seems an 'ahci' to me. but since I have limited
+> > > knowledge about storage driver, maybe I'm wrong. if you want more information,
+> > > please let us know. thanks a lot!
+> > 
+> > Yes, this looks like ahci.  Thanks a lot!
+> 
+> Did this ever get resolved?
+> 
+> I haven't seen a patch that seems to address this.
+> 
+> AHCI (ata_scsi_queuecmd()) only issues a single command, so if there is any
+> reordering when issuing a batch of commands, my guess is that the problem
+> also affects SCSI / the problem is in upper layers above AHCI, i.e. SCSI lib
+> or block layer.
 
-Just as last time around I think this is a bad idea that just creates
-more boilerplate.  I actually wrote a series before my vacation to
-drop another unused flag, remove the weirdo policy indiretion and
-add better max flag checking while removing code.  Let me rebase
-that, finish writing commit log and send it out.
+I started looking into this before the holidays.  blktrace shows perfectly
+sequential writes without any reordering using ahci, directly on the
+block device or using xfs and btrfs when using dd.  I also started
+looking into what the test does and got as far as checking out the
+stress-ng source tree and looking at stress-aiol.c.  AFAICS the default
+submission does simple reads and writes using increasing offsets.
+So if the test result isn't a fluke either the aio code does some
+weird reordering or btrfs does.
+
+Oliver, did the test also show any interesting results on non-btrfs
+setups?
 
 
