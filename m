@@ -1,78 +1,144 @@
-Return-Path: <linux-block+bounces-15825-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15827-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2D68A006E7
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 10:27:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC6F7A00706
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 10:33:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F029E16185E
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 09:26:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9BCC3A3FC3
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 09:33:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398D41E009F;
-	Fri,  3 Jan 2025 09:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qxl5Awe0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 610961F239F;
+	Fri,  3 Jan 2025 09:33:50 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25A21119A;
-	Fri,  3 Jan 2025 09:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133221F2361;
+	Fri,  3 Jan 2025 09:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735896408; cv=none; b=K/8Ntiy4bYw3ogh//DjfHkcHhHu1trwKtjeKC5WVl8gU2ZyRu5ryoRvZklVQJ9zBvtVpmaCXhZUfS0xgbfmfwbZBQ/qCbEs90lgvL3ThBlqmGBB2/VV1jMwkjtxE9zLzrauPkpqNEWAzhCFH4OTPA9V1u/XPYJWbbjih1lDbDW4=
+	t=1735896830; cv=none; b=pxwRuAs51CoYGr0JTUZ+R9fNIRsFL2TQt3pJvE2JuuxMKqZ+GFyEVufKiuxMqlVysi0KGBrrArARWUyh97vu36pIpQntmHW5MzXeP5q1BEneK8fnw03Y211eQl/l3GLSovpuVZ7b/iyOVOcDSYnHUC8i1k8RgFK/hsuf1ZK/3/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735896408; c=relaxed/simple;
-	bh=r12MOnn1uesY7j1pRUihCeTf3pHRkYo3YfSJvunhVU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BMr6v1PxbnMQ2LoBzfobyFW3dD1xFrBZnJOh3TxCS6yS/D1808ynLt+WXAmzS0FxNFU+VE/uGXeEy+pKjbh/Z2UvJgyxFlGPZlcFzUhg1u8VYXY22R+vm31Xk3XTspBwCda2mI3I6QdZWABg4acGasZlMAPOc772TSyOoRF1gnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qxl5Awe0; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jmVJJz+38rmIB/8qMaixIq1CEISbYL2BWv1447YsIio=; b=qxl5Awe00UrxQyzxcnu9RkYyU0
-	fF7vfHF92LW1CXnqoogPXuc5wSjvtp0ZbkUgKPyloKemOnkrKKemSlIuSYlX/kxcb4ivp5N/rhZA9
-	fYZl6bCab7DquVIsYm4heHU/+qg8Iqt3exliDH8vijZTaC15RV9m5iToT8tIhJRYUozjlgYZgfwTT
-	jDsAr6t6nskr1oZ6o8xQI6W1tSq//M6oqZQJSOTvmbKVoLDMoLasZE5zFrhrWFVnOGnhahFlmYN27
-	k6KH0W04gIETO3ueK1k7r5mBmTuDgecZQrXZt+DRalO/3+27/qFhlzwFB94QKStzxvjK07nKTXNJj
-	eVLla9jQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tTdx8-0000000Cbaw-0eXi;
-	Fri, 03 Jan 2025 09:26:46 +0000
-Date: Fri, 3 Jan 2025 01:26:46 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Vishnu ks <ksvishnu56@gmail.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-block@vger.kernel.org,
-	bpf@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [LSF/MM/BPF TOPIC] Improving Block Layer Tracepoints for
- Next-Generation Backup Systems
-Message-ID: <Z3etVqYMWjh9n7s5@infradead.org>
-References: <CAJHDoJac2Qa6QjhDFi7YZf0D05=Svc13ZQyX=92KsM7pkkVbJA@mail.gmail.com>
+	s=arc-20240116; t=1735896830; c=relaxed/simple;
+	bh=qtK9bKDYHIPaP6M5tyZKbkucjZn1GTPb89j9Zev9Rzc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o0Tu8ZlwvE0a0tcIpBZgK38PVW8fxd0Mhv3fOmh6ntB8orRAnT1EqLVo/T0Dm4vF5H65aRr4MeBa6JmdR2cBp/mq8zBClPArQ00s351gzk1KnylnpykdfUA8jKFNW9H0DebTDkW0rtJdQ9XYrwIKxHZBvwFCvWU36O0SwmTBVZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YPdfp5crvz4f3jks;
+	Fri,  3 Jan 2025 17:33:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A18181A08C1;
+	Fri,  3 Jan 2025 17:33:37 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCXcYXurndnpXOuGQ--.4390S4;
+	Fri, 03 Jan 2025 17:33:36 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: josef@toxicpanda.com,
+	axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	nbd@other.debian.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] nbd: don't allow reconnect after disconnect
+Date: Fri,  3 Jan 2025 17:28:59 +0800
+Message-Id: <20250103092859.3574648-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJHDoJac2Qa6QjhDFi7YZf0D05=Svc13ZQyX=92KsM7pkkVbJA@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXcYXurndnpXOuGQ--.4390S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFyrJFyrur4fXw4Uuw15urg_yoW8CrW8pF
+	W3AFsrGrW8Ga15JF4kJ34xuFyDKasIgrW3WrW3Z345ZrWfZrZIyw48Ka4Fqr4DGF97Xw43
+	ZF4rW3W0y3ZYkrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
+	UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, Jan 01, 2025 at 12:04:56PM +0530, Vishnu ks wrote:
-> - I'm developing a continuous data protection system using eBPF to
-> monitor block request completions
-> - The system aims to achieve reliable live data replication for block devices
-> Current tracepoints present challenges in capturing the complete
-> lifecycle of write operations
+From: Yu Kuai <yukuai3@huawei.com>
 
-This is nuts.  No, we don't guarantee any stability in the trace points,
-and certainly not for data integrity operations.
+Following process can cause nbd_config UAF:
 
-Please make sure this never gets near any production system.
+1) grab nbd_config temporarily;
+
+2) nbd_genl_disconnect() flush all recv_work() and release the
+initial reference:
+
+  nbd_genl_disconnect
+   nbd_disconnect_and_put
+    nbd_disconnect
+     flush_workqueue(nbd->recv_workq)
+    if (test_and_clear_bit(NBD_RT_HAS_CONFIG_REF, ...))
+     nbd_config_put
+     -> due to step 1), reference is still not zero
+
+3) nbd_genl_reconfigure() queue recv_work() again;
+
+  nbd_genl_reconfigure
+   config = nbd_get_config_unlocked(nbd)
+   if (!config)
+   -> succeed
+   if (!test_bit(NBD_RT_BOUND, ...))
+   -> succeed
+   nbd_reconnect_socket
+    queue_work(nbd->recv_workq, &args->work)
+
+4) step 1) release the reference;
+
+5) Finially, recv_work() will trigger UAF:
+
+  recv_work
+   nbd_config_put(nbd)
+   -> nbd_config is freed
+   atomic_dec(&config->recv_threads)
+   -> UAF
+
+Fix the problem by clearing NBD_RT_BOUND in nbd_genl_disconnect(), so
+that nbd_genl_reconfigure() will fail.
+
+Fixes: b7aa3d39385d ("nbd: add a reconfigure netlink command")
+Reported-by: syzbot+6b0df248918b92c33e6a@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/675bfb65.050a0220.1a2d0d.0006.GAE@google.com/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/block/nbd.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b1a5af69a66d..259bd57fc529 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2179,6 +2179,7 @@ static void nbd_disconnect_and_put(struct nbd_device *nbd)
+ 	flush_workqueue(nbd->recv_workq);
+ 	nbd_clear_que(nbd);
+ 	nbd->task_setup = NULL;
++	clear_bit(NBD_RT_BOUND, &nbd->config->runtime_flags);
+ 	mutex_unlock(&nbd->config_lock);
+ 
+ 	if (test_and_clear_bit(NBD_RT_HAS_CONFIG_REF,
+-- 
+2.39.2
+
 
