@@ -1,45 +1,43 @@
-Return-Path: <linux-block+bounces-15807-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15806-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83AE6A00482
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 07:48:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B7CAA00478
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 07:44:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2570188396C
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 06:48:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6721C3A36B3
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jan 2025 06:44:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D974E1AF0B9;
-	Fri,  3 Jan 2025 06:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5741A841F;
+	Fri,  3 Jan 2025 06:44:37 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B09618EFCC
-	for <linux-block@vger.kernel.org>; Fri,  3 Jan 2025 06:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F7616F8F5
+	for <linux-block@vger.kernel.org>; Fri,  3 Jan 2025 06:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735886879; cv=none; b=Gvwcx7utb13iwS7R/T41S3fhyGhq08IC6VNR1e+mT+mZIAxf+oeBl+Z0vYDBGqH99kleaJwrwReLyNAVy9ttg81i53rq3OyscFkrTw/XPXZ0WuC6ctSR27J6//6zZ4ZTCgst4shj9ofXfjnrXbLd/oiSSlzwH6XhWofnrqnaaTI=
+	t=1735886677; cv=none; b=YWnWeF/Fn9HQrS6iW+RwHt0FOxcu2dwJNcbwzW9aCoYuJDtgYzPj3Ox9QqjJQPdXOhl2YyjoWbsyG99IhdhtjAzUtgMV0r6fTiF6o50f7rkmwqmYpeatdnYSEReFXlhv5Tw3nCGa0JtfdoBhxwXZuDUcJo9O7MAOXKEIisU+rxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735886879; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1735886677; c=relaxed/simple;
+	bh=XHc8hP7UkkJt+FVbl5awJXixpANuNTTImseQF2zYzvY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hKGZjb1UYAJSirmOANqKwW9TAxA+SN7Di1n3A6TQ9LwIKZnokp1zc4I2MqCkuvRwK5VhDqGFdIul7+qXlcD+FB1FkwvZgG2xcyIgPThGADYMV7M3mjvgGKCRnNIqq3XhY3Xfhd+pmce8rQrxNju+Jh2Es5Mj9595jyO4Xr8BtyY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gq+MfD7mtGN8HAinDIzweDJwshzk4T7xFVj8IGHCJwxN8OAJofUsWGfE3OTMRAbxmUb/jsKIv0IuIjfwHmZttjO9xu+5lQJqqf6yIcyn5xhsBMPcZ36cA83KWlBqfjec9FGYmJkEVZt8XHR+vMZvFvM0aQ7YhM+XcM1G+bRVgog=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 38BA568BEB; Fri,  3 Jan 2025 07:41:27 +0100 (CET)
-Date: Fri, 3 Jan 2025 07:41:26 +0100
+	id AFB8A68BFE; Fri,  3 Jan 2025 07:44:28 +0100 (CET)
+Date: Fri, 3 Jan 2025 07:44:27 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Yang Erkun <yangerkun@huaweicloud.com>
-Cc: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-	yangerkun@huawei.com
-Subject: Re: [PATCH v2] block: retry call probe after request_module in
- blk_request_module
-Message-ID: <20250103064126.GA27788@lst.de>
-References: <20241209110435.3670985-1-yangerkun@huaweicloud.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, hch@lst.de
+Subject: Re: [PATCH v2] block: Use enum for blk-mq tagset flags
+Message-ID: <20250103064427.GA27984@lst.de>
+References: <20250102144426.24241-1-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -48,11 +46,18 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241209110435.3670985-1-yangerkun@huaweicloud.com>
+In-Reply-To: <20250102144426.24241-1-john.g.garry@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+On Thu, Jan 02, 2025 at 02:44:26PM +0000, John Garry wrote:
+> Use an enum for tagset flags, so that they are automatically
+> renumbered when modified and we don't potentially leave
+> unused gaps. Some may find this neater.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Just as last time around I think this is a bad idea that just creates
+more boilerplate.  I actually wrote a series before my vacation to
+drop another unused flag, remove the weirdo policy indiretion and
+add better max flag checking while removing code.  Let me rebase
+that, finish writing commit log and send it out.
 
 
