@@ -1,111 +1,85 @@
-Return-Path: <linux-block+bounces-15846-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-15847-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88C32A01462
-	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2025 13:50:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79CA7A01504
+	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2025 14:26:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ABA13A4169
-	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2025 12:50:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C427F18843DF
+	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2025 13:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFF734C9F;
-	Sat,  4 Jan 2025 12:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D5C136E28;
+	Sat,  4 Jan 2025 13:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0zCc9HW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNJAs4Po"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BB225949A;
-	Sat,  4 Jan 2025 12:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEBE25949A
+	for <linux-block@vger.kernel.org>; Sat,  4 Jan 2025 13:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735995055; cv=none; b=ssTOJDFlAA0bzSfey5MQ9e+mshLL/EU0BOZsLbWKUUvySXv13JKcEqt2xTfyiGeBaT7BdrIeCQuUzevxdYjM/3fd6ARGpEOX9Vfhm+MaKqBv1TWL7z8Ec/lNyzKCTPFiRwgFXNsdzyMpaFZqx4mv026EghW18zUpDhLGxXd7sWg=
+	t=1735997159; cv=none; b=A3dJ5vtteO0wdaRMH/cRvU7UpdKtSX4Uy89al4noXSk3O83AbCGwLTrwlG75bKgt4FMLryAUN3IP57s1tf/fDbtAAUepHNjsU7949fx0yUpc4zaU+J1XlhorM7MhiqmEteuOFyTYVsxy/R5APkiFzMF79tsHrEcH+jUh+rSXm00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735995055; c=relaxed/simple;
-	bh=wG77QoH8YFFbXXyt5XCkGfnUCh8vBW7TkSa0RhILZzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q/Cx4F8CXAwapa0BS8UpO3ixnYaISb+QIulgzbvi9Syo5tcGHeNipuaz/Y06v+CvlzCeEYsvrfVFqmVa01z0+el1J6FBpxi12M2ODb/CK0YzdvAk7hHwG2Adn3wpzXSpRl1nV42SsPzi0eipVZiDxFLSNv8+a0ZtYE3zjkG1R/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0zCc9HW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52620C4CED1;
-	Sat,  4 Jan 2025 12:50:54 +0000 (UTC)
+	s=arc-20240116; t=1735997159; c=relaxed/simple;
+	bh=har1/GhEcZrPJFeBVnIml94XvalIgKbFhgx19QnyqSs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDRqYENuElgEWijXBYBbxYI+lDYzsXKhSariocHILOiQwRjxqTpPuloNEQqR2x/ROwWE6qpKOwP1c/NtRgnoMYU6m6QSgMbsvUUqMAqrNS2DvSV3c4wdciAi4nlHTMqq1EAnQXbVXBnmfXa5UBg84LdSYGCEGxwLQjv5IVLQg7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNJAs4Po; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA960C4CED1;
+	Sat,  4 Jan 2025 13:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735995055;
-	bh=wG77QoH8YFFbXXyt5XCkGfnUCh8vBW7TkSa0RhILZzU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j0zCc9HWipc7zTQ8rkjD80P+cRJkuXXw5Uha4fDe4TAwguqKT0X7jF+pA+DF4rYD8
-	 9TQJWrt7lv0psR5Xly8hgXGoy3vtGHjfmMftBO2WubmHz7TJNAU3l75qWzz7o+rQ3e
-	 7+HjKPOIQ34jCCYSEucQ7m0KCilb7CGBf8f+/9v6kHo2io/mTHd73NAKdf25+A1zNe
-	 MmZS7ETnVhCDRsMCbApBtCpLn4R9GhwZDUM3xkNOaH99oW7rZ3sVgH39Ze9QD6repg
-	 UkafmN15l2IohchFSiXZ6O4zAssA86u705jfuz03NC4HnYYdGFjqgtcjMW/ab6GIiG
-	 NGBymgNtQOXjw==
-Message-ID: <84b856a9-482a-45ac-974b-61bbe619b588@kernel.org>
-Date: Sat, 4 Jan 2025 21:50:53 +0900
+	s=k20201202; t=1735997159;
+	bh=har1/GhEcZrPJFeBVnIml94XvalIgKbFhgx19QnyqSs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YNJAs4Po56ImaJXQNeMoij9BIPW0FM8b8wd2994m93QnXpf5MiI4kWPBw7m43S8Mb
+	 Hjg/mngVTH5CuY+G7c6/xiewDKFBErFFh5IzO3NuxFtI7VbhwyOvYrOh14QuVgh2UG
+	 WPlsTRYtL+gHrZT9ttV/bLp804db09LNgeIP81LeqZXQcSYELBOQaMGigsVHsf6ohR
+	 XbGpGE26OjVJ7CdRYeHnYwMGxTFS8o55Mlxe195s0ciHgebz15gLfodRjDer3Nx2M9
+	 PxJdiSM9z/7ekWDGSG0ks5Oq1Xe2iphSrygjIhu61C72ZEzpKvzXjbKGgS1b5Rb2rz
+	 HKRSXAu7f6D2g==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Nilay Shroff <nilay@linux.ibm.com>
+Subject: [PATCH 0/3] Fix queue freeze and limit locking order
+Date: Sat,  4 Jan 2025 22:25:19 +0900
+Message-ID: <20250104132522.247376-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: avoid to send scsi command with ->queue_limits lock
- held
-To: Nilay Shroff <nilay@linux.ibm.com>, Ming Lei <ming.lei@redhat.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org
-Cc: linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-References: <20241231042241.171227-1-ming.lei@redhat.com>
- <770947cc-6ce9-4ef0-8577-6966c7b8d555@kernel.org>
- <89b19b37-3e47-4914-aed0-83e5602c3ab8@linux.ibm.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <89b19b37-3e47-4914-aed0-83e5602c3ab8@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/4/25 20:28, Nilay Shroff wrote:
-> 
-> 
-> On 1/4/25 12:47 PM, Damien Le Moal wrote:
->> On 12/31/24 13:22, Ming Lei wrote:
->>> Block request queue is often frozen before acquiring the queue
->>> ->limits_lock.
->>
->> "often" is rather vague. What cases are we talking about here beside the block
->> layer sysfs ->store() operations ? Fixing these is easy and does not need this
->> change.
-> Other than sysfs ->store(), I see there're few call sites in NVMe driver (nvme_update_
-> ns_info_block(), nvme_update_ns_info_generic(), nvme_update_ns_info() etc.) which first
-> freezes queue and then acquire limits lock. Also there's one call site (__blk_mq_update_
-> nr_hw_queues) in block layer which does the same.
+Three patches to fix the ordering of freezing a queue with
+blk_mq_freeze_queue() and obtaining a device queue limits lock with
+queue_limits_start_update(). These changes ensure that a devie queue is
+always frozen after the device limits lock is obtained to avoid
+potential ABBA deadlocks in drivers that need to issue commands to probe
+a device limits with the limits lock held (e.g. the SCSI sd driver).
 
-I sent a patch to address the block layer sysfs. Starting looking into these
-other calls with the reversed locking.
+Damien Le Moal (3):
+  block: Fix sysfs queue freeze and limits lock order
+  block: Fix __blk_mq_update_nr_hw_queues() queue freeze and limits lock
+    order
+  nvme: Fix queue freeze and limits lock order
 
->> Furthermore, this change almost feels like a layering violation as it replicates
->> most of the queue limits structure inside sd. This introducing a strong
->> dependency to the block layer internals which we should avoid.
->>
-> In theory, we don't need to hold limits lock while sd_revalidate_disk() reads various
-> limits from hardware. However can't we make this one exception (till we find a better 
-> solution) for sd_revalidate_disk() and allow it to acquire limits lock while blk-mq 
-> request is processed?
-
-Sure, but issuing IOs to probe a device with the limits lock held is also *not*
-an issue. All that can cause is a slight delay for user initiated changes
-through sysfs. The fundamental issue is not issuing IOs with the limits lock
-held, it is the inconsistent ordering of the calls to blk_mq_freeze_queue and
-queue_limits_start_update().
-
-My take on this is that we should always freeze the queue only once the limits
-lock is held, with the queue freeze only around queue_limits_commit_update(). If
-the consensus is to do the reverse, that's fine with me as well, but probably
-will be more work to change (as this large patch tends to indicate).
+ block/blk-mq.c           |  25 +++++---
+ block/blk-sysfs.c        | 123 ++++++++++++++++++++-------------------
+ drivers/nvme/host/core.c |   8 ++-
+ 3 files changed, 85 insertions(+), 71 deletions(-)
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.47.1
+
 
