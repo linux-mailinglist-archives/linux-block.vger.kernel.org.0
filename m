@@ -1,522 +1,197 @@
-Return-Path: <linux-block+bounces-16029-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16031-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC1AA03C73
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 11:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CDF11A03C86
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 11:35:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 984E83A56DD
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 10:33:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 406BA3A5828
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 10:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A79C1EE7A3;
-	Tue,  7 Jan 2025 10:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10799158D8B;
+	Tue,  7 Jan 2025 10:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XcQFUZ/h"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X7BBCGx3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5ndY/IYG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ka25hQY7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="soERdOG5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288721E9B39
-	for <linux-block@vger.kernel.org>; Tue,  7 Jan 2025 10:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5D1E47A4;
+	Tue,  7 Jan 2025 10:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736245905; cv=none; b=X6ocL4C+c9rwJyoa0XACvWECb+ns8NOB8u09TeRiD/z0XIMGEptJ5So4+vEGdejjr9xQ/MkUq/YG4qJg/AP1eGj6eWjnPILk/h9FhFtpmxfWpijN064RH+2FcRpjOvAkVYuNkveXS6MfPT7AF3s3jLGrjGlirNXO/nLL6oannSE=
+	t=1736246121; cv=none; b=qHuK7kwSj6w6LeiF2SGurlrnsLdYb7l634qqzrL2cf7CgQUbs7oG1P1vC2Dx0U0kUiVfSjBUXoAdE6R6Wq9kjkW58Dj5iZnhLAxsrJ7vrQn05NXrxHzkB1pbrupiQpyof7MfWcB+WUQa9zSjwIKLPw/WRj/opdnJceapv/zHMEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736245905; c=relaxed/simple;
-	bh=18XVdKsOBkJz2/pT4zU2r10WgwIc7yTToepo8R6d7iQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fTBFoHRqkEuEwbdUMTWxcROB4ECDyIH7ZlRjozHAxXGjoj4osXcUXqCeFyMNx5K09XnwAX77Rjkb6H0TKSY/VGreC5GQp45QY7xGBmB9+beVVk1Hw1JbIApSl3r3JgZBFbpGIusjbcU3u5GxSm4aCVDS8MRIBY2I1a+i4mfhqRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XcQFUZ/h; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1736245896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	s=arc-20240116; t=1736246121; c=relaxed/simple;
+	bh=7iq3Nq+KFFUgY6Oi/YzRCcTj+ChTG44ZPyAw0Y9Gm9s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gmy6e3cInKsFkJ0WDLFqI3dlIZZxrWJrDdG7j6X03y8md/jZQsBq65qAXBeDkcEA2I+3n0I7CuzkxKQzvff9WtkfvpBypBdyFZh9ovAJP1j4BIbK8Ge9y2i1P4/GNtPJ29LPsOe3N1uVEtbZWcq49gYTySeBjx3vD8I03No5fA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X7BBCGx3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5ndY/IYG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ka25hQY7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=soERdOG5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E907221109;
+	Tue,  7 Jan 2025 10:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736246115; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Xi9WsBBML0UJPwzRgYAfQ6+/QyzWCMV5t0rXx+a3Cc8=;
-	b=XcQFUZ/hPEGoARiTHdcd61LQfjN31v6oSHnfDPdblnAX9lYUyaNt9vinFTebLOaNQfspIU
-	Ng00887niSFwYWuHmG3HU0zfrBeAIA4H5ovhH4IZrfrXzA/gIqnhx89rtfUkm1unGAwpPj
-	X6ujT1CrEAUj4krlFo814f7F37et0NI=
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: axboe@kernel.dk,
-	dan.j.williams@intel.com,
-	gregory.price@memverge.com,
-	John@groves.net,
-	Jonathan.Cameron@Huawei.com,
-	bbhushan2@marvell.com,
-	chaitanyak@nvidia.com,
-	rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-bcache@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [PATCH v3 8/8] block: Init for CBD(CXL Block Device)
-Date: Tue,  7 Jan 2025 10:30:24 +0000
-Message-Id: <20250107103024.326986-9-dongsheng.yang@linux.dev>
-In-Reply-To: <20250107103024.326986-1-dongsheng.yang@linux.dev>
-References: <20250107103024.326986-1-dongsheng.yang@linux.dev>
+	bh=m4ihRWi9dWWRNYoaRnE7jai/GZiNOG/j5hceB4sXBqw=;
+	b=X7BBCGx3YSe1RFTqGqCz46xofKW4uN+D6It39NQUhCysxo/h9fBkEsfWj8yQGNnc/m4APs
+	RSzVGJlmcj5mdGuxt5h6va/+ey48v7hu3A0nAGRLY5qB0xNDwOBqnLEjOgWERk6KMeALia
+	PSxgCvGX8YtBcwIvCnQ+O2lExhjO3rs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736246115;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m4ihRWi9dWWRNYoaRnE7jai/GZiNOG/j5hceB4sXBqw=;
+	b=5ndY/IYGpSzkHG8+jBqO5tPbNkDzDxyclH7J61dN9NROzVaEkDCxNkAmWRT8TS5LFfDF5e
+	gd/3sSqXVMiPlqBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736246114; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m4ihRWi9dWWRNYoaRnE7jai/GZiNOG/j5hceB4sXBqw=;
+	b=ka25hQY7n5ZP7m0XSSvseP5NZCQoFzQbF3EiLogU8vkwdOBj+mTRq5rjlH4U150Ds5Yw/J
+	Srk68FKvDOkFc2dRyVp0PIdog7uVZZ9HKv70hA80j8CGs8RHiFKslGKB3ozGeJwup2vG2H
+	zFLe3OnS5Q+4B2MPjmbig9m8XyRH9V4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736246114;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m4ihRWi9dWWRNYoaRnE7jai/GZiNOG/j5hceB4sXBqw=;
+	b=soERdOG5ZAQXM45kqUF6T3R4y7BTZt9+xhyQpTveYXAmjlqiI6fLCgklLSQL7rh3+januN
+	eS3IvXfhV5qmQvAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BF5D813763;
+	Tue,  7 Jan 2025 10:35:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /h2uJ18DfWdYaAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 07 Jan 2025 10:35:11 +0000
+Message-ID: <5eaeec6d-48fd-4fb7-90ac-70f596572644@suse.de>
+Date: Tue, 7 Jan 2025 11:35:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] lib/group_cpus: let group_cpu_evenly return number
+ of groups
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Kashyap Desai
+ <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com,
+ Don Brace <don.brace@microchip.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin
+ <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
+ Ming Lei <ming.lei@redhat.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Mel Gorman <mgorman@suse.de>,
+ Sridhar Balaraman <sbalaraman@parallelwireless.com>,
+ "brookxu.cn" <brookxu.cn@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+ megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ storagedev@microchip.com, virtualization@lists.linux.dev
+References: <20241217-isolcpus-io-queues-v4-0-5d355fbb1e14@kernel.org>
+ <20241217-isolcpus-io-queues-v4-1-5d355fbb1e14@kernel.org>
+ <1a2fe8aa-d3e1-4e36-8cd5-27141c1d7178@suse.de>
+ <1d7b96ca-a015-4730-9035-abb69cd6cda4@flourine.local>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <1d7b96ca-a015-4730-9035-abb69cd6cda4@flourine.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[39];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,kernel.dk,lst.de,grimberg.me,broadcom.com,oracle.com,marvell.com,microchip.com,redhat.com,linux.alibaba.com,linux-foundation.org,linutronix.de,suse.com,suse.de,parallelwireless.com,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	R_RATELIMIT(0.00)[to_ip_from(RLwoqrtcdrtewo8fubna94zinu)];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-CBD (CXL Block Device) provides two usage scenarios: single-host and
-multi-hosts.
+On 1/7/25 09:20, Daniel Wagner wrote:
+> On Tue, Jan 07, 2025 at 08:51:57AM +0100, Hannes Reinecke wrote:
+>>>    void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>>>    {
+>>>    	const struct cpumask *masks;
+>>> -	unsigned int queue, cpu;
+>>> +	unsigned int queue, cpu, nr_masks;
+>>> -	masks = group_cpus_evenly(qmap->nr_queues);
+>>> +	nr_masks = qmap->nr_queues;
+>>> +	masks = group_cpus_evenly(&nr_masks);
+>>
+>> Hmph. I am a big fan of separating input and output paramenters;
+>> most ABI definitions will be doing that anyway.
+>> Makes it also really hard to track whether the output parameters
+>> had been set at all. Care to split it up?
+> 
+> What API do you have in mind?
 
-(1) Single-host scenario, CBD can use a pmem device as a cache for block
-devices, providing a caching mechanism specifically designed for
-persistent memory.
+ABI, not API.
+x86 ABI has 'rdi' as the first input register, and 'rax' as the first 
+output register. So there is no difference for the compiler whether
+you have 'x(&a); b = a;' or 'x(a, &b)'.
+But you gain on usability, as in the second case you can check whether
+'b' had been set by the function.
 
-+-----------------------------------------------------------------+
-|                         single-host                             |
-+-----------------------------------------------------------------+
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                        +-----------+     +------------+         |
-|                        | /dev/cbd0 |     | /dev/cbd1  |         |
-|                        |           |     |            |         |
-|  +---------------------|-----------|-----|------------|-------+ |
-|  |                     |           |     |            |       | |
-|  |      /dev/pmem0     | cbd0 cache|     | cbd1 cache |       | |
-|  |                     |           |     |            |       | |
-|  +---------------------|-----------|-----|------------|-------+ |
-|                        |+---------+|     |+----------+|         |
-|                        ||/dev/sda ||     || /dev/sdb ||         |
-|                        |+---------+|     |+----------+|         |
-|                        +-----------+     +------------+         |
-+-----------------------------------------------------------------+
+Cheers,
 
-(2) Multi-hosts scenario, CBD also provides a cache while taking
-advantage of shared memory features, allowing users to access block
-devices on other nodes across different hosts.
-
-As shared memory is supported in CXL3.0 spec, we can transfer data via
-CXL shared memory. CBD use CXL shared memory to transfer data between
-node-1 and node-2.
-
-This scenario require your shared memory device support Hardware-consistency
-as CXL 3.0 described, and CONFIG_CBD_MULTIHOST to be enabled.
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
----
- MAINTAINERS                  |   7 ++
- drivers/block/Kconfig        |   2 +
- drivers/block/Makefile       |   2 +
- drivers/block/cbd/Kconfig    |  89 ++++++++++++++
- drivers/block/cbd/Makefile   |  14 +++
- drivers/block/cbd/cbd_main.c | 230 +++++++++++++++++++++++++++++++++++
- 6 files changed, 344 insertions(+)
- create mode 100644 drivers/block/cbd/Kconfig
- create mode 100644 drivers/block/cbd/Makefile
- create mode 100644 drivers/block/cbd/cbd_main.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 910305c11e8a..a8728304cca1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5198,6 +5198,13 @@ S:	Odd Fixes
- F:	Documentation/devicetree/bindings/arm/cavium-thunder2.txt
- F:	arch/arm64/boot/dts/cavium/thunder2-99xx*
- 
-+CBD (CXL Block Device)
-+M:	Dongsheng Yang <dongsheng.yang@linux.dev>
-+R:	Gu Zheng <cengku@gmail.com>
-+L:	linux-block@vger.kernel.org
-+S:	Maintained
-+F:	drivers/block/cbd/
-+
- CBS/ETF/TAPRIO QDISCS
- M:	Vinicius Costa Gomes <vinicius.gomes@intel.com>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index a97f2c40c640..62e18d5d62e2 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -219,6 +219,8 @@ config BLK_DEV_NBD
- 
- 	  If unsure, say N.
- 
-+source "drivers/block/cbd/Kconfig"
-+
- config BLK_DEV_RAM
- 	tristate "RAM block device support"
- 	help
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 1105a2d4fdcb..617d2f97c88a 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -42,4 +42,6 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- 
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
-+obj-$(CONFIG_BLK_DEV_CBD)	+= cbd/
-+
- swim_mod-y	:= swim.o swim_asm.o
-diff --git a/drivers/block/cbd/Kconfig b/drivers/block/cbd/Kconfig
-new file mode 100644
-index 000000000000..f7987e7afdf0
---- /dev/null
-+++ b/drivers/block/cbd/Kconfig
-@@ -0,0 +1,89 @@
-+config BLK_DEV_CBD
-+	tristate "CXL Block Device (Experimental)"
-+	depends on DEV_DAX && FS_DAX
-+	help
-+	  CBD (CXL Block Device) provides a mechanism to register a persistent
-+	  memory device as a transport layer for block devices. By leveraging CBD,
-+	  you can use persistent memory as a high-speed data cache, significantly
-+	  enhancing the performance of block storage devices by reducing latency
-+	  for frequent data access.
-+
-+	  When CBD_MULTIHOST is enabled, the module extends functionality to
-+	  support shared access to block devices across multiple hosts. This
-+	  enables you to access and manage block devices located on remote hosts
-+	  as though they are local disks, a feature valuable in distributed
-+	  environments where data accessibility and performance are critical.
-+
-+	  Usage options:
-+	  - Select 'y' to build the CBD module directly into the kernel, making
-+	    it immediately available at boot.
-+	  - Select 'm' to build it as a loadable kernel module. The module will
-+	    be called "cbd" and can be loaded or unloaded as needed.
-+
-+	  Note: This feature is experimental and should be tested thoroughly
-+	  before use in production environments.
-+
-+	  If unsure, say 'N'.
-+
-+config CBD_CHANNEL_CRC
-+	bool "Enable CBD channel checksum"
-+	default n
-+	depends on BLK_DEV_CBD
-+	help
-+	  Enabling CBD_CHANNEL_CRC adds a checksum (CRC) to control elements within
-+	  the CBD transport, specifically in `cbd_se` (submit entry) and `cbd_ce`
-+	  (completion entry) structures. This checksum is used to validate the
-+	  integrity of `cbd_se` and `cbd_ce` control structures themselves, ensuring
-+	  they remain uncorrupted during transmission. However, the CRC added by
-+	  this option does not cover the actual data content associated with these
-+	  entries.
-+
-+	  For complete data integrity, including the content managed by `cbd_se`
-+	  and `cbd_ce`, consider enabling CBD_CHANNEL_DATA_CRC.
-+
-+config CBD_CHANNEL_DATA_CRC
-+	bool "Enable CBD channel data checksum"
-+	default n
-+	depends on BLK_DEV_CBD
-+	help
-+	  Enabling CBD_CHANNEL_DATA_CRC adds an additional data-specific CRC
-+	  within both the `cbd_se` and `cbd_ce` structures, dedicated to verifying
-+	  the integrity of the actual data content transmitted alongside the entries.
-+	  When both CBD_CHANNEL_CRC and CBD_CHANNEL_DATA_CRC are enabled, each
-+	  control entry (`cbd_se` and `cbd_ce`) will contain a CRC for its structure
-+	  and a separate data CRC, ensuring full integrity checks on both control
-+	  and data elements.
-+
-+config CBD_CACHE_DATA_CRC
-+	bool "Enable CBD cache data checksum"
-+	default n
-+	depends on BLK_DEV_CBD
-+	help
-+	  In the CBD cache system, all cache keys are stored within a kset. Each
-+	  kset inherently includes a CRC to ensure the integrity of its stored
-+	  data, meaning that basic data integrity for all cache keys is enabled
-+	  by default.
-+
-+	  Enabling CBD_CACHE_DATA_CRC, however, adds an additional CRC specifically
-+	  within each `cache_key`, providing a checksum for the actual data content
-+	  associated with each cache entry. This option ensures full data integrity
-+	  for both cache keys and the cached data itself, offering an additional
-+	  layer of protection against data corruption within the cache.
-+
-+config CBD_MULTIHOST
-+	bool "Multi-host CXL Block Device"
-+	default n
-+	depends on BLK_DEV_CBD
-+	help
-+	  Enabling CBD_MULTIHOST allows CBD to support a multi-host environment,
-+	  where a shared memory device serves as a CBD transport across multiple
-+	  hosts. In this configuration, block devices (blkdev) and backends can
-+	  be accessed and managed across nodes, allowing for cross-host disk
-+	  access through a shared memory interface.
-+
-+	  This mode is particularly useful in distributed storage setups where
-+	  multiple hosts need concurrent, high-speed access to the same storage
-+	  resources.
-+
-+	  IMPORTANT: This Require your shared memory device support Hardware-consistency
-+	  as described in CXL 3.0.
-diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
-new file mode 100644
-index 000000000000..7069fd57b1ce
---- /dev/null
-+++ b/drivers/block/cbd/Makefile
-@@ -0,0 +1,14 @@
-+CBD_CACHE_DIR := cbd_cache/
-+
-+cbd-y := cbd_main.o cbd_transport.o cbd_channel.o cbd_host.o \
-+         cbd_backend.o cbd_handler.o cbd_blkdev.o cbd_queue.o \
-+         cbd_segment.o \
-+         $(CBD_CACHE_DIR)cbd_cache.o \
-+         $(CBD_CACHE_DIR)cbd_cache_key.o \
-+         $(CBD_CACHE_DIR)cbd_cache_segment.o \
-+         $(CBD_CACHE_DIR)cbd_cache_req.o \
-+         $(CBD_CACHE_DIR)cbd_cache_gc.o \
-+         $(CBD_CACHE_DIR)cbd_cache_writeback.o \
-+
-+obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
-+
-diff --git a/drivers/block/cbd/cbd_main.c b/drivers/block/cbd/cbd_main.c
-new file mode 100644
-index 000000000000..448577d8308f
---- /dev/null
-+++ b/drivers/block/cbd/cbd_main.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright(C) 2024, Dongsheng Yang <dongsheng.yang@linux.dev>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/parser.h>
-+
-+#include "cbd_internal.h"
-+#include "cbd_blkdev.h"
-+
-+struct workqueue_struct	*cbd_wq;
-+
-+enum {
-+	CBDT_REG_OPT_ERR		= 0,
-+	CBDT_REG_OPT_FORCE,
-+	CBDT_REG_OPT_FORMAT,
-+	CBDT_REG_OPT_PATH,
-+	CBDT_REG_OPT_HOSTNAME,
-+	CBDT_REG_OPT_HOSTID,
-+};
-+
-+static const match_table_t register_opt_tokens = {
-+	{ CBDT_REG_OPT_FORCE,		"force=%u" },
-+	{ CBDT_REG_OPT_FORMAT,		"format=%u" },
-+	{ CBDT_REG_OPT_PATH,		"path=%s" },
-+	{ CBDT_REG_OPT_HOSTNAME,	"hostname=%s" },
-+	{ CBDT_REG_OPT_HOSTID,		"hostid=%u" },
-+	{ CBDT_REG_OPT_ERR,		NULL	}
-+};
-+
-+static int parse_register_options(
-+		char *buf,
-+		struct cbdt_register_options *opts)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *o, *p;
-+	int token, ret = 0;
-+
-+	o = buf;
-+
-+	while ((p = strsep(&o, ",\n")) != NULL) {
-+		if (!*p)
-+			continue;
-+
-+		token = match_token(p, register_opt_tokens, args);
-+		switch (token) {
-+		case CBDT_REG_OPT_PATH:
-+			if (match_strlcpy(opts->path, &args[0],
-+				CBD_PATH_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		case CBDT_REG_OPT_FORCE:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->force = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_FORMAT:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->format = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_HOSTNAME:
-+			if (match_strlcpy(opts->hostname, &args[0],
-+				CBD_NAME_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		case CBDT_REG_OPT_HOSTID:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->host_id = token;
-+			break;
-+		default:
-+			pr_err("unknown parameter or missing value '%s'\n", p);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+static ssize_t transport_unregister_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	u32 transport_id;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (sscanf(ubuf, "transport_id=%u", &transport_id) != 1)
-+		return -EINVAL;
-+
-+	ret = cbdt_unregister(transport_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static ssize_t transport_register_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	struct cbdt_register_options opts = { 0 };
-+	char *buf;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
-+	if (IS_ERR(buf)) {
-+		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
-+		return PTR_ERR(buf);
-+	}
-+	buf[size] = '\0';
-+
-+	opts.host_id = UINT_MAX;
-+	ret = parse_register_options(buf, &opts);
-+	if (ret < 0) {
-+		kfree(buf);
-+		return ret;
-+	}
-+	kfree(buf);
-+
-+	ret = cbdt_register(&opts);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static BUS_ATTR_WO(transport_unregister);
-+static BUS_ATTR_WO(transport_register);
-+
-+static struct attribute *cbd_bus_attrs[] = {
-+	&bus_attr_transport_unregister.attr,
-+	&bus_attr_transport_register.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cbd_bus_group = {
-+	.attrs = cbd_bus_attrs,
-+};
-+__ATTRIBUTE_GROUPS(cbd_bus);
-+
-+const struct bus_type cbd_bus_type = {
-+	.name		= "cbd",
-+	.bus_groups	= cbd_bus_groups,
-+};
-+
-+static void cbd_root_dev_release(struct device *dev)
-+{
-+}
-+
-+struct device cbd_root_dev = {
-+	.init_name =    "cbd",
-+	.release =      cbd_root_dev_release,
-+};
-+
-+static int __init cbd_init(void)
-+{
-+	int ret;
-+
-+	cbd_wq = alloc_workqueue(CBD_DRV_NAME, WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
-+	if (!cbd_wq)
-+		return -ENOMEM;
-+
-+	ret = device_register(&cbd_root_dev);
-+	if (ret < 0) {
-+		put_device(&cbd_root_dev);
-+		goto destroy_wq;
-+	}
-+
-+	ret = bus_register(&cbd_bus_type);
-+	if (ret < 0)
-+		goto device_unregister;
-+
-+	ret = cbd_blkdev_init();
-+	if (ret < 0)
-+		goto bus_unregister;
-+
-+	/*
-+	 * Ensures that key structures do not exceed a single page in size,
-+	 * using BUILD_BUG_ON checks to enforce this at compile-time.
-+	 */
-+	BUILD_BUG_ON(sizeof(struct cbd_transport_info) > PAGE_SIZE);
-+	BUILD_BUG_ON(sizeof(struct cbd_host_info) > PAGE_SIZE);
-+	BUILD_BUG_ON(sizeof(struct cbd_backend_info) > PAGE_SIZE);
-+	BUILD_BUG_ON(sizeof(struct cbd_blkdev_info) > PAGE_SIZE);
-+	BUILD_BUG_ON(sizeof(struct cbd_cache_seg_info) > PAGE_SIZE);
-+	BUILD_BUG_ON(sizeof(struct cbd_channel_seg_info) > PAGE_SIZE);
-+
-+	return 0;
-+
-+bus_unregister:
-+	bus_unregister(&cbd_bus_type);
-+device_unregister:
-+	device_unregister(&cbd_root_dev);
-+destroy_wq:
-+	destroy_workqueue(cbd_wq);
-+
-+	return ret;
-+}
-+
-+static void cbd_exit(void)
-+{
-+	cbd_blkdev_exit();
-+	bus_unregister(&cbd_bus_type);
-+	device_unregister(&cbd_root_dev);
-+	destroy_workqueue(cbd_wq);
-+}
-+
-+MODULE_AUTHOR("Dongsheng Yang <dongsheng.yang@linux.dev>");
-+MODULE_DESCRIPTION("CXL(Compute Express Link) Block Device");
-+MODULE_LICENSE("GPL v2");
-+module_init(cbd_init);
-+module_exit(cbd_exit);
+Hannes
 -- 
-2.34.1
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
