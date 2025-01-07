@@ -1,119 +1,465 @@
-Return-Path: <linux-block+bounces-16021-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16023-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07B6FA03C4C
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 11:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A954A03C60
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 11:31:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE2877A07F5
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 10:25:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3A5DF7A1EC2
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2025 10:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8651E47BA;
-	Tue,  7 Jan 2025 10:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D791E47DA;
+	Tue,  7 Jan 2025 10:31:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evN0ua96"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BaFUd94/"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CEE16CD1D
-	for <linux-block@vger.kernel.org>; Tue,  7 Jan 2025 10:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FDE1E5702
+	for <linux-block@vger.kernel.org>; Tue,  7 Jan 2025 10:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736245546; cv=none; b=gna7GSGl56Y2HRmqLaWE3LgcsnKgvhPayJ9AIVFJIm0SGOIkOfw08EIQwRA+AHrcQxrZ+E991/bm9Zd7WT+2B524KWInWXtkHxWHwKoPtOnZQkWXI8nzGBISCnni74dyDnzDEaQzU7fB6bG8Ku2QhCUGcivMr/7yNyzmAtVol00=
+	t=1736245865; cv=none; b=c5TTIkfSv3L7voJWvVgGErcBTWBGpPgDhODbqTT4gJPPrK/cBB5ckLyiI91eb1BiDRnhx/pSpZKoTfWBiEE6LbELBKhQRAOUJr2nGxvJttjWv9Jde0c3WmYcLlYD1T7oepc3B1goYqzkAQW0h7OjpEZMN+4qiRDu77ehrpEo6vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736245546; c=relaxed/simple;
-	bh=Ltko/t9sUklM1UW/yxtw+NkoOQ3q5ebqnCUDhoIeACs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tuavbVO+m4ryC3O3lD+1a7SXPKXrI2tAmVhNy0XxEdjSl+H2A0MFXVhXdrhiRk6O0KssmdeDrYelPPly83bUBBz32elet4mtPFbMY3Sz6rluBnrw3h9D6WGszR0Xt5FzJJzrolEe/q9JnH4EkVOaLeJbDPyiQYrl/W6f1NRO++Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=evN0ua96; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736245542;
+	s=arc-20240116; t=1736245865; c=relaxed/simple;
+	bh=ozV1WyixpM/ji61nxFeN2j3Li0jjPjHtHNdiUDT4q78=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yc627tuNtGYlF1UMJ1r5jIZfqfl7PoXcLt1I9gqise/izhXrCWHOs0dT9VPcbKyjL7tPcEtmFS4DaO3I5uD+sgKWm6ym+Sv5tFF/T9CSOIa0TI8ndJdb3hkP8LZmKVpmCy+Y2eLHe+L/CmhU40MqfhQYuXwUq2NzJrLVnA8ErOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BaFUd94/; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1736245847;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g+kgv40Nv3jmk18aQH5jxbGFwIkI3jfpro4OOu8qIeE=;
-	b=evN0ua96xetE+8cmqzShJhbfTQzOMHagFH8Ko72jr/g/MilsLaWPhv5GkBp+7DQM0jRk4I
-	A1fdVnYAe2ToInzGfgtP7QfgRGz6xP+1xhemhL40aDy1TZXEOIWE/LbYQ3RqiH1iKulg/s
-	3zACI4sJRtcxqi5hApECEcSybeBJ2Lg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-580-w5dnKRt2PPm84kKWsCv9qg-1; Tue,
- 07 Jan 2025 05:25:36 -0500
-X-MC-Unique: w5dnKRt2PPm84kKWsCv9qg-1
-X-Mimecast-MFC-AGG-ID: w5dnKRt2PPm84kKWsCv9qg
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A16BB19560A3;
-	Tue,  7 Jan 2025 10:25:32 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.66])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 318F5195605F;
-	Tue,  7 Jan 2025 10:25:25 +0000 (UTC)
-Date: Tue, 7 Jan 2025 18:25:20 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org, nbd@other.debian.org,
-	linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
-Subject: Re: [PATCH 4/8] block: add a store_limit operations for sysfs entries
-Message-ID: <Z30AsQq89_lcstNl@fedora>
-References: <20250107063120.1011593-1-hch@lst.de>
- <20250107063120.1011593-5-hch@lst.de>
- <Z3zXANbFk6GBZg_z@fedora>
- <ae6b7727-64d6-4d9e-9bf5-951e38d8a768@linux.ibm.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mV7we0kChanHQnwo+6cB63oe3mpIMNCFCCmvaNDYctw=;
+	b=BaFUd94/BWMA3CMNONgnYGyk+dFflcHfEZw4R2cEqZ7g7YzfaMmqPOVgYwy4tgP170jqLg
+	dHnGaOspH/MzRKUBpjsRdHNOJX2BEG6dhOCguCQa/ODhvHd0JW73A/lmZvQcL1UKDq6Phq
+	Y/KlKH6sIvPm4aex2cWIhxOj1v+DgtE=
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: axboe@kernel.dk,
+	dan.j.williams@intel.com,
+	gregory.price@memverge.com,
+	John@groves.net,
+	Jonathan.Cameron@Huawei.com,
+	bbhushan2@marvell.com,
+	chaitanyak@nvidia.com,
+	rdunlap@infradead.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-bcache@vger.kernel.org,
+	Dongsheng Yang <dongsheng.yang@linux.dev>
+Subject: [PATCH v3 0/8] Introduce CBD (CXL Block Device)
+Date: Tue,  7 Jan 2025 10:30:16 +0000
+Message-Id: <20250107103024.326986-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae6b7727-64d6-4d9e-9bf5-951e38d8a768@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jan 07, 2025 at 01:21:14PM +0530, Nilay Shroff wrote:
-> 
-> 
-> On 1/7/25 12:55 PM, Ming Lei wrote:
-> > On Tue, Jan 07, 2025 at 07:30:36AM +0100, Christoph Hellwig wrote:
-> >> De-duplicate the code for updating queue limits by adding a store_limit
-> >> method that allows having common code handle the actual queue limits
-> >> update.
-> >>
-> >> Note that this is a pure refactoring patch and does not address the
-> >> existing freeze vs limits lock order problem in the refactored code,
-> >> which will be addressed next.
-> >>
-> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi Jens,
+    Please help to take a look at this patchset. This is V3 for CBD (CXL Block Device).
+CBD supports both single-host and multi-host scenarios, and allows the use of pmem
+devices as block device cache, providing low latency and high-concurrency performance.
+    (1) Better latency:
+        1 iodepth, 1 numjobs, randwrite bs=4K: cbd 7.72us vs bcache
+25.30us, about 300% improvement
+    (2) Better iops:
+        1 iodepth, 32 numjobs, randwrite bs=4K: cbd 1,400K IOPS vs
+bcache 210K IOPS, about 600% improvement
+    (3) Better stdev:
+        1 iodepth, 1 numjobs, randwrite bs=4K: cbd stdev=36.45 vs bcache
+stdev=937.81, about 30 times improvement.
 
-...
+V3 of the code can be found at: https://github.com/DataTravelGuide/linux.git tag cbd-v3
 
-> > Order between freeze and ->sysfs_lock is changed, and it may cause new
-> > lockdep warning because we may freeze queue first before acquiring
-> > ->sysfs_lock in del_gendisk().
-> > 
-> On contrary, in elevator_disable() and elevator_switch() we acquire 
-> ->sysfs_lock first before freezing the queue. I think this is a mess and 
-> we need to fix ordering. We need to decide ordering rules. IMO, the 
-> correct order should be to acquire ->sysfs_lock before freezing queue. 
-> Likewise with this patch now we acquire ->limits_lock before freezing the 
-> queue.
+Changelog from V2:
+	- Refactored the cbd_cache.c and cbd_internal.h files by splitting them into multiple files, making the structure clearer and increasing readability.
+	- Added CRC verification for all data and metadata. This means that if all CRC verification options are enabled in Kconfig, all information written to pmem, including data and metadata, will have CRC checks.
+	- Fixed some minor bugs discovered during long-term runs of xfstests.
+	- Added the cbd-utils (https://github.com/DataTravelGuide/cbd-utils) project to user-space tools, providing the cbdctrl command for cbd-related management operations.
 
-__blk_mq_update_nr_hw_queues() freezes queue before acquiring ->syfs_lock too.
+You can create a cbd using the following commands:
 
-So yes, it is a mess wrt. order between ->sysfs_lock and freezing queue.
+	# cbdctrl tp-reg --path /dev/pmem0 --host node0 --format --force
+	# cbdctrl backend-start --path /dev/sda --start-dev --cache-size 1G
+	/dev/cbd0
+	# cbdctrl backend-list
+	[
+	    {
+		"backend_id": 0,
+		"host_id": 0,
+		"backend_path": "/dev/sda",
+		"alive": true,
+		"cache_segs": 64,
+		"cache_gc_percent": 70,
+		"cache_used_segs": 1,
+		"blkdevs": [
+		    {
+			"blkdev_id": 0,
+			"host_id": 0,
+			"backend_id": 0,
+			"dev_name": "/dev/cbd0",
+			"alive": true
+		    }
+		]
+	    }
+	]
 
+Additional information about CBD cache:
 
-Thanks,
-Ming
+    (1) What is CBD Cache
+  cbd cache is a *lightweight* solution that uses persistent memory as block
+device cache. It works similar with bcache, where bcache uses block
+devices as cache device, but cbd cache only supports persistent memory
+devices for caching. It accesses the cache device through DAX and
+is designed with features specifically for persistent memory scenarios,
+such as multi-cache tree structures and sync insertion of cached data.
+
++-----------------------------------------------------------------+
+|                         single-host                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|                                                                 |
+|                                                                 |
+|                                                                 |
+|                                                                 |
+|                        +-----------+     +------------+         |
+|                        | /dev/cbd0 |     | /dev/cbd1  |         |
+|                        |           |     |            |         |
+|  +---------------------|-----------|-----|------------|-------+ |
+|  |                     |           |     |            |       | |
+|  |      /dev/pmem0     | cbd0 cache|     | cbd1 cache |       | |
+|  |                     |           |     |            |       | |
+|  +---------------------|-----------|-----|------------|-------+ |
+|                        |+---------+|     |+----------+|         |
+|                        ||/dev/sda ||     || /dev/sdb ||         |
+|                        |+---------+|     |+----------+|         |
+|                        +-----------+     +------------+         |
++-----------------------------------------------------------------+
+
+Note: cbd cache is not intended to replace your bcache. Instead, it
+offers an alternative solution specifically suited for scenarios where
+you want to use persistent memory devices as block device cache.
+
+Another caching technique for accessing persistent memory using DAX is
+dm-writeback, but it is designed for scenarios based on device-mapper.
+On the other hand, cbd cache and bcache are caching solutions for block
+device scenarios. Therefore, I did not do a comparative analysis between
+cbd cache and dm-writeback.
+
+    (2) light software overhead cache write (low latency)
+
+For cache write, handling a write request typically involves the
+following steps: (1) Allocating cache space -> (2) Writing data to the
+cache -> (3) Recording cache index metadata -> (4) Returning the result.
+
+In cache modules using block devices as the cache (e.g., bcache), the
+steps of (2) writing data to the cache and (3) recording cache index
+metadata are asynchronous.
+
+During step (2), submit_bio is issued to the cache block device, and
+after the bi_end_io callback completes, a new process continues with
+step (3). This incurs significant overhead for persistent memory cache.
+
+However, cbd cache, which is designed for persistent memory, does not
+require asynchronous operations. It can directly proceed with steps (3)
+and (4) after completing the memcpy through DAX.
+
+This makes a significant difference for small IO. In the case of 4K
+random writes, cbd cache achieves a latency of only 7.72us (compared to
+25.30us for bcache in the same test, offering a 300% improvement).
+
+Further comparative results for various scenarios are shown in the table
+below.
+
++------------+-------------------------+--------------------------+
+| numjobs=1  |         randwrite       |       randread           |
+| iodepth=1  +------------+------------+-------------+------------+
+| (latency)  |  cbd cache |  bcache    |  cbd cache  |  bcache    |
++------------+------------+------------+-------------+------------+
+|  bs=512    |    6.10us  |    23.08us |      4.82us |     5.57us |
++------------+------------+------------+-------------+------------+
+|  bs=1K     |    6.35us  |    21.68us |      5.38us |     6.05us |
++------------+------------+------------+-------------+------------+
+|  bs=4K     |    7.72us  |    25.30us |      6.06us |     6.00us |
++------------+------------+------------+-------------+------------+
+|  bs=8K     |    8.92us  |    27.73us |      7.24us |     7.35us |
++------------+------------+------------+-------------+------------+
+|  bs=16K    |   12.25us  |    34.04us |      9.06us |     9.10us |
++------------+------------+------------+-------------+------------+
+|  bs=32K    |   16.77us  |    49.24us |     14.10us |    16.18us |
++------------+------------+------------+-------------+------------+
+|  bs=64K    |   30.52us  |    63.72us |     30.69us |    30.38us |
++------------+------------+------------+-------------+------------+
+|  bs=128K   |   51.66us  |   114.69us |     38.47us |    39.10us |
++------------+------------+------------+-------------+------------+
+|  bs=256K   |  110.16us  |   204.41us |     79.64us |    99.98us |
++------------+------------+------------+-------------+------------+
+|  bs=512K   |  205.52us  |   398.70us |    122.15us |   131.97us |
++------------+------------+------------+-------------+------------+
+|  bs=1M     |  493.57us  |   623.31us |    233.48us |   246.56us |
++------------+------------+------------+-------------+------------+
+
+    (3) multi-queue and multi cache tree (high iops)
+
+For persistent memory, the hardware concurrency is very high. If an
+indexing tree is used to manage space indexing, the indexing will become
+a bottleneck for concurrency.
+
+cbd cache independently manages its own indexing tree for each backend.
+Meanwhile, the indexing tree for the cache corresponding to each backend
+is divided into multiple RB trees based on the logical address space.
+All IO operations will find the corresponding indexing tree based on
+their offset. This design increases concurrency while ensuring that the
+depth of the indexing tree does not become too large.
+
+From testing, in a scenario with 32 numjobs, cbd cache achieved nearly
+1,400K IOPS for 4K random write (under the same test scenario, the IOPS
+of bcache was around 210K, meaning CBD Cache provided an improvement of
+over 600%).
+
+More detailed comparison results are as follows:
++------------+-------------------------+--------------------------+
+|  bs=4K     |         randwrite       |       randread           |
+| iodepth=1  +------------+------------+-------------+------------+
+|  (iops)    |  cbd cache |  bcache    |  cbd cache  |  bcache    |
++------------+------------+------------+-------------+------------+
+|  numjobs=1 |    93652   |    38055   |    154101   |     142292 |
++------------+------------+------------+-------------+------------+
+|  numjobs=2 |   205255   |    79322   |    317143   |     221957 |
++------------+------------+------------+-------------+------------+
+|  numjobs=4 |   430588   |   124439   |    635760   |     513443 |
++------------+------------+------------+-------------+------------+
+|  numjobs=8 |   852865   |   160980   |   1226714   |     505911 |
++------------+------------+------------+-------------+------------+
+|  numjobs=16|  1140952   |   226094   |   2058178   |     996146 |
++------------+------------+------------+-------------+------------+
+|  numjobs=32|  1418989   |   214447   |   2892710   |    1361308 |
++------------+------------+------------+-------------+------------+
+    (4) better performance stablility (less stdev)
+
+CBD Cache, through a streamlined design, simplifies and makes the IO
+process more controllable, which allows for stable performance output.
+
+For example, in CBD Cache, the writeback does not need to walk through
+the indexing tree, meaning that the writeback process will not suffer
+from increased IO latency due to conflict in the indexing tree.
+
+From testing, under random write, CBD Cache achieves an average latency
+of 6.80us, with a max latency of 2794us and a latency standard deviation
+of 36.45 (under the same test, Bcache has an average latency of 24.28us,
+but a max latency of 474,622us and a standard deviation as high as
+937.81. This means that in terms of standard deviation, CBD Cache
+achieved approximately 30 times the improvement).
+
+Bcache:
+=================================================
+write: IOPS=39.1k, BW=153MiB/s (160MB/s)(5120MiB/33479msec); 0 zone
+resets
+    slat (usec): min=4, max=157364, avg=12.47, stdev=138.93
+    clat (nsec): min=1168, max=474615k, avg=11808.80, stdev=927287.74
+     lat (usec): min=11, max=474622, avg=24.28, stdev=937.81
+    clat percentiles (nsec):
+     |  1.00th=[   1256],  5.00th=[   1304], 10.00th=[   1320],
+     | 20.00th=[   1400], 30.00th=[   1448], 40.00th=[   1672],
+     | 50.00th=[   8640], 60.00th=[   9152], 70.00th=[   9664],
+     | 80.00th=[  10048], 90.00th=[  11328], 95.00th=[  19072],
+     | 99.00th=[  27776], 99.50th=[  36608], 99.90th=[ 173056],
+     | 99.95th=[ 856064], 99.99th=[2039808]
+   bw (  KiB/s): min=28032, max=214664, per=99.69%, avg=156122.03, stdev=51649.87, samples=66
+   iops        : min= 7008, max=53666, avg=39030.53, stdev=12912.50, samples=66
+  lat (usec)   : 2=41.55%, 4=4.59%, 10=32.70%, 20=16.37%, 50=4.45%
+  lat (usec)   : 100=0.10%, 250=0.17%, 500=0.02%, 750=0.01%, 1000=0.01%
+  lat (msec)   : 2=0.03%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+  lat (msec)   : 100=0.01%, 250=0.01%, 500=0.01%
+  cpu          : usr=11.93%, sys=38.61%, ctx=1311384, majf=0, minf=382
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=0,1310718,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+  WRITE: bw=153MiB/s (160MB/s), 153MiB/s-153MiB/s (160MB/s-160MB/s), io=5120MiB (5369MB), run=33479-33479msec
+
+Disk stats (read/write):
+    bcache0: ios=0/1305444, sectors=0/10443552, merge=0/0,
+ticks=0/21789, in_queue=21789, util=65.13%, aggrios=0/0, aggsectors=0/0,
+aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0, aggrutil=0.00%
+  ram0: ios=0/0, sectors=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+  pmem0: ios=0/0, sectors=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+
+CBD cache:
+==============================================
+  write: IOPS=133k, BW=520MiB/s (545MB/s)(5120MiB/9848msec); 0 zone
+resets
+    slat (usec): min=3, max=2786, avg= 5.84, stdev=36.41
+    clat (nsec): min=852, max=132404, avg=959.09, stdev=436.60
+     lat (usec): min=4, max=2794, avg= 6.80, stdev=36.45
+    clat percentiles (nsec):
+     |  1.00th=[  884],  5.00th=[  900], 10.00th=[  908], 20.00th=[916],
+     | 30.00th=[  924], 40.00th=[  924], 50.00th=[  932], 60.00th=[940],
+     | 70.00th=[  948], 80.00th=[  964], 90.00th=[ 1004], 95.00th=[1064],
+     | 99.00th=[ 1192], 99.50th=[ 1432], 99.90th=[ 6688], 99.95th=[7712],
+     | 99.99th=[12480]
+   bw (  KiB/s): min=487088, max=552928, per=99.96%, avg=532154.95, stdev=18228.92, samples=19
+   iops        : min=121772, max=138232, avg=133038.84, stdev=4557.32, samples=19
+  lat (nsec)   : 1000=89.09%
+  lat (usec)   : 2=10.76%, 4=0.03%, 10=0.09%, 20=0.03%, 50=0.01%
+  lat (usec)   : 100=0.01%, 250=0.01%
+  cpu          : usr=23.93%, sys=76.03%, ctx=61, majf=0, minf=16
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=0,1310720,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+  WRITE: bw=520MiB/s (545MB/s), 520MiB/s-520MiB/s (545MB/s-545MB/s),
+io=5120MiB (5369MB), run=9848-9848msec
+
+Disk stats (read/write):
+  cbd0: ios=0/1280334, sectors=0/10242672, merge=0/0, ticks=0/0, in_queue=0, util=43.07%
+
+    (5) no need of formating for your existing disk
+
+As a lightweight block storage caching technology, cbd cache does not
+require storing metadata on backend disk. This allows users to easily
+add caching to existing disks without the need for any formatting
+operations and data migration. They can also easily stop using the cbd
+cache without complications, The backend disk can be used independently
+as a raw disk.
+
+    (6) backend device is crash-consistency
+
+The writeback mechanism of cbd cache strictly follows a log-structured
+approach when writeback data. Even if dirty cache data is overwritten by
+new data (e.g., the old data from 0-4K is A, and new data overwrites
+0-4K with B), the old data A is writeback first, followed by writeback
+the new data B to overwrite on the backend disk. This ensures that the
+backend disk maintains crash consistency. In the event of a failure of
+the pmem device, the data on the backend disk remains usable, though
+crash consistency is maintained while losing the data in the cache. This
+feature is particularly useful in cloud storage for disaster recovery
+scenarios.
+
+It is important to note that this approach may lead to cache space
+utilization issues if there are many overwrite operations. However,
+modern file systems, such as Btrfs and F2FS, take wear leveling of the
+disk into account, so they tend to avoid writing repeatedly to the same
+area. This means that there will not be a large number of overwrite
+writes for the disk. Additionally, modern databases, especially those
+using LSM engines, rarely perform overwrite operations.
+
+Additionally, there is an entry on the TODO list to provide a parameter
+backend_consistency=false to allow users to achieve better cache space
+utilization. That depends on how urgent the requirment is.
+
+    (7) cache space for each disk is configurable
+
+For each backend, when enabling caching, we can specify cache space size
+for this backend. This is different from bcache, where all backing
+devices can dynamically share the cache space within a single cache
+device. This improves cache utilization by achieving optimal utilization
+through time-sharing. However, this can lead to an issue where cache
+behavior becomes unpredictable. In enterprise applications, it's
+important to have a more precise understanding of the performance of
+each disk. When multiple disks dynamically share the cache, the exact
+amount of cache each disk receives becomes uncertain. cbd cache assigns
+a dedicated cache space for each disk, ensuring that the cache is
+exclusive and not affected by others, making the cache behavior more
+predictable.
+
+    (8) After all, all the performance test results mentioned
+above were executed using the `memmap=20G!4G` option to simulate the `/dev/pmem0` device.
+
+Additionally, the cbd code runs the cbd-tests daily, including the xfstests suite,
+it passes xfstests test suite. (cbd-tests: https://github.com/DataTravelGuide/cbd-tests)
+
+Thanx
+
+Dongsheng Yang (8):
+  cbd: introduce cbd_transport
+  cbd: introduce cbd_host
+  cbd: introduce cbd_segment
+  cbd: introduce cbd_channel
+  cbd: introduce cbd_blkdev
+  cbd: introduce cbd_backend
+  cbd: introduce cbd_cache
+  block: Init for CBD(CXL Block Device)
+
+ MAINTAINERS                                   |    7 +
+ drivers/block/Kconfig                         |    2 +
+ drivers/block/Makefile                        |    2 +
+ drivers/block/cbd/Kconfig                     |   89 ++
+ drivers/block/cbd/Makefile                    |   14 +
+ drivers/block/cbd/cbd_backend.c               |  730 ++++++++++
+ drivers/block/cbd/cbd_backend.h               |  137 ++
+ drivers/block/cbd/cbd_blkdev.c                |  551 ++++++++
+ drivers/block/cbd/cbd_blkdev.h                |   92 ++
+ drivers/block/cbd/cbd_cache/cbd_cache.c       |  489 +++++++
+ drivers/block/cbd/cbd_cache/cbd_cache.h       |  157 +++
+ drivers/block/cbd/cbd_cache/cbd_cache_gc.c    |  167 +++
+ .../block/cbd/cbd_cache/cbd_cache_internal.h  |  536 ++++++++
+ drivers/block/cbd/cbd_cache/cbd_cache_key.c   |  881 ++++++++++++
+ drivers/block/cbd/cbd_cache/cbd_cache_req.c   |  921 +++++++++++++
+ .../block/cbd/cbd_cache/cbd_cache_segment.c   |  268 ++++
+ .../block/cbd/cbd_cache/cbd_cache_writeback.c |  197 +++
+ drivers/block/cbd/cbd_channel.c               |  144 ++
+ drivers/block/cbd/cbd_channel.h               |  429 ++++++
+ drivers/block/cbd/cbd_handler.c               |  468 +++++++
+ drivers/block/cbd/cbd_handler.h               |   66 +
+ drivers/block/cbd/cbd_host.c                  |  227 ++++
+ drivers/block/cbd/cbd_host.h                  |   67 +
+ drivers/block/cbd/cbd_internal.h              |  482 +++++++
+ drivers/block/cbd/cbd_main.c                  |  230 ++++
+ drivers/block/cbd/cbd_queue.c                 |  516 +++++++
+ drivers/block/cbd/cbd_queue.h                 |  288 ++++
+ drivers/block/cbd/cbd_segment.c               |  311 +++++
+ drivers/block/cbd/cbd_segment.h               |  104 ++
+ drivers/block/cbd/cbd_transport.c             | 1186 +++++++++++++++++
+ drivers/block/cbd/cbd_transport.h             |  169 +++
+ 31 files changed, 9927 insertions(+)
+ create mode 100644 drivers/block/cbd/Kconfig
+ create mode 100644 drivers/block/cbd/Makefile
+ create mode 100644 drivers/block/cbd/cbd_backend.c
+ create mode 100644 drivers/block/cbd/cbd_backend.h
+ create mode 100644 drivers/block/cbd/cbd_blkdev.c
+ create mode 100644 drivers/block/cbd/cbd_blkdev.h
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache.c
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache.h
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_gc.c
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_internal.h
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_key.c
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_req.c
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_segment.c
+ create mode 100644 drivers/block/cbd/cbd_cache/cbd_cache_writeback.c
+ create mode 100644 drivers/block/cbd/cbd_channel.c
+ create mode 100644 drivers/block/cbd/cbd_channel.h
+ create mode 100644 drivers/block/cbd/cbd_handler.c
+ create mode 100644 drivers/block/cbd/cbd_handler.h
+ create mode 100644 drivers/block/cbd/cbd_host.c
+ create mode 100644 drivers/block/cbd/cbd_host.h
+ create mode 100644 drivers/block/cbd/cbd_internal.h
+ create mode 100644 drivers/block/cbd/cbd_main.c
+ create mode 100644 drivers/block/cbd/cbd_queue.c
+ create mode 100644 drivers/block/cbd/cbd_queue.h
+ create mode 100644 drivers/block/cbd/cbd_segment.c
+ create mode 100644 drivers/block/cbd/cbd_segment.h
+ create mode 100644 drivers/block/cbd/cbd_transport.c
+ create mode 100644 drivers/block/cbd/cbd_transport.h
+
+-- 
+2.34.1
 
 
