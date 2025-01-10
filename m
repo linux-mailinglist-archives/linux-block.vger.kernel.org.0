@@ -1,81 +1,78 @@
-Return-Path: <linux-block+bounces-16218-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16219-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30DBCA08C21
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2025 10:33:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67EE1A08CA4
+	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2025 10:47:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EE6DD7A29EC
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2025 09:33:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B585166FFA
+	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2025 09:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD64209F4D;
-	Fri, 10 Jan 2025 09:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A766A1E25F4;
+	Fri, 10 Jan 2025 09:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sy4+K6LB"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8BF1B4248;
-	Fri, 10 Jan 2025 09:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF70F207DFC
+	for <linux-block@vger.kernel.org>; Fri, 10 Jan 2025 09:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736501599; cv=none; b=dXgMu2AcmWlfp0d/NrDMDT56uH7CpRsQSO/bRuOju+Df4hNMA3u7iivbDQXLNN68nDGm9YfFMhWsrTw2Xwp0DxYCWHvBZBFl/CXMqS9n+9Kn4B40fUpgo5CUTdBt9BSrNXB37TXHIKYIcZIq8e1QuonV/MI3VTyYNYesZCf5A/g=
+	t=1736502150; cv=none; b=F7U99p5W4/TFFKbpLY8rm/TP993bcTGEyLIo5yYDzCeYgGMt03wPGAYsUgXcD+dKYkbnQn6QWMDCaMrOaRFPNFy9T0r0i9xDQlzibNXrVbJ3WPWMVyztWlyWUjVjDXDHcR6X9KXcqJHQhSgmDlWWPWG+o5GcmoOn1oMEpR3yQ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736501599; c=relaxed/simple;
-	bh=LSZZQLHEUL35al6IQQVXAzakwnVJ1OwQSLU2c936n7k=;
+	s=arc-20240116; t=1736502150; c=relaxed/simple;
+	bh=cmqj0Z5Clfvh3cMivWgMd9zIgbmrfmuBykALB+AJRzo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGIrJTdhT52x4d6TCk6yStW+KhcguEWX0M/akEL4Y+AZcN2C7vUtkW02coGjIFqDJ/MFbD/YS+WIQzxCtHRqE9NwjJIOWjcS1E5JmvJn21PqRexa24QN06/c5HZZYs0yi+WRdo92F3r1ucU0eWgbtpGHtM8/OiXwmletViH93qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B95E868BFE; Fri, 10 Jan 2025 10:33:11 +0100 (CET)
-Date: Fri, 10 Jan 2025 10:33:11 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Damien Le Moal <dlemoal@kernel.org>, Ming Lei <ming.lei@redhat.com>,
-	Nilay Shroff <nilay@linux.ibm.com>, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org, nbd@other.debian.org,
-	linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH 06/11] block: fix queue freeze vs limits lock order in
- sysfs store methods
-Message-ID: <20250110093311.GA9083@lst.de>
-References: <20250109055810.1402918-1-hch@lst.de> <20250109055810.1402918-7-hch@lst.de> <8cfe7690-0101-42e7-ba97-6c6b717c4706@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0R+vTXlbTXABjGKkSetQ63HjRHVHFtq9EWD67+R/eTfGN5rdRPlGrsVb/50TH/C49nsx5t6zZgrcrtuGcf/ickT4JyQLmwsUUO7+SWlMd0/f/YCdup7UfNa8Rj18JvHZhpMvxhCbKSreKb287eWFkZFX+F7GWeNBE92TwRXXks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Sy4+K6LB; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cmqj0Z5Clfvh3cMivWgMd9zIgbmrfmuBykALB+AJRzo=; b=Sy4+K6LBSkFqkbqhYu1QiJqpxw
+	JSQG+uIyX64WkRJPDtXNOpNLjHbyKLIvWfsXdQr9mnG+1iHN1Em8Z2WNqg26qjmZiyb/OyblBPdFl
+	t9/z8VKYxjOPqgT2HXKlMX0dXUTW2DKasr8JvrgKt6Q2RIzl7jjBy/oyn98GevB+pfdotrmR++pHy
+	DnONFeGx2kOVbHvH5viBpHhvTorQkXZn5kaQzgPyigh5m2UvrXK+o9K/IkhPewH84OFG3EIbWsHC5
+	URo9cK/xOoANLX9Se5h8BwYG2aDfefUXEh4gNH6bJaCIQnFSH9x9GVsiBiOg7swyv0shyf4KrS2ij
+	YzO4R6OQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tWBX9-0000000EmLB-22Ac;
+	Fri, 10 Jan 2025 09:42:27 +0000
+Date: Fri, 10 Jan 2025 01:42:27 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Travis Downs <travis.downs@gmail.com>, Theodore Ts'o <tytso@mit.edu>,
+	linux-block@vger.kernel.org
+Subject: Re: Semantics of racy O_DIRECT writes
+Message-ID: <Z4Drg8pewTBbs0sy@infradead.org>
+References: <CAOBGo4xx+88nZM=nqqgQU5RRiHP1QOqU4i2dDwXt7rF6K0gaUQ@mail.gmail.com>
+ <20250109045743.GE1323402@mit.edu>
+ <CAOBGo4w88v0tqDiTwAPP6OQLXHGdjx1oFKaB0oRY45dmC-D1_Q@mail.gmail.com>
+ <CAOBGo4zdDQ+mV_5X1Y0J2VpV8F63RsBs66Xq4CHPtpBu9MFebg@mail.gmail.com>
+ <d2951075-e9e8-460c-9dbf-34bfeb942aa4@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8cfe7690-0101-42e7-ba97-6c6b717c4706@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <d2951075-e9e8-460c-9dbf-34bfeb942aa4@acm.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Jan 09, 2025 at 01:07:47PM +0000, John Garry wrote:
-> Do you mean that the sysfs_lock could be removed in future? I would have 
-> thought that queue limits lock could be used for the same thing, but I am 
-> probably failing to see some lock nesting/ordering issues...
+On Thu, Jan 09, 2025 at 09:32:54AM -0800, Bart Van Assche wrote:
+> in trouble. Additionally, since typical storage controllers use DMA to
+> transfer data, and since DMA may happen out of order, another pattern
+> than AB00 or ABCD could end up on the storage device, e.g. AB0D.
 
-More or less.  Think about it: what does it even try to protect?
+Only when using an LBA size larger than each chunk, e.g. in the scenario
+mentioned by Travis if using a 4k LBA size and not a 512 byte LBA size.
 
-Readіng/writing sysfs files vs itself and file removal it serialized by
-sysfs/kernfs internally.
-
-Any information tweaked in sysfs usually also has other places that can
-modify it.  So we'll need a lock independent of sysfs for that anyway.
-A big part, buy by far all of that is covered by limits_lock.
-
-Serializing creating/removing sysfs attribues is supposed to be
-serialized using sysfs_dir_lock, although that needs a careful audit.
-
-It's also used to serialize a few debugfs things, but we'll need to look
-carefully for what exactly and switch that over to debugfs_mutex or
-something new.
-
-And then there's a bunch of misc cruft that also needs a careful look.
 
