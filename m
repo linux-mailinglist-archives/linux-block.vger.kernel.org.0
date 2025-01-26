@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-16559-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16560-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94DEDA1C881
-	for <lists+linux-block@lfdr.de>; Sun, 26 Jan 2025 15:49:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1B08A1C893
+	for <lists+linux-block@lfdr.de>; Sun, 26 Jan 2025 15:50:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E0E71886529
-	for <lists+linux-block@lfdr.de>; Sun, 26 Jan 2025 14:49:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24DD31882669
+	for <lists+linux-block@lfdr.de>; Sun, 26 Jan 2025 14:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C904315DBBA;
-	Sun, 26 Jan 2025 14:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84751940A1;
+	Sun, 26 Jan 2025 14:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eliujxza"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoVF0wXA"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F08E15CD4A;
-	Sun, 26 Jan 2025 14:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF96194080;
+	Sun, 26 Jan 2025 14:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737902926; cv=none; b=gKP6ML8CTagnZwR74k5NpCRJOozqqgrtKUGZIejci5vZB/m7N1SMOJ4oladpquVLIKuLLMwSNu2VTlU8NQ+U0TN5oKK3JNbYIGsRuEkiPq/xxZA6Dt2bojvFdRBEMcYMBQ+jl3UGKTW3evBck3swUB70mdXdVSWTDKLcGbgftxM=
+	t=1737902940; cv=none; b=HrcSXD1Q5gOjwM5pBtKNAliFYFm+6eifMRvI5B1jATG1UnCR1sX8HuqBZu51b1IKfQFJfPCLtJNGaovGp/TVKOj4xILJ9MZroafo8qTCO9SR57xBeE7pHTJ8JC7bS+YmMoboWAyPA4eLAELxaUHwRzk4vklXMzqiR2nQxq9TiAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737902926; c=relaxed/simple;
-	bh=uYNSd7HZWd79B6SkTzkI0BmE60u6OMnA8ioZz/homSc=;
+	s=arc-20240116; t=1737902940; c=relaxed/simple;
+	bh=pSyI6sYQUIy8age47j4+sm2JuPCMfmeGvUHk9jzoqy4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A6ejpWnb+iqFAx5tV2mmqTPRf6QGsDCcgUsRabD9gtdUpOlBWqScEWfbKO1ctazGgeShRP5JNDR7ZDpUcHQ8yYE9BwLI6jBYkSEcGG6U5hWfrdx8aLnYNL6QYpvz1xYd9sxNOoC8Y8AvZhKmZgvTH0ugKlXVGP//DwyGPJ1CUC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eliujxza; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080A0C4CEE4;
-	Sun, 26 Jan 2025 14:48:44 +0000 (UTC)
+	 MIME-Version; b=uC3wvXHUbA9u/AMhbiT/dmSyARx/3DEfkPlLeL2h0tqKp3P2W+YO8whXiQewpAP2ICY8Od01hZ1vjtPWKwk4raiovGA+QX74wyfs4322gn3lTFk/2V1yTObFVxp9gxkYScy46w9kuZIFwH5uzQmN5XUa7u64u+ShyKZzjE17uVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoVF0wXA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B172C4CEE2;
+	Sun, 26 Jan 2025 14:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737902926;
-	bh=uYNSd7HZWd79B6SkTzkI0BmE60u6OMnA8ioZz/homSc=;
+	s=k20201202; t=1737902940;
+	bh=pSyI6sYQUIy8age47j4+sm2JuPCMfmeGvUHk9jzoqy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eliujxza/OJnPFGMMnnIzu29/VHLYSm1tMsqXx6BTQabd7iuL3T6XFl9A/VNd7bxe
-	 TMVnBjes0DEyYgA8WnkSIBYQ3dYp0o8KUdHWCz1qKtprVkfldw82243/CupVELmbVY
-	 /Z8dzTazDMdR34NIivzbkTPR4+7JKa9xQU5zBP4nbFrHR4mBGhlAumpgSL/p4rUhJ+
-	 wASxk0Rm93OIGJH2HwRN/4ETfriOiYDIr2K71qcrvMjmt4YnGIxVBop9oNvhalieLL
-	 BafdJn5wJMnPm0r9/FDMrfJYIGrNZBL6ZAAqxIZSr5MXV5FRgI0R8p1RE2mdi5PMxV
-	 Cvy61TDzXuzag==
+	b=eoVF0wXA8jg1Fk4P/Sd8TL2RlhY/cy1hu7ODWMsTfp0GEGzhxJ+O66VBBK5nWIEq9
+	 3Z8kM89Tic5ijdjaJNyIu915ta/bwxic9uoVIq7Gz/CnD2atKWJ8Nc19KiAuivKjFX
+	 JnG+0LU3OmdKGP5jD0XCMcmxy3fveiYVtlTonNW8MPd9VAgkAIDU/WCJtUaYRYKEYb
+	 rtX12zjBCLWMQkE90yq0yjbmfMn/NU/w/shBJvqHLyero3tOG1HkCT71xUvb9oSD8/
+	 sCUmAGn9UGi6vTjW2X9v3GxnxT/N13HEiM+jxIxHGPp5CmkjphpaUqeeMI8DKpmbUW
+	 iVVAeRvldor7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -51,12 +51,12 @@ Cc: Christoph Hellwig <hch@lst.de>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 3/7] block: check BLK_FEAT_POLL under q_usage_count
-Date: Sun, 26 Jan 2025 09:48:34 -0500
-Message-Id: <20250126144839.925271-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 3/6] block: check BLK_FEAT_POLL under q_usage_count
+Date: Sun, 26 Jan 2025 09:48:50 -0500
+Message-Id: <20250126144854.925377-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126144839.925271-1-sashal@kernel.org>
-References: <20250126144839.925271-1-sashal@kernel.org>
+In-Reply-To: <20250126144854.925377-1-sashal@kernel.org>
+References: <20250126144854.925377-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: 8bit
 
 From: Christoph Hellwig <hch@lst.de>
@@ -91,7 +91,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 666efe8fa2020..6309b3f5a89dc 100644
+index 4f791a3114a12..487e8cafccc55 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
 @@ -629,8 +629,14 @@ static void __submit_bio(struct bio *bio)
@@ -145,7 +145,7 @@ index 666efe8fa2020..6309b3f5a89dc 100644
  	} else {
  		struct gendisk *disk = q->disk;
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8ac19d4ae3c0a..0137a995b9f37 100644
+index 4e76651e786d1..784d41eb0abba 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
 @@ -3092,14 +3092,22 @@ void blk_mq_submit_bio(struct bio *bio)
