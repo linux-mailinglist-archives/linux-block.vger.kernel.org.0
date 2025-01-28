@@ -1,100 +1,143 @@
-Return-Path: <linux-block+bounces-16591-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16593-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26E7CA20214
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jan 2025 01:06:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF71EA202C3
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jan 2025 01:53:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F053165976
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jan 2025 00:06:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE4991887EC4
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jan 2025 00:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00371EEAB;
-	Tue, 28 Jan 2025 00:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072221773A;
+	Tue, 28 Jan 2025 00:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCw3ncnM"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PsUE3hI+"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8198462;
-	Tue, 28 Jan 2025 00:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D534D125DF
+	for <linux-block@vger.kernel.org>; Tue, 28 Jan 2025 00:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738022796; cv=none; b=WPy56bmiSV7/Og4KWOEqt3EXldzZFgdCfGzx3jXYj9xCLKs4Uuf1WA2K42nFYtwvDLZNjeYRWHKzdQkzqS8ID59rpeRCRIcC2Gyz6uT9pnOEtdf052OKo0CxmCZLdPUUT6V1aBRfteJIqcHVq5LTBrKjUAvfqyC/ubjttKX9LdQ=
+	t=1738025592; cv=none; b=oGWQVKO6aMMYLsH3TeriKxZhUbUsJvQ9hUEaO5vu4t6EL1NRgO7m4oHdm5t3vE0LMCqycxz6Jc6TR6JqE9iRucWQH/wLrK0iQdbXZk48h56T2OVhFiv0O972UgXxnQBE3G79M9ZQschZtxE9blKc6d0MpFERX0EHDOWubTDbaRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738022796; c=relaxed/simple;
-	bh=Qfw83Lsvw9YW81iRX0U1pEJiGDlKBK7ODRwFNFgYaqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K/sTcyiIrU6RuPkAwA48I7z0HZ1QykoMExa9IUD7SnmwBF4vMFaOaf2W7q2NKmUhIUbU2KY0RsxiQ4UfgtUQkFmUHdxlWloMrgWfoDcYbkujHuLfeXg37sY6+mdnfRhXPo95tDfCnvtGpqZNfUsHWTzrhCv2JGRS3FIvTsnL0O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCw3ncnM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CD2C4CEEB;
-	Tue, 28 Jan 2025 00:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738022795;
-	bh=Qfw83Lsvw9YW81iRX0U1pEJiGDlKBK7ODRwFNFgYaqQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oCw3ncnMSwJFVXYin7ecw9sGmuVVEgSoun/Ci8tV7AZDndK0sk/ezkYQeuOL8Bybh
-	 /benV6dn1rTZMgO5OcAncJ1Xr+5/ShybogpSaSirks9Ff7qNGQaUBefuNsqP4WRF06
-	 pFGswKs51hT6T/iJvTsYUiv4AcUNg87OiQ+Hcor/64tVrg1SdWirZTWwtHqZdmdmQL
-	 GX+v2TOwPZ+4hSVnqYZrjmtEMARaw46ajpon2hcouDom+G9ztQrE74oB9K0XEbdHGe
-	 ksI2n7HFQKKWv5nySzAsHQUpcoCHDWjmpj4WgxYiZHSTYFXFwUxEiupH2PdFn/Gbi2
-	 1FTpMUkv/teog==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tcZ7h-0000000DRKZ-2hj3;
-	Tue, 28 Jan 2025 01:06:33 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Ming Lei <ming.lei@redhat.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC v2 03/38] docs: block: ublk.rst: remove a reference from a dropped text
-Date: Tue, 28 Jan 2025 01:05:52 +0100
-Message-ID: <f892c3774c1f6f50a74b8e5f5d6c830a86c743ce.1738020236.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1738020236.git.mchehab+huawei@kernel.org>
-References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1738025592; c=relaxed/simple;
+	bh=V8hCmqSu648rjGj9uef2mOgFY3g/hPMBNN/V/Gn2vkg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mQ9+TePfjZbM54HDSUXsQzw9JPlpTLQ//k9KypC2qLypvlN50SUuoScErNOMvFyD0CTPWKP/YDIKF7qNFExoVXdh9DxPvUbtJwkG+u6ejwINh7WfGdyFuGrwOYxn1SYPiOk9+J4NzKryfa5nMXB791S+NjIdy8WHSHzd11YvBrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PsUE3hI+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B665C4CED2;
+	Tue, 28 Jan 2025 00:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738025592;
+	bh=V8hCmqSu648rjGj9uef2mOgFY3g/hPMBNN/V/Gn2vkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PsUE3hI+T7bp7NhvLcEykdZQ8RJk4lCsCeT9XhOeZUT5LHHMC2yAV4/rdLc/i+l6j
+	 T6rvaDuvbUlzDUBv1xLHbWbWHl+eAmDcvnzcIxuQsQ5tcUY/LL8zDtlYzw+MxZu3vx
+	 o7LXMuDnFwQ+fiDNw0hKtQY+KBV9rD8+UrIZ166s=
+Date: Mon, 27 Jan 2025 16:53:11 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: sooraj <sooraj20636@gmail.com>
+Cc: linux-mm@kvack.org, Tejun Heo <tj@kernel.org>,
+ linux-block@vger.kernel.org
+Subject: Re: [PATCH] mm/bdi: fix race between cgwb_create and conflicting
+ blkcg associations
+Message-Id: <20250127165311.f51b98290b548aff1df92a81@linux-foundation.org>
+In-Reply-To: <20250128075250.11500-1-sooraj20636@gmail.com>
+References: <20250128075250.11500-1-sooraj20636@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Commit  4093cb5a0634 ("ublk_drv: add mechanism for supporting unprivileged ublk device")
-implemented support for unprivileged ublk devices. With that, the
-text mentioning such issue was removed. However, the footnote
-is still there.
+On Tue, 28 Jan 2025 02:52:50 -0500 sooraj <sooraj20636@gmail.com> wrote:
 
-Drop the footnote to remove a documentation build warning.
+> Ensure cgwb (cgroup writeback) structures are uniquely associated with a
+> memcg-blkcg pair to prevent inconsistencies when concurrent cgwb_create
+> calls race. This resolves a scenario where two threads creating cgwbs
+> for the same memory cgroup (memcg) but different I/O control groups (blkcg)
+> could insert conflicting entries.
+> 
+> The fix rechecks for existing cgwbs under the cgwb_lock spinlock after
+> initial creation. If a conflicting cgwb (same memcg, different blkcg) is
+> found, it is killed before inserting the new entry. This guarantees a
+> 1:1 relationship between memcg-blkcg pairs and their cgwbs, preserving
+> system invariants.
 
-Fixes: 4093cb5a0634 ("ublk_drv: add mechanism for supporting unprivileged ublk device")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/block/ublk.rst | 2 --
- 1 file changed, 2 deletions(-)
+Thanks.
 
-diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
-index 51665a3e6a50..1e0e7358e14a 100644
---- a/Documentation/block/ublk.rst
-+++ b/Documentation/block/ublk.rst
-@@ -333,6 +333,4 @@ References
- 
- .. [#userspace_readme] https://github.com/ming1/ubdsrv/blob/master/README
- 
--.. [#stefan] https://lore.kernel.org/linux-block/YoOr6jBfgVm8GvWg@stefanha-x1.localdomain/
--
- .. [#xiaoguang] https://lore.kernel.org/linux-block/YoOr6jBfgVm8GvWg@stefanha-x1.localdomain/
--- 
-2.48.1
+This looks sensible, but it would be best to bring it to Tejun's attention.
+
+I assume that this race has been observed in the real world?  If so,
+please fully describe the circumstances under which it occurred, and
+describe the userspace-visible effects.
+
+Probably a "Cc: <stable@vger.kernel.org>" is appropriate.  And it looks
+like the offending code is so old that a Fixes: won't be needed.
+
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -723,24 +723,39 @@ static int cgwb_create(struct backing_dev_info *bdi,
+>  	spin_lock_irqsave(&cgwb_lock, flags);
+>  	if (test_bit(WB_registered, &bdi->wb.state) &&
+>  	    blkcg_cgwb_list->next && memcg_cgwb_list->next) {
+> -		/* we might have raced another instance of this function */
+> -		ret = radix_tree_insert(&bdi->cgwb_tree, memcg_css->id, wb);
+> -		if (!ret) {
+> -			list_add_tail_rcu(&wb->bdi_node, &bdi->wb_list);
+> -			list_add(&wb->memcg_node, memcg_cgwb_list);
+> -			list_add(&wb->blkcg_node, blkcg_cgwb_list);
+> -			blkcg_pin_online(blkcg_css);
+> -			css_get(memcg_css);
+> -			css_get(blkcg_css);
+> +		/* Re-check under lock to handle races */
+> +		struct bdi_writeback *existing;
+> +
+> +		existing = radix_tree_lookup(&bdi->cgwb_tree, memcg_css->id);
+> +		if (existing) {
+> +			if (existing->blkcg_css != blkcg_css) {
+> +				cgwb_kill(existing);
+> +				existing = NULL;
+> +			} else {
+> +				ret = 0; /* Already exists, treat as success */
+> +			}
+> +		}
+> +
+> +		if (!existing) {
+> +			ret = radix_tree_insert(&bdi->cgwb_tree, memcg_css->id, wb);
+> +			if (!ret) {
+> +				list_add_tail_rcu(&wb->bdi_node, &bdi->wb_list);
+> +				list_add(&wb->memcg_node, memcg_cgwb_list);
+> +				list_add(&wb->blkcg_node, blkcg_cgwb_list);
+> +				blkcg_pin_online(blkcg_css);
+> +				css_get(memcg_css);
+> +				css_get(blkcg_css);
+> +			}
+>  		}
+>  	}
+>  	spin_unlock_irqrestore(&cgwb_lock, flags);
+> -	if (ret) {
+> -		if (ret == -EEXIST)
+> -			ret = 0;
+> +
+> +	if (!ret)
+> +		goto out_put;
+> +	if (ret == -EEXIST)
+> +		ret = 0; /* Lost race, another thread created the same wb */
+> +	else
+>  		goto err_fprop_exit;
+> -	}
+> -	goto out_put;
+>  
+>  err_fprop_exit:
+>  	bdi_put(bdi);
 
 
