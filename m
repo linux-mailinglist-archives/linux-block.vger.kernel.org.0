@@ -1,158 +1,129 @@
-Return-Path: <linux-block+bounces-16728-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16730-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAD0FA230F9
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jan 2025 16:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14AD3A2312D
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jan 2025 16:48:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FBE616375C
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jan 2025 15:25:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 811D21654E2
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jan 2025 15:48:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27C8F1E284C;
-	Thu, 30 Jan 2025 15:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AC591EBA19;
+	Thu, 30 Jan 2025 15:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G/S331RP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BeuH8oCI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G/S331RP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BeuH8oCI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wqoh1aJs"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F01F13FEE;
-	Thu, 30 Jan 2025 15:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B971E7668
+	for <linux-block@vger.kernel.org>; Thu, 30 Jan 2025 15:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738250740; cv=none; b=lXmKn/UcE5W/IbkHk9PtONIV/PGf4t1BXt77bGZRffP01vyjJ64azbb9LodGNkkqDS9oqZnM4Ml9Mnco/z1cuXyWU7aJqKKC6x+nAdM8zC8hxyW3G4o9G4Fs/3o55WsQZC2OZEvHLxg103R+2GW1ycNSYbW68vfczW+irMLNW1Q=
+	t=1738252130; cv=none; b=C5M0Lnb566TTPesK99g/8uwZXbq1mO5bxClr9Fe5iu5dzBnlzCF9DoAuUwzVjVGqOwj+18+zw026WT18/dTh+6rVepz+AVhd+dSaEm08AFkS+8VX5IKZ74rmsQIEEJQKFodZWCmro+cVCQXec1dkWx0sRg9J/S0byep7hX9+T30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738250740; c=relaxed/simple;
-	bh=5jPWKLNesjifMXdgjs+g2wuSE6mSbvzJyPlTCh9k4bs=;
+	s=arc-20240116; t=1738252130; c=relaxed/simple;
+	bh=qrkZvwvg3OuouMLvaatKH0A8WnUk/82OCAf9pVTfo3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnEdHnmcstH+F4xqitff8xyWU3IiEl7RV8l7VrNBgmeRVMi15BhNb46xM+Pu+7JRYt2JvrzHPEogu4JXn0bP7VkTRG6/64cKjFNb8ScYGmrwYkwJhEztKV/1ncPwJ3tx/YL+oLSAhkC1zWbSb9ldTgqetfeD3B5CzCL8JeEF/mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G/S331RP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BeuH8oCI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G/S331RP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BeuH8oCI; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	 Content-Type:Content-Disposition:In-Reply-To; b=on9ZjuZImf4CrQGid9lW0tmCUeY9k9m42nmJaMYOVqdfPnq6DW5XUAhDsyHTzuqisW9A8igEsW4bVpRcrae3vbEtgcVjin2SPB9VOdc2bYKXbW4pUuw4WDra5lMSim/icmkUr1IwGBoD6xe7CtjZmLhHaWpE1lqC3TruAm0XqrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wqoh1aJs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738252127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hgx1GZ8+M8oa4YQkR4BkCJmoPBM2B6r3RMwPamOyFls=;
+	b=Wqoh1aJsf6BzagSJltu/LERSG8sJyCnqB34vMoN+HsMR9wnF1PyuT/kyN85vqLtr4bRYqn
+	T6zp70eNnsG7WqS/6uwfF2iqovEkeRkX2Yrdq0HS3x6gO9Pk8sj3hUFLuca7LAaN//8m/u
+	gdQIxkcNAK33mKOxq+LxmHsioQknVjA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-6-lvdJVgEsMxerhUNdV_jlIw-1; Thu,
+ 30 Jan 2025 10:48:42 -0500
+X-MC-Unique: lvdJVgEsMxerhUNdV_jlIw-1
+X-Mimecast-MFC-AGG-ID: lvdJVgEsMxerhUNdV_jlIw
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 479892117F;
-	Thu, 30 Jan 2025 15:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738250736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
-	b=G/S331RPzqeN8RLclPgCZBvBthOz9gB0ZitX2Gu7+lqZBITnB+iVcui5MiN0z6054kMZBJ
-	Y0w3l7l4GvrqnG9F10YFNzG1AomoaKlytP4D/FkYjh/G8Xo7s07rmyaUPealClXSDO+Apy
-	mcblW5qFWlKL7U7Ik2gyZpv3NQK+3qg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738250736;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
-	b=BeuH8oCIrs5fkeTJQo5zyGo2q6mVspG5ylgU7tjnLP6tQ9TxyUfBBvZkA1p2+pIaWKDzrW
-	Me9Q9u8TRgnZbbAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="G/S331RP";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BeuH8oCI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738250736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
-	b=G/S331RPzqeN8RLclPgCZBvBthOz9gB0ZitX2Gu7+lqZBITnB+iVcui5MiN0z6054kMZBJ
-	Y0w3l7l4GvrqnG9F10YFNzG1AomoaKlytP4D/FkYjh/G8Xo7s07rmyaUPealClXSDO+Apy
-	mcblW5qFWlKL7U7Ik2gyZpv3NQK+3qg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738250736;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QXqnGoRaI66tmMlBOUK4wmzdfIDwO2FaFNK6NEuhUPU=;
-	b=BeuH8oCIrs5fkeTJQo5zyGo2q6mVspG5ylgU7tjnLP6tQ9TxyUfBBvZkA1p2+pIaWKDzrW
-	Me9Q9u8TRgnZbbAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3477B1366F;
-	Thu, 30 Jan 2025 15:25:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /PP1C/CZm2cXBQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 30 Jan 2025 15:25:36 +0000
-Date: Thu, 30 Jan 2025 16:25:35 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Daniel Wagner <wagi@kernel.org>, Keith Busch <kbusch@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, Ming Lei <ming.lei@redhat.com>, 
-	James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/3] nvme-tcp: rate limit error message in send path
-Message-ID: <216ab5ef-1c8b-4f3e-8a1a-f11e28994620@flourine.local>
-References: <20250128-nvme-misc-fixes-v1-0-40c586581171@kernel.org>
- <20250128-nvme-misc-fixes-v1-1-40c586581171@kernel.org>
- <20250129060534.GA29266@lst.de>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C80A1956083;
+	Thu, 30 Jan 2025 15:48:39 +0000 (UTC)
+Received: from localhost (unknown [10.2.16.138])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 43C7919560A3;
+	Thu, 30 Jan 2025 15:48:38 +0000 (UTC)
+Date: Thu, 30 Jan 2025 10:48:37 -0500
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: Israel Rukshin <israelr@nvidia.com>
+Cc: Max Gurtovoy <mgurtovoy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	mst@redhat.com, Linux-block <linux-block@vger.kernel.org>,
+	Nitzan Carmi <nitzanc@nvidia.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH 2/2] virtio_blk: Add support for transport error recovery
+Message-ID: <20250130154837.GB223554@fedora>
+References: <1732690652-3065-1-git-send-email-israelr@nvidia.com>
+ <1732690652-3065-3-git-send-email-israelr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="p/RIuBFdBJg4RMjD"
+Content-Disposition: inline
+In-Reply-To: <1732690652-3065-3-git-send-email-israelr@nvidia.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+
+
+--p/RIuBFdBJg4RMjD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250129060534.GA29266@lst.de>
-X-Rspamd-Queue-Id: 479892117F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 07:05:34AM +0100, Christoph Hellwig wrote:
-> On Tue, Jan 28, 2025 at 05:34:46PM +0100, Daniel Wagner wrote:
-> > If a lot of request are in the queue, this message is spamming the logs,
-> > thus rate limit it.
-> 
-> Are in the queue when what happens?  Not that I'm against this,
-> but if we have a known condition where this error is printed a lot
-> we should probably skip it entirely for that?
+On Wed, Nov 27, 2024 at 08:57:32AM +0200, Israel Rukshin wrote:
+> Add support for proper cleanup and re-initialization of virtio-blk devices
+> during transport reset error recovery flow.
+> This enhancement includes:
+> - Pre-reset handler (reset_prepare) to perform device-specific cleanup
+> - Post-reset handler (reset_done) to re-initialize the device
+>=20
+> These changes allow the device to recover from various reset scenarios,
+> ensuring proper functionality after a reset event occurs.
+> Without this implementation, the device cannot properly recover from
+> resets, potentially leading to undefined behavior or device malfunction.
+>=20
+> This feature has been tested using PCI transport with Function Level
+> Reset (FLR) as an example reset mechanism. The reset can be triggered
+> manually via sysfs (echo 1 > /sys/bus/pci/devices/$PCI_ADDR/reset).
+>=20
+> Signed-off-by: Israel Rukshin <israelr@nvidia.com>
+> Reviewed-by: Max Gurtovoy <mgurtovoy@nvidia.com>
+> ---
+>  drivers/block/virtio_blk.c | 28 +++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
 
-The condition is that all the elements in the queue->send_list could fail as a
-batch. I had a bug in my patches which re-queued all the failed command
-immediately and semd them out again, thus spamming the log.
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-This behavior doesn't exist in upstream. I just thought it might make
-sense to rate limit as precaution. I don't know if it is worth the code
-churn.
+--p/RIuBFdBJg4RMjD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmebn1UACgkQnKSrs4Gr
+c8j//Qf/Tv5y1Av+0bpdc9RvxLDX3Jslxlct66naW6zB5O2ZCtoOB9WGRyzNfpLM
+dOq/h9PtzjcGf2H0+cJ3Wdq3ycp/4NPvl2yhDQGfbqExHP/E/rDXsBevKH+zyldv
+yioc34WUgZA34CXGfsJryknxnaBv0rXfwB1xyV0o0I0XSDEkSUdFA7PoGvDAi98y
+VJPcyNzABu3ACtRjCM2jWb5UyBGvitJJHdX1zjsnNaowQJhTKJy9qUD6iGbn8Qsn
+UXuBVBbceAhGQPXz0UKxu35D2yNg09GMj9WI/3toZTJD77X2G1N+xJiIJmHkoRkB
+Ws1c2IpQD2ua7FqvzHlhjI+ygA/6Ng==
+=7B66
+-----END PGP SIGNATURE-----
+
+--p/RIuBFdBJg4RMjD--
+
 
