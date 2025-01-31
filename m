@@ -1,246 +1,109 @@
-Return-Path: <linux-block+bounces-16770-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16772-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B007A2411B
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2025 17:54:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE77A24390
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2025 20:59:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08B633A526F
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2025 16:54:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 213491889940
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2025 19:59:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 140511C5D63;
-	Fri, 31 Jan 2025 16:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B603B1F151B;
+	Fri, 31 Jan 2025 19:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZJy6y91"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/CkH6vM"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ACC13213E;
-	Fri, 31 Jan 2025 16:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABED22615
+	for <linux-block@vger.kernel.org>; Fri, 31 Jan 2025 19:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738342474; cv=none; b=XbVwwXli3qb7IFJ0TDYQNRflCRw66/DlyHdJ8DsWWFsBjwHdLGKiqh3fzuelkxFUExKrl0jhMyK05+tBx0EPAxe9cDbSs6XvmLr9bXP3b2TK3S7o7gD8is7NalKR0k5/K33PPeAyTAqLjxHxjVfeo2zTRMdM4Ri3nuCIHeykUjU=
+	t=1738353558; cv=none; b=FkXEfxFF4SErm/MXl6d3vwR6HKSKI3eVCKEmbcJ4/BZmeYEddvlvFXN5lDkUnrC6YjQ68dJzr8FpTp4TCk3uLuZ8q/dka8WBue/uRO7H0BQJxeJDDZoCjDG8R4Nc170OpnoeqoTbM4M37zZyIEWzhBQrqjPoZTyBeM8iFOQrpWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738342474; c=relaxed/simple;
-	bh=7Hl3GljDjAhtN6pmOcEy1UlbVLzmS0WmXIW/DQQ3PiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vDuGJPaKg0xArXY+lsKRwmAUFEzsDmHjUJjwTR9OEpuqQdZcdg9bGHRFuQ63CmecSx1ReKnTlpcBZZJhY7Vj3qPIsXZySzP10dcbAHg2COO/JatGfQYSHSwsySOLh4mjNvHr4StoaOoUa+Csl6IQVBhMoMUlIEawxtMDp9CD/RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZJy6y91; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1622C4CED3;
-	Fri, 31 Jan 2025 16:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738342473;
-	bh=7Hl3GljDjAhtN6pmOcEy1UlbVLzmS0WmXIW/DQQ3PiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AZJy6y91Vv1HZtJR8WflihFkJ/rqTfbZ1FKuyaSEsO+rRESNkufWToIr8vsIyAHPn
-	 iwrqhMfTwhvqTIbu+//DqynolEY2R0aLQFRbOcBoKCiJ2Ty/5vAWrVr613mMbUtPPu
-	 kFfrYqU5XYVpxevgUR0q2B5wmXt9IsyUPoLZYNYeMhMw6gHiC9uXwgyap60f3S73H4
-	 Fx+/dvKi/JkmRKx+wjGdYX1Rk84gtiELgf+Bn0Uq+VMCB3DkLMxmlcJvzNRU1beS2r
-	 NWCfBhVu7I+3u2eKAXDNofdgeG9l8XlbCva8bcmzs1OOZXdNlcbR5RyIHLSD4xCDom
-	 fOgS0LcUDS1mQ==
-Date: Fri, 31 Jan 2025 08:54:31 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: hare@suse.de, dave@stgolabs.net, david@fromorbit.com, djwong@kernel.org,
-	kbusch@kernel.org, john.g.garry@oracle.com, hch@lst.de,
-	ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-	linux-block@vger.kernel.org, gost.dev@samsung.com,
-	p.raghav@samsung.com, da.gomez@samsung.com, kernel@pankajraghav.com
-Subject: Re: [PATCH 0/5] fs/buffer: strack reduction on async read
-Message-ID: <Z50AR0RKSKmsumFN@bombadil.infradead.org>
-References: <20241218022626.3668119-1-mcgrof@kernel.org>
- <Z2MrCey3RIBJz9_E@casper.infradead.org>
- <Z2OEmALBGB8ARLlc@bombadil.infradead.org>
- <Z2OYRkpRcUFIOFog@casper.infradead.org>
+	s=arc-20240116; t=1738353558; c=relaxed/simple;
+	bh=17el+ADTwxXBp5MOIBwfzED8HdqlGU895MY2gC9ezwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HpRCmh9R1GK4Q1hgCr7b8fWj8QB0n4TZuR5P11/5D93jDHcLNvyNX1BkKf0C71JjhRvEuZKeJXyiPjadbp2tZ/L8r185x7EWmjxdPUpVCIhhwq7rLwO303HPYgrTcxIcUGezTVYQrIQIyUOb82i7boiM5ziDuMojDgBC7Vd39BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/CkH6vM; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2efe25558ddso3187637a91.2
+        for <linux-block@vger.kernel.org>; Fri, 31 Jan 2025 11:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738353555; x=1738958355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17el+ADTwxXBp5MOIBwfzED8HdqlGU895MY2gC9ezwg=;
+        b=J/CkH6vM1K4kfK165TJ65xxlPwT8iDGFEpDJvSzzHoP8tB/p7sgWRzPRpNjKDuD6Bv
+         ooUeWYAvkDwrr6ixCESYVfUl1U43ONrnSEJ6hK2+AjLCAYptmkwcub532GFjEp3wm11A
+         k14FEwgLdok/ckzUCTJt9C1abEB/Pgh7LLmNghO/RKmkNIp47e7al5RAA90UdVYid86U
+         tD13MLMDuExrxXf4l/Njyeg3MKT7XVkaAXVqdjndUEotcLdRPYFRPHfxCb7a72Mq0vbk
+         XFl55L2HlCmaosOdI79quGQPUk4r/lB6utTSf81o3h/VaaSuXJqZDRnt9M3ieetOIW5o
+         0c/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738353555; x=1738958355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=17el+ADTwxXBp5MOIBwfzED8HdqlGU895MY2gC9ezwg=;
+        b=f10OGVjdpjWQyOrSdDoPxxP3kObkoc81lq07qmkxoxbcusAnE1jwc2NU8XT0O7H/74
+         7nBo0hBssjkPTleNzLNJMtKaBwyfEsS+mJrmd4gkL9QX+LLh/iLl6wFUGgAvCxA5uLab
+         aI825If6kw5yNjpp5N/EV1cIMDETBO8wYTBa4DWCtJMov5UX1SnFD+ZW/BpgmRI613rn
+         LuLJ3R/oq8e0Am27FcggwqYp6QTf3HI/Z2tflyeqnOhAPyHZqlXZyQLSR0JNkBcZfPgF
+         9a0YHx/EF364Uh+QTaHb8YHMhfYVKaBVuYC/IjEc43U7qR+3BTiHkkAIRo2Y2W2hdxe/
+         h5ig==
+X-Forwarded-Encrypted: i=1; AJvYcCWv+eaRUo6cVD29g4eXufPx0WyX4umTUbuLiBfR0UVtYsftT72zADm+GVJnebARZ9CgcPyZall3NVERPg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4d4QJb+M8YeP29HqgtlpU0nlTpNozIVR7Jsm8wLttoZnv1fJb
+	trIEqCRVVYDYqVKpfpIMED/uhUF+VLoqj55i2/MJlX6Dk8BdjMymcK9WK1dRh/4+WVKHFd+vNm2
+	i3t0GVyiWf1OTBkPhrze6L0IU4jYkYfUX
+X-Gm-Gg: ASbGnctrKNQBS99uYrD3cwLlvWUCsi9WGapf4CIY5bmgIjlKCG/KKoqx9ZZk15XpvkP
+	U6f9ViRH+VPsq12yYq3G4Okvsh89l/NO3tEcvf/aSX1smsLD7HtwmmVWXlRRAcj6SY0JkaEc=
+X-Google-Smtp-Source: AGHT+IEdz+PUksdDfWR4Ut69T7hAs/nk6qgNXncnnf/UaAPmP4FVOrqUe+Cxrgi4In7rmdxq5b7K/K2hnW+gUEh4jC8=
+X-Received: by 2002:a17:90b:2f0d:b0:2ee:45fe:63b5 with SMTP id
+ 98e67ed59e1d1-2f83abbd6e9mr16489290a91.3.1738353553920; Fri, 31 Jan 2025
+ 11:59:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z2OYRkpRcUFIOFog@casper.infradead.org>
+References: <CAOBGo4xx+88nZM=nqqgQU5RRiHP1QOqU4i2dDwXt7rF6K0gaUQ@mail.gmail.com>
+ <20250109045743.GE1323402@mit.edu> <CAOBGo4w88v0tqDiTwAPP6OQLXHGdjx1oFKaB0oRY45dmC-D1_Q@mail.gmail.com>
+ <CAOBGo4zdDQ+mV_5X1Y0J2VpV8F63RsBs66Xq4CHPtpBu9MFebg@mail.gmail.com>
+ <d2951075-e9e8-460c-9dbf-34bfeb942aa4@acm.org> <Z4Drg8pewTBbs0sy@infradead.org>
+In-Reply-To: <Z4Drg8pewTBbs0sy@infradead.org>
+From: Travis Downs <travis.downs@gmail.com>
+Date: Fri, 31 Jan 2025 16:58:37 -0300
+X-Gm-Features: AWEUYZmsVxC3Fi1GEkd0v_5VCxWz2PQ1H5xcQjXI62xu7O_gMUebqyAwQ0FzUw0
+Message-ID: <CAOBGo4wRNmMNy1ArCXphEpV+NrcJ0nyHtew6nwJLeJYGqM7fXQ@mail.gmail.com>
+Subject: Re: Semantics of racy O_DIRECT writes
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Bart Van Assche <bvanassche@acm.org>, "Theodore Ts'o" <tytso@mit.edu>, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 19, 2024 at 03:51:34AM +0000, Matthew Wilcox wrote:
-> On Wed, Dec 18, 2024 at 06:27:36PM -0800, Luis Chamberlain wrote:
-> > On Wed, Dec 18, 2024 at 08:05:29PM +0000, Matthew Wilcox wrote:
-> > > On Tue, Dec 17, 2024 at 06:26:21PM -0800, Luis Chamberlain wrote:
-> > > > This splits up a minor enhancement from the bs > ps device support
-> > > > series into its own series for better review / focus / testing.
-> > > > This series just addresses the reducing the array size used and cleaning
-> > > > up the async read to be easier to read and maintain.
-> > > 
-> > > How about this approach instead -- get rid of the batch entirely?
-> > 
-> > Less is more! I wish it worked, but we end up with a null pointer on
-> > ext4/032 (and indeed this is the test that helped me find most bugs in
-> > what I was working on):
-> 
-> Yeah, I did no testing; just wanted to give people a different approach
-> to consider.
-> 
-> > [  106.034851] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > [  106.046300] RIP: 0010:end_buffer_async_read_io+0x11/0x90
-> > [  106.047819] Code: f2 ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 53 48 8b 47 10 48 89 fb 48 8b 40 18 <48> 8b 00 f6 40 0d 40 74 0d 0f b7 00 66 25 00 f0 66 3d 00 80 74 09
-> 
-> That decodes as:
-> 
->    5:	53                   	push   %rbx
->    6:	48 8b 47 10          	mov    0x10(%rdi),%rax
->    a:	48 89 fb             	mov    %rdi,%rbx
->    d:	48 8b 40 18          	mov    0x18(%rax),%rax
->   11:*	48 8b 00             	mov    (%rax),%rax		<-- trapping instruction
->   14:	f6 40 0d 40          	testb  $0x40,0xd(%rax)
-> 
-> 6: bh->b_folio
-> d: b_folio->mapping
-> 11: mapping->host
-> 
-> So folio->mapping is NULL.
-> 
-> Ah, I see the problem.  end_buffer_async_read() uses the buffer_async_read
-> test to decide if all buffers on the page are uptodate or not.  So both
-> having no batch (ie this patch) and having a batch which is smaller than
-> the number of buffers in the folio can lead to folio_end_read() being
-> called prematurely (ie we'll unlock the folio before finishing reading
-> every buffer in the folio).
+On Fri, Jan 10, 2025 at 6:42=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> On Thu, Jan 09, 2025 at 09:32:54AM -0800, Bart Van Assche wrote:
+> > in trouble. Additionally, since typical storage controllers use DMA to
+> > transfer data, and since DMA may happen out of order, another pattern
+> > than AB00 or ABCD could end up on the storage device, e.g. AB0D.
+>
+> Only when using an LBA size larger than each chunk, e.g. in the scenario
+> mentioned by Travis if using a 4k LBA size and not a 512 byte LBA size.
+>
 
-But:
+Thanks Christoph, your reply is appreciated.
 
-a) all batched buffers are locked in the old code, we only unlock
-   the currently evaluated buffer, the buffers from our pivot are locked
-   and should also have the async flag set. That fact that buffers ahead
-   should have the async flag set should prevent from calling
-   folio_end_read() prematurely as I read the code, no?
-
-b) In the case we're evaluting the last buffer, we can unlock and call
-   folio_end_read(), but that seems fine given the previous batch work
-   was in charge of finding candidate buffers which need a read, so in
-   this case there should be no pending read.
-
-So I don't see how we yet can call folio_end_read() prematurely.
-
-We do however unlock the buffer in end_buffer_async_read(), but in case
-of an inconsistency we simply bail on the loop, and since we only called
-end_buffer_async_read() in case of the buffer being up to date, the only
-iconsistency we check for is if (!buffer_uptodate(tmp)) in which case
-the folio_end_read() will be called but without a success being annoted.
-
-> Once the folio is unlocked, it can be truncated.  That's a second-order
-> problem, but it's the one your test happened to hit.
-> 
-> 
-> This should fix the problem; we always have at least one BH held in
-> the submission path with the async_read flag set, so
-> end_buffer_async_read() will not end it prematurely.
-
-But this alternative does not call end_buffer_async_read(), in fact
-we only call folio_end_read() in case of no pending reads being needed.
-
-> diff --git a/fs/buffer.c b/fs/buffer.c
-> index cc8452f60251..fd2633e4a5d2 100644
-> --- a/fs/buffer.c
-> +++ b/fs/buffer.c
-> @@ -2361,9 +2361,9 @@ int block_read_full_folio(struct folio *folio, get_block_t *get_block)
->  {
->  	struct inode *inode = folio->mapping->host;
->  	sector_t iblock, lblock;
-> -	struct buffer_head *bh, *head, *arr[MAX_BUF_PER_PAGE];
-> +	struct buffer_head *bh, *head, *prev = NULL;
->  	size_t blocksize;
-> -	int nr, i;
-> +	int i;
->  	int fully_mapped = 1;
->  	bool page_error = false;
->  	loff_t limit = i_size_read(inode);
-> @@ -2380,7 +2380,6 @@ int block_read_full_folio(struct folio *folio, get_block_t *get_block)
->  	iblock = div_u64(folio_pos(folio), blocksize);
->  	lblock = div_u64(limit + blocksize - 1, blocksize);
->  	bh = head;
-> -	nr = 0;
->  	i = 0;
->  
->  	do {
-> @@ -2411,40 +2410,33 @@ int block_read_full_folio(struct folio *folio, get_block_t *get_block)
->  			if (buffer_uptodate(bh))
->  				continue;
->  		}
-> -		arr[nr++] = bh;
-> +
-> +		lock_buffer(bh);
-> +		if (buffer_uptodate(bh)) {
-> +			unlock_buffer(bh);
-> +			continue;
-> +		}
-> +
-> +		mark_buffer_async_read(bh);
-> +		if (prev)
-> +			submit_bh(REQ_OP_READ, prev);
-> +		prev = bh;
->  	} while (i++, iblock++, (bh = bh->b_this_page) != head);
->  
->  	if (fully_mapped)
->  		folio_set_mappedtodisk(folio);
->  
-> -	if (!nr) {
-> -		/*
-> -		 * All buffers are uptodate or get_block() returned an
-> -		 * error when trying to map them - we can finish the read.
-> -		 */
-> -		folio_end_read(folio, !page_error);
-> -		return 0;
-> -	}
-> -
-> -	/* Stage two: lock the buffers */
-> -	for (i = 0; i < nr; i++) {
-> -		bh = arr[i];
-> -		lock_buffer(bh);
-> -		mark_buffer_async_read(bh);
-> -	}
-> -
->  	/*
-> -	 * Stage 3: start the IO.  Check for uptodateness
-> -	 * inside the buffer lock in case another process reading
-> -	 * the underlying blockdev brought it uptodate (the sct fix).
-> +	 * All buffers are uptodate or get_block() returned an error
-> +	 * when trying to map them - we must finish the read because
-> +	 * end_buffer_async_read() will never be called on any buffer
-> +	 * in this folio.
-
-Do we want to keep mentioning end_buffer_async_read() here?
-
->  	 */
-> -	for (i = 0; i < nr; i++) {
-> -		bh = arr[i];
-> -		if (buffer_uptodate(bh))
-> -			end_buffer_async_read(bh, 1);
-> -		else
-> -			submit_bh(REQ_OP_READ, bh);
-> -	}
-> +	if (prev)
-> +		submit_bh(REQ_OP_READ, prev);
-> +	else
-> +		folio_end_read(folio, !page_error);
-> +
->  	return 0;
-
-Becuase we only call folio_end_read() in the above code in case we had
-no pending read IO determined. In case we had to at least issue one read
-for one buffer we never call folio_end_read(). We didn't before unless
-we ran into a race where a pending batched read coincided with a read
-being issued and updating our buffer by chance, and we determined we
-either completed that read fine or with an error.
-
-Reason I'm asking these things is I'm trying to determine if there was
-an issue before we're trying to fix other than the simplification with
-the new un-batched strategy. I don't see it yet. If we're fixing
-something here, it is still a bit obscure to me and I'd like to make
-sure we document it properly.
-
-  Luis
+In our case any pattern that is ABxx is fine. We don't have any
+expectations about the about xx part, it's fine if they have a torn
+write, out of order write, total garbage etc, but we'd like ABxx to be
+intact (see also my coming reply on a parallel branch).
 
