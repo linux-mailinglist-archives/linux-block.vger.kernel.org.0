@@ -1,472 +1,193 @@
-Return-Path: <linux-block+bounces-16825-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16827-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B50AA25F20
-	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 16:46:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA37A2608F
+	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 17:50:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D807A7A2049
-	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 15:45:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3B7A1887035
+	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 16:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D0920ADC2;
-	Mon,  3 Feb 2025 15:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76E820B218;
+	Mon,  3 Feb 2025 16:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="HQvVRfGT"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OPlZp8BL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2045.outbound.protection.outlook.com [40.107.243.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7AD209F5A
-	for <linux-block@vger.kernel.org>; Mon,  3 Feb 2025 15:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597540; cv=none; b=ADE8i7TjgB/kHe+b6tRJKl+J8nJ+OC0i8m/oTv+VZXdrj21kVnfGYtywvBhHmJTqOUp8VYIPxlS4iCOPFrWJ9xEKTsDGrByiKBe7r6zBtc2Ysp37Po0/JPphZ2hcjy0yoj6O0E6AL9FITmU2IaVJre6c8/eeApfXumWNVSWLKJc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597540; c=relaxed/simple;
-	bh=mn+CY3dTAGazV9JQYW/9hNHqGStvNKf5F/Qe3qx9n28=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LNqxplDdhuJ0Z+fzaqmKlwWq5j2YLtwSvA9qxfH2FVmDJIoc+mYre3lzSUBc34uNdkqEXrLd4LeF7mByP9sEj/BbH1c3hXkFCXP9XNjtACoSMoIn3lsj/aaTHC9pVivyc5se3OAXIprDDm+AKaBZAj9jvT7DqRlP+dESLkL267g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=HQvVRfGT; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513FjCw2004352
-	for <linux-block@vger.kernel.org>; Mon, 3 Feb 2025 07:45:37 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=xT9bYyhPiIjW1fRj+7v8fy9G12JyuUUWgtfu26pK2PA=; b=HQvVRfGTbkBH
-	9CXBd9XHZzNCH8/YauHuv2aeFRjhKRy62AVoaAgWeYVzgSdkuD2uMtZOTAVtbToU
-	Ku2Lo0cwnrKjp0VxfC6PNZ/swiKvTBlSVyek4fLVevDvH5mJvnupY7ZQQTTBq0IX
-	7MvoDl/YfWxdkNBY6kQL/ExBVpThBDDjzNm5dlqrAXTkDA/Qo+hUVHNo/9qWXXDB
-	b0PftaG9/6Mp8UIYV1YYhkjGgIZU3W3gvz0gDKV1ELSqzmCwpw05Ov+SCnNHYFQx
-	WzDNPdWwAws74/uODMgbMkYwLQDWBetjjo5vYhR4r4+L5OtxFdDLOHxgYv/bGqau
-	UfFcnRdntQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 44k0q6r041-15
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Mon, 03 Feb 2025 07:45:37 -0800 (PST)
-Received: from twshared55211.03.ash8.facebook.com (2620:10d:c085:208::7cb7) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Mon, 3 Feb 2025 15:45:27 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 3D158179A9858; Mon,  3 Feb 2025 07:45:22 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <io-uring@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <ming.lei@redhat.com>, <axboe@kernel.dk>, <asml.silence@gmail.com>
-CC: Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 6/6] io_uring: cache nodes and mapped buffers
-Date: Mon, 3 Feb 2025 07:45:17 -0800
-Message-ID: <20250203154517.937623-7-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250203154517.937623-1-kbusch@meta.com>
-References: <20250203154517.937623-1-kbusch@meta.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B201FFC55;
+	Mon,  3 Feb 2025 16:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738601404; cv=fail; b=Fvn2lGu4aTPQyGDKHlIU8ifqvQ1wqqtHTvn2iXp0uOsrNSr2pHojm8cBffWi9/paOHeDfghUhsnpuaguD954+a4OgkJYQBqjF26vRlKXQYIkHRc+zoMmJdUP86Olpu1vietDWDDR3FJ7Rn8bnDDy5n/SgN7qCvgLXtfnSGUbEe8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738601404; c=relaxed/simple;
+	bh=4MzgSZHcpTjV9WknwRRDeB38nabktTwbQ0uJ8yROspM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iWlPTf+0WZyYC9II+zi4bstp8Burgg9dbACyfe09LZ976KvLV/0u4qnhdUCjDapeB6YnjCVoaYfej8WfrNbkEjRqATu4n6QNSkrrYVg2ds4ZbHE77/j6i2iyWYssEYi9+8I0zH+AOGEJPpyrEg1DEZN/1XNnGNueYLh0AD6ii44=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OPlZp8BL; arc=fail smtp.client-ip=40.107.243.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dKjpsHvUItOv3CfcsVfJE2WZaal+8FKOcOM92OmdkgvuzpEw5l7JKr3AmY/X3quT+C8hxcG3jYyr+TAgbzvX9EbjruKkPPzFtU4/NgUZw08d57AqMaMkDr+x7KgUvrKPV5z7hkev+O14McG75Unysrz1K0Epd6PTnWjOVCzjGNltCzTKLN1qKo101p2d1b5HvOPIP+nIDRQ96o0y6RohuHphzt+w4I9+Hu+SUe5DAQ+zpUC7Nys4DTL8WIeFlQZ7j6N5pBDY8Q0EbvHJQKBvTu3lqDkx6UkZuiUBPKFhBRWeSvBZFBr8TmtE+v7HhBbFlCQYk/dwCO9En3TFJI5wjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4MzgSZHcpTjV9WknwRRDeB38nabktTwbQ0uJ8yROspM=;
+ b=ogHL0IUtZMTD3MgLJnLeREnON8vasCF+3NsqPK42jGiHdkWPWRUa9esHKN+qzCJni3LBGqPvVK1VfKSDOR+RZ/lilZEQD5bv+maMmq0uNXo2GP35ySpW7x6GY2P9pbrrRxWCJlrsF+LWZQ/to3RatOgA62k/uHQI9QlOBaxxZpLtucUoyGAceKFvHdJGYfwafZguKuUe/S6n3eup4fbftJZi/nOPm9YQh1zRFw4Qgo9xkeEHxP+SkCxWqKVEFkkMCoBQzD0lfKvjr+gibSF/aNT+JBIpzZ4rZcVhXO0wN0JvaLpNQTQu2idULc2lCdDGs0VzRzZw+bNFCY8nuVechw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4MzgSZHcpTjV9WknwRRDeB38nabktTwbQ0uJ8yROspM=;
+ b=OPlZp8BLBiTXF0CLHftArpgui6qgAI151FHadgAr0Qep4R/GjClc+U9GdlbSo/r/GZl7rmw9YN6ss9gqnyk7FYoeirK+GusXZBhwSsNmuUc4FCp5p91xwEAEaYcF3AoUIoYeDMGbhZnHB5WtlFoqeFDDBUyzK9lcxPCNmRgdo6BPQ6rZ3aB4IlivwfnzVYSRHb6a2WPrshXBT8M3Fwl4w7RMI5EC9D7iRRxmp3BkIRqQp2VBYVLj3zw4pqI0fiH8LDgyVMK3LL1TyUJLREKXpHC7S5gP4sfRSXZ/t+au+nXIjjsiI5h3WkHz9BUlU4c4Ol3D3ms9fDHiyKiiNzo3CQ==
+Received: from LV3PR12MB9404.namprd12.prod.outlook.com (2603:10b6:408:219::9)
+ by MN0PR12MB5738.namprd12.prod.outlook.com (2603:10b6:208:371::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Mon, 3 Feb
+ 2025 16:50:00 +0000
+Received: from LV3PR12MB9404.namprd12.prod.outlook.com
+ ([fe80::57ac:82e6:1ec5:f40b]) by LV3PR12MB9404.namprd12.prod.outlook.com
+ ([fe80::57ac:82e6:1ec5:f40b%5]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
+ 16:49:59 +0000
+From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"target-devel@vger.kernel.org" <target-devel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] block: remove bio_add_pc_page
+Thread-Topic: [PATCH 1/2] block: remove bio_add_pc_page
+Thread-Index: AQHbXbHxgYHHDxrTcUumzD0wKp5y3rM1++6A
+Date: Mon, 3 Feb 2025 16:49:59 +0000
+Message-ID: <f7bf999c-b3a5-47e3-ba77-483039656302@nvidia.com>
+References: <20250103073417.459715-1-hch@lst.de>
+ <20250103073417.459715-2-hch@lst.de>
+In-Reply-To: <20250103073417.459715-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV3PR12MB9404:EE_|MN0PR12MB5738:EE_
+x-ms-office365-filtering-correlation-id: 9fab7710-de0a-4b79-50c0-08dd4472cc29
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|10070799003|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?a3FyeW91MzgvY3BDcTdoeXZFZEtycG83MHBMSE00S3I1S1d0eEdGT05yZmlJ?=
+ =?utf-8?B?TmpSTkE5MVBxNFRkTmF5Mjk1a2tjU0Rqd2NFeU1XYVdjcUJ3Qi9aQ1dYMll3?=
+ =?utf-8?B?VU50RTdDTmhweW52cnBlWEQ2QytzV3NJaG9UZGM3bk5ueVRMaVNuU1h6a1dr?=
+ =?utf-8?B?d1kwNGN2Qk5oTGdlL0RVcERyUFRDSmR2cnErbk1vTFFrQ0o3Znk3S2lBRm9x?=
+ =?utf-8?B?MFlDNDc1V2lYRFVFTTdHNGhETHVPbWJTdWphUVVYQVp1Z1lwcXgzbUtrclhp?=
+ =?utf-8?B?WVdMSWh1WHNFemV4NnZ0NlAwanNMWEJ2ZVB3a3ViejY2MDVDSGFQbGd2bHVP?=
+ =?utf-8?B?RnNDczdtSU01cDZMQnIvMjNCMW8vdlZ2MVFTaVM0cnh6NjRrUTVXb2Y1UURl?=
+ =?utf-8?B?VFptSStrOHFhQ0tDV3E2TGdHZC9WVzd1Q0JCUmppWmZCY3RuNWorVERlblBa?=
+ =?utf-8?B?dHp3UlhnbFhEcjlQQjExckt1MjZTSXJoMW5mTVZjSjJTTUZkNEYrUm9Vdzdq?=
+ =?utf-8?B?K0lhOVhYQllSYUlEK3ZnQU1YbkJnV0d2SllCOHdpTitXeDFqY2JiTE9SL1dm?=
+ =?utf-8?B?ZUFubitJM1h3V0M5TVhRMlVocFhqaHBBVGZZYU1kRjJ3RlRLVHJrUGo0eXJZ?=
+ =?utf-8?B?THF5ektlakZGaENXeUxoNHllT3FCN2xLT25RZWJFVzRQOFloUjJuY0dET3Ra?=
+ =?utf-8?B?cTVsYXkrR0FNY3ZtSkZRSnczZnZBcTNXVmdKS3E5ZU9kaUk5L056ejFJNkQw?=
+ =?utf-8?B?VU1yUzlqYXcvcDVMd01HYnN3SldCK0l3dk9QbmFVL056bTdBMTZvb2lyYU80?=
+ =?utf-8?B?ZlM2dS8wV0RsTytoS0pkK0JJQjFyVHpaUTM5MEE2UnJ2U0UwUEx1UFNYZGc0?=
+ =?utf-8?B?RnRzUlY3MGkyeURiVkV4N3hKMXhZTWJNUkpRc2xuYjlsOWJDdVl1dTRwU2tV?=
+ =?utf-8?B?RnZ5R0x6SlB2MUkwNVBRUmtBbGV6QW9qcDFXYk15RmZsMTVuWjVVRjBpemNv?=
+ =?utf-8?B?alc4a3liSndnQnZLR1NyWGF6MTdGcy9IVVBqK2FvazY5dktIaGtPeXNhcGFn?=
+ =?utf-8?B?SzF1Y0xWaTNhU3h3ZDMxNmVLdVhhamFzU0EyTjJwT1UxMkVDVG9iTzBEUllp?=
+ =?utf-8?B?ZlpXV3RnT3BQeUljMzBHVWtjSTMydzFpQ3VOaXg4VFR2VUZXQkRWVnBRWFpH?=
+ =?utf-8?B?c0c5bERGM1pYQXc5blJDMFh4VG00a2JYcW0wNUxXb2Rza3ZJZHNSMnVLblFy?=
+ =?utf-8?B?UnEzeFArSmVCZU1SNUlWNWFmS3JTeVJNYlZ1WVdZbEgrbEN1MnlDM2llcTRF?=
+ =?utf-8?B?UVhnb0dHWHp3bnoxcG94VTJLQmdmdjZxajQyRUNOZnhHS1hWQ0N4QWg3WHpU?=
+ =?utf-8?B?d2ZUZ1dGQ2llSDhmYjFxYk9KZytPVGdkSG1acU5hKzZsVlRyL3diaU9VdDVj?=
+ =?utf-8?B?RGh0Ky9MM3RvNEJpL1p1MGZCNzM4MDFXY0pYVFBkMGxqTHpGNkRYZnlyaGVp?=
+ =?utf-8?B?SUsxVE5McmlQVVBXREl3ZktpZCtqamhvVGEvZlMrQ0YzaGRMWjlSdHVTYUpp?=
+ =?utf-8?B?bHUxU0l4WEwzd1J2V0htT1pJNDJjUFhVSGhhODd6MG1EL0tKa0E1TmhmU203?=
+ =?utf-8?B?UXJmc0hqcHJDN3JZT2RkaWZlb1pVamRaWWJ2NnZkdTM3alFqbDdRWHFMZjJT?=
+ =?utf-8?B?T3JZeklxM3Nad3dzdFJaMWRMMEpCVmNRcSsvRHJZR2FmR2l2S1NoN3llS29U?=
+ =?utf-8?B?K2Mrd2x2eU1lUGxZQWpLZU1veks3MEtBdjdEM2gvRmVmQmlVTVJVQjZ1Vlpx?=
+ =?utf-8?B?eHhpYzlLRkJxU28vUXQxYVdUTFgrNkdpNGNIWUk1WHpXQzUrOVJpd0Z6aERp?=
+ =?utf-8?B?ZjJjc2ZKVGZ1OFVFMTJiNDBzekprTURhbmJkNmprOGFMelJ0ZHFBcmtLbHAx?=
+ =?utf-8?Q?cbv29bAf4XCSuXF+NeviqKKifd6vhOVd?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9404.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ckdOSjBpTXJ0KytleXVhOXpiS0hGRkRBeGI2VDA2eldKeUsrdFlWZzhicFd4?=
+ =?utf-8?B?bFFqT2t2QXpObmpraVJGTkNIUVlPd1NEa2tOQUNzalh6UXVwYmFhY0pXTFVx?=
+ =?utf-8?B?NE1VRFk2T1hOb0FZcERpeVUvNk5nd0xHQ0s3T0NWZ1BERy9Sa3kraTE5TkFu?=
+ =?utf-8?B?WVJoQjZneWh6cGR4aTAzaHdGdFA0d0VMaVJoOHBBUlpZOVZnajhvek5aa2V4?=
+ =?utf-8?B?MEZuV3oydTJDMmZYS2hlOWh3WDVRcUpSK2FjcFlpVXVHTzc3SUlFbTBkZGs0?=
+ =?utf-8?B?Q09jV2U4dmhpMWo1VGZYeHhJZ09Xa0RyREVSN29Db3VFM08zbkxNTUM3YWxZ?=
+ =?utf-8?B?NEw4Z1J0RmlRZk9tdmNDczZWaHhyK1RLeS8rd3gveXBiQzlHZHVKaGdubE5s?=
+ =?utf-8?B?RU1JRE9vd0pXOUQyc291cFRsUEJwQW9SRW5USklZOHJSZ2hxenM4VkN1cm8y?=
+ =?utf-8?B?Tm41N2xnUjlYUnhnQjFjanJlUzUrSjZRaHQzdVlQZ1hwalJ5WnJONlNVaEFZ?=
+ =?utf-8?B?Wml6TU5QemtjSFJFYjBYUXc2TGNrSHBEWUp3alR0VTlxakpLaC9hck5OQ3dh?=
+ =?utf-8?B?enRZMS9ETTNqVENrRU8zWHpMem1LcUNTd1M4MWxFQUo0S2Y1NUxMbmZwVi9o?=
+ =?utf-8?B?QVRZQTF5Y0hzMkVQWG9ZMTNtYjdhMXV5enBZRE1YZHVHQ3BQUmI0Si9JcE5m?=
+ =?utf-8?B?L084MTlpRVJ6eXkvQmh6N1h1VkdNeFB2WWJnOWFNRXR3ZTBpV1NIWXJuM3gz?=
+ =?utf-8?B?Q1JYZFVReHhFQ1dUOGxndUpyQmJyS1U0cGlRRHMzNVdNVnJGRmlNaWl2dVVQ?=
+ =?utf-8?B?R01GNUlPdU1KWXMwZ3FaKzJtdytINlhmQVd5YkFlS0xvdm8xQm5XQXlDeHFw?=
+ =?utf-8?B?V0xmR0k4NzA3OGc0TFpJSGZ5RXZnSjhyL05TcURvNTFJWDdCN1lVUFZmTCto?=
+ =?utf-8?B?eFNyeS9OOVVwbUM3dHpmeDBLczh5VytBbWVPYk9LR3ZpOWlZVTZCcVNKdVp6?=
+ =?utf-8?B?SVNUdjh3dkh4YkU3M3JNS1FNQ3BLMXEvbUtHckdUOEduSlFaaDhsbStEcXU4?=
+ =?utf-8?B?N2JZWWZHR1BMZlAvUEpRVnh0V1Jaemw2dTBTbnNvaGllUjdxNzVQK3daUEZI?=
+ =?utf-8?B?dkxlUEhFbGc2cWRTYXFtbmpUNGE4TjBTRDBPbzJ0Z0pkM05YSDN6U2lORzY1?=
+ =?utf-8?B?RUhDSm1SeEYzdWF2MVptYXpzYTl6dnNWWnh0WG52UnU2am95QWMwbG51NWQ3?=
+ =?utf-8?B?NURFNVVOQ3pYSmtKUk1sSGpUUUdRTjdTTFltdmZ6NjlXVVNjOXpNRUlwVWZH?=
+ =?utf-8?B?U2lSNU44VWVsUGtrRmFUYk5PRVIwckVvdCszeTNnMzF6cVNpVGRRUHcwYVZx?=
+ =?utf-8?B?UHRudjZLa0JPTURoZ1RVR2htVlFUVWpjODV2cVZ5Ni9rbU9RUnU2THpTeHYz?=
+ =?utf-8?B?T1Z3a0lObmNVWXFBWGx1VU5ITFFYd3RYdlRBb1FmV2hjZCsvVnJDNGJsUjJ4?=
+ =?utf-8?B?QjZOMkMrOGNQMG52U0h1dWlBSVd5RkUwdkZTQ29ZRDV6SFZHODliM1BoSnYr?=
+ =?utf-8?B?eklvcmhkRm8weHZqMEhzQmI1ZTJxaGtiUmFPOG5XTGpFSWJ3Y2tSZHBCekRK?=
+ =?utf-8?B?dFp1MzhqR3RobFBVbHI3NkNvdVU5ME0wdXBJRHcycjVkRy82M2dreWlrSTdY?=
+ =?utf-8?B?VnozOUM2cFdDQmNXVWZlSlRhMDhYSWRtYlEzdkVLaThhWERRbVFXT3NYL0Nm?=
+ =?utf-8?B?ZWRqRndqTHZVOXFJZzgwaVpIY1B2MERuSHNMeml6eG40OHBXamp5NHptSTdl?=
+ =?utf-8?B?UU9Td2pEa213VEJaR0tXOUpyeDlXME1zY1I0bkxTdG5lL2E3WDFuc1lZZHZS?=
+ =?utf-8?B?RmlPdEMwV24rVDBGQm0wMFBpTVIwVnI1VGNnamsra3ZwcGpBV0Y1MjJiQVhw?=
+ =?utf-8?B?TlB6M1pvOTc0VVBuc2FDTzZCaHphQUJ4MkpMUHZkMWNla1lnK0R4TjBEVUhU?=
+ =?utf-8?B?Wm0yeFMyTTlrd24ra2oyRHg5U2l4dS85cnNaeW5XZXJzV1ZpenhNZFoyalph?=
+ =?utf-8?B?TytPaUtDdjhzczg1M2o4WG4zS1FMVW1YeTVLWkxRcnJhWFRYbm5RK3FjdnRr?=
+ =?utf-8?B?UjlHYnhveDR3SnEvN3BUS0lvMmo3TThVNFlOZG9wcWp5RXl0ekVjVmhIVHRO?=
+ =?utf-8?Q?Ole/S/AOJJBwTmuopuHUDcDfRIAOj+SyDKbY8ukf0D7C?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E1B5C148E56C214F93828182D05781E1@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: HUI2nd_ADcA16PmjzpRGg2llf3mgfJLb
-X-Proofpoint-GUID: HUI2nd_ADcA16PmjzpRGg2llf3mgfJLb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9404.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fab7710-de0a-4b79-50c0-08dd4472cc29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 16:49:59.8191
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kClpQ2BjSx8kA6ypclz5E+CRhFBzeTB8YZudIIH0jPWDeSDGTek5Y+fjnXEaKk+ZLJ27RXq4K8FKHjy6yQndEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5738
 
-From: Keith Busch <kbusch@kernel.org>
-
-Frequent alloc/free cycles on these is pretty costly. Use an io cache to
-more efficiently reuse these buffers.
-
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- include/linux/io_uring_types.h |  16 ++---
- io_uring/filetable.c           |   2 +-
- io_uring/rsrc.c                | 108 ++++++++++++++++++++++++---------
- io_uring/rsrc.h                |   2 +-
- 4 files changed, 92 insertions(+), 36 deletions(-)
-
-diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_type=
-s.h
-index aa661ebfd6568..c0e0c1f92e5b1 100644
---- a/include/linux/io_uring_types.h
-+++ b/include/linux/io_uring_types.h
-@@ -67,8 +67,17 @@ struct io_file_table {
- 	unsigned int alloc_hint;
- };
-=20
-+struct io_alloc_cache {
-+	void			**entries;
-+	unsigned int		nr_cached;
-+	unsigned int		max_cached;
-+	size_t			elem_size;
-+};
-+
- struct io_buf_table {
- 	struct io_rsrc_data	data;
-+	struct io_alloc_cache	node_cache;
-+	struct io_alloc_cache	imu_cache;
- };
-=20
- struct io_hash_bucket {
-@@ -222,13 +231,6 @@ struct io_submit_state {
- 	struct blk_plug		plug;
- };
-=20
--struct io_alloc_cache {
--	void			**entries;
--	unsigned int		nr_cached;
--	unsigned int		max_cached;
--	size_t			elem_size;
--};
--
- struct io_ring_ctx {
- 	/* const or read-mostly hot data */
- 	struct {
-diff --git a/io_uring/filetable.c b/io_uring/filetable.c
-index dd8eeec97acf6..a21660e3145ab 100644
---- a/io_uring/filetable.c
-+++ b/io_uring/filetable.c
-@@ -68,7 +68,7 @@ static int io_install_fixed_file(struct io_ring_ctx *ct=
-x, struct file *file,
- 	if (slot_index >=3D ctx->file_table.data.nr)
- 		return -EINVAL;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 	if (!node)
- 		return -ENOMEM;
-=20
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index 864c2eabf8efd..5434b0d992d62 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -117,23 +117,39 @@ static void io_buffer_unmap(struct io_ring_ctx *ctx=
-, struct io_rsrc_node *node)
- 				unpin_user_page(imu->bvec[i].bv_page);
- 		if (imu->acct_pages)
- 			io_unaccount_mem(ctx, imu->acct_pages);
--		kvfree(imu);
-+		if (struct_size(imu, bvec, imu->nr_bvecs) >
-+				ctx->buf_table.imu_cache.elem_size ||
-+		    !io_alloc_cache_put(&ctx->buf_table.imu_cache, imu))
-+			kvfree(imu);
- 	}
- }
-=20
--struct io_rsrc_node *io_rsrc_node_alloc(int type)
-+struct io_rsrc_node *io_rsrc_node_alloc(struct io_ring_ctx *ctx, int typ=
-e)
- {
- 	struct io_rsrc_node *node;
-=20
--	node =3D kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (type =3D=3D IORING_RSRC_FILE)
-+		node =3D kmalloc(sizeof(*node), GFP_KERNEL);
-+	else
-+		node =3D io_cache_alloc(&ctx->buf_table.node_cache, GFP_KERNEL, NULL);
- 	if (node) {
- 		node->type =3D type;
- 		node->refs =3D 1;
-+		node->tag =3D 0;
-+		node->file_ptr =3D 0;
- 	}
- 	return node;
- }
-=20
--__cold void io_rsrc_data_free(struct io_ring_ctx *ctx, struct io_rsrc_da=
-ta *data)
-+static __cold void __io_rsrc_data_free(struct io_rsrc_data *data)
-+{
-+	kvfree(data->nodes);
-+	data->nodes =3D NULL;
-+	data->nr =3D 0;
-+}
-+
-+__cold void io_rsrc_data_free(struct io_ring_ctx *ctx,
-+			      struct io_rsrc_data *data)
- {
- 	if (!data->nr)
- 		return;
-@@ -141,9 +157,7 @@ __cold void io_rsrc_data_free(struct io_ring_ctx *ctx=
-, struct io_rsrc_data *data
- 		if (data->nodes[data->nr])
- 			io_put_rsrc_node(ctx, data->nodes[data->nr]);
- 	}
--	kvfree(data->nodes);
--	data->nodes =3D NULL;
--	data->nr =3D 0;
-+	__io_rsrc_data_free(data);
- }
-=20
- __cold int io_rsrc_data_alloc(struct io_rsrc_data *data, unsigned nr)
-@@ -157,6 +171,31 @@ __cold int io_rsrc_data_alloc(struct io_rsrc_data *d=
-ata, unsigned nr)
- 	return -ENOMEM;
- }
-=20
-+static __cold int io_rsrc_buffer_alloc(struct io_buf_table *table, unsig=
-ned nr)
-+{
-+	int ret;
-+
-+	ret =3D io_rsrc_data_alloc(&table->data, nr);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D io_alloc_cache_init(&table->node_cache, nr,
-+				  sizeof(struct io_rsrc_node));
-+	if (ret)
-+		goto out_1;
-+
-+	ret =3D io_alloc_cache_init(&table->imu_cache, nr, 512);
-+	if (ret)
-+		goto out_2;
-+
-+	return 0;
-+out_2:
-+	io_alloc_cache_free(&table->node_cache, kfree);
-+out_1:
-+	__io_rsrc_data_free(&table->data);
-+	return ret;
-+}
-+
- static int __io_sqe_files_update(struct io_ring_ctx *ctx,
- 				 struct io_uring_rsrc_update2 *up,
- 				 unsigned nr_args)
-@@ -206,7 +245,7 @@ static int __io_sqe_files_update(struct io_ring_ctx *=
-ctx,
- 				err =3D -EBADF;
- 				break;
- 			}
--			node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+			node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 			if (!node) {
- 				err =3D -ENOMEM;
- 				fput(file);
-@@ -466,6 +505,8 @@ void io_free_rsrc_node(struct io_ring_ctx *ctx, struc=
-t io_rsrc_node *node)
- 	case IORING_RSRC_KBUF:
- 		if (node->buf)
- 			io_buffer_unmap(ctx, node);
-+		if (io_alloc_cache_put(&ctx->buf_table.node_cache, node))
-+			return;
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-@@ -534,7 +575,7 @@ int io_sqe_files_register(struct io_ring_ctx *ctx, vo=
-id __user *arg,
- 			goto fail;
- 		}
- 		ret =3D -ENOMEM;
--		node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+		node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 		if (!node) {
- 			fput(file);
- 			goto fail;
-@@ -554,11 +595,19 @@ int io_sqe_files_register(struct io_ring_ctx *ctx, =
-void __user *arg,
- 	return ret;
- }
-=20
-+static void io_rsrc_buffer_free(struct io_ring_ctx *ctx,
-+				struct io_buf_table *table)
-+{
-+	io_rsrc_data_free(ctx, &table->data);
-+	io_alloc_cache_free(&table->node_cache, kfree);
-+	io_alloc_cache_free(&table->imu_cache, kfree);
-+}
-+
- int io_sqe_buffers_unregister(struct io_ring_ctx *ctx)
- {
- 	if (!ctx->buf_table.data.nr)
- 		return -ENXIO;
--	io_rsrc_data_free(ctx, &ctx->buf_table.data);
-+	io_rsrc_buffer_free(ctx, &ctx->buf_table);
- 	return 0;
- }
-=20
-@@ -739,7 +788,7 @@ static struct io_rsrc_node *io_sqe_buffer_register(st=
-ruct io_ring_ctx *ctx,
- 	if (!iov->iov_base)
- 		return NULL;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_BUFFER);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_BUFFER);
- 	if (!node)
- 		return ERR_PTR(-ENOMEM);
- 	node->buf =3D NULL;
-@@ -759,7 +808,10 @@ static struct io_rsrc_node *io_sqe_buffer_register(s=
-truct io_ring_ctx *ctx,
- 			coalesced =3D io_coalesce_buffer(&pages, &nr_pages, &data);
- 	}
-=20
--	imu =3D kvmalloc(struct_size(imu, bvec, nr_pages), GFP_KERNEL);
-+	if (struct_size(imu, bvec, nr_pages) > ctx->buf_table.imu_cache.elem_si=
-ze)
-+		imu =3D kvmalloc(struct_size(imu, bvec, nr_pages), GFP_KERNEL);
-+	else
-+		imu =3D io_cache_alloc(&ctx->buf_table.imu_cache, GFP_KERNEL, NULL);
- 	if (!imu)
- 		goto done;
-=20
-@@ -805,9 +857,9 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx, =
-void __user *arg,
- 			    unsigned int nr_args, u64 __user *tags)
- {
- 	struct page *last_hpage =3D NULL;
--	struct io_rsrc_data data;
- 	struct iovec fast_iov, *iov =3D &fast_iov;
- 	const struct iovec __user *uvec;
-+	struct io_buf_table table;
- 	int i, ret;
-=20
- 	BUILD_BUG_ON(IORING_MAX_REG_BUFFERS >=3D (1u << 16));
-@@ -816,13 +868,14 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx=
-, void __user *arg,
- 		return -EBUSY;
- 	if (!nr_args || nr_args > IORING_MAX_REG_BUFFERS)
- 		return -EINVAL;
--	ret =3D io_rsrc_data_alloc(&data, nr_args);
-+	ret =3D io_rsrc_buffer_alloc(&table, nr_args);
- 	if (ret)
- 		return ret;
-=20
- 	if (!arg)
- 		memset(iov, 0, sizeof(*iov));
-=20
-+	ctx->buf_table =3D table;
- 	for (i =3D 0; i < nr_args; i++) {
- 		struct io_rsrc_node *node;
- 		u64 tag =3D 0;
-@@ -862,10 +915,8 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx,=
- void __user *arg,
- 			}
- 			node->tag =3D tag;
- 		}
--		data.nodes[i] =3D node;
-+		table.data.nodes[i] =3D node;
- 	}
--
--	ctx->buf_table.data =3D data;
- 	if (ret)
- 		io_sqe_buffers_unregister(ctx);
- 	return ret;
-@@ -878,11 +929,14 @@ static struct io_rsrc_node *io_buffer_alloc_node(st=
-ruct io_ring_ctx *ctx,
- 	struct io_mapped_ubuf *imu;
- 	struct io_rsrc_node *node;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_KBUF);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_KBUF);
- 	if (!node)
- 		return NULL;
-=20
--	imu =3D kvmalloc(struct_size(imu, bvec, nr_bvecs), GFP_KERNEL);
-+	if (struct_size(imu, bvec, nr_bvecs) > ctx->buf_table.imu_cache.elem_si=
-ze)
-+		imu =3D kvmalloc(struct_size(imu, bvec, nr_bvecs), GFP_KERNEL);
-+	else
-+		imu =3D io_cache_alloc(&ctx->buf_table.imu_cache, GFP_KERNEL, NULL);
- 	if (!imu) {
- 		io_put_rsrc_node(ctx, node);
- 		return NULL;
-@@ -1036,7 +1090,7 @@ static void lock_two_rings(struct io_ring_ctx *ctx1=
-, struct io_ring_ctx *ctx2)
- static int io_clone_buffers(struct io_ring_ctx *ctx, struct io_ring_ctx =
-*src_ctx,
- 			    struct io_uring_clone_buffers *arg)
- {
--	struct io_rsrc_data data;
-+	struct io_buf_table table;
- 	int i, ret, off, nr;
- 	unsigned int nbufs;
-=20
-@@ -1067,7 +1121,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 	if (check_add_overflow(arg->nr, arg->dst_off, &nbufs))
- 		return -EOVERFLOW;
-=20
--	ret =3D io_rsrc_data_alloc(&data, max(nbufs, ctx->buf_table.data.nr));
-+	ret =3D io_rsrc_buffer_alloc(&table, max(nbufs, ctx->buf_table.data.nr)=
-);
- 	if (ret)
- 		return ret;
-=20
-@@ -1076,7 +1130,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 		struct io_rsrc_node *src_node =3D ctx->buf_table.data.nodes[i];
-=20
- 		if (src_node) {
--			data.nodes[i] =3D src_node;
-+			table.data.nodes[i] =3D src_node;
- 			src_node->refs++;
- 		}
- 	}
-@@ -1106,7 +1160,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 		if (!src_node) {
- 			dst_node =3D NULL;
- 		} else {
--			dst_node =3D io_rsrc_node_alloc(IORING_RSRC_BUFFER);
-+			dst_node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_BUFFER);
- 			if (!dst_node) {
- 				ret =3D -ENOMEM;
- 				goto out_free;
-@@ -1115,12 +1169,12 @@ static int io_clone_buffers(struct io_ring_ctx *c=
-tx, struct io_ring_ctx *src_ctx
- 			refcount_inc(&src_node->buf->refs);
- 			dst_node->buf =3D src_node->buf;
- 		}
--		data.nodes[off++] =3D dst_node;
-+		table.data.nodes[off++] =3D dst_node;
- 		i++;
- 	}
-=20
- 	/*
--	 * If asked for replace, put the old table. data->nodes[] holds both
-+	 * If asked for replace, put the old table. table.data->nodes[] holds b=
-oth
- 	 * old and new nodes at this point.
- 	 */
- 	if (arg->flags & IORING_REGISTER_DST_REPLACE)
-@@ -1133,10 +1187,10 @@ static int io_clone_buffers(struct io_ring_ctx *c=
-tx, struct io_ring_ctx *src_ctx
- 	 * entry).
- 	 */
- 	WARN_ON_ONCE(ctx->buf_table.data.nr);
--	ctx->buf_table.data =3D data;
-+	ctx->buf_table =3D table;
- 	return 0;
- out_free:
--	io_rsrc_data_free(ctx, &data);
-+	io_rsrc_buffer_free(ctx, &table);
- 	return ret;
- }
-=20
-diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
-index d1d90d9cd2b43..759ac373b0dc6 100644
---- a/io_uring/rsrc.h
-+++ b/io_uring/rsrc.h
-@@ -46,7 +46,7 @@ struct io_imu_folio_data {
- 	unsigned int	nr_folios;
- };
-=20
--struct io_rsrc_node *io_rsrc_node_alloc(int type);
-+struct io_rsrc_node *io_rsrc_node_alloc(struct io_ring_ctx *ctx, int typ=
-e);
- void io_free_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *nod=
-e);
- void io_rsrc_data_free(struct io_ring_ctx *ctx, struct io_rsrc_data *dat=
-a);
- int io_rsrc_data_alloc(struct io_rsrc_data *data, unsigned nr);
---=20
-2.43.5
-
+T24gMS8yLzI1IDIzOjMzLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gTGlmdCBiaW9fc3Bs
+aXRfcndfYXQgaW50byBibGtfcnFfYXBwZW5kX2JpbyBzbyB0aGF0IGl0IHZhbGlkYXRlcyB0aGUN
+Cj4gaGFyZHdhcmUgbGltaXRzLiAgV2l0aCB0aGlzIGFsbCBwYXNzdGhyb3VnaCBjYWxsZXJzIGNh
+biBzaW1wbHkgYWRkDQo+IGJpb19hZGRfcGFnZSB0byBidWlsZCB0aGUgYmlvIGFuZCBkZWxheSBj
+aGVja2luZyBmb3IgZXhjZWVkaW5nIG9mIGxpbWl0cw0KPiB0byB0aGlzIHBvaW50IGluc3RlYWQg
+b2YgZG9pbmcgaXQgZm9yIGVhY2ggcGFnZS4NCj4NCj4gV2hpbGUgdGhpcyBsb29rcyBsaWtlIGFk
+ZGluZyBhIG5ldyBleHBlbnNpdmUgbG9vcCBvdmVyIGFsbCBiaW9fdmVjcywNCj4gYmxrX3JxX2Fw
+cGVuZF9iaW8gaXMgYWxyZWFkeSBkb2luZyB0aGF0IGp1c3QgdG8gY291bnRlciB0aGUgbnVtYmVy
+IG9mDQo+IHNlZ21lbnRzLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdpZzxo
+Y2hAbHN0LmRlPg0KDQoNCkxvb2tzIGdvb2QuDQoNClJldmlld2VkLWJ5OiBDaGFpdGFueWEgS3Vs
+a2FybmkgPGtjaEBudmlkaWEuY29tPg0KDQotY2sNCg0K
 
