@@ -1,68 +1,74 @@
-Return-Path: <linux-block+bounces-16829-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16835-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD45A262AA
-	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 19:41:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78692A262F3
+	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 19:48:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E650B165D01
-	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 18:41:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A90E1643D9
+	for <lists+linux-block@lfdr.de>; Mon,  3 Feb 2025 18:48:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8887A194AEC;
-	Mon,  3 Feb 2025 18:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C911D63C5;
+	Mon,  3 Feb 2025 18:46:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Oh1LcRbb"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="SACofaZ8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86941487DD
-	for <linux-block@vger.kernel.org>; Mon,  3 Feb 2025 18:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD7020C472
+	for <linux-block@vger.kernel.org>; Mon,  3 Feb 2025 18:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608111; cv=none; b=SF7okBh3swOdMPoklTNuC3CxGaelFheI9RIoWaFqSzsjEGzleAeGW9rQlBeiLD53a3IvaGibV+o7HfHkKOifDvX1C4bEy6a/J9v5PVJvsMPrj01g3v6ubNgUqjU+8biFt3sjgEVEa/5R3cdX+xZBzkqvyibu12Fze3WvAq6BUbI=
+	t=1738608418; cv=none; b=g6EZQxNldAtR5qvi9vnsb+eNXEtselBzJTi9B6Q8sIT68YLNuS26fenKGsJs4ibrothIOsSgLeZTSJFNbeiZWJVHaYzfpR9UwRp2mZSxd4LhAIvYArO2do/XKKemCFq40OK/u7dBoqHviSY+4QbSHu+YLOrzuK3kuZpKwjhNSIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608111; c=relaxed/simple;
-	bh=jGBOyTMxd9LBptAGrMlxqGFgBEc8xTnk1LL6MSBn3dc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VQHy9enhmIT2BR5DFOXZKg2osfqraW7Z4SL+hNzM36glwulvLDB2+AhaZYKS+wJ0luL8HE1J/86vGsSZWaSsjANvtvqzsSS+kHZeIVwHQv8zS8dWAhYxWyg9Gd6jVa/Daw42HRctEu/Y779v7lVw4rBH34CT0l9wkne9m/oO5yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Oh1LcRbb; arc=none smtp.client-ip=67.231.153.30
+	s=arc-20240116; t=1738608418; c=relaxed/simple;
+	bh=cHfJqU+8fT1AgHs/sOlci9bbUY6q0mUJ2fCUPGBBiQ0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MVh0vBwELNua2uEmD8siPcbg1K1SEKaG8juFUwE+Oy+eMZn7UoZayhorZ7NnYXBkF3D/SCnUXzsqtOvkyHcqCPgWV65a11yltIO9D1+HoLlCTheZbZADgWfnJtVM63QOiMgZbqBvPV6euN2cGLOZoOlbdxOw/kqrFTPLweUy/lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=SACofaZ8; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 513IHqSC006896
-	for <linux-block@vger.kernel.org>; Mon, 3 Feb 2025 10:41:48 -0800
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513IHnAd023598
+	for <linux-block@vger.kernel.org>; Mon, 3 Feb 2025 10:46:56 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=s2048-2021-q4; bh=KMmG5gJPTqu1RsuNuX
-	10Ml6gX7oOZqPZjeqbhOhxPB4=; b=Oh1LcRbbUPxefNDABEAQXrYS0O5V3SFY+5
-	x776MigOcbrj8bT3C9IRiYTShwSWg9tKoPOiFgTmjcf0HUXoCQFmQntKfW0pxAp3
-	JN1BLRIoBXGJsM1aEztEcBOSQhWMQTOYuP3jg60luPC3kkSfcfpQGFPIiUi52DZI
-	x8kWzP141SYy0FhAy/hxgPGXA6+xVBOk1tyFgNyV4UCU/8otm3qa9F2jis9SKO0r
-	ISyXY/FRL0K1kfUIVjg+fX0O6gZC5kLpwi5A1Cc4yhk6Kgo0rTI0GzCt1tSlVxuH
-	012vXwEeJfDJXMFzKpHk0a23rg/p3Tpg3zk5YOwiJMc/OhSxOHsA==
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
+	 bh=ofkRPdTjKg7ts9Ihi7aIUWTO3ybxkoz6ifoQjAbWOYI=; b=SACofaZ8osAl
+	ouCN04Tz5Vklhq7fleFAb9b5osRyNJMDn0HgLf2l8CjFqVBXRhu5gCPrhqat8HE5
+	TMgYwXEvo1FD/TVIA29O3EHEvyPkLujPBT+uyJcLn4ax6LpKz0uY6iGsyOcA63yc
+	JKgqkUqHe1kL+IZg7XOxIKd/5zzA+lasv562L6kKSClRCadA8Omyvxb/Lha9ACpl
+	FEnk8x0MN31BQJQSbrnFP3VE/YWFqTO+eacVGUHQda3GiTVP3+U0ZjxHydv5yliZ
+	DQNWzly0mD7FCi02fmseW/9SA52XSaIconyWPmqz4NmLJw3ayekON/szSQt/9NJ5
+	hyHxQ+cc2A==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 44k21sgqqb-9
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 44k2muge55-11
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Mon, 03 Feb 2025 10:41:48 -0800 (PST)
-Received: from twshared29376.33.frc3.facebook.com (2620:10d:c0a8:1c::11) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Mon, 03 Feb 2025 10:46:56 -0800 (PST)
+Received: from twshared7122.08.ash9.facebook.com (2620:10d:c0a8:fe::f072) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Mon, 3 Feb 2025 18:41:43 +0000
+ 15.2.1544.14; Mon, 3 Feb 2025 18:46:49 +0000
 Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id E8684179C261F; Mon,  3 Feb 2025 10:41:30 -0800 (PST)
+	id F0B45179C2621; Mon,  3 Feb 2025 10:41:33 -0800 (PST)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-nvme@lists.infradead.org>, <io-uring@vger.kernel.org>,
         <linux-block@vger.kernel.org>
 CC: <linux-fsdevel@vger.kernel.org>, <asml.silence@gmail.com>,
         <axboe@kernel.dk>, <hch@lst.de>, <sagi@grimberg.me>,
+        Hannes Reinecke
+	<hare@suse.de>, Nitesh Shetty <nj.shetty@samsung.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv2 00/11] block write streams with nvme fdp
-Date: Mon, 3 Feb 2025 10:41:18 -0800
-Message-ID: <20250203184129.1829324-1-kbusch@meta.com>
+Subject: [PATCHv2 01/11] fs: add a write stream field to the kiocb
+Date: Mon, 3 Feb 2025 10:41:19 -0800
+Message-ID: <20250203184129.1829324-2-kbusch@meta.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250203184129.1829324-1-kbusch@meta.com>
+References: <20250203184129.1829324-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -72,53 +78,38 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: qWFmpFMDPNLHWT_znyD03ptsF-7SigO_
-X-Proofpoint-GUID: qWFmpFMDPNLHWT_znyD03ptsF-7SigO_
+X-Proofpoint-ORIG-GUID: ljmWMCHxsTs9g20CmSOUrxX0Y-0rF87I
+X-Proofpoint-GUID: ljmWMCHxsTs9g20CmSOUrxX0Y-0rF87I
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-03_08,2025-01-31_02,2024-11-22_01
 
-From: Keith Busch <kbusch@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-Changes since v14:
+Prepare for io_uring passthrough of write streams. The write stream
+field in the kiocb structure fits into an existing 2-byte hole, so its
+size is not changed.
 
-  Merged to latest nvme, block, and io_uring trees
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ include/linux/fs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-  Replaced vmalloc with kvmalloc (Christoph)
-
-Christoph Hellwig (7):
-  fs: add a write stream field to the kiocb
-  block: add a bi_write_stream field
-  block: introduce a write_stream_granularity queue limit
-  block: expose write streams for block device nodes
-  nvme: add a nvme_get_log_lsi helper
-  nvme: pass a void pointer to nvme_get/set_features for the result
-  nvme: add FDP definitions
-
-Keith Busch (4):
-  block: introduce max_write_streams queue limit
-  io_uring: enable per-io write streams
-  nvme: register fdp parameters with the block layer
-  nvme: use fdp streams if write stream is provided
-
- Documentation/ABI/stable/sysfs-block |  15 +++
- block/bio.c                          |   2 +
- block/blk-crypto-fallback.c          |   1 +
- block/blk-merge.c                    |   4 +
- block/blk-sysfs.c                    |   6 +
- block/bounce.c                       |   1 +
- block/fops.c                         |  23 ++++
- drivers/nvme/host/core.c             | 191 ++++++++++++++++++++++++++-
- drivers/nvme/host/nvme.h             |   7 +-
- include/linux/blk_types.h            |   1 +
- include/linux/blkdev.h               |  10 ++
- include/linux/fs.h                   |   1 +
- include/linux/nvme.h                 |  77 +++++++++++
- include/uapi/linux/io_uring.h        |   4 +
- io_uring/io_uring.c                  |   2 +
- io_uring/rw.c                        |   1 +
- 16 files changed, 340 insertions(+), 6 deletions(-)
-
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index be3ad155ec9f7..e9ec7afa5d5f8 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -408,6 +408,7 @@ struct kiocb {
+ 	void			*private;
+ 	int			ki_flags;
+ 	u16			ki_ioprio; /* See linux/ioprio.h */
++	u8			ki_write_stream;
+ 	union {
+ 		/*
+ 		 * Only used for async buffered reads, where it denotes the
 --=20
 2.43.5
 
