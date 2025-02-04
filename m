@@ -1,118 +1,99 @@
-Return-Path: <linux-block+bounces-16911-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16914-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E4E0A27CB8
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 21:24:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D0D8A27F12
+	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 23:58:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D78E97A401D
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 20:23:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18556167F75
+	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 22:58:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F9E5219A7E;
-	Tue,  4 Feb 2025 20:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC0621C19D;
+	Tue,  4 Feb 2025 22:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="mWAnCFiB"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ogIH2AeD"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E9218E8B;
-	Tue,  4 Feb 2025 20:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5377A21C168;
+	Tue,  4 Feb 2025 22:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700661; cv=none; b=SxrC4d+XfBcYWmi0zA6qfgyNKc52NI/vPIIeJD5lswuB2sdcBBp9O8JZMBfeqsUvjoUQtp0dRxbe63s3tmGn++zfamtZ2DS9mSJnL81EQ7om1wlsEPMtnKYLV/RX3i4bH1URRPKaaHrZi7m7IsFAvzhJMSfegSdkwmhl6ppDqFw=
+	t=1738709853; cv=none; b=WcSUw80NKwRnwwFxRZ5upNeO400Tdg/UqoLwgV3gdo7wxV5maDCtbQf97QPY5oqjpn9fIzsMTaVInccJgPJ6mGxiirgA4ztZyOpPRlEPKP3w3kET5fIinLje1VcFrAISC2UtHiYQviq/WMB3PBQlzfUyFx9OHbOQEwb4HFMz0fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700661; c=relaxed/simple;
-	bh=75Sg6DJ0wuEgO5Nk9sCKBkm6E1RJzb3mKvvXTGVIBz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sTQcAv26t9gkx9WRx9Kx2BB+Q3VWQS9Z0I//HY1G6k1+5LGWKcLZV+GpxBbekOrnXEzTzv9nx7g9pWz5bjEIPpXFeGPlZX1eKcn9JxlLxN08vu3Z52eiDfe2VHFrefF2N6FzI3J7LzSNQxH2cErc3UHu8ZeUArPbeuhwAZOmlI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=mWAnCFiB; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738700647; x=1739305447; i=markus.elfring@web.de;
-	bh=75Sg6DJ0wuEgO5Nk9sCKBkm6E1RJzb3mKvvXTGVIBz4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=mWAnCFiBTGBHF0D8y22X/ofl161UVgRE/LZ4UAbz6KH++7JYgdAOxQiXpGChxE71
-	 lTwc8apfhCZwGln7iXyX0wplZ3h9fo66V8uSM3Amk6Yl+8LCTGV7ZRQxy/fLrJ0Mi
-	 VaDPQhPEbDn4bA3+RWVOdwdQOyxfvE3X0SAqdpGilsakkXZmE97ZAy6PCThXiz73E
-	 oM5oPZp1m+St5d7xzecWbF9D6GTySqTDXhzF4uLJkQVlaooq67k9YQ/JInpZGcRbi
-	 Yp/mBJlEL1bw5migda02nTksvwAXtTJz1Xq80N0G+A4g9pRY4JaDD0nx18p4xglq5
-	 26KWq19O7RbJM3cusw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.16]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N6JxT-1tLuXO1vbd-010G2q; Tue, 04
- Feb 2025 21:24:07 +0100
-Message-ID: <a3b1ecdf-0bf0-4053-8bbf-ecaff4e8cb62@web.de>
-Date: Tue, 4 Feb 2025 21:24:05 +0100
+	s=arc-20240116; t=1738709853; c=relaxed/simple;
+	bh=mTY+DrKg05PZUhHlWuukW5rELcmGnBoUUOaEVnlcjr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E9F++ZGAavoHnv3KpJiQSQ83sxxziB85I4+fqLFyfAVAfh+B+qPWZtmA4vKL4WODELn2TNhYT0eIo4iOYAXJHmw5PXitcbXeJDdiPbhMVYu5zBWzSsrxDmqbjc0lhQ/EhFCYKu6AUtTV8PIJlL+RsglIG8FIbgPJ4R/d0ii1lCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ogIH2AeD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ORxEaFpzeoq4+yV0cPvXeAvVVVHMpbAET1BB2wadKeI=; b=ogIH2AeDYoCIw6OTZLcwNDZ7Xb
+	7dDdeqDlvRiHayjDWA1o6/pFKKhvl8k4Fp1+V6CVzqM0IejHvEGkgMFDvX//tHWNi7qiAlhAMCki7
+	aQHgBe+pLZ6H+IR3rJjz3Zr/S39OhNrmU+cYHTVknwHzJOdsxpXNJkLlG8n5oqdkekPjDP0Slzj7Y
+	U5JMK236kZuWPHvigcx6lRvzK+c3C2/b0D/kqr4ZgNKsx/TnpOd5g27r5w75/8CVW3VIifCShmzRf
+	RFJe/FdS1fR0xV23aiRLQui4BXzSu/P/Tih1I87JfwiChYXggtLlrMEhqA+zPbShJTw9OB5rd+Jvu
+	l7q6coSQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfRrH-00000001m1x-1AaE;
+	Tue, 04 Feb 2025 22:57:31 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: shinichiro.kawasaki@wdc.com
+Cc: linux-block@vger.kernel.org,
+	hare@suse.de,
+	patches@lists.linux.dev,
+	gost.dev@samsung.com,
+	mcgrof@kernel.org
+Subject: [PATCH blktests v2 0/4] enable bs > ps device testing 
+Date: Tue,  4 Feb 2025 14:57:25 -0800
+Message-ID: <20250204225729.422949-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [v2 1/3] coccinelle: misc: secs_to_jiffies: Patch
- expressions too
-To: Easwar Hariharan <eahariha@linux.microsoft.com>, cocci@inria.fr,
- Andrew Morton <akpm@linux-foundation.org>,
- Dongsheng Yang <dongsheng.yang@easystack.cn>,
- Ilya Dryomov <idryomov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
- Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
- Ricardo Ribalda <ribalda@chromium.org>, Xiubo Li <xiubli@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com>
- <20250203-converge-secs-to-jiffies-part-two-v2-1-d7058a01fd0e@linux.microsoft.com>
- <49533960-e437-4042-951a-0221164bfa3d@web.de>
- <974a03d2-3f3f-4be2-9dba-ece6dca8015e@linux.microsoft.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <974a03d2-3f3f-4be2-9dba-ece6dca8015e@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bHRRDUYNgzL2w5T+cBWnQvEzsyVC5tGhQ42pj//Hbr4WJXbt5Tx
- NmigUqbqJgStPgfqohv2o83whcM6RPacemDly0/uhpszNzDSw3IAGU2IJTNaWvTkb7j2QJo
- JxDWv833ZoIP8YHiW6/lT+xid70cxmorwByZZo2wrpkzHlXD5CJM6tPQN3DfzRA7YNRkajF
- qIjSyG47cUu91WN+pwj3g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Ygu3d3nBFok=;Vgbi7VkznJIFuieA/BcpmXLJjxL
- ZFgf31MXADDmjwCBZKeq0yl1JBII2u3U2u8Vx8+pbqSy0KklvYP9lcAdklAoqsqwVjtL+JBoV
- +SASzap27bZKSMQsdsr17b/oxdCJhaFdKju02RLOqomK1EDDvoQqx09WuT40V1qGN31AoUjIf
- +ixzbHmKcndbO0Cy34Ij1VrICdux9x+1dWJrBTl8YC61yydkhNHEPgrTV4Yr9IL14OQXhIVlN
- AiwSIdSSdRCtjti1ydmx6G6frq9leAF14IgXBS4D/n03fON+72pfBM2fFQiLGPVXkwJZOvacX
- 4e5g7DEFmy+KkO624irI+m1lJ4UhrT72Wongw6ntrbKbfDFwWSWvTYJIx/uQMOyw3+r2DRmZG
- dXwD0b4DbgR3xtpU8fClMj5auwcw+z0XusU0nrMII48inU5+WJ+0v1dYo5yHFq1ISwNL3z5yy
- HaTsFQ+EO3b6vJ9BkLmXHj+YidJHL4NeIU2mRaeBmjXtYFboite/t7iDVp/G5hgIy2h/K+gy6
- 7oWBApvDevTxWTDOI7tS3tr1c+wQ77uSinvuZAdkL2YtwBLGsrcTsM9J7w5uVm9h/9PI8/Cyl
- 2ma8d7e/lHRIWIqlzvQqmtpZO4nUjjyDRimvv0gCM2QP78zGVg6AnlMK7z1RW/x9r0Y6uFqKN
- kR6geHrfz53EsXgzuOZZgeBwnkU3dFmV8M6CAgPPGhGVdJoFu41sqhbR+2d18AKYVcU8XEDUL
- UnTsN46NB9io18/A0+lcQCPlU92MoBgxz/+GU5n2beuXX/BH9Z3SZukI9y/uowH0fEbby8rTP
- 5M9rfmSjiWSnLHPKDXjCl4rq+8hfa0g24Ncp+NdvY6AfkiRSI0BBiyNJH/C/Jxtn0xJxRQTk9
- joL/em4JNuJM6UHv/LUZj1AMJGObMg5WZCbf/SCnu51nl2l9KAMvlE3fmbcwh3UlwspxjFgnf
- PMWmzNcyIp0HwWZSAWJklv39m+6iIm0PTWTErE6UdKntbCxOMDGUKyoAaEmE2P5jsYYGGpxaT
- lHIj40GfUwp2MnRbGyr+BJhd5jksqq9ai3ZNmpk6mHRiE99M+FSyJj0YtSaL8tgIWq4D8s50t
- dUZW1+ancQnbHj9uHdSGdexcqttgE0q1QGWlXqMmHqikYNdtHILvdaDhAAprPlMQ9MzZ5wDga
- y8OKxkI+12l48PRYLPfVXq9CP8FXicrc5GLs6DggMrK+yWaWRi29kgxLsu24e5K63NQlJvXsY
- iUsjmMiH0ES7wdQj5ylD501ectD1omCsyr1fj6JMBUZpCQmDKOOtDLH+S9GA9P4gZr8j65hmz
- EQGlolNigaM6VSGebRHE5FjOOKDkn6PlIlXVo9A85Wcn31BVr1x7LZpbNYplTMD4u5x
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
->> How do you imagine that the shown SmPL code fits ever to patch reviews?
->
-> By the simple fact of accomplishing the same result despite differences =
-in
-> code style, as explicitly called out in the changelog.
-Do any other contributors care more for the mentioned software development=
- concerns?
+This v2 series addresses the feedback from the first series [0], namely:
 
-How do you think about helping to improve affected implementation details?
+  - uses less device specific names
+  - checks for fio arguments --filename or --directory to extract the
+    min io target or path
+  - adds a new patch to verify the sector size will work before creating
+    a filesystem
+  - a diagram is provided to help easily disect why we use statx
+    blocksize, although not included in the docs we could later if
+    it helps
 
-Regards,
-Markus
+This goes tested against a 64k sector size NVMe drive, the patches for
+which will be posted soon rebased on v6.14-rc1.
+
+[0] https://lkml.kernel.org/r/20241218112153.3917518-1-mcgrof@kernel.org
+[1] https://docs.google.com/drawings/d/e/2PACX-1vQeZaBq2a0dgg9RDyd_XAJBSH-wbuGCtm95sLp2oFj66oghHWmXunib7tYOTPr84AlQ791VGiaKWvKF/pub?w=1006&h=929                                                  
+Luis Chamberlain (4):
+  common: add and use min io for fio
+  common/xfs: use min io for fs blocksize
+  tests: use test device min io to support bs > ps
+  common/xfs: check for max supported sector size
+
+ common/fio      | 23 +++++++++++++++++++++--
+ common/rc       | 21 +++++++++++++++++++++
+ common/xfs      | 15 ++++++++++++++-
+ tests/block/003 |  4 +++-
+ tests/block/007 |  3 ++-
+ tests/nvme/049  |  8 ++++++--
+ 6 files changed, 67 insertions(+), 7 deletions(-)
+
+-- 
+2.45.2
+
 
