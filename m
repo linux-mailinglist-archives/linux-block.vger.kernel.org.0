@@ -1,37 +1,37 @@
-Return-Path: <linux-block+bounces-16879-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16880-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B754CA26BAC
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 07:01:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 642C8A26BAE
+	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 07:01:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68D9E7A1BD4
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 06:00:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED4273A2B4D
+	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 06:01:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B6E012E7F;
-	Tue,  4 Feb 2025 06:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B4819CCFA;
+	Tue,  4 Feb 2025 06:01:27 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF7325A655;
-	Tue,  4 Feb 2025 06:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75625A655;
+	Tue,  4 Feb 2025 06:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738648876; cv=none; b=rUvtjF8lFisQs9blrzgiXWyZyjydufpNdSkDYNl2kxwr7QKSZ6RkHNiGroQDnKaogNYyNi+UyRGS8bRkwcOEs2yybN9V1Ip3DusmKpeaEI8jVdz59cpFfBYCf1ygBF8h7NsB6MQC5nIQ2Bj5XhnI8uzIs5FcMFD9wkT4CbbSbCE=
+	t=1738648887; cv=none; b=MfiBFHIeYXqv+1tDjwJTq3np3icSUM5XADIXqaBen5cbjSi/+Fr+2EbKVLuDgUeN6fxjC+82FYlD/qeNZQI8kIADofzCPz/uG/dCAPBy1EKgoLJbK5+ujwV/OBRognSpScyd/HqV4f5sTfRgRX7pq1+/7ayQOfdGxUkb+pD6lWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738648876; c=relaxed/simple;
+	s=arc-20240116; t=1738648887; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bPs+Wt+SYAntbfZEtBUUWcLiptdmaolq73+34a4j9jNfj//V37wEsRnP4kHZpZma+8Fj4XmMW5XNbis27stoNnlxHvXn3PYRRP/mTLlkJ5ENvMNu/lSV2w4c6Ht4Nupzff9gB20tCKW3NY+eUb/lFECadN9nHbM4m0xxzB3frRg=
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAsd85o4DxWCPWd+dEhXmoG+DE2AKmFtUkYMn/Uc61R011RwZrNAFpVI7rTxPeIKuIhs0IEhEiYtI+F4/W1Q8rlI9ZleG4yyCaCGIOnglsdryMDsVh+2DeT/p2CO5w96XWNvkR+lcYfaLya9BGRK//2uDJPz1OQDE/OJHcUREZ0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9ADEE68AFE; Tue,  4 Feb 2025 07:01:10 +0100 (CET)
-Date: Tue, 4 Feb 2025 07:01:10 +0100
+	id 0369A68D07; Tue,  4 Feb 2025 07:01:21 +0100 (CET)
+Date: Tue, 4 Feb 2025 07:01:21 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Keith Busch <kbusch@meta.com>
 Cc: linux-nvme@lists.infradead.org, io-uring@vger.kernel.org,
@@ -40,10 +40,10 @@ Cc: linux-nvme@lists.infradead.org, io-uring@vger.kernel.org,
 	sagi@grimberg.me, Keith Busch <kbusch@kernel.org>,
 	Hannes Reinecke <hare@suse.de>,
 	Nitesh Shetty <nj.shetty@samsung.com>
-Subject: Re: [PATCHv2 10/11] nvme: register fdp parameters with the block
- layer
-Message-ID: <20250204060110.GB29177@lst.de>
-References: <20250203184129.1829324-1-kbusch@meta.com> <20250203184129.1829324-11-kbusch@meta.com>
+Subject: Re: [PATCHv2 11/11] nvme: use fdp streams if write stream is
+ provided
+Message-ID: <20250204060121.GC29177@lst.de>
+References: <20250203184129.1829324-1-kbusch@meta.com> <20250203184129.1829324-12-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250203184129.1829324-11-kbusch@meta.com>
+In-Reply-To: <20250203184129.1829324-12-kbusch@meta.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
