@@ -1,62 +1,71 @@
-Return-Path: <linux-block+bounces-16915-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16922-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80947A27F14
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 23:58:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C9AEA27F5A
+	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2025 00:12:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD2291614EC
-	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 22:58:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 871643A5481
+	for <lists+linux-block@lfdr.de>; Tue,  4 Feb 2025 23:12:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D7F21C9E8;
-	Tue,  4 Feb 2025 22:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F6FB21D018;
+	Tue,  4 Feb 2025 23:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JsrDsvXT"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rijrXj+y"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5384F21C172;
-	Tue,  4 Feb 2025 22:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B646F21C19F;
+	Tue,  4 Feb 2025 23:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738709854; cv=none; b=UVuX2/tntA6MNAjsFTfZ8LIQyJqfpjn8k2oI5zf2Y64oMFISG/GMJsd03hFHA5U1WojmXJfSGcjvcvOpgqGkllwD5GJsi3iLwEDsNJ3TAXKdBpG4ltTHKh+HeThjl+ZMTWPJ2bcOjz2LAKKgStqcIx1ZbvDQWySTGwtLRSV7OUA=
+	t=1738710737; cv=none; b=bjjGUSnJJz0IO7Zt38iPCAviG4ifKhGFHL3N9W6rlg8MyX2rW/WaK7gjmugRsyyFpz16DsSDd5TWvGvhCktHvr8noHxdDoNOtrfueK9C4E9fVxTJMaKgtoIAR+EtTXRarPYV1Z83qi8zF5kYT1fsIqHnVRGaRp3E5HjVQKzLa10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738709854; c=relaxed/simple;
-	bh=BODiohmKm8cTDp97zKOTvksVUaNhvdRHT/PhjLPoDGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M9bbI6e6Mm1qOLpmuQeO9ewClgISLzc6kXvTmWkFTsJDWj4pHY+QoCxT+pZeR533my2pz/NjpGzfW4/jPWgX2B7e+bt1MCcmW/CV5/Ccs7zOagHibieeo9a9EEVUA8RNjaaFOJ1SerFMa3hegdSsIHo+ZFeW8aPG4NeZmC3qdss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JsrDsvXT; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1738710737; c=relaxed/simple;
+	bh=fhhKGl6JPTwaTU9BuRnwZE+PIEHWTvw++wt/aZK++ik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QJwMz2pDopHonXgF2uvdWuI8SG2aI1M6Zrk+Mp/Z3dg1aIQCObxiS8Ya6P+4c0ud3fy5wifiiRRQOtzS33l/SSlY71+tD8zk5b36oO3keQ6WMPIrLkeOAoLU1WcEfJotET5CDBkxFW4kcKvptuH0bORwXJN8w0jo50C3dyP2lLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rijrXj+y; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=n5ePGnOybzLL4xMQV7kTXCqghOG4qwHDurKWjefDKY0=; b=JsrDsvXT4k/Tipfxf3PmLxNYl+
-	lBR7kvFpTAbr7OHpJOvZx2nPZ1d/rv+hqNLHbxMBrnT+F+ODkkH774uhs6RJ9j57opTT+9o911wXW
-	T+uavWZrqohwJh3yuJ4d+aMGTxZTMZcDEyFOQ31LnikbBNKPnvQC9PLof/8h49xUfTsfhJjDALagm
-	aHZ8gK6LNMEwoxeR6sFx4fiyMxyME9ipmpdDUx3vPLsqbhXf4yMZwJ1azIvZNExOUJ2qDGGO4P7eY
-	JuQd+wAqfFnNCevTeKExGd13MA6QZHDMvkK79GFJ8wgr8Qt60M6ujz/zRPHN7m9D/P/7m6Yt9xdBN
-	6E5+zTrA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=kWF3U2LkOxTN8T3vmFQjS9eJjcQiGfH8Tr90xVOXrSQ=; b=rijrXj+yJ+nz0RrF14z8QejonG
+	FcZPUXqnRhOO/8Yc+wXkDRt55ZCULLTT96RwOVqheHS2h40N0Me6/L5+Ca0MGifYuCdUWcCAtb52K
+	IF+jWLscCxlkNQV6+0N8I4Gwdpsu+uQFcIFwsdHP1uwf1oTLoSy0bPXqGmcmxLp3kwsIWDfNySFlu
+	suQWP4HgutVMmg4anHWTlM8HblHs+CogEX50QOsPXnoVO777kbKZ4MmMap2lLqSuSv8dBEby5kzeN
+	/qrcA5FFtDeAz+vJoI8bkA/EUtVABdcNHRWMShHSwmBPEcWIuqR2nQLpBZ8exqNvol9iv7magNTwu
+	Clebuseg==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfRrH-00000001m25-1fSz;
-	Tue, 04 Feb 2025 22:57:31 +0000
+	id 1tfS5T-00000001nhK-0tRb;
+	Tue, 04 Feb 2025 23:12:11 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
-To: shinichiro.kawasaki@wdc.com
-Cc: linux-block@vger.kernel.org,
-	hare@suse.de,
-	patches@lists.linux.dev,
+To: hare@suse.de,
+	willy@infradead.org,
+	dave@stgolabs.net,
+	david@fromorbit.com,
+	djwong@kernel.org,
+	kbusch@kernel.org
+Cc: john.g.garry@oracle.com,
+	hch@lst.de,
+	ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
 	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
 	mcgrof@kernel.org
-Subject: [PATCH blktests v2 4/4] common/xfs: check for max supported sector size
-Date: Tue,  4 Feb 2025 14:57:29 -0800
-Message-ID: <20250204225729.422949-5-mcgrof@kernel.org>
+Subject: [PATCH v2 0/8] enable bs > ps for block devices
+Date: Tue,  4 Feb 2025 15:12:01 -0800
+Message-ID: <20250204231209.429356-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250204225729.422949-1-mcgrof@kernel.org>
-References: <20250204225729.422949-1-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -66,39 +75,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-mkfs.xfs will use the sector size exposed by the device, if this
-is larger than 32k this will fail as the largest sector size on XFS
-is 32k. Provide a sanity check to ensure we skip creating a filesystem
-if the sector size is larger than what XFS supports.
+This v2 addresses feedback from the first RFC on enabling bs > ps for
+block devices [0] after which I split the async read buffer-head work
+into its own series [1]. This unifies the series now that this the
+buffer-head work is greatly simplified, and generalizing a block size
+check is now merged upstream on v6.14-rc1.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- common/xfs | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in this series:
 
-diff --git a/common/xfs b/common/xfs
-index 8b068837fa37..dbae572e4390 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -15,11 +15,18 @@ _xfs_mkfs_and_mount() {
- 	local mount_dir=$2
- 	local bs=$(_min_io $bdev)
- 	local xfs_logsize="64m"
-+	local sysfs="/sys/block/${bdev#/dev/}"
-+	local logical_block_size=$(cat $sysfs/queue/logical_block_size)
- 
- 	if [[ $bs -gt 4096 ]]; then
- 		xfs_logsize="128m"
- 	fi
- 
-+	if [[ $logical_block_size -gt 32768 ]]; then
-+		SKIP_REASONS+=("max sector size for XFS is 32768 but device $bdev has a larger sector size $logical_block_size")
-+		return 1
-+	fi
-+
- 	mkdir -p "${mount_dir}"
- 	umount "${mount_dir}"
- 	mkfs.xfs -l size=$xfs_logsize -f "${bdev}" -b size=$bs || return $?
+ - Simplify block_read_full_folio() with bh_offset() and moves this
+   as a first patch
+ - Re-orders the negative shift patch to go first as otherwise
+   the blocks_per_folio changes don't make any sense
+ - Simplifies the amount of changes in the patch
+   "enable large folio support for large logical block sizes" as most
+   of the required changes are now upstream
+ - Drops the NVMe patch as its no longer needed
+ - Keeps the nrpages to 1 for readahead for folio for buffer-heads
+   as suggested by Matthew
+ - Takes the suggested approach by Matthew Wilcox on async read by
+   replacing the batched read with a straight forward iteration
+ - Tons of cosmetic updates as requested by folks
+ - Rebases on top of v6.14-rc1
+ - Tested with both fstests on ext4 and blktests using the latest
+   changes posted to support bs > ps for block devices just now [2]
+ - Updates the rationale for why we use 64k as the current limit:
+   test and validation
+
+If you want this on a tree, this is available on the kdevops linux
+large-block-buffer-heads-for-next branch [3].
+
+[0] https://lkml.kernel.org/r/20241113094727.1497722-1-mcgrof@kernel.org
+[1] https://lkml.kernel.org/r/20241218022626.3668119-1-mcgrof@kernel.org
+[2] https://lkml.kernel.org/r/20250204225729.422949-1-mcgrof@kernel.org
+[3] https://github.com/linux-kdevops/linux/tree/large-block-buffer-heads-for-next
+
+Hannes Reinecke (3):
+  fs/mpage: avoid negative shift for large blocksize
+  fs/mpage: use blocks_per_folio instead of blocks_per_page
+  block/bdev: enable large folio support for large logical block sizes
+
+Luis Chamberlain (4):
+  fs/buffer: simplify block_read_full_folio() with bh_offset()
+  fs/buffer fs/mpage: remove large folio restriction
+  block/bdev: lift block size restrictions to 64k
+  bdev: use bdev_io_min() for statx block size
+
+Matthew Wilcox (1):
+  fs/buffer: remove batching from async read
+
+ block/bdev.c           | 11 ++++----
+ fs/buffer.c            | 58 +++++++++++++++++-------------------------
+ fs/mpage.c             | 45 +++++++++++++++-----------------
+ include/linux/blkdev.h |  9 ++++++-
+ 4 files changed, 58 insertions(+), 65 deletions(-)
+
 -- 
 2.45.2
 
