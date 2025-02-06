@@ -1,288 +1,191 @@
-Return-Path: <linux-block+bounces-16977-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-16979-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29EA6A29D19
-	for <lists+linux-block@lfdr.de>; Thu,  6 Feb 2025 00:02:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24734A29F57
+	for <lists+linux-block@lfdr.de>; Thu,  6 Feb 2025 04:24:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8FE31689A6
-	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2025 23:02:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 846E33A4720
+	for <lists+linux-block@lfdr.de>; Thu,  6 Feb 2025 03:24:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D831021B918;
-	Wed,  5 Feb 2025 23:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 615F0148314;
+	Thu,  6 Feb 2025 03:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="acEd+qp/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQf3ifiE"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2E21506A;
-	Wed,  5 Feb 2025 23:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D117F70838
+	for <linux-block@vger.kernel.org>; Thu,  6 Feb 2025 03:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796555; cv=none; b=EO/2HYsMWCtxQ3nCJQgY2iU/SCLyc5RcX95FU0TjjVSQ+N9odyI7nNTr7n02PdzuDjx80ZrrLakdDnQAV3yI+eQ2nBLSieuCQxpigSsN7JUbVBaaEE86VlBZm5wj8HeO0HLdxCv5zSrwk8pkqydsENqXPyrhwONZZ6US02TAMj4=
+	t=1738812292; cv=none; b=MIbDAmGjoiD8sg9xuzgv9mjfnpUFdNci4AwI8YsjFNKkYk18bgQUCHAlt9PVXvOVheZTTWH5TjkSvwIjynBAbMrWZoybm3X7ptRC4WLmmWnYhl4NZqgxtPxKk0+CIS0Ka4foPg0sbHig8d6lZkslTz7wCzgSZtuxcIzOEK/NttA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796555; c=relaxed/simple;
-	bh=ZSRUoATcoXuShGzkiPK2QTea3nWZ+pEH1Z+2h7nBQQs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pGexI4wdEuTB51zl3Q7xb2d5lVyEFSohVZU41OVIS/1J0UMwGPv/9QR3AyMHatfohstbz6jw7RYMEK5zZR4vreJD1/MIaxJdsCe+Rl6QzhpUY4CpnXv6y54X+fLEswlEFH+axgHsPylhevSa90vEmaTfdx4HJslmrlbxdQt2CTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=acEd+qp/; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515N10xF022294;
-	Wed, 5 Feb 2025 23:02:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=PoT5i
-	XwqkGHI6Zj22GZ49yPCVDOUpRMeA1OsHfTmtg0=; b=acEd+qp/Uq3sYApUjNbS6
-	WjuRe9tvN7Ox/56rhSyoesbIjNFW/nZSTXoxnbxwtH3nsMt8k9in10MqTqFmu+Xk
-	s52Ju/gmntkTLDxb/gX1lIhFA25ZEadzlXFcLILRICrkxaa+ajL62Blzk0tbNrHW
-	UUFHeQAyAS25LkW+Au3Kv6orU8+IpCSYExEBePLIdUx3ozgIXQhNa3o6xfEUQFA9
-	skrtMaYUpPAkhU1D6raoFqrYMbKw/BG20OnnJcahf6vh/m0Zm8kcgS4j7oeC2LK5
-	RwDrlec+bDPqzdxZDCu6EDX58iRaZ3a9LlLmiLCx7V5pi+x8JPWAcrl72hoBCFz3
-	w==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44kckxm5t0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Feb 2025 23:02:30 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 515Lu44D022663;
-	Wed, 5 Feb 2025 23:02:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8e9r5ng-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Feb 2025 23:02:29 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 515N2Rfm040085;
-	Wed, 5 Feb 2025 23:02:28 GMT
-Received: from ca-dev94.us.oracle.com (ca-dev94.us.oracle.com [10.129.136.30])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 44j8e9r5m8-3;
-	Wed, 05 Feb 2025 23:02:28 +0000
-From: Alan Adamson <alan.adamson@oracle.com>
-To: linux-block@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org, alan.adamson@oracle.com,
-        linux-nvme@lists.infradead.org, shinichiro.kawasaki@wdc.com
-Subject: [PATCH v3 blktests 2/2] nvme/059: add atomic write tests
-Date: Wed,  5 Feb 2025 15:11:00 -0800
-Message-ID: <20250205231100.391005-3-alan.adamson@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250205231100.391005-1-alan.adamson@oracle.com>
-References: <20250205231100.391005-1-alan.adamson@oracle.com>
+	s=arc-20240116; t=1738812292; c=relaxed/simple;
+	bh=h383WTieKGBXuyD4LGBsdDNiqVZtRmPi096eiHFI4S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWOqv1Mqhh1OQxPWezS/4n9TzeIALpQoHqRrOx3SVQHSMfvmTMV/0ZjBkmzQZeD0NdUrZfkvGIuinpfAswf6W35dQOYpHnIWlhvIEX9SjVsrJ8Dz0BEbZ6IiVYu4CBZURYrmcuxc1xc4r+5ZXVqkVu3jMIR9d/JW7t8h3jQdzDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iQf3ifiE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738812288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=72Yvsn7/ra1USam5/8ljvS+Hw1RNlRQujL6a4iWdwuc=;
+	b=iQf3ifiEn5IxEHHHNIGNArCjYKWKR+Q/KtQ+96JsJgyc8d9JM1HMsKD61eKIPMOyvMM1Am
+	xbLl10883CxL+/wBxTM2a+RC8BQ/Dfq6tA2GiL/Tx2s9J+6rHrdfWu2zLn37wZjOQM2jiY
+	3ZXMvHunxURkxPBYBNJltF0ydFSUOwM=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-261-SfN4wQcNPMG6JhPtrm1Ckw-1; Wed,
+ 05 Feb 2025 22:24:44 -0500
+X-MC-Unique: SfN4wQcNPMG6JhPtrm1Ckw-1
+X-Mimecast-MFC-AGG-ID: SfN4wQcNPMG6JhPtrm1Ckw
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C3EA1955DDD;
+	Thu,  6 Feb 2025 03:24:42 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.133])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA7C5195608D;
+	Thu,  6 Feb 2025 03:24:38 +0000 (UTC)
+Date: Thu, 6 Feb 2025 11:24:33 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Subject: Re: [PATCH 0/2] New zoned loop block device driver
+Message-ID: <Z6QrceGGAJl_X_BM@fedora>
+References: <20250108090912.GA27786@lst.de>
+ <Z35H1chBIvTt0luL@fedora>
+ <Z4ETvfwVfzNWtgAo@fedora>
+ <d5e59531-c19b-4332-8f47-b380ab9678be@kernel.org>
+ <Z5OHy76X2F9H6EWP@fedora>
+ <cb5d4dad-35a9-400e-9c53-785fba6f5a87@kernel.org>
+ <Z5xJh84xZbjcO-nJ@fedora>
+ <a63406f1-6a45-4d07-b998-504bd2d6d0d7@kernel.org>
+ <Z6LeXsYw_qq4hqoC@fedora>
+ <f6d82d47-ff27-43e8-a772-0ab90a2f86c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_08,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502050176
-X-Proofpoint-GUID: -ki184izDy3JthxZMTqwLoytknoySExw
-X-Proofpoint-ORIG-GUID: -ki184izDy3JthxZMTqwLoytknoySExw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6d82d47-ff27-43e8-a772-0ab90a2f86c4@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Tests basic atomic write functionality using NVMe devices
-that support the AWUN and AWUPF Controller Atomic Parameters
-and NAWUN and NAWUPF Namespace Atomic Parameters.
+On Wed, Feb 05, 2025 at 03:07:51PM +0900, Damien Le Moal wrote:
+> On 2/5/25 12:43 PM, Ming Lei wrote:
+> >>> Can you share how you create rublk/zoned and zloop and the underlying
+> >>> device info? Especially queue depth and nr_queues(both rublk/zloop &
+> >>> underlying disk) plays a big role.
+> >>
+> >> rublk:
+> >>
+> >> cargo run -r -- add zoned --size 524288 --zone-size 256 --conv-zones 0 \
+> >> 		--logical-block-size 4096 --queue ${nrq} --depth 128 \
+> >> 		--path /mnt/zloop/0
+> >>
+> >> zloop:
+> >>
+> >> echo "add conv_zones=0,capacity_mb=524288,zone_size_mb=256,\
+> >> base_dir=/mnt/zloop,nr_queues=${nrq},queue_depth=128" > /dev/zloop-control
+> > 
+> > zone is actually stateful, maybe it is better to use standalone backing
+> > directory/files.
+> 
+> I do not understand what you are saying... I reformat the backing FS and
+> recreate the same /mnt/zloop/0 directory for every test, to be sure I am not
+> seeing an artifact from the FS.
 
-Testing areas include:
+I meant same backfiles are shared for two devices.
 
-- Verify sysfs atomic write attributes are consistent with
-  atomic write capablities advertised by the NVMe HW.
+But I guess it may not be big deal.
 
-- Verify the atomic write paramters of statx are correct using
-  xfs_io.
+> 
+> >> The backing storage is using XFS on a PCIe Gen4 4TB M.2 SSD (my Xeon machine is
+> >> PCIe Gen3 though). This drive has a large enough max_qid to provide one IO queue
+> >> pair per CPU for up to 32 CPUs (16-cores / 32-threads).
+> > 
+> > I just setup one XFS over nvme in real hardware, still can't reproduce the big gap in
+> > your test result. Kernel is v6.13 with zloop patch v2.
+> > 
+> > `8 queues` should only make a difference for the test of "QD=32,   4K rnd wr, 8 jobs".
+> > For other single job test, single queue supposes to be same with 8 queues.
+> > 
+> > The big gap is mainly in test of 'QD=32, 128K seq wr, 1 job ', maybe your local
+> > change improves zloop's merge? In my test:
+> > 
+> > 	- ublk/zoned : 912 MiB/s
+> > 	- zloop(v2) : 960 MiB/s.
+> > 
+> > BTW, my test is over btrfs, and follows the test script:
+> > 
+> >  fio --size=32G --time_based --bsrange=128K-128K --runtime=40 --numjobs=1 \
+> >  	--ioengine=libaio --iodepth=32 --directory=./ublk --group_reporting=1 --direct=1 \
+> > 	--fsync=0 --name=f1 --stonewall --rw=write
+> 
+> If you add an FS on top of the emulated zoned deive, you are testing the FS
+> perf as much as the backing dev. I focused on the backing dev so I ran fio
+> directly on top of the emulated drive. E.g.:
+> 
+> fio --name=test --filename=${dev} --rw=randwrite \
+>                 --ioengine=libaio --iodepth=32 --direct=1 --bs=4096 \
+>                 --zonemode=zbd --numjobs=8 --group_reporting --norandommap \
+>                 --cpus_allowed=0-7 --cpus_allowed_policy=split \
+>                 --runtime=${runtime} --ramp_time=5 --time_based
+> 
+> (you must use libaio here)
 
-- Perform a pwritev2() (with and without RWF_ATOMIC flag) using
-  xfs_io:
-    - maximum byte size (atomic_write_unit_max_bytes)
-    - a write larger than atomic_write_unit_max_bytes
+Thanks for sharing the '--zonemode=zbd'.
 
-Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
----
- tests/nvme/059     | 147 +++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/059.out |  10 +++
- 2 files changed, 157 insertions(+)
- create mode 100755 tests/nvme/059
- create mode 100644 tests/nvme/059.out
+I can reproduce the perf issue with the above script, and the reason is related
+to io-uring emulation and zone space pre-allocation.
 
-diff --git a/tests/nvme/059 b/tests/nvme/059
-new file mode 100755
-index 000000000000..24b2bec645a8
---- /dev/null
-+++ b/tests/nvme/059
-@@ -0,0 +1,147 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2025 Oracle and/or its affiliates
-+#
-+# Test NVMe Atomic Writes
-+
-+. tests/nvme/rc
-+. common/xfs
-+
-+DESCRIPTION="test atomic writes"
-+QUICK=1
-+
-+requires() {
-+	_nvme_requires
-+	_have_program nvme
-+	_have_xfs_io_atomic_write
-+}
-+
-+device_requires() {
-+	_require_device_support_atomic_writes
-+}
-+
-+test_device() {
-+	local ns_dev
-+	local ctrl_dev
-+	local queue_path
-+	local nvme_awupf
-+	local nvme_nsfeat
-+	local nvme_nsabp
-+	local atomic_max_bytes
-+	local statx_atomic_max
-+	local sysfs_atomic_max_bytes
-+	local sysfs_atomic_unit_max_bytes
-+	local sysfs_logical_block_size
-+	local bytes_written
-+	local bytes_to_write
-+	local test_desc
-+
-+	echo "Running ${TEST_NAME}"
-+	ns_dev=${TEST_DEV##*/}
-+	ctrl_dev=${ns_dev%n*}
-+	queue_path="${TEST_DEV_SYSFS}/queue/"
-+
-+	test_desc="TEST 1 - Verify sysfs attributes"
-+
-+	sysfs_logical_block_size=$(cat "$queue_path"/logical_block_size)
-+	sysfs_max_hw_sectors_kb=$(cat "$queue_path"/max_hw_sectors_kb)
-+	max_hw_bytes=$(( "$sysfs_max_hw_sectors_kb" * 1024 ))
-+	sysfs_atomic_max_bytes=$(cat "$queue_path"/atomic_write_max_bytes)
-+	sysfs_atomic_unit_max_bytes=$(cat "$queue_path"/atomic_write_unit_max_bytes)
-+	sysfs_atomic_unit_min_bytes=$(cat "$queue_path"/atomic_write_unit_min_bytes)
-+
-+	if [ "$max_hw_bytes" -ge "$sysfs_atomic_max_bytes" ] &&
-+		[ "$sysfs_atomic_max_bytes" -ge "$sysfs_atomic_unit_max_bytes" ] &&
-+		[ "$sysfs_atomic_unit_max_bytes" -ge "$sysfs_atomic_unit_min_bytes" ]
-+	then
-+		echo "$test_desc - pass"
-+	else
-+		echo "$test_desc - fail $max_hw_bytes - $sysfs_max_hw_sectors_kb -" \
-+			"$sysfs_atomic_max_bytes - $sysfs_atomic_unit_max_bytes -" \
-+			"$sysfs_atomic_unit_min_bytes"
-+	fi
-+
-+	test_desc="TEST 2 - Verify sysfs atomic_write_unit_max_bytes is consistent "
-+	test_desc+="with NVMe AWUPF/NAWUPF"
-+	nvme_nsfeat=$(nvme id-ns /dev/"${ns_dev}" | grep nsfeat | awk '{ print $3}')
-+	nvme_nsabp=$((("$nvme_nsfeat" & 0x2) != 0))
-+	if [ "$nvme_nsabp" = 1 ] # Check if NSABP is set
-+	then
-+		nvme_awupf=$(nvme id-ns /dev/"$ns_dev" | grep nawupf | awk '{ print $3}')
-+		atomic_max_bytes=$(( ("$nvme_awupf" + 1) * "$sysfs_logical_block_size" ))
-+	else
-+		nvme_awupf=$(nvme id-ctrl /dev/"${ctrl_dev}" | grep awupf | awk '{ print $3}')
-+		atomic_max_bytes=$(( ("$nvme_awupf" + 1) * "$sysfs_logical_block_size" ))
-+	fi
-+	if [ "$atomic_max_bytes" -le "$max_hw_bytes" ]
-+	then
-+		if [ "$atomic_max_bytes" = "$sysfs_atomic_max_bytes" ]
-+		then
-+			echo "$test_desc - pass"
-+		else
-+			echo "$test_desc - fail $nvme_nsabp - $atomic_max_bytes - $sysfs_atomic_max_bytes -" \
-+				"$max_hw_bytes"
-+		fi
-+	else
-+		if [ "$sysfs_atomic_max_bytes" = "$max_hw_bytes" ]
-+		then
-+			echo "$test_desc - pass"
-+		else
-+			echo "$test_desc - fail $nvme_nsabp - $atomic_max_bytes - $sysfs_atomic_max_bytes -" \
-+				"$max_hw_bytes"
-+		fi
-+	fi
-+
-+	test_desc="TEST 3 - Verify statx is correctly reporting atomic_unit_max_bytes"
-+	statx_atomic_max=$(run_xfs_io_xstat /dev/"$ns_dev" "stat.atomic_write_unit_max")
-+	if [ "$sysfs_atomic_unit_max_bytes" = "$statx_atomic_max" ]
-+	then
-+		echo "$test_desc - pass"
-+	else
-+		echo "$test_desc - fail $statx_atomic_max - $sysfs_atomic_unit_max_bytes"
-+	fi
-+
-+	test_desc="TEST 4 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes "\
-+	test_desc+="with no RWF_ATOMIC"
-+	# flag - pwritev2 should be succesful.
-+        bytes_written=$(run_xfs_io_pwritev2 /dev/"$ns_dev" "$sysfs_atomic_unit_max_bytes")
-+        if [ "$bytes_written" = "$sysfs_atomic_unit_max_bytes" ]
-+        then
-+                echo "$test_desc - pass"
-+        else
-+                echo "$test_desc - fail $bytes_written - $sysfs_atomic_unit_max_bytes"
-+        fi
-+
-+	test_desc="TEST 5 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes with "
-+	test_desc+="RWF_ATOMIC flag - pwritev2 should  be succesful"
-+	bytes_written=$(run_xfs_io_pwritev2_atomic /dev/"$ns_dev" "$sysfs_atomic_unit_max_bytes")
-+	if [ "$bytes_written" = "$sysfs_atomic_unit_max_bytes" ]
-+	then
-+		echo "$test_desc - pass"
-+	else
-+		echo "$test_desc - fail $bytes_written - $sysfs_atomic_unit_max_bytes"
-+	fi
-+
-+	test_desc="TEST 6 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes + 1 logical "
-+	test_desc+="block with no RWF_ATOMIC flag - pwritev2 should be succesful"
-+	bytes_to_write=$(( "$sysfs_atomic_unit_max_bytes" + "$sysfs_logical_block_size" ))
-+	bytes_written=$(run_xfs_io_pwritev2 /dev/"$ns_dev" "$bytes_to_write")
-+	if [ "$bytes_written" = "$bytes_to_write" ]
-+	then
-+		echo "$test_desc - pass"
-+	else
-+		echo "$test_desc - fail $bytes_written - $bytes_to_write"
-+	fi
-+
-+	test_desc="TEST 7 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes + logical "
-+	test_desc+="block with RWF_ATOMIC flag - pwritev2 should not be succesful"
-+	bytes_written=$(run_xfs_io_pwritev2_atomic /dev/"$ns_dev" "$bytes_to_write")
-+	if [ "$bytes_written" = "" ]
-+	then
-+		echo "$test_desc - pass"
-+	else
-+		echo "$test_desc - fail $bytes_written - $bytes_to_write"
-+	fi
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/059.out b/tests/nvme/059.out
-new file mode 100644
-index 000000000000..e803de35776f
---- /dev/null
-+++ b/tests/nvme/059.out
-@@ -0,0 +1,10 @@
-+Running nvme/059
-+TEST 1 - Verify sysfs attributes - pass
-+TEST 2 - Verify sysfs atomic_write_unit_max_bytes is consistent with NVMe AWUPF/NAWUPF - pass
-+TEST 3 - Verify statx is correctly reporting atomic_unit_max_bytes - pass
-+TEST 4 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes with no RWF_ATOMIC - pass
-+TEST 5 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes with RWF_ATOMIC flag - pwritev2 should  be succesful - pass
-+TEST 6 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes + 1 logical block with no RWF_ATOMIC flag - pwritev2 should be succesful - pass
-+pwrite: Invalid argument
-+TEST 7 - perform a pwritev2 with size of sysfs_atomic_unit_max_bytes + logical block with RWF_ATOMIC flag - pwritev2 should not be succesful - pass
-+Test complete
--- 
-2.43.5
+When FS WRITE IO needs to allocate space, .write_iter() returns -EAGAIN
+for each io-uring write, then the write is always fallback to io-wq, cause
+very bad sequential write perf.
+
+It can be fixed[1] simply by pre-allocating space before writing to the
+beginning of each seq-zone.
+
+Now follows result in my test over real nvme/XFS:
+
++ ./zfio /dev/zloop0 write 1 40
+    write /dev/zloop0: jobs   1 io_depth   32 time   40sec
+	BS   4k: IOPS   171383 BW   685535KiB/s fio_cpu_util(25% 38%)
+	BS 128k: IOPS     7669 BW   981846KiB/s fio_cpu_util( 5% 11%)
++ ./zfio /dev/ublkb0 write 1 40
+    write /dev/ublkb0: jobs   1 io_depth   32 time   40sec
+	BS   4k: IOPS   179861 BW   719448KiB/s fio_cpu_util(29% 42%)
+	BS 128k: IOPS     7239 BW   926786KiB/s fio_cpu_util( 6%  9%)
+
++ ./zfio /dev/zloop0 randwrite 1 40
+randwrite /dev/zloop0: jobs   1 io_depth   32 time   40sec
+	BS   4k: IOPS     8909 BW    35642KiB/s fio_cpu_util( 2%  5%)
+	BS 128k: IOPS      210 BW    27035KiB/s fio_cpu_util( 0%  0%)
++ ./zfio /dev/ublkb0 randwrite 1 40
+randwrite /dev/ublkb0: jobs   1 io_depth   32 time   40sec
+	BS   4k: IOPS    20500 BW    82001KiB/s fio_cpu_util( 5% 12%)
+	BS 128k: IOPS     5622 BW   719792KiB/s fio_cpu_util( 6%  8%)
+
+
+
+[1] https://github.com/ublk-org/rublk/commit/fd01a87abb2f9b8e94c8da24e73683e4bb12659b
+
+[2] `z` (zone fio test script) https://github.com/ublk-org/rublk/blob/main/scripts/zfio
+
+Thanks,
+Ming
 
 
