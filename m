@@ -1,498 +1,188 @@
-Return-Path: <linux-block+bounces-17140-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17142-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8E71A2FFCD
-	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2025 01:57:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9E42A30153
+	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2025 03:11:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3EBB18835EB
-	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2025 00:57:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30A3D1888ECC
+	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2025 02:11:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2416A2AF12;
-	Tue, 11 Feb 2025 00:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D84526BDAE;
+	Tue, 11 Feb 2025 02:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="fqnrrutf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhO9svYw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A87E1509A0
-	for <linux-block@vger.kernel.org>; Tue, 11 Feb 2025 00:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5090926BD97
+	for <linux-block@vger.kernel.org>; Tue, 11 Feb 2025 02:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235443; cv=none; b=nfm/Dn9yomzYoY23WeV0APwGZVZKns+/S+d7oMSj+70v5myvDKOClNYKk6QHDwCRKeJuhsZ9oSgQppKt5RfY5v/FwW9z1VEQzEzcN0zLRlMOlxYWxuo2+7p071bJz0qe4ZuK7KQatBsHAy2mFYep2LGwbQtMLmCHOl8tfma9WTs=
+	t=1739239857; cv=none; b=KeupBuGTKk8fdEy7JfwSN/kYxnQbkMFudzkJOV377sNPIGyvNXKV9QdlBovNSoCc2xxyXRuIe1Q6y4yKaq5enj1rfRWfbGpKvosRy2/9Aca4yJyixQjdO+L8x9JJcNyxvrpVRzXC7lUoI0GtVcyHvmHjti0p5goWdVrDzjKfZt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235443; c=relaxed/simple;
-	bh=R6ezdbb1SZGK6TaSG5laRh7MNR6umGNnOH1qxUnqoW8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IY73rUhsSOKl0qnSdpPheLK1wu7BRzMTYuUQLIuctj526d9JMIrHradWzKnNiobArtBfX2GxcRNwNkCoa7ZWlu8bVOFEejU9/ZmaGa2yZ32CR8mp1aNx9Ekc0/4TWq4DvuHzEXm0UD3YLTan8fkaO/t+oVYaOE0RE+B+Ri8ayaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=fqnrrutf; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B0oYg0027464
-	for <linux-block@vger.kernel.org>; Mon, 10 Feb 2025 16:57:20 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=DktvP6+nkYX2C0FR/dkgSu1ncTUJ2KmCUq8qXVB1v2o=; b=fqnrrutfegsP
-	yT3m6+UKpB8qNN+ZrrhD0fC1lg1B0dQI0pPDlvr1q3St3ZeLW9ZJ+SC9dBdgFXyI
-	trjaqHU18PFNrP/b7WlTAR7U08lIWZbkuf8BJd0wij8REF8FJJXF1Hqq6J3uiaet
-	bA7uAI6/3LUIi9DNtKv4ZlMLzHevn4oIgU5U0j97nELKdwwiDlHFgpiqA0v1ea/C
-	W91o9GXw8LDB0H9hDML+UDVU94OxwcOplI92xP1sbqPu6DaE0l49u35owRd+d++a
-	JTdcuXJfk4b2P7bqgS3mKdCqZXA4FnATJ/+BQPt+sXl2Wx2nPlU0+oa9OBxcwhE4
-	gI9NJKbNXw==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 44qpm92u4s-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Mon, 10 Feb 2025 16:57:20 -0800 (PST)
-Received: from twshared3076.40.frc1.facebook.com (2620:10d:c0a8:1c::1b) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Tue, 11 Feb 2025 00:57:02 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id ABD4917E18F8B; Mon, 10 Feb 2025 16:56:48 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <ming.lei@redhat.com>, <asml.silence@gmail.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <io-uring@vger.kernel.org>
-CC: <bernd@bsbernd.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 6/6] io_uring: cache nodes and mapped buffers
-Date: Mon, 10 Feb 2025 16:56:46 -0800
-Message-ID: <20250211005646.222452-7-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250211005646.222452-1-kbusch@meta.com>
-References: <20250211005646.222452-1-kbusch@meta.com>
+	s=arc-20240116; t=1739239857; c=relaxed/simple;
+	bh=G3HykhtYVyfzFOFLBoG8rE11HjGSrrQWFGaot0gnkHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sd7/6nUW/pMaazcTSqFlWwn4ZbgnC73Ofin0aQN7GSPpi2CX81NeP8gIO3OTRVAvO7vBHUkBOAXbmHQJ9atInTxsqs52WHS2tcG57Uu1HjaUSclOv9LHTiOWwt5vtMQHiQcAjp2xXPQc2b6YhXTZp+ysca9HOOiUjsOXPqhWjr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KhO9svYw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739239854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bo0N8Gcm+lPnMsC7LF3je0++T3EKGJ6mYbFKX8DKF1Q=;
+	b=KhO9svYwRq88Dcx8N7wdR95XVfhP90mE5TaNEZgrfOkv65JAnzqtRrn5N5Pa24oI6swc7G
+	gZ06qO/Ft8saT3btmzfnPea/bhcVSrvGoIKwclbXP9Qf0a3xfhCgJz9o9DmJS++OWRpFt5
+	3ssVLd7ptbUJagvu6qyHByBdvgHj+zo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-353-CnyoPuCwNxmMcuPjf5oxLw-1; Mon,
+ 10 Feb 2025 21:10:50 -0500
+X-MC-Unique: CnyoPuCwNxmMcuPjf5oxLw-1
+X-Mimecast-MFC-AGG-ID: CnyoPuCwNxmMcuPjf5oxLw
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DFA841800874;
+	Tue, 11 Feb 2025 02:10:48 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.126])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1D10C1800570;
+	Tue, 11 Feb 2025 02:10:41 +0000 (UTC)
+Date: Tue, 11 Feb 2025 10:10:36 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	Yi Zhang <yi.zhang@redhat.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Daniel Gomez <da.gomez@samsung.com>
+Subject: Re: [PATCH V2] block: make segment size limit workable for > 4K
+ PAGE_SIZE
+Message-ID: <Z6qxnAEMeTVW-wK-@fedora>
+References: <20250210090319.1519778-1-ming.lei@redhat.com>
+ <Z6peww6d3EP5-B8n@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: Ts0ZrBD-_guTgFUkVG5nr8gy7bc_Q-nq
-X-Proofpoint-ORIG-GUID: Ts0ZrBD-_guTgFUkVG5nr8gy7bc_Q-nq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_01,2025-02-10_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6peww6d3EP5-B8n@bombadil.infradead.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Keith Busch <kbusch@kernel.org>
+On Mon, Feb 10, 2025 at 12:17:07PM -0800, Luis Chamberlain wrote:
+> On Mon, Feb 10, 2025 at 05:03:19PM +0800, Ming Lei wrote:
+> > PAGE_SIZE is applied in some block device queue limits, this way is
+> > very fragile and is wrong:
+> > 
+> > - queue limits are read from hardware, which is often one readonly
+> > hardware property
+> > 
+> > - PAGE_SIZE is one config option which can be changed during build time.
+> 
+> This is true.
+> 
+> > In RH lab, it has been found that max segment size of some mmc card is
+> > less than 64K, then this kind of card can't work in case of 64K PAGE_SIZE.
+> 
+> This is true, but check the note on block/blk-merge.c blk_bvec_map_sg().
+> It would seem that this is a limitation of MMC/SD and that this should
+> ideally be fixed.
 
-Frequent alloc/free cycles on these is pretty costly. Use an io cache to
-more efficiently reuse these buffers.
+The mmc card works just fine in case of 4K page size, there isn't any
+limitation for the mmc/ssd from storage viewpoint, the failure is just
+because this card's max segment size is < 64KB in case of 64K page size.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- include/linux/io_uring_types.h |  18 +++---
- io_uring/filetable.c           |   2 +-
- io_uring/rsrc.c                | 115 +++++++++++++++++++++++++--------
- io_uring/rsrc.h                |   2 +-
- 4 files changed, 101 insertions(+), 36 deletions(-)
+> 
+> > Fix this issue by using BLK_MIN_SEGMENT_SIZE in related code for dealing
+> > with queue limits and checking if bio needn't split. Define BLK_MIN_SEGMENT_SIZE
+> > as 4K(minimized PAGE_SIZE).
+> 
+> But indeed if the block driver isn't yet fixed, then sure, we have to
+> deal with the issue, I am not convinced that the logic below addresses
+> this in a generic way, rather it seems to conflate the areas where we
+> do need the generic block layer min defined, and when we have a block
+> min segment limit.
+> 
+> > Cc: Yi Zhang <yi.zhang@redhat.com>
+> > Cc: Luis Chamberlain <mcgrof@kernel.org>
+> > Cc: John Garry <john.g.garry@oracle.com>
+> > Cc: Bart Van Assche <bvanassche@acm.org>
+> > Cc: Keith Busch <kbusch@kernel.org>
+> > Link: https://lore.kernel.org/linux-block/20250102015620.500754-1-ming.lei@redhat.com/
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > ---
+> > V2:
+> > 	- cover bio_split_rw_at()
+> > 	- add BLK_MIN_SEGMENT_SIZE
+> > 
+> >  block/blk-merge.c      | 2 +-
+> >  block/blk-settings.c   | 6 +++---
+> >  block/blk.h            | 2 +-
+> >  include/linux/blkdev.h | 1 +
+> >  4 files changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/block/blk-merge.c b/block/blk-merge.c
+> > index 15cd231d560c..b55c52a42303 100644
+> > --- a/block/blk-merge.c
+> > +++ b/block/blk-merge.c
+> > @@ -329,7 +329,7 @@ int bio_split_rw_at(struct bio *bio, const struct queue_limits *lim,
+> >  
+> >  		if (nsegs < lim->max_segments &&
+> >  		    bytes + bv.bv_len <= max_bytes &&
+> > -		    bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
+> > +		    bv.bv_offset + bv.bv_len <= BLK_MIN_SEGMENT_SIZE) {
+> >  			nsegs++;
+> >  			bytes += bv.bv_len;
+> 
+> I'll note that the 64k BLK_MAX_SEGMENT_SIZE is an old "odd historic" default
+> value, ie, not a documented hard limit but some odd old thing which
+> blk_validate_limits() encourages block drivers to override, so a soft
+> max.
 
-diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_type=
-s.h
-index 4f4b7ad21500d..a6e525b756d10 100644
---- a/include/linux/io_uring_types.h
-+++ b/include/linux/io_uring_types.h
-@@ -67,8 +67,18 @@ struct io_file_table {
- 	unsigned int alloc_hint;
- };
-=20
-+struct io_alloc_cache {
-+	void			**entries;
-+	unsigned int		nr_cached;
-+	unsigned int		max_cached;
-+	size_t			elem_size;
-+	unsigned int		init_clear;
-+};
-+
- struct io_buf_table {
- 	struct io_rsrc_data	data;
-+	struct io_alloc_cache	node_cache;
-+	struct io_alloc_cache	imu_cache;
- };
-=20
- struct io_hash_bucket {
-@@ -222,14 +232,6 @@ struct io_submit_state {
- 	struct blk_plug		plug;
- };
-=20
--struct io_alloc_cache {
--	void			**entries;
--	unsigned int		nr_cached;
--	unsigned int		max_cached;
--	unsigned int		elem_size;
--	unsigned int		init_clear;
--};
--
- struct io_ring_ctx {
- 	/* const or read-mostly hot data */
- 	struct {
-diff --git a/io_uring/filetable.c b/io_uring/filetable.c
-index dd8eeec97acf6..a21660e3145ab 100644
---- a/io_uring/filetable.c
-+++ b/io_uring/filetable.c
-@@ -68,7 +68,7 @@ static int io_install_fixed_file(struct io_ring_ctx *ct=
-x, struct file *file,
- 	if (slot_index >=3D ctx->file_table.data.nr)
- 		return -EINVAL;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 	if (!node)
- 		return -ENOMEM;
-=20
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index b3f36f1b2a668..88a67590c67d4 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -32,6 +32,8 @@ static struct io_rsrc_node *io_sqe_buffer_register(stru=
-ct io_ring_ctx *ctx,
- #define IORING_MAX_FIXED_FILES	(1U << 20)
- #define IORING_MAX_REG_BUFFERS	(1U << 14)
-=20
-+#define IO_CACHED_BVECS_SEGS	30
-+
- int __io_account_mem(struct user_struct *user, unsigned long nr_pages)
- {
- 	unsigned long page_limit, cur_pages, new_pages;
-@@ -119,19 +121,35 @@ static void io_buffer_unmap(struct io_ring_ctx *ctx=
-, struct io_rsrc_node *node)
- 	}
- }
-=20
--struct io_rsrc_node *io_rsrc_node_alloc(int type)
-+
-+struct io_rsrc_node *io_rsrc_node_alloc(struct io_ring_ctx *ctx, int typ=
-e)
- {
- 	struct io_rsrc_node *node;
-=20
--	node =3D kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (type =3D=3D IORING_RSRC_FILE)
-+		node =3D kmalloc(sizeof(*node), GFP_KERNEL);
-+	else
-+		node =3D io_cache_alloc(&ctx->buf_table.node_cache, GFP_KERNEL);
- 	if (node) {
- 		node->type =3D type;
- 		node->refs =3D 1;
-+		node->tag =3D 0;
-+		node->file_ptr =3D 0;
-+		node->release =3D NULL;
-+		node->priv =3D NULL;
- 	}
- 	return node;
- }
-=20
--__cold void io_rsrc_data_free(struct io_ring_ctx *ctx, struct io_rsrc_da=
-ta *data)
-+static __cold void __io_rsrc_data_free(struct io_rsrc_data *data)
-+{
-+	kvfree(data->nodes);
-+	data->nodes =3D NULL;
-+	data->nr =3D 0;
-+}
-+
-+__cold void io_rsrc_data_free(struct io_ring_ctx *ctx,
-+			      struct io_rsrc_data *data)
- {
- 	if (!data->nr)
- 		return;
-@@ -139,9 +157,7 @@ __cold void io_rsrc_data_free(struct io_ring_ctx *ctx=
-, struct io_rsrc_data *data
- 		if (data->nodes[data->nr])
- 			io_put_rsrc_node(ctx, data->nodes[data->nr]);
- 	}
--	kvfree(data->nodes);
--	data->nodes =3D NULL;
--	data->nr =3D 0;
-+	__io_rsrc_data_free(data);
- }
-=20
- __cold int io_rsrc_data_alloc(struct io_rsrc_data *data, unsigned nr)
-@@ -155,6 +171,34 @@ __cold int io_rsrc_data_alloc(struct io_rsrc_data *d=
-ata, unsigned nr)
- 	return -ENOMEM;
- }
-=20
-+static __cold int io_rsrc_buffer_alloc(struct io_buf_table *table, unsig=
-ned nr)
-+{
-+	const int imu_cache_size =3D struct_size_t(struct io_mapped_ubuf, bvec,
-+						 IO_CACHED_BVECS_SEGS);
-+	int ret;
-+
-+	BUILD_BUG_ON(imu_cache_size !=3D 512);
-+	ret =3D io_rsrc_data_alloc(&table->data, nr);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D io_alloc_cache_init(&table->node_cache, nr,
-+				  sizeof(struct io_rsrc_node), 0);
-+	if (ret)
-+		goto out_1;
-+
-+	ret =3D io_alloc_cache_init(&table->imu_cache, nr, imu_cache_size, 0);
-+	if (ret)
-+		goto out_2;
-+
-+	return 0;
-+out_2:
-+	io_alloc_cache_free(&table->node_cache, kfree);
-+out_1:
-+	__io_rsrc_data_free(&table->data);
-+	return ret;
-+}
-+
- static int __io_sqe_files_update(struct io_ring_ctx *ctx,
- 				 struct io_uring_rsrc_update2 *up,
- 				 unsigned nr_args)
-@@ -204,7 +248,7 @@ static int __io_sqe_files_update(struct io_ring_ctx *=
-ctx,
- 				err =3D -EBADF;
- 				break;
- 			}
--			node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+			node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 			if (!node) {
- 				err =3D -ENOMEM;
- 				fput(file);
-@@ -465,6 +509,8 @@ void io_free_rsrc_node(struct io_ring_ctx *ctx, struc=
-t io_rsrc_node *node)
- 			io_buffer_unmap(ctx, node);
- 		if (node->release)
- 			node->release(node->priv);
-+		if (io_alloc_cache_put(&ctx->buf_table.node_cache, node))
-+			return;
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-@@ -533,7 +579,7 @@ int io_sqe_files_register(struct io_ring_ctx *ctx, vo=
-id __user *arg,
- 			goto fail;
- 		}
- 		ret =3D -ENOMEM;
--		node =3D io_rsrc_node_alloc(IORING_RSRC_FILE);
-+		node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
- 		if (!node) {
- 			fput(file);
- 			goto fail;
-@@ -553,11 +599,19 @@ int io_sqe_files_register(struct io_ring_ctx *ctx, =
-void __user *arg,
- 	return ret;
- }
-=20
-+static void io_rsrc_buffer_free(struct io_ring_ctx *ctx,
-+				struct io_buf_table *table)
-+{
-+	io_rsrc_data_free(ctx, &table->data);
-+	io_alloc_cache_free(&table->node_cache, kfree);
-+	io_alloc_cache_free(&table->imu_cache, kfree);
-+}
-+
- int io_sqe_buffers_unregister(struct io_ring_ctx *ctx)
- {
- 	if (!ctx->buf_table.data.nr)
- 		return -ENXIO;
--	io_rsrc_data_free(ctx, &ctx->buf_table.data);
-+	io_rsrc_buffer_free(ctx, &ctx->buf_table);
- 	return 0;
- }
-=20
-@@ -722,6 +776,15 @@ bool io_check_coalesce_buffer(struct page **page_arr=
-ay, int nr_pages,
- 	return true;
- }
-=20
-+static struct io_mapped_ubuf *io_alloc_imu(struct io_ring_ctx *ctx,
-+					   int nr_bvecs)
-+{
-+	if (nr_bvecs <=3D IO_CACHED_BVECS_SEGS)
-+		return io_cache_alloc(&ctx->buf_table.imu_cache, GFP_KERNEL);
-+	return kvmalloc(struct_size_t(struct io_mapped_ubuf, bvec, nr_bvecs),
-+			GFP_KERNEL);
-+}
-+
- static struct io_rsrc_node *io_sqe_buffer_register(struct io_ring_ctx *c=
-tx,
- 						   struct iovec *iov,
- 						   struct page **last_hpage)
-@@ -738,7 +801,7 @@ static struct io_rsrc_node *io_sqe_buffer_register(st=
-ruct io_ring_ctx *ctx,
- 	if (!iov->iov_base)
- 		return NULL;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_BUFFER);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_BUFFER);
- 	if (!node)
- 		return ERR_PTR(-ENOMEM);
- 	node->buf =3D NULL;
-@@ -758,7 +821,7 @@ static struct io_rsrc_node *io_sqe_buffer_register(st=
-ruct io_ring_ctx *ctx,
- 			coalesced =3D io_coalesce_buffer(&pages, &nr_pages, &data);
- 	}
-=20
--	imu =3D kvmalloc(struct_size(imu, bvec, nr_pages), GFP_KERNEL);
-+	imu =3D io_alloc_imu(ctx, nr_pages);
- 	if (!imu)
- 		goto done;
-=20
-@@ -804,9 +867,9 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx, =
-void __user *arg,
- 			    unsigned int nr_args, u64 __user *tags)
- {
- 	struct page *last_hpage =3D NULL;
--	struct io_rsrc_data data;
- 	struct iovec fast_iov, *iov =3D &fast_iov;
- 	const struct iovec __user *uvec;
-+	struct io_buf_table table;
- 	int i, ret;
-=20
- 	BUILD_BUG_ON(IORING_MAX_REG_BUFFERS >=3D (1u << 16));
-@@ -815,13 +878,14 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx=
-, void __user *arg,
- 		return -EBUSY;
- 	if (!nr_args || nr_args > IORING_MAX_REG_BUFFERS)
- 		return -EINVAL;
--	ret =3D io_rsrc_data_alloc(&data, nr_args);
-+	ret =3D io_rsrc_buffer_alloc(&table, nr_args);
- 	if (ret)
- 		return ret;
-=20
- 	if (!arg)
- 		memset(iov, 0, sizeof(*iov));
-=20
-+	ctx->buf_table =3D table;
- 	for (i =3D 0; i < nr_args; i++) {
- 		struct io_rsrc_node *node;
- 		u64 tag =3D 0;
-@@ -861,10 +925,8 @@ int io_sqe_buffers_register(struct io_ring_ctx *ctx,=
- void __user *arg,
- 			}
- 			node->tag =3D tag;
- 		}
--		data.nodes[i] =3D node;
-+		table.data.nodes[i] =3D node;
- 	}
--
--	ctx->buf_table.data =3D data;
- 	if (ret)
- 		io_sqe_buffers_unregister(ctx);
- 	return ret;
-@@ -892,7 +954,7 @@ int io_buffer_register_bvec(struct io_ring_ctx *ctx, =
-struct request *rq,
- 	if (node)
- 		return -EBUSY;
-=20
--	node =3D io_rsrc_node_alloc(IORING_RSRC_KBUFFER);
-+	node =3D io_rsrc_node_alloc(ctx, IORING_RSRC_KBUFFER);
- 	if (!node)
- 		return -ENOMEM;
-=20
-@@ -900,7 +962,8 @@ int io_buffer_register_bvec(struct io_ring_ctx *ctx, =
-struct request *rq,
- 	node->priv =3D rq;
-=20
- 	nr_bvecs =3D blk_rq_nr_phys_segments(rq);
--	imu =3D kvmalloc(struct_size(imu, bvec, nr_bvecs), GFP_KERNEL);
-+
-+	imu =3D io_alloc_imu(ctx, nr_bvecs);
- 	if (!imu) {
- 		kfree(node);
- 		return -ENOMEM;
-@@ -1022,7 +1085,7 @@ static void lock_two_rings(struct io_ring_ctx *ctx1=
-, struct io_ring_ctx *ctx2)
- static int io_clone_buffers(struct io_ring_ctx *ctx, struct io_ring_ctx =
-*src_ctx,
- 			    struct io_uring_clone_buffers *arg)
- {
--	struct io_rsrc_data data;
-+	struct io_buf_table table;
- 	int i, ret, off, nr;
- 	unsigned int nbufs;
-=20
-@@ -1053,7 +1116,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 	if (check_add_overflow(arg->nr, arg->dst_off, &nbufs))
- 		return -EOVERFLOW;
-=20
--	ret =3D io_rsrc_data_alloc(&data, max(nbufs, ctx->buf_table.data.nr));
-+	ret =3D io_rsrc_buffer_alloc(&table, max(nbufs, ctx->buf_table.data.nr)=
-);
- 	if (ret)
- 		return ret;
-=20
-@@ -1062,7 +1125,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 		struct io_rsrc_node *src_node =3D ctx->buf_table.data.nodes[i];
-=20
- 		if (src_node) {
--			data.nodes[i] =3D src_node;
-+			table.data.nodes[i] =3D src_node;
- 			src_node->refs++;
- 		}
- 	}
-@@ -1092,7 +1155,7 @@ static int io_clone_buffers(struct io_ring_ctx *ctx=
-, struct io_ring_ctx *src_ctx
- 		if (!src_node) {
- 			dst_node =3D NULL;
- 		} else {
--			dst_node =3D io_rsrc_node_alloc(src_node->type);
-+			dst_node =3D io_rsrc_node_alloc(ctx, src_node->type);
- 			if (!dst_node) {
- 				ret =3D -ENOMEM;
- 				goto out_free;
-@@ -1101,12 +1164,12 @@ static int io_clone_buffers(struct io_ring_ctx *c=
-tx, struct io_ring_ctx *src_ctx
- 			refcount_inc(&src_node->buf->refs);
- 			dst_node->buf =3D src_node->buf;
- 		}
--		data.nodes[off++] =3D dst_node;
-+		table.data.nodes[off++] =3D dst_node;
- 		i++;
- 	}
-=20
- 	/*
--	 * If asked for replace, put the old table. data->nodes[] holds both
-+	 * If asked for replace, put the old table. table.data->nodes[] holds b=
-oth
- 	 * old and new nodes at this point.
- 	 */
- 	if (arg->flags & IORING_REGISTER_DST_REPLACE)
-@@ -1119,10 +1182,10 @@ static int io_clone_buffers(struct io_ring_ctx *c=
-tx, struct io_ring_ctx *src_ctx
- 	 * entry).
- 	 */
- 	WARN_ON_ONCE(ctx->buf_table.data.nr);
--	ctx->buf_table.data =3D data;
-+	ctx->buf_table =3D table;
- 	return 0;
- out_free:
--	io_rsrc_data_free(ctx, &data);
-+	io_rsrc_buffer_free(ctx, &table);
- 	return ret;
- }
-=20
-diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
-index 8147dfc26f737..751db2ce9affb 100644
---- a/io_uring/rsrc.h
-+++ b/io_uring/rsrc.h
-@@ -49,7 +49,7 @@ struct io_imu_folio_data {
- 	unsigned int	nr_folios;
- };
-=20
--struct io_rsrc_node *io_rsrc_node_alloc(int type);
-+struct io_rsrc_node *io_rsrc_node_alloc(struct io_ring_ctx *ctx, int typ=
-e);
- void io_free_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *nod=
-e);
- void io_rsrc_data_free(struct io_ring_ctx *ctx, struct io_rsrc_data *dat=
-a);
- int io_rsrc_data_alloc(struct io_rsrc_data *data, unsigned nr);
---=20
-2.43.5
+BLK_MAX_SEGMENT_SIZE is default or fallback max segment size if the hardware
+doesn't provide this limit, so nothing odd here because block layer has
+to use something reasonable here.
+
+> 
+> That said, if we validate this soft max and if you also validate the min
+
+There isn't soft max segment size.
+
+> shouldn't value in the above instead be lim->max_segment_size instead,
+
+min segment size is page_size and it is soft, and has been applied
+for long time. This patch just fixes it as 4k(min(page_size)).
+
+> provided that we also address the coment in blk_bvec_map_sg()?
+
+The comment in blk_bvec_map_sg() has been removed, and blk_bvec_map_sg
+has been re-written in commit b7175e24d6ac ("block: add a dma mapping
+iterator") by following segment limits only.
+
+> 
+> More forward looking -- are you using BLK_MIN_SEGMENT_SIZE here due to
+> the same mmc/sd limitations ? Can we overcome the mmc/sd limitations by
+> only using this BLK_MIN_SEGMENT_SIZE only on block drivers which have the
+> scatterlists limitation?
+
+Please see my comment above, the mmc card doesn't have any limitation,
+it is just that its max segment size is < 64K, which is absolutely
+allowed from storage viewpoint.
+
+
+Thanks, 
+Ming
 
 
