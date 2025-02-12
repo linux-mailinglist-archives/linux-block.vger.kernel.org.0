@@ -1,98 +1,107 @@
-Return-Path: <linux-block+bounces-17174-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17177-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F339EA32B24
-	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 17:08:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 04787A33115
+	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 21:55:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14009163FA4
-	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 16:08:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57669168433
+	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 20:55:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6434E212B21;
-	Wed, 12 Feb 2025 16:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7ED3202F80;
+	Wed, 12 Feb 2025 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IaqgLLKS"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B041B21AD;
-	Wed, 12 Feb 2025 16:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA8B202C32;
+	Wed, 12 Feb 2025 20:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739376487; cv=none; b=KpKrnJpY9xfHJnz7zPg0aygjPYn66NoJF0CTXOEmEBtUtkztyrFzG0jaFN62cfZGUE4zgb4G19hwH7L1XvmGzXDxVRLbFVjHPH8iWbgN0f8MtKkL/PqWJVYx4LzEtWjzn7Y2hLLxbZtxNRbyCjDECHogALCgJ2BEteUZWHXvhWg=
+	t=1739393693; cv=none; b=V8ymlX8rn6uBK6ZlU2xBtwvc1697XGM6TJwkMlYja+rymlwcfFPPUeA4scdvi/tgw/NUAn2pR1YJmf0uEQdlkGa0wZEwFgwWGxhLhKwWiwscvIkEIujaiJtJKgmTHv3ZylDq7MkWSXwNTXKR+C3EY3uTqkSOH2GYTV2xBOb/YYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739376487; c=relaxed/simple;
-	bh=CGPA2diWDPRlo+xCIF3lvcfw8/qJFHHjnFL2shClYSg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=YC5fD8T2iDwhAeolr7Af0sW+Pbrvfd+qNAyX2mSPkEtZ5VxWBDjkKzryEhftLcHhnZBwH4qNQQ7+A1FVjNHtq5aCclzssjdSUnKPL+DanMQHCztoUfcX9WIXZxHoyQzAiOP/N2QuJThOr2mSnfPrAqiJ5jgZH+MxmlLlJNGU3bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
-Received: from localhost (25.205.forpsi.net [80.211.205.25])
-	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id 2ef4fa32 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 12 Feb 2025 17:08:01 +0100 (CET)
+	s=arc-20240116; t=1739393693; c=relaxed/simple;
+	bh=Di7ZCuht89rGJbgc5fTYIK6TnUgp4/cGLdBz5UkzNuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k/hDB5YK/sAyA3xp3wwOxxuftgDLcw85v637LvKrG/SnZcXbI71vVLsVI3pheNnNQ8ChWkxsF6Njc6E38d9apObBV4ZkPmiyLsjEb8ohRXWh3ztg9GGZOVQEyHyOFPa9pXQz2FA5M8P2Ln7jBB9cXuXn+bwcfpfuoS6+DVSE7kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IaqgLLKS; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=MDe5MlqzTjN3qy/1dUBy4rXWUWp+5LRgOl2dkUwNMOM=; b=IaqgLLKS5mXlGd9JsUbKocTCGb
+	9zxvi+mD8eKBKoKEby0YDg7w9HJ0YpTdzT8XBUJIiTqF32bAlBZTgXVM5HpfzmWfV26fLbnKGoe5H
+	hkVOADfUV+veYS63UIUQX1CZ2HWMPS94UeWcnxFZRa4wGfRhN+INN7UcH1GXwOhQRGwKMZgItyLFT
+	NuLjcaHlc1P/oCdoRHzuPyRL8bZO3J9TtRJP4d4FHj8qxAZmWkyyPBw4qz/lUfJbPOI4R+KPyYXGZ
+	UUaDzDVuQ+jy8s8QoMjW8TPRjXkUjQC398Krz4KprACISXsYYph/FQrXYWa61XLGtsxUcMjJCyGwq
+	u9z1XvKA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiJkw-00000008q85-2wsf;
+	Wed, 12 Feb 2025 20:54:50 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: shinichiro.kawasaki@wdc.com
+Cc: linux-block@vger.kernel.org,
+	hare@suse.de,
+	patches@lists.linux.dev,
+	gost.dev@samsung.com,
+	mcgrof@kernel.org
+Subject: [PATCH blktests v3 0/6] enable bs > ps device testing
+Date: Wed, 12 Feb 2025 12:54:42 -0800
+Message-ID: <20250212205448.2107005-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 12 Feb 2025 17:07:59 +0100
-Message-Id: <D7QLI3PYQ877.1KH6K8K08P2IP@bsdbackstore.eu>
-Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
-From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-To: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>,
- "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "sagi"
- <sagi@grimberg.me>, "mgurtovoy" <mgurtovoy@nvidia.com>, "kbusch"
- <kbusch@kernel.org>, "sashal" <sashal@kernel.org>, "chunguang.xu"
- <chunguang.xu@shopee.com>
-Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-nvme"
- <linux-nvme@lists.infradead.org>, "linux-block"
- <linux-block@vger.kernel.org>
-X-Mailer: aerc
-References: <2025021015413817916143@cestc.cn>
- <D7QKRU1EXDXJ.K6ZXC4V4ZD68@bsdbackstore.eu>
-In-Reply-To: <D7QKRU1EXDXJ.K6ZXC4V4ZD68@bsdbackstore.eu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Wed Feb 12, 2025 at 4:33 PM CET, Maurizio Lombardi wrote:
->
-> Taking a step back. Let's take a different approach and try to avoid the
-> double completion.
->
-> The problem here is that apparently we received a nvme_tcp_rsp capsule
-> from the target, meaning that the command has been processed (I guess
-> the capsule has an error status?)
->
-> So maybe only part of the command has been sent?
-> Why we receive the rsp capsule at all? Shouldn't this be treated as a fat=
-al
-> error by the controller?
+This v3 series addresses the feedback from the v2 series [0] and
+makes some minor new changes, the change are:
 
+  - Fixes all shellcheck complaints
+  - Addresses spacing / tabs fixes
+  - Adds _test_dev_suits_xfs() as suggested by Shinichiro and makes
+    tests which require this depend on it
+  - Clamps _min_io() to 4k as well for backward compatibility
+  - Few minor enhancements to help capture up error messages from
+    mkfs from block/032
 
-The NVMe/TCP specification says
+This goes tested against a 64k sector size NVMe drive, and also
+using ./check so regular loopback devices are used. This helps
+test 64k sector devices, patches for which have been posted [1].
+                                                                                                                                                                                              
+[0] https://lkml.kernel.org/r/20250204225729.422949-1-mcgrof@kernel.org
+[1] https://lkml.kernel.org/r/20250204231209.429356-1-mcgrof@kernel.org
 
-******
-When a controller detects a fatal error, that controller shall:
-  1. stop processing any PDUs that arrive on the connection; and
-  2. send a C2HTermReq PDU
-******
+Luis Chamberlain (6):
+  common/xfs: ignore first umount error on _xfs_mkfs_and_mount()
+  block/032: make error messages clearer if mkfs or mount fails
+  common: add and use min io for fio
+  common/xfs: use min io for fs blocksize
+  tests: use test device min io to support bs > ps
+  common/xfs: add _test_dev_suits_xfs() to verify logical block size
+    will work
 
-And indeed I see in the dmesg this:
+ common/fio      | 26 ++++++++++++++++++++++++--
+ common/rc       | 24 ++++++++++++++++++++++++
+ common/xfs      | 23 +++++++++++++++++++++--
+ tests/block/003 |  6 +++++-
+ tests/block/007 |  5 ++++-
+ tests/block/032 |  7 ++++---
+ tests/nvme/012  |  1 +
+ tests/nvme/035  |  1 +
+ tests/nvme/049  | 15 +++++++++++----
+ 9 files changed, 95 insertions(+), 13 deletions(-)
 
-nvme nvme2: unsupported pdu type (3)
-
-This means the controller detected the problem and sent to the host the
-C2HTermReq command. Upon receiving this command, the host is supposed to
-close the connection.
-
-Now I get it.
-
-Zhang, do you have commit aeacfcefa218f4ed11da478e9b7915a37d1afaff in
-your kernel, I guess you are missing it. Check it please.
-
-Maurizio
+-- 
+2.45.2
 
 
