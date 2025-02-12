@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-17178-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17176-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04D31A33116
-	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 21:55:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6247BA33114
+	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 21:55:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6BF33A2676
-	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 20:54:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAC533A1EA4
+	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2025 20:54:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB06C202F70;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87584202F72;
 	Wed, 12 Feb 2025 20:54:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXYKkZ4k"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B84msV45"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB39202C33;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A25201258;
 	Wed, 12 Feb 2025 20:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739393693; cv=none; b=JSmDCsZgafFCNysFE+R2bXF+TXh1t0W4wh66qADEkB9uXJskP8dWxKtDzOer2ivRBZTv+aTf6o6xYlkiUPCVY59ZeR+MMJKv5jyiWQ/4Zv+2+aee6O4M6Y+HY/bY43F5BvYA2C0THUgXa+UJRULrhl1LRlIoDByngeuClqwNUoc=
+	t=1739393693; cv=none; b=pVr5FWT+nUO/FTQVPWIujUPyEO+eOMntzFODlrkIoWRIaXzM8Er2LaCnkWYy58Y+HtdykEX9gu5ZNKg7crInK+Bk0rfKX1wtPgtHX4DCddFkoY5j1O9PySNkJEUjoL/hmlmzc430yPTy87xsIkSTTIGueEiWQUWMBZ/jkU2V4Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739393693; c=relaxed/simple;
-	bh=adWzKjCFzxNuBVmy6SjaplBwVSgeL5T0CTiWNombh0g=;
+	bh=07qFMcDQ8An9Ib21CmoWdYlNhpc43kYAeKCaGsKQusE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aK6mCtQNMFjKCOo3hRqI4DTRdKqsxSf+bWXNORgrUVq/3pBERZi3neroIFyNNCGZLZF586IDUHif+I/LTbd6JK3iGrnh9p0RzvRK/euKutJHFPjBm6D6luZf00gn4aZjtSzIvE9Ge7hViLlOcnDoIBEgx3QYGFAwJtTg8810pYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PXYKkZ4k; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=X1+pvxP27AtG6H6AsHsgSrP1Bb4lViJ7zP21mSmCCozbhUJU8dFoRYzeAQh/a1U+pIuEMW2l1WJ/gWxgA65yooIq/vQXSIzkT5Se1LdvlclQsJZWV8kQaEAnSwuU5Ep02GGza8NVaE1V5UAYECgebzCBJms6UvSGuG1TXBYeJ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B84msV45; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=GTl9k7yAp3U+wqtvYfSngx+82iSSK1W56O6UQmOfBSE=; b=PXYKkZ4kXDkrRglQQ2HhUArvl7
-	RJnZToAppKUKsYXqt4OwyD0iwfeyvrS6i7MhclTrXpcto2HwFP7dPPF4l88UFRWjm40Q/w6TK4R/9
-	6U/qCFuZIDPDhXyOgjCa7CkUbNiiqtKrNzu1qawp9ma13Cs5FPI1UrDkuhF89Ov+cp3sgKeM1YkDz
-	SSMwvmVZ3l/YE3VgyFoCftZRQ+orkrNCTE3QO/PRFw8xRSETiQjcoJWIdRCqUi6/cYSGb62wNTvkd
-	F+2EOnyBs+L4JrF2beMlEpth/V4AXWlEQZjkV7bOh1y6UtD0yiFUBJEwaVl/LDIyZWG1fuhBtua/4
-	/6j+ctdw==;
+	bh=UFWuuTJsuoXbom2W75IczMP+fGuQKORSKlCtAWBXU9w=; b=B84msV45oi2B2MRi8XHgaV3Ddb
+	R9uvQWF6uEsUZKgUdD7hvs/Yqst4pEIurHxeenw94/7VJnokBDWg8Ne55LZ+h1idkDoHjtKzEgf6o
+	MQcsPEIniEkiHWhAuTmJdUKHMLUrga592YqAcBTilaJGxJgsT9QwviQRTVLmXD204K8DJpNw34FaR
+	iZWPtg59yHMbl70SlJWxR/Tny22qNLB6PpUY7j7qxadFYgrLzyZouh+Bl/2/ehkGNgaE+uNA7V+z6
+	1MVoFc8SyEzPiseDY/+uuzB8ewrYB5GdOknGIMGUsivzTCHYv0xY7Q50U3vBBvQripVxs6965538E
+	XtA4R6XA==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiJkw-00000008q8F-3XES;
+	id 1tiJkw-00000008q8H-3ebB;
 	Wed, 12 Feb 2025 20:54:50 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: shinichiro.kawasaki@wdc.com
@@ -51,9 +51,9 @@ Cc: linux-block@vger.kernel.org,
 	patches@lists.linux.dev,
 	gost.dev@samsung.com,
 	mcgrof@kernel.org
-Subject: [PATCH blktests v3 5/6] tests: use test device min io to support bs > ps
-Date: Wed, 12 Feb 2025 12:54:47 -0800
-Message-ID: <20250212205448.2107005-6-mcgrof@kernel.org>
+Subject: [PATCH blktests v3 6/6] common/xfs: add _test_dev_suits_xfs() to verify logical block size will work
+Date: Wed, 12 Feb 2025 12:54:48 -0800
+Message-ID: <20250212205448.2107005-7-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250212205448.2107005-1-mcgrof@kernel.org>
 References: <20250212205448.2107005-1-mcgrof@kernel.org>
@@ -66,96 +66,87 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-When a block device supports a minimum block size > ps we must
-ensure we don't issue IOs below what is supported. Just leverage
-the min optimal IO to also ensure we use the optimal IO as well.
+mkfs.xfs will use the sector size exposed by the device, if this
+is larger than 32k this will fail as the largest sector size on XFS
+is 32k. Provide a sanity check to ensure we skip creating a filesystem
+if the sector size is larger than what XFS supports.
 
+Suggested-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- tests/block/003 |  6 +++++-
- tests/block/007 |  5 ++++-
- tests/nvme/049  | 15 +++++++++++----
- 3 files changed, 20 insertions(+), 6 deletions(-)
+ common/xfs      | 11 +++++++++++
+ tests/block/032 |  3 ++-
+ tests/nvme/012  |  1 +
+ tests/nvme/035  |  1 +
+ 4 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/tests/block/003 b/tests/block/003
-index 2af9b89ec3e5..b0dd1d1fd62b 100755
---- a/tests/block/003
-+++ b/tests/block/003
-@@ -18,10 +18,14 @@ device_requires() {
+diff --git a/common/xfs b/common/xfs
+index 226fdbd1c83f..1342a8e61f0b 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -10,6 +10,17 @@ _have_xfs() {
+ 	_have_fs xfs && _have_program mkfs.xfs
  }
  
- test_device() {
-+	local test_dev_bs
++_test_dev_suits_xfs() {
++	local logical_block_size
 +
-+	test_dev_bs=$(_min_io "$TEST_DEV")
++	logical_block_size=$(_test_dev_queue_get logical_block_size)
++	if ((logical_block_size > 32768 )); then
++		SKIP_REASONS+=("sector size ${logical_block_size} is larger than max XFS sector size 32768")
++		return 1
++	fi
++	return 0
++}
 +
- 	echo "Running ${TEST_NAME}"
- 
- 	FIO_PERF_FIELDS=("trim iops")
--	_fio_perf --bsrange=4k-4g --rw=randtrim --norandommap --name=discards \
-+	_fio_perf --bsrange="${test_dev_bs}"-4g --rw=randtrim --norandommap --name=discards \
- 		--filename="$TEST_DEV" --number_ios=200k
- 
- 	echo "Test complete"
-diff --git a/tests/block/007 b/tests/block/007
-index 3b68d0deec35..8043a83a565b 100755
---- a/tests/block/007
-+++ b/tests/block/007
-@@ -31,13 +31,16 @@ cleanup_fallback_device() {
+ _xfs_mkfs_and_mount() {
+ 	local bdev=$1
+ 	local mount_dir=$2
+diff --git a/tests/block/032 b/tests/block/032
+index fc6d1a51dcad..74688f7fca6e 100755
+--- a/tests/block/032
++++ b/tests/block/032
+@@ -15,6 +15,7 @@ QUICK=1
+ requires() {
+ 	_have_xfs
+ 	_have_module scsi_debug
++	_test_dev_suits_xfs
  }
  
- run_fio_job() {
-+	local test_dev_bs
-+
-+	test_dev_bs=$(_min_io "$TEST_DEV")
- 	if _test_dev_is_rotational; then
- 		size="32m"
- 	else
- 		size="1g"
+ test() {
+@@ -25,7 +26,7 @@ test() {
  	fi
  
--	_fio_perf --bs=4k --rw=randread --norandommap --name=reads \
-+	_fio_perf --bs="$test_dev_bs" --rw=randread --norandommap --name=reads \
- 		--filename="$TEST_DEV" --size="$size" --direct=1 \
- 		--ioengine=pvsync2 --hipri="$1"
+ 	mkdir -p "${TMPDIR}/mnt"
+-	_xfs_mkfs_and_mount "/dev/${SCSI_DEBUG_DEVICES[0]}" "${TMPDIR}/mnt" >> $FULL || return $?
++	_xfs_mkfs_and_mount "/dev/${SCSI_DEBUG_DEVICES[0]}" "${TMPDIR}/mnt" >> "$FULL" || return $?
+ 	echo 1 > "/sys/block/${SCSI_DEBUG_DEVICES[0]}/device/delete"
+ 	udevadm settle
+ 	umount "${TMPDIR}/mnt" || return $?
+diff --git a/tests/nvme/012 b/tests/nvme/012
+index f9bbdca911c0..f2727c06c893 100755
+--- a/tests/nvme/012
++++ b/tests/nvme/012
+@@ -17,6 +17,7 @@ requires() {
+ 	_have_loop
+ 	_require_nvme_trtype_is_fabrics
+ 	_require_nvme_test_img_size 350m
++	_test_dev_suits_xfs
  }
-diff --git a/tests/nvme/049 b/tests/nvme/049
-index 88d4fb122988..7304d6604d8f 100755
---- a/tests/nvme/049
-+++ b/tests/nvme/049
-@@ -19,10 +19,16 @@ test_device() {
- 	echo "Running ${TEST_NAME}"
  
- 	local ngdev=${TEST_DEV/nvme/ng}
--	local common_args=(
-+	local test_dev_bs
-+	local target_size=4096
-+	local common_args=()
-+	local fio_output
-+
-+	test_dev_bs=$(_min_io "$ngdev")
-+	common_args=(
- 		--size=1M
- 		--filename="$ngdev"
--		--bs=4k
-+		--bs="$test_dev_bs"
- 		--rw=randread
- 		--numjobs=1
- 		--iodepth=16
-@@ -32,10 +38,11 @@ test_device() {
- 		--time_based
- 		--runtime=2
- 	)
--	local fio_output
-+
-+	((test_dev_bs > target_size)) && target_size=$test_dev_bs
+ set_conditions() {
+diff --git a/tests/nvme/035 b/tests/nvme/035
+index 9f84ced53ce6..14aa8c22956b 100755
+--- a/tests/nvme/035
++++ b/tests/nvme/035
+@@ -14,6 +14,7 @@ requires() {
+ 	_have_kernel_option NVME_TARGET_PASSTHRU
+ 	_have_xfs
+ 	_have_fio
++	_test_dev_suits_xfs
+ }
  
- 	# check security permission
--	if ! fio_output=$(fio --name=check --size=4k --filename="$ngdev" \
-+	if ! fio_output=$(fio --name=check --bs="$test_dev_bs" --size="$target_size" --filename="$ngdev" \
- 			    --rw=read --ioengine=io_uring_cmd 2>&1) &&
- 			grep -q -e "Operation not permitted" \
- 				-e "Permission denied" <<< "$fio_output"; then
+ device_requires() {
 -- 
 2.45.2
 
