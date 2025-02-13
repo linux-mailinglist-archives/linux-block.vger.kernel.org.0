@@ -1,121 +1,68 @@
-Return-Path: <linux-block+bounces-17198-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17200-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41055A3362F
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2025 04:38:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E512DA337D0
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2025 07:17:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B89D43A612B
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2025 03:38:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8617F188C7DA
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2025 06:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2236F204F63;
-	Thu, 13 Feb 2025 03:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA94207649;
+	Thu, 13 Feb 2025 06:17:52 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD58C204080;
-	Thu, 13 Feb 2025 03:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B667320764B
+	for <linux-block@vger.kernel.org>; Thu, 13 Feb 2025 06:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739417911; cv=none; b=MpR4wunVcsHt3PhhyT9gc2lvuNL8BVBcnV0XDpUZMvsSAGaShT6Ots6JrpyGIFvBJJ0KFORI/XTvmUahhx/Uhd2sgsf3nzqA2kYgElO2dFVx+VLhlVQoz1aeevrG6t/Rhh0uv1JA3DvdjUL2l15riOLCGWY5R/flc4Z9xnA+ZYo=
+	t=1739427472; cv=none; b=Usk0TeAcwBg1tkbI2GChTcqBMM0mwCKjhPJBW5+kPFiEh1lFokjEUV9YBOq6I0snPSzselAXWGZ0TztwPbgmkw7Dv0nv9/BC++l5rS81Os0U6FYVCpv8BPwTL4/IBlN0O10qZy/Se2PbJ/rBsLKkWu5kQcmUepImyye5erkty7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739417911; c=relaxed/simple;
-	bh=YvUP2oYZOBIz7MiyhBYXzlL7FDycSv4JpNWjTW0Rvto=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dpn5iT8Nrr9qcemYoQhck18dDmQNsQWoF0sinzK80InQapLYRQTbg9Try5iIMBj7swwCm09EKAx6ZiPj8rHfzvUoTwKZZt+f7oj10gXgx4oGCmVwOvUKfe4i/+cmtaRw2XgcSsP/CeleWAONhVqnGHjCb0BOL3jTFV67ccQhb5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ytgqz5gsQz4f3jks;
-	Thu, 13 Feb 2025 11:38:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D96801A08B5;
-	Thu, 13 Feb 2025 11:38:23 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul4uaa1nrzvKDg--.9280S3;
-	Thu, 13 Feb 2025 11:38:23 +0800 (CST)
-Subject: Re: [PATCH] block: Modify the escape character
-To: Donglei Wei <veidongray@qq.com>, linux-block@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <tencent_208A5FC4C96DBFC52E02FC3CC394272EFB0A@qq.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <f5182f1c-eec9-9144-114c-1bdbd2571990@huaweicloud.com>
-Date: Thu, 13 Feb 2025 11:38:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1739427472; c=relaxed/simple;
+	bh=gvcU+3zx+1+4cYzgvrkVvlK5WM0gScB6nsBZMFaABVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SX8tRuGciiB/nam2kLuYr9XwU633jA/HeMYZOXlSwzeMPq3yfh+TfA+Esyg3SacMIqCnwq8U/skY19TAi50u2iUT+SHS69C0Q3ikvRNd1kwNC29G9OTIq6IG1yohBw8ZiI7bTx7sY+lUMVSMgpujpHKa8vNuQj/6WOqhKiPFYlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 6627767373; Thu, 13 Feb 2025 07:17:45 +0100 (CET)
+Date: Thu, 13 Feb 2025 07:17:44 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Khazhy Kumykov <khazhy@chromium.org>
+Cc: Jens Axboe <axboe@kernel.dk>, ming.lei@redhat.com,
+	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org
+Subject: Re: Question about backporting w/ missing bitenum members
+Message-ID: <20250213061744.GB19608@lst.de>
+References: <CAE5=w7odv-cL6PJ=ie0bE5UYpfzEdqpB4vEo_FQm0fUTLDgXYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <tencent_208A5FC4C96DBFC52E02FC3CC394272EFB0A@qq.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXul4uaa1nrzvKDg--.9280S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFyktr4xCr1xtr4UCr1rZwb_yoW8Xr1DpF
-	W5GasxA39F9w4IgF1DGa1avrnav3ZIqa1SqrsIgw4Ykr13WwnF9F1kAryqyFWkuF4xtr4f
-	XFsagFyDtw1Duw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE5=w7odv-cL6PJ=ie0bE5UYpfzEdqpB4vEo_FQm0fUTLDgXYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi,
-
-Please change the title.
-
-ÔÚ 2025/02/09 20:35, Donglei Wei Ð´µÀ:
->      The iocg->cfg_weight/WEIGHT_ONE code has a data type of long unsigned int,
->      which is escaped using %u, which generates a compilation warning.
+On Wed, Feb 12, 2025 at 05:10:42PM -0800, Khazhy Kumykov wrote:
+> Heya, I'm backporting 752863bddaca ("block: propagate partition
+> scanning errors to the BLKRRPART ioctl") to LTS and noticed it
+> conflicts in the blkdev.h header, where in upstream we had already
+> introduced another blk_mode_t for bit 5, and this new STRICT_SCAN uses
+> bit 6...
 > 
->      Signed-off-by: Donglei Wei <veidongray@qq.com>
-> ---
+> In this scenario, would we prefer keep the bit used consistent (so
+> have a gap with an unused bit 5 - what I would typically go with), or
+> renumber to avoid the gap?
 
-I never see this warning, is this because USEC_PER_MSEC is long, causing
-other fields in the same enum to be long?
-
-Thanks,
-Kuai
-
->   block/blk-iocost.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-> index 65a1d4427ccf..693e642d4235 100644
-> --- a/block/blk-iocost.c
-> +++ b/block/blk-iocost.c
-> @@ -3078,7 +3078,7 @@ static u64 ioc_weight_prfill(struct seq_file *sf, struct blkg_policy_data *pd,
->   	struct ioc_gq *iocg = pd_to_iocg(pd);
->   
->   	if (dname && iocg->cfg_weight)
-> -		seq_printf(sf, "%s %u\n", dname, iocg->cfg_weight / WEIGHT_ONE);
-> +		seq_printf(sf, "%s %lu\n", dname, iocg->cfg_weight / WEIGHT_ONE);
->   	return 0;
->   }
->   
-> @@ -3088,7 +3088,7 @@ static int ioc_weight_show(struct seq_file *sf, void *v)
->   	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
->   	struct ioc_cgrp *iocc = blkcg_to_iocc(blkcg);
->   
-> -	seq_printf(sf, "default %u\n", iocc->dfl_weight / WEIGHT_ONE);
-> +	seq_printf(sf, "default %lu\n", iocc->dfl_weight / WEIGHT_ONE);
->   	blkcg_print_blkgs(sf, blkcg, ioc_weight_prfill,
->   			  &blkcg_policy_iocost, seq_cft(sf)->private, false);
->   	return 0;
-> 
+It doesn't really matter as there is no in-kernel ABI  But just keeping
+the upstream value is probably going to create less confusion going
+ahead.
 
 
