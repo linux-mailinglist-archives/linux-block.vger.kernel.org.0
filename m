@@ -1,95 +1,116 @@
-Return-Path: <linux-block+bounces-17252-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17254-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C504AA3619C
-	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2025 16:26:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B133DA36218
+	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2025 16:45:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F0DE16BB45
-	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2025 15:26:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6592718961FB
+	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2025 15:44:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF559266F00;
-	Fri, 14 Feb 2025 15:26:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE64267382;
+	Fri, 14 Feb 2025 15:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/rfFuvA"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ArsodE3S"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EA9266EFD;
-	Fri, 14 Feb 2025 15:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852692673A0
+	for <linux-block@vger.kernel.org>; Fri, 14 Feb 2025 15:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546781; cv=none; b=YTEEOijibkiQwbAavxF7JqVzrW8Yiie5ZIExfn+dubpfObuxNlStdjDYUVu7ERGae8nxSrD84XkEOc6HSN3gnN6JOJTKNr4XPE+yXrQqDLFT+vctuBs4exbOrK+czKQ83eprZ+Q3JV3CDj9unsV7H/Jk4ZSYaRzc6ocCRFoWaT4=
+	t=1739547840; cv=none; b=UArp4GVm9703NN2qBtxjAJxoZK+bsh8I2cJkZO34ehGnKyUix5F0IhJLCBm1+nD7vmU0+mU9ULIL/HLs84lP3InvbzbdJBXEER20/hVz2AlrOvgxTabyq54ccNbylQQOE9EQyQTOtI2ndt/+pIn9d5lgCvVS7GAFB7bEEBHvxgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546781; c=relaxed/simple;
-	bh=CuJ2gzdoI2RP5H2P4WDu+5TgwOgiUndF6rIhVTEIIjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fPT7VJBY+wuzCBI18TZwDrWb6sTaJteAUD4qQvdm4aZN5BBapEycB5GpYV4zo5CQ3pOGYZ5tBRfEGOaxMCY0qyhGXkLOxCmwBybNzlpzGI2UlXypHci05jVGNiewPDvVfC3uJod3mpVV2FWQi5j+4g/lVK+EhxKb5M9NpT0PA/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/rfFuvA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696E8C4CED1;
-	Fri, 14 Feb 2025 15:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739546780;
-	bh=CuJ2gzdoI2RP5H2P4WDu+5TgwOgiUndF6rIhVTEIIjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a/rfFuvAk2s9Qvb+V6KthceRnM2FCCRkj0Vupjq3NNsO7N7vFCx4X+1c+7UA9VChq
-	 Nv6L2ubXcO82rScFtXw07v7w4aeTbw/c4bGc6OHRXt6Ybv33Tgk1csMMQtkPAcPSdE
-	 QurUCWIYZH2DdvO3p8gYAIAkXhOYgktrmXgyw6tjR28wvMzrKRxFUghsH9tT7EngHb
-	 fuY60Rl4TYV59HJptBi6IbtbReS575bMZwjz3SyVEqHlqsQsDRcn6h2X4IaiQaghAG
-	 EnNqWgWo5QAC00zb1CPpGUaRzIBxthpJaj3Ox8ggEQliEdZ8juEtrPMph69so5pZNs
-	 wNKdBgFNBf7nA==
-Date: Fri, 14 Feb 2025 08:26:17 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Keith Busch <kbusch@meta.com>, asml.silence@gmail.com, axboe@kernel.dk,
-	linux-block@vger.kernel.org, io-uring@vger.kernel.org,
-	bernd@bsbernd.com
-Subject: Re: [PATCHv2 3/6] io_uring: add support for kernel registered bvecs
-Message-ID: <Z69gmZs4BcBFqWbP@kbusch-mbp>
-References: <20250211005646.222452-1-kbusch@meta.com>
- <20250211005646.222452-4-kbusch@meta.com>
- <Z664w0GrgA8LjYko@fedora>
+	s=arc-20240116; t=1739547840; c=relaxed/simple;
+	bh=JtRO7/9akkUnGPuKN29F1CC7He+e5OifRG0AcXByYn8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dfFD01a8TrBbaNUGqcinWkPqt721tNMzVW5esXdf7VmiMClrKaBFFDiCxZfA2trITldFxmk5xo97qR7ze56J36WT50XNyQaYfUTr82EC3PnQZZqRKKWr7jh/W+YmIKgctOZHw6ptfwe3zxvdp3sp2190w6jhB5rfgXLNi/i2E14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ArsodE3S; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EE0Kcd004277
+	for <linux-block@vger.kernel.org>; Fri, 14 Feb 2025 07:43:57 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=Uz7QnoVRYxAuthHNdb
+	2dhFCRervR6/2B0R/MoeaQpJ0=; b=ArsodE3Sux/ohfNuWwUr38AHFDWhvwkKP9
+	a5Azn911GRsB3vtBhhgDJvfNZ42zlUtWsJ5BSMTVFd+V7FtR2Q26k45tUs6rxoe9
+	heJ9ApI5E+Iy7p0WLpNpwLiHW43mR9qNZgvJYEXTggTGP/Y7UgYfsvVw6tDvH5GN
+	Wazhve5PtAE+odz8zeS4qFL6XqaRk8E8Hci9O/r4q/z/xFuY8CLxaCH7BMTDpo9q
+	/zlhDRscnI3JxRgyRVQtj7NOxKY8hppKW6Hygqq+MjedCfaXO0F/Dhxk1Fp8WTKe
+	jZD5fwEuBOgMByBuG+/rzrbC1ipVi44D5OisEcqPiLMp4rqJ2cXw==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 44t1nu2nrt-10
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Fri, 14 Feb 2025 07:43:57 -0800 (PST)
+Received: from twshared40462.17.frc2.facebook.com (2620:10d:c0a8:1c::1b) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Fri, 14 Feb 2025 15:43:52 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 1D16D18060B56; Fri, 14 Feb 2025 07:43:49 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <ming.lei@redhat.com>, <asml.silence@gmail.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <io-uring@vger.kernel.org>
+CC: <bernd@bsbernd.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv3 0/5] ublk zero-copy support
+Date: Fri, 14 Feb 2025 07:43:43 -0800
+Message-ID: <20250214154348.2952692-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z664w0GrgA8LjYko@fedora>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: rDJ4_fVkBnqFh-MK6_KwJfb_S2_QOzlE
+X-Proofpoint-GUID: rDJ4_fVkBnqFh-MK6_KwJfb_S2_QOzlE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_06,2025-02-13_01,2024-11-22_01
 
-On Fri, Feb 14, 2025 at 11:30:11AM +0800, Ming Lei wrote:
-> On Mon, Feb 10, 2025 at 04:56:43PM -0800, Keith Busch wrote:
-> > +
-> > +	node->release = release;
-> > +	node->priv = rq;
-> > +
-> > +	nr_bvecs = blk_rq_nr_phys_segments(rq);
-> > +	imu = kvmalloc(struct_size(imu, bvec, nr_bvecs), GFP_KERNEL);
-> > +	if (!imu) {
-> > +		kfree(node);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	imu->ubuf = 0;
-> > +	imu->len = blk_rq_bytes(rq);
-> > +	imu->acct_pages = 0;
-> > +	imu->nr_bvecs = nr_bvecs;
-> > +	refcount_set(&imu->refs, 1);
-> > +	node->buf = imu;
-> 
-> request buffer direction needs to be stored in `imu`, for READ,
-> the buffer is write-only, and for WRITE, the buffer is read-only,
-> which isn't different with user mapped buffer.
-> 
-> Meantime in read_fixed/write_fixed side or buffer lookup abstraction
-> helper, the buffer direction needs to be validated.
+From: Keith Busch <kbusch@kernel.org>
 
-I suppose we could add that check, but the primary use case doesn't even
-use those operations. They're using uring_cmd with the FIXED flag, and
-io_uring can't readily validate the data direction from that interface.
+Changes from v2:
+
+ This one allows you to use the IOSQE_LINK_FLAG so you can strictly
+ order the sequence.
+
+ No special "KBUF" node type. We use the 'release' callback to tell the
+ difference now.
+
+ Moved the 'release' callback from the node to the imu where it belongs.
+
+Keith Busch (5):
+  io_uring: move fixed buffer import to issue path
+  io_uring: add support for kernel registered bvecs
+  ublk: zc register/unregister bvec
+  io_uring: add abstraction for buf_table rsrc data
+  io_uring: cache nodes and mapped buffers
+
+ drivers/block/ublk_drv.c       | 137 +++++++++++++-----
+ include/linux/io_uring.h       |   1 +
+ include/linux/io_uring_types.h |  33 +++--
+ include/uapi/linux/ublk_cmd.h  |   4 +
+ io_uring/fdinfo.c              |   8 +-
+ io_uring/filetable.c           |   2 +-
+ io_uring/io_uring.c            |  19 +++
+ io_uring/net.c                 |  25 +---
+ io_uring/nop.c                 |  22 +--
+ io_uring/register.c            |   2 +-
+ io_uring/rsrc.c                | 257 ++++++++++++++++++++++++++-------
+ io_uring/rsrc.h                |   4 +-
+ io_uring/rw.c                  |  45 ++++--
+ io_uring/uring_cmd.c           |  16 +-
+ 14 files changed, 409 insertions(+), 166 deletions(-)
+
+--=20
+2.43.5
+
 
