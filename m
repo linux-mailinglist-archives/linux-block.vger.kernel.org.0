@@ -1,50 +1,47 @@
-Return-Path: <linux-block+bounces-17457-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17455-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D355BA3F1CA
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 11:19:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9B42A3F187
+	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 11:12:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CF42188C8FB
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 10:18:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6FE1421374
+	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 10:11:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D536E204F6F;
-	Fri, 21 Feb 2025 10:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE532204F81;
+	Fri, 21 Feb 2025 10:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="bMi5BshJ"
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="jgQQxOtC"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail70.out.titan.email (mail70.out.titan.email [3.216.99.52])
+Received: from mail6.out.titan.email (mail6.out.titan.email [3.226.109.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019852010EF
-	for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 10:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C60A204C3B
+	for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 10:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.226.109.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740133106; cv=none; b=IBvC4d60mLYVS59vFVo0ZcVWr68VUiXsQ7p+uqPRwGdakVJMTwLX82sS1kHAnBGfhnXG+V1PDeTeCEiWR/aTXGwvBbi1sO3uPi7F1NIuhw8qb/AYKxc/nrPXHzjV9zITflpDoS4+blQXCQu17tLBHmexcAYaUhhOpcl67JN83Dg=
+	t=1740132658; cv=none; b=KWuGiOCEjqeMmYMczJ3aCVDAuKDFCkZH+YZdR3+oRnBhoCc16hYaAvWDW9c2oNGq2ucBUwE6dJ3rRLjuxAULtrSyXh1KtazI6tVBae42yKpbv+UehoLwW8m/xmuqWffvrWwiMiGZIWHyJJck+dgBvb3nMey732StyB4WzjzM9Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740133106; c=relaxed/simple;
-	bh=ea+Ek2RQttgOP+iUjwOS2oImmaIG+/q8Ozo8FGBXYvw=;
+	s=arc-20240116; t=1740132658; c=relaxed/simple;
+	bh=CJTatHUiCB2mk5gZnHEF1n8uf5CwCMiUtV7AVquwh3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iLnIdRiUf8vQRhKQJLbix+TqH5havlAK6CzbAYSdeT8slk93/ciUoP4GMG4kFR9g89Jg6xeWuKTpHTtXSb7aMU+QE3Q/Ykla83PBkmK//83VsCKRB5+SRLGZ2jk0U/HmTUpQpoYXEnU4d89oHtz6QD1scaoeAudIIX81iOmF7HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=bMi5BshJ; arc=none smtp.client-ip=3.216.99.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJ9CCGmavOI3m6Hq6GBAsRaNed1xVWLCUNe9169EnBim0EDqQNcJEDRNOzrKkfmmuqUAQmHi8ONa3Wq3n8oVLfgFi7Ddnz96wuJpZ1qqske1PdvsP8l9HGBhUjiHoHQ2pj9UKhM0a4KDWRhsf0nv2zhSY784aLFza86s2JugLAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=jgQQxOtC; arc=none smtp.client-ip=3.226.109.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
-Received: from smtp-out.flockmail.com (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 19C901401B7;
-	Fri, 21 Feb 2025 09:59:00 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=k1ZI6/H36h6jxhHmmVjWJpJw1xAsCSw9MFuq5X7Hl3g=;
+DKIM-Signature: a=rsa-sha256; bh=E8xDhYB5dTniEqejMlnuKVP8JOLWSCvk34/8j7lmisk=;
 	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=subject:references:to:message-id:mime-version:from:cc:in-reply-to:date:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1740131940; v=1;
-	b=bMi5BshJoilKdG0aIy/FOLxFRPSQvptgRdYxhCBonZ9QGDNpvVktjv5lI0UaMp6liDxnfv7a
-	HX4vUncQ3cIFqweB9Dqovk8CjMDiUZCY0zG23VV3fA+0ASfN1ty/vdnIQTSFBVWlZhQKnkgWqXz
-	GL6cwyKunaTxWkr7UVdGhF4o=
+	h=date:from:message-id:mime-version:to:subject:cc:references:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1740132293; v=1;
+	b=jgQQxOtCY/0wbEmtd452iAI/1AkGJ2n42KQSSoyC/8ArS25nfVgud6/J1r2sVMXlJchTb7td
+	596KAbkAgVAQ+J+PpMNJPnhGNDeVjqZjMnj28Y76VZKgNpFv1UhS6/TFwDqN+C0qUJmbcrsB294
+	MH5MvSypHdv3YRjXqZ0UdEtw=
 Received: from studio.local (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id E015E140230;
-	Fri, 21 Feb 2025 09:58:51 +0000 (UTC)
-Date: Fri, 21 Feb 2025 17:58:49 +0800
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 7F3FC100280;
+	Fri, 21 Feb 2025 10:04:45 +0000 (UTC)
+Date: Fri, 21 Feb 2025 18:04:43 +0800
 Feedback-ID: :i@coly.li:coly.li:flockmailId
 From: Coly Li <i@coly.li>
 To: Zheng Qixing <zhengqixing@huaweicloud.com>
@@ -55,10 +52,10 @@ Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org,
 	geliang@kernel.org, xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
 	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 01/12] badblocks: Fix error shitf ops
-Message-ID: <utqnfxii5zrqafturex5tyu4ufociw2uojdtiqrs6mezjkcf53@mtxl3g74c44u>
+Subject: Re: [PATCH 02/12] badblocks: factor out a helper try_adjacent_combine
+Message-ID: <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
 References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-2-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-3-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -67,71 +64,91 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250221081109.734170-2-zhengqixing@huaweicloud.com>
+In-Reply-To: <20250221081109.734170-3-zhengqixing@huaweicloud.com>
 X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1740131939955435648.32605.715982361791409116@prod-use1-smtp-out1003.
+X-Titan-Src-Out: 1740132293142604270.29396.4416553515934908601@prod-use1-smtp-out1002.
 X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=XIrKSRhE c=1 sm=1 tr=0 ts=67b84e63
+X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b84fc5
 	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8
-	a=bTkXzGrAoGneLz_nSNMA:9 a=QEXdDO2ut3YA:10
-X-Virus-Scanned: ClamAV using ClamSMTP
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8
+	a=xfoHWtfPNc-Uf5GpDPwA:9 a=QEXdDO2ut3YA:10 a=HMmSsUQzf63YMr8qf_ya:22
 
-On Fri, Feb 21, 2025 at 04:10:58PM +0800, Zheng Qixing wrote:
+On Fri, Feb 21, 2025 at 04:10:59PM +0800, Zheng Qixing wrote:
 > From: Li Nan <linan122@huawei.com>
+> 
+> Factor out try_adjacent_combine(), and it will be used in the later patch.
 >
 
-Looks good to me.
-
-Acked-by: Coly Li <colyli@kernel.org>
+Which patch is try_adjacent_combine() used in? I don't see that at a quick glance.
 
 Thanks.
+
+Coly Li
+
  
-> 'bb->shift' is used directly in badblocks. It is wrong, fix it.
-> 
-> Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
 > Signed-off-by: Li Nan <linan122@huawei.com>
 > ---
->  block/badblocks.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  block/badblocks.c | 40 ++++++++++++++++++++++++++--------------
+>  1 file changed, 26 insertions(+), 14 deletions(-)
 > 
 > diff --git a/block/badblocks.c b/block/badblocks.c
-> index db4ec8b9b2a8..bcee057efc47 100644
+> index bcee057efc47..f069c93e986d 100644
 > --- a/block/badblocks.c
 > +++ b/block/badblocks.c
-> @@ -880,8 +880,8 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
->  		/* round the start down, and the end up */
->  		sector_t next = s + sectors;
+> @@ -855,6 +855,31 @@ static void badblocks_update_acked(struct badblocks *bb)
+>  		bb->unacked_exist = 0;
+>  }
 >  
-> -		rounddown(s, bb->shift);
-> -		roundup(next, bb->shift);
-> +		rounddown(s, 1 << bb->shift);
-> +		roundup(next, 1 << bb->shift);
->  		sectors = next - s;
->  	}
+> +/*
+> + * Return 'true' if the range indicated by 'bad' is exactly backward
+> + * overlapped with the bad range (from bad table) indexed by 'behind'.
+> + */
+> +static bool try_adjacent_combine(struct badblocks *bb, int prev)
+> +{
+> +	u64 *p = bb->page;
+> +
+> +	if (prev >= 0 && (prev + 1) < bb->count &&
+> +	    BB_END(p[prev]) == BB_OFFSET(p[prev + 1]) &&
+> +	    (BB_LEN(p[prev]) + BB_LEN(p[prev + 1])) <= BB_MAX_LEN &&
+> +	    BB_ACK(p[prev]) == BB_ACK(p[prev + 1])) {
+> +		p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
+> +				  BB_LEN(p[prev]) + BB_LEN(p[prev + 1]),
+> +				  BB_ACK(p[prev]));
+> +
+> +		if ((prev + 2) < bb->count)
+> +			memmove(p + prev + 1, p + prev + 2,
+> +				(bb->count -  (prev + 2)) * 8);
+> +		bb->count--;
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
+>  /* Do exact work to set bad block range into the bad block table */
+>  static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+>  			  int acknowledged)
+> @@ -1022,20 +1047,7 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+>  	 * merged. (prev < 0) condition is not handled here,
+>  	 * because it's already complicated enough.
+>  	 */
+> -	if (prev >= 0 &&
+> -	    (prev + 1) < bb->count &&
+> -	    BB_END(p[prev]) == BB_OFFSET(p[prev + 1]) &&
+> -	    (BB_LEN(p[prev]) + BB_LEN(p[prev + 1])) <= BB_MAX_LEN &&
+> -	    BB_ACK(p[prev]) == BB_ACK(p[prev + 1])) {
+> -		p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
+> -				  BB_LEN(p[prev]) + BB_LEN(p[prev + 1]),
+> -				  BB_ACK(p[prev]));
+> -
+> -		if ((prev + 2) < bb->count)
+> -			memmove(p + prev + 1, p + prev + 2,
+> -				(bb->count -  (prev + 2)) * 8);
+> -		bb->count--;
+> -	}
+> +	try_adjacent_combine(bb, prev);
 >  
-> @@ -1157,8 +1157,8 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
->  		 * isn't than to think a block is not bad when it is.
->  		 */
->  		target = s + sectors;
-> -		roundup(s, bb->shift);
-> -		rounddown(target, bb->shift);
-> +		roundup(s, 1 << bb->shift);
-> +		rounddown(target, 1 << bb->shift);
->  		sectors = target - s;
->  	}
->  
-> @@ -1288,8 +1288,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->  
->  		/* round the start down, and the end up */
->  		target = s + sectors;
-> -		rounddown(s, bb->shift);
-> -		roundup(target, bb->shift);
-> +		rounddown(s, 1 << bb->shift);
-> +		roundup(target, 1 << bb->shift);
->  		sectors = target - s;
->  	}
->  
+>  	if (space_desired && !badblocks_full(bb)) {
+>  		s = orig_start;
 > -- 
 > 2.39.2
 > 
