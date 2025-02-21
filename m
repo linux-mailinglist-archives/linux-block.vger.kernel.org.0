@@ -1,210 +1,157 @@
-Return-Path: <linux-block+bounces-17466-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17468-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 418C9A3F402
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 13:18:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6EE7A3F6B6
+	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 15:03:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C56D7A9E6E
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 12:16:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C2FA1891D32
+	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 14:03:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DF520A5EC;
-	Fri, 21 Feb 2025 12:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B83AF1F3FE2;
+	Fri, 21 Feb 2025 14:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JQr9xBzj"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gqzi/3Z5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B052080E6
-	for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 12:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B932D05E
+	for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 14:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740140219; cv=none; b=ldP+cHpJrzTSWxiRjTvma5K9ovc+bKJQeAhTzo9GJBBdbUm3e0VPE0dABBBlQ8fOwQ3I3lbbO9gjzqy8C6Gb1bmOABHULViOUQN1SMNzB9iqu7k9U7VScTACtU95/4HhYjs6tYjvC3eqNOl/DkWCW8Pb2QYw8UTNbEqyuO3PhRA=
+	t=1740146589; cv=none; b=jpsMTdpqUzaCfZCIJjwaxuCB+rFwJn0Dp9kRgX1Ztb2igaw2gbOH/DnK83DChEa+gVb0SEC9YBPGhatwyUPRGBkq0jTAh4K63t45MLabovgVbm1cPbaNIrBTZ8kIuj6oh1GfYjg/rwn2x4QMqLWhLEmqMHyx+I4V3QdZfqlGm3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740140219; c=relaxed/simple;
-	bh=AytNe/HlUvovzNVPebv72028JhoBKwW3ZkXVgYp23rE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=SR2M0Evb8x1/nuEvqb74lfHPct/u1oaXawJBqseDrrfxOxNsNDm7ldCg+NvoiK6uAyad7+dUDRkG4laMDAD6PWgIsLlWOjTk3dsvkzhj4eiA26QDwiUgdpsYsw9LH96HPO74wfvSnB1DbbtvbsUxfKMgcPBTBYFmX/I9vdrcLLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JQr9xBzj; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250221121654epoutp04fde11d3617ece58966822975716dcf6e~mOE4v3D721985319853epoutp04L
-	for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 12:16:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250221121654epoutp04fde11d3617ece58966822975716dcf6e~mOE4v3D721985319853epoutp04L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740140214;
-	bh=vHEeLZ2yQAJD7Zb6AS+MprdQT+oGOwFu1priVptQrqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JQr9xBzjPiR4AoCTEwmDsP/nssLrYemKMooWpgxhoF1vnNGZg/8/LUU9G1fxO6MsS
-	 TP+YC+3WpPyAoFDKq8O3VhZMr3WUKOOVOlvp+ODlQubVXmmfUVPQ792ZGU07a+TSI6
-	 M6qYuM0ehvmM5amS4VAMgxUGPjBuviLVXwg/j3j4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250221121653epcas5p2c61096e52a754bbbd806a89cca6c083d~mOE4QPd1o0224102241epcas5p2J;
-	Fri, 21 Feb 2025 12:16:53 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yzpyq6sj9z4x9Ps; Fri, 21 Feb
-	2025 12:16:51 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1F.C5.19710.3BE68B76; Fri, 21 Feb 2025 21:16:51 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250221121541epcas5p163deb1f82a4775da19f3a57eb0bee55f~mOD1GC7XC1966519665epcas5p13;
-	Fri, 21 Feb 2025 12:15:41 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250221121541epsmtrp2b427fbb704630cc61b96c670b176b1d0~mOD1AIUkK1401914019epsmtrp26;
-	Fri, 21 Feb 2025 12:15:41 +0000 (GMT)
-X-AuditID: b6c32a44-363dc70000004cfe-2b-67b86eb36ea3
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A3.1C.33707.D6E68B76; Fri, 21 Feb 2025 21:15:41 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250221121539epsmtip22f2d2c43dd807a3d03f7ec968dab5328~mODzLy2gf0040200402epsmtip2U;
-	Fri, 21 Feb 2025 12:15:39 +0000 (GMT)
-Date: Fri, 21 Feb 2025 17:37:29 +0530
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: Anuj gupta <anuj1072538@gmail.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Christoph Hellwig
-	<hch@lst.de>, M Nikhil <nikh1092@linux.ibm.com>,
-	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-scsi@vger.kernel.org, hare@suse.de, steffen Maier
-	<maier@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>, Nihar Panda
-	<niharp@linux.ibm.com>
-Subject: Re: Change in reported values of some block integrity sysfs
- attributes
-Message-ID: <20250221120729.GA5233@green245>
+	s=arc-20240116; t=1740146589; c=relaxed/simple;
+	bh=5MPsDBJjOW6+Ehe+mZCU/ajKCb5hrXnXirMtYnUu+i8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fIkqRr+iPGf7D10/l6az8jQ+9YmBH0Jv0j5WYOCfE3AWuRQaRCPvbZGf7zBszpx1ZY6GvcsC+ljZMYJ6ykSi+jCJf4wftTBEiAwRyR8/LYiPdCOmhUcBvI2XJhW6p7A4h6iBuidVvE8k78qrLwO8VKzDCegoH7mGfZ+g8r6WAkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gqzi/3Z5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LBmsha027194;
+	Fri, 21 Feb 2025 14:02:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=KvBvsJ
+	xif2l1vAajwL/+oAv34ymGgtR2jSx9FZbqPRI=; b=gqzi/3Z56PcoVwpkeYxca4
+	4PKDurgk7hGHSskwE1C+oQife2kHrPpyGPcaPm+4urUw03i2gvI5TXAIJBsl1j49
+	k6fCv1r4Qd8/AfuakpLleNOYVs3OzVN8wmLx9kcBmrdHCkmwi0dU3y7fO5uPn3vL
+	54yC+EuR1yzCpBnhaJhXoMTKZJ58sBV7JATyd59jF6DabIAaH9635yN5cwkzWu0C
+	9Tv9cKR/tRnxuAFLUR7KA3Zi8mkMpsMPuHNDtDK/XyG2O8s2OCIuorzo4i+gYwuN
+	641dx5/NFbnDw4Jk8fOVDaSLvMz+Bckl3isn/2c158O8KI05njfT2LCML7TPleIg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44xfj9uagv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 14:02:57 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51LBnHhb030262;
+	Fri, 21 Feb 2025 14:02:56 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w01xgbu1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 14:02:56 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51LE2tZp18154190
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 14:02:55 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56B845805C;
+	Fri, 21 Feb 2025 14:02:56 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4AD6858054;
+	Fri, 21 Feb 2025 14:02:54 +0000 (GMT)
+Received: from [9.61.34.131] (unknown [9.61.34.131])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Feb 2025 14:02:53 +0000 (GMT)
+Message-ID: <cecc5d49-9a54-4285-a0d2-32699cb1f908@linux.ibm.com>
+Date: Fri, 21 Feb 2025 19:32:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CACzX3AvbM4qG+ZOWJoCTNMMgSz8gMjoRcQ10_HJbMyi0Nv9qvQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMJsWRmVeSWpSXmKPExsWy7bCmuu7mvB3pBp1zTC0+fv3NYnFp3QVm
-	iwWL5rJY7Fk0icli5eqjTBZ7b2lbtM/fxWjRfX0Hm8XF3q/MFsuP/2Oy+Nbxkd3i7sWnzBYr
-	f/xhdeD12DnrLrvHhEUHGD1ebJ7J6LH7ZgObx8ent1g8Np+u9vi8SS6APSrbJiM1MSW1SCE1
-	Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoWCWFssScUqBQQGJxsZK+
-	nU1RfmlJqkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsb9rTOYCppFK1Yf
-	fsvSwDhHsIuRk0NCwERi7a9FLF2MXBxCArsZJWa1bWGFcD4xSrTOXofgnDi+lxmm5dLFBnaI
-	xE5GiZOHXrJBOM8YJXbO+cIGUsUioCrxZfEedhCbTUBd4sjzVkYQW0RATeLptu1gDcwCncwS
-	0zqngDUICwRKfN3wG6yIV0BHYmPzSnYIW1Di5MwnLCA2J1DNl+/NYGeICihLHNh2nAlkkITA
-	Wg6J87+OMkHc5yKxc8ZVNghbWOLV8S3sELaUxOd3e6Hi6RI/Lj+Fqi+QaD62jxHCtpdoPdUP
-	toBZIEPi98d9UD/LSkw9tY4JIs4n0fv7CVQvr8SOeTC2kkT7yjlQtoTE3nMNULaHxJfdF8Hm
-	CAm0MEk0XWeawCg/C8lvs5Csg7B1JBbs/sQ2i5EDyJaWWP6PA8LUlFi/S38BI+sqRsnUguLc
-	9NRk0wLDvNRyeJQn5+duYgSnZi2XHYw35v/TO8TIxMF4iFGCg1lJhLetfku6EG9KYmVValF+
-	fFFpTmrxIUZTYGRNZJYSTc4HZoe8knhDE0sDEzMzMxNLYzNDJXHe5p0t6UIC6YklqdmpqQWp
-	RTB9TBycUg1MevssYmZ9O7Jk3ZHED2WzZGZNjOq03xp6oJFbpVHebcNhrZ8Hr7Mt2vb6SG62
-	lNQNhnTTWQULTn9R6fjEdTLNYa6/ybLjUy+lpgWtmptQVeUtZCmZw37DmS3gyHxXvlXeB3R0
-	3V6esZ1rVj8t5a0syyIJ2x1nZ8p6rZ256vrSSDujCXveMHyaVyLwuGH/1suWD9LrBBpWPJTp
-	vXJ+75Q4b+XbE9QW5XHtNstceGtmI+dmW67s2C8e8UWuRx4ebYq+fvzNoaCK0Ng/JvNnblyS
-	mDdX6ea3B9FLunlDNsxbzXqlUGLVWeG5f/Js0np4f256dPzTFYUEfsbjZc2JslpqKp5b87U6
-	51wUOGaXw/ZsvhJLcUaioRZzUXEiAM9HXrVWBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42LZdlhJXjc3b0e6QWOXqsXHr79ZLC6tu8Bs
-	sWDRXBaLPYsmMVmsXH2UyWLvLW2L9vm7GC26r+9gs7jY+5XZYvnxf0wW3zo+slvcvfiU2WLl
-	jz+sDrweO2fdZfeYsOgAo8eLzTMZPXbfbGDz+Pj0FovH5tPVHp83yQWwR3HZpKTmZJalFunb
-	JXBlNF5+ylJwWKji7ZtpLA2MX/m6GDk5JARMJC5dbGDvYuTiEBLYzihx+cd8RoiEhMSpl8ug
-	bGGJlf+eQxU9YZTYdbCBBSTBIqAq8WXxHnYQm01AXeLI81awBhEBNYmn27azgTQwC3QzSyzd
-	vB+sQVggUOLrht9gRbwCOhIbm1dCTW1hkti+6QYrREJQ4uTMJ2ANzAJaEjf+vWTqYuQAsqUl
-	lv/jAAlzAs358r2ZGcQWFVCWOLDtONMERsFZSLpnIemehdC9gJF5FaNoakFxbnpucoGhXnFi
-	bnFpXrpecn7uJkZwLGkF7WBctv6v3iFGJg7GQ4wSHMxKIrxt9VvShXhTEiurUovy44tKc1KL
-	DzFKc7AoifMq53SmCAmkJ5akZqemFqQWwWSZODilGpjMVyt0WmzlOlQoEOAx513p7Evvo5VV
-	+Tdef8qz59AS/obVCgJXnTWVZebvmWz+MV3zv97sFJUA40vr9pxYPTvkuepCscB5HPUp3yTL
-	9izXPnfOW7D354oTH0P3F5o/1fT5+OtB9Ex2sxz2hj7jSSf5NE8IHt1cdqB3o665gdeeF6o+
-	RuzRk2WWaa9Qapz0Z8KBKdnblnCq3zt7tL+oT+7Vg5p5C5uOXJxy8MGbmqTS8DjPaqMO78hz
-	kx1cZGMj15xctUvRPezPgk/cZ0UfS4kf3LZhStLu/qnTGJWbbivo7Pm0780l8dV7UmTF5fcE
-	2qhNXt3P9mFqufJKhvd1fB82rFOMnsS1Kl1G6UaAmdUSJZbijERDLeai4kQAfQSPIBQDAAA=
-X-CMS-MailID: 20250221121541epcas5p163deb1f82a4775da19f3a57eb0bee55f
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----BPpCInZN70AS5XN_6T9hoGDuzhCf8U2LGtknTi7-jKSoGEoM=_74df3_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250221103836epcas5p2158071e3449f10b80b44b43595d18704
-References: <f6130475-3ccd-45d2-abde-3ccceada0f0a@linux.ibm.com>
-	<yq18qsjdz0r.fsf@ca-mkp.ca.oracle.com>
-	<CGME20250221103836epcas5p2158071e3449f10b80b44b43595d18704@epcas5p2.samsung.com>
-	<CACzX3AvbM4qG+ZOWJoCTNMMgSz8gMjoRcQ10_HJbMyi0Nv9qvQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 1/6] blk-sysfs: remove q->sysfs_lock for attributes
+ which don't need it
+From: Nilay Shroff <nilay@linux.ibm.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org, ming.lei@redhat.com, dlemoal@kernel.org,
+        axboe@kernel.dk, gjoyce@ibm.com
+References: <20250218082908.265283-1-nilay@linux.ibm.com>
+ <20250218082908.265283-2-nilay@linux.ibm.com> <20250218084622.GA11405@lst.de>
+ <00742db2-08b3-4582-b741-8c9197ffaced@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <00742db2-08b3-4582-b741-8c9197ffaced@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: x6-JhyjPjBN4Krf_6AqLkfuV_4OdwuAC
+X-Proofpoint-GUID: x6-JhyjPjBN4Krf_6AqLkfuV_4OdwuAC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ mlxlogscore=672 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502210102
 
-------BPpCInZN70AS5XN_6T9hoGDuzhCf8U2LGtknTi7-jKSoGEoM=_74df3_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
 
-On Fri, Feb 21, 2025 at 04:07:55PM +0530, Anuj gupta wrote:
-> > I don't see any change in what's reported with block/for-next in a
-> > regular SCSI HBA/disk setup. Will have to look at whether there is a
-> > stacking issue wrt. multipathing.
+Hi Christoph, Ming and others,
+
+On 2/18/25 4:56 PM, Nilay Shroff wrote:
 > 
-> Hi Martin, Christoph,
 > 
-> It seems this change in behaviour is not limited to SCSI only. As Nikhil
-> mentioned an earlier commit
-> [9f4aa46f2a74 ("block: invert the BLK_INTEGRITY_{GENERATE,VERIFY} flags")]
-> causes this change in behaviour. On my setup with a NVMe drive not formatted
-> with PI, I see that:
+> On 2/18/25 2:16 PM, Christoph Hellwig wrote:
+>> On Tue, Feb 18, 2025 at 01:58:54PM +0530, Nilay Shroff wrote:
+>>> There're few sysfs attributes in block layer which don't really need
+>>> acquiring q->sysfs_lock while accessing it. The reason being, writing
+>>> a value to such attributes are either atomic or could be easily
+>>> protected using WRITE_ONCE()/READ_ONCE(). Moreover, sysfs attributes
+>>> are inherently protected with sysfs/kernfs internal locking.
+>>>
+>>> So this change help segregate all existing sysfs attributes for which 
+>>> we could avoid acquiring q->sysfs_lock. We group all such attributes,
+>>> which don't require any sorts of locking, using macro QUEUE_RO_ENTRY_
+>>> NOLOCK() or QUEUE_RW_ENTRY_NOLOCK(). The newly introduced show/store 
+>>> method (show_nolock/store_nolock) is assigned to attributes using these 
+>>> new macros. The show_nolock/store_nolock run without holding q->sysfs_
+>>> lock.
+>>
+>> Can you add the analys why they don't need sysfs_lock to this commit
+>> message please?
+> Sure will do it in next patchset.
+>>
+>> With that:
+>>
+>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>
 > 
-> Without this commit:
-> Value reported by read_verify and write_generate sysfs entries is 0.
-> 
-> With this commit:
-> Value reported by read_verify and write_generate sysfs entries is 1.
-> 
-> Diving a bit deeper, both these flags got inverted due to this commit.
-> But during init (in nvme_init_integrity) these values get initialized to 0,
-> inturn setting the sysfs entries to 1. In order to fix this, the driver has to
-> initialize both these flags to 1 in nvme_init_integrity if PI is not supported.
-> That way, the value in sysfs for these entries would become 0 again. Tried this
-> approach in my setup, and I am able to see the right values now. Then something
-> like this would also need to be done for SCSI too.
-> 
+I think we discussed about all attributes which don't require locking,
+however there's one which I was looking at "nr_zones" which we haven't
+discussed. This is read-only attribute and currently protected with 
+q->sysfs_lock.
 
-I tried to make it work for SCSI too. However my testing is limited as I
-don't have a SCSI device. With scsi_debug I see this currently:
+Write to this attribute (nr_zones) mostly happens in the driver probe
+method (except nvme) before disk is added and outside of q->sysfs_lock
+or any other lock. But in case of nvme it could be updated from disk 
+scan.   
+nvme_validate_ns
+  -> nvme_update_ns_info_block
+    -> blk_revalidate_disk_zones
+      -> disk_update_zone_resources
 
-# modprobe scsi_debug dev_size_mb=128 dix=0 dif=0
-# cat /sys/block/sda/integrity/write_generate
-1
-# cat /sys/block/sda/integrity/read_verify
-1
-# cat /sys/class/scsi_host/host0/prot_capabilities
-0
+The update to disk->nr_zones is done outside of queue freeze or any 
+other lock today. So do you agree if we could use READ_ONCE/WRITE_ONCE
+to protect this attribute and remove q->sysfs_lock? I think, it'd be 
+great if we could agree upon this one before I send the next patchset.
 
-To fix this, I added this. Nikhil can you try below patch? Martin, can
-you please take a look as well.
-
-After this patch, with the same scsi_debug device, I see sysfs entries
-populated as 0.
-
-diff --git a/drivers/scsi/sd_dif.c b/drivers/scsi/sd_dif.c
-index ae6ce6f5d622..be2cd06f500b 100644
---- a/drivers/scsi/sd_dif.c
-+++ b/drivers/scsi/sd_dif.c
-@@ -40,8 +40,10 @@ void sd_dif_config_host(struct scsi_disk *sdkp, struct queue_limits *lim)
- 		dif = 0; dix = 1;
- 	}
- 
--	if (!dix)
-+	if (!dix) {
-+		bi->flags |= BLK_INTEGRITY_NOGENERATE | BLK_INTEGRITY_NOVERIFY;
- 		return;
-+	}
- 
- 	/* Enable DMA of protection information */
- 	if (scsi_host_get_guard(sdkp->device->host) & SHOST_DIX_GUARD_IP)
-
-------BPpCInZN70AS5XN_6T9hoGDuzhCf8U2LGtknTi7-jKSoGEoM=_74df3_
-Content-Type: text/plain; charset="utf-8"
-
-
-------BPpCInZN70AS5XN_6T9hoGDuzhCf8U2LGtknTi7-jKSoGEoM=_74df3_--
+Thanks,
+--Nilay
 
