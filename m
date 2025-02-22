@@ -1,189 +1,110 @@
-Return-Path: <linux-block+bounces-17482-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17488-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88FC2A402D1
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 23:38:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0FBFA403EF
+	for <lists+linux-block@lfdr.de>; Sat, 22 Feb 2025 01:13:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BD4F3B5B90
-	for <lists+linux-block@lfdr.de>; Fri, 21 Feb 2025 22:38:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B09A3BDF20
+	for <lists+linux-block@lfdr.de>; Sat, 22 Feb 2025 00:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EC7253F3B;
-	Fri, 21 Feb 2025 22:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB93AC147;
+	Sat, 22 Feb 2025 00:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qfI+6CVA"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OHXfJPE0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DDE2054EC;
-	Fri, 21 Feb 2025 22:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21415684
+	for <linux-block@vger.kernel.org>; Sat, 22 Feb 2025 00:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740177512; cv=none; b=vGBKeR9Aa4HIeu9Zd8eMPNXtXKGlYxESaKhoWbaEpZG1OONCjiSh0Y82m1tUg9qx8hdx9VNbgst/O2jzucHVI96/MBiqpGbovVF8UxtQwjvWr0eIea3urhEh65oRpSb3tycV0Hp4El/LST2Q+J7+qtMamHE9L3VfLkro1xkQ3lo=
+	t=1740183186; cv=none; b=f7APb9/oBaYdmR4eSu+gYjOlDSK5XsrRxqagWmompqePpexWGGIxD5w8mAh0j2vjjRixScUtSqzlmU+ZoRnklrUB1WbIncxDVrgINjSQbOUuSp4J0kusjshBI79uUZaKw9nRn5l8Vm2IndBfLR/+IPZdIWTYwnrNgFjgNXyQMkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740177512; c=relaxed/simple;
-	bh=cpFeSl7V1siK2jIrJWc8/1O6vqPGiI+x+UOItHwJfNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q7JeKQAjLg3SAFJ9iZUz5PLDT6Bins2GYXh5LyA1EZFmKoT4wGv/cUB34CFb+0lu9JVM7uYykghzBqzydcLBqCV9PPCrdd+m26yUoce3cAHFVyr+UWivd06RT35Yaackk7U4smIwiIeLUS0CnV6SeCaZmoVVnLTR7JkYLYMcURc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qfI+6CVA; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dPYsaEMRasFiFhMNTtOpkluc57HIzwvU4rUiMYmi9nk=; b=qfI+6CVA3tipgW2HoFB+Sph6kC
-	ojVbYPteH2HN9YNIRQNgabxVOxbyu3vzNyWvcv3QbydCSqjtYEdETy6GhjYsXGmXOCgLRADt5Riul
-	gId1AxDN9dF2oJR5t3/LL0ik7MU+eLrERaAhdwNDmE+OwEgiGDfgIepYOT7kwkzzJ7oOkWQt5vtyx
-	f9kws4SbOJoxp26AbIBPJq6lE0zge4Mc3mCg891tFx45dI0gbb4dw2do/e3cbtflZ1JWK7hmP3Fxk
-	oeIUsxXFbB/ahkHzLQcFsLTsiMgkf978tsMNCly6+41cEHR4AljXIfdUIbUuP0CE6LZ+QsyN1B5cn
-	gBsm3zOQ==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tlbf7-000000073DH-49mH;
-	Fri, 21 Feb 2025 22:38:25 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	hare@suse.de,
-	willy@infradead.org,
-	dave@stgolabs.net,
-	david@fromorbit.com,
-	djwong@kernel.org,
-	kbusch@kernel.org
-Cc: john.g.garry@oracle.com,
-	hch@lst.de,
-	ritesh.list@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-block@vger.kernel.org,
-	gost.dev@samsung.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	kernel@pankajraghav.com,
-	mcgrof@kernel.org
-Subject: [PATCH v3 8/8] bdev: use bdev_io_min() for statx block size
-Date: Fri, 21 Feb 2025 14:38:23 -0800
-Message-ID: <20250221223823.1680616-9-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221223823.1680616-1-mcgrof@kernel.org>
-References: <20250221223823.1680616-1-mcgrof@kernel.org>
+	s=arc-20240116; t=1740183186; c=relaxed/simple;
+	bh=51yncecrfj0RsMPvBHqMPp58DR3VmCsbq0CeL73I5lE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=R5sq3KAapmfVrA5qyphbgikMnqWpFFhXIoaWUtkKmaIMo3MRHSDecm7/3wtmaC7K6GaNdG5D3o7eNXrOK2W4rBai9RqPESlimgwR7jn0vVRSYZgSWiDTp4qgrit/TyQDE56b2Cmc8VmOWbAtfqV7TJIDyJLneyWD527Crw3up+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=OHXfJPE0; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d2b3811513so10321765ab.1
+        for <linux-block@vger.kernel.org>; Fri, 21 Feb 2025 16:13:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740183182; x=1740787982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GsufKr0NGP3tYvsFVv0EO/2yZiZEnUNT84I1RxYAoyM=;
+        b=OHXfJPE0LlToVRPlme+GzfHuTUe8byvdNZxm9x0O7BvfagIwPNGSx/4l1psKSGvoNv
+         pXaJyb49NII7hiQxCIKJTx1YvVmrne2KlbQX/RqK5izMbKwrKI2/9GBUQEC+TwyoAmrR
+         N2wtrR+m6onpIGxT2QtaEDpukz4cU17UU+U1X9Ivi52JeUtHTZB5Lc4J9X9frdOJMXyX
+         SKsMajYx8j9wzplr07W6NmU4sRkPyw6UZEmzIyefPpHRIrZDAuZu1LT+rbn4/6RV+1mP
+         ylpXf38934eS1J1RBAz+dQMKMojXl3/ST1wkHwcczOgTLHx5ISJdAIdEmNjRSTYEfTED
+         U9Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740183182; x=1740787982;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GsufKr0NGP3tYvsFVv0EO/2yZiZEnUNT84I1RxYAoyM=;
+        b=Ojp5DXKxj5bPgGlKnsoGQHxxSzO414w34/PINwnj4p8VCOfAbKIy96eUWK4Vw7gNwk
+         KD2icTQS7HiE8UnqSURylp6vgeCOQeZ7NCz7eQEGQIkUlyMjSlBYE25WSwyvzke7ekd+
+         7lD62tgIexN3axFzTcgD1kVJt26VTN5vQj/ESUhrhhJWfgKD9WooPDG8o9LO/psLKYuC
+         nkNRpjYjJxRZKEfLlJFUeDEDTHF85Fmck76MBnz8nO9MCAECc65hQTFT6IBqmesJmBPe
+         C+Z0wQ4F3k5dCtPKNQQehi5L7Wjcef75iBmA9Q9fYHsd7491/My7wF0/zc3ydYQ5fPcj
+         VB3A==
+X-Gm-Message-State: AOJu0Yyy6ZXr9BsW8i1ajd5CYRDkcUKwRdJGD6htxmWxo70EtfXTD009
+	FXFEaI2NXB/4G9n718RCIZRdI7pS3UmDxysfCTkF9IqvaaTDfmc9q591MLEHzt3WG5HRbeDG294
+	7
+X-Gm-Gg: ASbGnctDn1L0LC7tsEyEzcgWGSJS1hp4RB2nl/4Kx1VrE7FaHAqjWLsm69YuXucdDOP
+	o0bBviSwtaH/i03A0cf82mjXvp7zatvOnKVmORB7p+aiMIlE32GNd6pXFSSEgWNZkfGQyh/rtKf
+	tTjgCGntj/OMoEyorbKENGb4HnxzE2c0nVpmKxB3nhFLNvdB3Vl1ki8AgUv9enDvuIJrzuHzvIs
+	NG8ok1VcdDwaogFpOjxb8SRzRoJKHIE9LqzEYyq9Xk7zVxMYPX04c6CSvFYqVSinmiMbU+6amaD
+	LwvLj11XBS0e5tXrng==
+X-Google-Smtp-Source: AGHT+IEUUpAfwedrwX8Z7yqaUa0AGKI0ihxBNgw80Nems7KCQtXMFtFcx2HmpwlG19S5/FlE2ikssQ==
+X-Received: by 2002:a05:6e02:3dc4:b0:3cf:b2ca:39b7 with SMTP id e9e14a558f8ab-3d2cacb0022mr52274585ab.3.1740183182418;
+        Fri, 21 Feb 2025 16:13:02 -0800 (PST)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d2bc19dbe3sm13388665ab.9.2025.02.21.16.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 16:13:01 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250219205328.28462-2-thorsten.blum@linux.dev>
+References: <20250219205328.28462-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] block: Remove commented out code
+Message-Id: <174018318140.1822587.9741571517838734087.b4-ty@kernel.dk>
+Date: Fri, 21 Feb 2025 17:13:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-94c79
 
-You can use lsblk to query for a block device block device block size:
 
-lsblk -o MIN-IO /dev/nvme0n1
-MIN-IO
- 4096
+On Wed, 19 Feb 2025 21:53:25 +0100, Thorsten Blum wrote:
+> Remove commented out code.
+> 
+> 
 
-The min-io is the minimum IO the block device prefers for optimal
-performance. In turn we map this to the block device block size.
-The current block size exposed even for block devices with an
-LBA format of 16k is 4k. Likewise devices which support 4k LBA format
-but have a larger Indirection Unit of 16k have an exposed block size
-of 4k.
+Applied, thanks!
 
-This incurs read-modify-writes on direct IO against devices with a
-min-io larger than the page size. To fix this, use the block device
-min io, which is the minimal optimal IO the device prefers.
+[1/1] block: Remove commented out code
+      commit: 8985c4298733a56d38c11948dc3b1dd24f4fcd6b
 
-With this we now get:
-
-lsblk -o MIN-IO /dev/nvme0n1
-MIN-IO
- 16384
-
-And so userspace gets the appropriate information it needs for optimal
-performance. This is verified with blkalgn against mkfs against a
-device with LBA format of 4k but an NPWG of 16k (min io size)
-
-mkfs.xfs -f -b size=16k  /dev/nvme3n1
-blkalgn -d nvme3n1 --ops Write
-
-     Block size          : count     distribution
-         0 -> 1          : 0        |                                        |
-         2 -> 3          : 0        |                                        |
-         4 -> 7          : 0        |                                        |
-         8 -> 15         : 0        |                                        |
-        16 -> 31         : 0        |                                        |
-        32 -> 63         : 0        |                                        |
-        64 -> 127        : 0        |                                        |
-       128 -> 255        : 0        |                                        |
-       256 -> 511        : 0        |                                        |
-       512 -> 1023       : 0        |                                        |
-      1024 -> 2047       : 0        |                                        |
-      2048 -> 4095       : 0        |                                        |
-      4096 -> 8191       : 0        |                                        |
-      8192 -> 16383      : 0        |                                        |
-     16384 -> 32767      : 66       |****************************************|
-     32768 -> 65535      : 0        |                                        |
-     65536 -> 131071     : 0        |                                        |
-    131072 -> 262143     : 2        |*                                       |
-Block size: 14 - 66
-Block size: 17 - 2
-
-     Algn size           : count     distribution
-         0 -> 1          : 0        |                                        |
-         2 -> 3          : 0        |                                        |
-         4 -> 7          : 0        |                                        |
-         8 -> 15         : 0        |                                        |
-        16 -> 31         : 0        |                                        |
-        32 -> 63         : 0        |                                        |
-        64 -> 127        : 0        |                                        |
-       128 -> 255        : 0        |                                        |
-       256 -> 511        : 0        |                                        |
-       512 -> 1023       : 0        |                                        |
-      1024 -> 2047       : 0        |                                        |
-      2048 -> 4095       : 0        |                                        |
-      4096 -> 8191       : 0        |                                        |
-      8192 -> 16383      : 0        |                                        |
-     16384 -> 32767      : 66       |****************************************|
-     32768 -> 65535      : 0        |                                        |
-     65536 -> 131071     : 0        |                                        |
-    131072 -> 262143     : 2        |*                                       |
-Algn size: 14 - 66
-Algn size: 17 - 2
-
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/bdev.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/block/bdev.c b/block/bdev.c
-index 22806ce11e1d..3bd948e6438d 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -1276,9 +1276,6 @@ void bdev_statx(struct path *path, struct kstat *stat,
- 	struct inode *backing_inode;
- 	struct block_device *bdev;
- 
--	if (!(request_mask & (STATX_DIOALIGN | STATX_WRITE_ATOMIC)))
--		return;
--
- 	backing_inode = d_backing_inode(path->dentry);
- 
- 	/*
-@@ -1305,6 +1302,8 @@ void bdev_statx(struct path *path, struct kstat *stat,
- 			queue_atomic_write_unit_max_bytes(bd_queue));
- 	}
- 
-+	stat->blksize = bdev_io_min(bdev);
-+
- 	blkdev_put_no_open(bdev);
- }
- 
+Best regards,
 -- 
-2.47.2
+Jens Axboe
+
+
 
 
