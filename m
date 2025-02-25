@@ -1,84 +1,84 @@
-Return-Path: <linux-block+bounces-17575-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17577-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F45A43477
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 06:12:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEBEEA4347B
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 06:12:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C2113B8A54
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 05:12:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05A61189E9C9
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 05:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FF7254877;
-	Tue, 25 Feb 2025 05:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26A4A2904;
+	Tue, 25 Feb 2025 05:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AS9bOm6U"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="viy43hXo"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702E72561B0
-	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A70254AEB
+	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740460323; cv=none; b=DZ9QxEY68/QtxXkXM3pAQ8651qW6Ed0XFEQ9JrUYelo003ZQ8qgnLAqbRLd7CCwHL3eZZ4zE1silCv5agk+qGQrGFoXMY16i3nUL33toCJuNJn8JtWJ9csa4jzc+uJKGoqfN/KrWzz7cxK1UgFphOnwsp01Zka1PfLiejVr999M=
+	t=1740460329; cv=none; b=m7oWxUUw90FXVU+dilLz+W85ubTElO2kNHUymeNTQYM9CavzfYbzzyMYpGcRmwXopwuZxy+LhJBjt814iyelbyVInFTndKEEE7RRyNE09aZtiPlM685JgjFiI01nx65ztsPl5WQ0/7QAFG+WGsx3zdPDcYpHbeDkNWEiNKBdflM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740460323; c=relaxed/simple;
-	bh=yJi2Cx14sSyS29LWyd5Tm76UaUyTByOH9I+D8gJFLQw=;
+	s=arc-20240116; t=1740460329; c=relaxed/simple;
+	bh=NKgcEijRW/Zh1cwjLKZ7Ou4LGFsGZ0EOpmzd2R6IRSA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=A/BE9sMmVecViEQioG/guIl2qV3owBz0338+/rcKL1M44poh2JJb5rSFdR776pITo/9yxERugFUIsJsYe2rYKTyspvTo9HhmLETFD6H+L1DW0XEtW2Hp0yKKf1xJcAQg/vNRCdzdsTcWVNhvibRnFCxHHGzPP3e6GM07+WN5row=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AS9bOm6U; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=p8vBePs2Pu50MgFJBznXaYUGCG2tN9GX45l14ss5/tydTDMOfDAuSY8RRo6c/4bBM1wzFfykjH+Ip6oy5vr1zPEepy/3rOVoedcCo+5pwn/Vne3xw4mmopJytxN7363WwXN6X4gWi4oE/sx5lcQK9J46OoD/iHzCtB7XVrVMGlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=viy43hXo; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250225051153epoutp04e180d3d0d54d2f1b59a8f4286e59b278~nW28P7chp0081700817epoutp04e
-	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:11:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250225051153epoutp04e180d3d0d54d2f1b59a8f4286e59b278~nW28P7chp0081700817epoutp04e
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250225051205epoutp039ac54a57f1309cc4f0b85d715dd74a39~nW3HU9pZG2785727857epoutp03V
+	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:12:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250225051205epoutp039ac54a57f1309cc4f0b85d715dd74a39~nW3HU9pZG2785727857epoutp03V
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740460313;
-	bh=8FlbVLaO/o7H2l1eNQnRbhbKI/JOMdEUHa8eyijxoXg=;
+	s=mail20170921; t=1740460325;
+	bh=WW5dHa7+uFgb2GgCT612fikzvZkwWoYKaCZBUFEuV44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AS9bOm6UpuzkFcpS1xBnrrhqrEO5382y2eEMHsjCWwWdEOs4OJJSfF54HeJ/0Uu9a
-	 9woK7LeThi15kZr2MDzxzDJJjLBO4NtMbigx13f51VDhustnMcg7mlmU9QD1sH5YYh
-	 4RYJsovYIHrcja7WuM/NJ26eTYfAxSZ620ZykBAI=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250225051153epcas5p4d72ff1e4eac5087087dfab0624a9e430~nW271EsKh0382603826epcas5p4o;
-	Tue, 25 Feb 2025 05:11:53 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z25Lb0ySgz4x9Q2; Tue, 25 Feb
-	2025 05:11:51 +0000 (GMT)
+	b=viy43hXoIYg+cJUTZHfh+EMgEZCTo/dHIkqBdP4R3Rjm676NveiJ2DBHOQXdRmcVR
+	 DEmWplCWqYmGhPeYnp1/bMuiuG7mzMOtwYuIDszrgaDfqlPONvK0Fk2iZ6TgSpPiFE
+	 MeeZ1SY43sj5vta3plsqPhGcLyWWgQqJlaiN/Y/w=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250225051204epcas5p3b53c8df5b0a9a1767e2b0d1b8ccca76b~nW3Gn-70Y0616406164epcas5p3R;
+	Tue, 25 Feb 2025 05:12:04 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z25Ll0rv9z4x9Pt; Tue, 25 Feb
+	2025 05:11:59 +0000 (GMT)
 Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2B.0F.19710.6115DB76; Tue, 25 Feb 2025 14:11:50 +0900 (KST)
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	34.E6.19933.E115DB76; Tue, 25 Feb 2025 14:11:59 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250225045514epcas5p10d06ab361a4125a94933fa8235fe3fa8~nWoaALfVu1699516995epcas5p1_;
-	Tue, 25 Feb 2025 04:55:14 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250225045516epcas5p3fa5712152300bf976d1bc0ab26211633~nWocCz3Mo3038830388epcas5p3w;
+	Tue, 25 Feb 2025 04:55:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
 	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250225045514epsmtrp1d0f23dbbee92f5ff06566717c072b986~nWoZ-VYIG1649716497epsmtrp1F;
-	Tue, 25 Feb 2025 04:55:14 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-bc-67bd51160b69
+	20250225045516epsmtrp11422abd21c4b46eb83fabce65c9d7e79~nWocB-QNy1661216612epsmtrp1r;
+	Tue, 25 Feb 2025 04:55:16 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-3e-67bd511eb825
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8D.4C.23488.23D4DB76; Tue, 25 Feb 2025 13:55:14 +0900 (KST)
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1A.BC.18729.43D4DB76; Tue, 25 Feb 2025 13:55:16 +0900 (KST)
 Received: from localhost.localdomain (unknown [107.99.41.245]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225045512epsmtip261a520979b8ef8fd960439b5d14a5574~nWoYGLxXI3047130471epsmtip2b;
-	Tue, 25 Feb 2025 04:55:12 +0000 (GMT)
+	20250225045514epsmtip24c33748a5236887fa8051cab6e307c55~nWoaCaXLr3049830498epsmtip2N;
+	Tue, 25 Feb 2025 04:55:14 +0000 (GMT)
 From: Anuj Gupta <anuj20.g@samsung.com>
 To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
 	martin.petersen@oracle.com
 Cc: anuj1072538@gmail.com, nikh1092@linux.ibm.com,
 	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
 	linux-scsi@vger.kernel.org, dm-devel@lists.linux.dev, Anuj Gupta
-	<anuj20.g@samsung.com>, M Nikhil <nikhilm@linux.ibm.com>
-Subject: [PATCH v1 1/3] block: Fix incorrect integrity sysfs reporting for
- DM devices
-Date: Tue, 25 Feb 2025 10:16:51 +0530
-Message-Id: <20250225044653.6867-2-anuj20.g@samsung.com>
+	<anuj20.g@samsung.com>
+Subject: [PATCH v1 2/3] nvme: Fix incorrect block integrity sysfs values for
+ non-PI namespaces
+Date: Tue, 25 Feb 2025 10:16:52 +0530
+Message-Id: <20250225044653.6867-3-anuj20.g@samsung.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250225044653.6867-1-anuj20.g@samsung.com>
 Precedence: bulk
@@ -88,112 +88,87 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRmVeSWpSXmKPExsWy7bCmlq5Y4N50g+37bSw+fv3NYtE04S+z
-	xeq7/WwWCxbNZbFYufook8WkQ9cYLfbe0raYv+wpu0X39R1sFsuP/2OyuHvxKbPFzvZjjA48
-	Hjtn3WX3uHy21GPTqk42jwmLDjB6bF5S7/Fi80xGj903G9g8Pj69xeLRt2UVo8fnTXIBXFHZ
-	NhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAVysplCXm
-	lAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCkwK9IoTc4tL89L18lJLrAwNDIxMgQoTsjMW
-	PlnAUnBAuGJnx12mBsbFAl2MnBwSAiYSr6edYuti5OIQEtjNKLFi/SVmCOcTo8TkP++ZIJxv
-	jBI73i9ngmk58fssVGIvo0R74ywo5zOjxJUVN1hAqtgE1CWOPG9lBLFFBAIkZp2+wghSxCzw
-	nlHidX8XG0hCWCBc4tnm2WA2i4CqxNTm9cwgNq+AhcSvr+tZIdbJS8y89J0dxOYUsJSYcKiX
-	FaJGUOLkzCdgy5iBapq3zgY7XEJgLYdEZ8McqFtdJD7f/Q5lC0u8Or6FHcKWknjZ3wZlp0v8
-	uPwUqqZAovnYPkYI216i9VQ/0FAOoAWaEut36UOEZSWmnlrHBLGXT6L39xOoVl6JHfNgbCWJ
-	9pUwJ0hI7D3XAGV7SLzc95EFElo9jBJNM/rZJjAqzELyzywk/8xCWL2AkXkVo2RqQXFuemqy
-	aYFhXmo5PJ6T83M3MYLTspbLDsYb8//pHWJk4mA8xCjBwawkwsuZuSddiDclsbIqtSg/vqg0
-	J7X4EKMpMMAnMkuJJucDM0NeSbyhiaWBiZmZmYmlsZmhkjhv886WdCGB9MSS1OzU1ILUIpg+
-	Jg5OqQamSy52Vm0fRL746S9gtha/dmkS9xSP1Avb6vL5Lvh89zAqT7lUvsV46QHORxfDwzqv
-	2L9xaui87nvF7Kz4tR1iNRF+G/e0yf7oOfae77C3gG76JZ/1siZ+h2Q3S4ZUmi+btE3dfqtV
-	7FuuuivpTNHLPc5/Vd0hK9Y5gUs05+av2CrF3/Ha9e6HqsJ2fGVhqcxO8NNNdN7fx7VC/Jyn
-	lYafz8yXuR0B+XJpZ2OY+LL2X627fedalXD2a+nUpaIZ0z1u/7FlqH2jz3uxt/O3X8S/DKtF
-	Lze4zzeedULm5edJbCneFf5bjjAt3x6jL741hu224PSJAXersycazPrpt+ykwtRru/z/l/4x
-	71P61qDEUpyRaKjFXFScCACo2ytsVAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsWy7bCSvK6R7950g3sNShYfv/5msWia8JfZ
-	YvXdfjaLBYvmslisXH2UyWLSoWuMFntvaVvMX/aU3aL7+g42i+XH/zFZ3L34lNliZ/sxRgce
-	j52z7rJ7XD5b6rFpVSebx4RFBxg9Ni+p93ixeSajx+6bDWweH5/eYvHo27KK0ePzJrkArigu
-	m5TUnMyy1CJ9uwSujIVPFrAUHBCu2Nlxl6mBcbFAFyMnh4SAicSJ32eZuhi5OIQEdjNKTG99
-	yAyRkJA49XIZI4QtLLHy33N2EFtI4COjxNaZXCA2m4C6xJHnrUA1HBwiAiESPUdMQOYwC3xn
-	lDjRcp0NpEZYIFRiy5XHLCA2i4CqxNTm9WDzeQUsJH59Xc8KMV9eYual72DzOQUsJSYc6mUF
-	mSkEVHNhZTREuaDEyZlPwMYwA5U3b53NPIFRYBaS1CwkqQWMTKsYJVMLinPTc5MNCwzzUsv1
-	ihNzi0vz0vWS83M3MYIjRktjB+O7b036hxiZOBgPMUpwMCuJ8HJm7kkX4k1JrKxKLcqPLyrN
-	SS0+xCjNwaIkzrvSMCJdSCA9sSQ1OzW1ILUIJsvEwSnVwGQnX7XIWolb943U66WOUfstsyou
-	fPWUV6tJ/787mNl2X2648ycnDu2Zrrt7LS2ucz9Rejv9F1+phNblyus6XoI3F81ifsoa9NJS
-	54r+J/PDF/Pk1dOXfVaYml1VWxp+Qvfm1gdZ8Xfnq3SLH7t69FHM2k1Sa+wWb+ZaWJH/R+xS
-	3LHzmR5cm74yvlZcE3j389O1rcJz1nYzp+za/SZNZa5oTtakOCXTLWf6PfKS+L4bPmo5c4uV
-	Q59BNOlFJOsZGQum3GPvrx5Zt3vNSVuFtoMxDFLCSdwlfo1uc2zEZLZaynktsNXa8tCr2YiP
-	02jPJkHhQ81ZDVOX66vuZ1e6obmo1UPvw4fwLX7M8z9UKbEUZyQaajEXFScCAHe30sIHAwAA
-X-CMS-MailID: 20250225045514epcas5p10d06ab361a4125a94933fa8235fe3fa8
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmlq584N50g1VfmS0+fv3NYtE04S+z
+	xeq7/WwWCxbNZbFYufook8WkQ9cYLfbe0raYv+wpu0X39R1sFsuP/2OyuHvxKbMDt8fOWXfZ
+	PS6fLfXYtKqTzWPCogOMHpuX1Hu82DyT0WP3zQY2j49Pb7F49G1ZxejxeZNcAFdUtk1GamJK
+	apFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0MFKCmWJOaVAoYDE
+	4mIlfTubovzSklSFjPziElul1IKUnAKTAr3ixNzi0rx0vbzUEitDAwMjU6DChOyMx90v2AsW
+	clW83n2buYHxBEcXIyeHhICJxJI13exdjFwcQgK7GSVu72hmgXA+MUrcmzkDyvnGKNG4aC0T
+	TMvMp5dZIRJ7GSUmfnwD1f+ZUWLRg/tsIFVsAuoSR563MoLYIgIBErNOX2EEKWIWOMso8bfx
+	PwtIQlggQeLD7l9AYzk4WARUJd6/KgIJ8wpYSGy8d4QNYpu8xMxL39lBbE4BS4kJh3pZIWoE
+	JU7OfAI2hhmopnnrbGaQ+RICKzkk9p6+xgrR7CLx7ecXqLOFJV4d38IOYUtJvOxvg7LTJX5c
+	fgpVUyDRfGwfI4RtL9F6qp8Z5DZmAU2J9bv0IcKyElNPrWOC2Msn0fv7CVQrr8SOeTC2kkT7
+	yjlQtoTE3nMNULaHxOzjPxkhgdXDKPFg8yGmCYwKs5D8MwvJP7MQVi9gZF7FKJlaUJybnlps
+	WmCUl1oOj+bk/NxNjOBUrOW1g/Hhgw96hxiZOBgPMUpwMCuJ8HJm7kkX4k1JrKxKLcqPLyrN
+	SS0+xGgKDO+JzFKiyfnAbJBXEm9oYmlgYmZmZmJpbGaoJM7bvLMlXUggPbEkNTs1tSC1CKaP
+	iYNTqoFpXr/95kMlj5/N3fO0a7rLarcP0ebiT3gjTTLsr1VXqfn7STWINO6PVROanlS9tfrA
+	1rWuF+/Xnnrn87Gz8fPuzjN1nVMrJi1+vjlBX62g40HBL5sXqke/rntWrvFk36aT55v4A7d/
+	cHWOunJR+na3tVj8PaEVfdvFPjY7PMk4pXreqWd2/lXF5/9KXqm53loUpSsRs/P2vhuPnk14
+	ML18xgL+zw4c7Ey8/B+vb7wwe/4ZiQ83uk6e2G6zsHid5BvfrdL7N1pf6xA7fSLnVn2HNtv9
+	wr+aq8p6nLZt+yN8SJvv1s4Kh0sFu5uPpfmarSvxNvmw5qK9+QU1h9bDB1MXH2DadPUxi4/f
+	hhKrsnyRNCWW4oxEQy3mouJEAMEBpCdOBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSvK6J7950gzMvDS0+fv3NYtE04S+z
+	xeq7/WwWCxbNZbFYufook8WkQ9cYLfbe0raYv+wpu0X39R1sFsuP/2OyuHvxKbMDt8fOWXfZ
+	PS6fLfXYtKqTzWPCogOMHpuX1Hu82DyT0WP3zQY2j49Pb7F49G1ZxejxeZNcAFcUl01Kak5m
+	WWqRvl0CV8bj7hfsBQu5Kl7vvs3cwHiCo4uRk0NCwERi5tPLrF2MXBxCArsZJY7/OcUKkZCQ
+	OPVyGSOELSyx8t9zdoiij4wSW8/MZgNJsAmoSxx53gpUxMEhIhAi0XPEBKSGWeAyo8SUV1/A
+	BgkLxEksOn2CGaSGRUBV4v2rIpAwr4CFxMZ7R9gg5stLzLz0nR3E5hSwlJhwqJcVpFwIqObC
+	ymiIckGJkzOfsIDYzEDlzVtnM09gFJiFJDULSWoBI9MqRsnUguLc9NxiwwLDvNRyveLE3OLS
+	vHS95PzcTYzgONHS3MG4fdUHvUOMTByMhxglOJiVRHg5M/ekC/GmJFZWpRblxxeV5qQWH2KU
+	5mBREucVf9GbIiSQnliSmp2aWpBaBJNl4uCUamAScxWV1VyY3nwm0O+T/OnZcdPO9bWo1n1c
+	+GiWr+0ZZ1eeOqMnMi+29CZmVMh8WbptHefrPVXZHbMdVt15sifg0CvV1duY3l2eLP1Lfs87
+	I7cGm316arPuMqXt7XaWfvGwj+Nit+ubq2+VVr0SmpByynDStSbzI9M9Wxf+4dAOjbjhN09K
+	bY7wvktlKzZZz91ub3bPyuqL/pFPH1Vzi7LC5Z9IbNw/1Xa6VO/bxjvFcyK8WKNWtfoc2rVk
+	7d0Fqn++tnNX3ij9fM3Mts16s8aWDdfX2Cf9d/XdOuOlW2qt5WINE9bdoSZR4QX6Hn0PTGwf
+	8G8vv64yv1H8s6i0VVYwZ/aZBbx8C7M4GDfNztNWYinOSDTUYi4qTgQAsp+yOwIDAAA=
+X-CMS-MailID: 20250225045516epcas5p3fa5712152300bf976d1bc0ab26211633
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225045514epcas5p10d06ab361a4125a94933fa8235fe3fa8
+X-CMS-RootMailID: 20250225045516epcas5p3fa5712152300bf976d1bc0ab26211633
 References: <20250225044653.6867-1-anuj20.g@samsung.com>
-	<CGME20250225045514epcas5p10d06ab361a4125a94933fa8235fe3fa8@epcas5p1.samsung.com>
+	<CGME20250225045516epcas5p3fa5712152300bf976d1bc0ab26211633@epcas5p3.samsung.com>
 
-The integrity stacking logic in device-mapper currently does not
-explicitly mark the device with BLK_INTEGRITY_NOGENERATE and
-BLK_INTEGRITY_NOVERIFY when the underlying device(s) do not support
-integrity. This can lead to incorrect sysfs reporting of integrity
-attributes.
+Commit 9f4aa46f2a74
+("block: invert the BLK_INTEGRITY{GENERATE,VERIFY} flags") caused
+read_verify and write_generate to report 1 for NVMe namespaces
+without PI support. This happens because BLK_INTEGRITY_NOGENERATE and
+BLK_INTEGRITY_NOVERIFY were not explicitly set.
 
-Additionally, queue_limits_stack_integrity() incorrectly sets
-BLK_INTEGRITY_DEVICE_CAPABLE for a DM device even when none of its
-underlying devices support integrity. This happens because the flag is
-blindly inherited from the first base device, even if it lacks integrity
-support.
+Fix this by initializing these flags by default and clearing them only
+when the namespace supports PI.
 
-This patch ensures:
-1. BLK_INTEGRITY_NOGENERATE and BLK_INTEGRITY_NOVERIFY are set correctly:
-   - When the underlying device does not support integrity.
-   - When integrity stacking fails due to incompatible profiles.
-2. device_is_integrity_capable is correctly propagated to reflect the
-actual capability of the stacked device.
-
-Reported-by: M Nikhil <nikhilm@linux.ibm.com>
-Link: https://lore.kernel.org/linux-block/f6130475-3ccd-45d2-abde-3ccceada0f0a@linux.ibm.com/
-Fixes: c6e56cf6b2e7 ("block: move integrity information into queue_limits")
+Fixes: 9f4aa46f2a74 ("block: invert the BLK_INTEGRITY_{GENERATE,VERIFY} flags")
 Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
 ---
- block/blk-settings.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index c44dadc35e1e..c32517c8bc2e 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -861,7 +861,8 @@ bool queue_limits_stack_integrity(struct queue_limits *t,
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 818d4e49aab5..fe599a811d38 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1799,6 +1799,7 @@ static bool nvme_init_integrity(struct nvme_ns_head *head,
  
- 	if (!ti->tuple_size) {
- 		/* inherit the settings from the first underlying device */
--		if (!(ti->flags & BLK_INTEGRITY_STACKED)) {
-+		if (!(ti->flags & BLK_INTEGRITY_STACKED) &&
-+		    (bi->flags & BLK_INTEGRITY_DEVICE_CAPABLE)) {
- 			ti->flags = BLK_INTEGRITY_DEVICE_CAPABLE |
- 				(bi->flags & BLK_INTEGRITY_REF_TAG);
- 			ti->csum_type = bi->csum_type;
-@@ -871,8 +872,11 @@ bool queue_limits_stack_integrity(struct queue_limits *t,
- 			ti->tag_size = bi->tag_size;
- 			goto done;
- 		}
--		if (!bi->tuple_size)
-+		if (!bi->tuple_size) {
-+			ti->flags |= BLK_INTEGRITY_NOGENERATE |
-+				     BLK_INTEGRITY_NOVERIFY;
- 			goto done;
-+		}
+ 	memset(bi, 0, sizeof(*bi));
+ 
++	bi->flags = BLK_INTEGRITY_NOGENERATE | BLK_INTEGRITY_NOVERIFY;
+ 	if (!head->ms)
+ 		return true;
+ 
+@@ -1850,6 +1851,9 @@ static bool nvme_init_integrity(struct nvme_ns_head *head,
+ 		break;
  	}
  
- 	if (ti->tuple_size != bi->tuple_size)
-@@ -893,6 +897,7 @@ bool queue_limits_stack_integrity(struct queue_limits *t,
- 
- incompatible:
- 	memset(ti, 0, sizeof(*ti));
-+	ti->flags |= BLK_INTEGRITY_NOGENERATE | BLK_INTEGRITY_NOVERIFY;
- 	return false;
- }
- EXPORT_SYMBOL_GPL(queue_limits_stack_integrity);
++	if (bi->flags & BLK_INTEGRITY_DEVICE_CAPABLE)
++		bi->flags &= ~(BLK_INTEGRITY_NOGENERATE |
++			       BLK_INTEGRITY_NOVERIFY);
+ 	bi->tuple_size = head->ms;
+ 	bi->pi_offset = info->pi_offset;
+ 	return true;
 -- 
 2.25.1
 
