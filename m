@@ -1,170 +1,190 @@
-Return-Path: <linux-block+bounces-17576-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17578-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FD9AA4347A
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 06:12:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82EE8A4363F
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 08:38:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A343B177148
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 05:12:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD943ADC8F
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 07:38:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBD0255E3C;
-	Tue, 25 Feb 2025 05:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA7A91EA7E5;
+	Tue, 25 Feb 2025 07:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kfFV4Ei4"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vOkXxkWc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xWHPtHQM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vOkXxkWc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xWHPtHQM"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDE5254AE5
-	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA9189F36
+	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 07:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740460327; cv=none; b=NSvFcBaeY9tCz5bRtBVVhZ1Me6y294rkJjIo2JSPfJBsh4fb+Vum0A0epOakoum/SSG8G3F0CR6yVtSUax7VLiD9EBhgrDaQCSCXpp192o95y28tCBNymEO1El1+uBcogn/OhZ9YQwEOR5i72IvpWli0tc4hNC+209GLEgtlNiI=
+	t=1740469108; cv=none; b=HL6GjxSSU632LFwkFk1E7Rppe4inFoUHo0fakTKr7fjQLMz6FJRwuUXNtwd3PFF07AggKuPd9bMA3yFH/U23eu1IIilsDuT15z4iSm+MAZ8A0SUb/GgnYZn14dOsK7T17oZ39tmtI4C5f688smej4Dw9jErAXLcc9L8Sm3Alh38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740460327; c=relaxed/simple;
-	bh=HK1Iqsygj+kpxTqmu43IDP04/FHAkBMHLKaFyoM1VMU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=RwJSnSsmvWNcy/yY6v9fjHO61bsKZ07rsjyBsjNJ2rKHE953n4r/a+Zg5odg1FcCj00xaXmb57CfCzjsiLxmvS0ieXfL6rSQQEl+RdH9LNgihuI0SlsRvBGVXxGAkEi2N0B8pSiZZ83wkgNYum40cRgKAcEkeywJ1KYajVILMS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kfFV4Ei4; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250225051203epoutp04efc5959e812732ab2cd14af681b2e541~nW3Fv-7YH0096500965epoutp04f
-	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 05:12:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250225051203epoutp04efc5959e812732ab2cd14af681b2e541~nW3Fv-7YH0096500965epoutp04f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740460323;
-	bh=VCXl3ajc+8ZGubQRsc7OXxF8hZHNLnv0fXU3im0PirA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kfFV4Ei4dE1XoP9SgTWJS9FnDXk+KM4UurLRHZ9w/MRuW91WmPszo/xUxeJDMP1GR
-	 MWztxGMDVFQtKkJeb2uAKeM7nd8I0ub7lzLl2Z3cAwgkBLNqsbURVw79Pjn3EYa3ki
-	 F/+k+HX26sphiOUos6BVC0IVT+N8a4vD9EaGSnvc=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250225051203epcas5p3e5bc333ffb75a03da2a22817f626fb7a~nW3FWZG1d0515805158epcas5p3N;
-	Tue, 25 Feb 2025 05:12:03 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z25Lp0H1wz4x9Q3; Tue, 25 Feb
-	2025 05:12:02 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AC.9F.20052.1215DB76; Tue, 25 Feb 2025 14:12:01 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225045519epcas5p2f1431355b6ab69305c1a431bfafbf7b6~nWoeeeuwb1006010060epcas5p2w;
-	Tue, 25 Feb 2025 04:55:19 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250225045519epsmtrp2f25a8ee5f1234328739692a4ca6fa6f4~nWoedwFPu0367803678epsmtrp22;
-	Tue, 25 Feb 2025 04:55:19 +0000 (GMT)
-X-AuditID: b6c32a49-3fffd70000004e54-42-67bd51216c0b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9F.4C.23488.73D4DB76; Tue, 25 Feb 2025 13:55:19 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225045517epsmtip260411173872e85ea6cb80ea78ae41ad9~nWocTJ5_o2728127281epsmtip2c;
-	Tue, 25 Feb 2025 04:55:16 +0000 (GMT)
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
-	martin.petersen@oracle.com
-Cc: anuj1072538@gmail.com, nikh1092@linux.ibm.com,
-	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-scsi@vger.kernel.org, dm-devel@lists.linux.dev, Anuj Gupta
-	<anuj20.g@samsung.com>, M Nikhil <nikhilm@linux.ibm.com>
-Subject: [PATCH v1 3/3] scsi: Fix incorrect integrity sysfs values when HBA
- doesn't support DIX
-Date: Tue, 25 Feb 2025 10:16:53 +0530
-Message-Id: <20250225044653.6867-4-anuj20.g@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250225044653.6867-1-anuj20.g@samsung.com>
+	s=arc-20240116; t=1740469108; c=relaxed/simple;
+	bh=+myyec9fstgP7F3nui5vZFKB+z8SJ29afXUXsd/qTmU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ux6n+3W1Y0dDrb+Rx7Pw29DuF9tnEm1UgYlwKddAr81p8TXCjfcnGXLAkdD+Edx7Pw1p5M3uWFu4B7Skw7uYh0RHxRd2xTUz6HGo44eGoLrnoF7TNlhPBesWLobx1/SutJ6UPcM80P0kE+0/gMheOPczHldv03KkoH/9jRU96D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vOkXxkWc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xWHPtHQM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vOkXxkWc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xWHPtHQM; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 083521F44F;
+	Tue, 25 Feb 2025 07:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740469105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b8yndWxMjcl+lcKx0y9LUj9XFTr9tgBHyvX7IKz4Brg=;
+	b=vOkXxkWcWviY2gYDoJ9Sv02PSsNLk0Ib63a3dxFlovhCwXBJINBx8bo/anKrMbGdlRr/VQ
+	hOFrLu+uErb8SSfkTiVlvABrbPshCdkc9YuLDRkNaHuhipl13plOL+4tJ5mWYGFCFwufsy
+	tIvGIdfzs/EZx6R5+jbH7PHpKG381zs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740469105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b8yndWxMjcl+lcKx0y9LUj9XFTr9tgBHyvX7IKz4Brg=;
+	b=xWHPtHQMHC1RDFMHbeDE83QzybuJi0RgryEtciErC8294Zn75rMEVlsemmrlWKS7YQJa5F
+	UnBsVgLnoby1xLBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vOkXxkWc;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xWHPtHQM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740469105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b8yndWxMjcl+lcKx0y9LUj9XFTr9tgBHyvX7IKz4Brg=;
+	b=vOkXxkWcWviY2gYDoJ9Sv02PSsNLk0Ib63a3dxFlovhCwXBJINBx8bo/anKrMbGdlRr/VQ
+	hOFrLu+uErb8SSfkTiVlvABrbPshCdkc9YuLDRkNaHuhipl13plOL+4tJ5mWYGFCFwufsy
+	tIvGIdfzs/EZx6R5+jbH7PHpKG381zs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740469105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b8yndWxMjcl+lcKx0y9LUj9XFTr9tgBHyvX7IKz4Brg=;
+	b=xWHPtHQMHC1RDFMHbeDE83QzybuJi0RgryEtciErC8294Zn75rMEVlsemmrlWKS7YQJa5F
+	UnBsVgLnoby1xLBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B68A413332;
+	Tue, 25 Feb 2025 07:38:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QpR4KnBzvWecbgAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 25 Feb 2025 07:38:24 +0000
+Message-ID: <ab4e899f-83d8-4f05-a592-122a445bff69@suse.de>
+Date: Tue, 25 Feb 2025 08:38:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv3 1/7] block: acquire q->limits_lock while reading sysfs
+ attributes
+To: Nilay Shroff <nilay@linux.ibm.com>, linux-block@vger.kernel.org
+Cc: hch@lst.de, ming.lei@redhat.com, dlemoal@kernel.org, axboe@kernel.dk,
+ gjoyce@ibm.com
+References: <20250224133102.1240146-1-nilay@linux.ibm.com>
+ <20250224133102.1240146-2-nilay@linux.ibm.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250224133102.1240146-2-nilay@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbVRzHd+4t7aVZzV3H5qHLRr0ZLgyBVkt3MUUat7g7t5guRhOH2t3A
-	TYv05W2x+KQDgcgKdBpMKAwQGQwIewBjBdbJKo9Q4nAMIaBNyFIydFNkOGRhbrbcovvv8/ud
-	7+95zsFQ8QBfguWYbAxrog0EX8jr+T4hIemZo16d7N71feTS/TUeWej6ByXbA5V8sqHxNI9s
-	bR9CyC99U4D0ziaS9c3zAvLktIdPtow8QsjAjXmU7C0dBurNVK87IKBu/pBHdbZ9wadcjQOA
-	6moqoBa6qgHVP+PgU0vzszyqorsNUMuduzTCY7kqPUNnM6yUMWWZs3NMunTi8Ova/dpUpUye
-	JE8j9xFSE21k0okDRzRJr+QYQl0T0g9oQ17IpaGtViLlJRVrzrMxUr3ZaksnGEu2waKwJFtp
-	ozXPpEs2MbYX5TLZ86kh4fFcffvCA2BxCPN/qnUJHKAHKwPRGMQVcO27i1FlQIiJ8X4AL9f3
-	CTjjHoCTrc0oZ6wAeK1mAd0Icd6qiKi8AM4F+xDOWAZwqPAXQVjFx/fAwdvFIMwxuAa6xyZB
-	WITiiwDeqSzjhw+24jQ8O+RGwszD4+HFmW/WWYSTsHb0WhRXLg5WT/y9njQaT4MuX3kUp9kC
-	R6uDvDCjIU3RpZr1XiHegcGRplmECz4A66/cF3C8Ff420h1hCVz+w8vnWAdXb85H9BZYNHwV
-	cJwBi/2VoaRYqEACPN+Xwrl3wir/OYSr+xQsXwtGQkXQU7fBBCxtrY0whN7rDiScBuIUvD0H
-	uWU5ATy30oG4gNT9xDjuJ8Zx/1+5AaBtIJaxWI06xppqkZsY+3/XnGU2doL1p7z3kAcE5v5M
-	9gEEAz4AMZSIEUXnXNGJRdn0hx8xrFnL5hkYqw+khvZ9CpVsyzKH/oLJppUr0mQKpVKpSHtB
-	KSeeFhX1fq4T4zraxuQyjIVhN+IQLFriQPZMupI8i/sDXwXtj39u0dd2KXs6lI8rzpyYGB8b
-	Z1drVTPanfZ8Xa4noNgevHR8xdizFNN2erfaL80XvtOs1iee6rx6Qzpx8vfqqkHfconq2Fhc
-	grZ8YOb8QwcS5TS4NhNEk/CEM+5wbGaJ8qz/E/dbk9KvX5Xsupuvk6ofdjR8VlN2a1sBb5gd
-	rGPfuPxAptn06FvXj71V/qN3c2Njdjdi79ZllHwqKP1L0DOOOt9ejBpUdJb/ajh4wefZNFFY
-	c+GQ6s3X/FPPFiAZmYnqfjGbMj1a7Oieu4P1rcxJtxu6jGvO6qkdCjuU7LC/F5wZGex/jlbE
-	v/9yy1r8dObqmY8JnlVPy/eirJX+F/zReHZTBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSvK657950g833pCw+fv3NYtE04S+z
-	xeq7/WwWCxbNZbFYufook8WkQ9cYLfbe0raYv+wpu0X39R1sFsuP/2OyuHvxKbPFzvZjjA48
-	Hjtn3WX3uHy21GPTqk42jwmLDjB6bF5S7/Fi80xGj903G9g8Pj69xeLRt2UVo8fnTXIBXFFc
-	NimpOZllqUX6dglcGatf/GQsaOCquDpnAnsD4zaOLkZODgkBE4meR33sXYxcHEICuxklLq+9
-	zwyRkJA49XIZI4QtLLHy33Oooo+MEudXNLCCJNgE1CWOPG8FKuLgEBEIkeg5YgJSwyzwnVHi
-	RMt1NpAaYYF4ifN/poDVswioSmy8uZAJxOYVsJCYc/IgK8QCeYmZl76zg9icApYSEw71soLM
-	FAKqubAyGqJcUOLkzCcsIDYzUHnz1tnMExgFZiFJzUKSWsDItIpRMrWgODc9N9mwwDAvtVyv
-	ODG3uDQvXS85P3cTIzhmtDR2ML771qR/iJGJg/EQowQHs5IIL2fmnnQh3pTEyqrUovz4otKc
-	1OJDjNIcLErivCsNI9KFBNITS1KzU1MLUotgskwcnFINTJO1b8S+L7ZwOlUl8k6cpVdXw8zy
-	4zqRl/tMOScctU1233/wX8lm30tqqTsdDz7MXP9E1ZMhpfjTsdTkxV0LXC3WfFzy8uPHPUWP
-	N5Xdlg9MTEqsPVqTlytQtNhc8eGUXM/mF5qVYcJx08qbSo399U9aZ1TNfBlcE/X1hvrnZQ0r
-	tAtr/tZeMnA+tuTZq/XdaR+6nqozv+OzY1QMdg/9v2RTjv2XtTcMPpdY2Uu9+8No+Svseevh
-	h5NbFV1T79jfKq+4Mztyv++01zyTy99eqdudcUecK8Ba4eQ9lVrF/0s6eyt/+30ULvz/p2VF
-	4ZPd75rVs6dMWWrzrClm7eP3F97YttQuiSzaoP7swCuXo0osxRmJhlrMRcWJAGfzQFsIAwAA
-X-CMS-MailID: 20250225045519epcas5p2f1431355b6ab69305c1a431bfafbf7b6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225045519epcas5p2f1431355b6ab69305c1a431bfafbf7b6
-References: <20250225044653.6867-1-anuj20.g@samsung.com>
-	<CGME20250225045519epcas5p2f1431355b6ab69305c1a431bfafbf7b6@epcas5p2.samsung.com>
+X-Rspamd-Queue-Id: 083521F44F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-For SCSI disks where the host bus adapter (HBA) does not support
-Data Integrity Extensions (DIX), the write_generate and read_verify sysfs
-attributes incorrectly report 1 instead of 0.
+On 2/24/25 14:30, Nilay Shroff wrote:
+> There're few sysfs attributes(RW) whose store method is protected
+> with q->limits_lock, however the corresponding show method of these
+> attributes run holding q->sysfs_lock and that doesn't make sense
+> as ideally the show method of these attributes should also run
+> holding q->limits_lock instead of q->sysfs_lock. Hence update the
+> show method of these sysfs attributes so that reading of these
+> attributes acquire q->limits_lock instead of q->sysfs_lock.
+> 
+> Similarly, there're few sysfs attributes(RO) whose show method is
+> currently protected with q->sysfs_lock however updates to these
+> attributes could occur using atomic limit update APIs such as queue_
+> limits_start_update() and queue_limits_commit_update() which run
+> holding q->limits_lock. So that means that reading these attributes
+> holding q->sysfs_lock doesn't make sense. Hence update the show method
+> of these sysfs attributes(RO) such that they run with holding q->
+> limits_lock instead of q->sysfs_lock.
+> 
+> We have defined a new macro QUEUE_LIM_RO_ENTRY() which uses new ->show_
+> limit() method and it runs holding q->limits_lock. All existing sysfs
+> attributes(RO) which needs protection using q->limits_lock while
+> reading have been now updated to use this new macro for initialization.
+> 
+> Also, the existing QUEUE_LIM_RW_ENTRY() is updated to use new ->show_
+> limit() method for reading attributes instead of existing ->show()
+> method. As ->show_limit() runs holding q->limits_lock, the existing
+> sysfs attributes(RW) requiring protection are now inherently protected
+> using q->limits_lock instead of q->sysfs_lock.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+> ---
+>   block/blk-sysfs.c | 102 +++++++++++++++++++++++++++++-----------------
+>   1 file changed, 65 insertions(+), 37 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-This happens because the BLK_INTEGRITY_NOGENERATE and
-BLK_INTEGRITY_NOVERIFY flags are not explicitly set when DIX is disabled.
-Fix this by properly setting these flags when DIX is not enabled.
+Cheers,
 
-Reported-by: M Nikhil <nikhilm@linux.ibm.com>
-Link: https://lore.kernel.org/linux-block/f6130475-3ccd-45d2-abde-3ccceada0f0a@linux.ibm.com/
-Fixes: 9f4aa46f2a74 ("block: invert the BLK_INTEGRITY_{GENERATE,VERIFY} flags")
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
----
- drivers/scsi/sd_dif.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/sd_dif.c b/drivers/scsi/sd_dif.c
-index ae6ce6f5d622..be2cd06f500b 100644
---- a/drivers/scsi/sd_dif.c
-+++ b/drivers/scsi/sd_dif.c
-@@ -40,8 +40,10 @@ void sd_dif_config_host(struct scsi_disk *sdkp, struct queue_limits *lim)
- 		dif = 0; dix = 1;
- 	}
- 
--	if (!dix)
-+	if (!dix) {
-+		bi->flags |= BLK_INTEGRITY_NOGENERATE | BLK_INTEGRITY_NOVERIFY;
- 		return;
-+	}
- 
- 	/* Enable DMA of protection information */
- 	if (scsi_host_get_guard(sdkp->device->host) & SHOST_DIX_GUARD_IP)
+Hannes
 -- 
-2.25.1
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
