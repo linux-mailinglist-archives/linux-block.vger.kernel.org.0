@@ -1,124 +1,191 @@
-Return-Path: <linux-block+bounces-17649-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17652-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D56BA44A38
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 19:26:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A2F5A44C8C
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 21:22:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E53C017404E
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 18:24:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BA987A2BC7
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 20:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9C419992E;
-	Tue, 25 Feb 2025 18:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77426211A36;
+	Tue, 25 Feb 2025 20:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RPhh6bNk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OJWfAvqA"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A701624C4;
-	Tue, 25 Feb 2025 18:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB4D20F094;
+	Tue, 25 Feb 2025 20:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507760; cv=none; b=M4qXFt3ZI7evJ8m3Rhm9IzDpgJLU+25ljTYZqjx+/bWD3XgNTpIJIZY/tIEkJhKzzq6hj/FWEhabKD9f5HtBvGFHrf3/RR17TTwhBrz59snkJXI9BlD5mnCGfbNQ4Q/elE7vuYZQ0wFtjC/0vrJoKZeSwkIWEWAnuUsqAwE1NYY=
+	t=1740514642; cv=none; b=KK4jxZUkaiBLNJOls5BVl2G4A2EYBVPyqBMskkeJaESrT4CZxCXSv3EfdTDYEAmXx2UcSXmBgbD2moUwS81i2iq+n4bUeY5BtTE75RM+vawXlyAHLNIYeoOBNHU6b2HO8+0ZAw51av3qmoLzP/ORXgFP3riZgQxFClAOygiNz3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740507760; c=relaxed/simple;
-	bh=qb4Lkvua5HTzO8mdZJQMjJPTj5qb9aMYFAXoIqFoigo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tRO0tGHtvW4dUfkPQBgeKP8RBtnFHyThDwRnP0Kxfo7QZP0VTRnyKujxmBNSXqYI3SjGUF/lXWAwK6lm64LqJkkp0MF/v6/legINp6m/myFxJJkdD1JUlZTqn5s1vrezAI2yiQ4Vh7S0/gBY6Dko7cdjHP4VKy4Of8hM2LwmyoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RPhh6bNk; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHtccq028274;
-	Tue, 25 Feb 2025 18:22:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=jqvPW
-	h1XotWX+Uhry/+cGJzjY5ak8C0eomurxRwFRJg=; b=RPhh6bNkMT/3V2e0cUm8I
-	Bp98apH+lQ6Wh04r0tjDK3BkoAQQ9Ho9yNEa75qUQkEMkEzM31vpUlSYLaYmWobO
-	KNT/DEpp360+TOOqDi2dopNW2liQce0Ft8wTwL4GY3IJ6uYHlIEUsh5cMqgWpoyE
-	EPgPNesPQKJ5TTXg9vwR1q2vGwZ/2zarXoFE5XAkl1xHPSwWP/XwPANnE8174ge1
-	tC6yIBu3BMaFYdhW9MrHu2khtAWtc33dykUMMdd+1N7NvT4IMkS+3FxJVZNNNr7y
-	rWZeOpPzudJ8414chOwKC9f1EEO4ON0KSUdsPeAh20/vSl9k5kI/uHEDqSvVcfei
-	A==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y560604v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 18:22:36 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHA6H1024384;
-	Tue, 25 Feb 2025 18:22:35 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y519n6yd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 18:22:35 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51PIMXe6038769;
-	Tue, 25 Feb 2025 18:22:34 GMT
-Received: from ca-dev94.us.oracle.com (ca-dev94.us.oracle.com [10.129.136.30])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44y519n6x8-2;
-	Tue, 25 Feb 2025 18:22:34 +0000
-From: Alan Adamson <alan.adamson@oracle.com>
-To: linux-block@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org, alan.adamson@oracle.com,
-        linux-nvme@lists.infradead.org, shinichiro.kawasaki@wdc.com
-Subject: [PATCH blktests 1/1] common/xfs: verify xfs_io supports statx atomic write attributes
-Date: Tue, 25 Feb 2025 10:31:08 -0800
-Message-ID: <20250225183108.3881328-2-alan.adamson@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250225183108.3881328-1-alan.adamson@oracle.com>
-References: <20250225183108.3881328-1-alan.adamson@oracle.com>
+	s=arc-20240116; t=1740514642; c=relaxed/simple;
+	bh=QWXk938u1ZUtRQ0fT2TND4jKL/fO2qpP0R5WJKK3KXc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jZ0gu8yg+jKmKTVfiM6psDY6m4Q3K7OPUjzvmDy4zaz9C8ZaU8VwQpub6rEl2pNOPtkfMuxij+C8RNqFhSHizShePgbSApQwXr1iCAOWn0XsSE7Whfw13WsAiMPGSaLswLEOkZqsPSo3n6/dOIqBo5tyAllHvwlzUCKR6vEhLQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OJWfAvqA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 920F4203CDFC;
+	Tue, 25 Feb 2025 12:17:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 920F4203CDFC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740514639;
+	bh=pRPTMwC85c4lYLBd5/aEkvEtme0QilCw7nKJr8ytgmI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OJWfAvqAxjSS6nUkULU00Pa8nQ9u9kKy42lXSCjyZ4ZUUOElAuQC0IJLL8YdgMxy4
+	 fRHYXp6qo5lzLvyA3yVmWt3cKN1fewJPyBbSi8i8x+l37gp4hdCbMSActzutlKgtXo
+	 djKAYQpE3vAmx4Iwoj2HThNeFrxgkdmyOVA8YA+8=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
+Date: Tue, 25 Feb 2025 20:17:14 +0000
+Message-Id: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_06,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502250114
-X-Proofpoint-GUID: 1Jq9aL3QLj6_Tjn4rS3-IQVoU6JxQyzU
-X-Proofpoint-ORIG-GUID: 1Jq9aL3QLj6_Tjn4rS3-IQVoU6JxQyzU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEslvmcC/43NMRKCMBCF4aswqV1nExDQyns4FjFsZB0hThKjj
+ sPdDTY2FpT/K773FoE8UxC74i08JQ7sxhzlqhCm1+OZgLvcQqGqpJINGDcm8nkPZAJEBxe2Ngt
+ w0z5CfDiwVYWy0bq2dSOyc/Nk+fn9OBxz9xyi86/vZZLzOusblKpdoCcJCFtdk7F4UiW2+yuP9
+ +d6YONdcDaujRvE/JPUz1ZYLrFVtrsGN61GaTuk//Y0TR+h+4siOAEAAA==
+X-Change-ID: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
+ James Smart <james.smart@broadcom.com>, 
+ Dick Kennedy <dick.kennedy@broadcom.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+ Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
+ Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
+ Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Selvin Xavier <selvin.xavier@broadcom.com>, 
+ Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: cocci@inria.fr, linux-kernel@vger.kernel.org, 
+ linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+ ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>, 
+ Takashi Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
+X-Mailer: b4 0.14.2
 
-xfs_io atomic write support is a dependency of the scsi and nvme atomic write
-tests. The xfs_io atomic write support was introduced across different
-versions so if xfs_io pwrite supports the -A (Atomic Write) option, it doesn't
-necessarily support statx atomic write fields so that needs to be verified
-separately.
+This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+either use the multiply pattern of either of:
+- msecs_to_jiffies(N*1000) or
+- msecs_to_jiffies(N*MSEC_PER_SEC)
 
-Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
+where N is a constant or an expression, to avoid the multiplication.
+
+The conversion is made with Coccinelle with the secs_to_jiffies() script
+in scripts/coccinelle/misc. Attention is paid to what the best change
+can be rather than restricting to what the tool provides.
+
+Andrew has kindly agreed to take the series through mm.git modulo the
+patches maintainers want to pick through their own trees.
+
+This series is based on next-20250225
+
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+
+* https://lore.kernel.org/all/20241210-converge-secs-to-jiffies-v3-0-ddfefd7e9f2a@linux.microsoft.com/
+
 ---
- common/xfs | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v3:
+- Change commit message prefix from libata: zpodd to ata: libata-zpodd: in patch 8 (Damien)
+- Split up overly long line in patch 9 (Christoph)
+- Fixup unnecessary line break in patch 14 (Ilpo)
+- Combine v1 and v2
+- Fix some additional hunks in patch 2 (scsi: lpfc) which the more concise script missed
+- msecs_to_jiffies -> msecs_to_jiffies() in commit messages throughout
+- Bug in secs_to_jiffies() uncovered by LKP merged in 6.14-rc2: bb2784d9ab4958 ("jiffies: Cast to unsigned long in secs_to_jiffies() conversion")
+- Link to v2: https://lore.kernel.org/r/20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com
 
-diff --git a/common/xfs b/common/xfs
-index 10ecda7c75c8..79e79e7f45ae 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -11,6 +11,14 @@ _have_xfs_io_atomic_write() {
- 
- 	_have_program xfs_io || return $?
- 
-+	# Determine if the statx command returns the atomic writes fields.
-+	s=$(xfs_io -c "statx -r -m 0x00010000" /dev/null | grep atomic_write_unit_min)
-+	if [[ $s == "" ]];
-+	then
-+		SKIP_REASONS+=("xfs_io does not support the statx atomic write fields")
-+		return 1
-+	fi
-+
- 	# If the pwrite command supports the -A option then this version
- 	# of xfs_io supports atomic writes.
- 	s=$(xfs_io -c help | grep pwrite | awk '{ print $4}')
+Changes in v2:
+- Remove unneeded range checks in rbd and libceph. While there, convert some timeouts that should have been fixed in part 1. (Ilya)
+- Fixup secs_to_jiffies.cocci to be a bit more verbose
+- Link to v1: https://lore.kernel.org/r/20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com
+
+---
+Easwar Hariharan (16):
+      coccinelle: misc: secs_to_jiffies: Patch expressions too
+      scsi: lpfc: convert timeouts to secs_to_jiffies()
+      accel/habanalabs: convert timeouts to secs_to_jiffies()
+      ALSA: ac97: convert timeouts to secs_to_jiffies()
+      btrfs: convert timeouts to secs_to_jiffies()
+      rbd: convert timeouts to secs_to_jiffies()
+      libceph: convert timeouts to secs_to_jiffies()
+      ata: libata-zpodd: convert timeouts to secs_to_jiffies()
+      xfs: convert timeouts to secs_to_jiffies()
+      power: supply: da9030: convert timeouts to secs_to_jiffies()
+      nvme: convert timeouts to secs_to_jiffies()
+      spi: spi-fsl-lpspi: convert timeouts to secs_to_jiffies()
+      spi: spi-imx: convert timeouts to secs_to_jiffies()
+      platform/x86/amd/pmf: convert timeouts to secs_to_jiffies()
+      platform/x86: thinkpad_acpi: convert timeouts to secs_to_jiffies()
+      RDMA/bnxt_re: convert timeouts to secs_to_jiffies()
+
+ .../accel/habanalabs/common/command_submission.c   |  2 +-
+ drivers/accel/habanalabs/common/debugfs.c          |  2 +-
+ drivers/accel/habanalabs/common/device.c           |  2 +-
+ drivers/accel/habanalabs/common/habanalabs_drv.c   |  2 +-
+ drivers/ata/libata-zpodd.c                         |  3 +-
+ drivers/block/rbd.c                                |  8 ++---
+ drivers/infiniband/hw/bnxt_re/qplib_rcfw.c         |  2 +-
+ drivers/nvme/host/core.c                           |  6 ++--
+ drivers/platform/x86/amd/pmf/acpi.c                |  2 +-
+ drivers/platform/x86/thinkpad_acpi.c               |  2 +-
+ drivers/power/supply/da9030_battery.c              |  3 +-
+ drivers/scsi/lpfc/lpfc.h                           |  3 +-
+ drivers/scsi/lpfc/lpfc_els.c                       | 11 +++---
+ drivers/scsi/lpfc/lpfc_hbadisc.c                   |  2 +-
+ drivers/scsi/lpfc/lpfc_init.c                      | 10 +++---
+ drivers/scsi/lpfc/lpfc_scsi.c                      | 12 +++----
+ drivers/scsi/lpfc/lpfc_sli.c                       | 41 +++++++++-------------
+ drivers/scsi/lpfc/lpfc_vport.c                     |  2 +-
+ drivers/spi/spi-fsl-lpspi.c                        |  2 +-
+ drivers/spi/spi-imx.c                              |  2 +-
+ fs/btrfs/disk-io.c                                 |  6 ++--
+ fs/xfs/xfs_icache.c                                |  2 +-
+ fs/xfs/xfs_sysfs.c                                 |  8 ++---
+ include/linux/ceph/libceph.h                       | 12 +++----
+ net/ceph/ceph_common.c                             | 18 ++++------
+ net/ceph/osd_client.c                              |  3 +-
+ scripts/coccinelle/misc/secs_to_jiffies.cocci      | 10 ++++++
+ sound/pci/ac97/ac97_codec.c                        |  3 +-
+ 28 files changed, 82 insertions(+), 99 deletions(-)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
+
+Best regards,
 -- 
-2.43.5
+Easwar Hariharan <eahariha@linux.microsoft.com>
 
 
