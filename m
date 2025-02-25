@@ -1,158 +1,138 @@
-Return-Path: <linux-block+bounces-17621-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17623-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36B4AA44110
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 14:40:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66910A4418D
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 15:00:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89F47163E0E
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 13:34:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15AEE7AC7AA
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 13:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C539B2045B9;
-	Tue, 25 Feb 2025 13:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E47126E149;
+	Tue, 25 Feb 2025 13:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fskCJdTH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V99u8oDa"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F913A1DB
-	for <linux-block@vger.kernel.org>; Tue, 25 Feb 2025 13:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53452267AE5;
+	Tue, 25 Feb 2025 13:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490442; cv=none; b=p2+TZ6uncNlfRbxTIeCD/xj+Rfb5rY7oBu4otzXmuoRp1cn/g5HzJxn2OX/qI6qOgyoYCBh2jPUyKD6BT5lJ1Fhxox21t2xUmVzRXDSZdCdTLyq84F3zZHhQZkw/oykE8C3UX/hfYwh9X9RwgQcCSiKK0zm3QJ8J/QLpwRojqxQ=
+	t=1740491768; cv=none; b=oMP6wJixJ1TB+W8b8dO4LJ5prh57tyBmav4qzwcRoxonAY1uL9q8UnWHwGsLKV9WAnb4/mX5BHlsUxT1Ba/GjKu+1VmWB2ZMQl4TK6E961MPgtCM2YHf98ly0TmYHZjmNbAKO3eJKclZ1AtHOObfMVg/jKaLrPh3GHLCd2EUCN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490442; c=relaxed/simple;
-	bh=8T35rDqQB8Jru6KK7el2MzYx2lMtJEkVP4uk/2ke0K8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PYn2/V3irrZ/DoYUSkvLFE9evU5AeibGvOtApq0B1hiGf2QUaXbeDbPJl+vB2D/ka/HmcHfZU/0rLN00h/AdE6syVNOrwB5BN02+6jvDC5jJGbCmhuunrLhLF/5rO7Wkw4P921lKjCEizjffrY23BpgM8wMOLAKi0vmgCk82oiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fskCJdTH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7XLrN007160;
-	Tue, 25 Feb 2025 13:31:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ep3Lun7kQUVIFCjiX
-	pVDv2FEx/b6V3zrgoemi9NfDi8=; b=fskCJdTHFl+7HcCr39H80or+7XVljguzC
-	YhQvCFUk6ftCdFohRIvFnT52Ez0s6m+NRMB1QmM8alhQSxuTrQY/2CqELGdls/+K
-	ngGmRmLo0tmuyY6rxqSvatwP+CrSCvrGnNaPGkzPfpzr/G2Fg6M8548CY4Ll3Mwc
-	zgsWfFbEWypzIkNCnroXNckytTAJQhSoQyw3Bz6Z+hQl/SxhldOmpzC0wEsGM91B
-	Binisoz7TQlqktd5hLKa6OLmW+gRG/TUNPlrUEizGOz39r58QU+VNk/Qsqoq2cFT
-	U3blPTZEpYYNK7+JCiC5wC72lUF/aD2A7WqwXw0o9c5ZsomOgr0zQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4519jp9qgp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 13:31:49 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51PD4EOA012507;
-	Tue, 25 Feb 2025 13:31:49 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ys9ydajp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 13:31:49 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PDVloG36110668
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 13:31:47 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A20B20040;
-	Tue, 25 Feb 2025 13:31:47 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 87B8E2004B;
-	Tue, 25 Feb 2025 13:31:43 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.61.156.112])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 25 Feb 2025 13:31:43 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: linux-block@vger.kernel.org
-Cc: hch@lst.de, ming.lei@redhat.com, dlemoal@kernel.org, hare@suse.de,
-        axboe@kernel.dk, gjoyce@ibm.com
-Subject: [PATCHv4 7/7] block: protect read_ahead_kb using q->limits_lock
-Date: Tue, 25 Feb 2025 19:00:42 +0530
-Message-ID: <20250225133110.1441035-8-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250225133110.1441035-1-nilay@linux.ibm.com>
-References: <20250225133110.1441035-1-nilay@linux.ibm.com>
+	s=arc-20240116; t=1740491768; c=relaxed/simple;
+	bh=DiLY1ms2hpUfmBnGN1pyxMuMPM2d9o1sORXwIXmzmo0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KKSdfapvkqzTaHlQWPRIXVMKkK1WDVTIDR7Abo20K7UZelQwJalOrGWKtSzB9e95nDl5kb+W0dVUyW8nDDIT/m60yHrC+pWF+GaWog7F9LDDnOaZFVPwD/RDIUhYxJS+tMkfnC65CxPli47l6j4JkHVnpdhwjejtM70vc6KjLlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V99u8oDa; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so9014883a12.3;
+        Tue, 25 Feb 2025 05:56:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740491765; x=1741096565; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gH1W2eZ1e+/3isrHjCzghMR+GkcDtBcMh63rzvVg7Uk=;
+        b=V99u8oDaqLVgEAT3kVHKJUwXLxChmnZ8w5O3Lbr+fda2D9WyDIU5mMZ/ddoXKCpsHh
+         9jcfx0Lc9M2hXZwE3FmrX7rLdN2aKGGS8r3zP1aMHqcV5/KZsoLwnJQjxNtQsxO/ez6G
+         DGmtZnuNaHxIo/cWNk/CUj0C9+hUbNvA8PeNbpdECNGS/JzOlV8D7KI7jNZGrx359/MW
+         k8DNzyluYtcxWeS75WSqyD6ItBJaE1yQ7jwBrIUzlRlyocqY3iQfp2xjT3al7ScG6A8b
+         ysXVksFTnms8wG1F/dnlgnBah1UOkuARp96fJsjzMuQ8kUKXAqb3wBlzBY5TjvgN5ziq
+         BylA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740491765; x=1741096565;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gH1W2eZ1e+/3isrHjCzghMR+GkcDtBcMh63rzvVg7Uk=;
+        b=EID1vpkKXXcUJKf4iAQjaU2uf3Sezwn18P26cQgPFSOMCDTFQmET1/rAFsQg40cJ0X
+         M7EPq8kKbV+HIjxV88NhOvmzOWXulft8/F3ZRw9YbTtJXEOFvGY45DX37rN/ByFPgbnz
+         MZfGlWYjW74KZWrb2DqmY01hPLY5PylgbifZ+MndTx91UXGdzNFKXu+uMA+fuVLEElEB
+         sBNc4yxvBeVGbvHJu++V6meV/Dyg2DV6tkl35yarZV3QbysGB2ZBWEsF1ghIhWB+dJyG
+         mPWdzjYm8QohpMT49V5IXhusEBeNKNYtsyQQ2a0FYL3ROiU7zpRqRce6C8ULIZFQgNo3
+         Dy5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFW8k7RGOOmxsG0IAQjvWZOd+/PkHC/nNfafhPKPawe5siPQsFBT7BxF6G1dhsftskiC3bJhJE2RASIKg=@vger.kernel.org, AJvYcCWK1OxXNk4MvEK2XbUZ8/Rl+66Tzh0PHZt7qV7OJORsEA2Mc/WmVi0xz7Let/9qh/jLa+/mjvDy5A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnAyWPC00zbycInPxkbu+PYHucFjZsqC4fACWN8qS+BPx0dTyK
+	1DJGJgmQU88hrzD+CpZ9xIacatTcGp/Xv5HplIhvpoE59jx1IdgI
+X-Gm-Gg: ASbGnctRN62kTEgBOuyxjYOWLAEj2lKZyLuLMq6MOweTo2X13k6lBtaEB1xLhYj+q7d
+	Srrwqb+pJCyWpAEhtIesax45hzBwd744UO0GT1pHLsovrx7xpFd0u4VStb+G7ZSPb+GnNVSXYsc
+	pQoZ7kcAcaT18qLR7y5J2kVCZd2I1QG5O3LiMzi0uvlzZtzj1jdCvqPl5r96drNZ6q8RS9ODDny
+	ioUlwXilI7lz4qFH1F8cp88vZjdamzhZSEeanlZfqWaw+hkWtEqSJo/wIprUziEP0H00uWt+j+V
+	uaq08MI4wHcHuY4qsU28poAw5oikuuIk06Fj693iIXiTQbLtfzIl2PBwSKc=
+X-Google-Smtp-Source: AGHT+IGuFev6KPwevZfjqaRBsxFc+AV7VrLQBs8rmxDWp5+72Od1TGI9seqF9RQppNl4s2tM2c7M4g==
+X-Received: by 2002:a17:907:3d9f:b0:abb:eaf2:51c0 with SMTP id a640c23a62f3a-abc09c2954dmr1756624866b.56.1740491765429;
+        Tue, 25 Feb 2025 05:56:05 -0800 (PST)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:9e08])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdc56bsm145830866b.37.2025.02.25.05.56.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 05:56:04 -0800 (PST)
+Message-ID: <81c3e298-42ca-4388-a31a-dfdd9734a638@gmail.com>
+Date: Tue, 25 Feb 2025 13:57:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: j1yRZvRyEhiknGhCsXzvq8LtO08gt1sC
-X-Proofpoint-GUID: j1yRZvRyEhiknGhCsXzvq8LtO08gt1sC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502250090
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv5 06/11] io_uring/rw: move fixed buffer import to issue
+ path
+To: Keith Busch <kbusch@meta.com>, ming.lei@redhat.com, axboe@kernel.dk,
+ linux-block@vger.kernel.org, io-uring@vger.kernel.org
+Cc: bernd@bsbernd.com, csander@purestorage.com,
+ Keith Busch <kbusch@kernel.org>
+References: <20250224213116.3509093-1-kbusch@meta.com>
+ <20250224213116.3509093-7-kbusch@meta.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250224213116.3509093-7-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The bdi->ra_pages could be updated under q->limits_lock because it's
-usually calculated from the queue limits by queue_limits_commit_update.
-So protect reading/writing the sysfs attribute read_ahead_kb using
-q->limits_lock instead of q->sysfs_lock.
+On 2/24/25 21:31, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
+> Registered buffers may depend on a linked command, which makes the prep
+> path too early to import. Move to the issue path when the node is
+> actually needed like all the other users of fixed buffers.
+> 
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> ---
+>   io_uring/opdef.c |  8 ++++----
+>   io_uring/rw.c    | 43 ++++++++++++++++++++++++++-----------------
+>   io_uring/rw.h    |  4 ++--
+>   3 files changed, 32 insertions(+), 23 deletions(-)
+> 
+> diff --git a/io_uring/opdef.c b/io_uring/opdef.c
+> index 9344534780a02..5369ae33b5ad9 100644
+> --- a/io_uring/opdef.c
+> +++ b/io_uring/opdef.c
+> @@ -104,8 +104,8 @@ const struct io_issue_def io_issue_defs[] = {
+>   		.iopoll			= 1,
+>   		.iopoll_queue		= 1,
+>   		.async_size		= sizeof(struct io_async_rw),
+> -		.prep			= io_prep_read_fixed,
+> -		.issue			= io_read,
+> +		.prep			= io_prep_read,
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
----
- block/blk-sysfs.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+io_prep_read_fixed() -> io_init_rw_fixed() -> io_prep_rw(do_import=false)
+after:
+io_prep_read() -> io_prep_rw(do_import=true)
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 31bfd6c92b2c..8d078c7f0347 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -93,9 +93,9 @@ static ssize_t queue_ra_show(struct gendisk *disk, char *page)
- {
- 	ssize_t ret;
- 
--	mutex_lock(&disk->queue->sysfs_lock);
-+	mutex_lock(&disk->queue->limits_lock);
- 	ret = queue_var_show(disk->bdi->ra_pages << (PAGE_SHIFT - 10), page);
--	mutex_unlock(&disk->queue->sysfs_lock);
-+	mutex_unlock(&disk->queue->limits_lock);
- 
- 	return ret;
- }
-@@ -111,12 +111,15 @@ queue_ra_store(struct gendisk *disk, const char *page, size_t count)
- 	ret = queue_var_store(&ra_kb, page, count);
- 	if (ret < 0)
- 		return ret;
--
--	mutex_lock(&q->sysfs_lock);
-+	/*
-+	 * ->ra_pages is protected by ->limits_lock because it is usually
-+	 * calculated from the queue limits by queue_limits_commit_update.
-+	 */
-+	mutex_lock(&q->limits_lock);
- 	memflags = blk_mq_freeze_queue(q);
- 	disk->bdi->ra_pages = ra_kb >> (PAGE_SHIFT - 10);
-+	mutex_unlock(&q->limits_lock);
- 	blk_mq_unfreeze_queue(q, memflags);
--	mutex_unlock(&q->sysfs_lock);
- 
- 	return ret;
- }
-@@ -670,7 +673,8 @@ static struct attribute *queue_attrs[] = {
- 	&queue_dma_alignment_entry.attr,
- 
- 	/*
--	 * Attributes which are protected with q->sysfs_lock.
-+	 * Attributes which require some form of locking
-+	 * other than q->sysfs_lock.
- 	 */
- 	&queue_ra_entry.attr,
- 
+This change flips do_import. I'd say, let's just remove the importing
+bits from io_prep_rw_fixed(), and should be good for now.
+
+Apart from that:
+
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+
 -- 
-2.47.1
+Pavel Begunkov
 
 
