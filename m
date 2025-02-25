@@ -1,83 +1,163 @@
-Return-Path: <linux-block+bounces-17648-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17650-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9FF4A44869
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 18:37:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C13AAA44A3A
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 19:26:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D37CE7A2798
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 17:36:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7ACBB175399
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2025 18:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0F9194A59;
-	Tue, 25 Feb 2025 17:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA341A0BDB;
+	Tue, 25 Feb 2025 18:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X079AkK5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dkU0DeKs"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D1715445D;
-	Tue, 25 Feb 2025 17:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756E319597F;
+	Tue, 25 Feb 2025 18:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504753; cv=none; b=XHZJgea/DYe9t0OpsjdAQy32XQP17nPoHv+58Io9la4e9rjQ2PHbuzksXJk7Jh1Ex7+6xSbsHiawnBk/GrpBkEVaB+ARs1+rdPBCWhEQe0aC0S/m5F0T1Ey9r+XApQdfqlzg1fLCs2jaYC4yoEssU5viAaX2AfRCrlLKVQklnvs=
+	t=1740507761; cv=none; b=BlUDbhzVS/B/abLcn+GcZdflplnWP6oClU2XHsLKOJK1s2LnJk7XbrB+FsYzyT/iTnSzXHv7bBqJIEYfq7k0ybTMxlFdq0ygC++gS7QkZGKP2C9woNPc9xJBKFwImctL8TJ2+nxx+lMveNzqeMcklX4tjwQYWIwtPDAJ1wkigKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504753; c=relaxed/simple;
-	bh=WXTf3EqU+ttyrsGnWXKJb8I6GmW83f0L9J4CqehU8Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tn+OqFeLKjcO9snEf5z8BTeBsDqXm4z1UN2SCyW/c3PquL4s2ejixXnRplz8GK6/VfVASIsImGxi5Z7sE1P+nVR2xjswFX77bX2seL1AECybm8c0u4yNCfKu1VjpM/HgsXcu0+ts7XSE9tXxTkMtBco09jCTORc9eV8NT6X0M9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X079AkK5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34D09C4CEDD;
-	Tue, 25 Feb 2025 17:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740504752;
-	bh=WXTf3EqU+ttyrsGnWXKJb8I6GmW83f0L9J4CqehU8Is=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X079AkK5UjPQoakZXniCf36gK4StJwq2QKaa7mb3jAvAFIkV1rHc+WtKpglxSrUeI
-	 mrAVWrB0eElkMF7lTkI3ik9ja0gwFKD8JkAxU7RZwEvrpNPiSKq/ew2RhOLRRBGWpu
-	 EMrcePCe5gmiq1zRhraWyqHpK2jgglwfYPhlPdPoOhjeb1EqOL606N2SoizB9C80vu
-	 wM4KlINOwfl7M/NvIW8eKj4H23SMoN8dUJGL7Tivt7czgQnPFG6p15ABk4jIVPvvPH
-	 RVYJFLi+sA05+RSdViA4a6urHNSANtd0TlWVpqHX/cIFyjbEyP5ccrXp+qiZSmAinB
-	 1+cyxbjIU2dtw==
-Date: Tue, 25 Feb 2025 10:32:30 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Keith Busch <kbusch@meta.com>, asml.silence@gmail.com, axboe@kernel.dk,
-	linux-block@vger.kernel.org, io-uring@vger.kernel.org,
-	bernd@bsbernd.com, csander@purestorage.com
-Subject: Re: [PATCHv5 07/11] io_uring: add support for kernel registered bvecs
-Message-ID: <Z73-rhNw3zgvUuZr@kbusch-mbp>
-References: <20250224213116.3509093-1-kbusch@meta.com>
- <20250224213116.3509093-8-kbusch@meta.com>
- <Z72P_nnZD9i-ya-1@fedora>
+	s=arc-20240116; t=1740507761; c=relaxed/simple;
+	bh=PNvCJg9elJfwoYtj5L3LVl7XN5WApXh77sQmP1Dbg9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HjUU8l6DOUol1AFIDk04rC3RgkX3t++FvN5C2ryovJIrPTGq7zZJpxS40rAzZD+rb5eRTJGDvYDCW9cJ/PxDjN9y76/qaAhgX3QRvarPJntOefTilGrKOLS2j3+Fbo8JN2yIH4rS7bC/v8j7uvLY94QGEAndU5PSPtziOD+opVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dkU0DeKs; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHtbtP008584;
+	Tue, 25 Feb 2025 18:22:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=/G+22Z5klOB/BaYgo3/8FGrN8t10I
+	pNqOIARPY7xUJY=; b=dkU0DeKsROM/mZtEf2javZx2D5KeN1Q3Io1FzZ5INlqWU
+	EjOlBw66OK2reLo2njrm75c4txi/6CI3EYfXzMOzMr8yrhuq/Rk3y4spj0/utNYT
+	qe/TsvY2xl5PzkeunlttnluJuzmvFxZ3sjVcNbVyJprbpFto4EBK2CQ44O0llBV6
+	ZFtUTWqNL2bfoAhuIvaK/BEbPISpEohdP/F0kN9/ZVhMIkmhxTHPxvnz55bPZCpK
+	x1oNSxh2YChvvMB0cH7iw5fB8wTXCdY4lj3vdmiqri+1i58iXLs95KTQKba+zHfF
+	u/OaRW/9wlQ7AzkNt/U/u0j+g7gGqOSk5wVCefx8A==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y5c2e1k0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 18:22:34 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHVu0r024499;
+	Tue, 25 Feb 2025 18:22:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y519n6xv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 18:22:33 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51PIMXe4038769;
+	Tue, 25 Feb 2025 18:22:33 GMT
+Received: from ca-dev94.us.oracle.com (ca-dev94.us.oracle.com [10.129.136.30])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44y519n6x8-1;
+	Tue, 25 Feb 2025 18:22:32 +0000
+From: Alan Adamson <alan.adamson@oracle.com>
+To: linux-block@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org, alan.adamson@oracle.com,
+        linux-nvme@lists.infradead.org, shinichiro.kawasaki@wdc.com
+Subject: [PATCH blktests 0/1] common/xfs: verify xfs_io supports statx atomic write attributes
+Date: Tue, 25 Feb 2025 10:31:07 -0800
+Message-ID: <20250225183108.3881328-1-alan.adamson@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z72P_nnZD9i-ya-1@fedora>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_06,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502250114
+X-Proofpoint-ORIG-GUID: pffJKxOyNP69FTdj4LuhTKOWd7JakYK2
+X-Proofpoint-GUID: pffJKxOyNP69FTdj4LuhTKOWd7JakYK2
 
-On Tue, Feb 25, 2025 at 05:40:14PM +0800, Ming Lei wrote:
-> On Mon, Feb 24, 2025 at 01:31:12PM -0800, Keith Busch wrote:
-> > +
-> > +	if (op_is_write(req_op(rq)))
-> > +		imu->perm = IO_IMU_WRITEABLE;
-> > +	else
-> > +		imu->perm = IO_IMU_READABLE;
-> 
-> Looks the above is wrong, if request is for write op, the buffer
-> should be readable & !writeable.
-> 
-> IO_IMU_WRITEABLE is supposed to mean the buffer is writeable, isn't it?
+The xfs_io utility is used to perform atomic pwritev2 and statx system calls.
+The atomic pwritev2 was supported in xfs_io v6.11.0 and atomic statx was
+added to v6.12.0 so _have_xfs_io_atomic_write() needs to be modified to
+check for both atomic pwritev2 (-A) and atomic statx.
 
-In the setup I used here, IMU_WRITEABLE means this can be used in a
-write command. You can write from this buffer, not to it.
+TEST RESULTS
+============
+Using xfs_io version 6.11.0:
 
-I think this is the kind of ambiguity that lead iov iter to call these
-buffers SOURCE and DEST instead of WRITE and READ.
+[root@localhost blktests.x]# ./check scsi/009
+scsi/*** => nvme0n1                                          [not run]
+    /dev/nvme0n1 is not a SCSI device
+scsi/009 => sdb (test scsi atomic writes)                    [failed]
+    runtime  0.156s  ...  0.148s
+    --- tests/scsi/009.out	2025-02-24 17:04:22.372544559 -0500
+    +++ /root/blktests.x/results/sdb/scsi/009.out.bad	2025-02-24 17:50:33.256602965 -0500
+    @@ -3,8 +3,8 @@
+     TEST 2 - check scsi_debug atomic_wr_max_length is the same as sysfs atomic_write_max_bytes - pass
+     TEST 3 - check sysfs atomic_write_unit_max_bytes <= scsi_debug atomic_wr_max_length - pass
+     TEST 4 - check sysfs atomic_write_unit_min_bytes = scsi_debug atomic_wr_gran - pass
+    -TEST 5 - check statx stx_atomic_write_unit_min - pass
+    -TEST 6 - check statx stx_atomic_write_unit_max - pass
+    +TEST 5 - check statx stx_atomic_write_unit_min - fail  - 1024
+    +TEST 6 - check statx stx_atomic_write_unit_max - fail  - 524288
+    ...
+    (Run 'diff -u tests/scsi/009.out /root/blktests.x/results/sdb/scsi/009.out.bad' to see the entire diff)
+[root@localhost blktests.x]# ./check nvme/059
+nvme/059 => nvme0n1 (test atomic writes)                     [failed]
+    runtime  0.035s  ...  0.036s
+    --- tests/nvme/059.out	2025-02-24 17:04:22.371132656 -0500
+    +++ /root/blktests.x/results/nvme0n1/nvme/059.out.bad	2025-02-24 17:50:36.383906336 -0500
+    @@ -1,8 +1,8 @@
+     Running nvme/059
+     TEST 1 - Verify sysfs attributes - pass
+     TEST 2 - Verify sysfs atomic_write_unit_max_bytes is consistent with NVMe AWUPF/NAWUPF - pass
+    -TEST 3 - Verify statx is correctly reporting atomic_unit_max_bytes - pass
+    -TEST 4 - Verify statx is correctly reporting atomic_unit_min_bytes - pass
+    +TEST 3 - Verify statx is correctly reporting atomic_unit_max_bytes - fail  - 16384
+    +TEST 4 - Verify statx is correctly reporting atomic_unit_min_bytes - fail  - 512
+    ...
+    (Run 'diff -u tests/nvme/059.out /root/blktests.x/results/nvme0n1/nvme/059.out.bad' to see the entire diff)
+[root@localhost blktests.x]# 
+
+
+Testing by czhong:
+the default xfs_io version is 6.11.0 on my system,
+after applied your patch:
+
+# xfs_io -V
+xfs_io version 6.11.0
+
+# ./check scsi/009
+scsi/*** => nvme1n1                                          [not run]
+    /dev/nvme1n1 is not a SCSI device
+scsi/009 => sdb (test scsi atomic writes)                    [not run]
+    xfs_io does not support the statx atomic write fields
+# ./check nvme/059
+nvme/059 => nvme1n1 (test atomic writes)                     [not run]
+    runtime  0.081s  ...  
+    xfs_io does not support the statx atomic write fields
+and then I upgrade the xfs_io to 6.13.0:
+
+# xfs_io -V
+xfs_io version 6.13.0
+
+# ./check scsi/009
+scsi/*** => nvme1n1                                          [not run]
+    /dev/nvme1n1 is not a SCSI device
+scsi/009 => sdb (test scsi atomic writes)                    [passed]
+    runtime    ...  0.271s
+]# ./check nvme/059
+nvme/059 => nvme1n1 (test atomic writes)                     [passed]
+    runtime    ...  0.078s
+everything looks good now!!
+please merge your new patch to the repo,
+Thanks!
 
