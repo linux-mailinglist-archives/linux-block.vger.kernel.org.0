@@ -1,162 +1,150 @@
-Return-Path: <linux-block+bounces-17711-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17715-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BD44A45CB8
-	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2025 12:10:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2613EA45D3F
+	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2025 12:35:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFC4D1716F0
-	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2025 11:10:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28374173485
+	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2025 11:35:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24D9A214236;
-	Wed, 26 Feb 2025 11:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4232153D3;
+	Wed, 26 Feb 2025 11:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="X7FSIOYi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fup7pU9D"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A820B213E87;
-	Wed, 26 Feb 2025 11:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C08519CD16
+	for <linux-block@vger.kernel.org>; Wed, 26 Feb 2025 11:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740568248; cv=none; b=S8pTOgrw/m0SiQ38YSOL7fR4yFhwuyIaVmjV3Q9NVQlqyjcel9lCqivbmKfi+qAD+lPNH8nU2wlsUjuGC1FvnMHrJQvZEY9+ujN5lCIpOURjjbiLOvE9e3qF05Nz4cN4khyvIg4xfBt8UUdhtgl3rl8sHHGzL5a0hW2FM0ZtttM=
+	t=1740569747; cv=none; b=sNx2lR/TQ+ahahHPixEFdQqfSyUJq7ZTKOg5DWgbH+p7bMpxCraNWvCM5R7Z8dy5aQ+wLrqwAwfVKBUgmpBU3AvyB0NJafwAbX1P1nfSZVuVLIivb/eKopl3lY0jLv74dhM+TwLQ/G48xRlbvtFk/lT3w1vURreU13hNvdo3pkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740568248; c=relaxed/simple;
-	bh=4I7omasySoZo/JUrFqUPmohfcJJOJWXiXsJQizCs3DE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DUea2mBUy2D7psLjB5gLpjaXDnh5EsmAJ5xypBHL3EcWUPoLofqUS7/52SOoXNYHpyvZJoDevxlYsTJUDkk7V1uvX1g9FwBOiu/H5jgNaVnEe3VvOQXAIEY9iyAoKjIVhzrmayPz4SUzwXQ271qJzcA/0dDQLvZlwyNI2NS/VqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=X7FSIOYi; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740568240; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vpAtcTJM/EJCDxxy2WMQ1RGo3EUw0Xe3GtPnY0G1MaE=;
-	b=X7FSIOYiW7AQXN6HaL0cIs7ZBQGdggEOG+3rwVAF2jfu9W17aoLsBFHyvYXNVJeH9OD4ACZV87APtHPAGvp+UdOqIuQQ+aNwQC24R5ixXBTVl8IvXqwB60m9Lqe+5GwLMGggNvvxFqKRdHCy7Db+owu2W2AQPz7tFP9gO7DyhtE=
-Received: from 30.221.130.195(mailfrom:mengferry@linux.alibaba.com fp:SMTPD_---0WQI5T1B_1740568238 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Feb 2025 19:10:38 +0800
-Message-ID: <be8704b0-81a4-403b-8b42-d3612099279f@linux.alibaba.com>
-Date: Wed, 26 Feb 2025 19:10:36 +0800
+	s=arc-20240116; t=1740569747; c=relaxed/simple;
+	bh=HReYMgg9LwBhweGV2Me8FeHN++Xz/on+AMz1xQfZXCE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=JK4fDwBbyIX7Y0mXZ5G8N547gcnS+ddwRw7PVeIR3N6LwykFf1ZtzeVDvzHOlJoXkqE21/LHv624QAT1Xy5FIBvEsjpQSISSfrH603RzAVqQWslUgzgG9v4R9Agwq+Zf+oz6NNrS1blVf4LbE/Qk+pp7+go3VL0Ei8h+i3wpo6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fup7pU9D; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250226112927epoutp045721fd1ee85544c1e633ef8dff6fc31a~nvp4r73OM0099000990epoutp04e
+	for <linux-block@vger.kernel.org>; Wed, 26 Feb 2025 11:29:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250226112927epoutp045721fd1ee85544c1e633ef8dff6fc31a~nvp4r73OM0099000990epoutp04e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740569367;
+	bh=mYlgMANAA3/12lPDPVDBmMvxGDvs5skYaJT+zjvYVg8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=fup7pU9DYOY4ikf5gTsVY33fY0x4zAQoa5c2tMO4Uzdk8Zm8uiybYlruNtHbOIFSv
+	 VwzFry0KbmI4AYmI4ii01jqiuqFzpXknWokQshB2BOB5PeEUcjtuG2NRhzdTsGnlDR
+	 fAn4/YaLczh3cXml+AlkJq1X0u7yjq1ziS99Bvfs=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20250226112922epcas5p190c013ea4bad09aee59696e3431204f0~nvpzg_reI2155121551epcas5p1y;
+	Wed, 26 Feb 2025 11:29:22 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z2sgh1Skpz4x9Pp; Wed, 26 Feb
+	2025 11:29:20 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	30.27.19933.01BFEB76; Wed, 26 Feb 2025 20:29:20 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250226112855epcas5p330a1f2e300a44ddea5189ff906de7788~nvpamDUgx1479014790epcas5p3t;
+	Wed, 26 Feb 2025 11:28:55 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250226112855epsmtrp16f0b74908e6bcf174d407a437d511e6c~nvpalW5mY2293422934epsmtrp1v;
+	Wed, 26 Feb 2025 11:28:55 +0000 (GMT)
+X-AuditID: b6c32a4a-c1fda70000004ddd-91-67befb104f79
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BD.60.18949.7FAFEB76; Wed, 26 Feb 2025 20:28:55 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250226112853epsmtip2bc828ba372ecf4dd6b3c9e7ddc173556~nvpZJtslA0998309983epsmtip2d;
+	Wed, 26 Feb 2025 11:28:53 +0000 (GMT)
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, martin.petersen@oracle.com
+Cc: anuj1072538@gmail.com, nikh1092@linux.ibm.com,
+	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-scsi@vger.kernel.org, dm-devel@lists.linux.dev, Anuj Gupta
+	<anuj20.g@samsung.com>
+Subject: [PATCH v2 0/2] Fix integrity sysfs reporting inconsistencies
+Date: Wed, 26 Feb 2025 16:50:33 +0530
+Message-Id: <20250226112035.2571-1-anuj20.g@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] virtio-blk: add io_uring passthrough support.
-To: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- io-uring@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>
-References: <20241218092435.21671-1-mengferry@linux.alibaba.com>
- <20250219020112.GB38164@fedora>
-Content-Language: en-US
-From: Ferry Meng <mengferry@linux.alibaba.com>
-In-Reply-To: <20250219020112.GB38164@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmhq7A733pBltb2S0+fv3NYtE04S+z
+	xeq7/WwWCxbNZbFYufook8XeW9oW85c9Zbfovr6DzWL58X9MFncvPmV24PLYOesuu8fls6Ue
+	ExYdYPTYvKTe48XmmYweu282sHl8fHqLxaNvyypGj8+b5AI4o7JtMlITU1KLFFLzkvNTMvPS
+	bZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4DOVFIoS8wpBQoFJBYXK+nb2RTll5ak
+	KmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkCFSZkZzxse8pesIel4l/HKsYGxmvM
+	XYycHBICJhIN0zoZuxi5OIQEdjNKfL/9nRXC+cQoMefeJBYI5xujxNIZa5hgWi6teAbWLiSw
+	l1Hi3ZRoiKLPjBK/2iezgCTYBNQljjxvBZrLwSEiYC3x/rU4SA2zwFlGib+N/8FqhAVcJTY8
+	WMoOYrMIqErs+P8IbCivgIXEmVtfoe6Tl5h56Ts7RFxQ4uTMJ2C9zEDx5q2zmUGGSgg0ckh8
+	fL8UqsFFYsnkpYwQtrDEq+Nb2CFsKYmX/W1QdrrEj8tPob4pkGg+tg+q3l6i9VQ/M8jRzAKa
+	Eut36UOEZSWmnlrHBLGXT6L39xOoVl6JHfNgbCWJ9pVzoGwJib3nGqBsD4k3v2awQgIrVmLu
+	ygbmCYzys5C8MwvJO7MQNi9gZF7FKJlaUJybnlpsWmCUl1oOj9jk/NxNjODUquW1g/Hhgw96
+	hxiZOBgPMUpwMCuJ8HJm7kkX4k1JrKxKLcqPLyrNSS0+xGgKDOOJzFKiyfnA5J5XEm9oYmlg
+	YmZmZmJpbGaoJM7bvLMlXUggPbEkNTs1tSC1CKaPiYNTqoHpgLCYU0OYss/1uF9hZxZfdJ1c
+	I9rtdmzdglO/c1YsPxr3+Zf+KVtz6XdMn2RvHWLtfrq21KcrJOLit+nWsk8OXZz1m/F/TV7P
+	vZOljopLlu7t3eZ951S55bzddaf+6M4t5zin1nnwycTHblmlu3y3Kcpozyvdf3nP1OYTvle5
+	Zu17fdZn7lL7TfV3Dac2qxyvaDt//QzXw72l0ysE14dWcroqlW/cMUHwqPlxzUk705ftWFBw
+	42JI9o/lynuX/+Q2avV5XmlkzvfBk8fmVZN9+eN5fnaZXE7XpFdclmqL9T60uOm16Y6WmlX3
+	Jix+rr6dm6P0lLHl6Tb9lRfWVv/necPDrmMZpbjh68cXi2I+2CqxFGckGmoxFxUnAgC/YZHx
+	NgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWy7bCSvO73X/vSDV4c47D4+PU3i0XThL/M
+	Fqvv9rNZLFg0l8Vi5eqjTBZ7b2lbzF/2lN2i+/oONovlx/8xWdy9+JTZgctj56y77B6Xz5Z6
+	TFh0gNFj85J6jxebZzJ67L7ZwObx8ektFo++LasYPT5vkgvgjOKySUnNySxLLdK3S+DKeNj2
+	lL1gD0vFv45VjA2M15i7GDk5JARMJC6teAZkc3EICexmlHi2tIUFIiEhcerlMkYIW1hi5b/n
+	7CC2kMBHRomzG7JBbDYBdYkjz1uBajg4RATsJe79qACZwyxwmVFiyqsvrCA1wgKuEhseLAXr
+	ZRFQldjx/xHYYl4BC4kzt75CHSEvMfPSd3aIuKDEyZlPwG5gBoo3b53NPIGRbxaS1CwkqQWM
+	TKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYKDXEtrB+OeVR/0DjEycTAeYpTgYFYS
+	4eXM3JMuxJuSWFmVWpQfX1Sak1p8iFGag0VJnPfb694UIYH0xJLU7NTUgtQimCwTB6dUA1PB
+	Rte7zYrOewOFfH8FPlFQiV3F9Sf2mtTPT7kqLK6nhHcKuu+eFxTwYeM/ofdtSlc668ziuo4r
+	Cnq+kPt66t/WWy1fdiq2rfn87nrgZaeel6ufnTaM0uT/aBqlf7I+WaRPfM46ow+bwmdlcu1e
+	IjvfUaBKxe3jg6vhbHyPK9mNXFe1hVhkbHMJP+NjHLxWJvXloab1TGdfMPbtCjBbE3Li0y6/
+	JfUWX/qy7Wy+Kf4/bnlV6tLkyspOFf1wNiu9UhOOHS+qC18vu/R62vPkyj2CNmePZ3B72lTv
+	/Pope/aKfz8mcjxs1+JLWfOi90RFacV2nzeijRHzOQJ9Vny8uYnrp8aype7TMxVOsW3dVqbE
+	UpyRaKjFXFScCABNdJ7t4QIAAA==
+X-CMS-MailID: 20250226112855epcas5p330a1f2e300a44ddea5189ff906de7788
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250226112855epcas5p330a1f2e300a44ddea5189ff906de7788
+References: <CGME20250226112855epcas5p330a1f2e300a44ddea5189ff906de7788@epcas5p3.samsung.com>
 
+Patch 1: Ensures DM devices correctly propagate device_is_integrity_capable
+Patch 2: initialize nogenerate and noverify correctly
 
-On 2/19/25 10:01 AM, Stefan Hajnoczi wrote:
-> On Wed, Dec 18, 2024 at 05:24:32PM +0800, Ferry Meng wrote:
->> This patchset implements io_uring passthrough surppot in virtio-blk
->> driver, bypass vfs and part of block layer logic, resulting in lower
->> submit latency and increased flexibility when utilizing virtio-blk.
-> Hi,
-> What is the status of this patch series?
->
-> Stefan
+v1 -> v2
+initialize BLK_INTEGRITY_NOGENERATE and BLK_INTEGRITY_NOVERIFY in
+blk_validate_integrity_limits rather than doing it in the driver (hch)
 
-I apologize for the delayed response. It seems that the maintainer has 
-not yet provided feedback on this patch series, and I was actually 
-waiting for his comments before proceeding. I have received the feedback 
-from the other reviewers & have already discovered some obvious mistakes 
-in v1 series.
+Anuj Gupta (2):
+  block: ensure correct integrity capability propagation in stacked
+    devices
+  block: Correctly initialize BLK_INTEGRITY_NOGENERATE and
+    BLK_INTEGRITY_NOVERIFY
 
+ block/blk-settings.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Although I'm occupied with other tasks recently, I expect to send out v2 
-patches *in a week*.
+-- 
+2.25.1
 
-
-Thanks.
-
->> In this version, currently only supports READ/WRITE vec/no-vec operations,
->> others like discard or zoned ops not considered in. So the userspace-related
->> struct is not complicated.
->>
->> struct virtblk_uring_cmd {
->> 	__u32 type;
->> 	__u32 ioprio;
->> 	__u64 sector;
->> 	/* above is related to out_hdr */
->> 	__u64 data;  // user buffer addr or iovec base addr.
->> 	__u32 data_len; // user buffer length or iovec count.
->> 	__u32 flag;  // only contains whether a vector rw or not.
->> };
->>
->> To test this patch series, I changed fio's code:
->> 1. Added virtio-blk support to engines/io_uring.c.
->> 2. Added virtio-blk support to the t/io_uring.c testing tool.
->> Link: https://github.com/jdmfr/fio
->>
->>
->> ===========
->> Performance
->> ===========
->>
->> Using t/io_uring-vblk, the performance of virtio-blk based on uring-cmd
->> scales better than block device access. (such as below, Virtio-Blk with QEMU,
->> 1-depth fio)
->> (passthru) read: IOPS=17.2k, BW=67.4MiB/s (70.6MB/s)
->> slat (nsec): min=2907, max=43592, avg=3981.87, stdev=595.10
->> clat (usec): min=38, max=285,avg=53.47, stdev= 8.28
->> lat (usec): min=44, max=288, avg=57.45, stdev= 8.28
->> (block) read: IOPS=15.3k, BW=59.8MiB/s (62.7MB/s)
->> slat (nsec): min=3408, max=35366, avg=5102.17, stdev=790.79
->> clat (usec): min=35, max=343, avg=59.63, stdev=10.26
->> lat (usec): min=43, max=349, avg=64.73, stdev=10.21
->>
->> Testing the virtio-blk device with fio using 'engines=io_uring_cmd'
->> and 'engines=io_uring' also demonstrates improvements in submit latency.
->> (passthru) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O0 -n1 -u1 /dev/vdcc0
->> IOPS=189.80K, BW=741MiB/s, IOS/call=4/3
->> IOPS=187.68K, BW=733MiB/s, IOS/call=4/3
->> (block) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O0 -n1 -u0 /dev/vdc
->> IOPS=101.51K, BW=396MiB/s, IOS/call=4/3
->> IOPS=100.01K, BW=390MiB/s, IOS/call=4/4
->>
->> =======
->> Changes
->> =======
->>
->> Changes in v1:
->> --------------
->> * remove virtblk_is_write() helper
->> * fix rq_flags type definition (blk_opf_t), add REQ_ALLOC_CACHE flag.
->> https://lore.kernel.org/io-uring/202412042324.uKQ5KdkE-lkp@intel.com/
->>
->> RFC discussion:
->> ---------------
->> https://lore.kernel.org/io-uring/20241203121424.19887-1-mengferry@linux.alibaba.com/
->>
->> Ferry Meng (3):
->>    virtio-blk: add virtio-blk chardev support.
->>    virtio-blk: add uring_cmd support for I/O passthru on chardev.
->>    virtio-blk: add uring_cmd iopoll support.
->>
->>   drivers/block/virtio_blk.c      | 320 +++++++++++++++++++++++++++++++-
->>   include/uapi/linux/virtio_blk.h |  16 ++
->>   2 files changed, 331 insertions(+), 5 deletions(-)
->>
->> -- 
->> 2.43.5
->>
 
