@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-17789-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17791-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03E7CA4770A
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 09:01:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CD3EA47715
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 09:02:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C07616E653
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 08:00:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 048AF18909DB
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 08:01:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE9D2288E3;
-	Thu, 27 Feb 2025 07:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C7F229B3C;
+	Thu, 27 Feb 2025 07:59:25 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8DA226888;
-	Thu, 27 Feb 2025 07:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57307227BA6;
+	Thu, 27 Feb 2025 07:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740643164; cv=none; b=lQmrURyCDSBOVLhFWxWQmdPVa5mXJh6JMCtZev83IE9yc2n7XxvX83bxm9J20PPgk3ifTLsKf0NLjAylF7dgW4YIWA29IE6TVNSypivxPi2+Qo6D8QKVQ0Wm4c1S8vGHxsykGmPuGKmgL6w6WxPFHHVAr7jhGExe+qhVz2QWSl0=
+	t=1740643165; cv=none; b=HMEh1LYYwQtlaQR1ZbnX6Nc9+/IkJ+e4mHhZl+lnQN+APIvwe3I94kJ6jTdLslyBqclqmwmmbsElhgYPabrEtuYmMS8UY6amRY9TVf2l7p7P2V8NCFqyBO5gFn6wfE2lTGT1iJBgprjhJQjqvicUsJTDZG+5ljiqC/qxNjzo3Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740643164; c=relaxed/simple;
-	bh=Px/mUYvsmiGzmhUc+tXa1Dybn4SpIBzdm7FmG97uj/k=;
+	s=arc-20240116; t=1740643165; c=relaxed/simple;
+	bh=7JfyPC4SKfaSXE9X/5i4eNtMjUhnK9ih2VMgcLSAHSI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j4TpsRYOkGru2gxqvzsyCtPwObwt3S/+NmamxxfJ4Lf5qww/IZIF4AuZ2cZXsyHncoi8DSQ0Tjgt8zCFNRAYM1yybu546OSqpu0MRHAsfgHPG2Ux5VHHyvvUwnubrGF3g3LurR/RZGn9RLLZ3pLJb0K5P2qEyw0aq/YjaHYdz7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=VZXof6hsGjtGxApkyqyDMLAg5fKbD0iPM9TfSekSEJ7UefEd+deAvyUxG8PvbnarPpYYHT7AUgDxrwXTcAxzlj3U9Fm5PbxsnxlhR2LRHleHituavrESSxS9Jk694+l+6iG/2ZsPc/a+5S8jo8c7IE5uyATeWkSXny5o/XHAfHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z3NyT5Vl9z4f3js3;
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z3NyT0p1bz4f3lVb;
 	Thu, 27 Feb 2025 15:58:57 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9F4F61A06D7;
-	Thu, 27 Feb 2025 15:59:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 65CE11A1C66;
+	Thu, 27 Feb 2025 15:59:20 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S11;
-	Thu, 27 Feb 2025 15:59:19 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S12;
+	Thu, 27 Feb 2025 15:59:20 +0800 (CST)
 From: Zheng Qixing <zhengqixing@huaweicloud.com>
 To: axboe@kernel.dk,
 	song@kernel.org,
@@ -60,9 +60,9 @@ Cc: linux-block@vger.kernel.org,
 	nvdimm@lists.linux.dev,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH V2 07/12] badblocks: try can_merge_front before overlap_front
-Date: Thu, 27 Feb 2025 15:55:02 +0800
-Message-Id: <20250227075507.151331-8-zhengqixing@huaweicloud.com>
+Subject: [PATCH V2 08/12] badblocks: fix merge issue when new badblocks align with pre+1
+Date: Thu, 27 Feb 2025 15:55:03 +0800
+Message-Id: <20250227075507.151331-9-zhengqixing@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
 References: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
@@ -73,10 +73,10 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S11
-X-Coremail-Antispam: 1UD129KBjvJXoW7trWxJFWkuFW5Jr1kZF43Wrg_yoW8Cw45pw
-	nIvr1akrZ7Kw17ur13u3ZFqr1agFW8GFsrKa17Jw1FkryIvas3KF1Iq3WxK34jqFZIyrn0
-	qw15CFy0vFy8trJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S12
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr45KrW3Jr4DurWDAr1DKFg_yoW8Xr4kpr
+	nxCw1SkryqgF18Za1Uu3WxWrW09a4fGF48Ca9rJr4jkr98A3WIqr1kX3yYqryjqr43Grn0
+	q3WY9Fy8Za4kG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -95,82 +95,54 @@ X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
 From: Li Nan <linan122@huawei.com>
 
-Regardless of whether overlap_front() returns true or false,
-can_merge_front() will be executed first. Therefore, move
-can_merge_front() in front of can_merge_front() to simplify code.
+There is a merge issue when adding badblocks as follow:
+  echo 0 10 > bad_blocks
+  echo 30 10 > bad_blocks
+  echo 20 10 > bad_blocks
+  cat bad_blocks
+  0 10
+  20 10    //should be merged with (30 10)
+  30 10
 
+In this case, if new badblocks does not intersect with prev, it is added
+by insert_at(). If there is an intersection with prev+1, the merge will
+be processed in the next re_insert loop.
+
+However, when the end of the new badblocks is exactly equal to the offset
+of prev+1, no further re_insert loop occurs, and the two badblocks are not
+merge.
+
+Fix it by inc prev, badblocks can be merged during the subsequent code.
+
+Fixes: aa511ff8218b ("badblocks: switch to the improved badblock handling code")
 Signed-off-by: Li Nan <linan122@huawei.com>
 Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/badblocks.c | 48 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
+ block/badblocks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/block/badblocks.c b/block/badblocks.c
-index 43430bd3efa7..57e9edf9b848 100644
+index 57e9edf9b848..92bd43f7fff1 100644
 --- a/block/badblocks.c
 +++ b/block/badblocks.c
-@@ -905,39 +905,35 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+@@ -892,7 +892,7 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 		len = insert_at(bb, 0, &bad);
+ 		bb->count++;
+ 		added++;
+-		hint = 0;
++		hint = ++prev;
  		goto update_sectors;
  	}
  
-+	if (can_merge_front(bb, prev, &bad)) {
-+		len = front_merge(bb, prev, &bad);
-+		added++;
-+		hint = prev;
-+		goto update_sectors;
-+	}
-+
- 	if (overlap_front(bb, prev, &bad)) {
--		if (can_merge_front(bb, prev, &bad)) {
--			len = front_merge(bb, prev, &bad);
--			added++;
--		} else {
--			int extra = 0;
-+		int extra = 0;
+@@ -947,7 +947,7 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 	len = insert_at(bb, prev + 1, &bad);
+ 	bb->count++;
+ 	added++;
+-	hint = prev + 1;
++	hint = ++prev;
  
--			if (!can_front_overwrite(bb, prev, &bad, &extra)) {
--				if (extra > 0)
--					goto out;
-+		if (!can_front_overwrite(bb, prev, &bad, &extra)) {
-+			if (extra > 0)
-+				goto out;
- 
--				len = min_t(sector_t,
--					    BB_END(p[prev]) - s, sectors);
--				hint = prev;
--				goto update_sectors;
--			}
-+			len = min_t(sector_t,
-+				    BB_END(p[prev]) - s, sectors);
-+			hint = prev;
-+			goto update_sectors;
-+		}
- 
--			len = front_overwrite(bb, prev, &bad, extra);
--			added++;
--			bb->count += extra;
-+		len = front_overwrite(bb, prev, &bad, extra);
-+		added++;
-+		bb->count += extra;
- 
--			if (can_combine_front(bb, prev, &bad)) {
--				front_combine(bb, prev);
--				bb->count--;
--			}
-+		if (can_combine_front(bb, prev, &bad)) {
-+			front_combine(bb, prev);
-+			bb->count--;
- 		}
--		hint = prev;
--		goto update_sectors;
--	}
- 
--	if (can_merge_front(bb, prev, &bad)) {
--		len = front_merge(bb, prev, &bad);
--		added++;
- 		hint = prev;
- 		goto update_sectors;
- 	}
+ update_sectors:
+ 	s += len;
 -- 
 2.39.2
 
