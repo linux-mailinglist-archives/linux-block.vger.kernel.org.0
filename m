@@ -1,67 +1,71 @@
-Return-Path: <linux-block+bounces-17813-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17815-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B877A48BB4
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 23:40:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF34A48BCD
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 23:41:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 667E016D277
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 22:39:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB4E33B7D0E
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 22:41:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2200B270ECB;
-	Thu, 27 Feb 2025 22:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A081027FE7B;
+	Thu, 27 Feb 2025 22:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ASpfbFoE"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="aIPfjGx1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101F26F469
-	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 22:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C172A27FE85
+	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 22:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740695968; cv=none; b=YQt0n8HX6urffhz+OSvMPVyMLJc6w0UYJt63MWusyLPgZz8I9+IHjkRfyP0CssXtfYz7uElAiBaqFjFk0gNl4/nwy6bU5HxL5cgr6wOHLmAreWxZtWMYRHIVaXRdabzrBsBKkGCXIEwp+MGaSVY+pgwRPgT9UmE9AtlO3uRHurE=
+	t=1740695991; cv=none; b=tzluaNAAmR/w+0YKRUZ6ipRFFFUTbL+kHiUs4Q2AKKWK4TKxvEJB7dOqcI+iJmjlz6wk+tHKXo/hCK7Me5D7huGLZuUw42y4zGoLb1t288FwtK3OrEvUkE2ponlE6TYCbk4OMXQgRE/RY4J+cvF3V15lzKGzoxERlRT3GfXujlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740695968; c=relaxed/simple;
-	bh=/e7mSNjJ60tQ8JkBcq+Zqp6nwg0ys3Vn78OeGJtHryo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t1ArnZGHg4c6dpVn2OAWyDCju7mwXAvlxNfoEDfY+YkDnL9MfReo9Ph6khwUyX/1XyQT7iTcu1z4XRXDXoIlkoWqrPtGC/x6w093n020/i5QZcCfxIFjn2vMN/27vy9TCgx3sm3BZtR+5LxudYq1RhZmW3E2poIqniRfEvpjHTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ASpfbFoE; arc=none smtp.client-ip=67.231.145.42
+	s=arc-20240116; t=1740695991; c=relaxed/simple;
+	bh=dHxCVDya3+j5PBBwUvC3UohhRNjgvI3ccXZHig0pYfE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aFKXx9XLyL8oqzWTyu7NOgTA02PL9506vM+L5ce3++bOpcOA5l/3Iscy+W/EUemH7HJdRKVWG10vvAyNfqLMponG0ZySCoAM+Jm/7zh9OdudpW8W+0iWJsh+CLJxPubNwnSkjKoOom1pNPQEH+ZWyGJ5s25inWQOaBRrlWcqDAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=aIPfjGx1; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RMbmhi032434
-	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 14:39:25 -0800
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RMdi6R011870
+	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 14:39:48 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=s2048-2021-q4; bh=tGmuivmMHmt4jFgZMi
-	c73AMs0v4Z1lHbqPxCC+pdAbM=; b=ASpfbFoEdU/KznfrV6HeguHKDk/nVJvHz2
-	3b4AltKvwffZWw7yH+2Uhpw7UJBfwRNK140pV4xalP5PHy+nTsg2jOhTXFJziny0
-	By/mS5/VMYZrTvD77rdwwy/TbZs2QWthnBBiXKJIYrFzApN8t5BSquWSp+ueXRya
-	AjqLZ73t4F/IrwZpYw0OlsS5npL8cS/weEuhp7EWuatInnkFBVU6lIK6plM50//Q
-	OBUr5iLaJSErW0sINmbFUrLrBfOsu6TwhzEauXZ1X27LRR+D3muEoma1RDrLB6BJ
-	JLNXCEKVwiagjYlVy7Am3TO7OjFZ7gKMoPfPyaBX5/F0n5mUMHcQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4530qwg44m-7
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
+	 bh=717Fucz3MwnGMkuf5ctouUv4BVsW93ozRQBD9opCJkQ=; b=aIPfjGx1z/yV
+	5TRQN8Qjk/WqZZSDDuNdIFzdWFk0Gy7NfDnXp9GMaB/r+bEgwPL5MvZPTBzCM5u5
+	AoRF13MrFDX9FRaUygErP2dXgM0hf1DGj4f1d6pTClkFBhyUig4FjryZ50kUpBGU
+	SQP1Sq4hakF3cfgWmmqOC+9Qa7/xd4TSfB2tf/OMmZZ37XMM5GzqqfzL1ezDr69O
+	C4/n28L2+MzlNp8Z0ZwOGYochL6Si4+ZEp+L/qt7Q5lrtJhhwXhrHEfAwMqER90u
+	fCFgdRTihblFGkkQfHcjzg9ZoT8ZYCcqqbdJng3L5ykKIgi4gQzTL6eBxJJoTsHo
+	fx5nFy7gqQ==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 452wtb9ntv-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 14:39:25 -0800 (PST)
-Received: from twshared32179.32.frc3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Thu, 27 Feb 2025 14:39:48 -0800 (PST)
+Received: from twshared40462.17.frc2.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Thu, 27 Feb 2025 22:39:13 +0000
+ 15.2.1544.14; Thu, 27 Feb 2025 22:39:14 +0000
 Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 684D91888280A; Thu, 27 Feb 2025 14:39:17 -0800 (PST)
+	id 6DE311888280C; Thu, 27 Feb 2025 14:39:17 -0800 (PST)
 From: Keith Busch <kbusch@meta.com>
 To: <ming.lei@redhat.com>, <axboe@kernel.dk>, <asml.silence@gmail.com>,
         <linux-block@vger.kernel.org>, <io-uring@vger.kernel.org>
 CC: <linux-nvme@lists.infradead.org>, <csander@purestorage.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv8 0/6] ublk zero copy support
-Date: Thu, 27 Feb 2025 14:39:10 -0800
-Message-ID: <20250227223916.143006-1-kbusch@meta.com>
+Subject: [PATCHv8 1/6] io_uring/rw: move buffer_select outside generic prep
+Date: Thu, 27 Feb 2025 14:39:11 -0800
+Message-ID: <20250227223916.143006-2-kbusch@meta.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250227223916.143006-1-kbusch@meta.com>
+References: <20250227223916.143006-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -71,61 +75,131 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: vX2vMbcrXLTg3G8dJqpjxo1v74uzRWRA
-X-Proofpoint-GUID: vX2vMbcrXLTg3G8dJqpjxo1v74uzRWRA
+X-Proofpoint-GUID: W94CrIUC4Jhnbvg2GcSIDK1aOtNo9YbZ
+X-Proofpoint-ORIG-GUID: W94CrIUC4Jhnbvg2GcSIDK1aOtNo9YbZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-27_08,2025-02-27_01,2024-11-22_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-This one completed liburing 'make runtests' successfully.
+Cleans up the generic rw prep to not require the do_import flag. Use a
+different prep function for callers that might need buffer select.
 
-Changes from v7:
+Based-on-a-patch-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ io_uring/rw.c | 45 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
 
-  Prep patch, mostly from Jens, that removes the "do_import" parameter
-  from the generic rw prep.
-
-  Added check for kernel buffers in rw's loop submit. This file
-  operation requires __user pointers, so can't use it there (Pavel)
-
-  Added a bool, is_kbuf, so that we don't use the existence of the
-  "release" callback to distinguish user vs kernel buffers. And had user
-  buffers define its own release function so that we can remove a branch
-  check on free.
-
-  The io node and imu caching is moved from the table to ring ctx. This
-  is the simplest solution to situations where the node outlives the
-  table it came from.
-
-  Fixed missing (parens) logical error checking for ublk flags.
-
-  Minor cleanups to reduce diff churn.
-
-Keith Busch (5):
-  io_uring/rw: move buffer_select outside generic prep
-  io_uring/rw: move fixed buffer import to issue path
-  io_uring: add support for kernel registered bvecs
-  ublk: zc register/unregister bvec
-  io_uring: cache nodes and mapped buffers
-
-Xinyu Zhang (1):
-  nvme: map uring_cmd data even if address is 0
-
- drivers/block/ublk_drv.c       |  59 ++++++++--
- drivers/nvme/host/ioctl.c      |   2 +-
- include/linux/io_uring/cmd.h   |   7 ++
- include/linux/io_uring_types.h |   2 +
- include/uapi/linux/ublk_cmd.h  |   4 +
- io_uring/filetable.c           |   2 +-
- io_uring/io_uring.c            |   5 +
- io_uring/opdef.c               |   4 +-
- io_uring/rsrc.c                | 189 +++++++++++++++++++++++++++++----
- io_uring/rsrc.h                |  13 ++-
- io_uring/rw.c                  |  85 ++++++++++-----
- io_uring/rw.h                  |   2 +
- 12 files changed, 318 insertions(+), 56 deletions(-)
-
+diff --git a/io_uring/rw.c b/io_uring/rw.c
+index 788f06fbd7db1..b21b423b3cf8f 100644
+--- a/io_uring/rw.c
++++ b/io_uring/rw.c
+@@ -248,8 +248,8 @@ static int io_prep_rw_pi(struct io_kiocb *req, struct=
+ io_rw *rw, int ddir,
+ 	return ret;
+ }
+=20
+-static int io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe *s=
+qe,
+-		      int ddir, bool do_import)
++static int __io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe =
+*sqe,
++			int ddir)
+ {
+ 	struct io_rw *rw =3D io_kiocb_to_cmd(req, struct io_rw);
+ 	unsigned ioprio;
+@@ -285,14 +285,6 @@ static int io_prep_rw(struct io_kiocb *req, const st=
+ruct io_uring_sqe *sqe,
+ 	rw->len =3D READ_ONCE(sqe->len);
+ 	rw->flags =3D READ_ONCE(sqe->rw_flags);
+=20
+-	if (do_import && !io_do_buffer_select(req)) {
+-		struct io_async_rw *io =3D req->async_data;
+-
+-		ret =3D io_import_rw_buffer(ddir, req, io, 0);
+-		if (unlikely(ret))
+-			return ret;
+-	}
+-
+ 	attr_type_mask =3D READ_ONCE(sqe->attr_type_mask);
+ 	if (attr_type_mask) {
+ 		u64 attr_ptr;
+@@ -307,26 +299,45 @@ static int io_prep_rw(struct io_kiocb *req, const s=
+truct io_uring_sqe *sqe,
+ 	return 0;
+ }
+=20
++static int io_rw_do_import(struct io_kiocb *req, int ddir)
++{
++	if (io_do_buffer_select(req))
++		return 0;
++
++	return io_import_rw_buffer(ddir, req, req->async_data, 0);
++}
++
++static int io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe *s=
+qe,
++		      int ddir)
++{
++	int ret;
++
++	ret =3D __io_prep_rw(req, sqe, ddir);
++	if (unlikely(ret))
++		return ret;
++
++	return io_rw_do_import(req, ddir);
++}
++
+ int io_prep_read(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+-	return io_prep_rw(req, sqe, ITER_DEST, true);
++	return io_prep_rw(req, sqe, ITER_DEST);
+ }
+=20
+ int io_prep_write(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+-	return io_prep_rw(req, sqe, ITER_SOURCE, true);
++	return io_prep_rw(req, sqe, ITER_SOURCE);
+ }
+=20
+ static int io_prep_rwv(struct io_kiocb *req, const struct io_uring_sqe *=
+sqe,
+ 		       int ddir)
+ {
+-	const bool do_import =3D !(req->flags & REQ_F_BUFFER_SELECT);
+ 	int ret;
+=20
+-	ret =3D io_prep_rw(req, sqe, ddir, do_import);
++	ret =3D io_prep_rw(req, sqe, ddir);
+ 	if (unlikely(ret))
+ 		return ret;
+-	if (do_import)
++	if (!(req->flags & REQ_F_BUFFER_SELECT))
+ 		return 0;
+=20
+ 	/*
+@@ -353,7 +364,7 @@ static int io_prep_rw_fixed(struct io_kiocb *req, con=
+st struct io_uring_sqe *sqe
+ 	struct io_async_rw *io;
+ 	int ret;
+=20
+-	ret =3D io_prep_rw(req, sqe, ddir, false);
++	ret =3D __io_prep_rw(req, sqe, ddir);
+ 	if (unlikely(ret))
+ 		return ret;
+=20
+@@ -386,7 +397,7 @@ int io_read_mshot_prep(struct io_kiocb *req, const st=
+ruct io_uring_sqe *sqe)
+ 	if (!(req->flags & REQ_F_BUFFER_SELECT))
+ 		return -EINVAL;
+=20
+-	ret =3D io_prep_rw(req, sqe, ITER_DEST, false);
++	ret =3D __io_prep_rw(req, sqe, ITER_DEST);
+ 	if (unlikely(ret))
+ 		return ret;
+=20
 --=20
 2.43.5
 
