@@ -1,42 +1,43 @@
-Return-Path: <linux-block+bounces-17788-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17790-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B44A47707
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 09:00:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68C61A4770D
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 09:01:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6C1F7A5443
-	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 07:59:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0ECB73B2D4E
+	for <lists+linux-block@lfdr.de>; Thu, 27 Feb 2025 08:00:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A2C2288C6;
-	Thu, 27 Feb 2025 07:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B29229B11;
+	Thu, 27 Feb 2025 07:59:25 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B867226887;
-	Thu, 27 Feb 2025 07:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615EC227BB0;
+	Thu, 27 Feb 2025 07:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740643164; cv=none; b=V/WdI5u5qZgKnOwOq6+UpKDHDcBOMRc6hikCC03tLEZq+iGp6K+tqNkhf1bXUB3TdBAs1+BPsgjtij7IXtrs+nHKomaDC8bERaqRTuPObWDiKy2ymnjk51L9U682p5VlVojpTenAPnrTP5F99M2yX/KuIPvmT15QqCN701eNk70=
+	t=1740643165; cv=none; b=XPT23cES1WP/NF1MPtrrMuhYhHjwmMG0P9vOGaTTghSs+3icp1gT1pk/mYRYa6/2IGE4GYYBHEPbcbTIKj2IfKcnb6kkb0sz+iCq+44cyVg9kDiZIu/8nw8TC/5+gvf97o2wcG5pAYvflmQFhyMypTiLL7TZZnjs5W7VR6MODRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740643164; c=relaxed/simple;
-	bh=eIK6f1xdC/gmj/6eb8x2ZwnscNw6e+6hXWxyPHoFkGo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CzY8v7p19qrTVmm17eLUNS5vQnaPFDvyazEX4J162Zlf2xSc7QSdV2YtKxTo8gf7jnA0FRz3ozQL32Sp+f5uO3E1FavCzRGTzxT6A/TbYS0CPx0UqBn8xz7IvnRqI3s1dwNEweoWFRHdQygABASCNVj51sIcvYBiHVAwtqCnE5g=
+	s=arc-20240116; t=1740643165; c=relaxed/simple;
+	bh=6oBs3WpSlBUFPcWaoJaR+XKYQEw9cDKj054cJxoJTBc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PPU35My/KHveCwnTiXcvztOlYowAWU51ozGwMmtqV5/x7ivrcPZpRBpIbuU5W+iOceIwqs6tfDhqVBEhU9aKicJjeCVq5TIPkdKa6h//vLtNJN569DFYqiA2gnJO8J4o861CruN9T2Ol7R7ZO/Unf+xvgGniwmwnXbxjoNHCwdQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z3NyN3C6pz4f3js1;
-	Thu, 27 Feb 2025 15:58:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z3NyP1bmkz4f3js6;
+	Thu, 27 Feb 2025 15:58:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4EC1C1A06D7;
-	Thu, 27 Feb 2025 15:59:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 1844B1A0D77;
+	Thu, 27 Feb 2025 15:59:15 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S4;
-	Thu, 27 Feb 2025 15:59:13 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S5;
+	Thu, 27 Feb 2025 15:59:14 +0800 (CST)
 From: Zheng Qixing <zhengqixing@huaweicloud.com>
 To: axboe@kernel.dk,
 	song@kernel.org,
@@ -59,91 +60,88 @@ Cc: linux-block@vger.kernel.org,
 	nvdimm@lists.linux.dev,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH V2 00/12] badblocks: bugfix and cleanup for badblocks
-Date: Thu, 27 Feb 2025 15:54:55 +0800
-Message-Id: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
+Subject: [PATCH V2 01/12] badblocks: Fix error shitf ops
+Date: Thu, 27 Feb 2025 15:54:56 +0800
+Message-Id: <20250227075507.151331-2-zhengqixing@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
+References: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4UurWfZFWUWw45uw4Durg_yoW8CF1rpF
-	nxK343Ar48ur47Xa4kZw4UZFyF9a1xJFWUG3y7J34kuFyUAas7Jr1vqF1Fqryqqry3JrnF
-	qF1YgryUWry8Cw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
-	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUIa0PDUUUU
+X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7CrykAw4UJw1rCr1DCrW8Xrb_yoW8XFW7pr
+	nrG343GrW7W3yj93W5X3WUGr9aq3W3JF43Ca17Ja4jkry5t3srta4kXrySva4a9FW3Grn0
+	g3WruryrZrZ7C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
+	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
+	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI
+	0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIw0e
+	DUUUU
 X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+From: Li Nan <linan122@huawei.com>
 
-Hi,
+'bb->shift' is used directly in badblocks. It is wrong, fix it.
 
-during RAID feature implementation testing, we found several bugs
-in badblocks.
+Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Acked-by: Coly Li <colyli@kernel.org>
+---
+ block/badblocks.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-This series contains bugfixes and cleanups for MD RAID badblocks
-handling code.
-
-V2:
-        - patch 4: add a description of the issue
-        - patch 5: add comment of parital setting
-        - patch 6: add fix tag
-        - patch 10: two code style modifications
-        - patch 11: keep original functionality of rdev_clear_badblocks(),
-          functionality was incorrectly modified in V1.
-	- patch 1-10 and patch 12 are reviewed by Yu Kuai
-	  <yukuai3@huawei.com>
-	- patch 1, 3, 5, 6, 8, 9, 10, 12 are acked by Coly Li
-	  <colyli@kernel.org>
-
-Li Nan (8):
-  badblocks: Fix error shitf ops
-  badblocks: factor out a helper try_adjacent_combine
-  badblocks: attempt to merge adjacent badblocks during
-    ack_all_badblocks
-  badblocks: return error directly when setting badblocks exceeds 512
-  badblocks: return error if any badblock set fails
-  badblocks: fix the using of MAX_BADBLOCKS
-  badblocks: try can_merge_front before overlap_front
-  badblocks: fix merge issue when new badblocks align with pre+1
-
-Zheng Qixing (4):
-  badblocks: fix missing bad blocks on retry in _badblocks_check()
-  badblocks: return boolean from badblocks_set() and badblocks_clear()
-  md: improve return types of badblocks handling functions
-  badblocks: use sector_t instead of int to avoid truncation of
-    badblocks length
-
- block/badblocks.c             | 322 +++++++++++++---------------------
- drivers/block/null_blk/main.c |  16 +-
- drivers/md/md.c               |  48 ++---
- drivers/md/md.h               |  14 +-
- drivers/md/raid1-10.c         |   2 +-
- drivers/md/raid1.c            |  10 +-
- drivers/md/raid10.c           |  14 +-
- drivers/nvdimm/badrange.c     |   2 +-
- drivers/nvdimm/nd.h           |   2 +-
- drivers/nvdimm/pfn_devs.c     |   7 +-
- drivers/nvdimm/pmem.c         |   2 +-
- include/linux/badblocks.h     |  10 +-
- 12 files changed, 183 insertions(+), 266 deletions(-)
-
+diff --git a/block/badblocks.c b/block/badblocks.c
+index db4ec8b9b2a8..bcee057efc47 100644
+--- a/block/badblocks.c
++++ b/block/badblocks.c
+@@ -880,8 +880,8 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 		/* round the start down, and the end up */
+ 		sector_t next = s + sectors;
+ 
+-		rounddown(s, bb->shift);
+-		roundup(next, bb->shift);
++		rounddown(s, 1 << bb->shift);
++		roundup(next, 1 << bb->shift);
+ 		sectors = next - s;
+ 	}
+ 
+@@ -1157,8 +1157,8 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+ 		 * isn't than to think a block is not bad when it is.
+ 		 */
+ 		target = s + sectors;
+-		roundup(s, bb->shift);
+-		rounddown(target, bb->shift);
++		roundup(s, 1 << bb->shift);
++		rounddown(target, 1 << bb->shift);
+ 		sectors = target - s;
+ 	}
+ 
+@@ -1288,8 +1288,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 
+ 		/* round the start down, and the end up */
+ 		target = s + sectors;
+-		rounddown(s, bb->shift);
+-		roundup(target, bb->shift);
++		rounddown(s, 1 << bb->shift);
++		roundup(target, 1 << bb->shift);
+ 		sectors = target - s;
+ 	}
+ 
 -- 
 2.39.2
 
