@@ -1,87 +1,48 @@
-Return-Path: <linux-block+bounces-17853-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17855-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65F2DA4A80E
-	for <lists+linux-block@lfdr.de>; Sat,  1 Mar 2025 03:24:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA528A4A88C
+	for <lists+linux-block@lfdr.de>; Sat,  1 Mar 2025 05:23:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E73BE174F25
-	for <lists+linux-block@lfdr.de>; Sat,  1 Mar 2025 02:24:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E04E316C31D
+	for <lists+linux-block@lfdr.de>; Sat,  1 Mar 2025 04:23:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC691B6CE0;
-	Sat,  1 Mar 2025 02:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1EB1AF4E9;
+	Sat,  1 Mar 2025 04:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gD4T4Vuf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Tic0cecF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092A01ADC68
-	for <linux-block@vger.kernel.org>; Sat,  1 Mar 2025 02:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B8A1519BE;
+	Sat,  1 Mar 2025 04:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740795823; cv=none; b=ZxEQg2a28Hh7WbXcwfT5u3AlhEyZNio8kaXRzGTdtasFrO+t4XUcwmV+7dtDgM3Ae3G6td17kVpXaZX+V+JKQavsFVYphAhesNCLgUj+HiXDvqRChYV41/GKUa7VeL7fcVnps6DoICvTwmiQljnEAR6KaneaaS/TMJvIgz46p/Y=
+	t=1740802986; cv=none; b=EGXKrEZ84nErlhBBHHNQU3nbl8WMm5yawvS0+QGnhC57+vZCX+h1LFUAIKyk+VJemveMXqwp39JyW6mfu4nwzyFytyUb1WlFVS9ydLrVQoy7suwk6qQMfItIGY7G7QDAO/WXXJ9gJp2IXYPDINJaWzS1EWpZIW0rPN8aIY2lhy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740795823; c=relaxed/simple;
-	bh=pKwkVTSQJ0aAuAlftXppJmht0Kot7MxlbY6yGzg7bVs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VYY5xyFid0oI+N5NgjJq0lE2Z/np0JAe9owCLokq9l/Fhn5CklrRRvjJauvSdVzLOutoAaO947YYViGGcVpHm2DnEsFOi0147NlUklUHyncJSJzcLJRgVxVgla3YfDrC7Q/sxQoQRkN9Dabllrf3QrUtc+ySufJ7upVi9WBjCww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gD4T4Vuf; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ef9b8b4f13so23456237b3.2
-        for <linux-block@vger.kernel.org>; Fri, 28 Feb 2025 18:23:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740795821; x=1741400621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9BLBwQOwrrYQIN7raxU+No/2e8DfV51qZaSaJee9wDc=;
-        b=gD4T4VufIzLXAfDpNNrVvusy4WZ9Vu4BbV7h18EDY/Pq7V27AuxzScRtJPvDQTZYRQ
-         vJc3SD8IAUYnXO9/whnJC5v13Ue7pdLhAI97/RCSEzpTFX4wPkuopZ86Q7YuseS4OI6t
-         XrnkI74oSNTWzx3NTz4j6gOX2iFgTc1mt9PbE+19m6dLNHbhmGqKdpHiNeA313z3eAki
-         n3Bvk6R1RFULa2KBpxxaBXGXpWTY9EDJMz2xgDm9uNstRn0LyhRISkvWWyj2EiaVnfnl
-         T4KX9kyx9GZCUuKIXT0i5/ZDl7T6YsqRwLQ4Fqf6d9XsimiPTkfW0HcvRnmeWCMfrhSI
-         9Vsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740795821; x=1741400621;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9BLBwQOwrrYQIN7raxU+No/2e8DfV51qZaSaJee9wDc=;
-        b=O3FK7EVB0CoFTRq+VrQYYx7JezqtMhz09ki12PQg9DcPv22JjMlWo3FOvoiFlnAANm
-         AXIgSdmNNGXelmBQWWHcHVi59mdOrnfRjBUZPUJbdXS3TuJ88ik12DJz9yx6UAObmyTo
-         007JSIilXllC4D3yhG9u3NZ+R5gMG4Uicma1gThVACxiYX95lSv1gOnvZ0EAdHTFgm6f
-         sHFOr5tyyBlO6YdJovBdIIXLrnrschBp/O9XuGzPq5vAn4vYsxRU7nUA2fyar6BtqbvD
-         rdxgzvuD3NkWX9/7G2em6gUi2eMr1jgSrKVNuph92947S4n/ybHze+Hb8ZP+CTia9y6H
-         1ejA==
-X-Gm-Message-State: AOJu0YzxgIrlvFAyjEgCAx5LB89CDYa7QGP3SDgi4JwD+u1CM+yrxog5
-	NNCGiMNrMgu6P2Lmhcv6Dnu25c80QesKHvah3ljEHJS2yDTQ/LmePqy5NsTPW8M=
-X-Gm-Gg: ASbGncubKynL+19jxSWaOiT6i5KgS81ggPZdWLZJsFhsPOVkb38wNEZmNr5ODb4mYqd
-	WoGAzwxTjHYXKKU0RRNgZW4Cu5dI8UUHCM6tfsu9KotWLLc4pTDtRvYrrcJMV0f0yRuYfhWPRV4
-	TFFCvHsBeJnxsn2njT4dbP2Ta4EC9D5EYedhM4pHFKqMxctTGcR+BpoLHtrVWPptJnrrFhc9L6Y
-	kvEFJErNFdIoHsZuWjEQ4Xkkf+JzJGZOEmaRo+bFW261X3u1FilWbEuQv068Jz2H1Yrf3A8R0ra
-	MmqgGqLlaeYo44Ls3xyyy6Wb2mHQQvQUnVN8Pds=
-X-Google-Smtp-Source: AGHT+IEAfgFEonGI7v81NxkPZsf+pVyxnn3pBYJKAcjf3ha9OznoVu7uywfX2gEhdr3ETKKz7Ff3pQ==
-X-Received: by 2002:a05:690c:5719:b0:6fd:3ff9:ad96 with SMTP id 00721157ae682-6fd4a16d0aemr55511127b3.37.1740795820960;
-        Fri, 28 Feb 2025 18:23:40 -0800 (PST)
-Received: from [127.0.0.1] ([207.222.175.10])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fd3cb7e02dsm10175307b3.84.2025.02.28.18.23.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 18:23:40 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Ming Lei <ming.lei@redhat.com>, Pavel Begunkov <asml.silence@gmail.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- io-uring@vger.kernel.org
-In-Reply-To: <20250228231432.642417-1-csander@purestorage.com>
-References: <20250228231432.642417-1-csander@purestorage.com>
-Subject: Re: [PATCH] io_uring/ublk: report error when unregister operation
- fails
-Message-Id: <174079581972.2596794.14825315582480664341.b4-ty@kernel.dk>
-Date: Fri, 28 Feb 2025 19:23:39 -0700
+	s=arc-20240116; t=1740802986; c=relaxed/simple;
+	bh=yseNamwDxaZtO0KtuMWvy0i8Osu9fsrGhdEX7PvrknE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JCs1hDPjygsX4YZp9RhGh8B5PiT/mlqGdc2iAB4FFeyl23n+qnB97fYOqeg7XlPcNu/4QvmTLnWip3SPHATS25bmPOG6wYCeYXmmqhpZB7gIZEPXsjrRTXcRQU1W0AocbXOP0hdj/gZCPVz4tDMbbF1Pzxn5DkinREhHEBJW1O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Tic0cecF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3AA842038A25;
+	Fri, 28 Feb 2025 20:23:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AA842038A25
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740802984;
+	bh=PgYb7240sgPq/L5w2oKC7klJ5k6Fow9TNpoUkzNGK1k=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Tic0cecF/21Kg594q1CO/eg5+QgiwPz4LgD/n3MMHP2O9FfWF99KZzvmupgYjfLmY
+	 kKC2iohVgVPu30uDrBrUvlKGueIlVHYFXCQHgQjO2hELzw+/4iCNbOl8VIVFWOPAzC
+	 WINPoDOvtacWuCzAjkiPENuSeaZYK/qJx1E103wU=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: [PATCH v4 0/2] Converge on using secs_to_jiffies() part two
+Date: Sat, 01 Mar 2025 04:22:51 +0000
+Message-Id: <20250301-converge-secs-to-jiffies-part-two-v4-0-c9226df9e4ed@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -90,26 +51,78 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+X-B4-Tracking: v=1; b=H4sIAJuLwmcC/43OsW4DIRAE0F+xqLPWsnBwdpX/iFIQbomJ4sMCQ
+ hxZ9+/h3CSNpStnijdzE4Vz5CKOu5vI3GKJae5BP+2EP7n5nSFOPQtC0pKkBZ/mxrn3hX2BmuA
+ jhtAFuLhcoX4nCFqjtM6ZYKzoziVziNf7xstrz6dYaso/98km13bVB5Q0btCbBISDM+wDvpHC8
+ fkzzl/X/Tn6nEoKde/TWaw7jf5sQrXFpm5PFofRoQwT8mNb/bNp2GKrbjutDsayMn588HtZll8
+ Wd1FLlAEAAA==
+X-Change-ID: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Daniel Vacek <neelx@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+ Xiubo Li <xiubli@redhat.com>
+Cc: ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+X-Mailer: b4 0.14.2
 
+This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+either use the multiply pattern of either of:
+- msecs_to_jiffies(N*1000) or
+- msecs_to_jiffies(N*MSEC_PER_SEC)
 
-On Fri, 28 Feb 2025 16:14:31 -0700, Caleb Sander Mateos wrote:
-> Indicate to userspace applications if a UBLK_IO_UNREGISTER_IO_BUF
-> command specifies an invalid buffer index by returning an error code.
-> Return -EINVAL if no buffer is registered with the given index, and
-> -EBUSY if the registered buffer is not a kernel bvec.
-> 
-> 
+where N is a constant or an expression, to avoid the multiplication.
 
-Applied, thanks!
+The conversion is made with Coccinelle with the secs_to_jiffies() script
+in scripts/coccinelle/misc. Attention is paid to what the best change
+can be rather than restricting to what the tool provides.
 
-[1/1] io_uring/ublk: report error when unregister operation fails
-      commit: e6ea7ec494881bcf61b8f0f77f7cb3542f717ff2
+Andrew has kindly agreed to take the series through mm.git modulo the
+patches maintainers want to pick through their own trees.
+
+This series is based on next-20250225
+
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+
+* https://lore.kernel.org/all/20241210-converge-secs-to-jiffies-v3-0-ddfefd7e9f2a@linux.microsoft.com/
+
+---
+Changes in v4:
+- Restore correct range checks for rbd and libceph (Christophe J)
+- Link to v3: https://lore.kernel.org/r/20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com
+
+Changes in v3:
+- Change commit message prefix from libata: zpodd to ata: libata-zpodd: in patch 8 (Damien)
+- Split up overly long line in patch 9 (Christoph)
+- Fixup unnecessary line break in patch 14 (Ilpo)
+- Combine v1 and v2
+- Fix some additional hunks in patch 2 (scsi: lpfc) which the more concise script missed
+- msecs_to_jiffies -> msecs_to_jiffies() in commit messages throughout
+- Bug in secs_to_jiffies() uncovered by LKP merged in 6.14-rc2: bb2784d9ab4958 ("jiffies: Cast to unsigned long in secs_to_jiffies() conversion")
+- Link to v2: https://lore.kernel.org/r/20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com
+
+Changes in v2:
+- Remove unneeded range checks in rbd and libceph. While there, convert some timeouts that should have been fixed in part 1. (Ilya)
+- Fixup secs_to_jiffies.cocci to be a bit more verbose
+- Link to v1: https://lore.kernel.org/r/20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com
+
+---
+Easwar Hariharan (2):
+      rbd: convert timeouts to secs_to_jiffies()
+      libceph: convert timeouts to secs_to_jiffies()
+
+ drivers/block/rbd.c          |  8 ++++----
+ include/linux/ceph/libceph.h | 12 ++++++------
+ net/ceph/ceph_common.c       | 18 ++++++++----------
+ net/ceph/osd_client.c        |  3 +--
+ 4 files changed, 19 insertions(+), 22 deletions(-)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
 
 Best regards,
 -- 
-Jens Axboe
-
-
+Easwar Hariharan <eahariha@linux.microsoft.com>
 
 
