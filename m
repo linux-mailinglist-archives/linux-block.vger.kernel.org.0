@@ -1,70 +1,70 @@
-Return-Path: <linux-block+bounces-17878-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17880-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37DF7A4C0E2
-	for <lists+linux-block@lfdr.de>; Mon,  3 Mar 2025 13:47:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C037A4C0E1
+	for <lists+linux-block@lfdr.de>; Mon,  3 Mar 2025 13:47:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 416AA1896EA8
-	for <lists+linux-block@lfdr.de>; Mon,  3 Mar 2025 12:47:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 877B33AC453
+	for <lists+linux-block@lfdr.de>; Mon,  3 Mar 2025 12:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4732521146B;
-	Mon,  3 Mar 2025 12:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA6020E6F9;
+	Mon,  3 Mar 2025 12:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CYHhsJjS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MLgfCs2v"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804911EE7C6
-	for <linux-block@vger.kernel.org>; Mon,  3 Mar 2025 12:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC7A20E332
+	for <linux-block@vger.kernel.org>; Mon,  3 Mar 2025 12:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741005874; cv=none; b=YIwbxhkYFv9No+z9Luuwi5lGoo/FWtDgdJTwPzvnnznw30lkdDJkxFDjHlwytrIgscoK3cxAqGxZUFNCE81KdW7JPxBCmUPZfT1vQrdnqLjaxIE4Ja33dFSRocj0TPsshxa4UErGfNEIkJe0GQoNv/opqfkqtSeX0R0OnwBECwg=
+	t=1741005887; cv=none; b=g1XTjSuqQsqvZpCiSzjrR2u1dPs6MaXQEY+gUmEctC7xBVtGhGDmCAE1/ZAJb6EMWNoaFQ8hUa/N2p3dLUaMPWt0+QHrblFYxDw4vuItSqnZ0smpk1LMn+/whHu5inG4Il7J47jGNGYJ4q1hKaSU83KQTQIp6GSekr1WaQzAACc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741005874; c=relaxed/simple;
-	bh=RhgCzhGQmspDhwt6h7K2VsgtZAx/zYR/kyWLK77dikk=;
+	s=arc-20240116; t=1741005887; c=relaxed/simple;
+	bh=FGAah+nZFfve3WCpEi0Ybu1HjWrSfpCAz+yiiAE7w9o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b6q6CLHAVLVhLybKTjoDRtGavAqAO5KF3DMeFLeHLwL3UL+O51nvs6ntV3Ca2r0hBm13/tjZ+9I/jtLTO11yYQa9f3mR7XrayICwkulj/ss5NB3TK1B98OuUtpzjUW3JVBLQ5tt7OoUL+PNGqfrk3Pvyr8TE7GeCFkuaeJWdYKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CYHhsJjS; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=Fk3SG05DOAcYPaoJAl/UIl2pkogA9Qv9LXDawGjpfp27aNzvNViEvPtUELX9DGW8dJxhx6/WzovXKRsks4yi2nMbustesFcn1EfF2NhIOeELqcEbsxhKK/tKdhSx8/vkKMW+ObEqn8Y7v8j54BaWIds2j8jZ3WhI4vllOgoGPTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MLgfCs2v; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741005870;
+	s=mimecast20190719; t=1741005884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YeME8YQChJWPab2nKPNhbBsN368ho/Xr+RmOIFOIMBs=;
-	b=CYHhsJjSMdo7lHtzCBNv4rF4C3D+7Jmm9qJohDqQl8KmYJ9rLwqBwBM4nxgIM2TuYDtWjW
-	4ICODAwccRR+YWhwO9OsXRA8sDHDk18t+2aGTNa++HI6xytFswvMhCVg1BIHCyMW6KjWlE
-	99qH2dYFPUkk1R0xojF2f6lwp5cbHuc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Quo9GFqH1Xb63xK1C4YcntZoNhBsXEt5C3tvQgLnKJE=;
+	b=MLgfCs2vYIG/r5oaxkKr8oCNC9yuzLS9EX3UP/gcZgieLBRXH5+RnM8adGpJ0tTrCIn0bh
+	lsqfTvvhIWe8z+xr+d8aXsODojcN64KbsGFDKyPCeq20nM2NoqdbmM3Uie0LntvpioRECi
+	nEz7ap5UVXLGVV+iufZ6LyTKEg687FQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-693-WL-_RIHcPvSg1IJz3GslmQ-1; Mon,
- 03 Mar 2025 07:44:27 -0500
-X-MC-Unique: WL-_RIHcPvSg1IJz3GslmQ-1
-X-Mimecast-MFC-AGG-ID: WL-_RIHcPvSg1IJz3GslmQ_1741005866
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-33-YU6gR_67OaKZj4tz8IcTrg-1; Mon,
+ 03 Mar 2025 07:44:33 -0500
+X-MC-Unique: YU6gR_67OaKZj4tz8IcTrg-1
+X-Mimecast-MFC-AGG-ID: YU6gR_67OaKZj4tz8IcTrg_1741005872
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A626D1944EB2;
-	Mon,  3 Mar 2025 12:44:26 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E2CD19540EE;
+	Mon,  3 Mar 2025 12:44:32 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.23])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B4F3180035F;
-	Mon,  3 Mar 2025 12:44:24 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67B66300019F;
+	Mon,  3 Mar 2025 12:44:30 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
 Cc: linux-kselftest@vger.kernel.org,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 10/11] selftests: ublk: add stress test for covering IO vs. killing ublk server
-Date: Mon,  3 Mar 2025 20:43:20 +0800
-Message-ID: <20250303124324.3563605-11-ming.lei@redhat.com>
+Subject: [PATCH 11/11] selftests: ublk: improve test usability
+Date: Mon,  3 Mar 2025 20:43:21 +0800
+Message-ID: <20250303124324.3563605-12-ming.lei@redhat.com>
 In-Reply-To: <20250303124324.3563605-1-ming.lei@redhat.com>
 References: <20250303124324.3563605-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -74,153 +74,164 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add stress_test_01 for running IO vs. killing ublk server, so io_uring exit &
-cancel code path can be covered, same with ublk's cancel code path.
+Add UBLK_TEST_QUIET, so we can print test result(PASS/SKIP/FAIL) only.
 
-Especially IO buffer lifetime is one big thing for ublk zero copy, the added
-test can verify if this area works as expected.
+Also always run from test script's current directory, then the same test
+script can be started from other work directory.
+
+This way helps a lot to reuse this test source code and scripts for
+other projects(liburing, blktests, ...)
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- tools/testing/selftests/ublk/Makefile         |  1 +
- tools/testing/selftests/ublk/test_common.sh   | 29 ++++++++++++
- .../testing/selftests/ublk/test_stress_01.sh  |  2 +-
- .../testing/selftests/ublk/test_stress_02.sh  | 47 +++++++++++++++++++
- 4 files changed, 78 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/ublk/test_stress_02.sh
+ tools/testing/selftests/ublk/test_common.sh    | 10 ++++++++--
+ tools/testing/selftests/ublk/test_loop_01.sh   |  2 +-
+ tools/testing/selftests/ublk/test_loop_02.sh   |  2 +-
+ tools/testing/selftests/ublk/test_loop_03.sh   |  2 +-
+ tools/testing/selftests/ublk/test_loop_04.sh   |  2 +-
+ tools/testing/selftests/ublk/test_null_01.sh   |  2 +-
+ tools/testing/selftests/ublk/test_stress_01.sh |  4 ++--
+ tools/testing/selftests/ublk/test_stress_02.sh |  4 ++--
+ 8 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-index 40af938cd277..5d8d5939f051 100644
---- a/tools/testing/selftests/ublk/Makefile
-+++ b/tools/testing/selftests/ublk/Makefile
-@@ -10,6 +10,7 @@ TEST_PROGS += test_loop_03.sh
- TEST_PROGS += test_loop_04.sh
- 
- TEST_PROGS += test_stress_01.sh
-+TEST_PROGS += test_stress_02.sh
- 
- TEST_GEN_PROGS_EXTENDED = kublk
- 
 diff --git a/tools/testing/selftests/ublk/test_common.sh b/tools/testing/selftests/ublk/test_common.sh
-index 89244a7e275c..92596d0d0013 100755
+index 92596d0d0013..350380facd9f 100755
 --- a/tools/testing/selftests/ublk/test_common.sh
 +++ b/tools/testing/selftests/ublk/test_common.sh
-@@ -155,6 +155,26 @@ _add_ublk_dev() {
- 	echo "${dev_id}"
+@@ -80,7 +80,7 @@ _prep_test() {
+ 	local type=$1
+ 	shift 1
+ 	modprobe ublk_drv
+-	echo "ublk $type: $*"
++	[ "$UBLK_TEST_QUIET" -eq 0 ] && echo "ublk $type: $*"
  }
  
-+# kill the ublk daemon and return ublk device state
-+__ublk_kill_daemon()
+ _remove_test_files()
+@@ -209,6 +209,12 @@ __run_io_and_remove()
+ 	wait
+ }
+ 
++_ublk_test_top_dir()
 +{
-+	local dev_id=$1
-+	local exp_state=$2
-+	local daemon_pid
-+	local state
-+
-+	daemon_pid=$(_get_ublk_daemon_pid "${dev_id}")
-+	state=$(_get_ublk_dev_state "${dev_id}")
-+
-+	for ((j=0;j<50;j++)); do
-+		[ "$state" == "$exp_state" ] && break
-+		kill -9 "$daemon_pid" > /dev/null 2>&1
-+		sleep 1
-+		state=$(_get_ublk_dev_state "${dev_id}")
-+	done
-+	echo "$state"
++	cd "$(dirname "$0")" && pwd
 +}
-+
- __remove_ublk_dev_return() {
- 	local dev_id=$1
  
-@@ -168,11 +188,20 @@ __run_io_and_remove()
- {
- 	local dev_id=$1
- 	local size=$2
-+	local kill_server=$3
+-UBLK_PROG=$(pwd)/kublk
++UBLK_PROG=$(_ublk_test_top_dir)/kublk
++UBLK_TEST_QUIET=1
+ export UBLK_PROG
++export UBLK_TEST_QUIET
+diff --git a/tools/testing/selftests/ublk/test_loop_01.sh b/tools/testing/selftests/ublk/test_loop_01.sh
+index 12bba9e5daa5..c882d2a08e13 100755
+--- a/tools/testing/selftests/ublk/test_loop_01.sh
++++ b/tools/testing/selftests/ublk/test_loop_01.sh
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
  
- 	fio --name=job1 --filename=/dev/ublkb"${dev_id}" --ioengine=libaio \
- 		--rw=readwrite --iodepth=64 --size="${size}" --numjobs=4 \
- 		--runtime=20 --time_based > /dev/null 2>&1 &
- 	sleep 2
-+	if [ "${kill_server}" = "yes" ]; then
-+		local state
-+		state=$(__ublk_kill_daemon "${dev_id}" "DEAD")
-+		if [ "$state" != "DEAD" ]; then
-+			echo "device isn't dead($state) after killing daemon"
-+			return 255
-+		fi
-+	fi
- 	if ! __remove_ublk_dev_return "${dev_id}"; then
- 		echo "delete dev ${dev_id} failed"
- 		return 255
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ 
+ TID="loop_01"
+ ERR_CODE=0
+diff --git a/tools/testing/selftests/ublk/test_loop_02.sh b/tools/testing/selftests/ublk/test_loop_02.sh
+index 9a163296ac83..03863d825e07 100755
+--- a/tools/testing/selftests/ublk/test_loop_02.sh
++++ b/tools/testing/selftests/ublk/test_loop_02.sh
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ 
+ TID="loop_02"
+ ERR_CODE=0
+diff --git a/tools/testing/selftests/ublk/test_loop_03.sh b/tools/testing/selftests/ublk/test_loop_03.sh
+index 72a1d072cfbd..269c96787d7d 100755
+--- a/tools/testing/selftests/ublk/test_loop_03.sh
++++ b/tools/testing/selftests/ublk/test_loop_03.sh
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ 
+ TID="loop_03"
+ ERR_CODE=0
+diff --git a/tools/testing/selftests/ublk/test_loop_04.sh b/tools/testing/selftests/ublk/test_loop_04.sh
+index 676c4652d758..1435422c38ec 100755
+--- a/tools/testing/selftests/ublk/test_loop_04.sh
++++ b/tools/testing/selftests/ublk/test_loop_04.sh
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ 
+ TID="loop_04"
+ ERR_CODE=0
+diff --git a/tools/testing/selftests/ublk/test_null_01.sh b/tools/testing/selftests/ublk/test_null_01.sh
+index e2847a50823a..a34203f72668 100755
+--- a/tools/testing/selftests/ublk/test_null_01.sh
++++ b/tools/testing/selftests/ublk/test_null_01.sh
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ 
+ TID="null_01"
+ ERR_CODE=0
 diff --git a/tools/testing/selftests/ublk/test_stress_01.sh b/tools/testing/selftests/ublk/test_stress_01.sh
-index 2dfd01cfd265..c1cdde3e79f7 100755
+index c1cdde3e79f7..7177f6c57bc5 100755
 --- a/tools/testing/selftests/ublk/test_stress_01.sh
 +++ b/tools/testing/selftests/ublk/test_stress_01.sh
-@@ -18,7 +18,7 @@ ublk_io_and_remove()
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ TID="stress_01"
+ ERR_CODE=0
+ DEV_ID=-1
+@@ -17,7 +17,7 @@ ublk_io_and_remove()
+ 	DEV_ID=$(_add_ublk_dev "$@")
  	_check_add_dev $TID $? "${backfile}"
  
- 	echo "run ublk IO vs. remove device(ublk add $*)"
--	if ! __run_io_and_remove "${DEV_ID}" "${size}"; then
-+	if ! __run_io_and_remove "${DEV_ID}" "${size}" "no"; then
+-	echo "run ublk IO vs. remove device(ublk add $*)"
++	[ "$UBLK_TEST_QUIET" -eq 0 ] && echo "run ublk IO vs. remove device(ublk add $*)"
+ 	if ! __run_io_and_remove "${DEV_ID}" "${size}" "no"; then
  		echo "/dev/ublkc${DEV_ID} isn't removed"
  		_remove_backfile "${backfile}"
- 		exit 255
 diff --git a/tools/testing/selftests/ublk/test_stress_02.sh b/tools/testing/selftests/ublk/test_stress_02.sh
-new file mode 100755
-index 000000000000..ec758f649a97
---- /dev/null
+index ec758f649a97..2a8e60579a06 100755
+--- a/tools/testing/selftests/ublk/test_stress_02.sh
 +++ b/tools/testing/selftests/ublk/test_stress_02.sh
-@@ -0,0 +1,47 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. test_common.sh
-+TID="stress_02"
-+ERR_CODE=0
-+DEV_ID=-1
-+
-+ublk_io_and_kill_daemon()
-+{
-+	local size=$1
-+	shift 1
-+	local backfile=""
-+	if echo "$@" | grep -q "loop"; then
-+		backfile=${*: -1}
-+	fi
-+	DEV_ID=$(_add_ublk_dev "$@")
-+	_check_add_dev $TID $? "${backfile}"
-+
-+	echo "run ublk IO vs kill ublk server(ublk add $*)"
-+	if ! __run_io_and_remove "${DEV_ID}" "${size}" "yes"; then
-+		echo "/dev/ublkc${DEV_ID} isn't removed res ${res}"
-+		_remove_backfile "${backfile}"
-+		exit 255
-+	fi
-+}
-+
-+_prep_test "stress" "run IO and kill ublk server"
-+
-+ublk_io_and_kill_daemon 8G -t null
-+ERR_CODE=$?
-+if [ ${ERR_CODE} -ne 0 ]; then
-+	_show_result $TID $ERR_CODE
-+fi
-+
-+BACK_FILE=$(_create_backfile 256M)
-+ublk_io_and_kill_daemon 256M -t loop "${BACK_FILE}"
-+ERR_CODE=$?
-+if [ ${ERR_CODE} -ne 0 ]; then
-+	_show_result $TID $ERR_CODE
-+fi
-+
-+ublk_io_and_kill_daemon 256M -t loop -z "${BACK_FILE}"
-+ERR_CODE=$?
-+_cleanup_test "stress"
-+_remove_backfile "${BACK_FILE}"
-+_show_result $TID $ERR_CODE
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-. test_common.sh
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+ TID="stress_02"
+ ERR_CODE=0
+ DEV_ID=-1
+@@ -17,7 +17,7 @@ ublk_io_and_kill_daemon()
+ 	DEV_ID=$(_add_ublk_dev "$@")
+ 	_check_add_dev $TID $? "${backfile}"
+ 
+-	echo "run ublk IO vs kill ublk server(ublk add $*)"
++	[ "$UBLK_TEST_QUIET" -eq 0 ] && echo "run ublk IO vs kill ublk server(ublk add $*)"
+ 	if ! __run_io_and_remove "${DEV_ID}" "${size}" "yes"; then
+ 		echo "/dev/ublkc${DEV_ID} isn't removed res ${res}"
+ 		_remove_backfile "${backfile}"
 -- 
 2.47.0
 
