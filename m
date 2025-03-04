@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-17956-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17953-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4D4EA4DE56
-	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 13:51:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B172BA4DDCB
+	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 13:24:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB20A1884F30
-	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 12:51:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E16A178396
+	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 12:24:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764E178F33;
-	Tue,  4 Mar 2025 12:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62A6202C53;
+	Tue,  4 Mar 2025 12:23:50 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08972905;
-	Tue,  4 Mar 2025 12:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCBB20298B;
+	Tue,  4 Mar 2025 12:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092703; cv=none; b=qIxXlGDBXfIt+s2OQukaMEMzfL2GthbcSpH5DupjUtFa9exV7o7viHxw4bvecqmORl/lxqb62or6Y8Xnh/GhJrqtfR964znXeREsUW5+Wm6H/KsGvmHznmhvkKM4U4QSJHwKQ2UjdwMOZD5wDCJFZMmaCQ2FOqBiBq7SURuyCyw=
+	t=1741091030; cv=none; b=RF81Ji5e9WIAHg0OCf06jtnnZJb1V0A4FMwGsCt2CWx+ZGAk0r2YW4jjSJPK0BKSoLmlcycRBssc/FOmJ6rIzv4uh7X6p0qeyHPcX9162Lw3nU9AMWlgF0Zxc7a/XCiZK7Kp7akQVlYqIQjpeCe/xf/hNeTxGgEX+4G5ZkDTvkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741092703; c=relaxed/simple;
-	bh=hPH3Nbg7RGi+tPJtqUdaCGrseBM4At38KJ5rEf2MPsY=;
+	s=arc-20240116; t=1741091030; c=relaxed/simple;
+	bh=WaZuf6sQ899CeExjC1r3ZPhnq4HH+D5ogsFML90W6Ko=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qVGkcXPNQmnTeVaRA8gi3nsuHdzdP64SOyYVy9H6yr30MHTpI2NZ3+nXGBkXsHvAH3Ktm2UD3gbelO5QaASZq+H9Lu1Rda8tOuv0CquQaqBJWEQPS942a2SW3sareFtbH0JBE6UN3+xpCkn75r0IxS2nz3Ds02LkC/2h0p3LqVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=n+AiM+0/YjvYbEzwj+x3y5PaN68jVfJ615pSKzfFTq4A2tYPSGv7YV/IsfzPTNhtSy6ff1MTDeyCr+7R3yWLitTA7AS/2p87gEu9Ms+f0dyfEz3ZszGIvqmm+nhA3rQ/Rz9HLp/uS/FUoRzWcEDr52tvfZFecJF15bNsRaZ7hXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z6ZbM2Dz0z4f3jt8;
-	Tue,  4 Mar 2025 20:23:27 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z6ZbG38Bdz4f3jHy;
+	Tue,  4 Mar 2025 20:23:22 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0C69E1A0DEA;
+	by mail.maildlp.com (Postfix) with ESMTP id 808DD1A0DEA;
 	Tue,  4 Mar 2025 20:23:44 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB321_O8MZnFO8VFg--.52907S5;
-	Tue, 04 Mar 2025 20:23:43 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgB321_O8MZnFO8VFg--.52907S6;
+	Tue, 04 Mar 2025 20:23:44 +0800 (CST)
 From: linan666@huaweicloud.com
 To: axboe@kernel.dk,
 	song@kernel.org,
@@ -51,9 +51,9 @@ Cc: linux-block@vger.kernel.org,
 	yangerkun@huawei.com,
 	zhangxiaoxu5@huawei.com,
 	wanghai38@huawei.com
-Subject: [PATCH 1/4] block: factor out a helper to set logical/physical block size
-Date: Tue,  4 Mar 2025 20:19:15 +0800
-Message-Id: <20250304121918.3159388-2-linan666@huaweicloud.com>
+Subject: [PATCH 2/4] md: make raid logical_block_size configurable
+Date: Tue,  4 Mar 2025 20:19:16 +0800
+Message-Id: <20250304121918.3159388-3-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250304121918.3159388-1-linan666@huaweicloud.com>
 References: <20250304121918.3159388-1-linan666@huaweicloud.com>
@@ -64,13 +64,13 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB321_O8MZnFO8VFg--.52907S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxKFWkZFy3trWxuFykWFWfXwb_yoW7XF4rp3
-	Z7ZrZ7K3y8WFyIvay3Ar1fW3ZYg3yUGFWUArya9345KrZ2yr17GFn7JFy5WrWjqrsxuw47
-	Z3Z8KFZ5C3WSgrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgB321_O8MZnFO8VFg--.52907S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3urWDGryxCF43AFWrJw4rGrg_yoWDCFyfpa
+	97ZFyS934UXayFy3ZrAFykuF15X3y8KFWqkryag3y0vr9Ivr17GF4fWFy5Wryjqwn8AwnF
+	q3WDKrWDu3WIgF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
 	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
@@ -81,149 +81,277 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxKFWkZFy3trWxuFykWFWfXwb_yoW7XF4rp3
 	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
 	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
 	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0NtIUUUUU
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoApeUUUUU
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-There is no functional change.
+Previously, raid array used the maximum logical_block_size (LBS) from
+all member disks. Adding disks with larger LBS during operation could
+unexpectedly increase RAID's LBS, risking existing partition data loss.
+Simply restricting larger-LBS disks is inflexible. In some scenarios,
+only disks with 512 LBS are available currently, but later, disks with
+4k LBS may be added to the array.
+
+Making LBS configurable is the best way to solve this scenario.
+After this patch, the raid will:
+  - handle LBS fields in disk metadata read/write operations.
+  - introduce a new sysfs 'md/logical_block_size' for LBS configuration.
+
+Future mdadm should support setting LBS via metadata field during RAID
+creation and the new sysfs. Though the kernel allows runtime LBS changes,
+users should avoid modifying it after creating partitions or filesystems
+to prevent compatibility issues.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- include/linux/blkdev.h |  2 +
- block/blk-settings.c   | 85 ++++++++++++++++++++++++------------------
- 2 files changed, 50 insertions(+), 37 deletions(-)
+ drivers/md/md.h                |  1 +
+ include/uapi/linux/raid/md_p.h |  6 ++-
+ drivers/md/md-linear.c         |  1 +
+ drivers/md/md.c                | 74 ++++++++++++++++++++++++++++++++++
+ drivers/md/raid0.c             |  1 +
+ drivers/md/raid1.c             |  1 +
+ drivers/md/raid10.c            |  1 +
+ drivers/md/raid5.c             |  1 +
+ 8 files changed, 84 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 248416ecd01c..516a7a8c0c3d 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -996,6 +996,8 @@ static inline void blk_queue_disable_write_zeroes(struct request_queue *q)
-  */
- extern void blk_set_queue_depth(struct request_queue *q, unsigned int depth);
- extern void blk_set_stacking_limits(struct queue_limits *lim);
-+extern int blk_set_block_size(struct queue_limits *t, unsigned int logical_block_size,
-+		unsigned int physical_block_size);
- extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 			    sector_t offset);
- void queue_limits_stack_bdev(struct queue_limits *t, struct block_device *bdev,
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index c44dadc35e1e..4a053c3d7c0a 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -645,6 +645,53 @@ static void blk_stack_atomic_writes_limits(struct queue_limits *t,
- 	t->atomic_write_hw_boundary = 0;
- }
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index def808064ad8..96bd10998ae0 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -403,6 +403,7 @@ struct mddev {
+ 	sector_t			array_sectors; /* exported array size */
+ 	int				external_size; /* size managed
+ 							* externally */
++	unsigned int			logical_block_size;
+ 	__u64				events;
+ 	/* If the last 'event' was simply a clean->dirty transition, and
+ 	 * we didn't write it to the spares, then it is safe and simple
+diff --git a/include/uapi/linux/raid/md_p.h b/include/uapi/linux/raid/md_p.h
+index ff47b6f0ba0f..ad1c84e772ba 100644
+--- a/include/uapi/linux/raid/md_p.h
++++ b/include/uapi/linux/raid/md_p.h
+@@ -180,7 +180,8 @@ typedef struct mdp_superblock_s {
+ 	__u32 delta_disks;	/* 15 change in number of raid_disks	      */
+ 	__u32 new_layout;	/* 16 new layout			      */
+ 	__u32 new_chunk;	/* 17 new chunk size (bytes)		      */
+-	__u32 gstate_sreserved[MD_SB_GENERIC_STATE_WORDS - 18];
++	__u32 logical_block_size;	/* same as q->limits->logical_block_size */
++	__u32 gstate_sreserved[MD_SB_GENERIC_STATE_WORDS - 19];
  
-+int blk_set_block_size(struct queue_limits *t, unsigned int logical_block_size,
-+		     unsigned int physical_block_size)
+ 	/*
+ 	 * Personality information
+@@ -291,7 +292,8 @@ struct mdp_superblock_1 {
+ 	__le64	resync_offset;	/* data before this offset (from data_offset) known to be in sync */
+ 	__le32	sb_csum;	/* checksum up to devs[max_dev] */
+ 	__le32	max_dev;	/* size of devs[] array to consider */
+-	__u8	pad3[64-32];	/* set to 0 when writing */
++	__le32  logical_block_size;	/* same as q->limits->logical_block_size */
++	__u8	pad3[64-36];	/* set to 0 when writing */
+ 
+ 	/* device state information. Indexed by dev_number.
+ 	 * 2 bytes per device
+diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
+index 369aed044b40..c197a90a6bd5 100644
+--- a/drivers/md/md-linear.c
++++ b/drivers/md/md-linear.c
+@@ -73,6 +73,7 @@ static int linear_set_limits(struct mddev *mddev)
+ 
+ 	md_init_stacking_limits(&lim);
+ 	lim.max_hw_sectors = mddev->chunk_sectors;
++	lim.logical_block_size = mddev->logical_block_size;
+ 	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
+ 	lim.io_min = mddev->chunk_sectors << 9;
+ 	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 827646b3eb59..cf3d8ff807a7 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1335,6 +1335,7 @@ static int super_90_validate(struct mddev *mddev, struct md_rdev *freshest, stru
+ 		mddev->bitmap_info.default_offset = MD_SB_BYTES >> 9;
+ 		mddev->bitmap_info.default_space = 64*2 - (MD_SB_BYTES >> 9);
+ 		mddev->reshape_backwards = 0;
++		mddev->logical_block_size = sb->logical_block_size;
+ 
+ 		if (mddev->minor_version >= 91) {
+ 			mddev->reshape_position = sb->reshape_position;
+@@ -1497,6 +1498,7 @@ static void super_90_sync(struct mddev *mddev, struct md_rdev *rdev)
+ 
+ 	sb->layout = mddev->layout;
+ 	sb->chunk_size = mddev->chunk_sectors << 9;
++	sb->logical_block_size = mddev->logical_block_size;
+ 
+ 	if (mddev->bitmap && mddev->bitmap_info.file == NULL)
+ 		sb->state |= (1<<MD_SB_BITMAP_PRESENT);
+@@ -1831,6 +1833,7 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *freshest, struc
+ 		mddev->layout = le32_to_cpu(sb->layout);
+ 		mddev->raid_disks = le32_to_cpu(sb->raid_disks);
+ 		mddev->dev_sectors = le64_to_cpu(sb->size);
++		mddev->logical_block_size = le32_to_cpu(sb->logical_block_size);
+ 		mddev->events = ev1;
+ 		mddev->bitmap_info.offset = 0;
+ 		mddev->bitmap_info.space = 0;
+@@ -2040,6 +2043,7 @@ static void super_1_sync(struct mddev *mddev, struct md_rdev *rdev)
+ 	sb->chunksize = cpu_to_le32(mddev->chunk_sectors);
+ 	sb->level = cpu_to_le32(mddev->level);
+ 	sb->layout = cpu_to_le32(mddev->layout);
++	sb->logical_block_size = cpu_to_le32(mddev->logical_block_size);
+ 	if (test_bit(FailFast, &rdev->flags))
+ 		sb->devflags |= FailFast1;
+ 	else
+@@ -5630,6 +5634,65 @@ static struct md_sysfs_entry md_serialize_policy =
+ __ATTR(serialize_policy, S_IRUGO | S_IWUSR, serialize_policy_show,
+        serialize_policy_store);
+ 
++static int mddev_set_logical_block_size(struct mddev *mddev,
++				unsigned int lbs)
 +{
-+	int ret = 0;
++	int err = 0;
++	struct queue_limits lim;
 +
-+	t->logical_block_size = max(t->logical_block_size,
-+				    logical_block_size);
-+
-+	t->physical_block_size = max(t->physical_block_size,
-+				     physical_block_size);
-+
-+	/* Physical block size a multiple of the logical block size? */
-+	if (t->physical_block_size & (t->logical_block_size - 1)) {
-+		t->physical_block_size = t->logical_block_size;
-+		t->flags |= BLK_FLAG_MISALIGNED;
-+		ret = -1;
++	if (blk_validate_block_size(lbs) ||
++	    queue_logical_block_size(mddev->gendisk->queue) >= lbs) {
++		pr_err("%s: incompatible logical_block_size, can not set\n",
++		       mdname(mddev));
++		return -EINVAL;
 +	}
 +
-+	/* Minimum I/O a multiple of the physical block size? */
-+	if (t->io_min & (t->physical_block_size - 1)) {
-+		t->io_min = t->physical_block_size;
-+		t->flags |= BLK_FLAG_MISALIGNED;
-+		ret = -1;
-+	}
++	lim = queue_limits_start_update(mddev->gendisk->queue);
++	if (blk_set_block_size(&lim, lbs, 0))
++		pr_warn("%s: logical_block_size changes, data may be lost\n",
++		       mdname(mddev));
++	err = queue_limits_commit_update(mddev->gendisk->queue, &lim);
++	if (err)
++		return err;
 +
-+	/* Optimal I/O a multiple of the physical block size? */
-+	if (t->io_opt & (t->physical_block_size - 1)) {
-+		t->io_opt = 0;
-+		t->flags |= BLK_FLAG_MISALIGNED;
-+		ret = -1;
-+	}
++	mddev->logical_block_size = lbs;
++	md_update_sb(mddev, 1);
 +
-+	/* chunk_sectors a multiple of the physical block size? */
-+	if ((t->chunk_sectors << 9) & (t->physical_block_size - 1)) {
-+		t->chunk_sectors = 0;
-+		t->flags |= BLK_FLAG_MISALIGNED;
-+		ret = -1;
-+	}
-+
-+	t->max_sectors = blk_round_down_sectors(t->max_sectors, t->logical_block_size);
-+	t->max_hw_sectors = blk_round_down_sectors(t->max_hw_sectors, t->logical_block_size);
-+	t->max_dev_sectors = blk_round_down_sectors(t->max_dev_sectors, t->logical_block_size);
-+
-+	return ret;
++	return 0;
 +}
-+EXPORT_SYMBOL(blk_set_block_size);
 +
- /**
-  * blk_stack_limits - adjust queue_limits for stacked devices
-  * @t:	the stacking driver limits (top device)
-@@ -728,12 +775,6 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 		}
++static ssize_t
++lbs_show(struct mddev *mddev, char *page)
++{
++	return sprintf(page, "%u\n", mddev->logical_block_size);
++}
++
++static ssize_t
++lbs_store(struct mddev *mddev, const char *buf, size_t len)
++{
++	unsigned int lbs;
++	int err;
++
++	err = kstrtouint(buf, 10, &lbs);
++	if (err < 0)
++		return err;
++
++	err = mddev_lock(mddev);
++	if (err)
++		return err;
++	err = -EBUSY;
++	if (mddev->pers)
++		goto unlock;
++
++	err = mddev_set_logical_block_size(mddev, lbs);
++
++unlock:
++	mddev_unlock(mddev);
++	return err ?: len;
++}
++
++static struct md_sysfs_entry md_logical_block_size =
++__ATTR(logical_block_size, S_IRUGO|S_IWUSR, lbs_show, lbs_store);
+ 
+ static struct attribute *md_default_attrs[] = {
+ 	&md_level.attr,
+@@ -5662,6 +5725,7 @@ static struct attribute *md_redundancy_attrs[] = {
+ 	&md_scan_mode.attr,
+ 	&md_last_scan_mode.attr,
+ 	&md_mismatches.attr,
++	&md_logical_block_size.attr,
+ 	&md_sync_min.attr,
+ 	&md_sync_max.attr,
+ 	&md_sync_speed.attr,
+@@ -5760,6 +5824,7 @@ int mddev_stack_rdev_limits(struct mddev *mddev, struct queue_limits *lim,
+ 		unsigned int flags)
+ {
+ 	struct md_rdev *rdev;
++	unsigned int lbs = mddev->logical_block_size;
+ 
+ 	rdev_for_each(rdev, mddev) {
+ 		queue_limits_stack_bdev(lim, rdev->bdev, rdev->data_offset,
+@@ -5768,6 +5833,14 @@ int mddev_stack_rdev_limits(struct mddev *mddev, struct queue_limits *lim,
+ 		    !queue_limits_stack_integrity_bdev(lim, rdev->bdev))
+ 			return -EINVAL;
  	}
++	if (lbs) {
++		if (lbs != queue_logical_block_size(mddev->gendisk->queue))
++			pr_warn("%s: logical_block_size is changed, before: %u, now: %u\n",
++			mdname(mddev), lbs,
++			queue_logical_block_size(mddev->gendisk->queue));
++	} else {
++		mddev->logical_block_size = queue_logical_block_size(mddev->gendisk->queue);
++	}
  
--	t->logical_block_size = max(t->logical_block_size,
--				    b->logical_block_size);
--
--	t->physical_block_size = max(t->physical_block_size,
--				     b->physical_block_size);
--
- 	t->io_min = max(t->io_min, b->io_min);
- 	t->io_opt = lcm_not_zero(t->io_opt, b->io_opt);
- 	t->dma_alignment = max(t->dma_alignment, b->dma_alignment);
-@@ -742,33 +783,7 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 	if (b->chunk_sectors)
- 		t->chunk_sectors = gcd(t->chunk_sectors, b->chunk_sectors);
+ 	return 0;
+ }
+@@ -6377,6 +6450,7 @@ static void md_clean(struct mddev *mddev)
+ 	mddev->chunk_sectors = 0;
+ 	mddev->ctime = mddev->utime = 0;
+ 	mddev->layout = 0;
++	mddev->logical_block_size = 0;
+ 	mddev->max_disks = 0;
+ 	mddev->events = 0;
+ 	mddev->can_decrease_events = 0;
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index 70bcc3cdf2cd..83e330e30fc2 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -382,6 +382,7 @@ static int raid0_set_limits(struct mddev *mddev)
+ 	md_init_stacking_limits(&lim);
+ 	lim.max_hw_sectors = mddev->chunk_sectors;
+ 	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
++	lim.logical_block_size = mddev->logical_block_size;
+ 	lim.io_min = mddev->chunk_sectors << 9;
+ 	lim.io_opt = lim.io_min * mddev->raid_disks;
+ 	lim.features |= BLK_FEAT_ATOMIC_WRITES;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 10ea3af40991..5d8a718af9b0 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3217,6 +3217,7 @@ static int raid1_set_limits(struct mddev *mddev)
  
--	/* Physical block size a multiple of the logical block size? */
--	if (t->physical_block_size & (t->logical_block_size - 1)) {
--		t->physical_block_size = t->logical_block_size;
--		t->flags |= BLK_FLAG_MISALIGNED;
--		ret = -1;
--	}
--
--	/* Minimum I/O a multiple of the physical block size? */
--	if (t->io_min & (t->physical_block_size - 1)) {
--		t->io_min = t->physical_block_size;
--		t->flags |= BLK_FLAG_MISALIGNED;
--		ret = -1;
--	}
--
--	/* Optimal I/O a multiple of the physical block size? */
--	if (t->io_opt & (t->physical_block_size - 1)) {
--		t->io_opt = 0;
--		t->flags |= BLK_FLAG_MISALIGNED;
--		ret = -1;
--	}
--
--	/* chunk_sectors a multiple of the physical block size? */
--	if ((t->chunk_sectors << 9) & (t->physical_block_size - 1)) {
--		t->chunk_sectors = 0;
--		t->flags |= BLK_FLAG_MISALIGNED;
--		ret = -1;
--	}
-+	ret = blk_set_block_size(t, b->logical_block_size, b->physical_block_size);
+ 	md_init_stacking_limits(&lim);
+ 	lim.max_write_zeroes_sectors = 0;
++	lim.logical_block_size = mddev->logical_block_size;
+ 	lim.features |= BLK_FEAT_ATOMIC_WRITES;
+ 	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+ 	if (err)
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 15b9ae5bf84d..085188f85785 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4016,6 +4016,7 @@ static int raid10_set_queue_limits(struct mddev *mddev)
  
- 	/* Find lowest common alignment_offset */
- 	t->alignment_offset = lcm_not_zero(t->alignment_offset, alignment)
-@@ -780,10 +795,6 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 		ret = -1;
- 	}
+ 	md_init_stacking_limits(&lim);
+ 	lim.max_write_zeroes_sectors = 0;
++	lim.logical_block_size = mddev->logical_block_size;
+ 	lim.io_min = mddev->chunk_sectors << 9;
+ 	lim.io_opt = lim.io_min * raid10_nr_stripes(conf);
+ 	lim.features |= BLK_FEAT_ATOMIC_WRITES;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 5c79429acc64..b11e0ae25c2f 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7736,6 +7736,7 @@ static int raid5_set_limits(struct mddev *mddev)
+ 	stripe = roundup_pow_of_two(data_disks * (mddev->chunk_sectors << 9));
  
--	t->max_sectors = blk_round_down_sectors(t->max_sectors, t->logical_block_size);
--	t->max_hw_sectors = blk_round_down_sectors(t->max_hw_sectors, t->logical_block_size);
--	t->max_dev_sectors = blk_round_down_sectors(t->max_dev_sectors, t->logical_block_size);
--
- 	/* Discard alignment and granularity */
- 	if (b->discard_granularity) {
- 		alignment = queue_limit_discard_alignment(b, start);
+ 	md_init_stacking_limits(&lim);
++	lim.logical_block_size = mddev->logical_block_size;
+ 	lim.io_min = mddev->chunk_sectors << 9;
+ 	lim.io_opt = lim.io_min * (conf->raid_disks - conf->max_degraded);
+ 	lim.features |= BLK_FEAT_RAID_PARTIAL_STRIPES_EXPENSIVE;
 -- 
 2.39.2
 
