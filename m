@@ -1,84 +1,184 @@
-Return-Path: <linux-block+bounces-17986-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-17990-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A646A4E878
-	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 18:23:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15B04A4EA0E
+	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 18:55:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D30619C49C7
-	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 17:17:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8CE6422095
+	for <lists+linux-block@lfdr.de>; Tue,  4 Mar 2025 17:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3866727CB22;
-	Tue,  4 Mar 2025 16:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2Rq8z9/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F4128152D;
+	Tue,  4 Mar 2025 17:30:13 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F4264600;
-	Tue,  4 Mar 2025 16:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BB28152A;
+	Tue,  4 Mar 2025 17:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741107304; cv=none; b=GNSVZiQwybBsyiJKNeYijdhgYgcsOj/4wPRi6aa3Cc3+d28FSwyUtzmMdW3MJkbu47amtrf/4IgR3PP+i6C0ei1y/Freqc08kyCxTjG77G4Be8K+/yZA3b7T2AQ37S8g2qHdgQqWa9uN82s2fjSPK3+usIk7BNzCAKkAenaGFBs=
+	t=1741109413; cv=none; b=UPjCx1bB01sPBB0UDhcnz31CdJ0APWCFnF7TjWtQbLrFoM9X8aSm0h0I2qTGZAw/DXspL0+YVNY4Dx1bEocRDsyClV2oj6W+/HqR9uGGilAcZ94OzJHrmzG07TgLPq1kcEa5SIHIWa2qqi1QiZjCVDLN7LuqMwHH6/RtHDvQmFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741107304; c=relaxed/simple;
-	bh=b0tgUtFT8jt9U9rAUFsewLIDZQyfCwT4CxSxsMn617o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmHEktfNPTecthqH75dw/KIJDCcLJGdIRb8qskxiYiHW/EDfIAuN1FYh8CO3PEIfplN8wJEIgtEg6qbK6ib9oeS08JzWZPnOzu2I/Sg+Jf7ILLstWJZmQkpNPa4UwHrfZMQ4JQ7B4rF7u6/ad392VYjjnfHX8iYNyEyg6SXxc8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2Rq8z9/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50726C4CEE5;
-	Tue,  4 Mar 2025 16:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741107303;
-	bh=b0tgUtFT8jt9U9rAUFsewLIDZQyfCwT4CxSxsMn617o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q2Rq8z9/nPxSEiZwUtvczIg9EPcyL/IYN32H60rL/gqIycMJKiRuQOIj/pgZ5I03D
-	 9WrgshNJEhKU58Q0KI1iEYJRRsMb21f6LT/1gSL1JI6dKDQHSKeRWNc3mW254Rgr9C
-	 IcYGH3P5YQwo04ZoVKexsrSAJEa/d+fR+QLJ+eS01xz3sWQAe/OIFc4YOPs68yaKsz
-	 Q6Z5jjf6RsKkieIbBGTjmnSsklG7voc7jrETAn7MdANlC3bgIe2UD+3ju/eb0ROkQx
-	 TFsSVIgnKa0cmQK+p9wXsiEQIwRZyqGXOIwAGUvSxjkpN1+dFyVwIKYufIANYR/JYS
-	 9sbEy8w/oVrkw==
-Date: Tue, 4 Mar 2025 06:55:02 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 4/9] cgroup: Print warning when /proc/cgroups is read on
- v2-only system
-Message-ID: <Z8cwZluJooqbO7uZ@slm.duckdns.org>
-References: <20250304153801.597907-1-mkoutny@suse.com>
- <20250304153801.597907-5-mkoutny@suse.com>
+	s=arc-20240116; t=1741109413; c=relaxed/simple;
+	bh=OdPmI4U5vFoGTHKzd0tRe7tG0OV3RaqOyfZhfElBWDE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sWQiePKRFNizOmYYVZfbuLZ7wGIgvG2n6hXeTpXmXn3bX+xTIiidB96gSHhDO3l0zMd46kEucss5Rk3ggxaI33j7EQdur7AQrVcoO9aFfv1UU4rzmDe+zUPS1HL+L/7bQ8VbTIJhHkjhHOdlAvnrSjLLM0k7nMHZR0BfPi8Drtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1tpViZ-000000000mW-0i6s;
+	Tue, 04 Mar 2025 17:06:07 +0000
+Date: Tue, 4 Mar 2025 17:06:01 +0000
+From: Daniel Golle <daniel@makrotopia.org>
+To: Jens Axboe <axboe@kernel.dk>, Daniel Golle <daniel@makrotopia.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Douglas Anderson <dianders@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Riyan Dhiman <riyandhiman14@gmail.com>,
+	Konstantin Khlebnikov <koct9i@gmail.com>,
+	Li Lingfeng <lilingfeng3@huawei.com>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] block: allow setting partition of_node
+Message-ID: <8cfbf225bcda906df0c89dd18ba07ecfa17123c2.1741107851.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304153801.597907-5-mkoutny@suse.com>
 
-On Tue, Mar 04, 2025 at 04:37:56PM +0100, Michal Koutný wrote:
-> As a followup to commits 6c2920926b10e ("cgroup: replace
-> unified-hierarchy.txt with a proper cgroup v2 documentation") and
-> ab03125268679 ("cgroup: Show # of subsystem CSSes in cgroup.stat"),
-> add a runtime message to users who read status of controllers in
-> /proc/cgroups on v2-only system. The detection is based on a)
-> no controllers are attached to v1, b) default hierarchy is mounted (the
-> latter is for setups that neven mount v2 but read /proc/cgroups upon
-> boot when controllers default to v2).
+Allow partition parsers to set the Device Tree node for a partition by
+introducing of_put_partition() and extending struct parsed_partitions
+accordingly.
 
-I'm hoping that we could deprecate /proc/cgroups entirely. Maybe we can just
-warn whenever the file is accessed?
+As the partition information is preallocated independently of the actual
+number of partitions the additional pointer takes about 2 kiB of allocated
+memory which is worth avoiding in case CONFIG_OF is not set. This is
+achieved by only adding the corresponding field to the struct in case
+CONFIG_OF is set using #ifdef'ery.
 
-Thanks.
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ block/partitions/check.h | 16 +++++++++++++++-
+ block/partitions/core.c  | 14 +++++++++++---
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
+diff --git a/block/partitions/check.h b/block/partitions/check.h
+index e5c1c61eb3532..0b326086b1b61 100644
+--- a/block/partitions/check.h
++++ b/block/partitions/check.h
+@@ -1,6 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #include <linux/pagemap.h>
+ #include <linux/blkdev.h>
++#include <linux/of.h>
+ #include "../blk.h"
+ 
+ /*
+@@ -16,6 +17,9 @@ struct parsed_partitions {
+ 		int flags;
+ 		bool has_info;
+ 		struct partition_meta_info info;
++#ifdef CONFIG_OF
++		struct device_node *np;
++#endif
+ 	} *parts;
+ 	int next;
+ 	int limit;
+@@ -34,18 +38,28 @@ static inline void put_dev_sector(Sector p)
+ }
+ 
+ static inline void
+-put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size)
++of_put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size,
++		 struct device_node *np)
+ {
+ 	if (n < p->limit) {
+ 		char tmp[1 + BDEVNAME_SIZE + 10 + 1];
+ 
+ 		p->parts[n].from = from;
+ 		p->parts[n].size = size;
++#ifdef CONFIG_OF
++		p->parts[n].np = np;
++#endif
+ 		snprintf(tmp, sizeof(tmp), " %s%d", p->name, n);
+ 		strlcat(p->pp_buf, tmp, PAGE_SIZE);
+ 	}
+ }
+ 
++static inline void
++put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size)
++{
++	of_put_partition(p, n, from, size, NULL);
++}
++
+ /* detection routines go here in alphabetical order: */
+ int adfspart_check_ADFS(struct parsed_partitions *state);
+ int adfspart_check_CUMANA(struct parsed_partitions *state);
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index 815ed33caa1b8..70d1ad8e37b93 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -9,6 +9,7 @@
+ #include <linux/slab.h>
+ #include <linux/ctype.h>
+ #include <linux/vmalloc.h>
++#include <linux/device.h>
+ #include <linux/raid/detect.h>
+ #include "check.h"
+ 
+@@ -292,7 +293,8 @@ static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
+  */
+ static struct block_device *add_partition(struct gendisk *disk, int partno,
+ 				sector_t start, sector_t len, int flags,
+-				struct partition_meta_info *info)
++				struct partition_meta_info *info,
++				struct device_node *np)
+ {
+ 	dev_t devt = MKDEV(0, 0);
+ 	struct device *ddev = disk_to_dev(disk);
+@@ -341,6 +343,7 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
+ 	pdev->class = &block_class;
+ 	pdev->type = &part_type;
+ 	pdev->parent = ddev;
++	device_set_node(pdev, of_fwnode_handle(np));
+ 
+ 	/* in consecutive minor range? */
+ 	if (bdev_partno(bdev) < disk->minors) {
+@@ -447,7 +450,7 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
+ 	}
+ 
+ 	part = add_partition(disk, partno, start, length,
+-			ADDPART_FLAG_NONE, NULL);
++			ADDPART_FLAG_NONE, NULL, NULL);
+ 	ret = PTR_ERR_OR_ZERO(part);
+ out:
+ 	mutex_unlock(&disk->open_mutex);
+@@ -561,8 +564,13 @@ static bool blk_add_partition(struct gendisk *disk,
+ 		size = get_capacity(disk) - from;
+ 	}
+ 
++#ifdef CONFIG_OF
+ 	part = add_partition(disk, p, from, size, state->parts[p].flags,
+-			     &state->parts[p].info);
++			     &state->parts[p].info, state->parts[p].np);
++#else
++	part = add_partition(disk, p, from, size, state->parts[p].flags,
++			     &state->parts[p].info, NULL);
++#endif
+ 	if (IS_ERR(part)) {
+ 		if (PTR_ERR(part) != -ENXIO) {
+ 			printk(KERN_ERR " %s: p%d could not be added: %pe\n",
 -- 
-tejun
+2.48.1
 
