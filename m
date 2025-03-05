@@ -1,47 +1,47 @@
-Return-Path: <linux-block+bounces-18027-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18025-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8346BA500C3
-	for <lists+linux-block@lfdr.de>; Wed,  5 Mar 2025 14:41:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0638DA50096
+	for <lists+linux-block@lfdr.de>; Wed,  5 Mar 2025 14:32:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCFDE7A4D95
-	for <lists+linux-block@lfdr.de>; Wed,  5 Mar 2025 13:40:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52ED01886F3E
+	for <lists+linux-block@lfdr.de>; Wed,  5 Mar 2025 13:32:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3852024A065;
-	Wed,  5 Mar 2025 13:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8442C2063EF;
+	Wed,  5 Mar 2025 13:32:46 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5521E531;
-	Wed,  5 Mar 2025 13:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8004C242915;
+	Wed,  5 Mar 2025 13:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741182100; cv=none; b=SJB6tjvfsvdGBBlCYSppybUEvB92diCmIjclq5NTxyWs7MVeM4ILDVIFmR8Qn46434rIpOKk+FEKlObD/NhZsulBVwMP8V+Yk8zbeB9vxvUCfv7X26DOUSPqwzdRLqNU2b903Zo95BGcqClw478ZpwIdnjwfbsPS2SmzWKclBdw=
+	t=1741181566; cv=none; b=ZheUa3C31Qp3/OHqZ7XsBv8i4c7lmdBnBYI2aoScoEG1LtHRjjhs175pNFvPfcFa8pDYAnp56PgaT1c/cPz9QGTss7iuN8a1kZpFRRk4ee8meuqksZdWxVntjcGjJc6Zd148Zcs2CrqDlyn+NXQmhs18ng33PSvGCkD4da0d7sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741182100; c=relaxed/simple;
+	s=arc-20240116; t=1741181566; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RKCSCXihYE8Ef1uBLJ9iye1TiYpFvm6x4b6ZOJPRZIfzd1RO6bJ2FbWhxgNm4EZveX5LOlkZjD7/SeVvp6kuyymujw35Nuwday60kZKZG6Q6OV4+jU3EWeWiF8Ap5vbzcEbAn+p6lszV+dYFxAoVJjyhnEvgnwBhxqsPrFNDBS8=
+	 Content-Type:Content-Disposition:In-Reply-To; b=VcgNfujLD36vQLjFu3FMaSKXco7b3VLWu+xUngTicxLho/S3LsvngMfWY8ibIZlnkHzJi8abhH3V5xLRBBX63UiBgHl4DlP1dukZXNGCPRQqmMEOklgxwJFZM6Ag7Q1TcYmBj9AXZffGOMCGHFNtE4q4Y9JU6+mcoI1AlmKfkWs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0283668AFE; Wed,  5 Mar 2025 14:32:18 +0100 (CET)
-Date: Wed, 5 Mar 2025 14:32:17 +0100
+	id E7D2868C7B; Wed,  5 Mar 2025 14:32:36 +0100 (CET)
+Date: Wed, 5 Mar 2025 14:32:36 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Anuj Gupta <anuj20.g@samsung.com>
 Cc: axboe@kernel.dk, hch@lst.de, martin.petersen@oracle.com,
 	anuj1072538@gmail.com, nikh1092@linux.ibm.com,
 	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
 	linux-scsi@vger.kernel.org, dm-devel@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] block: ensure correct integrity capability
- propagation in stacked devices
-Message-ID: <20250305133217.GA16755@lst.de>
-References: <20250305063033.1813-1-anuj20.g@samsung.com> <CGME20250305063902epcas5p25cc1df91006f1bb35ea782ec430b6d4b@epcas5p2.samsung.com> <20250305063033.1813-2-anuj20.g@samsung.com>
+Subject: Re: [PATCH v3 2/2] block: Correctly initialize
+ BLK_INTEGRITY_NOGENERATE and BLK_INTEGRITY_NOVERIFY
+Message-ID: <20250305133236.GB16755@lst.de>
+References: <20250305063033.1813-1-anuj20.g@samsung.com> <CGME20250305063903epcas5p46a5f908f6500fc34795b8330534d0c15@epcas5p4.samsung.com> <20250305063033.1813-3-anuj20.g@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305063033.1813-2-anuj20.g@samsung.com>
+In-Reply-To: <20250305063033.1813-3-anuj20.g@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
