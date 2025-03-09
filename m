@@ -1,82 +1,75 @@
-Return-Path: <linux-block+bounces-18106-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18108-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00020A57FFC
-	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 01:17:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCFD1A5815B
+	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 08:31:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C8B816AF04
-	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 00:17:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E910169E87
+	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 07:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4DB64A3E;
-	Sun,  9 Mar 2025 00:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61A3C35977;
+	Sun,  9 Mar 2025 07:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SiGOxgqa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EAPPoDG6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29155136A
-	for <linux-block@vger.kernel.org>; Sun,  9 Mar 2025 00:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C807117B50F
+	for <linux-block@vger.kernel.org>; Sun,  9 Mar 2025 07:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741479434; cv=none; b=mO1XLAbpZwd8T+0FR6a4tYIBBbGaHgl3TqGDZuGNFDJBakEyT8D9kb2zBzeJWk6D7B7cN7E/TiA12MP9qC3gSHrY+4UlS0Qgwwbi3MGxl2dJrC0Bqn0Dtk6sjwiu5k7daT9rGEFG1xO9YqqIOSUWXt5ACFlxCFIiU4GzahVx5Y4=
+	t=1741505468; cv=none; b=IK4UE/SXM9jUfCdnaSrIMUcb9B2YSAe7xgfZN508yZhfQOC4aP8wF0M8acPGEoIg9kTqzL95UfDhsFvZQOMrbIEphC5S7+wGVm/VOxtJH2OhL6Ukw9wYNVFKJCzu0VufKXwrBE2awoT+xIyT1rewnifruNn5p3hhwgdnNdpIG/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741479434; c=relaxed/simple;
-	bh=THtDhScMln822aq4Vmu3UXX6XJfr22NYp7F82DStE0o=;
+	s=arc-20240116; t=1741505468; c=relaxed/simple;
+	bh=ZKJSAixtGa8EYM786HG4a7BBHv/1ACcxuJ/EoQKKgBI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGVJh3X1tpMyzH71zq2yf6LNCurtSumnmaLySy+MfZj51CFnXTC8mWs7z8CNqa79+t82V9VHWX6hWvaJXLeGksi9bxfyNQ1czCdAWj5kwoVHc/Lvd6BzA5a0bnAa5wUJR6cXQeiwKafWxPB8ss7ahpGTkJxz1LILS0IF6p30fm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SiGOxgqa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741479431;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cDsahH8DeVAVtVpMyFzohcPlKXp1v4nXuT8Fv8DeuVM=;
-	b=SiGOxgqa1w4AZYOIfeHWvqnb0AdzcBTR7vuaa6pPW1+nmp1U1p0AZfx9xqReda0nN7Hj5m
-	piSB9UzKGSKT/TR4mf6Ki482pDsJSrP7DToo6kicrPrxgl/LvwKM7TemOSdwwxyq3LGHfT
-	/QdOHmWC9QhgpQre6TT7Z/BwNHLwwuQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-463-zCNv-e6dO1CSX27mJyXhQA-1; Sat,
- 08 Mar 2025 19:17:08 -0500
-X-MC-Unique: zCNv-e6dO1CSX27mJyXhQA-1
-X-Mimecast-MFC-AGG-ID: zCNv-e6dO1CSX27mJyXhQA_1741479427
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D4E618004A9;
-	Sun,  9 Mar 2025 00:17:07 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E852C300019E;
-	Sun,  9 Mar 2025 00:16:57 +0000 (UTC)
-Date: Sun, 9 Mar 2025 08:16:51 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Dave Chinner <david@fromorbit.com>,
-	Christoph Hellwig <hch@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-	Jooyung Han <jooyung@google.com>, Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Heinz Mauelshagen <heinzm@redhat.com>, zkabelac@redhat.com,
-	dm-devel@lists.linux.dev, linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] the dm-loop target
-Message-ID: <Z8zd85X2gosbrsc8@fedora>
-References: <7d6ae2c9-df8e-50d0-7ad6-b787cb3cfab4@redhat.com>
- <Z8W1q6OYKIgnfauA@infradead.org>
- <b3caee06-c798-420e-f39f-f500b3ea68ca@redhat.com>
- <Z8XlvU0o3C5hAAaM@infradead.org>
- <8adb8df2-0c75-592d-bc3e-5609bb8de8d8@redhat.com>
- <Z8Zh5T9ZtPOQlDzX@dread.disaster.area>
- <1fde6ab6-bfba-3dc4-d7fb-67074036deb0@redhat.com>
- <Z8eURG4AMbhornMf@dread.disaster.area>
- <81b037c8-8fea-2d4c-0baf-d9aa18835063@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0+s74kImCYEdAk1Q1Yivmj4HGDoDrREROgV8HZjWVeuB1WQ6t4dutH9w5mWZ7SH1jcx/ksyZa2Euv20+B2dPgtleBeyf1DbMiTMSYhOAcDBfYaDYW5mPCx4eI8YNpNJiwiQ3Ag8ehCjNcfrcA2SfNGX71jg+43Hj7FU0oJSGBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EAPPoDG6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741505464; x=1773041464;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZKJSAixtGa8EYM786HG4a7BBHv/1ACcxuJ/EoQKKgBI=;
+  b=EAPPoDG6ryex3O7npIQwmfr3mgHhv3ktD8ULikq8VFjxJf45ttTsE5mP
+   uvWbJ8mB11LcY+dnuqYZu7S6g7Fbytjc7ZyLAzaveudz0mojD5KD+bcxj
+   XgVECwuEj5q0TQLbFUtN5Bl5ULY0vMJDv3vN+4eIR4Sm1l22bEcc67nab
+   cuXuFdRvigbPVeeIQhPd8uMr2eO85tECSyanAcRmXz2NN1J4h+m2p8Lcx
+   f2RkxUNXmqfhBAB082ExRPRbHKhKDBoGK4R3lNqrYg32yl8zrrdyRn/7r
+   jyk+3ogSA7CZ2/hZMsGVwH5thAc7Kg3L/qwXB6U77/iTsXQFg8BtR8vC9
+   Q==;
+X-CSE-ConnectionGUID: CUW/w9KNReCWOhpQcvUchw==
+X-CSE-MsgGUID: mKqhsmg8QpWqES4ojFIqyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="46294100"
+X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
+   d="scan'208";a="46294100"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2025 23:31:03 -0800
+X-CSE-ConnectionGUID: ue1gO0WMR5+lcH41ApZx1A==
+X-CSE-MsgGUID: s9AjcIKbQlSBzq2PnIQnJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
+   d="scan'208";a="120419004"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 08 Mar 2025 23:31:02 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trB7g-0002nm-1P;
+	Sun, 09 Mar 2025 07:30:57 +0000
+Date: Sun, 9 Mar 2025 15:30:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [RESEND PATCH 3/5] loop: add helper loop_queue_work_prep
+Message-ID: <202503091413.vbFFy32o-lkp@intel.com>
+References: <20250308162312.1640828-4-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -85,53 +78,65 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <81b037c8-8fea-2d4c-0baf-d9aa18835063@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20250308162312.1640828-4-ming.lei@redhat.com>
 
-On Fri, Mar 07, 2025 at 04:21:58PM +0100, Mikulas Patocka wrote:
-> > I didn't say you were. I said the concept that dm-loop is based on
-> > is fundamentally flawed and that your benchmark setup does not
-> > reflect real world usage of loop devices.
-> 
-> > Where are the bug reports about the loop device being slow and the
-> > analysis that indicates that it is unfixable?
-> 
-> So, I did benchmarks on an enterprise nvme drive (SAMSUNG 
-> MZPLJ1T6HBJR-00007). I stacked ext4/loop/ext4, xfs/loop/xfs (using losetup 
-> --direct-io=on), ext4/dm-loop/ext4 and xfs/dm-loop/xfs. And loop is slow.
-> 
-> synchronous I/O:
-> fio --direct=1 --bs=4k --runtime=10 --time_based --numjobs=12 --ioengine=psync --iodepth=1 --group_reporting=1 --filename=/mnt/test2/l -name=job --rw=rw
-> raw block device:
->    READ: bw=399MiB/s (418MB/s), 399MiB/s-399MiB/s (418MB/s-418MB/s), io=3985MiB (4179MB), run=10001-10001msec
->   WRITE: bw=399MiB/s (418MB/s), 399MiB/s-399MiB/s (418MB/s-418MB/s), io=3990MiB (4184MB), run=10001-10001msec
-> ext4/loop/ext4:
->    READ: bw=223MiB/s (234MB/s), 223MiB/s-223MiB/s (234MB/s-234MB/s), io=2232MiB (2341MB), run=10002-10002msec
->   WRITE: bw=223MiB/s (234MB/s), 223MiB/s-223MiB/s (234MB/s-234MB/s), io=2231MiB (2339MB), run=10002-10002msec
-> xfs/loop/xfs:
->    READ: bw=220MiB/s (230MB/s), 220MiB/s-220MiB/s (230MB/s-230MB/s), io=2196MiB (2303MB), run=10001-10001msec
->   WRITE: bw=219MiB/s (230MB/s), 219MiB/s-219MiB/s (230MB/s-230MB/s), io=2193MiB (2300MB), run=10001-10001msec
-> ext4/dm-loop/ext4:
->    READ: bw=338MiB/s (355MB/s), 338MiB/s-338MiB/s (355MB/s-355MB/s), io=3383MiB (3547MB), run=10002-10002msec
->   WRITE: bw=338MiB/s (355MB/s), 338MiB/s-338MiB/s (355MB/s-355MB/s), io=3385MiB (3549MB), run=10002-10002msec
-> xfs/dm-loop/xfs:
->    READ: bw=375MiB/s (393MB/s), 375MiB/s-375MiB/s (393MB/s-393MB/s), io=3752MiB (3934MB), run=10002-10002msec
->   WRITE: bw=376MiB/s (394MB/s), 376MiB/s-376MiB/s (394MB/s-394MB/s), io=3756MiB (3938MB), run=10002-10002msec
-> 
-> asynchronous I/O:
-> fio --direct=1 --bs=4k --runtime=10 --time_based --numjobs=12 --ioengine=libaio --iodepth=16 --group_reporting=1 --filename=/mnt/test2/l -name=job --rw=rw
-> raw block device:
->    READ: bw=1246MiB/s (1306MB/s), 1246MiB/s-1246MiB/s (1306MB/s-1306MB/s), io=12.2GiB (13.1GB), run=10001-10001msec
->   WRITE: bw=1247MiB/s (1308MB/s), 1247MiB/s-1247MiB/s (1308MB/s-1308MB/s), io=12.2GiB (13.1GB), run=10001-10001msec
+Hi Ming,
 
-BTW, raw device is supposed to be xfs or ext4 over raw block device, right?
+kernel test robot noticed the following build warnings:
 
-Otherwise, please provide test data for this case, then it becomes one fair
-comparison because there should be lock contention for FS write IOs on same file.
+[auto build test WARNING on axboe-block/for-next]
+[also build test WARNING on linus/master v6.14-rc5 next-20250307]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Lei/loop-remove-rw-parameter-from-lo_rw_aio/20250309-002548
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20250308162312.1640828-4-ming.lei%40redhat.com
+patch subject: [RESEND PATCH 3/5] loop: add helper loop_queue_work_prep
+config: arc-randconfig-001-20250309 (https://download.01.org/0day-ci/archive/20250309/202503091413.vbFFy32o-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250309/202503091413.vbFFy32o-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503091413.vbFFy32o-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/block/loop.c: In function 'loop_queue_work_prep':
+>> drivers/block/loop.c:862:25: warning: unused variable 'rq' [-Wunused-variable]
+     862 |         struct request *rq = blk_mq_rq_from_pdu(cmd);
+         |                         ^~
 
 
+vim +/rq +862 drivers/block/loop.c
 
-Thanks,
-Ming
+   859	
+   860	static void loop_queue_work_prep(struct loop_cmd *cmd)
+   861	{
+ > 862		struct request *rq = blk_mq_rq_from_pdu(cmd);
+   863	
+   864		/* always use the first bio's css */
+   865		cmd->blkcg_css = NULL;
+   866		cmd->memcg_css = NULL;
+   867	#ifdef CONFIG_BLK_CGROUP
+   868		if (rq->bio) {
+   869			cmd->blkcg_css = bio_blkcg_css(rq->bio);
+   870	#ifdef CONFIG_MEMCG
+   871			if (cmd->blkcg_css) {
+   872				cmd->memcg_css =
+   873					cgroup_get_e_css(cmd->blkcg_css->cgroup,
+   874							&memory_cgrp_subsys);
+   875			}
+   876	#endif
+   877		}
+   878	#endif
+   879	}
+   880	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
