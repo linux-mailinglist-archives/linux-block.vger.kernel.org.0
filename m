@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-18117-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18116-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C7FDA585DD
-	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 17:43:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 623B6A585C7
+	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 17:18:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE93A1887906
-	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 16:43:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92DC816B141
+	for <lists+linux-block@lfdr.de>; Sun,  9 Mar 2025 16:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303261DE880;
-	Sun,  9 Mar 2025 16:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA05914A09E;
+	Sun,  9 Mar 2025 16:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="OtUQ/47z"
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="F+++zi2g"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail42.out.titan.email (mail42.out.titan.email [209.209.25.43])
+Received: from mail108.out.titan.email (mail108.out.titan.email [44.210.203.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010241DE4F8
-	for <linux-block@vger.kernel.org>; Sun,  9 Mar 2025 16:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.209.25.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE20B2F37
+	for <linux-block@vger.kernel.org>; Sun,  9 Mar 2025 16:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.210.203.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741538589; cv=none; b=haazQFeTZSPJXy5BSR62awkQc9Grv9tfj6x8eZCG6I7smPGccK8YvR3stREkprCo6luDoWs4zsiBtBQHp7j4iuG64CIQU7Sb+Jo23lCYpzui9rRK3lz5rbw6j97a0ZQXEeONShox3vfExQlAD1wZDfhUQnSZaAp6bPcFmhSFPII=
+	t=1741537087; cv=none; b=Xnz7rZnS1k3WledLMLHYKXjSeRnZbXVEfWOBjat56/kyw7Lio6Ha2HdR7uEvszfVmBSAapfmsaerJQgGxqsn57FnyaApueeqpv1xH5O2/1ZESM2CFxVHRB8dyUhoPPuwUlWfyPz6f09YEZG7/ld32OOkLEKpdFDzU+6Wwsx7iYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741538589; c=relaxed/simple;
+	s=arc-20240116; t=1741537087; c=relaxed/simple;
 	bh=oH4wwJlTC8RywziiEnNdkwKpipiOGuOfib+M01mB0Dc=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=pKK8lw44x44kIO81ypCDbK+D4H/Y+lHPhJQM74mwXMTOAe+xWSILs9kXM5uoL3q3SMlaNLv2fxjYybo067Mg0tS3kocHjtKwz1bySCEFSmDl8nwkhBouCDss8Hk6Y/cW55XOgE+6PuFAMpUjeLy610quOXZulMoeS/alkqSlkE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=OtUQ/47z; arc=none smtp.client-ip=209.209.25.43
+	 Message-Id:References:To; b=jBKfniw+XhxcJzpzIQWgjPVPmJI/hDikUhbosB/8jZlfpeIMdVwarzFzSdIj4+vF+tRKgvysGvTV7xWj4emYpx0HX4iMFsDx7OMKEZAU+78Z/2G01QyCSUVRAgYJJgrJoQddZQx+E1M/oz/82BZx7wV8FSTzAgx+BjmA1aJMwCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=F+++zi2g; arc=none smtp.client-ip=44.210.203.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
 DKIM-Signature: a=rsa-sha256; bh=JsV29vf87lO68vdSl5Li1WxJXM9iyqC5aDWsbs6cej0=;
 	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=references:mime-version:cc:to:from:in-reply-to:message-id:subject:date:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1741536417; v=1;
-	b=OtUQ/47zT2SkffhGXUaqujNwFZpVI5lCFzePR/zQZILHJrhn/gdeyWo3OxQlSY+f3mGf9o8Z
-	FNzLB6rXufuLT3GhNZIsCCnyg85PeUNykNvsn9swKKjAbp5cdMr5BQb1j1Dmgvye1dNgxJzallE
-	pjcHVbl2s4SAQOFETAuaKxOk=
+	h=to:mime-version:in-reply-to:from:cc:message-id:references:subject:date:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1741536627; v=1;
+	b=F+++zi2gB52tVzrlRcjmYFJ18U0pBDdfOw3GL8+hOd4HkcdLSIOG/bzE2H6VflRmy42FW2F+
+	NNE72KavTC052Cx1NlKMqL59/zevAvKA4yrrx0fzxZBqqfDqwfOo0551cRFH9milY/U6X08nndg
+	5h1UjpAmtsOcMlYiWlorPkKk=
 Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 67176E02C4;
-	Sun,  9 Mar 2025 16:06:55 +0000 (UTC)
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id CE783E0105;
+	Sun,  9 Mar 2025 16:10:25 +0000 (UTC)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -54,18 +54,18 @@ Subject: Re: [bug report] badblocks: improve badblocks_check() for multiple
 Feedback-ID: :i@coly.li:coly.li:flockmailId
 From: Coly Li <i@coly.li>
 In-Reply-To: <c8e4f72d-7a9f-428d-a67b-41ddd4da8f2f@stanley.mountain>
-Date: Mon, 10 Mar 2025 00:06:20 +0800
+Date: Mon, 10 Mar 2025 00:10:13 +0800
 Cc: linux-block@vger.kernel.org,
  colyli@kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <A4B7FCE6-4F1A-4A87-B9C9-2D3FB1D5FB25@coly.li>
+Message-Id: <B1D2F256-1239-460E-BAE8-4C6C2459370F@coly.li>
 References: <c8e4f72d-7a9f-428d-a67b-41ddd4da8f2f@stanley.mountain>
 To: Dan Carpenter <dan.carpenter@linaro.org>
 X-Mailer: Apple Mail (2.3826.400.131.1.6)
 X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1741536416991095307.19601.873836069139295401@prod-use1-smtp-out1004.
+X-Titan-Src-Out: 1741536627520804902.19601.6393682865750146538@prod-use1-smtp-out1004.
 X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=F6ytdrhN c=1 sm=1 tr=0 ts=67cdbca1
+X-CMAE-Analysis: v=2.4 cv=IeV9WXqa c=1 sm=1 tr=0 ts=67cdbd73
 	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
 	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=KKAkSRfTAAAA:8
 	a=EAby17L36nNo1SpXxpYA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
