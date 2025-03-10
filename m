@@ -1,71 +1,108 @@
-Return-Path: <linux-block+bounces-18157-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18159-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C361A59656
-	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 14:30:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ACC5CA59691
+	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 14:43:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDF3E3A474A
-	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 13:30:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B9593A7644
+	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 13:42:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B133846D;
-	Mon, 10 Mar 2025 13:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F0722A4EF;
+	Mon, 10 Mar 2025 13:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qPK/xp2l"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="P+dq660+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51BF2FC23;
-	Mon, 10 Mar 2025 13:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F80221729
+	for <linux-block@vger.kernel.org>; Mon, 10 Mar 2025 13:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741613431; cv=none; b=lGQbBnF4s6udw2oOci5htFGiJ9hns+ssS5zWmTlzzRFj4jdv6CAeCynkp/KjfZovRlk7wCGEeoc8L2LGyJ1lL8X08Use2lPvLBdn8Zk8bmoPqTK6aBQ6ecjGRbsYm4mGsAxZDqdG7HC5FAvKM3e3qCy0Qj6RAA7v9OmGMSpoHT4=
+	t=1741614181; cv=none; b=RIXAWjqbKroFRz8GNpSYDqP9ggT1DxZA1YQqMdAYJ5jQTU4OjFES1d/Q9gmbzcOLHeG1DRbTlSu75O/ShOxjzoed+e/0MCga/+xBP2mm8Y+xZnO16SR7ClqHzPC0TT5REYcmw3oe5s99yw/x5XhfMpq2dXEJ3bOmIUlOgIOESvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741613431; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpEzM9okhsCl3d1LeAB+03fvwfhZAJoX1lDLHMuwzDFRX2CXIDHRl5w0JNCIDLeb3zeWvZ5NftJT7XzujpXaAwWVUFG0zI4q+nxG4sgKuCwJdpZx6rBkhfb89Li5qfXC9Gv+iwqtaC2fXJoIkfwSZBKWmI+3ggi//vETK8yyI1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qPK/xp2l; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=qPK/xp2lWLapk4aZ68CKRHt8wC
-	cOmIaWjXJASOFyDXQMPXOZTfeIz/KOz47TWQJmJHFr23D7gNTyBfVSYAt1cK9GcXd6TJPMU2jtaEl
-	B04rde18oDIWBdBUtXMYRF+kpBm09t1LxJDRsYZakdQEqEDD3nBW/Jw+C3cHy4VOClpIIo/s108vN
-	+NEsFkhsjm8xJ7XTLDL91HTkA3F1vckNoG4SfxpA145z+IKe4lTOCDU/MCryRPFBxbsuzhgPtONBE
-	meyp4FsGNx7mRRew4rHo+IHJ5WfJhLhNYUSV3+XvF9zz/XPeyaTqrpolhYeA1N+nCkqbboiy0dYJi
-	/mubAe6g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1trdDB-00000002nmz-26wU;
-	Mon, 10 Mar 2025 13:30:29 +0000
-Date: Mon, 10 Mar 2025 06:30:29 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH V2] block: make sure ->nr_integrity_segments is cloned in
- blk_rq_prep_clone
-Message-ID: <Z87pdRKOKozDx4cb@infradead.org>
-References: <20250310115453.2271109-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1741614181; c=relaxed/simple;
+	bh=ePpI5r7ai9kjlwrxAN5W3wGdQWudCw/TieHKITaOmlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u6jmC8gxHHrMVhSrNADJxwa8hFxM+UY1a/azXkWtPehpB8ZQJC9bJ265IE/3dib7P6I14KOLUzuFuVvtk2eMgYug7HjEH4z3t/qepiKphszgiSFrdzqyFo5hDmXHAEYtAQTv33QxF6fJ9KwSKwjAfeIc1bWkaUE+CcSVPSlhB8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=P+dq660+; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85ad83ba141so398561939f.2
+        for <linux-block@vger.kernel.org>; Mon, 10 Mar 2025 06:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1741614175; x=1742218975; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=stHa8Q8NyWzcaYemh2RSpVoePqJWdSd3fJKwEv1PAeo=;
+        b=P+dq660+CzFjViiFhnwJ2rxJh17QrRRv38O1sA9r3nBRJGqz3CxRV4EDXM4AvZfJ50
+         pbtLcS3wU6Clv2Amt/55Sg5O/VRjT5133kmTWNJLe5mgqYXDueSZpLTASSjgFEpel9w4
+         2sEbkxLfMTRP7Ukqmcj7/FOD5V6AfFWqtwIlmHlUlYf7izyEBp/vj05JG3/YTUpI7HYR
+         cYPDdLuRkUA0090EENEwEKE6BEabSmL0sb3b++Uw4jTF7YJC95fq1nuolhLAw4cSLq32
+         PKoM0ZG6OwZc8v0qu/X04mPHs/0onjxBY6O6xi/LrKS5O0qd0YBavYCas1QI4obLFhn1
+         OrEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741614175; x=1742218975;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=stHa8Q8NyWzcaYemh2RSpVoePqJWdSd3fJKwEv1PAeo=;
+        b=TjeBjRO/pmw8FdwZaStIxVjx777NnQlWDbwioQdUdSOp22YBqhZbwAhsMWBD8G3zuF
+         XLpStaSIFuLe4obRH1w5L5D1gyJEVcWrFKozhXzDTWP5zoSniOX7g899lqjizCKSvnKi
+         YWtMBnpMoxMazSkZXcnhBBtDMcz0EPSQM2SeXDgLyIhtNS5CYc94vICgmPOw8PooIiF+
+         Z/nPQoi7TQesX+mVgJ7JqYNB2qmQufILQ20nUEmc/h8MYY6DDbgQtBC+l6coUmmgy+OQ
+         07Q0kB2W64rpKHPf8QgXHZTz99GQWJBgTUFMqDV7OSJUSjyIUKGlzBUEciTITVcSZsot
+         fs1A==
+X-Gm-Message-State: AOJu0YxwXyvZCfhRESKIj0ICj5I6Dk+WjiDhFHSBwrKuHg6zWdVH6+4z
+	SpI0sXj276FeXy415lVatzkXhkQCftB56FBUhxJg/FKZVNmuW2+kYB6x59gbT7M=
+X-Gm-Gg: ASbGnctQrmT67EnUDkdM7EQsvcxP8MgJj2UjvkFhx52d0hXoksyGxKiBVQpgD5hiIoX
+	b22daZPzVMEhdYm5s7GzQLCch//02sCf/5fdyNZZ0Wer9xg3H3/ZKZG3mwWxBkwQE0mG+ZdJmrA
+	+ZDBDjhwgVnEIoCVeqN7edWuAsKIQeFR1b7PH7TALWq+xLXH5Qa3U/GANgVFEN5Y6+wthBM2vRF
+	wYtHNW7EeZq3ruPipiBJqe9CTbViTFPOyA6ESnuOiSdItVy3D7iVryd7+2wyKxNmH9RdhblWwox
+	EDfue24Sfgm/e7Y77SpD6lglYo+OpsD3R8zvzda9
+X-Google-Smtp-Source: AGHT+IFrVd2OKUQ3aKu8A1Lc3xlpS9KEsyDxEwl+qVr8/7Q1zVtgVOGAJE/HYQkasDYxIu7PR+TwvQ==
+X-Received: by 2002:a05:6602:3a16:b0:855:a047:5ef8 with SMTP id ca18e2360f4ac-85b1d03fb7bmr1650354739f.11.1741614175452;
+        Mon, 10 Mar 2025 06:42:55 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f22edef008sm969073173.57.2025.03.10.06.42.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 06:42:54 -0700 (PDT)
+Message-ID: <de3a5313-b0b5-432f-ace2-f6859eeb4436@kernel.dk>
+Date: Mon, 10 Mar 2025 07:42:54 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310115453.2271109-1-ming.lei@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: [PATCH] badblocks: Fix a nonsense WARN_ON() which checks
+ whether a u64 variable < 0
+To: Coly Li <i@coly.li>
+Cc: linux-block@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250309160556.42854-1-colyli@kernel.org>
+ <18D3673D-575E-4002-B5A8-FEE56A732EDC@coly.li>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <18D3673D-575E-4002-B5A8-FEE56A732EDC@coly.li>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Looks good:
+On 3/9/25 10:12 AM, Coly Li wrote:
+> Hi Jens,
+> 
+> Could you please take a look at it and pick this patch into the for-6.15/block branch? The patch is generated based on the for-6.15/block branch.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Just a heads-up - you don't need to send these emails outside of
+just sending the patch, I do get the patches. If I didn't, then that'd
+be a problem. If you feel patches need extra context, then just do a
+cover letter for them.
+
+-- 
+Jens Axboe
 
 
