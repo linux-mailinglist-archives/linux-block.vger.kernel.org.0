@@ -1,108 +1,99 @@
-Return-Path: <linux-block+bounces-18159-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18165-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACC5CA59691
-	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 14:43:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FBEAA596EC
+	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 15:01:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B9593A7644
-	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 13:42:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4DD816ABE2
+	for <lists+linux-block@lfdr.de>; Mon, 10 Mar 2025 14:01:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F0722A4EF;
-	Mon, 10 Mar 2025 13:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E92C2206B2;
+	Mon, 10 Mar 2025 14:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="P+dq660+"
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="gpTfGvb8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail86.out.titan.email (mail86.out.titan.email [209.209.25.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F80221729
-	for <linux-block@vger.kernel.org>; Mon, 10 Mar 2025 13:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FCC1D79BE
+	for <linux-block@vger.kernel.org>; Mon, 10 Mar 2025 14:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.209.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741614181; cv=none; b=RIXAWjqbKroFRz8GNpSYDqP9ggT1DxZA1YQqMdAYJ5jQTU4OjFES1d/Q9gmbzcOLHeG1DRbTlSu75O/ShOxjzoed+e/0MCga/+xBP2mm8Y+xZnO16SR7ClqHzPC0TT5REYcmw3oe5s99yw/x5XhfMpq2dXEJ3bOmIUlOgIOESvc=
+	t=1741615258; cv=none; b=mF9NdCP5P4SHlC2IpUv3LN475gjajryJDhHN4SUU39AtK7sSVigC/2pGQoubqsjwMo+NhB0Q+k2plRqOtiOn5RoUSeBHk/GnBICl+Ep3ej7fSb/HgML+R8W+rxuuATLXfSppXya6ai8WvqTK2mST48kM2008de1V5xKIBJcdhEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741614181; c=relaxed/simple;
-	bh=ePpI5r7ai9kjlwrxAN5W3wGdQWudCw/TieHKITaOmlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u6jmC8gxHHrMVhSrNADJxwa8hFxM+UY1a/azXkWtPehpB8ZQJC9bJ265IE/3dib7P6I14KOLUzuFuVvtk2eMgYug7HjEH4z3t/qepiKphszgiSFrdzqyFo5hDmXHAEYtAQTv33QxF6fJ9KwSKwjAfeIc1bWkaUE+CcSVPSlhB8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=P+dq660+; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85ad83ba141so398561939f.2
-        for <linux-block@vger.kernel.org>; Mon, 10 Mar 2025 06:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1741614175; x=1742218975; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=stHa8Q8NyWzcaYemh2RSpVoePqJWdSd3fJKwEv1PAeo=;
-        b=P+dq660+CzFjViiFhnwJ2rxJh17QrRRv38O1sA9r3nBRJGqz3CxRV4EDXM4AvZfJ50
-         pbtLcS3wU6Clv2Amt/55Sg5O/VRjT5133kmTWNJLe5mgqYXDueSZpLTASSjgFEpel9w4
-         2sEbkxLfMTRP7Ukqmcj7/FOD5V6AfFWqtwIlmHlUlYf7izyEBp/vj05JG3/YTUpI7HYR
-         cYPDdLuRkUA0090EENEwEKE6BEabSmL0sb3b++Uw4jTF7YJC95fq1nuolhLAw4cSLq32
-         PKoM0ZG6OwZc8v0qu/X04mPHs/0onjxBY6O6xi/LrKS5O0qd0YBavYCas1QI4obLFhn1
-         OrEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741614175; x=1742218975;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=stHa8Q8NyWzcaYemh2RSpVoePqJWdSd3fJKwEv1PAeo=;
-        b=TjeBjRO/pmw8FdwZaStIxVjx777NnQlWDbwioQdUdSOp22YBqhZbwAhsMWBD8G3zuF
-         XLpStaSIFuLe4obRH1w5L5D1gyJEVcWrFKozhXzDTWP5zoSniOX7g899lqjizCKSvnKi
-         YWtMBnpMoxMazSkZXcnhBBtDMcz0EPSQM2SeXDgLyIhtNS5CYc94vICgmPOw8PooIiF+
-         Z/nPQoi7TQesX+mVgJ7JqYNB2qmQufILQ20nUEmc/h8MYY6DDbgQtBC+l6coUmmgy+OQ
-         07Q0kB2W64rpKHPf8QgXHZTz99GQWJBgTUFMqDV7OSJUSjyIUKGlzBUEciTITVcSZsot
-         fs1A==
-X-Gm-Message-State: AOJu0YxwXyvZCfhRESKIj0ICj5I6Dk+WjiDhFHSBwrKuHg6zWdVH6+4z
-	SpI0sXj276FeXy415lVatzkXhkQCftB56FBUhxJg/FKZVNmuW2+kYB6x59gbT7M=
-X-Gm-Gg: ASbGnctQrmT67EnUDkdM7EQsvcxP8MgJj2UjvkFhx52d0hXoksyGxKiBVQpgD5hiIoX
-	b22daZPzVMEhdYm5s7GzQLCch//02sCf/5fdyNZZ0Wer9xg3H3/ZKZG3mwWxBkwQE0mG+ZdJmrA
-	+ZDBDjhwgVnEIoCVeqN7edWuAsKIQeFR1b7PH7TALWq+xLXH5Qa3U/GANgVFEN5Y6+wthBM2vRF
-	wYtHNW7EeZq3ruPipiBJqe9CTbViTFPOyA6ESnuOiSdItVy3D7iVryd7+2wyKxNmH9RdhblWwox
-	EDfue24Sfgm/e7Y77SpD6lglYo+OpsD3R8zvzda9
-X-Google-Smtp-Source: AGHT+IFrVd2OKUQ3aKu8A1Lc3xlpS9KEsyDxEwl+qVr8/7Q1zVtgVOGAJE/HYQkasDYxIu7PR+TwvQ==
-X-Received: by 2002:a05:6602:3a16:b0:855:a047:5ef8 with SMTP id ca18e2360f4ac-85b1d03fb7bmr1650354739f.11.1741614175452;
-        Mon, 10 Mar 2025 06:42:55 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f22edef008sm969073173.57.2025.03.10.06.42.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 06:42:54 -0700 (PDT)
-Message-ID: <de3a5313-b0b5-432f-ace2-f6859eeb4436@kernel.dk>
-Date: Mon, 10 Mar 2025 07:42:54 -0600
+	s=arc-20240116; t=1741615258; c=relaxed/simple;
+	bh=o3jo8Yp6GBl1EzB187l+mO+RUd+WDfgcPP/VmFEaNZQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=kt8bovE3Eak+YQB+eceO+1kUdspx8RW6MXrtDPBpyP4JNIXJk275HZnPIKrZCx6vn84kLpvCk8KCPkacH/2p0oeWzukJGQddnCVQVIDpnce6YoLXsmaQdMJlCyMlU548yip7R5REoSh1rjArHg7Xuq/OSi7vB3PM/BaoC9a74OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=gpTfGvb8; arc=none smtp.client-ip=209.209.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+DKIM-Signature: a=rsa-sha256; bh=o3jo8Yp6GBl1EzB187l+mO+RUd+WDfgcPP/VmFEaNZQ=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=mime-version:date:references:to:subject:from:in-reply-to:cc:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1741614317; v=1;
+	b=gpTfGvb8e/wHWyCIe6OuqWrYd3zTM6cZgGpZSnY4ENXCOa8gHLJhb1YlnmERxzlY/zRiyU14
+	fX8ovwJm2+EiFVFnJwA3N96mw6l953h1EpoHbq8uNEptEKZVe3cLXH05xoFxD9eQXanXfrtKZq8
+	PevqyG1OcMqQAJ5xJzsfihyA=
+Received: from smtpclient.apple (v133-18-178-219.vir.kagoya.net [133.18.178.219])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 9BACB1004A4;
+	Mon, 10 Mar 2025 13:45:14 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: [PATCH] badblocks: Fix a nonsense WARN_ON() which checks
- whether a u64 variable < 0
-To: Coly Li <i@coly.li>
-Cc: linux-block@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH] badblocks: Fix a nonsense WARN_ON() which checks whether
+ a u64 variable < 0
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <de3a5313-b0b5-432f-ace2-f6859eeb4436@kernel.dk>
+Date: Mon, 10 Mar 2025 21:44:59 +0800
+Cc: linux-block@vger.kernel.org,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DB1BA32F-C77C-4606-A886-B519ADC3FCB5@coly.li>
 References: <20250309160556.42854-1-colyli@kernel.org>
  <18D3673D-575E-4002-B5A8-FEE56A732EDC@coly.li>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <18D3673D-575E-4002-B5A8-FEE56A732EDC@coly.li>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <de3a5313-b0b5-432f-ace2-f6859eeb4436@kernel.dk>
+To: Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1741614317168885566.29396.279708926236796156@prod-use1-smtp-out1002.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=IeV9WXqa c=1 sm=1 tr=0 ts=67ceeced
+	a=6yy/x1GoN29p2+/2k52XZQ==:117 a=6yy/x1GoN29p2+/2k52XZQ==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i1v2BhhCwKSZKKg_S70A:9
+	a=QEXdDO2ut3YA:10
 
-On 3/9/25 10:12 AM, Coly Li wrote:
-> Hi Jens,
-> 
-> Could you please take a look at it and pick this patch into the for-6.15/block branch? The patch is generated based on the for-6.15/block branch.
 
-Just a heads-up - you don't need to send these emails outside of
-just sending the patch, I do get the patches. If I didn't, then that'd
-be a problem. If you feel patches need extra context, then just do a
-cover letter for them.
 
--- 
-Jens Axboe
+> 2025=E5=B9=B43=E6=9C=8810=E6=97=A5 21:42=EF=BC=8CJens Axboe =
+<axboe@kernel.dk> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On 3/9/25 10:12 AM, Coly Li wrote:
+>> Hi Jens,
+>>=20
+>> Could you please take a look at it and pick this patch into the =
+for-6.15/block branch? The patch is generated based on the =
+for-6.15/block branch.
+>=20
+> Just a heads-up - you don't need to send these emails outside of
+> just sending the patch, I do get the patches. If I didn't, then that'd
+> be a problem. If you feel patches need extra context, then just do a
+> cover letter for them.
 
+So if you are the receiver of the patch email, then I don=E2=80=99t need =
+to worry that you will treat it as a normal patch for review. Can I take =
+this as a rule?
+
+Thanks.
+
+Coly Li=
 
