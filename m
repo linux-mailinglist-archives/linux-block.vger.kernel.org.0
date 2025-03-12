@@ -1,113 +1,103 @@
-Return-Path: <linux-block+bounces-18304-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18307-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47277A5E028
-	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 16:22:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E66F8A5E047
+	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 16:25:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8870F16F959
-	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 15:22:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 802CD7ADF14
+	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 15:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5062512E4;
-	Wed, 12 Mar 2025 15:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E268255E37;
+	Wed, 12 Mar 2025 15:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pPMO1Xi2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="frPan1h6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAC8251797
-	for <linux-block@vger.kernel.org>; Wed, 12 Mar 2025 15:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE631253355;
+	Wed, 12 Mar 2025 15:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792848; cv=none; b=V8pE3qlV2XcD3YqQijexhpXxnffYVyMAb22fR6ner3Afma92USdU33GiijPQUvc/vbiDIuPtKd65xxrEPmXFW21vnlAwLojluEJmIF1sozzcXdM+mqqGO2ANF1qH4XkgIokXhu5HDP+7Od96lFNqB/1TsNulQGMS0SiL4nv3UmM=
+	t=1741793109; cv=none; b=iLoHID9thPfK3w9xaAp3xgX/tbenb1BUELsdYfjKtdaDNfPeTEzXZAE16e/+r1IBqXqk5EFmeKLqjCuMhJ5+s7hFB7o+paO9B7yY0Dy2Hk3Byppw/YihPeoUMgnbSS2I/9FaELCUhXVciJ+extwq5YkCLLOyLVJWHNEHv2SIfmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792848; c=relaxed/simple;
-	bh=qKRNbi1Xw7gX2CgxUYZvlt0A4c9pTiZyAGQUbmtoD98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qm9oKo7J7+BXKYmEX66QmvUPZtLeEf3VMg9odLEuYGF6HwDOVsc9z74b1reCCyvBwQJxmjXjSgw46X2RfCWcxahijh42v52AxJOlOREZMgSi6YF4VFIxSRWyfUGf9MWlAOiH1H3wSTq991nSFutzlv5g1qK3N/gS5IL6JODQkU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pPMO1Xi2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CCdmV6020071;
-	Wed, 12 Mar 2025 15:20:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=PX0kNF
-	JWfpYNwm1oYrG4fw4H9ApUdZ2CZZLhEKe9Qtw=; b=pPMO1Xi2YEcDhTk5LPteUy
-	HIzTb/usJFVuug/ogkAwpgbbLAyjn178sNuipjpTFSBvLqsTqQiqS16Uov4qK4l+
-	3BsQvUbt0UUf5UDWVIVUxkrFqM2rzQMjyyQKWL7zFAMcjbQQ0W5OJhRPvl9xpDnO
-	1veUQ95mn+cjtsnV9ESr5/rKSGd3lhLaBU8bO+tNFIrpQao0od3vLASPnoKWBG8b
-	zOi1UY5LfejI5mFrSxgLQQs0ApbwuVRkiEX0Twy+baLxzQyj57FaIBprL3vN+4MO
-	PzcqRKmz4O1XnIWhzvLdF0REFPrdrRTi2ogQUx/ePnQW1gmqNlGGzIIoyMEFvrXQ
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45avk4cmkf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 15:20:42 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52CE1fmv007468;
-	Wed, 12 Mar 2025 15:20:41 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsr4rft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 15:20:41 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52CFKfqL11665888
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Mar 2025 15:20:41 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4E6B558052;
-	Wed, 12 Mar 2025 15:20:41 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 21AB758056;
-	Wed, 12 Mar 2025 15:20:40 +0000 (GMT)
-Received: from [9.61.69.177] (unknown [9.61.69.177])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Mar 2025 15:20:39 +0000 (GMT)
-Message-ID: <67682ed5-ecf4-4b84-bdbc-b4d8c0aabe03@linux.ibm.com>
-Date: Wed, 12 Mar 2025 20:50:38 +0530
+	s=arc-20240116; t=1741793109; c=relaxed/simple;
+	bh=DfBHEd0SO4r7NiVGfilpd306yK11/eGsLe574+AnTFE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iompNPW+EX/sECr5CDvEQh34dqaUw+VIEofdzoVY5IPW8cQrehAlr9t1E8yV6KizkL4RIc6EajOWuRvFhmxj9OO1jjPpK6VOdJgGiHZJlosg1lgs0QpJMEj4I605Pu0l6BU6Iq/kmBejevNRgmVk0543KKp6Mz6z5CIam1CVGpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=frPan1h6; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741793105; x=1742052305;
+	bh=uVoMgsncNZ81Qs244XhiNiFSVWapFutHM21B/73cujs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=frPan1h6YKzC0bqmU90vrOcukl566AIP3m89ASwWziUTdMAfARywXB6xoIg5UvfEN
+	 uTRXcdJ+e39oceAAQXFwT1toqQCsPCa0lu5tXgylrivtsfeTW/uBausk1BNWN8xE7e
+	 LxGN+w83PewYzTnX++QkpWrxHTv/niZTJQo7rmXUozJejyjRjD6E4jJak6YD/8TkGu
+	 Hmb9Y+cRH+osorMUMDEMxGIZ16PyvudJ7XX9ubJzWd+818lcGjffTJk8218pDZ3GRU
+	 CXgzzIGbAEuahl8+tyGyQkG0XGwt13MItmEPxE1lg82Ev7wPTS/uvZX1mIjlz3SPqx
+	 2121b88MfPw2g==
+Date: Wed, 12 Mar 2025 15:25:00 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] rust: enable `clippy::ptr_as_ptr` lint
+Message-ID: <D8EE4BXJ5NLB.8BBCUV0UXWY5@proton.me>
+In-Reply-To: <CAJ-ks9kOLgXrOHucFXHB+DwZEZpZEKhBNmXKh_hB_agrq=2n6g@mail.gmail.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-2-25d60ad922b7@gmail.com> <D8ED5UWKL2N1.2JPWVV0297BJ0@proton.me> <CAJ-ks9kOLgXrOHucFXHB+DwZEZpZEKhBNmXKh_hB_agrq=2n6g@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 6dd0142bc1b95eaf185630e5f364e5053d7fe2a5
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: fix a comment in the queue_attrs[] array
-To: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk
-Cc: linux-block@vger.kernel.org
-References: <20250312150127.703534-1-hch@lst.de>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250312150127.703534-1-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: v7R25C8hOrssxnRNTvXz14pEa7U2brIU
-X-Proofpoint-GUID: v7R25C8hOrssxnRNTvXz14pEa7U2brIU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=844
- lowpriorityscore=0 spamscore=0 malwarescore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503120102
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Wed Mar 12, 2025 at 4:18 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 12, 2025 at 10:40=E2=80=AFAM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>>
+>> On Sun Mar 9, 2025 at 5:00 PM CET, Tamir Duberstein wrote:
+>> > In Rust 1.51.0, Clippy introduced the `ptr_as_ptr` lint [1]:
+>> >
+>> >> Though `as` casts between raw pointers are not terrible,
+>> >> `pointer::cast` is safer because it cannot accidentally change the
+>> >> pointer's mutability, nor cast the pointer to other types like `usize=
+`.
+>> >
+>> > There are a few classes of changes required:
+>> > - Modules generated by bindgen are marked
+>> >   `#[allow(clippy::ptr_as_ptr)]`.
+>> > - Inferred casts (` as _`) are replaced with `.cast()`.
+>> > - Ascribed casts (` as *... T`) are replaced with `.cast::<T>()`.
+>> > - Multistep casts from references (` as *const _ as *const T`) are
+>> >   replaced with `let x: *const _ =3D &x;` and `.cast()` or `.cast::<T>=
+()`
+>>
+>> Similarly to the other patch, this could be `let x =3D &raw x;`. (but it=
+'s
+>> fine to leave it as-is for now, we can also make that a
+>> good-first-issue.)
+>
+> Yeah, same as the other patch; we can't directly do that here without
+> introducing some compiler infra or bumping MSRV.
 
+I think it's fine enabling the feature for this patch (or in a prior
+one) if you want to do the work. But someone already took up the issue I
+created, so maybe it's best to let them handle it.
 
-On 3/12/25 8:31 PM, Christoph Hellwig wrote:
-> queue_ra_entry uses limits_lock just like the attributes above it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
-Thank you for fixing this!
-
-Looks good to me:
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+---
+Cheers,
+Benno
 
 
