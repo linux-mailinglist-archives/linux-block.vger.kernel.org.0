@@ -1,154 +1,115 @@
-Return-Path: <linux-block+bounces-18303-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18305-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07E8EA5E034
-	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 16:23:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29561A5E037
+	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 16:23:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A5FD3AFA62
-	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 15:22:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 029BD19C06A3
+	for <lists+linux-block@lfdr.de>; Wed, 12 Mar 2025 15:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BD32250BE9;
-	Wed, 12 Mar 2025 15:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279AC2586DA;
+	Wed, 12 Mar 2025 15:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SJ+mzjZM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iEG9dvLh"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B02512C5
-	for <linux-block@vger.kernel.org>; Wed, 12 Mar 2025 15:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534FC25179D
+	for <linux-block@vger.kernel.org>; Wed, 12 Mar 2025 15:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792793; cv=none; b=TuIWaIjxvXLtliJE119JNzBUFqNnzXvJYJ2NB+UtyOMeovRG2W75poKJMICOODHdcWIc7zm3bnKNxnB58Vpjb2DAwoVfYSFfe4m18sBUviy8Q82tYcnwiDCaCzK/8bHZSCm79d6dd10DaSH2y+TH3qhcvhK6bL+nlCri4gul2Sg=
+	t=1741792853; cv=none; b=FUrjSqbaZX0/FP3rRAJe/6Xzd+jg6C9dUxw3L/+n993Dmav+OBa8SD3jjB7E9/S/R5Udb8wraJ374Owed9MiJoVK1KyRye1O59F0FSMv+DJFhRPzBhBEfg3493wxJIfc7qQxrbPa5liMc2WCOcsU/rH+g4JcWEGXsDKRD3FdqOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792793; c=relaxed/simple;
-	bh=IkBLvmDITnyPBUUbc0HneErGyCPjUNDYRBIFFpOeaS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jmIzK+4uGTg+TpPtKIfCCtP0WfHnVy3ZfPUxPo8Ws2LChb8kGcy/FhqA10sm8LElo7d5EwDnCm0P5stRXXMcQ0l3qMAK4HdsRRPBRhrDTXmkGOnl9iUhCVDj6qXnPqAUbvomonF1cMDsbzkI3G76rD9c1+JbgQTkMFM8ih0AK48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SJ+mzjZM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CCdnq6028667;
-	Wed, 12 Mar 2025 15:19:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=CfiSmE
-	amRd3ACvm3B1lU8m6rJNAK/6qer0yMaBEUWog=; b=SJ+mzjZM9yD8VZY/58B5Ob
-	zQZhlHXv6njBItIwcRSTHE5E21Z+20HbWVo685PULWFcOiNZgy92dr7NMCT1Ie7e
-	R5eabxsb7Rz3yucVSdXegdwqKOzxpvfLInzr/mpMUAB49XOa+jUVSsUHE0oWdxBl
-	RR57QuZ6q6fRyMglE7esBcqS4Iph9y+0OgtTuFOCq+zBmmHnghBc1KL40sGB2ivW
-	rwAAqrHUGY2oYt0Mlmyo3MT0xZvVD1QDj2BBXBlGiV26hu31KxyOKMuc6FIo7wba
-	7B6Xgwd2R9upb0snym4OSvpwFzRh/blE96DDs+EV0ATN1aly1klQfDndRvR1jJLQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45b2n9b8n6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 15:19:39 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52CDv8NZ027172;
-	Wed, 12 Mar 2025 15:19:37 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsqvqys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 15:19:37 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52CFJb9x25428552
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Mar 2025 15:19:37 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3E92558052;
-	Wed, 12 Mar 2025 15:19:37 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0024158056;
-	Wed, 12 Mar 2025 15:19:34 +0000 (GMT)
-Received: from [9.61.69.177] (unknown [9.61.69.177])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Mar 2025 15:19:34 +0000 (GMT)
-Message-ID: <9e5fd5f1-1564-4a99-aeb4-6d8d9d765db7@linux.ibm.com>
-Date: Wed, 12 Mar 2025 20:49:33 +0530
+	s=arc-20240116; t=1741792853; c=relaxed/simple;
+	bh=vFO5RejfroO3/QCBzMpZapYOLh4Wu0SP4ltEFH9/5V8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NRmUqMbPWLSji8N67e2DJp9LKomUvr+qZUmZJsTLAxSUP41wIuxmWOjebwubh5dAkZAilJ8aRAzrKcnzLYHNd686I32RPSAbNmsCfmhXHaffPFdEp6rcsS+2F/28jVGkit68RPKFA7+mnTxjAapSvjRST6gFz9OFDhAijSDXW44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iEG9dvLh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-438d9c391fcso55215e9.0
+        for <linux-block@vger.kernel.org>; Wed, 12 Mar 2025 08:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741792849; x=1742397649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bGxZkF5t/1wrFPJ00FERNaK3N3Q0WGshExeLmGRXwks=;
+        b=iEG9dvLhmd0BrnthMwEu0OzD2RHaNIgNqI9g/+nhDui/skVHhKYblZeY0fzLxORBL8
+         FrV3UvyNHMzRA7qNTHWAuw1Aq2tCBnTq6lNbE9Xqm+pP3rEGoq3c6TjqBmaQFfJ2CNvO
+         aKRrrKiO0Xbv2Z0QYCY5QNzGxQm2ujnD7M++Wwsnpul33P7q/PKgGkT2meQ0SnozOiGg
+         M5VrZIm1skS/GXq2cOWPaHqF3R6xxiJUJ7zST7u07RL35DM4ZQXljoTq34KDISozB/oW
+         Yd4NpXUg/aPXdPkbt7bCgIAY8GGNJ/gyFEKokmsk8Sz/dpzXy7ihWLhCFyplOYkhaSgU
+         Ujyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741792849; x=1742397649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bGxZkF5t/1wrFPJ00FERNaK3N3Q0WGshExeLmGRXwks=;
+        b=k6NQ6bfxVUyTXtuNdR+cBsKy84mlrj4wiITKLoZYdvekYmkNEZcB7Ooj/77b74xkPR
+         PvjghdFYqAyTCWKHspvALZD1xZGZ3SM91sMgK+nl0NHlTv8pwDlKNGnRl1hpmpkfI9cW
+         uC/QVjQH0uyouJ3HiznEDyjQVe61rqHPhymmdwXMvlSZuq221aPjXYihznWTNDihQzHr
+         jLlmN0YbfEKwP9BITOs3usVg6jDx/Rys2hCJFTtIN+8/yhOxlX3jru/8FbruONzLjMWC
+         EHMlMccN49lFGWn4A/69YixyHhmdrAundnvCD+mRfs1csNoKmL/+H+hLAaayJJyOzT7Z
+         MIOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlr9SbMp6Flj9PaYJckHCVP1qC0q8UFsTsv2O9aDH7ek2tjac22xB30kYlkiYWQCUO3OfAmpaynaf/Xw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDraZVvDKBmyVR+LBz+Cw/7J4EeDvWMA2l3X7hwWSDEQZHFTqb
+	wLR9OF7s3GZ2Y4NckJarsjsANHHUfxN620D1dwUs8B3Alk1VzsRcbyYig3I09dOSpWg2GxOrbwk
+	v4xpaCXmPlMcBYnxk191HpIPC+lxpqIlEV9RQIolKzj6/zTkvjw==
+X-Gm-Gg: ASbGncuUrxrqLW0DhBU6CnD0bGvx1cM/CpqnjvEQakCMGWkmmWjihXoZY7ASKQAzrJh
+	yFHTULV1rDlp/WGnBMYn8z2MErTlBeRuji81JHCnoYF5ZuIIlsT69HPwsBDmfTAHipKx+77181h
+	kOuPuSBSTK2LYEoZqWtlK5IHRGtFoeQuG9OZCJmHYcxy9jY7JU/bS+aeDM
+X-Google-Smtp-Source: AGHT+IHD2nQKbwusxnJ80KAjLgbQAOF0EvyAvqqHHVna5q1oZeuBFrEiEEKAahgMMiR6eRSYCFMQhm6AYgZVdiouPL0=
+X-Received: by 2002:a05:600c:4f49:b0:439:9434:1b66 with SMTP id
+ 5b1f17b1804b1-43d15f8df65mr69355e9.1.1741792849400; Wed, 12 Mar 2025 08:20:49
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: protect debugfs attributes using q->elevator_lock
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-block@vger.kernel.org, ming.lei@redhat.com, dlemoal@kernel.org,
-        hare@suse.de, axboe@kernel.dk, gjoyce@ibm.com
-References: <20250312102903.3584358-1-nilay@linux.ibm.com>
- <20250312141251.GA13250@lst.de>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250312141251.GA13250@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kB1EMD0VIIMdupKUK-cRq33mtTLgW7_y
-X-Proofpoint-ORIG-GUID: kB1EMD0VIIMdupKUK-cRq33mtTLgW7_y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- spamscore=0 mlxscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=687 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503120102
+References: <CGME20250306074101epcas1p4b24ac546f93df2c7fe3176607b20e47f@epcas1p4.samsung.com>
+ <20250306074056.246582-1-s.suk@samsung.com> <Z8m-vJ6mP1Sh2pt3@infradead.org>
+ <CAJrd-UuLvOPLC2Xr=yOzZYvOw9k8qwbNa0r9oNjne31x8Pmnhw@mail.gmail.com>
+ <848301db8f05$a1d79430$e586bc90$@samsung.com> <CAJuCfpHjV=nRmkAGrf-tyCxEEygZ0CuW-PRp+F_vHwFbfYS8dA@mail.gmail.com>
+ <Z9Gld_s3XYic8-dG@infradead.org>
+In-Reply-To: <Z9Gld_s3XYic8-dG@infradead.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 12 Mar 2025 08:20:36 -0700
+X-Gm-Features: AQ5f1JoRE6F00aRF8p4iMy0O_p5G6IwsOeM_xmMCWwyYOphS5VP-BnJT1SNFaJY
+Message-ID: <CAJuCfpGa43OQHG9BmnvxROX1AneCvkuLxFwM+TdxAdR1v9kWSg@mail.gmail.com>
+Subject: Re: [RFC PATCH] block, fs: use FOLL_LONGTERM as gup_flags for direct IO
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Sooyong Suk <s.suk@samsung.com>, Jaewon Kim <jaewon31.kim@gmail.com>, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	spssyr@gmail.com, axboe@kernel.dk, linux-block@vger.kernel.org, 
+	dhavale@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Mar 12, 2025 at 8:17=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> On Thu, Mar 06, 2025 at 06:28:40PM -0800, Suren Baghdasaryan wrote:
+> > I think this will help you only when the pages are faulted in but if
+> > __get_user_pages() finds an already mapped page which happens to be
+> > allocated from CMA, it will not migrate it. So, you might still end up
+> > with unmovable pages inside CMA.
+>
+> Direct I/O pages are not unmovable.  They are temporarily pinned for
+> the duration of the direct I/O.
 
+Yes but even temporarily pinned pages can cause CMA allocation
+failure. My point is that if we know beforehand that the pages will be
+pinned we could avoid using CMA and these failures would go away.
 
-On 3/12/25 7:42 PM, Christoph Hellwig wrote:
-> On Wed, Mar 12, 2025 at 03:58:38PM +0530, Nilay Shroff wrote:
->> Additionally, debugfs attribute "busy" is currently unprotected. This
->> attribute iterates over all started requests in a tagset and prints them. 
->> However, the tags can be updated simultaneously via the sysfs attribute 
->> "nr_requests" or "scheduler" (elevator switch), leading to potential race 
->> conditions. Since the sysfs attributes "nr_requests" and "scheduler" are 
->> already protected using q->elevator_lock, extend this protection to the 
->> debugfs "busy" attribute as well.
-> 
-> I'd split that into a separate patch for bisectability.
-Ok I will split it.
-> 
->>  	struct show_busy_params params = { .m = m, .hctx = hctx };
->> +	int res;
->>  
->> +	res = mutex_lock_interruptible(&hctx->queue->elevator_lock);
->> +	if (res)
->> +		goto out;
-> 
-> Is mutex_lock_interruptible really the right primitive here?  We don't
-> really want this read system call interrupted by random signals, do
-> we?  I guess this should be mutex_lock_killable.
-> 
-> (and the same for the existing methods this is copy and pasted from).
-> 
-I thought we wanted to interrupt using SIGINT (CTRL+C) in case user opens 
-this file using cat. Maybe that's more convenient than sending SIGKILL. 
-And yes I used mutex_lock_interruptible because for other attributes we are 
-already using it. But if mutex_lock_killable is preferred then I'd change it
-for all methods.
-
->>  	blk_mq_tagset_busy_iter(hctx->queue->tag_set, hctx_show_busy_rq,
->>  				&params);
->> -
->> -	return 0;
->> +	mutex_unlock(&hctx->queue->elevator_lock);
->> +out:
->> +	return res;
-> 
-> And as Damien already said, no need for the labels here, including for
-> the existing code.  That should probably be alsot changed in an extra
-> patch for the existing code while you're at it.
-> 
-Okay will do in next patch.
-
-Thanks,
---Nilay
-
+>
+> I really don't understand what problem you're trying to fix here.
+>
 
