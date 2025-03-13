@@ -1,79 +1,79 @@
-Return-Path: <linux-block+bounces-18361-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18359-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 489FFA5F376
-	for <lists+linux-block@lfdr.de>; Thu, 13 Mar 2025 12:54:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19363A5F377
+	for <lists+linux-block@lfdr.de>; Thu, 13 Mar 2025 12:54:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 914AE19C2882
-	for <lists+linux-block@lfdr.de>; Thu, 13 Mar 2025 11:53:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8578174A07
+	for <lists+linux-block@lfdr.de>; Thu, 13 Mar 2025 11:53:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC182661A9;
-	Thu, 13 Mar 2025 11:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A43CE26462C;
+	Thu, 13 Mar 2025 11:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Rn7zh+4u"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="phfgskqL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC50E26659E
-	for <linux-block@vger.kernel.org>; Thu, 13 Mar 2025 11:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBEC266F01
+	for <linux-block@vger.kernel.org>; Thu, 13 Mar 2025 11:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866779; cv=none; b=LMhk/HyR7pR+GcqLY5g+GrjpqxvUom+X3JI0Qy5CdLi4bnFa+fR52NrKZTK6L0cEbiDxzTr9WVnEil8Gv/UHJbtLALv7NWD9E4Wm4xWta3nqt8CmNd4dHRYqg+VVoQYXyuUwXPLDaHAuNOGKiOOjaUct4Sv7gwu+9DKQFc4oPag=
+	t=1741866772; cv=none; b=NNqpqkFtAsWaFHP+Mds0Pmbu9N2nkeBE14fM5pgG+bNhdjQeiI0WcB0kGyXQl4EZM3YgQnTw7NXXxEDaHYelTc21DBY7AsQgJevXKQGwsxB29Qftds4O2lk9lrYFrZiLGkbRd6hcFz7m85jk9jwnEQ0YTvZKK2Lzn6290ohDjv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866779; c=relaxed/simple;
-	bh=l/i3BbZGvZoVMDsdVAe3Q9ijqmqQq3QIX5MEQ3LV1hA=;
+	s=arc-20240116; t=1741866772; c=relaxed/simple;
+	bh=lUG7V7wTDeuvu/E5E6vhklmw93TxJu4ukUznksQffmc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ghJ9IrkdH51sTzEtwg0RQjOB+oTyrdRdFpiJ5b27ft7KkahTgGD1rk6c76FVKjcGMcXSLUiw6CQ2jEfFTfZgZHbB+webua6B1vCd00zWyx5taNtQH+nYqaltlsE678bDrHiBMnyxi7j2XUNIhZJffccAG6oe0wbhgUZAcVxlUGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Rn7zh+4u; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=WxME4dR5npo/z7AXx2jusl1ImA/VwvHcLnijanQx49MOpd2ziNC0Ukjkd+H2w+e+wkvh3Lz6M+l915d9pvh6+OT9gvxta3jM92U0V9YknLR2pgj3QpfUoTWWjh1Usl+Uik9nC7Z117ExPmz/2pkPxvMdQ6EtXQ5deAC/7buV+sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=phfgskqL; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D3jvdm006503;
-	Thu, 13 Mar 2025 11:52:41 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D8ejDP010375;
+	Thu, 13 Mar 2025 11:52:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=z/3CqngCnsQ+dywl8
-	/Yeb1PsqBlTmgF+7QiIhSlBct0=; b=Rn7zh+4u/rh8Zk3WqUrhaO//jPwdhyd9V
-	X80ZGU+JG+V+JooNrwpKXZSNkpN/r/ocXbDX3z7MhAh46FvDGslzXpuQXmMiSbpp
-	JnhLAVnNme8VxqVkXz6zP4zn96rai5ke5D2A5x6WMw2cgNBf/AX4l5w/PpGEig9d
-	ZoN2iNaKExCXuw1u74HV4NZe9NIC28eIlIqMZQ44E/YfLVfBURIFAyOKgrP97uFj
-	OFKDGQm6sN3kifsOxKsiJHi6wubQb/Nu17/FOu1yUC7Qk9hBY44rvZXhQMa4ywLu
-	T0REKzVDM3xiRjFvKQBcagAJhR1gum7BTnxV56EP23jiv1JPh1hfg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bqr92396-1
+	:mime-version:references:subject:to; s=pp1; bh=I7yQ+4qKm1VpMZmZB
+	Wertmdabmj9rVfBW4pb0Pj2NBA=; b=phfgskqL6nvykMrzuZOGWznBCvyk4eTmT
+	Vd7TYTn1ncjYLQyc7AjCteQXv4k2NMe8EMbVKAm6mRtN2bVa9Qc8E6zp9Xchbl0+
+	B0uBucCSmCMqZ6NBtK1trZ3fNkPsEIkxY7Jut3N0sOUvX0FhhG4ukfMgtCEnBgzF
+	I7cplyiHDeHHMWJql/o5T/niQpUn4Mpo8f0VWa3+6rgES4etpqJ1Ky4ORaYpQoPV
+	Ga068Y92AXOCahIdqriFGXUsAR+8nVCOIQO5PV89EsjRMX+3O5nDWepU0lZ2oDiq
+	a+vCRk1nfsPFN1O5//QAAj5CFUWyN0+BHSvM9iXtuaUMy3i7knayQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bhg0bew2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 11:52:41 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52D8S4x9026029;
-	Thu, 13 Mar 2025 11:52:40 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atsphkm9-1
+	Thu, 13 Mar 2025 11:52:43 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52D8XPpe015411;
+	Thu, 13 Mar 2025 11:52:42 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atsphk8v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 11:52:40 +0000
+	Thu, 13 Mar 2025 11:52:42 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52DBqcNR32834260
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52DBqejY58720610
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Mar 2025 11:52:39 GMT
+	Thu, 13 Mar 2025 11:52:40 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D75E620043;
-	Thu, 13 Mar 2025 11:52:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8287A20040;
+	Thu, 13 Mar 2025 11:52:40 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 879F62004D;
-	Thu, 13 Mar 2025 11:52:37 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 2A1772004B;
+	Thu, 13 Mar 2025 11:52:39 +0000 (GMT)
 Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.in.ibm.com (unknown [9.109.198.185])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Mar 2025 11:52:37 +0000 (GMT)
+	Thu, 13 Mar 2025 11:52:38 +0000 (GMT)
 From: Nilay Shroff <nilay@linux.ibm.com>
 To: linux-block@vger.kernel.org
 Cc: hch@lst.de, ming.lei@redhat.com, dlemoal@kernel.org, hare@suse.de,
         axboe@kernel.dk, gjoyce@ibm.com
-Subject: [PATCHv2 1/3] block: protect debugfs attrs using elevator_lock instead of sysfs_lock
-Date: Thu, 13 Mar 2025 17:21:50 +0530
-Message-ID: <20250313115235.3707600-2-nilay@linux.ibm.com>
+Subject: [PATCHv2 2/3] block: Remove unnecessary goto labels in debugfs attribute read methods
+Date: Thu, 13 Mar 2025 17:21:51 +0530
+Message-ID: <20250313115235.3707600-3-nilay@linux.ibm.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250313115235.3707600-1-nilay@linux.ibm.com>
 References: <20250313115235.3707600-1-nilay@linux.ibm.com>
@@ -85,117 +85,98 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BB56hy7dtfWP6hXNkE2a3RoXk0TSIbb9
-X-Proofpoint-ORIG-GUID: BB56hy7dtfWP6hXNkE2a3RoXk0TSIbb9
+X-Proofpoint-GUID: jGOkS0VSlPXYF2Hew-evdlnNl1JQYFKJ
+X-Proofpoint-ORIG-GUID: jGOkS0VSlPXYF2Hew-evdlnNl1JQYFKJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 clxscore=1015
- suspectscore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=989 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503130090
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130090
 
-Currently, the block debugfs attributes (tags, tags_bitmap, sched_tags,
-and sched_tags_bitmap) are protected using q->sysfs_lock. However, these
-attributes are updated in multiple scenarios:
-- During driver probe method
-- During an elevator switch/update
-- During an nr_hw_queues update
-- When writing to the sysfs attribute nr_requests
+In some debugfs attribute read methods, failure to acquire the mutex lock
+results in jumping to a label before returning an error code. However this
+is unnecessary, as we can return the failure code directly, improving code
+readability and reducing complexity.
 
-All these update paths (except driver probe method which anyways doesn't
-not require any protection) are already protected using q->elevator_lock.
-So to ensure consistency and proper synchronization, replace q->sysfs_
-lock with q->elevator_lock for protecting these debugfs attributes.
+This commit removes the goto labels and ensures that the method returns
+immediately upon failing to acquire the mutex lock.
 
 Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
 ---
- block/blk-mq-debugfs.c | 16 ++++++++--------
- include/linux/blkdev.h |  6 +++---
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ block/blk-mq-debugfs.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
 diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index adf5f0697b6b..62775b132d4c 100644
+index 62775b132d4c..1c958bbaddce 100644
 --- a/block/blk-mq-debugfs.c
 +++ b/block/blk-mq-debugfs.c
-@@ -400,12 +400,12 @@ static int hctx_tags_show(void *data, struct seq_file *m)
- 	struct request_queue *q = hctx->queue;
- 	int res;
+@@ -402,13 +402,12 @@ static int hctx_tags_show(void *data, struct seq_file *m)
  
--	res = mutex_lock_interruptible(&q->sysfs_lock);
-+	res = mutex_lock_interruptible(&q->elevator_lock);
+ 	res = mutex_lock_interruptible(&q->elevator_lock);
  	if (res)
- 		goto out;
+-		goto out;
++		return res;
  	if (hctx->tags)
  		blk_mq_debugfs_tags_show(m, hctx->tags);
--	mutex_unlock(&q->sysfs_lock);
-+	mutex_unlock(&q->elevator_lock);
+ 	mutex_unlock(&q->elevator_lock);
  
- out:
- 	return res;
-@@ -417,12 +417,12 @@ static int hctx_tags_bitmap_show(void *data, struct seq_file *m)
- 	struct request_queue *q = hctx->queue;
- 	int res;
+-out:
+-	return res;
++	return 0;
+ }
  
--	res = mutex_lock_interruptible(&q->sysfs_lock);
-+	res = mutex_lock_interruptible(&q->elevator_lock);
+ static int hctx_tags_bitmap_show(void *data, struct seq_file *m)
+@@ -419,13 +418,12 @@ static int hctx_tags_bitmap_show(void *data, struct seq_file *m)
+ 
+ 	res = mutex_lock_interruptible(&q->elevator_lock);
  	if (res)
- 		goto out;
+-		goto out;
++		return res;
  	if (hctx->tags)
  		sbitmap_bitmap_show(&hctx->tags->bitmap_tags.sb, m);
--	mutex_unlock(&q->sysfs_lock);
-+	mutex_unlock(&q->elevator_lock);
+ 	mutex_unlock(&q->elevator_lock);
  
- out:
- 	return res;
-@@ -434,12 +434,12 @@ static int hctx_sched_tags_show(void *data, struct seq_file *m)
- 	struct request_queue *q = hctx->queue;
- 	int res;
+-out:
+-	return res;
++	return 0;
+ }
  
--	res = mutex_lock_interruptible(&q->sysfs_lock);
-+	res = mutex_lock_interruptible(&q->elevator_lock);
+ static int hctx_sched_tags_show(void *data, struct seq_file *m)
+@@ -436,13 +434,12 @@ static int hctx_sched_tags_show(void *data, struct seq_file *m)
+ 
+ 	res = mutex_lock_interruptible(&q->elevator_lock);
  	if (res)
- 		goto out;
+-		goto out;
++		return res;
  	if (hctx->sched_tags)
  		blk_mq_debugfs_tags_show(m, hctx->sched_tags);
--	mutex_unlock(&q->sysfs_lock);
-+	mutex_unlock(&q->elevator_lock);
+ 	mutex_unlock(&q->elevator_lock);
  
- out:
- 	return res;
-@@ -451,12 +451,12 @@ static int hctx_sched_tags_bitmap_show(void *data, struct seq_file *m)
- 	struct request_queue *q = hctx->queue;
- 	int res;
+-out:
+-	return res;
++	return 0;
+ }
  
--	res = mutex_lock_interruptible(&q->sysfs_lock);
-+	res = mutex_lock_interruptible(&q->elevator_lock);
+ static int hctx_sched_tags_bitmap_show(void *data, struct seq_file *m)
+@@ -453,13 +450,12 @@ static int hctx_sched_tags_bitmap_show(void *data, struct seq_file *m)
+ 
+ 	res = mutex_lock_interruptible(&q->elevator_lock);
  	if (res)
- 		goto out;
+-		goto out;
++		return res;
  	if (hctx->sched_tags)
  		sbitmap_bitmap_show(&hctx->sched_tags->bitmap_tags.sb, m);
--	mutex_unlock(&q->sysfs_lock);
-+	mutex_unlock(&q->elevator_lock);
+ 	mutex_unlock(&q->elevator_lock);
  
- out:
- 	return res;
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 22600420799c..709a32022c78 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -568,9 +568,9 @@ struct request_queue {
- 	 * nr_requests and wbt latency, this lock also protects the sysfs attrs
- 	 * nr_requests and wbt_lat_usec. Additionally the nr_hw_queues update
- 	 * may modify hctx tags, reserved-tags and cpumask, so this lock also
--	 * helps protect the hctx attrs. To ensure proper locking order during
--	 * an elevator or nr_hw_queue update, first freeze the queue, then
--	 * acquire ->elevator_lock.
-+	 * helps protect the hctx sysfs/debugfs attrs. To ensure proper locking
-+	 * order during an elevator or nr_hw_queue update, first freeze the
-+	 * queue, then acquire ->elevator_lock.
- 	 */
- 	struct mutex		elevator_lock;
+-out:
+-	return res;
++	return 0;
+ }
  
+ static int hctx_active_show(void *data, struct seq_file *m)
 -- 
 2.47.1
 
