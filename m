@@ -1,77 +1,77 @@
-Return-Path: <linux-block+bounces-18497-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18492-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B74DA63EA3
-	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 05:45:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CA52A63E99
+	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 05:45:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3067E188E55C
-	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 04:45:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A2DE3AC757
+	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 04:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF7E4215040;
-	Mon, 17 Mar 2025 04:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DF1215061;
+	Mon, 17 Mar 2025 04:45:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfculuOn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZuAqQmbC"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B471CAB3
-	for <linux-block@vger.kernel.org>; Mon, 17 Mar 2025 04:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A80B1CAB3
+	for <linux-block@vger.kernel.org>; Mon, 17 Mar 2025 04:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742186723; cv=none; b=Z2UU5FFzLhlFJaSGzW86spaQGt9Qt/xiontmJKC9/84cPFv3akqe1aWXWUSJ0/kgkjCIMnorwBRj8SRokMuG2iEDQdKzWR0UX7I0MXp8/wzkFBQy6CHdEB0YuifLKwjCzk04+GFsjxPFT6PDYRPT/q7K17NghCvLnj1PTnD/L4o=
+	t=1742186721; cv=none; b=Dc/YEinlVvjLGl/3Q2O/tQIQCzk5MJw9a9bKgwcziS0Dq3z27ZqZGiM9/2UGlMs5/VOxFU2qtj2FulKpgTXAa2Yvj/4+1Phrmq117YF7QEoNYUGDVQ1e1dpePDXAaHex9vpfkh3FW5TOhL2RZ57dB6gBFw0JUKAcwk0N95N84WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742186723; c=relaxed/simple;
-	bh=iMgGLXK/eZWiCsHhtcIH2pAMYjwOYrtD4D2UKcrxOwo=;
+	s=arc-20240116; t=1742186721; c=relaxed/simple;
+	bh=SegGlhs5rUpbazr0P6rA5zofnxeczZspPIszZebPp0Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RaFst6x5B12/aiuCrkhMfbC3FiKJ/tQPASapOmq+wQ4Rr0eTHsrcmjV3gU+plhgPQaZpVGO/ZEs4IcvAMCzLAs+DCxOQYuzQjG6oSJTnIBIOldwZFq4kVdIImKCpN/EzqflPx1aFnkuU9agHMv9s0ksUxS8xzBSOwviOEoAYEdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CfculuOn; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=h3U2NpxN0UbCy/zM6DQnw0NkHS+mrbR94FQ+0y4Sfa+sHNq7xsOGaUXo7jHRvBWA9pImgenyPyFdkKC6cKalkLml3eOgb42Kk7USmxt1WNV8+8Qc/fwatas+nrA5JLFw7zSgdEnIG4eFfVnC8eX59wpCSRhkm7nYzWFOASMtels=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZuAqQmbC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742186721;
+	s=mimecast20190719; t=1742186718;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D0kJ1tJt2xaS+916+lJm7oq1cAwal02L1nVtgf6lm4g=;
-	b=CfculuOnpfU31kvbwSyZ2miu6I8u7hhC0pUwBEWrlOM1TkgIfv1ChHAX2gjdR6tQOGBB5J
-	YvkQ+bLe/r6jggBSk2E2MSHC/tBYzcAb61Q7HC6jsMn2eRNsliezz8qy7wZNd8xtJDEBXJ
-	pEAAweJeaPcA4eNkEOdo8ywjGhUw5Rg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=CWrD1i2oH26aPXh0nPETAOF3chlf/K1Pa5lwOz3u0UQ=;
+	b=ZuAqQmbCe/DAutF1kB51Eh3DJJt2qNQmd9RlBV2pnqRheNyKc8FxzneI9+4N5X6zF692WH
+	bkeAvX5F/iKYCq1Qtf1lm6SdPq1LLfNHX6iUyL8toJaslK3ormwyxc97YjOVjbaoA4eL0P
+	0cYo3sC6LtKRiv0majhoALpb490Z9Fw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-tVkVis3lNXGpyZdq6qHE4g-1; Mon,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-1K0TQU_INa21wgKix8Saiw-1; Mon,
  17 Mar 2025 00:45:15 -0400
-X-MC-Unique: tVkVis3lNXGpyZdq6qHE4g-1
-X-Mimecast-MFC-AGG-ID: tVkVis3lNXGpyZdq6qHE4g_1742186714
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+X-MC-Unique: 1K0TQU_INa21wgKix8Saiw-1
+X-Mimecast-MFC-AGG-ID: 1K0TQU_INa21wgKix8Saiw_1742186714
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D93E719560AE;
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B5AD180AF50;
 	Mon, 17 Mar 2025 04:45:13 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC17E1954B32;
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3FC1180175A;
 	Mon, 17 Mar 2025 04:45:12 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 52H4jBdW2200878
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 52H4jBD92200882
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
 	Mon, 17 Mar 2025 00:45:11 -0400
 Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 52H4jBw12200877;
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 52H4jBhL2200881;
 	Mon, 17 Mar 2025 00:45:11 -0400
 From: Benjamin Marzinski <bmarzins@redhat.com>
 To: Mikulas Patocka <mpatocka@redhat.com>, Mike Snitzer <snitzer@redhat.com>,
         Jens Axboe <axboe@kernel.dk>
 Cc: dm-devel@lists.linux.dev, linux-block@vger.kernel.org,
         Damien Le Moal <dlemoal@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 4/6] dm: handle failures in dm_table_set_restrictions
-Date: Mon, 17 Mar 2025 00:45:08 -0400
-Message-ID: <20250317044510.2200856-5-bmarzins@redhat.com>
+Subject: [PATCH v2 5/6] dm: fix dm_blk_report_zones
+Date: Mon, 17 Mar 2025 00:45:09 -0400
+Message-ID: <20250317044510.2200856-6-bmarzins@redhat.com>
 In-Reply-To: <20250317044510.2200856-1-bmarzins@redhat.com>
 References: <20250317044510.2200856-1-bmarzins@redhat.com>
 Precedence: bulk
@@ -81,154 +81,89 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-If dm_table_set_restrictions() fails while swapping tables,
-device-mapper will continue using the previous table. It must be sure to
-leave the mapped_device in it's previous state on failure.  Otherwise
-device-mapper could end up using the old table with settings from the
-unused table.
+If dm_get_live_table() returned NULL, dm_put_live_table() was never
+called.  Also, if md->zone_revalidate_map is set, check that
+dm_blk_report_zones() is being called from the process that set it in
+__bind(). Otherwise the zone resources could change while accessing
+them. Finally, it is possible that md->zone_revalidate_map will change
+while calling this function. Only read it once, so that we are always
+using the same value. Otherwise we might miss a call to
+dm_put_live_table().
 
-Do not update the mapped device in dm_set_zones_restrictions(). Wait
-till after dm_table_set_restrictions() is sure to succeed to update the
-md zoned settings. Do the same with the dax settings, and if
-dm_revalidate_zones() fails, restore the original queue limits.
-
-Fixes: 7f91ccd8a608d ("dm: Call dm_revalidate_zones() after setting the queue limits")
+Fixes: f211268ed1f9b ("dm: Use the block layer zone append emulation")
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Benjamin Marzinski <bmarzins@redhat.com>
 ---
- drivers/md/dm-table.c | 25 ++++++++++++++++---------
- drivers/md/dm-zone.c  | 26 ++++++++++++++++++--------
- drivers/md/dm.h       |  1 +
- 3 files changed, 35 insertions(+), 17 deletions(-)
+ drivers/md/dm-core.h |  1 +
+ drivers/md/dm-zone.c | 23 +++++++++++++++--------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 77d8459b2f2a..66ebe76f8c9c 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1836,6 +1836,7 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 			      struct queue_limits *limits)
- {
- 	int r;
-+	struct queue_limits old_limits;
+diff --git a/drivers/md/dm-core.h b/drivers/md/dm-core.h
+index 3637761f3585..f3a3f2ef6322 100644
+--- a/drivers/md/dm-core.h
++++ b/drivers/md/dm-core.h
+@@ -141,6 +141,7 @@ struct mapped_device {
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 	unsigned int nr_zones;
+ 	void *zone_revalidate_map;
++	struct task_struct *revalidate_map_task;
+ #endif
  
- 	if (!dm_table_supports_nowait(t))
- 		limits->features &= ~BLK_FEAT_NOWAIT;
-@@ -1862,16 +1863,11 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 	if (dm_table_supports_flush(t))
- 		limits->features |= BLK_FEAT_WRITE_CACHE | BLK_FEAT_FUA;
- 
--	if (dm_table_supports_dax(t, device_not_dax_capable)) {
-+	if (dm_table_supports_dax(t, device_not_dax_capable))
- 		limits->features |= BLK_FEAT_DAX;
--		if (dm_table_supports_dax(t, device_not_dax_synchronous_capable))
--			set_dax_synchronous(t->md->dax_dev);
--	} else
-+	else
- 		limits->features &= ~BLK_FEAT_DAX;
- 
--	if (dm_table_any_dev_attr(t, device_dax_write_cache_enabled, NULL))
--		dax_write_cache(t->md->dax_dev, true);
--
- 	/* For a zoned table, setup the zone related queue attributes. */
- 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
- 	    (limits->features & BLK_FEAT_ZONED)) {
-@@ -1883,7 +1879,7 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 	if (dm_table_supports_atomic_writes(t))
- 		limits->features |= BLK_FEAT_ATOMIC_WRITES;
- 
--	r = queue_limits_set(q, limits, NULL);
-+	r = queue_limits_set(q, limits, &old_limits);
- 	if (r)
- 		return r;
- 
-@@ -1894,10 +1890,21 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
- 	    (limits->features & BLK_FEAT_ZONED)) {
- 		r = dm_revalidate_zones(t, q);
--		if (r)
-+		if (r) {
-+			queue_limits_set(q, &old_limits, NULL);
- 			return r;
-+		}
- 	}
- 
-+	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED))
-+		dm_finalize_zone_settings(t, limits);
-+
-+	if (dm_table_supports_dax(t, device_not_dax_synchronous_capable))
-+		set_dax_synchronous(t->md->dax_dev);
-+
-+	if (dm_table_any_dev_attr(t, device_dax_write_cache_enabled, NULL))
-+		dax_write_cache(t->md->dax_dev, true);
-+
- 	dm_update_crypto_profile(q, t);
- 	return 0;
- }
+ #ifdef CONFIG_IMA
 diff --git a/drivers/md/dm-zone.c b/drivers/md/dm-zone.c
-index 20edd3fabbab..681058feb63b 100644
+index 681058feb63b..11e19281bb64 100644
 --- a/drivers/md/dm-zone.c
 +++ b/drivers/md/dm-zone.c
-@@ -340,12 +340,8 @@ int dm_set_zones_restrictions(struct dm_table *t, struct request_queue *q,
- 	 * mapped device queue as needing zone append emulation.
- 	 */
- 	WARN_ON_ONCE(queue_is_mq(q));
--	if (dm_table_supports_zone_append(t)) {
--		clear_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
--	} else {
--		set_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
-+	if (!dm_table_supports_zone_append(t))
- 		lim->max_hw_zone_append_sectors = 0;
--	}
+@@ -56,24 +56,29 @@ int dm_blk_report_zones(struct gendisk *disk, sector_t sector,
+ {
+ 	struct mapped_device *md = disk->private_data;
+ 	struct dm_table *map;
+-	int srcu_idx, ret;
++	struct dm_table *zone_revalidate_map = md->zone_revalidate_map;
++	int srcu_idx, ret = -EIO;
  
- 	/*
- 	 * Determine the max open and max active zone limits for the mapped
-@@ -383,9 +379,6 @@ int dm_set_zones_restrictions(struct dm_table *t, struct request_queue *q,
- 		lim->zone_write_granularity = 0;
- 		lim->chunk_sectors = 0;
- 		lim->features &= ~BLK_FEAT_ZONED;
--		clear_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
--		md->nr_zones = 0;
--		disk->nr_zones = 0;
- 		return 0;
+-	if (!md->zone_revalidate_map) {
+-		/* Regular user context */
++	if (!zone_revalidate_map || md->revalidate_map_task != current) {
++		/*
++		 * Regular user context or
++		 * Zone revalidation during __bind() is in progress, but this
++		 * call is from a different process
++		 */
+ 		if (dm_suspended_md(md))
+ 			return -EAGAIN;
+ 
+ 		map = dm_get_live_table(md, &srcu_idx);
+-		if (!map)
+-			return -EIO;
+ 	} else {
+ 		/* Zone revalidation during __bind() */
+-		map = md->zone_revalidate_map;
++		map = zone_revalidate_map;
  	}
  
-@@ -408,6 +401,23 @@ int dm_set_zones_restrictions(struct dm_table *t, struct request_queue *q,
- 	return 0;
- }
+-	ret = dm_blk_do_report_zones(md, map, sector, nr_zones, cb, data);
++	if (map)
++		ret = dm_blk_do_report_zones(md, map, sector, nr_zones, cb,
++					     data);
  
-+void dm_finalize_zone_settings(struct dm_table *t, struct queue_limits *lim)
-+{
-+	struct mapped_device *md = t->md;
-+
-+	if (lim->features & BLK_FEAT_ZONED) {
-+		if (dm_table_supports_zone_append(t))
-+			clear_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
-+		else
-+			set_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
-+	} else {
-+		clear_bit(DMF_EMULATE_ZONE_APPEND, &md->flags);
-+		md->nr_zones = 0;
-+		md->disk->nr_zones = 0;
-+	}
-+}
-+
-+
- /*
-  * IO completion callback called from clone_endio().
-  */
-diff --git a/drivers/md/dm.h b/drivers/md/dm.h
-index a0a8ff119815..e5d3a9f46a91 100644
---- a/drivers/md/dm.h
-+++ b/drivers/md/dm.h
-@@ -102,6 +102,7 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t);
- int dm_set_zones_restrictions(struct dm_table *t, struct request_queue *q,
- 		struct queue_limits *lim);
- int dm_revalidate_zones(struct dm_table *t, struct request_queue *q);
-+void dm_finalize_zone_settings(struct dm_table *t, struct queue_limits *lim);
- void dm_zone_endio(struct dm_io *io, struct bio *clone);
- #ifdef CONFIG_BLK_DEV_ZONED
- int dm_blk_report_zones(struct gendisk *disk, sector_t sector,
+-	if (!md->zone_revalidate_map)
++	if (!zone_revalidate_map)
+ 		dm_put_live_table(md, srcu_idx);
+ 
+ 	return ret;
+@@ -175,7 +180,9 @@ int dm_revalidate_zones(struct dm_table *t, struct request_queue *q)
+ 	 * our table for dm_blk_report_zones() to use directly.
+ 	 */
+ 	md->zone_revalidate_map = t;
++	md->revalidate_map_task = current;
+ 	ret = blk_revalidate_disk_zones(disk);
++	md->revalidate_map_task = NULL;
+ 	md->zone_revalidate_map = NULL;
+ 
+ 	if (ret) {
 -- 
 2.48.1
 
