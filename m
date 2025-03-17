@@ -1,137 +1,108 @@
-Return-Path: <linux-block+bounces-18510-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18512-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52DD7A65285
-	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 15:14:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C156A65294
+	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 15:15:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB5B5169558
-	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 14:13:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 691C83B9DC5
+	for <lists+linux-block@lfdr.de>; Mon, 17 Mar 2025 14:14:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7947021931C;
-	Mon, 17 Mar 2025 14:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC4C2417E5;
+	Mon, 17 Mar 2025 14:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TzYCnaTd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cr7WxoOe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEGAqmaF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D892820322;
-	Mon, 17 Mar 2025 14:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55022417C7;
+	Mon, 17 Mar 2025 14:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220812; cv=none; b=r8C8iYAxTlVluYmQYTZc/1cX00+CdM0wNXJ6aDIw36peWPAGdV3XXi4be47Fby05rIVFm4ch0D5M/9nCx0J5Xbr/6PIYqxjE+vSr91EnuHRzFkSEmbPdBIdOeAEwrf0c95GfuovVYF+DytZyUh2bk7aeBGuakqouJUTnybTdaP8=
+	t=1742220842; cv=none; b=WCBqW8/f6kKb84mDDq+dkZOGDFIyZ5wni0I+7ZZOwjy0LAJ8xJD9/LD8kVPlrzWbWpqWQV9y+XAbeU2713vMqc9teEqiUsOgs5elOf3ExmRMJiU+Cf3Ih7YIuTjCOVKI8P8FgeRUNK89lNbakItfZTo70DZJ/9OTP5YhTHLnQvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220812; c=relaxed/simple;
-	bh=Hpdcypjt0ZbNYUdHGey6gpoTcz3DMDSTuv0leQ5C0HE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AV5FC+Cv3OIb+xr/qNKKG2qS7DBmM+PNQQJk14kldTuCb53xoJpPQhkqsNWJQgzxSoL0EVX2JN+B/QvE18ZMtJx31ioB9ItqGkx1tMcDzFUxClsEc0Q6UzzRIQXVmd/nKN1V9D8AANC53AuEuezjkHDXpwzvEL1u6tgQN6gl0v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TzYCnaTd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cr7WxoOe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742220809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EtclTXwOSCMg5QOeKYXMx4COUFyfI8/aHYlSBvUgGug=;
-	b=TzYCnaTdWzV3lR+LbCsvEXfYiozktCDRcAjuEJRTFaKJX21f1jRAeEEWrSmmwM693xOcZj
-	2LYKAtFqBlOpqv7KfpCqL2RmmlMHcQn5uBC/EpYh20HASDiCqSZRVz8SKgx3h0+0kLs0f4
-	rLCmkHMHGUOKDFGBMCSyZlFp2qXw++J3Whcu0AZWM9WafvunhtnOuGvfj/iSXg7m97k/JX
-	IE98Ukjxml0QJay26gx3Qo/HKuXQor/S+VxpLA7zycAkUjvQMChVQ+egsa8mNTmI/7ST64
-	9cpjR30crg9kNbyKef84j5u/TbML0mAPVNiXWUl8FmZH4uf3EL4HkwYco0F1+w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742220809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EtclTXwOSCMg5QOeKYXMx4COUFyfI8/aHYlSBvUgGug=;
-	b=Cr7WxoOe6k9vgW/OwIAFPJXvkXXDWam+Q5QI+HAYPBEKwogwSrCNLAFJK7AloA6dPmU0XD
-	lRnFLnNMiYbyqmAA==
-Date: Mon, 17 Mar 2025 15:13:25 +0100
-Subject: [PATCH] loop: Properly send KOBJ_CHANGED uevent for disk device
+	s=arc-20240116; t=1742220842; c=relaxed/simple;
+	bh=KetjEDEIpNK3M8QcLEfsyRIU1gURvCcBvqSeu3O8Y4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TAp/PKv+cHLheFw0762OZ3zriwkIIblJqtxc6SKBPtoQfseH/uCI3LVSHvokFemCkzA7FVN1G3lkS7BJIOY7CF+ihVXfaSR3FGO7D5kBOdJfHsJA7CIxd60enkfMQxFJZ8DX4yY12IUH/HOSQGoKvkan0yMWpAQ8nF3cqMAyegA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEGAqmaF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACD6C4CEE3;
+	Mon, 17 Mar 2025 14:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742220842;
+	bh=KetjEDEIpNK3M8QcLEfsyRIU1gURvCcBvqSeu3O8Y4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TEGAqmaFg2dV/ByjFvfDpQBY74I21IYlF7W1EZ0xyleN4H6jqR7VXiLxKJHoqAel6
+	 Y8tG3rEzJsfq7V9I7YRByt+CsyDC0oc+HEiNu27qad9bsdI5od+rNmCpFXiLLbzgL6
+	 nfCzWnrCp4vCAQvvofOtJGXVR5FNxlqoilmPT8k5cLPQT7FFT4yofuWpv0RRndESUs
+	 42B/p/Tc28dfdUGky+UnMTIoUEw1OMU1skoXPK1H3jWiBwgDgvwH0t5+DxSAQfeyQV
+	 zP8NDqk/PFpI/VlG3TbHhvoNP+fiHGefGlOnXjJlajPxQHXsajnyNwUUoVc1TsVY0T
+	 gbmltAxJoxtjg==
+Date: Mon, 17 Mar 2025 08:13:59 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Christoph Hellwig <hch@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 13/14] block: Allow REQ_FUA|REQ_READ
+Message-ID: <Z9guJ2VxvqAmm9o9@kbusch-mbp.dhcp.thefacebook.com>
+References: <9db17620-4b93-4c01-b7f8-ecab83b12d0f@kernel.dk>
+ <abk74sbsvsuijqhohyenl2mecz6unmkhavkga55fxsld6m6ise@ncbz3xmjlymw>
+ <510692e2-b83c-45bc-8d9d-08f7a172ffe6@kernel.dk>
+ <5ymzmc3u3ar7p4do5xtrmlmddpzhkqse2gfharr3nrhvdexiiq@p3hszkhipbgr>
+ <0712e91f-2342-41ef-baad-3f2348f47ed6@kernel.dk>
+ <ycsdpbpm4jbyc6tbixj3ujricqg3pszpfpjltb25b3qxl47tti@b2oydmcmf2a6>
+ <ad32deb6-daad-4aa8-8366-2013b08e394f@kernel.dk>
+ <fy5lq7bxyr64f7oiypo343s57nujafjue2bcl72ovwszbzasxk@k6jhr6asqtmx>
+ <Z9e6dFm_qtW29sVe@infradead.org>
+ <fhhgjnhmk72vpruhgftwq3lzfmylbhn6cuajj6saikee2zuqjp@54yfyxu35yiz>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAAQu2GcC/32Nyw7CIBBFf6WZtRgeRYMr/8N0QWRqJ2mgAUpqG
- v5drHtzV+fmPnZIGAkT3LodIhZKFHwDcergOVn/QkauMUguNVf8yuYQFrZiQZ/ZL+GYtepi+Ng
- r5Apac4k40nasPobGE6Uc4vs4KeLr/t8rgjWh0dpKZXqp7zP5NcfgaTs7hKHW+gFGqDT0ugAAA
- A==
-X-Change-ID: 20250307-loop-uevent-changed-aa3690f43e03
-To: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>, 
- Alyssa Ross <hi@alyssa.is>
-Cc: John Ogness <john.ogness@linutronix.de>, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742220808; l=2095;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=Hpdcypjt0ZbNYUdHGey6gpoTcz3DMDSTuv0leQ5C0HE=;
- b=ZiaehUy4QRjIUsV2+NmlNt3mlBEdxOFbu0yZU+R2EUOO8E9PCR+ziupoxLo1EqSseZc+g9f8L
- XR1CUo90jEsDkbodaQktZN9z1XRXdwyXnqFtTUbzSN2/owDrtXrfL1g
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+In-Reply-To: <fhhgjnhmk72vpruhgftwq3lzfmylbhn6cuajj6saikee2zuqjp@54yfyxu35yiz>
 
-The wording "uncork" in the code comment indicates that it is expected that
-the suppressed event instances are automatically sent after unsuppressing.
-This is not the case, they are discarded.
-In effect this means that no "changed" events are emitted on the device
-itself by default. On the other hand each discovered partition does trigger
-a "changed" event on the loop device itself. Therefore no event is emitted for
-devices without partitions.
+On Mon, Mar 17, 2025 at 08:15:51AM -0400, Kent Overstreet wrote:
+> On Sun, Mar 16, 2025 at 11:00:20PM -0700, Christoph Hellwig wrote:
+> > On Sat, Mar 15, 2025 at 02:41:33PM -0400, Kent Overstreet wrote:
+> > > That's the sort of thing that process is supposed to avoid. To be clear,
+> > > you and Christoph are the two reasons I've had to harp on process in the
+> > > past - everyone else in the kernel has been fine.
+> 
+> ...
+> 
+> > In this case you very clearly misunderstood how the FUA bit works on
+> > reads (and clearly documented that misunderstanding in the commit log).
+> 
+> FUA reads are clearly documented in the NVME spec.
 
-This leads to udev missing the device creation and prompting workarounds in
-userspace, see the linked util-linux/losetup bug.
+NVMe's Read with FUA documentation is a pretty short:
 
-Explicitly emit the events and drop the confusingly worded comments.
+  Force Unit Access (FUA): If this bit is set to `1�, then for data and
+  metadata, if any, associated with logical blocks specified by the Read
+  command, the controller shall:
 
-Link: https://github.com/util-linux/util-linux/issues/2434
-Fixes: 3448914e8cc5 ("loop: Add LOOP_CONFIGURE ioctl")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- drivers/block/loop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+    1) commit that data and metadata, if any, to non-volatile medium; and
+    2) read the data and metadata, if any, from non-volatile medium.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index c05fe27a96b64f1f1ea3868510fdd0c7f4937f55..fbc67ff29e07c15f2e3b3e225a4a37df016fe9de 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -654,8 +654,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 
- 	error = 0;
- done:
--	/* enable and uncork uevent now that we are done */
- 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-+	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
- 	return error;
- 
- out_err:
-@@ -1115,8 +1115,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
- 	if (partscan)
- 		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
- 
--	/* enable and uncork uevent now that we are done */
- 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-+	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
- 
- 	loop_global_unlock(lo, is_loop);
- 	if (partscan)
+So this aligns with ATA and SCSI.
 
----
-base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
-change-id: 20250307-loop-uevent-changed-aa3690f43e03
+The concern about what you're doing is with respect to "1". Avoiding that
+requires all writes also set FUA, or you sent a flush command before doing any
+reads. Otherwise how would you know whether or not read data came from a
+previous cached write?
 
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+I'm actually more curious how you came to use this mechanism for recovery.
+Have you actually seen this approach fix a real problem? In my experience, a
+Read FUA is used to ensure what you're reading has been persistently committed.
+It can be used as an optimization to flush a specific LBA range, but I'd not
+seen this used as a bit error recovery mechanism.
 
