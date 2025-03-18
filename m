@@ -1,70 +1,70 @@
-Return-Path: <linux-block+bounces-18601-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18590-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6936A66C24
-	for <lists+linux-block@lfdr.de>; Tue, 18 Mar 2025 08:41:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB0F0A66BAF
+	for <lists+linux-block@lfdr.de>; Tue, 18 Mar 2025 08:31:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24A254203AD
-	for <lists+linux-block@lfdr.de>; Tue, 18 Mar 2025 07:39:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61A9417AFFD
+	for <lists+linux-block@lfdr.de>; Tue, 18 Mar 2025 07:30:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21792066F1;
-	Tue, 18 Mar 2025 07:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760A21A0BD6;
+	Tue, 18 Mar 2025 07:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vg7Op2Td"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6960A202978;
-	Tue, 18 Mar 2025 07:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CA91E8344
+	for <linux-block@vger.kernel.org>; Tue, 18 Mar 2025 07:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742283426; cv=none; b=Tmn5B1W1YsaffqnNRNL4uSfL0M0m50B36fq66uJYBiDz+y0IDk0e1i9J63MuODF5e//l8mDpWptTGl9lM+ndft435th6VVT0llHmZw3OpC8mhak8JekTGNaFj/Kh8NujHVhkPTkmD/xh0L6K52edxAmcM1T6uOPzjzNxWxDP564=
+	t=1742283016; cv=none; b=nBtr89ZKvNUTo80He3rVBkxF9vVum8BrLbArDbSJowHhLU5OYgN4tq2V5S4V3XcZZVtn4jD18EpMzOMKmQ4Vvxq9GDgz9llk0JxMpxG8AW+g/hewhfdErH+Emvxi3YyHMEH+3ydLtfcJE/VKl5X1q5zRpL2xdxPHMHF6BpX+9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742283426; c=relaxed/simple;
-	bh=qRhWbIArakniweM68OrA5PdRGrB5BfFvmCp41RraK68=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GiWlReq3bhyWkq2eRU82QRjxVdfjpgsC/ouXHeHcCvXJdYd4XvSKvxjFIpzlkyPlmJozMsyV1fpvnsujMag9E49VGZgCniYu0NgSfa8ORG0FYNMjcuAbMg2OcUrdFmGQfCAlns5YSrmS5Qr9l+m6ac9l01CYyWl2lRCfbQbHOw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZH3Yx31Blz4f3m76;
-	Tue, 18 Mar 2025 15:36:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 789501A06D7;
-	Tue, 18 Mar 2025 15:37:01 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgBXu1+PItlnS19YGw--.63204S7;
-	Tue, 18 Mar 2025 15:37:01 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	tytso@mit.edu,
-	djwong@kernel.org,
-	john.g.garry@oracle.com,
-	bmarzins@redhat.com,
-	chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH blktests 3/3] nvme/060: add unmap write zeroes tests
-Date: Tue, 18 Mar 2025 15:28:35 +0800
-Message-ID: <20250318072835.3508696-4-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
-References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1742283016; c=relaxed/simple;
+	bh=mPQe5jyzGkiT9fc3vZLGVVqn+kIzoIdAIWfDqZz60o4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S/xdH12LAmpPiyAvF6YoGIEWMWj+baubecyT8z3EEVLO8PfH8tmOo+Brj+7CcI0FC9hCZbzcovt1nhinIICpoNglQqP/4kmgK6gJ3MDZjFqcPq0fwDHaKq1R5YwFrY+/6gL2s93rBRyNdDFfFRFg065VwGL58+NqMJN0sgr+blM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vg7Op2Td; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742283012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+QiWbSF6w77Vxmgs9pymecmjPKeDqaRIzPvvqyvzzrM=;
+	b=Vg7Op2Tdmfmi2Bd2k7wFKxfps4Kw9pdqxm6KOY6IcxmSh8x9nHrsJNOM4/sGj4Wn45arL6
+	9536zgTvTk3DrKt3u6uoq2X0YlpeCD283ZxbIzfJPqAVBFcDk30QCeUinwZUq6FXZMNr6d
+	Jy36VluzsN9VxE+5+0kB7S4NU45jcT8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-KCelIgecMAC-gYmSwz7k_Q-1; Tue,
+ 18 Mar 2025 03:30:11 -0400
+X-MC-Unique: KCelIgecMAC-gYmSwz7k_Q-1
+X-Mimecast-MFC-AGG-ID: KCelIgecMAC-gYmSwz7k_Q_1742283009
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C84A1801A12;
+	Tue, 18 Mar 2025 07:30:09 +0000 (UTC)
+Received: from localhost (unknown [10.72.120.33])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0863D1956094;
+	Tue, 18 Mar 2025 07:30:00 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Kun Hu <huk23@m.fudan.edu.cn>,
+	Jiaji Qin <jjtan24@m.fudan.edu.cn>
+Subject: [PATCH V3] loop: move vfs_fsync() out of loop_update_dio()
+Date: Tue, 18 Mar 2025 15:29:55 +0800
+Message-ID: <20250318072955.3893805-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -72,127 +72,90 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXu1+PItlnS19YGw--.63204S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxur48WF45GF13KFyUZw4ruFg_yoW5XF17pa
-	yUKF9Ikr1xW3Wagw1fZa15WFyfCw4kZw12y34xKw1jyr9rX343Wrn7K34jvw1fGF93Ww18
-	ZayjgFWrur1DGF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x0pRWv3bUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-From: Zhang Yi <yi.zhang@huawei.com>
+If vfs_flush() is called with queue frozen, the queue freeze lock may be
+connected with FS internal lock, and lockdep warning can be triggered
+because the queue freeze lock is connected with too many global or
+sub-system locks.
 
-Test block device unmap write zeroes sysfs interface with NVMeT devices
-which are based on various SCSI debug devices. The
-/sys/block/<disk>/queue/write_zeroes_unmap interface should return 1 if
-the NVMeT devices support the unmap write zeroes command, and it should
-return 0 otherwise.
+Fix the warning by moving vfs_fsync() out of loop_update_dio():
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+- vfs_fsync() is only needed when switching to dio
+
+- only loop_change_fd() and loop_configure() may switch from buffered
+IO to direct IO, so call vfs_fsync() directly here. This way is safe
+because either loop is in unbound, or new file isn't attached
+
+- for the other two cases of set_status and set_block_size, direct IO
+can only become off, so no need to call vfs_fsync()
+
+Cc: Christoph Hellwig <hch@infradead.org>
+Reported-by: Kun Hu <huk23@m.fudan.edu.cn>
+Reported-by: Jiaji Qin <jjtan24@m.fudan.edu.cn>
+Closes: https://lore.kernel.org/linux-block/359BC288-B0B1-4815-9F01-3A349B12E816@m.fudan.edu.cn/T/#u
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- tests/nvme/060     | 68 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/060.out |  4 +++
- 2 files changed, 72 insertions(+)
- create mode 100755 tests/nvme/060
- create mode 100644 tests/nvme/060.out
+V3:
+	- replace comment with Christoph's words(Christoph)
+V2:
+	- update comment(Christoph)
 
-diff --git a/tests/nvme/060 b/tests/nvme/060
-new file mode 100755
-index 0000000..524176f
---- /dev/null
-+++ b/tests/nvme/060
-@@ -0,0 +1,68 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2025 Huawei.
-+#
-+# Test block device unmap write zeroes sysfs interface with nvmet scsi
-+# debug devices.
+ drivers/block/loop.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 8ca092303794..674527d770dc 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -189,18 +189,12 @@ static bool lo_can_use_dio(struct loop_device *lo)
+  */
+ static inline void loop_update_dio(struct loop_device *lo)
+ {
+-	bool dio_in_use = lo->lo_flags & LO_FLAGS_DIRECT_IO;
+-
+ 	lockdep_assert_held(&lo->lo_mutex);
+ 	WARN_ON_ONCE(lo->lo_state == Lo_bound &&
+ 		     lo->lo_queue->mq_freeze_depth == 0);
+ 
+ 	if ((lo->lo_flags & LO_FLAGS_DIRECT_IO) && !lo_can_use_dio(lo))
+ 		lo->lo_flags &= ~LO_FLAGS_DIRECT_IO;
+-
+-	/* flush dirty pages before starting to issue direct I/O */
+-	if ((lo->lo_flags & LO_FLAGS_DIRECT_IO) && !dio_in_use)
+-		vfs_fsync(lo->lo_backing_file, 0);
+ }
+ 
+ /**
+@@ -637,6 +631,13 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 	if (get_loop_size(lo, file) != get_loop_size(lo, old_file))
+ 		goto out_err;
+ 
++	/*
++	 * We might switch to direct I/O mode for the loop device, write back
++	 * all dirty data the page cache now that so that the individual I/O
++	 * operations don't have to do that.
++	 */
++	vfs_fsync(file, 0);
 +
-+. tests/nvme/rc
-+. common/scsi_debug
+ 	/* and ... switch */
+ 	disk_force_media_change(lo->lo_disk);
+ 	memflags = blk_mq_freeze_queue(lo->lo_queue);
+@@ -1105,6 +1106,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+ 	if (error)
+ 		goto out_unlock;
+ 
++	/*
++	 * We might switch to direct I/O mode for the loop device, write back
++	 * all dirty data the page cache now that so that the individual I/O
++	 * operations don't have to do that.
++	 */
++	vfs_fsync(file, 0);
 +
-+DESCRIPTION="test unmap write zeroes sysfs interface with nvmet devices"
-+QUICK=1
-+
-+nvme_trtype=loop
-+nvmet_blkdev_type="device"
-+
-+requires() {
-+	_have_scsi_debug
-+	_nvme_requires
-+	_require_nvme_trtype_is_loop
-+}
-+
-+device_requries() {
-+	_require_test_dev_sysfs queue/write_zeroes_unmap
-+}
-+
-+setup_test_device() {
-+	if ! _configure_scsi_debug "$@"; then
-+		return 1
-+	fi
-+
-+	local port="$(_create_nvmet_port)"
-+	_create_nvmet_subsystem --blkdev "/dev/${SCSI_DEBUG_DEVICES[0]}"
-+	_add_nvmet_subsys_to_port "${port}" "${def_subsysnqn}"
-+
-+	_create_nvmet_host "${def_subsysnqn}" "${def_hostnqn}"
-+	_nvme_connect_subsys
-+}
-+
-+cleanup_test_device() {
-+	_nvme_disconnect_subsys
-+	_nvmet_target_cleanup --subsysnqn "${def_subsysnqn}"
-+	_exit_scsi_debug
-+}
-+
-+test() {
-+	echo "Running ${TEST_NAME}"
-+
-+	_setup_nvmet
-+
-+	# disable WRITE SAME with unmap
-+	setup_test_device lbprz=0
-+	umap="$(cat "/sys/block/$(_find_nvme_ns "${def_subsys_uuid}")/queue/write_zeroes_unmap")"
-+	if [[ $umap -ne 0 ]]; then
-+		echo "Test disable WRITE SAME with unmap failed."
-+	fi
-+	cleanup_test_device
-+
-+	# enable WRITE SAME with unmap
-+	setup_test_device lbprz=1 lbpws=1
-+	umap="$(cat "/sys/block/$(_find_nvme_ns "${def_subsys_uuid}")/queue/write_zeroes_unmap")"
-+	if [[ $umap -ne 1 ]]; then
-+		echo "Test enable WRITE SAME with unmap failed."
-+	fi
-+	cleanup_test_device
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/060.out b/tests/nvme/060.out
-new file mode 100644
-index 0000000..e60714d
---- /dev/null
-+++ b/tests/nvme/060.out
-@@ -0,0 +1,4 @@
-+Running nvme/060
-+disconnected 1 controller(s)
-+disconnected 1 controller(s)
-+Test complete
+ 	loop_update_dio(lo);
+ 	loop_sysfs_init(lo);
+ 
 -- 
-2.46.1
+2.47.1
 
 
