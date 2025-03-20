@@ -1,119 +1,133 @@
-Return-Path: <linux-block+bounces-18752-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18754-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA1CBA6A472
-	for <lists+linux-block@lfdr.de>; Thu, 20 Mar 2025 12:09:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 509DFA6A49B
+	for <lists+linux-block@lfdr.de>; Thu, 20 Mar 2025 12:14:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 945053B12A4
-	for <lists+linux-block@lfdr.de>; Thu, 20 Mar 2025 11:08:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 998FA18890C9
+	for <lists+linux-block@lfdr.de>; Thu, 20 Mar 2025 11:13:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D38D21C9EB;
-	Thu, 20 Mar 2025 11:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E265D21CC6A;
+	Thu, 20 Mar 2025 11:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="QH+USH5p"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nQ4SLRp8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364C521859F
-	for <linux-block@vger.kernel.org>; Thu, 20 Mar 2025 11:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FA521C9FE;
+	Thu, 20 Mar 2025 11:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742468944; cv=none; b=ctGPIg5RcGNoh7Xj5S/MENUGHNQs4YMRnPq6sWjvjxyYwAfIC7Y4VAzxfDhYOKp9O4skQpwQAeLYR643lnR0nhsf4GVSd1JxuhyZAmWvZ6xOwUudGo6JhznXWSvgo2V/y9P9NgFb6P4l8a9NSoHD3BtbXPCpsAI1Y04z4qUE/0k=
+	t=1742469223; cv=none; b=BHa+Tb3PuCOqOyktPFsR1yKLmABWZWhjwpvQpT6s2Wtts4Sa712ofhhaxnnsX/gLRz53M+WEwbdoUmxlQJjueXjr+2t/50WEkZlU2QVfvCvsYyOM1PR6FEnCQUgt+OtLiSifcn6BuWI/hJJXa7kVLAZHHWf4UJH8WTto/R0clBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742468944; c=relaxed/simple;
-	bh=osW1kFCLI829UxP/FGQhh3fUcKf9g9/SFfLRTZNim5k=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cBp13p4COb3XgbZ7450tfboKEgT1/s1ZcQLfpUDsEpSiWeD5O2sBSlLpgeLgxsoSSX6xJTLEPo45hH/m8pOYGaxU16CvLswd3i8DGl8hBRnr6Es3Z469rjSWyPyOuFgboLWZIoxVc+cvIGHXOBa/epLrS+33wLKODA15RWVmaAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=QH+USH5p; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b4277d03fso24053439f.1
-        for <linux-block@vger.kernel.org>; Thu, 20 Mar 2025 04:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742468941; x=1743073741; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AQO3nk1/bJyBeu7gYPGuEGHyQvMd43lPro8TsMhG7Rc=;
-        b=QH+USH5pbe2pCHc2O7vFnkKbL33WdgH/koirnbQam18Nvain6xMXhCZkXuPsBMvN4k
-         4ofrlhefzia1QvYdKlA5m8k911lQRRptphl02xdioqfcK9dmHEyAQ+UmMHtm3jW8DvOV
-         WjCITeafkBQxKPih/+VTrsx31hdHwcIInWN4ihsXCmI2dxf8JZMdG/z0ocoDDmkXxDmu
-         T/gQ2BqxKIuIJWFlo2KhF64huGGw9mjg0X4f8Sq2mfq3gcoxDbgzWJpiG1LMoF3EbDhx
-         Lmf5WIjz1jkX9O8Prw+gYr+cHnxiY0Q6yi/R/BdSl6LDPDxIaPHjwI7kT0dXYIRInEFn
-         3Lyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742468941; x=1743073741;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AQO3nk1/bJyBeu7gYPGuEGHyQvMd43lPro8TsMhG7Rc=;
-        b=OqoJisFfKtbN3eIIN2duskliBkCR1BdIdS0GArdaXY5+DaV9pIgXNqxBlgHvlSPt8R
-         2+yldsD1jw86ylSEkJwIhtgDJD55gekhDgboRYm6j9dnBw36uu/f8tBZ8r/p8GjEu3aZ
-         eMug4yFHG6zsEFsj9+9wIQFKFI7fypugk0MjbRTGzXZNDkp0Cm4VFV5VjiZV8PVr7CG7
-         xLlBwn38ncRVTWG00iApSldGGU4WAnpFRXnIB26Z1wHbREpWGOHJ8uEyIJ8jMQKqJQjM
-         C/OWS/q2UH0RLGKmv1OEZDJKFJgUowsalVxivOM/ERj8qJBbUFspmxECnykFu90Pwjde
-         oPnw==
-X-Gm-Message-State: AOJu0YygxZti2cxioI8Ii/+LckKFNol2R+IXIv7ZQxsDyarXNFb2bP/A
-	F+CymVPaQJVxPeNiUHbK0zJPKK7C4CWRRHX5H+lVSd4QBwNL7mLP9x1KlFJw4VTp4pKA/cO2H4e
-	H
-X-Gm-Gg: ASbGncshdL1FktzlBB8lMZVbJZx/9C2eIbltHlYYhNmKIjMuYEqyNM4p4tAKf7p+wU4
-	BKApU6wWrv9ZhHJL9AvI5Hb0G1sro/NRbxZhOdhFe9b3gomzKWkMv+NeYymt57Jxw669SyrpKkp
-	g9j6ZyZKkl58oDytbRWWJf3gss6oskjHCBwx0EBCWhnXCPfcYUw15GBpPIwVpIkx4h4dObSOjoN
-	3IGA9liqt+/l8ahnMRzVLMxPaC07MOW0Q8piH61BdEjeNuQXhy9LOCXu4Nx6gCZrEZNIBhpGuz/
-	EcpkTYyUSiMt2R+AIgIcYUS6MekPU/fpb+H5pN7Aez8eqJ8=
-X-Google-Smtp-Source: AGHT+IFcLzuD/j+CIrDvaODi2fe2CChlMK5uLwIgsrPIF4WrM4MdiSkKHy7UDBlj24twtpLAeMnrFw==
-X-Received: by 2002:a05:6e02:1c26:b0:3d4:36da:19a9 with SMTP id e9e14a558f8ab-3d586bca3f5mr64346155ab.15.1742468940922;
-        Thu, 20 Mar 2025 04:09:00 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d47a6471f4sm42719585ab.10.2025.03.20.04.09.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 04:09:00 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-In-Reply-To: <20250320013743.4167489-1-ming.lei@redhat.com>
-References: <20250320013743.4167489-1-ming.lei@redhat.com>
-Subject: Re: [PATCH 0/3] selftests: ublk: one fix and two improvement
-Message-Id: <174246893994.142306.10519066135151858121.b4-ty@kernel.dk>
-Date: Thu, 20 Mar 2025 05:08:59 -0600
+	s=arc-20240116; t=1742469223; c=relaxed/simple;
+	bh=Yv/QyXen/MVWoFbGC0/9RIHDrXtmkEkP7+bsyO2cfgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tf0EtnE6+aBcorHiWiUVb8eddS3AmQIYfZJ9OHJSTY0MttaIOlwfM6vd4a1x03hya+B+BLvbGntFQO7L4OCw4CngmVUUMf9novFOLfYP2OVIEbbPhItRQqVvto42ycyzPuH7JmEs+JCApTrUJyb1wMITNESfhUfwfYdnNBibTXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nQ4SLRp8; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=WS4+PxUYUf19jfxnqS2EQlmOXbGsS87CgpVY0Jf14I8=; b=nQ4SLRp8pgRrgY0eqG6fpORerE
+	+/jDoFDBF+u18IAKjQaTHK6XVtvFyLe2a5XNQbeuIISOdvQlFIqvg1CwaoEX/csVtXSQC5HBPk7oS
+	STGsU2WwCKLjHs44liiXHF5/E5UbYirwWVT/Jx/4QZjt1rwGnikjNy9DagBCsX6J5DVH4b9qfVMmC
+	fq0R2Fmj0sTVsvDRoSg0DjtIe9/6ilLHO6o9ezmLrNxodTVvbCtJkurNvtatLpcrH6cdKP+a6nTjb
+	scyNfjsnYlQwI2bElpvGnXte1/kqfsFnuKUNThTJxM0dGQcriEUQfhXmsp6txniVcyfBvDqmSASR/
+	HupGc0TQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tvDqB-0000000BvGH-0d8w;
+	Thu, 20 Mar 2025 11:13:35 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: leon@kernel.org,
+	hch@lst.de,
+	kbusch@kernel.org,
+	sagi@grimberg.me,
+	axboe@kernel.dk,
+	joro@8bytes.org,
+	brauner@kernel.org,
+	hare@suse.de,
+	willy@infradead.org,
+	david@fromorbit.com,
+	djwong@kernel.org
+Cc: john.g.garry@oracle.com,
+	ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [RFC 0/4] nvme-pci: breaking the 512 KiB max IO boundary
+Date: Thu, 20 Mar 2025 04:13:24 -0700
+Message-ID: <20250320111328.2841690-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
+Now that we have bs > ps for block device sector sizes on linux-next the next
+eye sore is why our max sector size is stuck at 64k while we should be able to
+go up to in theory to the max supported by the page cache. On x86_64 that's 2
+MiB.
 
-On Thu, 20 Mar 2025 09:37:32 +0800, Ming Lei wrote:
-> The 2nd patch avoids to show modprobe failure in case that ublk_drv
-> is built-in or not enabled.
-> 
-> The other two patches improves test deployment.
-> 
-> Thanks,
-> Ming
-> 
-> [...]
+The reason we didn't jump to 2 MiB is because testing with a higher limit than
+64k proved to have issues. While we've looked into them a glaring issue was
+scatter list limitation on the NVMe PCI driver. While we could adopt scatter
+list chaining, the work Christoph and Leon have been working on with the two
+step DMA API seems to be the way to go since the scatter lists are tied to
+PAGE_SIZE restrictions, and the scatter list chaining is just a mess.
 
-Applied, thanks!
+So it begs the question, with the new two step DMA API, does the problem
+get easier? The answer is yes, and for those that want to experiment this
+will let you do just that.
 
-[1/3] selftests: ublk: add one dependency header
-      commit: bed99afa346e220bd3b2c767ded44ade21685d35
-[2/3] selftests: ublk: don't show `modprobe` failure
-      commit: 51847a3ed0ff088b83135d535dc9db26c10c706b
-[3/3] selftests: ublk: add variable for user to not show test result
-      commit: f8b2ce9ab8f8e0db224378fb1860e5188c89b2be
+With this we can enable 2 MiB LBA format on NVMe and we can issue single IOs
+up to 8 MiB for both buffered IO and direct IO. The last two patches are not
+really intended for upstream, but rather experimental code to let folks muck
+around with large sector sizes.
 
-Best regards,
+Daniel Gomez has taken Leon Romanovsky's new two step DMA API [0] and
+Christoph Hellwig's "Block and NMMe PCI use of new DMA mapping API" [1].
+We then used this to apply on top the 64k sector size patches now merged on
+linux-next and backported them to v6.14-rc5. The patches on this RFC
+are the patches on top of all that so to demonstrate the minimal changes
+needed to enable up to 8 MiB IOs on NVMe leveraging a 2 MiB max block
+sector size on x86_64 after the two-step DMA API and the NVMe cleanup.
+
+If you want a git tree to play with you can use our large-block-buffer-heads-2m
+linux branch from kdevops.
+
+[0] https://lore.kernel.org/all/20250302085717.GO53094@unreal/ 
+[1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
+[2] https://github.com/linux-kdevops/linux/tree/large-block-buffer-heads-2m
+
+Luis Chamberlain (4):
+  iomap: use BLK_MAX_BLOCK_SIZE for the iomap zero page
+  blkdev: lift BLK_MAX_BLOCK_SIZE to page cache limit
+  nvme-pci: bump segments to what the device can use
+  nvme-pci: add quirk for qemu with bogus NOWS
+
+ drivers/nvme/host/core.c |   2 +
+ drivers/nvme/host/nvme.h |   5 ++
+ drivers/nvme/host/pci.c  | 167 ++-------------------------------------
+ fs/iomap/direct-io.c     |   2 +-
+ include/linux/blkdev.h   |   7 +-
+ 5 files changed, 15 insertions(+), 168 deletions(-)
+
 -- 
-Jens Axboe
-
-
+2.47.2
 
 
