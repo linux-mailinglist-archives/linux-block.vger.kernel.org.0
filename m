@@ -1,110 +1,114 @@
-Return-Path: <linux-block+bounces-18830-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18832-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 006D1A6C2DA
-	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 19:56:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FE56A6C381
+	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 20:47:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0232F46541E
-	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 18:55:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B234048267C
+	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 19:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279E01E766F;
-	Fri, 21 Mar 2025 18:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C15A18E76B;
+	Fri, 21 Mar 2025 19:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mciTbD0Q"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="yU0mmTdW"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF574B664;
-	Fri, 21 Mar 2025 18:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BB241C64
+	for <linux-block@vger.kernel.org>; Fri, 21 Mar 2025 19:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742583355; cv=none; b=uVVCPKgc1kmkZQrBshRyVl989Y/5RRGCsDKp4dM+tMh99/ApvmUEbpNsLRUGeTnZI/dtp97BywN5uMvEt2DWS3PjYHIkV0wtfvrZ2fw+WQrt/w/iHTb5juxVW1YDE3YrQ2eX3H5ubuoHVmU+/B5Yayg6nVM9XZ+Wz8IpLxYZQpo=
+	t=1742586425; cv=none; b=mQrEsjM8fy8hXmMwQmT3/YVWB7gSaYzPthnPME0ynCfyoou0SEoiHkWA4cz4bdp4wOxG1unhvparGLUbAuDo4U+o7Z/uZQUaEWRcUz3JT3l0ugDfAtHfBclLlf9jZWwm7ZayOvW5nl0o+lHm9x2ie0xS5PfrU/CxaXWe3O8W5K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742583355; c=relaxed/simple;
-	bh=w12rCUpRRlnFTNDJ/U+SOBnCtlzfICVSlsh9Ym7O+N4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JgCX2+206H9aW69C8ChVCRUWD2d2gQBWR2BXAan4OT+7V9XtyUXnmUnLhDF0bfZIIkqkRg1T3pksoJfYaXVOGO70WZWfRYr5gPItoxN+HiwUibMMA7Gf35BtVc5LJZ/KKIz6I4BTpSyQJt6gOSmbKEZAkaQzCi7O0eNkCsKdHIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mciTbD0Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2523EC4CEE3;
-	Fri, 21 Mar 2025 18:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742583354;
-	bh=w12rCUpRRlnFTNDJ/U+SOBnCtlzfICVSlsh9Ym7O+N4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mciTbD0QQWuzPYUfOwXAUqDo8vvOxxP4h1FybYtQps1Ml6nc6+GuqlUuaq474IyCb
-	 qPVXquzW/I8Lqh2hW1ldeU8dvn9TcssCJ3Z5EzFodUAdD8ZZVjTFvMKDb7PdJx4NfC
-	 oN3Kq6g5leHeKGI41L4kjf/3RzKH+M4PqM/M1WfDS+tqTlVOrjEtCKqn7IF3z1PENf
-	 q49KujEicQYs5UW5Pagu/nx2tJ4mbcovq0jbMskM/JRnmWEsGj8MCi+3lgvxwmBSeH
-	 H463quHsqCTgSJNNDMrWLsaYihg9lfrjI29jYFMGiM8U7tL4LAXO1S5OWKSTQq+Ox1
-	 q5tHryGzSQmZQ==
-Date: Fri, 21 Mar 2025 12:55:50 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-block@vger.kernel.org,
-	lsf-pc@lists.linux-foundation.org, david@fromorbit.com,
-	leon@kernel.org, hch@lst.de, sagi@grimberg.me, axboe@kernel.dk,
-	joro@8bytes.org, brauner@kernel.org, hare@suse.de,
-	willy@infradead.org, john.g.garry@oracle.com, p.raghav@samsung.com,
-	gost.dev@samsung.com, da.gomez@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC] breaking the 512 KiB IO boundary on x86_64
-Message-ID: <Z922NlB1Q9jv8KpB@kbusch-mbp>
-References: <Z9v-1xjl7dD7Tr-H@bombadil.infradead.org>
- <87o6xvsfp7.fsf@gmail.com>
- <20250320213034.GG2803730@frogsfrogsfrogs>
- <87jz8jrv0q.fsf@gmail.com>
- <Z92WBePJ620r5-13@kbusch-mbp>
- <87frj6s3ix.fsf@gmail.com>
+	s=arc-20240116; t=1742586425; c=relaxed/simple;
+	bh=+WnbsCQf0RkeQjRKxamSw94es1Sb3f9LAw7sWH14CZI=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Y4ViWDWts3SPFDxAyfqRpEtboNp4VPMoUYsJKeq7P1bdk1F1IsR1t5ZFwapXXkPi37L51upKxWG7HkU1l9HvQG+z60azrCYeimEeMGRJuf6LW5eHwAc+LOcPKNEhYG0q3ipfTZDWQ6HlQp18VPqEP9+vyW53zgoiCk2Yu8DIzAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=yU0mmTdW; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85b515e4521so72417339f.1
+        for <linux-block@vger.kernel.org>; Fri, 21 Mar 2025 12:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742586421; x=1743191221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FK2kg9IYmxE42LXnq6anIi6OHhpvShyg+1plxYgL42w=;
+        b=yU0mmTdW4mX/07KzFbcThuL3XanyNlv1VNy7MMra6KgP+Hs08ZxSusvvaTmZR7ywrH
+         lyUHvcXf9vi5nCp4MLYKxHDwkn8QG0CIirgbxdlNWCcdhNQmMLyxO2nnqYzd/LiHGf7l
+         GIVnVFLeJw2VfQfRm0TUjkKH23Y4h1vnf868x6Oj1rKKepfGlz+PyoMlAahot7fImE+C
+         o3OsRT8+trrFvejqmQPm9plcnpV3QlJ19phlifhv9PZHIniN7XO+WnyzsS6+0VH0dwg8
+         XR1SYzwEBr+SqiR6BbeHz5YrpFil1VNGwGw8mL/zPXMiHZAB+CKP7q8BdyayMpzmdbrP
+         32RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742586421; x=1743191221;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FK2kg9IYmxE42LXnq6anIi6OHhpvShyg+1plxYgL42w=;
+        b=UHfJEsmdfSZmRpvse0h3Q8z2XqYTXSDnarBSj9d6Eu1yaWPvpOAXOW8hZBq7xvW8xh
+         KZPWQMjU3rB89CPOPF0lZSwP/eXd6bY2rX+OAAi31d66mD41CzZnRMGt1Kpobqf71Pb2
+         2ws7iUG+i2EqO6kb6cJ4IOAJVeViGf7DS7bHNc0xTMPPN2NYLd33Xvlyj6mLmtjTEvJe
+         a+hAiTJ37KUrqAmh672TIiS8u/MS2IUK2BfSM8X+R5247xgAbfSSkmOCqXT5LOFM6LKm
+         3E0QMn26IGvrwy94jteHrI/nPWfs4BB2gOunqV3BlmvmggpE9+ibjiLMUiF6H3yME/7y
+         vLWA==
+X-Gm-Message-State: AOJu0YyUf/ZkVNPZP9OYed1vWc5Lk8Vp2pm7RNR2b+mct5ldd2efTpY6
+	NkqSdG/P5IhYUXQaUtWBgTrk0++w+0WCc+sN/pGKcyW4s0KefleIdFS4mCCFdY3V2y2aCOq1cyi
+	0
+X-Gm-Gg: ASbGncv9Ue+FdxnJaP7WGudIwI9M1VwQZUIHfBlOOV1YB/2lSui1vNOPLN/kj+Oddec
+	PJzpAY5Q3S3nn01phmu34ZsRzDVlm6tVjfMOmeuU76VWBkxhzVWD4MYjPOTkcod9wxfT/nkPkmR
+	1laqKKfAms7mDoXRmOlsRasD8WWVyUjBckUiJNCQnGdo/3sEgi9cFY1Vfgv4lYre34NaAQk7jgA
+	hTeURNFpLRISkyaGn2nGhZH1KQPXnYJ7GCGB72qZvXpt1T6SMxaWWg6fkNUei0TWDtuDuCmgPJS
+	Y8mqDj6ECvPTSQVs1SarXG3LW8YVUPMZy3+6oyvujLXt4sQ=
+X-Google-Smtp-Source: AGHT+IG3olMYGrDAWHqUT+U6acPiKVkiz2EfrAeXXfW5t4GvNNSOzt4Pn6Enrr7ke+n0/hFa0vzgCA==
+X-Received: by 2002:a05:6602:380f:b0:85d:9e5d:efa9 with SMTP id ca18e2360f4ac-85e2cb423f8mr512036539f.10.1742586421442;
+        Fri, 21 Mar 2025 12:47:01 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbe80b01sm579627173.79.2025.03.21.12.47.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 12:47:00 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+In-Reply-To: <20250321135324.259677-1-ming.lei@redhat.com>
+References: <20250321135324.259677-1-ming.lei@redhat.com>
+Subject: Re: [PATCH] selftests: ublk: fix starting ublk device
+Message-Id: <174258642055.742061.1713958203897349462.b4-ty@kernel.dk>
+Date: Fri, 21 Mar 2025 13:47:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87frj6s3ix.fsf@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Fri, Mar 21, 2025 at 10:51:42PM +0530, Ritesh Harjani wrote:
-> Keith Busch <kbusch@kernel.org> writes:
-> 
-> > On Fri, Mar 21, 2025 at 07:43:09AM +0530, Ritesh Harjani wrote:
-> >> i.e. w/o large folios in block devices one could do direct-io &
-> >> buffered-io in parallel even just next to each other (assuming 4k pagesize). 
-> >> 
-> >>            |4k-direct-io | 4k-buffered-io | 
-> >> 
-> >> 
-> >> However with large folios now supported in buffered-io path for block
-> >> devices, the application cannot submit such direct-io + buffered-io
-> >> pattern in parallel. Since direct-io can end up invalidating the folio
-> >> spanning over it's 4k range, on which buffered-io is in progress.
-> >
-> > Why would buffered io span more than the 4k range here? You're talking
-> > to the raw block device in both cases, so they have the exact same
-> > logical block size alignment. Why is buffered io allocating beyond
-> > the logical size granularity?
-> 
-> This can happen in following 2 cases - 
-> 1. System's page size is 64k. Then even though the logical block size
-> granularity for buffered-io is set to 4k (blockdev --setbsz 4k
-> /dev/sdc), it still will instantiate a 64k page in the page cache.
 
-But that already happens without large folio support, so I wasn't
-considering that here.
- 
-> 2. Second is the recent case where (correct me if I am wrong) we now
-> have large folio support for block devices. So here again we can
-> instantiate a large folio in the page cache where buffered-io is in
-> progress correct? (say a previous read causes a readahead and installs a
-> large folio in that region). Or even iomap_write_iter() these days tries
-> to first allocate a chunk of size mapping_max_folio_size().
- 
-Okay, I am also not sure on what happens for this part on speculative
-allocations.
+On Fri, 21 Mar 2025 21:53:24 +0800, Ming Lei wrote:
+> Firstly ublk char device node may not be created by udev yet, so wait
+> a while until it can be opened or timeout.
+> 
+> Secondly delete created ublk device in case of start failure, otherwise
+> the device becomes zombie.
+> 
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] selftests: ublk: fix starting ublk device
+      commit: 2b17a89292b98c27ffacc7966e2e42bfe0465242
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
 
