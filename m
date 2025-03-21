@@ -1,127 +1,124 @@
-Return-Path: <linux-block+bounces-18829-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-18831-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77CCCA6C28E
-	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 19:38:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C385A6C2DD
+	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 19:57:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA9EB3B7418
-	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 18:38:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FBC13BDA4B
+	for <lists+linux-block@lfdr.de>; Fri, 21 Mar 2025 18:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678AD22D4C3;
-	Fri, 21 Mar 2025 18:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D24C1EE7DF;
+	Fri, 21 Mar 2025 18:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ypsf8qN2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9tWOflK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC597B664;
-	Fri, 21 Mar 2025 18:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D38B664;
+	Fri, 21 Mar 2025 18:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742582320; cv=none; b=F1zxo5AxdHVOlNTk9S5C1hvcFK95Q4baITr4swdLIKr3p6kSx4u8yNkpY5MK/QEtEROjgLv/wCWbd509QUHQZcnYRXP4YkJ4Ehc98WGhKwh5y67AnIbTM7eUKRasn8K1bWvh0fL+UaoV3dCgVIFL+mazLi0pOK/DBClzdHw7Urg=
+	t=1742583423; cv=none; b=lcjjwNRs37g1zoGLFrmXHqPppq/hmFV5RmBQYo5mSjJPdqd/7zaxojeqD54OFwngHDdSg3w29ztIQHoKjfLBDmC5gQZhHYBm/hCdbbrj182HMgCkmNns5yRn/VppiBvIzHoFrs8khOGkren0RCZMXqupID/fI0hcF64lEqTiN6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742582320; c=relaxed/simple;
-	bh=4rrZLfeHbIKAjKa1DKmEyWOdLHgdJOl0MAzQeIkOudo=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=As+l4FOgLRSd0Mv6QwQ5JZTxtVMARDdUVGPnFp7L3x8a4ut6/e6Ciw8LGYBSdl03WUxfMBUUoqUfNXjtKl6WpQiXEnNL/uMd68LxASpEYwFf0ltkZTq9nrrJipVspppUxTeatDq9Yvb79LVKmQlgC2bPPCTl067zuBx5yXoob2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ypsf8qN2; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1742583423; c=relaxed/simple;
+	bh=eZcWcOhHIawWrb9Ml4EQ6aZ1/wyurT/sT6Io8xnVFbk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=t5fqzhajIxkOnVJSu0REAFQCULuzAD8Q8RNYpgY/ugwMLGqXYcVtjygYGkMnfXR/8hqqhh4kwNlr2mUtkIguvr5agj8QacA5cOg0+Aj5aZmoB49beDax/LWWMpg1wQtNLs6LjrXM9zm3k/v/HbMY60QDJ6YAgl+SisZxkGmRLZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9tWOflK; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22401f4d35aso51935995ad.2;
-        Fri, 21 Mar 2025 11:38:38 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224191d92e4so47864255ad.3;
+        Fri, 21 Mar 2025 11:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742582318; x=1743187118; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742583421; x=1743188221; darn=vger.kernel.org;
         h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=WLg29Du4d9hxLW5NIOZlGqy6bsHbWf+jMBwTEsqW+BA=;
-        b=Ypsf8qN2KrQURN6SH0K2taGNXHi0zbNJPcthckFp6/HWPP6t8mLO+sUljtBBQsstVB
-         D57R8aS8bEYuSZsM0X8m+mfeE3J9Nbpj2dm+BLyLdBUiWuODDi0p96+QD/brT2IdXan9
-         Fq9Rb3kmcdD3G+kPJKFgXTEteLDMkObQ8a0dEL5eQaY9Dxi1yERxpuFvK1i9aPFVnhj2
-         XkGutoQCaFobjbcs4lexsU6KlEHKjPFLBGHYkYCodFN9VT3c7EvUb2Ip2AWrNJbIEQy+
-         xXTfShGtYnrFHBRpREaDXV+x/uHVP/xZBTjFZ2LK+biAGay0oA4kzh6nA7crbWXtJzJt
-         cm3A==
+        bh=E6L6wutV3ZHB5tvyGWzOD0ba/O/FC8bdjgSutzT7uag=;
+        b=l9tWOflK5wltWV5kxBGiFy+goTiujuRAPUULMft4uJ4e2avM6DQ0WyMy72AqCw+a+r
+         4l4Ml7DiFT9JbFBj6kotznAdQCmQpvK/Lhh5eFpetdWdl0Skby0r2GyxNNui3n36Lydi
+         S3ajwUnaePB+Pc1OZ9EGW7+Rcc0PoDSqbcKhm3MJLhL2XFN6sA/GC0hsCVtzAQB1Vx68
+         NGQrlQ8SjWQcJrf8N9ta2EwMe+C1yK12LR2vtW6q7NVS5vvtUHU0EjxLxmqxdRQqa2IF
+         Qk9Q+zsHq0fEHNqVv2VMNG6MMmu4h2BWFPxKDVpuxpVO4sg1yUqk5v+2dCznoq+GAPPl
+         cLdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742582318; x=1743187118;
+        d=1e100.net; s=20230601; t=1742583421; x=1743188221;
         h=references:message-id:date:in-reply-to:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WLg29Du4d9hxLW5NIOZlGqy6bsHbWf+jMBwTEsqW+BA=;
-        b=UZnrGgChz+dBCf6hofljt95GnIR01kxMefqs0XzB/8sT3erUZysKHjFgJGfkdnxGP4
-         ILLg5Rj/Fghn6HC6f1i+8iuuMKLIebOF8OvoJNDNlRUDGwaeUNQBPu/4x7c9yHzLyazU
-         U4yWLV8iwgYieNbyvRO1qWl9aLo9E3GhuFKmhweYoqnLLhndRo6PIwBvT8ao1gChYxDw
-         FiN/OF0LZgQplCUFsDINMn6oqLMcRG1i/rqmd0ZLheq0ZjMbg90+jMEOUxQtFPB/odcu
-         kMTxttzXA9U7XM9acGZu20B/wePalNcw3K21xXAmlH+EmmIN+CXaQe8f54Cpn71AHdG3
-         pisQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkr2BnThEyOhxBIFT4ZbBivrD8dAzTTCCqplX7SdcEj0Jbi68PC+xUBROzfIXfPRyNLMB98zaH9qvGXw==@vger.kernel.org, AJvYcCVzM7SS3rHpaIjj25TYnyjYf7/QgPUrJPgnUABIQAytguk6u2CoWaMG7z9D3nZJnzm5JLhMXjkN6KOi+ZkAOw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcC+Nub/ORMLmLbClrt3S5HOHsONR+W+U/v0IoIXBmJoR2k+Pr
-	rZj53UIOH81PYHUSupcM35IdCC6OHcxoIPwSnE6Z90qAcHehmTdc
-X-Gm-Gg: ASbGncstiAxSAU027typRVXISkxpWAbZYzCxmON53aUdTP89P0SXSx0Ki5gPDNsx48B
-	h7b5pVjYovE70BnNbfYybiA55UxdfCJjtrNHb6qsE0W4YPukqYfroDROwTBAzdV2L2QXcg0qo2l
-	IoBGZgyIOEmoz0mQvwPG6czqJ31FKgVvP+8Rp+cTVXX0qkVBWOW/wFKfut2qA4g5fBOg3SAVApA
-	PpW4y3Q5QLAMZNKiUIGBQoQw/QRqCHLhAgAbb2qrujbx/qAXFVi6bSMiaXH359KOR4btVX07h5C
-	ql6Felv6EryIRaSm/fblq+gGYWVnLr37N8JDRg==
-X-Google-Smtp-Source: AGHT+IHWkYu5R5KHVsYmHJNCVf/nynTskt0Y86WId2DrBJREIzTZC0pMVzC1eXdRjZpNgDwkmpUIoA==
-X-Received: by 2002:a17:903:98d:b0:223:5e76:637a with SMTP id d9443c01a7336-22780d980fcmr73987485ad.23.1742582318033;
-        Fri, 21 Mar 2025 11:38:38 -0700 (PDT)
+        bh=E6L6wutV3ZHB5tvyGWzOD0ba/O/FC8bdjgSutzT7uag=;
+        b=aGdsEa1S5wb9wWzcJf29EcuUdCPrb3apO93s60TQy9ShdDux7UHjhN9fie2McHFCb2
+         Hgj1bKPyiDqSUPucz1CNXt3enPfrifGB4+ioyDPnPC1XXFdjX3Ga58XPqWre4y0g14QN
+         5xtv0fcI8a7H3B3bV7DK34Q6wKTXJ0LRNFK4sa5fPJWfGTGKfkX9X+GtXm5P/symlWx2
+         tkpTIP9yVq+ZZanhjWax+QTQrkIOyeyyKXPBDiVohXjX53Y8T0bCXcG/EXx4BmlcRfFw
+         nqAHU/kl8R3n3AbGYeJz76Gl8rLpHbZFTPSCtVKCi9mEKjYwJ9tcF3eOIvFapqp7F+g9
+         peog==
+X-Forwarded-Encrypted: i=1; AJvYcCUHrhcNyXbvEAviKZ9/GX3LjISfuO5JHoNuda4T+cJgvwzcbI7X6GiawAM8M700uuhEFXQGucq+PBTSpw==@vger.kernel.org, AJvYcCWFrgzd5MUCMNuaOlDGSyXbntL+Zg4ndzIR+p0yPgKx3plQBQ+ePhe09xXCL77WYJElW1bjWDbtRU7wC6DcnQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq36gpMWY45NRjdCDtnCzeQ64vj7iUVNYh1rlSiuYwSsk0IFTl
+	iFOx/19PpgKGRErTEA90r5vLg8cycazrPwLtUhEvoe9ZBwQdliLj
+X-Gm-Gg: ASbGncv4Sf+Qc+pHaYfCC/a8vtKChFVNlyoq/3KrQ517aNujWYeAKsafTO0e/4cyVNM
+	DBCJd4KKI5E2mtxDXfI+0u5Nlzo9Rs1zlZHduT80cBwct6FINP0g+Ev/kCk2hWCj79WcuoYiMB8
+	fU6h7wc21MhtGvi2xvKTxknIh5/uLVKQV6Ut+Lc3Gq697BVjIjdH/cIaVNDz6gbJquE9zsplCNP
+	5X0bRF+/tiyuF4H9RGdL1uyL4wQJaFVtItF0NP3IZi+3LKyFZPU8B3nCDEjPDBOZMusEidp72gV
+	/yfm8kndYz+fNlxSuEiY2Hq5/JqPuKvL0rxgrg==
+X-Google-Smtp-Source: AGHT+IFTR/0mpypKv50+XZ6X8K3cee/U5NEm6S8aE5fxiwEbadWq9uUGE1SDbkJwu58WEomccQhM1w==
+X-Received: by 2002:a17:902:ef12:b0:223:88af:2c30 with SMTP id d9443c01a7336-22780d8cfeemr63100365ad.16.1742583420932;
+        Fri, 21 Mar 2025 11:57:00 -0700 (PDT)
 Received: from dw-tp ([171.76.82.198])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f397d9sm20752535ad.49.2025.03.21.11.38.32
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f4d606sm20918565ad.103.2025.03.21.11.56.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 11:38:37 -0700 (PDT)
+        Fri, 21 Mar 2025 11:57:00 -0700 (PDT)
 From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Keith Busch <kbusch@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-block@vger.kernel.org, lsf-pc@lists.linux-foundation.org, david@fromorbit.com, leon@kernel.org, hch@lst.de, sagi@grimberg.me, axboe@kernel.dk, joro@8bytes.org, brauner@kernel.org, hare@suse.de, willy@infradead.org, john.g.garry@oracle.com, p.raghav@samsung.com, gost.dev@samsung.com, da.gomez@samsung.com
+To: Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-block@vger.kernel.org, lsf-pc@lists.linux-foundation.org, david@fromorbit.com, leon@kernel.org, hch@lst.de, kbusch@kernel.org, sagi@grimberg.me, axboe@kernel.dk, joro@8bytes.org, brauner@kernel.org, hare@suse.de, willy@infradead.org, john.g.garry@oracle.com, p.raghav@samsung.com, gost.dev@samsung.com, da.gomez@samsung.com
 Subject: Re: [LSF/MM/BPF TOPIC] breaking the 512 KiB IO boundary on x86_64
-In-Reply-To: <Z92WBePJ620r5-13@kbusch-mbp>
-Date: Fri, 21 Mar 2025 22:51:42 +0530
-Message-ID: <87frj6s3ix.fsf@gmail.com>
-References: <Z9v-1xjl7dD7Tr-H@bombadil.infradead.org> <87o6xvsfp7.fsf@gmail.com> <20250320213034.GG2803730@frogsfrogsfrogs> <87jz8jrv0q.fsf@gmail.com> <Z92WBePJ620r5-13@kbusch-mbp>
+In-Reply-To: <20250321050023.GB1831@lst.de>
+Date: Sat, 22 Mar 2025 00:09:09 +0530
+Message-ID: <87ecyqrzxu.fsf@gmail.com>
+References: <Z9v-1xjl7dD7Tr-H@bombadil.infradead.org> <87o6xvsfp7.fsf@gmail.com> <20250320213034.GG2803730@frogsfrogsfrogs> <87jz8jrv0q.fsf@gmail.com> <20250321030526.GW89034@frogsfrogsfrogs> <20250321045604.GA1161423@mit.edu> <20250321050023.GB1831@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 
-Keith Busch <kbusch@kernel.org> writes:
+Christoph Hellwig <hch@lst.de> writes:
 
-> On Fri, Mar 21, 2025 at 07:43:09AM +0530, Ritesh Harjani wrote:
->> i.e. w/o large folios in block devices one could do direct-io &
->> buffered-io in parallel even just next to each other (assuming 4k pagesize). 
->> 
->>            |4k-direct-io | 4k-buffered-io | 
->> 
->> 
->> However with large folios now supported in buffered-io path for block
->> devices, the application cannot submit such direct-io + buffered-io
->> pattern in parallel. Since direct-io can end up invalidating the folio
->> spanning over it's 4k range, on which buffered-io is in progress.
+> On Fri, Mar 21, 2025 at 12:56:04AM -0400, Theodore Ts'o wrote:
+>> As I recall, in the eary days Linux's safety for DIO and Bufered I/O
+>> was best efforts, and other Unix system the recommendation to "don't
+>> mix the streams" was far stronger.  Even if it works reliably for
+>> Linux, it's still something I recommend that people avoid if at all
+>> possible.
 >
-> Why would buffered io span more than the 4k range here? You're talking
-> to the raw block device in both cases, so they have the exact same
-> logical block size alignment. Why is buffered io allocating beyond
-> the logical size granularity?
-
-This can happen in following 2 cases - 
-1. System's page size is 64k. Then even though the logical block size
-granularity for buffered-io is set to 4k (blockdev --setbsz 4k
-/dev/sdc), it still will instantiate a 64k page in the page cache.
-
-2. Second is the recent case where (correct me if I am wrong) we now
-have large folio support for block devices. So here again we can
-instantiate a large folio in the page cache where buffered-io is in
-progress correct? (say a previous read causes a readahead and installs a
-large folio in that region). Or even iomap_write_iter() these days tries
-to first allocate a chunk of size mapping_max_folio_size().
+> It still is a best effort, just a much better effort now.  It's still
+> pretty easy to break the coherent.
 
 
-However with large folio support now in block devices, I am not sure
-whether an application can retain much benefit of doing buffered-io (if
-they happen to mix buffered-io and direct-io carefully over a logical
-boundary). Because the direct-io can end up invalidating the entire
-large folio, if there is one, in the region where the direct-io
-operation is taking place. However this may still be useful if only
-buffered-io is being performed on the block device.
+Thanks Ted & Christoph for the info. Do you think we should document
+this recommendation, maybe somewhere in the kernel Documentation where
+we can also lists the possible cases where the coherency could break?
+(I am not too well aware of those cases though).
+
+One case which I recently came across was where the application was not
+setting --setbsz properly on a block device where system's pagesize is
+64k. This if I understand correctly will install 1 buffer_head for a 64k
+page for any buffered-io operation. Then, if someone mixes the 4k
+buffered-io write, right next to 4k direct-io write, then well it
+definitely ends up problematic. Because the 4k buffered-io write will
+end up making a read-modify-write over a 64k page (1 buffer_head). This
+means we now have the entire 64k dirty page, while there is also a
+direct-io write operation in that region. This means both writes got
+overlapped, hence causing coherency issues.
+
+Such cases, I believe, are easy to miss. And now, with large folios
+being used in block devices, I am not sure if there is much value in
+applications mixing buffered I/O and direct I/O. Since direct I/O write
+will just end up invalidating the entire large folio, that means it
+could negate any benefits of using buffered I/O alongside it, on the
+same block device.
+
 
 -ritesh
 
