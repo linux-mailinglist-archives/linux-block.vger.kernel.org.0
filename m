@@ -1,220 +1,180 @@
-Return-Path: <linux-block+bounces-19017-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19020-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D34E6A742FF
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 05:21:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A649FA743C2
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 07:15:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 982507A7A10
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 04:20:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA6BF17B3DF
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 06:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F278F49;
-	Fri, 28 Mar 2025 04:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0GeXZzY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3043921171D;
+	Fri, 28 Mar 2025 06:14:53 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414DD3CF58;
-	Fri, 28 Mar 2025 04:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034DF1EF36F;
+	Fri, 28 Mar 2025 06:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743135692; cv=none; b=awbQlfPWCN2XAE7LCllL2WYdLzXkvCWhuSYM60f7kEijAUP/VpLTW1rX2obCf0CQ9R2eu7F8N7qsLweH8aStDoUd0VTk2y6m/yFHQJqGWIk7HVg4lvjwYnCycCeajYNNOklXo6pMq6bWdrfPNuWFFslQbRqv+9/BOLPoO2KMp6k=
+	t=1743142493; cv=none; b=s9dO/tonM/LIHawKjnn2bYNURc/xn2/dO8bA1ys2s5Z66z9RFmj7tHWH38zQPL8Mgi6cp3bbF2XyFOpDB0VJRB81P/j+DzNHHacsqORqfTPQCaReuFPJzay3CQa5fyQD8u54tgyE64xxGzUr7JyYtuUNKnK0AK4gGr4M5wOaMLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743135692; c=relaxed/simple;
-	bh=EkZr+InM+IE+kVx2qsfh4jplm5ZGyo/xPOkhd09hklc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/Goo6O8rIUsHwJ439JJRbMls26RqUBo4xux0ic6OPs2MqXnF1MKHA5yERTr2zWXU0Pl9O7ZK71tLxpP7dbAqkXP5vtoKMYfsqOSR6BVQhNTpr+PbMdkJpx6eip29DgEeuKnnRPgJEsdgJgzJZncMq0MRk3nidHaEIlqIgkDAo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0GeXZzY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB44C4CEE4;
-	Fri, 28 Mar 2025 04:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743135690;
-	bh=EkZr+InM+IE+kVx2qsfh4jplm5ZGyo/xPOkhd09hklc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t0GeXZzYKN4pot90kVRCo8FSkgmYZFvOjZ60Zuyy6iByYStTWb7psQOlbk/wCHJg+
-	 AcceYumfrBCUDVPOuU3bLcJ1z0UAeSSDfl1MxByNAzLaiJ2bQURoGk/jIM3WzG7VyL
-	 HV6BpgRfWJK8hQ58Qm9sqm4R9j79X/eQfQNXmCBpMvHSpL/8/PPDb9kcvLCX7ikNWC
-	 nC4/ykbJdl3mogEPpX4Hq03d6gL0QCdmtcZZCB6fAD1jR/UiBNEnmevAGCwTd09qvq
-	 rceggSr4u732Mk/KggVDiMnsrTYPYNPao4ISic0fCXJrfPJyRmtFb9WJnkKyrLNKIv
-	 vRgJc2/a04frg==
-Date: Thu, 27 Mar 2025 21:21:28 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Jan Kara <jack@suse.cz>, Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Oliver Sang <oliver.sang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-	Christian Brauner <brauner@kernel.org>,
-	Hannes Reinecke <hare@suse.de>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, John Garry <john.g.garry@oracle.com>,
-	linux-block@vger.kernel.org, ltp@lists.linux.it,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	David Bueso <dave@stgolabs.net>
-Subject: Re: [linux-next:master] [block/bdev]  3c20917120:
- BUG:sleeping_function_called_from_invalid_context_at_mm/util.c
-Message-ID: <Z-YjyBF-M9ciJC7X@bombadil.infradead.org>
-References: <Z9oy3i3n_HKFu1M1@casper.infradead.org>
- <Z9r27eUk993BNWTX@bombadil.infradead.org>
- <Z9sYGccL4TocoITf@bombadil.infradead.org>
- <Z9sZ5_lJzTwGShQT@casper.infradead.org>
- <Z9wF57eEBR-42K9a@bombadil.infradead.org>
- <20250322231440.GA1894930@cmpxchg.org>
- <Z99dk_ZMNRFgaaH8@bombadil.infradead.org>
- <Z9-zL3pRpCHm5a0w@bombadil.infradead.org>
- <Z+JSwb8BT0tZrSrx@xsang-OptiPlex-9020>
- <Z-X_FiXDTSvRSksp@bombadil.infradead.org>
+	s=arc-20240116; t=1743142493; c=relaxed/simple;
+	bh=v5tjRA3ZVyMyUsgojjyteteRUZX2Erx+Fr5ybQyUuh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UvhW9nZVsUIV7mIAruWz2388anJHmI44tzcbUfs1cy/O8+V2gxB2ArS2JX7Ch0BiQoZ4FmXBxbxlKrmpeYMPhMNnvZe8mJDghuF0pInrPtTqc5LmFvReu0p1w9Rt13YjU5sqjWH7bksdqMMr39HNmaj/2ZaUxReqUHVDTsJ3Q3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZP9GX4gsNz4f3jZd;
+	Fri, 28 Mar 2025 14:14:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 42D6C1A07BB;
+	Fri, 28 Mar 2025 14:14:46 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2BSPuZnfAUtHw--.25875S4;
+	Fri, 28 Mar 2025 14:14:44 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: hch@lst.de,
+	xni@redhat.com,
+	colyli@kernel.org,
+	axboe@kernel.dk,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	mpatocka@redhat.com,
+	song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
+Date: Fri, 28 Mar 2025 14:08:39 +0800
+Message-Id: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-X_FiXDTSvRSksp@bombadil.infradead.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHK2BSPuZnfAUtHw--.25875S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr1kZry3XFW5GryUtrW5Jrb_yoWrGF1UpF
+	ZxJr4fGrs0qr47Xw13AryIqFySqr4kJr9Igr93A39Y9F1DCr9Ivr48WayFv347Gry3JF1q
+	qr45tr95GFyDCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUOv38UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Mar 27, 2025 at 06:44:56PM -0700, Luis Chamberlain wrote:
-> On Tue, Mar 25, 2025 at 02:52:49PM +0800, Oliver Sang wrote:
-> > hi, Luis,
-> > 
-> > On Sun, Mar 23, 2025 at 12:07:27AM -0700, Luis Chamberlain wrote:
-> > > On Sat, Mar 22, 2025 at 06:02:13PM -0700, Luis Chamberlain wrote:
-> > > > On Sat, Mar 22, 2025 at 07:14:40PM -0400, Johannes Weiner wrote:
-> > > > > Hey Luis,
-> > > > > 
-> > > > > This looks like the same issue the bot reported here:
-> > > > > 
-> > > > > https://lore.kernel.org/all/20250321135524.GA1888695@cmpxchg.org/
-> > > > > 
-> > > > > There is a fix for it queued in next-20250318 and later. Could you
-> > > > > please double check with your reproducer against a more recent next?
-> > > > 
-> > > > Confirmed, at least it's been 30 minutes and no crashes now where as
-> > > > before it would crash in 1 minute. I'll let it soak for 2.5 hours in
-> > > > the hopes I can trigger the warning originally reported by this thread.
-> > > > 
-> > > > Even though from code inspection I see how the kernel warning would
-> > > > trigger I just want to force trigger it on a test, and I can't yet.
-> > > 
-> > > Survied 5 hours now. This certainly fixed that crash.
-> > > 
-> > > As for the kernel warning, I can't yet reproduce that, so trying to
-> > > run generic/750 forever and looping
-> > > ./testcases/kernel/syscalls/close_range/close_range01
-> > > and yet nothing.
-> > > 
-> > > Oliver can you reproduce the kernel warning on next-20250321 ?
-> > 
-> > the issue still exists on
-> > 9388ec571cb1ad (tag: next-20250321, linux-next/master) Add linux-next specific files for 20250321
-> > 
-> > but randomly (reproduced 7 times in 12 runs, then ltp.close_range01 also failed.
->a> on another 5 times, the issue cannot be reproduced then ltp.close_range01 pass)
-> 
-> OK I narrowed down a reproducer to requiring the patch below 
-> 
-> 
-> diff --git a/mm/util.c b/mm/util.c
-> index 448117da071f..3585bdb8700a 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -735,6 +735,8 @@ int folio_mc_copy(struct folio *dst, struct folio *src)
->  	long nr = folio_nr_pages(src);
->  	long i = 0;
->  
-> +	might_sleep();
-> +
->  	for (;;) {
->  		if (copy_mc_highpage(folio_page(dst, i), folio_page(src, i)))
->  			return -EHWPOISON;
-> 
-> 
-> And  then just running:
-> 
-> dd if=/dev/zero of=/dev/vde bs=1024M count=1024
-> 
-> For some reason a kernel with the following didn't trigger it so the
-> above patch is needed
-> 
-> 
-> CONFIG_PROVE_LOCKING=y
-> CONFIG_DEBUG_SPINLOCK=y
-> CONFIG_ACPI_SLEEP=y
-> 
-> It may have to do with my preemtpion settings:
-> 
-> CONFIG_PREEMPT_BUILD=y
-> CONFIG_ARCH_HAS_PREEMPT_LAZY=y
-> # CONFIG_PREEMPT_NONE is not set
-> CONFIG_PREEMPT_VOLUNTARY=y
-> # CONFIG_PREEMPT is not set
-> # CONFIG_PREEMPT_LAZY is not set
-> CONFIG_PREEMPT_COUNT=y
-> CONFIG_PREEMPTION=y
-> CONFIG_PREEMPT_DYNAMIC=y
-> CONFIG_PREEMPT_RCU=y
-> 
-> And so now to see how we should fix it.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Would the extra ref check added via commit 060913999d7a9e50 ("mm:
-migrate: support poisoned recover from migrate folio") make the removal
-of the spin lock safe now given all the buffers are locked from the
-folio? This survives some basic sanity checks on my end with
-generic/750 against ext4 and also filling a drive at the same time with
-fio. I have a feeling is we are not sure, do we have a reproducer for
-the issue reported through ebdf4de5642fb6 ("mm: migrate: fix reference
-check race between __find_get_block() and migration")? I suspect the
-answer is now. The only other thing I can think of at this tie is to add
-the lru_cache_disabled() || cpu_is_isolated(smp_processor_id())) checks
-on __find_get_block_slow() as we do in bh_lru_install() but I am not
-sure if that suffices for the old races.
+#### Background
 
-Thoughts?
+Redundant data is used to enhance data fault tolerance, and the storage
+method for redundant data vary depending on the RAID levels. And it's
+important to maintain the consistency of redundant data.
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 97f0edf0c032..6a5d125ecde9 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -859,12 +859,12 @@ static int __buffer_migrate_folio(struct address_space *mapping,
- 			}
- 			bh = bh->b_this_page;
- 		} while (bh != head);
-+		spin_unlock(&mapping->i_private_lock);
- 		if (busy) {
- 			if (invalidated) {
- 				rc = -EAGAIN;
- 				goto unlock_buffers;
- 			}
--			spin_unlock(&mapping->i_private_lock);
- 			invalidate_bh_lrus();
- 			invalidated = true;
- 			goto recheck_buffers;
-@@ -882,8 +882,6 @@ static int __buffer_migrate_folio(struct address_space *mapping,
- 	} while (bh != head);
- 
- unlock_buffers:
--	if (check_refs)
--		spin_unlock(&mapping->i_private_lock);
- 	bh = head;
- 	do {
- 		unlock_buffer(bh);
-diff --git a/mm/util.c b/mm/util.c
-index 448117da071f..3585bdb8700a 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -735,6 +735,8 @@ int folio_mc_copy(struct folio *dst, struct folio *src)
- 	long nr = folio_nr_pages(src);
- 	long i = 0;
- 
-+	might_sleep();
-+
- 	for (;;) {
- 		if (copy_mc_highpage(folio_page(dst, i), folio_page(src, i)))
- 			return -EHWPOISON;
+Bitmap is used to record which data blocks have been synchronized and which
+ones need to be resynchronized or recovered. Each bit in the bitmap
+represents a segment of data in the array. When a bit is set, it indicates
+that the multiple redundant copies of that data segment may not be
+consistent. Data synchronization can be performed based on the bitmap after
+power failure or readding a disk. If there is no bitmap, a full disk
+synchronization is required.
+
+#### Key Concept
+
+##### State Machine
+
+Each bit is one byte, contain 6 difference state, see llbitmap_state. And
+there are total 8 differenct actions, see llbitmap_action, can change state:
+
+llbitmap state machine: transitions between states
+
+|           | Startwrite | Startsync | Endsync | Abortsync| Reload   | Daemon | Discard   | Stale     |
+| --------- | ---------- | --------- | ------- | -------  | -------- | ------ | --------- | --------- |
+| Unwritten | Dirty      | x         | x       | x        | x        | x      | x         | x         |
+| Clean     | Dirty      | x         | x       | x        | x        | x      | Unwritten | NeedSync  |
+| Dirty     | x          | x         | x       | x        | NeedSync | Clean  | Unwritten | NeedSync  |
+| NeedSync  | x          | Syncing   | x       | x        | x        | x      | Unwritten | x         |
+| Syncing   | x          | Syncing   | Dirty   | NeedSync | NeedSync | x      | Unwritten | NeedSync  |
+
+special illustration:
+- Unwritten is special state, which means user never write data, hence there
+  is no need to resync/recover data. This is safe if user create filesystems
+  for the array, filesystem will make sure user will get zero data for
+  unwritten blocks.
+- After resync is done, change state from Syncing to Dirty first, in case
+  Startwrite happen before the state is Clean.
+
+##### Bitmap IO
+
+A hidden disk, named mdxxx_bitmap, is created for bitmap, see details in
+llbitmap_add_disk(). And a file is created as well to manage bitmap IO for
+this disk, see details in llbitmap_open_disk(). Read/write bitmap is
+converted to buffer IO to this file.
+
+IO fast path will set bits to dirty, and those dirty bits will be cleared
+by daemon after IO is done. llbitmap_barrier is used to syncronize between
+IO path and daemon;
+
+Test result: to be added
+
+Noted:
+1) user must apply the following mdadm patch, and then llbitmap can be
+enabled by --bitmap=lockless
+https://lore.kernel.org/all/20250327134853.1069356-1-yukuai1@huaweicloud.com/
+2) this set is cooked on the top of my other set:
+https://lore.kernel.org/all/20250219083456.941760-1-yukuai1@huaweicloud.com/
+
+Yu Kuai (14):
+  block: factor out a helper bdev_file_alloc()
+  md/md-bitmap: pass discard information to bitmap_{start, end}write
+  md/md-bitmap: remove parameter slot from bitmap_create()
+  md: add a new sysfs api bitmap_version
+  md: delay registeration of bitmap_ops until creating bitmap
+  md/md-llbitmap: implement bit state machine
+  md/md-llbitmap: implement hidden disk to manage bitmap IO
+  md/md-llbitmap: implement APIs for page level dirty bits
+    synchronization
+  md/md-llbitmap: implement APIs to mange bitmap lifetime
+  md/md-llbitmap: implement APIs to dirty bits and clear bits
+  md/md-llbitmap: implement APIs for sync_thread
+  md/md-llbitmap: implement all bitmap operations
+  md/md-llbitmap: implement sysfs APIs
+  md/md-llbitmap: add Kconfig
+
+ block/bdev.c             |   21 +-
+ drivers/md/Kconfig       |   12 +
+ drivers/md/Makefile      |    1 +
+ drivers/md/md-bitmap.c   |   10 +-
+ drivers/md/md-bitmap.h   |   21 +-
+ drivers/md/md-llbitmap.c | 1410 ++++++++++++++++++++++++++++++++++++++
+ drivers/md/md.c          |  180 ++++-
+ drivers/md/md.h          |    3 +
+ include/linux/blkdev.h   |    1 +
+ 9 files changed, 1614 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/md/md-llbitmap.c
+
+-- 
+2.39.2
+
 
