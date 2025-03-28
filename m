@@ -1,124 +1,114 @@
-Return-Path: <linux-block+bounces-19042-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19047-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E254A7500B
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 19:04:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 644F4A75017
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 19:05:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A14993BBAF3
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 18:03:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FEFF17144A
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 18:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3517A1DE3AC;
-	Fri, 28 Mar 2025 18:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C252A1DB15C;
+	Fri, 28 Mar 2025 18:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Pi4mGhJl"
 X-Original-To: linux-block@vger.kernel.org
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f228.google.com (mail-vk1-f228.google.com [209.85.221.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BE71DE3CF;
-	Fri, 28 Mar 2025 18:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010BF1D54D6
+	for <linux-block@vger.kernel.org>; Fri, 28 Mar 2025 18:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743185024; cv=none; b=Un0yhwaYaM9zblw0JDGBk2paPQIYA0xrQQMtxKllaP/0zOluKawgknr6aQM/tCQa4N8P0dAZ3/O6HXLJeRGOTnsJ4PoDJsdgL+ODNidKxn9KY29vaHsIRXuswhR2xrZD0hIM4eBq8imWfPjs1iy0HU9icSI+b81xPTQ4QFzCHys=
+	t=1743185118; cv=none; b=OCQW6x4BDYCcsDH5PHtaKGu2DQerpivrrzyU/a1IfniEREyR/eO2NG7AeA0+UvyXw56PWKpenxrCNTRWyWROe45hNThvB3jAHrMl+AaGOp/VVjPEhsLvdb4SKwvXUYw13McK/sdu75tWf++M6U5tPnzquNd5+BRsRUlp8imqP5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743185024; c=relaxed/simple;
-	bh=IWz0jtZ6+4vXPupTEZOFTGaUWXOG/rvX0o464gLivlI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b/AcpBk66HMNjY0Z7GLlgpLA1IyNuN8Tqqcg73MypCyb9OO0w2gqJexCg9hQMp0aaDWZe+R2Zr0RU9ph2lNMgJqzwcYEDCNZIQtj5rk+DLzlzUXa0FMkXqB6DtcOWed5oxh/aLFYickFbt3uk9SDcocA2OvUtr3ahLoAyot1SHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1tyE3M-0006IW-0p;
-	Fri, 28 Mar 2025 18:03:35 +0000
-Received: from ben by deadeye with local (Exim 4.98.1)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1tyE3J-000000002Rz-33YE;
-	Fri, 28 Mar 2025 19:03:33 +0100
-Message-ID: <56332722d85e0893884e7bacaf28cebd8665adec.camel@decadent.org.uk>
-Subject: Re: [PATCH V3] block: fix conversion of GPT partition name to 7-bit
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Olivier Gayot <olivier.gayot@canonical.com>, Ming Lei
- <ming.lei@redhat.com>,  Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, Mulhern <amulhern@redhat.com>, Davidlohr
- Bueso	 <dave@stgolabs.net>, stable@vger.kernel.org
-Date: Fri, 28 Mar 2025 19:03:23 +0100
-In-Reply-To: <7afc3a7e-1dd8-4dbb-b243-75bd554c00da@canonical.com>
-References: <20250305022154.3903128-1-ming.lei@redhat.com>
-	 <3fa05bba190bec01df2bc117cf7e3e2f00e8b946.camel@decadent.org.uk>
-	 <7afc3a7e-1dd8-4dbb-b243-75bd554c00da@canonical.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-QaH22s1ONrOgfyQFf70Q"
-User-Agent: Evolution 3.56.0-1 
+	s=arc-20240116; t=1743185118; c=relaxed/simple;
+	bh=/EJ4ZbjnkYRQ/SfJMW9byzKiIXwhHDQOX3y6P4axrN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrgFmNAbgvZAxZHlDUxIdN6/AWFWM7yrr48uEp3I65q3v7bhizk+zHszNl/sP/ZCesg/8UEhXJyoJUpvI4Y0IVMIyYs58lV34gcANulH2aS+MEUGVLHKBQJ9pSdXPBrs+Yt8pwutjudyO8UWhoYPPkK67NHj9bkEFH/lwiUK8gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Pi4mGhJl; arc=none smtp.client-ip=209.85.221.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-vk1-f228.google.com with SMTP id 71dfb90a1353d-523d8cc30a5so50399e0c.3
+        for <linux-block@vger.kernel.org>; Fri, 28 Mar 2025 11:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743185116; x=1743789916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QKO+URIjpVJ9uG1rgJTxLMHOxyHBEWIVMk3SFxHLeIU=;
+        b=Pi4mGhJluHpukbmZLYiJYUJC8rwKfzf15vWKb02o9EGC47U+FcsTFHr4ji2xO3r6RP
+         t/Wa6S2bvprYe0zri+/lOeUPZ0nsye9lo7POkvzfV91mVLFJslmlD8z4Ij0aEEVrj7YT
+         ETH4KfIVEeFgtWjew+rq98431XzYrpMl/3htmi3HPhAq/UMirOPA7mD3Tu4AIf1+VBUy
+         jc9BauHQUHByS8z7bLhgk9x/VJlna6Ghc90W3eKMkvnG+AoiEGtt5DWO8A8VQvYsR/YD
+         CEBtiGKEiM0hcBtMrT9b+Np9b6paiX8b0OTh8svHRZYhEfV8Xg+o6R8PhOHNw+MC6djT
+         Meqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743185116; x=1743789916;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QKO+URIjpVJ9uG1rgJTxLMHOxyHBEWIVMk3SFxHLeIU=;
+        b=tp0yHAYDl4J638xwbydiBXSk+Dz+4CYLDwTA1XafcejH5K+GXKr/wbwOhZaGfN+NxI
+         Ngow2EHEpz3a72Y2KCOf4IbLo57Qg8yBCk7jO14tgBc9Eb5vD/pjrAg5+uqjjkWTnxfY
+         WcVybfQqkZw1YLLzF26ASDxs8IYRrY3SurW/e4gHbag1d88IH/Dw/9tu0eysjwgWTNWc
+         nFxBwUxxcNpNxAEf0Uwuk5whAP9MzfNXJaBYlgxRxvKE7n8L5gXHt6myzfOJuebyPYNG
+         j2PTWogAXpiGRChz1Sh7GXmQLmOKO6NeJWU5Fq2Qgb7SIoEz6Rndc/BpYTF2l0SRKM88
+         JHOQ==
+X-Gm-Message-State: AOJu0Ywi17gNYUBH46QBgeWrZhHI57OWAkj0MSJ/EqrqwPMKYfd0bV4I
+	ncjlXTQW+Sgloguwluw+q3kIwERA6k2oAlnCgZeLNxLMTqp6+wA/EobBoyQFHNceVUG5I4J97im
+	x4uHMpRz/YTncHj5GERW66lOGh+2bFQyR
+X-Gm-Gg: ASbGnctb3aCwdf0xBaiFdsOP+iWdHmF6kSo4KuN5Vm7y4bsh9Jh7gd9qC1nJSGyHd+T
+	7UJ2ozOWZz4XwuToz7XAEAUIeKWNKi3VuTfcoF1tHFC4/QDMDd+K3wHYy5ldYtcHoy6r14r5n9z
+	o+qBNXMucZAD+SjQFZF9rf8xaVRW3ocexriR1AdAsuNioW9D/L9fdCggKrOCT49sayjzstsnMK9
+	xJ+2B77ScbYfZB460YXozPc8FPG61P8a0N3EoquTQhlCmF/Ml3hRaeK19iCNvQkQ2OhqcNkbd0Q
+	Na0ZklCcO+WjKh9fuQls8a+27XtDV53P7kJxVT4UgNdhEhq1
+X-Google-Smtp-Source: AGHT+IFAQauqg+sisZgW8z9z5TD36rwH/+HiDXUUrVmp0B2ndOE3PZDgqz5p6Y1vA4wQ/WM3IeHpP3hPsize
+X-Received: by 2002:a05:6122:50b:b0:520:5b43:b843 with SMTP id 71dfb90a1353d-5261d18035cmr211486e0c.0.1743185115578;
+        Fri, 28 Mar 2025 11:05:15 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id ada2fe7eead31-4c6bfdf1f10sm110525137.3.2025.03.28.11.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 11:05:15 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 7F1183403C5;
+	Fri, 28 Mar 2025 12:05:14 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 74C6EE408F2; Fri, 28 Mar 2025 12:04:44 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH 0/5] Minor ublk optimizations
+Date: Fri, 28 Mar 2025 12:04:06 -0600
+Message-ID: <20250328180411.2696494-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 
+A few cleanups on top of Ming's recent patch set that implemented
+->queue_rqs() for ublk:
+https://lore.kernel.org/linux-block/20250327095123.179113-1-ming.lei@redhat.com/T/#u
 
---=-QaH22s1ONrOgfyQFf70Q
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Caleb Sander Mateos (5):
+  ublk: remove unused cmd argument to ublk_dispatch_req()
+  ublk: skip 1 NULL check in ublk_cmd_list_tw_cb() loop
+  ublk: get ubq from pdu in ublk_cmd_list_tw_cb()
+  ublk: avoid redundant io->cmd in ublk_queue_cmd_list()
+  ublk: store req in ublk_uring_cmd_pdu for ublk_cmd_tw_cb()
 
-On Fri, 2025-03-28 at 10:29 +0100, Olivier Gayot wrote:
-> > We shouldn't mask the input character; instead we should do a range
-> > check before calling isprint().  Something like:
-> >=20
-> > 	u16 uc =3D le16_to_cpu(in[i]);
-> > 	u8 c;
-> >=20
-> > 	if (uc < 0x80 && (uc =3D=3D 0 || isprint(uc)))
-> > 		c =3D uc;
-> > 	else
-> > 		c =3D '!';
->=20
-> Sounds like a good alternative to me.
->=20
-> Would a conversion from utf-16-le to utf-8 be a viable solution?
+ drivers/block/ublk_drv.c | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
-If we were adding partition name support today I think UTF-8 conversion
-would be reasonable, but I would guess that there are now consumers that
-depend on the output being restricted to ASCII.
+-- 
+2.45.2
 
-Also I think we would still want to replace non-printable code points,
-and we don't have iswprint() in the kernel.
-
-Ben.
-
---=20
-Ben Hutchings
-If at first you don't succeed, you're doing about average.
-
---=-QaH22s1ONrOgfyQFf70Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmfm5GsACgkQ57/I7JWG
-EQmoDRAAlGEJhib5bEgBApYoART1rmhAfp5kK7hFigKNY2QNvq4GZx1yFD16Bnv7
-w3zTpcnaYjdHxKj67/JdJR6PJ4E9OmbHYpUslwbV3JFn5FgkddeKDcmImmAfg3rX
-xQ3lt/pjm8nJPGG+Ddk7sEcjgAewvLWyMX0GdSfkOmtv/2Kbcs0e7IclREB+JbJO
-vLAuZDnD2ESCED2RIYlp6INfSXyimtblX8zrS52XcHfqTmde0Ky4YIdpvTQiy3qh
-uFhagwnixPCnyz9zoCJdC50NMsS9kuHrCWwjXpi4etwwlDIxHknpezbvncIb1tOt
-ZRwXdC0oT8TLcckWKxWkHvz9CvlDZTHg6qJAu7AwLVtc8HvQBX1uR+45z4vvv7J+
-FhSjF/TeDgGAE+l0JehBSWNMjr8Aak5Gfsmr2/IZV3tjluU41RIAWfSoSUG4G7hR
-s4b9boJQYhciJ4Crxu07ztxJ1+j1wvBHwddIJclrItYbMKvOGj6IqfmFHBmHi0pM
-OFaVtpsswMTyEE7XZP5dlZprFnpmJGMs2IlS4OMEzG7BqV4Qi2PuUzgp52Tc5yHM
-GwuV7iMYS5yUk89z0x6V2Xg/OJE4AJv3y3NbaWafHzkJK5XZ/gqwS3rv0htTVyx/
-mQE2va4TeZSxQNFhlbwQbvsK1sVYW0BCpPzizi/+Ka+8ZIeOg7c=
-=qxbz
------END PGP SIGNATURE-----
-
---=-QaH22s1ONrOgfyQFf70Q--
 
