@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-19023-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19029-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D11BA743CD
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 07:16:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA867A743EB
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 07:19:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEC2917C391
-	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 06:15:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67FC43BEE76
+	for <lists+linux-block@lfdr.de>; Fri, 28 Mar 2025 06:17:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E09C21322E;
-	Fri, 28 Mar 2025 06:14:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B1C2214A80;
+	Fri, 28 Mar 2025 06:14:59 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA7A2116FB;
-	Fri, 28 Mar 2025 06:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C725A211A31;
+	Fri, 28 Mar 2025 06:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743142495; cv=none; b=ic2wr6LUn6VWcOFUKVRQfGZq8sGMDNDsO/TwE7/o+A/+DFkapUYSiO/eO7EhA96g0tOV9EAFRWvpUc3L5snA6zLtDbt32CVXtvaJMOJyN9JSoHNYqKKtw7jxEvC63rZRhiQPBj+KH+tUUAQXPtx/1XXxEqlK+J3k9BbJNkt1ZyQ=
+	t=1743142498; cv=none; b=azKnXH9+hmyTRuzWXxjgds0C6UgjBlz1gxw0RSuIFgJ6yuNUtEJXTjfrL1zv2jfhtgYn7FT/YQf8NrW4vIAmqsSTD4o2861j1xha2rMgqsuHE4ZJ0XzVsHSczGTJHR0mk1aFQfriX6eiK8dP8Py7R2JDEaDTU9Vqaa2cTiPxkYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743142495; c=relaxed/simple;
-	bh=f0pkztABVxsx1XEA4hoL0l/3Y1SW0SHoMhcrQFK2HK8=;
+	s=arc-20240116; t=1743142498; c=relaxed/simple;
+	bh=KIeqCI1rQ9xEoTnMFgzrPuDOkPsFLF9qmyeXIjCapD8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NDQKGhd15NF0Le/UZ9I+Z+p7x4WLoM9kPYFWrFUWosCNqjMFwntbvgc9VI2oUlZtPFiGhK5AZhthCmhUU8qKGSgqGizWKUI1HpqmXFjOfSxDSr0JHH7wGVh/2mH5h1/AbG1WePVn/tjO3WHPcAVQKj6AJLWR52ZYooWH3m+nl7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=paHYFeMRkJsJmjAczxFuQQ1oAjcG0pNgp7zCOJE8miJC9LbDnoZHpFUfwn2faRCCrk53kR6VFWuB2nWg3RUeQvqIPq1PQSufdtPc0yXNKhDDaAEkaL7PQEC3x8ucf8Ji+PZVoClZnMcwSQuMMmNPFaLyPWtNW5+AgGTXSISMSwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZP9Gc2SWXz4f3jtW;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZP9Gc6yxpz4f3jtT;
 	Fri, 28 Mar 2025 14:14:32 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EA7941A1012;
-	Fri, 28 Mar 2025 14:14:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 9136F1A101E;
+	Fri, 28 Mar 2025 14:14:50 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2BSPuZnfAUtHw--.25875S10;
-	Fri, 28 Mar 2025 14:14:49 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2BSPuZnfAUtHw--.25875S11;
+	Fri, 28 Mar 2025 14:14:50 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@lst.de,
 	xni@redhat.com,
@@ -55,9 +55,9 @@ Cc: linux-block@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC v2 06/14] md/md-llbitmap: implement bit state machine
-Date: Fri, 28 Mar 2025 14:08:45 +0800
-Message-Id: <20250328060853.4124527-7-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v2 07/14] md/md-llbitmap: implement hidden disk to manage bitmap IO
+Date: Fri, 28 Mar 2025 14:08:46 +0800
+Message-Id: <20250328060853.4124527-8-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
 References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
@@ -68,10 +68,10 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHK2BSPuZnfAUtHw--.25875S10
-X-Coremail-Antispam: 1UD129KBjvJXoW3JrWkur43WF15tw43tFWDJwb_yoWfXF4DpF
-	sxZrn3GrsYqa1rX347Ja42vF95tr4kJry3tr9rA3sYvw1jyFZI9F1vgFW8J3y7G3yUG3WU
-	Xan8Gr95GF45Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgDHK2BSPuZnfAUtHw--.25875S11
+X-Coremail-Antispam: 1UD129KBjvJXoWxuw15ury3Kr4kAF43GryxAFb_yoW3AFWxpF
+	W3X3W5Kr4rJrn3Ww17JrW7AFyFqr4DJr92qFZ7ua4S9r1jyrZIgF48GFy8Aws8WrnrCFnr
+	JFs8K34rGw48XFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -90,288 +90,283 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Each bit is one byte and contain 6 different state, and there are total
-8 different action can change state, see details in the following form:
+Bitmap is stored in each member disk, the old bitmap implementation is
+allocating memory and managing data by itself, read and write will
+attach the allocated page to bio for member disks, and a bitmap level
+spinlock is used for synchronization
 
-|           | Startwrite | Startsync | Endsync | Abortsync| Reload   | Daemon | Discard   | Stale     |
-| --------- | ---------- | --------- | ------- | -------  | -------- | ------ | --------- | --------- |
-| Unwritten | Dirty      | x         | x       | x        | x        | x      | x         | x         |
-| Clean     | Dirty      | x         | x       | x        | x        | x      | Unwritten | NeedSync  |
-| Dirty     | x          | x         | x       | x        | NeedSync | Clean  | Unwritten | NeedSync  |
-| NeedSync  | x          | Syncing   | x       | x        | x        | x      | Unwritten | x         |
-| Syncing   | x          | Syncing   | Dirty   | NeedSync | NeedSync | x      | Unwritten | NeedSync  |
-
-This patch implement the state machine first, and following patches will
-use it to implement new llbitmap.
+For llbitmap, a hidden disk, named mdxxx_bitmap, is created for bitmap, see
+details in llbitmap_add_disk(). And a file is created as well to manage
+bitmap IO for this disk. Read/write bitmap will be converted to buffer
+IO to this file.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-llbitmap.c | 256 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 256 insertions(+)
- create mode 100644 drivers/md/md-llbitmap.c
+ drivers/md/md-llbitmap.c | 238 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 238 insertions(+)
 
 diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
-new file mode 100644
-index 000000000000..1f97b6868279
---- /dev/null
+index 1f97b6868279..bbd8a7c99577 100644
+--- a/drivers/md/md-llbitmap.c
 +++ b/drivers/md/md-llbitmap.c
-@@ -0,0 +1,256 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/blkdev.h>
-+#include <linux/module.h>
-+#include <linux/errno.h>
-+#include <linux/slab.h>
-+#include <linux/init.h>
-+#include <linux/timer.h>
-+#include <linux/sched.h>
-+#include <linux/list.h>
-+#include <linux/file.h>
-+#include <linux/mount.h>
-+#include <linux/buffer_head.h>
-+#include <linux/seq_file.h>
-+#include <trace/events/block.h>
-+
-+#include "md.h"
-+#include "md-bitmap.h"
-+
-+/*
-+ * #### Background
+@@ -56,8 +56,16 @@
+  *   unwritten blocks.
+  * - After resync is done, change state from Syncing to Dirty first, in case
+  *   Startwrite happen before the state is Clean.
 + *
-+ * Redundant data is used to enhance data fault tolerance, and the storage
-+ * method for redundant data vary depending on the RAID levels. And it's
-+ * important to maintain the consistency of redundant data.
++ * ##### Bitmap IO
 + *
-+ * Bitmap is used to record which data blocks have been synchronized and which
-+ * ones need to be resynchronized or recovered. Each bit in the bitmap
-+ * represents a segment of data in the array. When a bit is set, it indicates
-+ * that the multiple redundant copies of that data segment may not be
-+ * consistent. Data synchronization can be performed based on the bitmap after
-+ * power failure or readding a disk. If there is no bitmap, a full disk
-+ * synchronization is required.
-+ *
-+ * #### Key Concept
-+ *
-+ * ##### State Machine
-+ *
-+ * Each bit is one byte, contain 6 difference state, see llbitmap_state. And
-+ * there are total 8 differenct actions, see llbitmap_action, can change state:
-+ *
-+ * llbitmap state machine: transitions between states
-+ *
-+ * |           | Startwrite | Startsync | Endsync | Abortsync| Reload   | Daemon | Discard   | Stale     |
-+ * | --------- | ---------- | --------- | ------- | -------  | -------- | ------ | --------- | --------- |
-+ * | Unwritten | Dirty      | x         | x       | x        | x        | x      | x         | x         |
-+ * | Clean     | Dirty      | x         | x       | x        | x        | x      | Unwritten | NeedSync  |
-+ * | Dirty     | x          | x         | x       | x        | NeedSync | Clean  | Unwritten | NeedSync  |
-+ * | NeedSync  | x          | Syncing   | x       | x        | x        | x      | Unwritten | x         |
-+ * | Syncing   | x          | Syncing   | Dirty   | NeedSync | NeedSync | x      | Unwritten | NeedSync  |
-+ *
-+ * special illustration:
-+ * - Unwritten is special state, which means user never write data, hence there
-+ *   is no need to resync/recover data. This is safe if user create filesystems
-+ *   for the array, filesystem will make sure user will get zero data for
-+ *   unwritten blocks.
-+ * - After resync is done, change state from Syncing to Dirty first, in case
-+ *   Startwrite happen before the state is Clean.
-+ */
-+
-+#define BITMAP_MAX_PAGES 32
-+#define BITMAP_SB_SIZE 1024
-+
-+enum llbitmap_state {
-+	/* No valid data, init state after assemble the array */
-+	BitUnwritten = 0,
-+	/* data is consistent */
-+	BitClean,
-+	/* data will be consistent after IO is done, set directly for writes */
-+	BitDirty,
-+	/*
-+	 * data need to be resynchronized:
-+	 * 1) set directly for writes if array is degraded, prevent full disk
-+	 * synchronization after readding a disk;
-+	 * 2) reassemble the array after power failure, and dirty bits are
-+	 * found after reloading the bitmap;
-+	 * */
-+	BitNeedSync,
-+	/* data is synchronizing */
-+	BitSyncing,
-+	nr_llbitmap_state,
-+	BitNone = 0xff,
++ * A hidden disk, named mdxxx_bitmap, is created for bitmap, see details in
++ * llbitmap_add_disk(). And a file is created as well to manage bitmap IO for
++ * this disk, see details in llbitmap_open_disk(). Read/write bitmap is
++ * converted to buffer IO to this file.
+  */
+ 
++#define BITMAP_MAX_SECTOR (128 * 2)
+ #define BITMAP_MAX_PAGES 32
+ #define BITMAP_SB_SIZE 1024
+ 
+@@ -135,6 +143,13 @@ struct llbitmap {
+ 	__u64	events_cleared;
+ };
+ 
++struct llbitmap_bio {
++	struct md_rdev *rdev;
++	struct bio bio;
 +};
 +
-+enum llbitmap_action {
-+	/* User write new data, this is the only acton from IO fast path */
-+	BitmapActionStartwrite = 0,
-+	/* Start recovery */
-+	BitmapActionStartsync,
-+	/* Finish recovery */
-+	BitmapActionEndsync,
-+	/* Failed recovery */
-+	BitmapActionAbortsync,
-+	/* Reassemble the array */
-+	BitmapActionReload,
-+	/* Daemon thread is trying to clear dirty bits */
-+	BitmapActionDaemon,
-+	/* Data is deleted */
-+	BitmapActionDiscard,
-+	/*
-+	 * Bitmap is stale, mark all bits in addition to BitUnwritten to
-+	 * BitNeedSync.
-+	 */
-+	BitmapActionStale,
-+	nr_llbitmap_action,
-+	/* Init state is BitUnwritten */
-+	BitmapActionInit,
-+};
++static struct workqueue_struct *md_llbitmap_io_wq;
 +
-+struct llbitmap {
-+	struct mddev *mddev;
-+	/* hidden disk to manage bitmap IO */
-+	struct gendisk *bitmap_disk;
-+	/* opened hidden disk */
-+	struct file *bitmap_file;
-+	int nr_pages;
-+	struct page *pages[BITMAP_MAX_PAGES];
+ static char state_machine[nr_llbitmap_state][nr_llbitmap_action] = {
+ 	[BitUnwritten] = {BitDirty, BitNone, BitNone, BitNone, BitNone, BitNone, BitNone, BitNone},
+ 	[BitClean] = {BitDirty, BitNone, BitNone, BitNone, BitNone, BitNone, BitUnwritten, BitNeedSync},
+@@ -254,3 +269,226 @@ static enum llbitmap_state llbitmap_state_machine(struct llbitmap *llbitmap,
+ 
+ 	return state;
+ }
 +
-+	struct bio_set bio_set;
-+	struct bio_list retry_list;
-+	struct work_struct retry_work;
-+	spinlock_t retry_lock;
++static void llbitmap_end_write(struct bio *bio)
++{
++	struct bio *parent = bio->bi_private;
++	struct llbitmap_bio *llbitmap_bio;
++	struct md_rdev *rdev;
 +
-+	/* shift of one chunk */
-+	unsigned long chunkshift;
-+	/* size of one chunk in sector */
-+	unsigned long chunksize;
-+	/* total number of chunks */
-+	unsigned long chunks;
-+	/* fires on first BitDirty state */
-+	struct timer_list pending_timer;
-+	struct work_struct daemon_work;
++	if (bio->bi_status == BLK_STS_OK) {
++		WRITE_ONCE(parent->bi_status, BLK_STS_OK);
++	} else {
++		llbitmap_bio = container_of(bio, struct llbitmap_bio, bio);
++		rdev = llbitmap_bio->rdev;
 +
++		pr_err("%s: %s: bitmap write failed for %pg\n", __func__,
++		       mdname(rdev->mddev), rdev->bdev);
++		md_error(rdev->mddev, rdev);
++	}
++
++	bio_put(bio);
++	bio_endio(parent);
++}
++
++static void md_llbitmap_retry_read(struct llbitmap *llbitmap, struct bio *bio)
++{
 +	unsigned long flags;
-+	__u64	events_cleared;
++
++	spin_lock_irqsave(&llbitmap->retry_lock, flags);
++	bio_list_add(&llbitmap->retry_list, bio);
++	queue_work(md_llbitmap_io_wq, &llbitmap->retry_work);
++	spin_unlock_irqrestore(&llbitmap->retry_lock, flags);
++}
++
++static void llbitmap_end_read(struct bio *bio)
++{
++	struct bio *parent = bio->bi_private;
++	struct llbitmap_bio *llbitmap_bio;
++	struct llbitmap *llbitmap;
++	struct md_rdev *rdev;
++
++	if (bio->bi_status == BLK_STS_OK) {
++		WRITE_ONCE(parent->bi_status, BLK_STS_OK);
++		bio_put(bio);
++		bio_endio(parent);
++		return;
++	}
++
++	llbitmap_bio = container_of(bio, struct llbitmap_bio, bio);
++	rdev = llbitmap_bio->rdev;
++	pr_err("%s: %s: bitmap read failed for %pg\n", __func__,
++	       mdname(rdev->mddev), rdev->bdev);
++	md_error(rdev->mddev, rdev);
++	bio_put(bio);
++	md_llbitmap_retry_read(llbitmap, parent);
++}
++
++static void md_llbitmap_retry_fn(struct work_struct *work)
++{
++	struct llbitmap *llbitmap =
++		container_of(work, struct llbitmap, retry_work);
++	struct mddev *mddev = llbitmap->mddev;
++	struct md_rdev *rdev;
++	struct bio *bio;
++
++again:
++	spin_lock_irq(&llbitmap->retry_lock);
++	bio = bio_list_pop(&llbitmap->retry_list);
++	spin_unlock_irq(&llbitmap->retry_lock);
++
++	if (!bio)
++		return;
++
++	rdev_for_each(rdev, mddev) {
++		struct llbitmap_bio *llbitmap_bio;
++		struct bio *new;
++
++		if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
++			continue;
++
++		new = bio_alloc_clone(rdev->bdev, bio, GFP_NOIO,
++				      &llbitmap->bio_set);
++		new->bi_iter.bi_sector = bio->bi_iter.bi_sector +
++					 rdev->sb_start +
++					 mddev->bitmap_info.offset;
++		new->bi_opf |= REQ_SYNC | REQ_IDLE | REQ_META;
++		new->bi_private = bio;
++		new->bi_end_io = llbitmap_end_read;
++
++		llbitmap_bio = container_of(new, struct llbitmap_bio, bio);
++		llbitmap_bio->rdev = rdev;
++
++		submit_bio_noacct(new);
++		goto again;
++	}
++}
++
++static void llbitmap_submit_bio(struct bio *bio)
++{
++	struct mddev *mddev = bio->bi_bdev->bd_disk->private_data;
++	struct llbitmap *llbitmap = mddev->bitmap;
++	struct llbitmap_bio *llbitmap_bio;
++	struct md_rdev *rdev;
++	struct bio *new;
++
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH))
++		bio->bi_opf &= ~REQ_PREFLUSH;
++
++	if (!bio_sectors(bio)) {
++		bio_endio(bio);
++		return;
++	}
++
++	/* status will be cleared if any member disk IO succeed */
++	bio->bi_status = BLK_STS_IOERR;
++
++	rdev_for_each(rdev, mddev) {
++		if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
++			continue;
++
++		new = bio_alloc_clone(rdev->bdev, bio, GFP_NOIO,
++				      &llbitmap->bio_set);
++		new->bi_iter.bi_sector = bio->bi_iter.bi_sector +
++					 rdev->sb_start +
++					 mddev->bitmap_info.offset;
++		new->bi_opf |= REQ_SYNC | REQ_IDLE | REQ_META;
++
++		llbitmap_bio = container_of(new, struct llbitmap_bio, bio);
++		llbitmap_bio->rdev = rdev;
++		bio_inc_remaining(bio);
++		new->bi_private = bio;
++
++		if (bio_data_dir(bio) == WRITE) {
++			new->bi_end_io = llbitmap_end_write;
++			new->bi_opf |= REQ_FUA;
++			submit_bio_noacct(new);
++			continue;
++		}
++
++		new->bi_end_io = llbitmap_end_read;
++		submit_bio_noacct(new);
++		break;
++	}
++
++	bio_endio(bio);
++}
++
++const struct block_device_operations llbitmap_fops = {
++	.owner = THIS_MODULE,
++	.submit_bio = llbitmap_submit_bio,
 +};
 +
-+static char state_machine[nr_llbitmap_state][nr_llbitmap_action] = {
-+	[BitUnwritten] = {BitDirty, BitNone, BitNone, BitNone, BitNone, BitNone, BitNone, BitNone},
-+	[BitClean] = {BitDirty, BitNone, BitNone, BitNone, BitNone, BitNone, BitUnwritten, BitNeedSync},
-+	[BitDirty] = {BitNone, BitNone, BitNone, BitNone, BitNeedSync, BitClean, BitUnwritten, BitNeedSync},
-+	[BitNeedSync] = {BitNone, BitSyncing, BitNone, BitNone, BitNone, BitNone, BitUnwritten, BitNone},
-+	[BitSyncing] = {BitNone, BitSyncing, BitDirty, BitNeedSync, BitNeedSync, BitNone, BitUnwritten, BitNeedSync},
-+};
-+
-+static enum llbitmap_state state_from_page(struct page *page, loff_t pos)
-+{
-+	u8 *p = kmap_local_page(page);
-+	enum llbitmap_state state = p[offset_in_page(pos)];
-+
-+	kunmap_local(p);
-+	return state;
-+}
-+
-+static void state_to_page(struct page *page, enum llbitmap_state state,
-+			  loff_t pos)
-+{
-+	u8 *p = kmap_local_page(page);
-+
-+	p[offset_in_page(pos)] = state;
-+	set_page_dirty(page);
-+	kunmap_local(p);
-+}
-+
-+static int llbitmap_read(struct llbitmap *llbitmap, enum llbitmap_state *state,
-+			 loff_t pos)
-+{
-+	pos += BITMAP_SB_SIZE;
-+	*state = state_from_page(llbitmap->pages[pos >> PAGE_SHIFT], pos);
-+	return 0;
-+}
-+
-+static int llbitmap_write(struct llbitmap *llbitmap, enum llbitmap_state state,
-+			  loff_t pos)
-+{
-+	pos += BITMAP_SB_SIZE;
-+	state_to_page(llbitmap->pages[pos >> PAGE_SHIFT], state, pos);
-+	return 0;
-+}
-+
-+/* The return value is only used from resync, where @start == @end. */
-+static enum llbitmap_state llbitmap_state_machine(struct llbitmap *llbitmap,
-+						  unsigned long start,
-+						  unsigned long end,
-+						  enum llbitmap_action action)
++static int llbitmap_add_disk(struct llbitmap *llbitmap)
 +{
 +	struct mddev *mddev = llbitmap->mddev;
-+	enum llbitmap_state state = BitNone;
-+	bool need_recovery = false;
++	struct gendisk *disk = blk_alloc_disk(&mddev->gendisk->queue->limits,
++					      NUMA_NO_NODE);
++	int ret;
 +
-+	if (test_bit(BITMAP_WRITE_ERROR, &llbitmap->flags))
-+		return BitNone;
++	if (IS_ERR(disk))
++		return PTR_ERR(disk);
 +
-+	while (start <= end) {
-+		ssize_t ret;
-+		enum llbitmap_state c;
++	sprintf(disk->disk_name, "%s_bitmap", mdname(mddev));
++	disk->flags |= GENHD_FL_HIDDEN;
++	disk->fops = &llbitmap_fops;
 +
-+		if (action == BitmapActionInit) {
-+			state = BitUnwritten;
-+			ret = llbitmap_write(llbitmap, state, start);
-+			if (ret < 0) {
-+				set_bit(BITMAP_WRITE_ERROR, &llbitmap->flags);
-+				return BitNone;
-+			}
-+
-+			start++;
-+			continue;
-+		}
-+
-+		ret = llbitmap_read(llbitmap, &c, start);
-+		if (ret < 0) {
-+			set_bit(BITMAP_WRITE_ERROR, &llbitmap->flags);
-+			return BitNone;
-+		}
-+
-+		if (c < 0 || c >= nr_llbitmap_state) {
-+			pr_err("%s: invalid bit %lu state %d action %d, forcing resync\n",
-+			       __func__, start, c, action);
-+			c = BitNeedSync;
-+			goto write_bitmap;
-+		}
-+
-+		if (c == BitNeedSync)
-+			need_recovery = true;
-+
-+		state = state_machine[c][action];
-+		if (state == BitNone) {
-+			start++;
-+			continue;
-+		}
-+
-+write_bitmap:
-+		ret = llbitmap_write(llbitmap, state, start);
-+		if (ret < 0) {
-+			set_bit(BITMAP_WRITE_ERROR, &llbitmap->flags);
-+			return BitNone;
-+		}
-+
-+		if (state == BitNeedSync)
-+			need_recovery = true;
-+		else if (state == BitDirty &&
-+			 !timer_pending(&llbitmap->pending_timer))
-+			mod_timer(&llbitmap->pending_timer,
-+				  jiffies + mddev->bitmap_info.daemon_sleep * HZ);
-+
-+		start++;
++	ret = add_disk(disk);
++	if (ret) {
++		put_disk(disk);
++		return ret;
 +	}
 +
-+	if (need_recovery) {
-+		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-+		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
-+		md_wakeup_thread(mddev->thread);
-+	}
-+
-+	return state;
++	set_capacity(disk, BITMAP_MAX_SECTOR);
++	disk->private_data = mddev;
++	llbitmap->bitmap_disk = disk;
++	return 0;
 +}
++
++static void llbitmap_del_disk(struct llbitmap *llbitmap)
++{
++	struct gendisk *disk = llbitmap->bitmap_disk;
++
++	if (!disk)
++		return;
++
++	llbitmap->bitmap_disk = NULL;
++	del_gendisk(disk);
++	put_disk(disk);
++}
++
++static int llbitmap_open_disk(struct llbitmap *llbitmap)
++{
++	struct gendisk *disk = llbitmap->bitmap_disk;
++	struct file *bitmap_file;
++
++	bitmap_file = bdev_file_alloc(disk->part0,
++				      BLK_OPEN_READ | BLK_OPEN_WRITE);
++	if (IS_ERR(bitmap_file))
++		return PTR_ERR(bitmap_file);
++
++	/* corresponding to the blkdev_put_no_open() from blkdev_release() */
++	get_device(disk_to_dev(disk));
++
++	bitmap_file->f_flags |= O_LARGEFILE;
++	bitmap_file->f_mode |= FMODE_CAN_ODIRECT;
++	bitmap_file->f_mapping = disk->part0->bd_mapping;
++	bitmap_file->f_wb_err = filemap_sample_wb_err(bitmap_file->f_mapping);
++
++	/* not actually opened, let blkdev_release() know */
++	bitmap_file->private_data = ERR_PTR(-ENODEV);
++	llbitmap->bitmap_file = bitmap_file;
++	return 0;
++}
++
++static void llbitmap_close_disk(struct llbitmap *llbitmap)
++{
++	struct file *bitmap_file = llbitmap->bitmap_file;
++
++	if (!bitmap_file)
++		return;
++
++	llbitmap->bitmap_file = NULL;
++	fput(bitmap_file);
++}
++
 -- 
 2.39.2
 
