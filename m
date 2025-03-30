@@ -1,132 +1,100 @@
-Return-Path: <linux-block+bounces-19071-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19075-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEB61A758C3
-	for <lists+linux-block@lfdr.de>; Sun, 30 Mar 2025 08:47:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 417F4A759E7
+	for <lists+linux-block@lfdr.de>; Sun, 30 Mar 2025 14:04:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9241D16B29E
-	for <lists+linux-block@lfdr.de>; Sun, 30 Mar 2025 06:47:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 350B71889579
+	for <lists+linux-block@lfdr.de>; Sun, 30 Mar 2025 12:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7DAE171D2;
-	Sun, 30 Mar 2025 06:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07A2C13665A;
+	Sun, 30 Mar 2025 12:04:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VPgNJJiZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q0GkGU+6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AC320B22;
-	Sun, 30 Mar 2025 06:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277532BB04;
+	Sun, 30 Mar 2025 12:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743317266; cv=none; b=PuOurxngB6QFEBsr03BYDjMCo/j4OaWachZQH2VG4mi0+QU/j9SWmYTbeKoYS+8BkiBD1Sh8JAABrKIjspKDQWAUjK+ZCjH0rcNYduWcvtYekdGhPbPK46Uw7v5XBeI9sQDpUlad8rry6M/6gV+NA2LDDo0cA9j8zDB0AY3mxh4=
+	t=1743336257; cv=none; b=b8hx3XdtnBiyJ6fUkSGar0Jo7L/ZYgn6qWf3Xl3EvUt1NDM8iRWM/0Pf8y5IsD/vJMZrEWRY4qGTzCoJi1xOGHCsyvg3kF8b8x8w4oCRvOiFNNg9+So0FmZDWAthG9/cV4ygAQ1X2JfG9nf4sgzNNoM5VoUw/OSIJXDmPefMxNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743317266; c=relaxed/simple;
-	bh=kgB8OOaAyE/3r4VIOULxwjlKCP0HM/KVZ4YfAhG+pT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BYCJ9g/IznBOLFEeRik+WWkdykiDR43oEe1BJcqgvyb7wtBY+b6DUqx5zHsFOkQkGC1WkAHl6hvVwmUk6r4wj3fkhgn6UYnPU8+fve6vSvuE/OmINnwJtm36ctXVik0PfVTPDgseBKfGBavlsvS7faIzw49k216ycJYJCF012L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VPgNJJiZ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+	s=arc-20240116; t=1743336257; c=relaxed/simple;
+	bh=j8I7Y4X262Zlf2k8C6vN5Flngo160/1EeL7FXB8cA3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQG+XCWLrsZj/rysOdxLnCARvubVWPJd5fhlXd7GH59GFj7BP8A3hP/OjnUOI7+Gd6IDdQ2dTB+uDGD2pm9+MFBBXTBf/ZqB8uePURq3yx/4zEWmz/oPifo2OfEwyNnJIFyVB++PWz10Ga//5HdK8QZpIR01EQd/yoz88BuFQ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q0GkGU+6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dsi6MQOqN7ghOTfrKnW38mWU0gU/PvadKLIXd+zTJ3U=; b=VPgNJJiZvXeAxUKUx/r9TdqDiX
-	19jBaZ71+1CjptFA1uPOz7MTCa0Dtsu0KQDcIzZUn9Yi1YtO6j3j5PULNY2V6f/kNMVmC/4U/sNjK
-	ugtHpJAPu+D/ECx8lTjKXbh0fgepBKkPRxSB8RySceHn+wbuC9K3XIza5cZvoQM/IJ4fbkFaQ5ALv
-	Um0efa/I52oG3LJ+ea9SqLXbRwEGidQSjjTfZAfC1MuFqFI0+JafxaPi4N+6MRZX791VwYk7jtVdk
-	jrT63PtUmoskyRNKQhE7QXj1MDsxFidXiGfbCST8XW+vWXZtagnsvPt3q3LLYOB6XmKtBB/x1dxGW
-	89MIB91g==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tymSJ-0000000FreE-2OYS;
-	Sun, 30 Mar 2025 06:47:39 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: brauner@kernel.org,
-	jack@suse.cz,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	riel@surriel.com
-Cc: willy@infradead.org,
-	hannes@cmpxchg.org,
-	oliver.sang@intel.com,
-	dave@stgolabs.net,
-	david@redhat.com,
-	axboe@kernel.dk,
-	hare@suse.de,
-	david@fromorbit.com,
-	djwong@kernel.org,
-	ritesh.list@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-mm@kvack.org,
-	gost.dev@samsung.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	mcgrof@kernel.org,
-	syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com
-Subject: [PATCH 3/3] mm/migrate: avoid atomic context on buffer_migrate_folio_norefs() migration
-Date: Sat, 29 Mar 2025 23:47:32 -0700
-Message-ID: <20250330064732.3781046-4-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250330064732.3781046-1-mcgrof@kernel.org>
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=voDv8EMh3wDI8Ol9zgDNGOFRR3qzvAQIM67ZjI3SCz8=; b=q0GkGU+6GJ3rbA/gqQ0Af/LEyg
+	b4UR04DsVRCaisDDpggnecveh2T2HG2hI3FYGxHsV1yK2jwXaHKw8+5hJeqAeB4TBDUiZJBV7sK5/
+	e4ntTTvaW7srOCXgoxG6mHOKljPVQ2BnECSogx8ttaFZu3ZML+5CIYNQ2a7wgaCcuVvrBcPdVvUYW
+	lbIbWtB2ftNtQf31ZMqCRR3mV8C2Pyrtf6kKqRPN4VOnuGrPyjUuCTvFG6iV5og6xRBvpgwMhFmma
+	Yd1uPj0T2gQ+64/f6JemxhVYWoP36361IdpKdNI+arvw72ypRh9rXc64cLBtR3gNUANvGtPGC4Ot0
+	4R2A6eUg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tyrOU-00000004M53-2Dfn;
+	Sun, 30 Mar 2025 12:04:02 +0000
+Date: Sun, 30 Mar 2025 13:04:02 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: brauner@kernel.org, jack@suse.cz, tytso@mit.edu,
+	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	riel@surriel.com, hannes@cmpxchg.org, oliver.sang@intel.com,
+	dave@stgolabs.net, david@redhat.com, axboe@kernel.dk, hare@suse.de,
+	david@fromorbit.com, djwong@kernel.org, ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, gost.dev@samsung.com, p.raghav@samsung.com,
+	da.gomez@samsung.com
+Subject: Re: [PATCH 1/3] mm/migrate: add might_sleep() on __migrate_folio()
+Message-ID: <Z-kzMlwJXG7V9lip@casper.infradead.org>
 References: <20250330064732.3781046-1-mcgrof@kernel.org>
+ <20250330064732.3781046-2-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250330064732.3781046-2-mcgrof@kernel.org>
 
-The buffer_migrate_folio_norefs() should avoid holding the spin lock
-held in order to ensure we can support large folios. The prior commit
-"fs/buffer: avoid races with folio migrations on __find_get_block_slow()"
-ripped out the only rationale for having the atomic context,  so we can
-remove the spin lock call now.
+On Sat, Mar 29, 2025 at 11:47:30PM -0700, Luis Chamberlain wrote:
+> However tracing shows that folio_mc_copy() *isn't* being called
+> as often as we'd expect from buffer_migrate_folio_norefs() path
+> as we're likely bailing early now thanks to the check added by commit
+> 060913999d7a ("mm: migrate: support poisoned recover from migrate
+> folio").
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Reported-by: syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/oe-lkp/202503101536.27099c77-lkp@intel.com
-Fixes: 3c20917120ce ("block/bdev: enable large folio support for large logical block sizes")
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- mm/migrate.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Umm.  You're saying that most folios we try to migrate have extra refs?
+That seems unexpected; does it indicate a bug in 060913999d7a?
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 712ddd11f3f0..f3047c685706 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -861,12 +861,12 @@ static int __buffer_migrate_folio(struct address_space *mapping,
- 			}
- 			bh = bh->b_this_page;
- 		} while (bh != head);
-+		spin_unlock(&mapping->i_private_lock);
- 		if (busy) {
- 			if (invalidated) {
- 				rc = -EAGAIN;
- 				goto unlock_buffers;
- 			}
--			spin_unlock(&mapping->i_private_lock);
- 			invalidate_bh_lrus();
- 			invalidated = true;
- 			goto recheck_buffers;
-@@ -884,8 +884,6 @@ static int __buffer_migrate_folio(struct address_space *mapping,
- 	} while (bh != head);
- 
- unlock_buffers:
--	if (check_refs)
--		spin_unlock(&mapping->i_private_lock);
- 	bh = head;
- 	do {
- 		unlock_buffer(bh);
--- 
-2.47.2
+> +++ b/mm/migrate.c
+> @@ -751,6 +751,8 @@ static int __migrate_folio(struct address_space *mapping, struct folio *dst,
+>  {
+>  	int rc, expected_count = folio_expected_refs(mapping, src);
+>  
+> +	might_sleep();
 
+We deliberately don't sleep when the folio is only a single page.
+So this needs to be:
+
+	might_sleep_if(folio_test_large(folio));
+
+>  	/* Check whether src does not have extra refs before we do more work */
+>  	if (folio_ref_count(src) != expected_count)
+>  		return -EAGAIN;
+> -- 
+> 2.47.2
+> 
 
