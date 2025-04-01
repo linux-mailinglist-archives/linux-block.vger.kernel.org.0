@@ -1,240 +1,122 @@
-Return-Path: <linux-block+bounces-19104-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19107-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA29A780B4
-	for <lists+linux-block@lfdr.de>; Tue,  1 Apr 2025 18:41:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69ED0A78397
+	for <lists+linux-block@lfdr.de>; Tue,  1 Apr 2025 22:52:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F720166296
-	for <lists+linux-block@lfdr.de>; Tue,  1 Apr 2025 16:41:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 330861892DF8
+	for <lists+linux-block@lfdr.de>; Tue,  1 Apr 2025 20:51:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08AFD20D51F;
-	Tue,  1 Apr 2025 16:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69B25219A9D;
+	Tue,  1 Apr 2025 20:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XrhKYfji"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eOe4Qc5Z"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f231.google.com (mail-pl1-f231.google.com [209.85.214.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD6F20D516;
-	Tue,  1 Apr 2025 16:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1022153CE
+	for <linux-block@vger.kernel.org>; Tue,  1 Apr 2025 20:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525675; cv=none; b=DW80NS65wsRy9SsFaKiznix2SH0ckhedX+QFilXqpPp4Do6TvpZPyr6KzwhvSGPjsZ7j6NtootLctgJdo4xidYW2zz/Zi0qggXpCLUksD/n4jlDDexq05Shrzt9pYVBRjqHb2d+dTWjoUmTy2PYio9dWAdLwInh30wxJTGn3Z+4=
+	t=1743540561; cv=none; b=YR41nc1oVTJssDu6y45yvjmyG7GGIQRhWQXCNCsu048ORshuxw6pv/ju5bYVASXX3STOH0e6eXkcxSf/1CXPuoYESF5myVGmE66r7c1beGQqUCFVDjarnS/Hss+jxee0NCCJH8UDv0EwuxEwqx2a1mjRXTPz5ox+yw5xpWLDPyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525675; c=relaxed/simple;
-	bh=1gLhTGr9l4B6cXOGLPFVG5q64lvtMbM6/m8pzagYpbU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d3WtJyWFicGOGbD+JtPcQKtoC6SSKU0QwUgHUcet1VZRr+cetUvfK6Z8KWHii4ieQ/cCBLgfZ18xsuM/wzj7IgCbyPNJRRxqCMzH2iy6kIyHAzEY0s27BP++5SPZEdDWHlXkrZmckwzFOUY+1XyzAnyHX5MtPRFIyrt9rhAvdk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XrhKYfji; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E6BC4CEED;
-	Tue,  1 Apr 2025 16:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743525675;
-	bh=1gLhTGr9l4B6cXOGLPFVG5q64lvtMbM6/m8pzagYpbU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XrhKYfji1O5VVc0m3pVmiek3wlBysahevwvD4uF0BAO1Pv80bs4rTS+CWURqeqpdu
-	 aR1VnApBwaumrUWEEZjkl1xHck26LPPAjvtIhhOUL7EodlWBhhrDp1YnXaBpVUKoxy
-	 vu66bfEZAkuMb5vMnb8EjZIbLqlQlouXEwlVl691oHdtDQL3NOauFY8b///y+isCqI
-	 JlSZM/VgCrZiUWo8WUmVjVwAUkrWjgsl25sZDif/6ZGW4UnogWsN3FidYdczTdtKCr
-	 vinfcwBuwjN/Y+aFPkKooassEGIngPDBkPSfq97DR5wxa2LJ2Of3C8jnyvh7iDnLdM
-	 KeilThHGeg8eQ==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c2504fa876so1490024fac.0;
-        Tue, 01 Apr 2025 09:41:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU59z/o59f1NZS5OC07Ep7S0eIDYDMDkUcHmBw8Lgy+9KfjiNf/dYc+CO2CtcyYQaLk8pSmdhtQWzJfJw==@vger.kernel.org, AJvYcCVIlhZYN5yY64DjEipFdoWVaRgFKBKlHnWTwKoprPFimkSTlxN1oeNhnOcoD75i9uGzZqlG2hUWmZo=@vger.kernel.org, AJvYcCXQPoRB5jOtpyHAddWaO+rklUIqPEvhaTVKlGrc9aYSf3hYGDsJtMVeCM617qQCwFJQl3n25z4kp0CciuS+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFxt+LFVNWlh9jmsqi++x2q+d55oC32hNyX3MFmfv/MHBa7o2M
-	XIPaENa+dSHiTQt6a6PuYE3bv3LDr7ahXkqwu5v+Ho6AwITwBzgmOIGZO30u82DA//JSw1tZzTn
-	Oz2jX0d7foneXnD+BKdt4+NDSzbc=
-X-Google-Smtp-Source: AGHT+IGVXZ+0BVDFKICSSMwrK67DZSsDNux/3FyKeJP2ZsYnODa6XRbFXoGvWozBU8NYZA0rltVFvYQzLnASEJnV66k=
-X-Received: by 2002:a05:6808:6f88:b0:3fa:8bfd:7721 with SMTP id
- 5614622812f47-3ff0f59b9efmr8000188b6e.27.1743525674482; Tue, 01 Apr 2025
- 09:41:14 -0700 (PDT)
+	s=arc-20240116; t=1743540561; c=relaxed/simple;
+	bh=30PV2+70FCQMUCz+gunbFAvwdSKP+yMM0OGPlJ/I0uY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=g+Pqp/lKTByeIki7PEWEakjdxABeGVfP1pKJTjpCqU4kR8Q8YMtfquzZRCNfMRy9E+fpeBR87MnLhv5XOdR/7a9zJ51V7guERZaSM5qqRgsaPglBJbmwDUz7cMjV3ZFjXeEfhabmg64wwTZDjl1IkuH3Pr+H9VWDh3F93vzer/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eOe4Qc5Z; arc=none smtp.client-ip=209.85.214.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pl1-f231.google.com with SMTP id d9443c01a7336-2295d78b45cso29979145ad.0
+        for <linux-block@vger.kernel.org>; Tue, 01 Apr 2025 13:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743540557; x=1744145357; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mstT9j25mjz8aUy9IpCZAB9h1zoQsbNBC0c7IzzYKmM=;
+        b=eOe4Qc5ZL6PxBdceX4WZA0jY4bi3HOOTm0/symgIiB4WNyTjHs3G47jdkpEJZ4bZ/E
+         Mq1sg2WjUcPDnuGgHYCiviD2KBTt6RG+8SEqUlKlyq7Sn22CbkFRJkb26Nn5aeIYCCtw
+         txeJg+gN+1U70zPMXe2vLzJGsjybG0V3lJB6uKE5/nwpv2FZrZl7u6tNswAt2Sa38ter
+         +4wkb89FRx/+L4vqAC+Xcm/a44TyjUjRfsDwFhs4yiLNvcvXU9NTE0qJ4dkqXUkLcYzG
+         Vn+1OdI+dZ5NLL6LkwzX+N/VjVy94zX1GknIiLYko4Nkm4Bh3N+xiXOhG2zUAZK2tRUM
+         eRaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743540557; x=1744145357;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mstT9j25mjz8aUy9IpCZAB9h1zoQsbNBC0c7IzzYKmM=;
+        b=DRhjjl30sA25hwdVexrmKlQF4Mj5AbOjtAumPSCQuj5REAVSyEGp9+0GNqiLGFaZxz
+         AgdWAPjDG+6NMjZlTia5KnNTW1HCyl1DN+MSoPFzYuDg/T7HbwNXKaZetS5CGgk6cR2s
+         2a7a6+yM+PvKo1c0tPnfZupK0PXW19qsG33UV1eYuGc2RjPozFsFw5qYwD3gyOhNx8LE
+         8fbPALcOs7/bN+sLeZz9EyAfEKmPWfkTk37KMZtOC6K+5MrX7V49TDYuOlGacFg89Vmt
+         XHyV+WxEDvuo3QQU5VlEovdi4CBV0cBKjXL1HEMagZfSci+2sty80qtzxMXwqOJEZ7fn
+         ZY9Q==
+X-Gm-Message-State: AOJu0YyoDPFYI7z/Hoy0BL1sZi2fuyF0dClNOBgAJeWhvtxNbQ/rybqt
+	kQ1rgeRC0CQXmz/hTmVH+0ujLq+BQ7Z+j/dM5XXaaCjbV9SLl4ZTrmhiPq/N67V3pOP1O32BUnp
+	7O5o3IK55chHtorllw9t2OBRfP9Ucq9IRJnwi5eSZtZS54W4s
+X-Gm-Gg: ASbGncvDgYjl7H9GN6/HSG1ycCVXXsDYQDyhySMYhDvHr6hqD1bf8QYq3G4D6+55rYj
+	/sTccwmQAxI6xPjp4yANcZyWMF0lfnBNFHwXaj23/pf9Jk6ZuycSIfCakxIrLldMEa9kVcpkJvL
+	7A3ev5T1R4FcO4KEr5RCzeEiUzXjXeeHEcgbbo6pyaz00cIH5xsL3maIs1v9bHS21nE+OlABqOb
+	PqxZx+KQgj1ZS3fTVrfOZikk/wSWzrdmhsIIQyfYQhGBznCdLOa6wAXkBUjGApSa2iz8SrWGoxr
+	iHNLezSrxINPHr2n/yMptuwoIGxk2KIB2w4=
+X-Google-Smtp-Source: AGHT+IGs2poYi76n3mLJWXhUA0XPnz0aQSm3PIe6uqP21P4f4eb9jq7kzrwsD2tGzgMq7M/2nrRv9Bzd3IVu
+X-Received: by 2002:a05:6a00:3a1d:b0:736:3d7c:236c with SMTP id d2e1a72fcca58-739803990admr19199141b3a.14.1743540556836;
+        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-739710cb596sm757975b3a.20.2025.04.01.13.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 104C43400D7;
+	Tue,  1 Apr 2025 14:49:16 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 038EAE4034D; Tue,  1 Apr 2025 14:49:15 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH 0/2] ublk: fixes for selftests
+Date: Tue, 01 Apr 2025 14:49:07 -0600
+Message-Id: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <33882f284ac6e6d1ec766ca4bb2f3b88@intel.com> <f18607ca-30dc-43de-be77-fec69968aeec@arm.com>
- <SJ2PR11MB7670F63C7052C88637D305DF8DDF2@SJ2PR11MB7670.namprd11.prod.outlook.com>
- <1ae51ccc-66cc-4551-b649-2f5883e2f5a2@acm.org> <SJ2PR11MB7670B2AEFF7C0DABE6856F258DA62@SJ2PR11MB7670.namprd11.prod.outlook.com>
- <ad852ef9-5207-4b70-8834-2db6aa5e1a51@arm.com> <SJ2PR11MB7670E05E066CCC16AFEA16A18DAC2@SJ2PR11MB7670.namprd11.prod.outlook.com>
- <743b3472-e1a4-4fdc-ac2d-6e74c51022c4@arm.com>
-In-Reply-To: <743b3472-e1a4-4fdc-ac2d-6e74c51022c4@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 1 Apr 2025 18:41:03 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gryQv8hQO0yp5Ssh2v6jvCtrF-g0xJhOrrxfrDeDeq=Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JqFA7IwPhhQcfGCN8j-8gC1KfAULXjhN1fIy5y9GFpwTc_hCUHt5sJFE3U
-Message-ID: <CAJZ5v0gryQv8hQO0yp5Ssh2v6jvCtrF-g0xJhOrrxfrDeDeq=Q@mail.gmail.com>
-Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
- fast I/O devices
-To: Christian Loehle <christian.loehle@arm.com>, "King, Colin" <colin.king@intel.com>
-Cc: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAENR7GcC/x3MQQqAIBBA0avErBPMmBZdJSIyxxoSC6ciiO6et
+ HyL/x8QSkwCbfFAoouFt5hRlQVMyxhnUuyywWiDujaoThvWQSj4g+QQ1Ywa0Xk7IVrI0Z7I8/0
+ Pu/59P8Y+ip1gAAAA
+X-Change-ID: 20250325-ublk_selftests-6a055dfbc55b
+To: Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 1, 2025 at 5:15=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> On 4/1/25 16:03, King, Colin wrote:
-> > Hi,
-> >
-> > Reply at end..
-> >
-> >> -----Original Message-----
-> >> From: Christian Loehle <christian.loehle@arm.com>
-> >> Sent: 26 March 2025 16:27
-> >> To: King, Colin <colin.king@intel.com>; Bart Van Assche
-> >> <bvanassche@acm.org>; Jens Axboe <axboe@kernel.dk>; Rafael J. Wysocki
-> >> <rafael@kernel.org>; Daniel Lezcano <daniel.lezcano@linaro.org>; linux=
--
-> >> block@vger.kernel.org; linux-pm@vger.kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention=
- for
-> >> fast I/O devices
-> >>
-> >> On 3/26/25 15:04, King, Colin wrote:
-> >>> Hi,
-> >>>
-> >>>> -----Original Message-----
-> >>>> From: Bart Van Assche <bvanassche@acm.org>
-> >>>> Sent: 23 March 2025 12:36
-> >>>> To: King, Colin <colin.king@intel.com>; Christian Loehle
-> >>>> <christian.loehle@arm.com>; Jens Axboe <axboe@kernel.dk>; Rafael J.
-> >>>> Wysocki <rafael@kernel.org>; Daniel Lezcano
-> >>>> <daniel.lezcano@linaro.org>; linux-block@vger.kernel.org;
-> >>>> linux-pm@vger.kernel.org
-> >>>> Cc: linux-kernel@vger.kernel.org
-> >>>> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion
-> >>>> prevention for fast I/O devices
-> >>>>
-> >>>> On 3/17/25 3:03 AM, King, Colin wrote:
-> >>>>> This code is optional, one can enable it or disable it via the
-> >>>>> config option. Also, even when it is built-in one can disable it by
-> >>>>> writing 0 to the
-> >>>> sysfs file
-> >>>>>    /sys/devices/system/cpu/cpuidle/psd_cpu_lat_timeout_ms
-> >>>>
-> >>>> I'm not sure we need even more configuration knobs in sysfs.
-> >>>
-> >>> It's useful for enabling / disabling the functionality, as well as so=
-me form of
-> >> tuning for slower I/O devices, so I think it is justifiable.
-> >>>
-> >>>> How are users
-> >>>> expected to find this configuration option? How should they decide
-> >>>> whether to enable or to disable it?
-> >>>
-> >>> I can send a V2 with some documentation if that's required.
-> >>>
-> >>>>
-> >>>> Please take a look at this proposal and let me know whether this
-> >>>> would solve the issue that you are looking into: "[LSF/MM/BPF Topic]
-> >> Energy- Efficient I/O"
-> >>>> (https://lore.kernel.org/linux-block/ad1018b6-7c0b-4d70-
-> >>>> b845-c869287d3cf3@acm.org/). The only disadvantage of this approach
-> >>>> compared to the cpuidle patch is that it requires RPM (runtime power
-> >>>> management) to be enabled. Maybe I should look into modifying the
-> >>>> approach such that it does not rely on RPM.
-> >>>
-> >>> I've had a look, the scope of my patch is a bit wider.  If my patch
-> >>> gets accepted I'm going to also look at putting the psd call into
-> >>> other devices (such as network devices) to also stop deep states whil=
-e
-> >>> these devices are busy.  Since the code is very lightweight I was hop=
-ing this
-> >> was going to be relatively easy and simple to use in various devices i=
-n the
-> >> future.
-> >>
-> >> IMO this needs to be a lot more fine-grained then, both in terms of wh=
-ich
-> >> devices or even IO is affected (Surely some IO is fine with at least *=
-some*
-> >> latency) but also how aggressive we are in blocking.
-> >> Just looking at some common latency/residency of idle states out there=
- I don't
-> >> think it's reasonable to force polling for a 3-10ms (rounding up with =
-the jiffie)
-> >> period.
-> >
-> > The current solution by a customer is that they are resorting to disabl=
-ing C6/C6P and hence
-> > all the CPUs are essentially in a non-low power state all the time.  Th=
-e opt-in solution
-> > provided in the patch provides nearly the same performance and will re-=
-enable deeper
-> > C-states once the I/O is completed.
-> >
-> > As I mentioned earlier, the jiffies are used because it's low-touch and=
- very fast with negligible
-> > impact on the I/O paths. Using finer grained timing is far more an expe=
-nsive operation and
-> > is a huge overhead on very fast I/O devices.
-> >
-> > Also, this is a user config and tune-able choice. Users can opt-in to u=
-sing this if they want
-> > to pay for the extra CPU overhead for a bit more I/O performance. If th=
-ey don't want it, they
-> > don't need to enable it.
-> >
-> >> Playing devil's advocate if the system is under some thermal/power pre=
-ssure
-> >> we might actually reduce throughput by burning so much power on this.
-> >> This seems like the stuff that is easily convincing because it improve=
-s
-> >> throughput and then taking care of power afterwards is really hard. :/
-> >>
-> >
-> > The current solution is when the user is trying to get maximum bandwidt=
-h and disabling C6/C6P
-> > so they are already keeping the system busy. This solution at least wil=
-l save power when I/O is idling.
-> >
->
-> No. They can set the pm qos latency constraint when they care about 'maxi=
-mum bandwidth'
-> and remove the constraint when they don't.
-> If they just disable the idle states at boot and never enable them at lea=
-st they have no
-> grounds to complain to kernel people about, they should know what they're=
- doing is detrimental
-> to power.
+Fix a couple of issues I saw when developing selftests for ublk. These
+patches are split out from the following series:
 
-I think that they know about it, but they are complaining that there's
-no alternative.
+https://lore.kernel.org/linux-block/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com/T/#t
 
-Well, this is not entirely true because of the PM QoS latency
-constraints that can be used, but this requires admin access which
-isn't popular.
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Uday Shankar (2):
+      selftests: ublk: kublk: use ioctl-encoded opcodes
+      selftests: ublk: kublk: fix an error log line
 
-Hence (I think) the idea to add an opt-in that will effectively
-disable C6/C6P temporarily when I/O is pending (in progress, queued up
-or whatever), but this may very well use the existing PM QoS latency
-constraints framework under the hood instead of adding something new.
+ tools/testing/selftests/ublk/kublk.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 4cfcc398357b0fb3d4c97d47d4a9e3c0653b7903
+change-id: 20250325-ublk_selftests-6a055dfbc55b
 
-> Furthermore we might be better off disabling C6/C6P than staying in a pol=
-ling state (whenever we've
-> completed an IO in the last ~5 to 20ms, depending on the HZ setting).
-> Again, the wastefulness of a polling state can hardly be overestimated, e=
-specially given
-> that it doesn't seem to be necessary at all here?
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
 
-I don't think it is necessary or at least the need for it would need
-to be demonstrated.  In fact, on x86, every time the poll state is
-selected, it turns out to be overly shallow, at least in the results
-I've seen so far.
-
-Most likely, it would be sufficient to have a CPU latency PM QoS
-request registered per I/O entity and set the limit for it slightly
-above the C1 (or C1E) exit latency when there's I/O to process.  After
-completing the I/O, the request can be update to the "don't care"
-value.
 
