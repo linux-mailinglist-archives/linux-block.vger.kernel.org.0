@@ -1,70 +1,70 @@
-Return-Path: <linux-block+bounces-19127-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19129-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3BA9A788A9
-	for <lists+linux-block@lfdr.de>; Wed,  2 Apr 2025 09:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3D36A788AB
+	for <lists+linux-block@lfdr.de>; Wed,  2 Apr 2025 09:11:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C5FF3B12A2
-	for <lists+linux-block@lfdr.de>; Wed,  2 Apr 2025 07:10:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9B923B1705
+	for <lists+linux-block@lfdr.de>; Wed,  2 Apr 2025 07:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 032D7236A6D;
-	Wed,  2 Apr 2025 07:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB27F233152;
+	Wed,  2 Apr 2025 07:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="f++gpbxg"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bKq11qpG"
 X-Original-To: linux-block@vger.kernel.org
 Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B25237186
-	for <linux-block@vger.kernel.org>; Wed,  2 Apr 2025 07:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1120E23315C
+	for <linux-block@vger.kernel.org>; Wed,  2 Apr 2025 07:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743577760; cv=none; b=MZwi0uKFqssywM6gzrjUU8/63OjOWk+xB0u/+wV5eCRiWyMpIYcKfGeVc2nWgry1D+yOZRpH7S9tS6VjXCFzTjH8QcqrFM1mi1uCzmIxrhcQn8glzfYk3t4t1GR0KcmucxfssHylhP6/tmu586YPu4+KRhQ8pUrH2bIh9+Re6H0=
+	t=1743577763; cv=none; b=YEtl9k+iOkZdfvYJJweBii8ytxzoYaz4A4rKC0Xbnad/mvAmVc75lXaOpOFblh0Z0iLFD632FZahUBxVD1YZXZ6dwi5R4sfkIPF2OzNSZDQdKgLDsO9T2j9ZgPm6J4rbYbxoV8BkVBsicVJpMfdhim0z94GmbBYA0ZhasuH05ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743577760; c=relaxed/simple;
-	bh=ZUg4vWIrhMybKloELmU+beOmG39uzWztwz1klnfDxho=;
+	s=arc-20240116; t=1743577763; c=relaxed/simple;
+	bh=MgPxIncYoIu1IyU0/pxsqdBGr5YKFoGwEiRiwr1vak4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GrQM6YlzObiEr01xwVCFDHM59mIpyWvLsJS8SOkYdE/44bi2RlNbja2WhSphgf5PwC2213DZ9ywldfrMzoeGuDkZrt0M4mOySw6oz3xo9XAN+tqLz28Tb1wKT9zVYmwh7NYhLnLmBjh2AiRaXMdDphAguw8NPP/FSkTctej7XKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=f++gpbxg; arc=none smtp.client-ip=216.71.154.45
+	 MIME-Version; b=C9GO+ecoLCe5+IKn8Y+6X81HB2I3bZISYYYRnMVhsRyJqUgSVV73LpIhoWK58DontOUQz2FgGFDmV5QANDJ8A/z6frHse8c7npnJZPj47if9cVlXE+JIBtB1Pq2IAZvqFkYurneo73WlMY4/cTA5KIML3nB8Vc4rAyIBjmvgt6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=bKq11qpG; arc=none smtp.client-ip=216.71.154.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1743577759; x=1775113759;
+  t=1743577761; x=1775113761;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZUg4vWIrhMybKloELmU+beOmG39uzWztwz1klnfDxho=;
-  b=f++gpbxgC3w/q9iCU4964/InqVPBXMeHMQ1O/KJjOFaBjQnxa9M9rFlE
-   z4aOVrjueiFrwi0qAx0Vu6SSw8AbsiRv5P/Y5jKyAl/UfroVXbXCjvxXB
-   C1UlF6OHNgqYDFcOS7PZS0Qhel5+MZwscosQx6UyJ030813qCc8VQzew5
-   ydWOgwk36ykjikeEDGu4239RQYeWjdGVXZveK3IXC/8UUDp0Ng7IdtC4x
-   As3EVH8rkt3FQFU5OAOW4TuI85E8mzcDRwNWmPGt4HmDZ1nTQ3qACqmI0
-   KwGuvx6rUioRhR4CayRWlJcl4r5S0sJeDgnHgZ1pQwvrHmcjc6dad16qe
-   A==;
-X-CSE-ConnectionGUID: FFH/VCwbTAmJDbYnbDqFDQ==
-X-CSE-MsgGUID: GADc8GIgTY2Ba3cr57ledg==
+  bh=MgPxIncYoIu1IyU0/pxsqdBGr5YKFoGwEiRiwr1vak4=;
+  b=bKq11qpG+FeBd/1W2Kd3aiLOU0q+IwcVqOcqkeGOkfKbdGfffIRqx9EM
+   rKeMGgPMKwcm0m6obqR94PGq3kqafw/Us2XP2kKygKTb8XpO6H7eDjYvH
+   lmnWGi7Btb9lieAAflyrLTNydS4Iu1Z4uhKjJeer9b50LPIvoHY5hM6Y1
+   0vyPXXi/LsVQJ+/eKlT5DEnj/rFkYN11XgVw7c4Ue0G8haYj+2z8Lg5YX
+   LbJDg6D9P5Afxyq4flVu/C6v+Vxl3XSx44dVfeR0tkI4sbDssm2ixumCq
+   VQoBzP/mYxQnZxW8MvRiRAe+bCV21lLDMZ4Q0ft2XS4A9CuelQK23zfnu
+   Q==;
+X-CSE-ConnectionGUID: FPTuqQWhRQSx0sUAO/1Prw==
+X-CSE-MsgGUID: 3deTz+z5QDCwgbn26VeyhA==
 X-IronPort-AV: E=Sophos;i="6.14,295,1736784000"; 
-   d="scan'208";a="71367749"
+   d="scan'208";a="71367750"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2025 15:09:18 +0800
-IronPort-SDR: 67ecd4a7_QwxykaXdSRiGVN5PZznDsiO/+ss2chu3ml9n2Nh30rnfXZf
- voVHFOf6jDIfWG4IbbBtVGe3g/bqfGbnmvyLbAg==
+  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2025 15:09:20 +0800
+IronPort-SDR: 67ecd4a9_GZyGbwKYYUmXgRKymJxuDKwC469HVyDuwEzoIkrY4wGQij1
+ 4GqkhJL7fefMEVD4YQX6IGM8A5pOeSBrjKJ0pZA==
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Apr 2025 23:09:44 -0700
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Apr 2025 23:09:45 -0700
 WDCIronportException: Internal
 Received: from 5cg2075fn7.ad.shared (HELO shinmob.wdc.com) ([10.224.102.114])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Apr 2025 00:09:19 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Apr 2025 00:09:20 -0700
 From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To: linux-block@vger.kernel.org,
 	linux-nvme@lists.infradead.org
 Cc: Hannes Reinecke <hare@suse.de>,
 	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 09/10] nvme: add testcase for TLS-encrypted connections
-Date: Wed,  2 Apr 2025 16:09:05 +0900
-Message-ID: <20250402070906.393160-10-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 10/10] nvme: add testcase for secure concatenation
+Date: Wed,  2 Apr 2025 16:09:06 +0900
+Message-ID: <20250402070906.393160-11-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250402070906.393160-1-shinichiro.kawasaki@wdc.com>
 References: <20250402070906.393160-1-shinichiro.kawasaki@wdc.com>
@@ -78,48 +78,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Hannes Reinecke <hare@suse.de>
 
-TCP connections can be encrypted using in-kernel TLS, so add a
-testcase to exercise the various combinations.
+NVMe-TCP has a 'secure concatenation' mode, where the TLS PSK is
+generated from the secret negotiated by the DH-HMAC-CHAP authentication,
+and the TLS connection is started after authentication.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-[Shin'ichiro: added _have_libnvme_ver and _have_systemd_tlshd_service]
+Signed-off-by: Hannes Reinecke <hare@kernel.org>
+[Shin'ichiro: added _have_systemd_tlshd_service, avoided "exit 1"]
 [Shin'ichiro: used _systemctl_start and _systemctl_stop]
-[Shin'ichiro: fixed file mode]
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- tests/nvme/060     | 95 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/060.out | 10 +++++
- tests/nvme/rc      | 14 +++++++
- 3 files changed, 119 insertions(+)
- create mode 100755 tests/nvme/060
- create mode 100644 tests/nvme/060.out
+ tests/nvme/061     | 109 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/061.out |   7 +++
+ 2 files changed, 116 insertions(+)
+ create mode 100755 tests/nvme/061
+ create mode 100644 tests/nvme/061.out
 
-diff --git a/tests/nvme/060 b/tests/nvme/060
+diff --git a/tests/nvme/061 b/tests/nvme/061
 new file mode 100755
-index 0000000..d7424ac
+index 0000000..7477078
 --- /dev/null
-+++ b/tests/nvme/060
-@@ -0,0 +1,95 @@
++++ b/tests/nvme/061
+@@ -0,0 +1,109 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2024 Hannes Reinecke, SUSE Labs
++# Copyright (C) 2022 Hannes Reinecke, SUSE Labs
 +#
-+# Create TLS-encrypted connections
++# Create secure concatenation for TCP connections
 +
 +. tests/nvme/rc
 +
-+DESCRIPTION="Create TLS-encrypted connections"
++DESCRIPTION="Create authenticated TCP connections with secure concatenation"
 +QUICK=1
 +
 +requires() {
 +	_nvme_requires
 +	_have_loop
++	_have_kernel_option NVME_AUTH
 +	_have_kernel_option NVME_TCP_TLS
++	_have_kernel_option NVME_TARGET_AUTH
 +	_have_kernel_option NVME_TARGET_TCP_TLS
-+	_require_kernel_nvme_fabrics_feature tls
++	_require_kernel_nvme_fabrics_feature dhchap_ctrl_secret
++	_require_kernel_nvme_fabrics_feature concat
 +	_require_nvme_trtype tcp
-+	_require_nvme_cli_tls
-+	_have_libnvme_ver 1 11
++	_require_nvme_cli_auth
 +	_have_systemd_tlshd_service
 +}
 +
@@ -133,59 +134,71 @@ index 0000000..d7424ac
 +	_setup_nvmet
 +
 +	local hostkey
-+	local ctrl
-+
-+	hostkey=$(nvme gen-tls-key -n "${def_hostnqn}" -c "${def_subsysnqn}" -m 1 -I 1 -i 2> /dev/null)
-+	if [ -z "$hostkey" ] ; then
-+		echo "nvme gen-tls-key failed"
-+		return 1
-+	fi
 +
 +	_systemctl_start tlshd
 +
-+	_nvmet_target_setup --blkdev file --tls
++	hostkey=$(nvme gen-dhchap-key -m 1 -n "${def_hostnqn}" 2> /dev/null)
++	if [ -z "$hostkey" ] ; then
++		echo "nvme gen-dhchap-key failed"
++		_systemctl_stop
++		return 1
++	fi
 +
-+	# Test unencrypted connection
-+	echo "Test unencrypted connection w/ tls not required"
-+	_nvme_connect_subsys
++	_nvmet_target_setup --blkdev file --hostkey "${hostkey}" --tls
++	_set_nvmet_hash "${def_hostnqn}" "hmac(sha256)"
++	_set_nvmet_dhgroup "${def_hostnqn}" "ffdhe2048"
++
++	echo "Test secure concatenation with SHA256"
++	_nvme_connect_subsys --dhchap-secret "${hostkey}" --concat
 +
 +	ctrl=$(_find_nvme_dev "${def_subsysnqn}")
-+	if _nvme_ctrl_tls_key "$ctrl" > /dev/null; then
-+		echo "WARNING: connection is encrypted"
++	if [[ -z "$ctrl" ]]; then
++		echo "WARNING: connection failed"
++		_systemctl_stop
++		return 1
++	fi
++	tlskey=$(_nvme_ctrl_tls_key "$ctrl" || true)
++	if [[ -z "$tlskey" ]]; then
++		echo "WARNING: connection is not encrypted"
++		_systemctl_stop
++		return 1
++	fi
++
++	# Reset controller to force re-negotiation
++	echo "Reset controller"
++	if ! nvme reset "/dev/${ctrl}" ; then
++		echo "WARNING: failed to reset controller"
++	fi
++
++	new_tlskey=$(_nvme_ctrl_tls_key "$ctrl" || true)
++	if [[ -z "$new_tlskey" ]]; then
++		echo "WARNING: connection is not encrypted"
++	elif [[ "$new_tlskey" = "$tlskey" ]]; then
++		echo "WARNING: TLS key has not been renegotiated"
 +	fi
 +
 +	_nvme_disconnect_subsys
 +
-+	# Test encrypted connection
-+	echo "Test encrypted connection w/ tls not required"
-+	_nvme_connect_subsys --tls
++	hostkey=$(nvme gen-dhchap-key -m 2 -n "${def_hostnqn}" 2> /dev/null)
++	if [ -z "$hostkey" ] ; then
++		echo "nvme gen-dhchap-key failed"
++		_systemctl_stop
++		return 1
++	fi
++
++	_set_nvmet_hostkey "${def_hostnqn}" "${hostkey}"
++	_set_nvmet_hash "${def_hostnqn}" "hmac(sha384)"
++	_set_nvmet_dhgroup "${def_hostnqn}" "ffdhe3072"
++
++	echo "Test secure concatenation with SHA384"
++	_nvme_connect_subsys --dhchap-secret "${hostkey}" --concat
 +
 +	ctrl=$(_find_nvme_dev "${def_subsysnqn}")
-+	if ! _nvme_ctrl_tls_key "$ctrl" > /dev/null ; then
-+                echo "WARNING: connection is not encrypted"
-+        fi
-+
-+	_nvme_disconnect_subsys
-+
-+	# Reset target configuration
-+	_nvmet_target_cleanup
-+
-+	_nvmet_target_setup --blkdev file --force-tls
-+
-+	# Test unencrypted connection
-+	echo "Test unencrypted connection w/ tls required (should fail)"
-+	_nvme_connect_subsys
-+
-+	_nvme_disconnect_subsys
-+
-+	# Test encrypted connection
-+	echo "Test encrypted connection w/ tls required"
-+	_nvme_connect_subsys --tls
-+
-+	ctrl=$(_find_nvme_dev "${def_subsysnqn}")
-+	if ! _nvme_ctrl_tls_key "$ctrl" > /dev/null; then
-+                echo "WARNING: connection is not encrypted"
-+        fi
++	if _nvme_ctrl_tls_key "$ctrl" > /dev/null ; then
++		echo "WARNING: connection is not encrypted"
++		_systemctl_stop
++		return 1
++	fi
 +
 +	_nvme_disconnect_subsys
 +
@@ -195,51 +208,19 @@ index 0000000..d7424ac
 +
 +	echo "Test complete"
 +}
-diff --git a/tests/nvme/060.out b/tests/nvme/060.out
+diff --git a/tests/nvme/061.out b/tests/nvme/061.out
 new file mode 100644
-index 0000000..b2975bb
+index 0000000..97e8948
 --- /dev/null
-+++ b/tests/nvme/060.out
-@@ -0,0 +1,10 @@
-+Running nvme/060
-+Test unencrypted connection w/ tls not required
++++ b/tests/nvme/061.out
+@@ -0,0 +1,7 @@
++Running nvme/061
++Test secure concatenation with SHA256
++Reset controller
 +disconnected 1 controller(s)
-+Test encrypted connection w/ tls not required
-+disconnected 1 controller(s)
-+Test unencrypted connection w/ tls required (should fail)
-+disconnected 0 controller(s)
-+Test encrypted connection w/ tls required
++Test secure concatenation with SHA384
 +disconnected 1 controller(s)
 +Test complete
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index e52437f..ac3949a 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -175,6 +175,14 @@ _require_nvme_cli_auth() {
- 	return 0
- }
- 
-+_require_nvme_cli_tls() {
-+	if ! nvme gen-tls-key --subsysnqn nvmf-test-subsys > /dev/null 2>&1; then
-+		SKIP_REASON+=("nvme gen-tls-key command missing")
-+		return 1
-+	fi
-+	return 0
-+}
-+
- _require_kernel_nvme_fabrics_feature() {
- 	local feature="$1"
- 
-@@ -630,3 +638,9 @@ _have_libnvme_ver() {
- 	fi
- 	return 0
- }
-+
-+_nvme_ctrl_tls_key() {
-+	local ctrl="$1"
-+
-+	cat /sys/class/nvme/"$ctrl"/tls_key 2>/dev/null
-+}
 -- 
 2.49.0
 
