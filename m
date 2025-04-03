@@ -1,160 +1,79 @@
-Return-Path: <linux-block+bounces-19180-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19181-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E1A9A7B205
-	for <lists+linux-block@lfdr.de>; Fri,  4 Apr 2025 00:26:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40697A7B253
+	for <lists+linux-block@lfdr.de>; Fri,  4 Apr 2025 01:17:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E05BD189B1D5
-	for <lists+linux-block@lfdr.de>; Thu,  3 Apr 2025 22:26:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04B063B97C7
+	for <lists+linux-block@lfdr.de>; Thu,  3 Apr 2025 23:17:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F5A19F471;
-	Thu,  3 Apr 2025 22:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19351DD9AB;
+	Thu,  3 Apr 2025 23:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="VFccl0d2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYiusROL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870022E62AE
-	for <linux-block@vger.kernel.org>; Thu,  3 Apr 2025 22:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6B61A5B8F
+	for <linux-block@vger.kernel.org>; Thu,  3 Apr 2025 23:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743719160; cv=none; b=e3MOjKV7KJnwOCmYhEWO/SP/UjuNWmzbLZdZiJ3LrSlnhaqcZn6CBQwcXYkJARvTKxoKOfG/GQFAjspbGwAbxvXZ1dAEkVGX2XDrR9vcJXozY4h6zldy+8NGX9Hr4ZilBL3l32fTg0pYavfjGZtCzKUFFo7a6XYK5S/wazACvi4=
+	t=1743722229; cv=none; b=iZdoIDBqXex0l9QFIlN9x6luSKP+VK+VdU0lFJj5iFqcxa6hsp2BS91KhBW70VuL5AOmDFlRBPaHRehXWFi1JbPF300hiAarZy2BZaV2VTL/dqOko0muWtwtcrziB0pO4LUh6FcfrDe7KX+fF6RESUlNetUYREY8vdYBScixHEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743719160; c=relaxed/simple;
-	bh=k4fjeeaRoGPxNiwsaZ3PT+0XkDRMps+Y46E1VBS0Mek=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=hdn7T5+ArNBJJZRRD60YaeneZRlhC9Pd9c1PzackG/CDj9t9a95I1uywVlBQtjbjw8cEWNH4JsuyQbpzFYIzI/JiKPJYHqdSVU6rlVJsyz8t+0IMBz7TkmNQ/Al/b4YWG1eZ6N6boUvrheWP+LY5AmkQkdWcmA27DNFzVXf6km8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=VFccl0d2; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d5eb0ec2bdso4789115ab.2
-        for <linux-block@vger.kernel.org>; Thu, 03 Apr 2025 15:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743719156; x=1744323956; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W+TjnAX+4DHr8l3uZ+EqCX2hVt076+5v8E8TdoE/zT8=;
-        b=VFccl0d2WNmf73NkxDPemz7hBnLfQ8mVFoVo91xpu33a7wulMqN2zrSgob4eWqSGZa
-         zW1pyqMceOCMiEHxlEBSfRsuDSYpapd3GT/q0Rm1UEoORpAANecJXtMPLoM4U5ejsUxo
-         42uaws/YbXi6Jf1dbqJbgxlr/EdM97HAc1WiGA9R1oqmTo0F9xzVMC6/aW3DU3xM4y2R
-         JaPp6rdNHqf1GYK0woVQHl+yNogGgIHKyYB06WzpyvznBU2eT2/cMYbj43qeRzd6LWEM
-         6A6f4F72+9aiUK3wu9nJaG/kh/4SUrReAUbKwjMPx4C1HfZ+CE4/VBpYZmuADt3OlKvE
-         Fm+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743719156; x=1744323956;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=W+TjnAX+4DHr8l3uZ+EqCX2hVt076+5v8E8TdoE/zT8=;
-        b=frjJj23I5g2ifgUgE29CZhAlreINFfCxUdRG/JxfWozGG0Le1NGIrte8I6aWlcySjd
-         rjUFGo/KrogmmDqdHiQ/aTYmbHRLm1m6K8BZAF0nEN3x/pqXe2TIy7GuqR+wRgDzowkB
-         fEXNafx3w+14Gp7zLcfpddfraJ1qgzgRlMWcR+Agm1t9+P+gwo0M0bUPhQd5UUECHf7S
-         wKrHrvAEL3j9SOG1huY7D6/a0wurB2jY0elXnub2rr2DzJWjRb2OqHtXrdBwCMZgWuO6
-         sTyooIHitcs3xKzhTGYMtN605fxLckKsQT07Bgc4z6Z/6oaJ1bxQwZ4UxHqSi+Q5Qavd
-         r5qw==
-X-Gm-Message-State: AOJu0YxwQgD0txDdcFjOPRsmpwb3Oap6pR+3QvnchgScdKkumhAjv/XI
-	EN4efv/mDlGbRihEjdj0micW1vIt6WILYIDLfd+InOqXRBoXCcr6jF7/jRYo3LSvgC8CxRCMifD
-	X
-X-Gm-Gg: ASbGncvxkiKlyQ/SCvYOsp4KgABR+dn59iNgM4+sL3htXfr20hlCXw9+abrdiRji8C3
-	VnULYVThp30ehcCAa1uFz9+cSPuu/+frm/nhfXtLtjFsELZvuhu+7vqqpFW8oYf7NrMtQ96W8MT
-	wb+Lf8Kccz5EPBQuYf5Ol3fIaXm/Sjq25wluBWecpLnxDI/QU1b8KyqpVOpzFsgIcPa3hFEQ6bo
-	57BKwnLNAcFjqNVjkOnSXT7e5B2CPwZlnqQsGFRAMl1Ipbb3F8DLmuYJwwRfz416lreZpczo91t
-	gnVC1vdJVtRg2E9oWauesbqtS8DkBCHyDZNWF0Twpg==
-X-Google-Smtp-Source: AGHT+IFb7eXXe4mk+qgAwz5BDBr8xe4XgOwBIYDhXVgpDAt6e+muEMw7epF6CxaEN9WDPDd0GzR+aQ==
-X-Received: by 2002:a05:6e02:398d:b0:3d4:2a4e:1272 with SMTP id e9e14a558f8ab-3d6e599cb42mr5666295ab.19.1743719156496;
-        Thu, 03 Apr 2025 15:25:56 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4b5d409cbsm498226173.107.2025.04.03.15.25.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 15:25:55 -0700 (PDT)
-Message-ID: <59ee82bb-7d4f-4a5a-8769-120c9dfdcc4d@kernel.dk>
-Date: Thu, 3 Apr 2025 16:25:55 -0600
+	s=arc-20240116; t=1743722229; c=relaxed/simple;
+	bh=rMMJPIbHSR+hBm11gpnVyzTOxHEji9+8oH1EEoUbifI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HQUkDFFGDTnQy1ZtBGCoot+7jczA0lSpDVEH35pCtnPCwQndCewtnx1Sk/ebYR5Mwn595hJreM1iyItb74XWlX8Bnv8wDAG3KBGk6m4tyOwN9HYTlZYac6acldjozftqgrAOJ0vqCY473WNjm5UuePb/KZlci0lyeaFILa7wR20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYiusROL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8B1C4CEE3;
+	Thu,  3 Apr 2025 23:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743722229;
+	bh=rMMJPIbHSR+hBm11gpnVyzTOxHEji9+8oH1EEoUbifI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=CYiusROLbKN23+bY+hPwpc6is6NIf/70PoVUz9UYgQBi7hCavqUJM+lOwImuobY0b
+	 cTGKRRVwy95ML6zeaZEMdUiBYQ/eFZWijs4KXArqrBzRrir0dZFNv0HdFBt4K599HA
+	 ++T6rF54BiM0rvv8eoPSypMjbHo7rUi1s2GMjbu9Gcb8Gu1HGBWxgjfRMc3FB3/iX1
+	 KW2DTtheX4rAIOJp6EcCmbNaI09I9La6jrHR6RJ/GpVmXgkV1+YIm4rT1BjD0AiSF3
+	 jXADWKqXrCFGywrbAXFLYqp1h6EIWOwruULf8BTjuAq9dFDDkI5OjuWwAxm6jgsAyE
+	 xqoJ1ED+3dFsw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD6C380664C;
+	Thu,  3 Apr 2025 23:17:47 +0000 (UTC)
+Subject: Re: [GIT PULL] Final block updates for 6.15-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <59ee82bb-7d4f-4a5a-8769-120c9dfdcc4d@kernel.dk>
+References: <59ee82bb-7d4f-4a5a-8769-120c9dfdcc4d@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <59ee82bb-7d4f-4a5a-8769-120c9dfdcc4d@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.15-20250403
+X-PR-Tracked-Commit-Id: 01b91bf14f6d4893e03e357006e7af3a20c03fee
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 949dd321ded41cba661f4ec04c521e294e73b89f
+Message-Id: <174372226662.2716716.9408975939917444058.pr-tracker-bot@kernel.org>
+Date: Thu, 03 Apr 2025 23:17:46 +0000
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From: Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] Final block updates for 6.15-rc1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+The pull request you sent on Thu, 3 Apr 2025 16:25:55 -0600:
 
-Set of updates/fixes for block that should go into the 6.15-rc1 kernel
-release. This pull request contains:
+> git://git.kernel.dk/linux.git tags/block-6.15-20250403
 
-- NVMe pull request via Keith
-	- PCI endpoint target cleanup (Damien)
-	- Early import for uring_cmd fixed buffer (Caleb)
-	- Multipath documentation and notification improvements (John)
-	- Invalid pci sq doorbell write fix (Maurizio)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/949dd321ded41cba661f4ec04c521e294e73b89f
 
-- Queue init locking fix
-
-- Remove dead nsegs parameter from blk_mq_get_new_requests()
-
-Please pull!
-
-
-The following changes since commit 08733088b566b58283f0f12fb73f5db6a9a9de30:
-
-  Merge tag 'rust-fixes-6.15-merge' of git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux (2025-03-31 18:39:59 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux.git tags/block-6.15-20250403
-
-for you to fetch changes up to 01b91bf14f6d4893e03e357006e7af3a20c03fee:
-
-  block: don't grab elevator lock during queue initialization (2025-04-03 08:32:03 -0600)
-
-----------------------------------------------------------------
-block-6.15-20250403
-
-----------------------------------------------------------------
-Caleb Sander Mateos (3):
-      nvme/ioctl: don't warn on vectorized uring_cmd with fixed buffer
-      nvme/ioctl: move blk_mq_free_request() out of nvme_map_user_request()
-      nvme/ioctl: move fixed buffer lookup to nvme_uring_cmd_io()
-
-Damien Le Moal (1):
-      nvmet: pci-epf: Keep completion queues mapped
-
-Jens Axboe (1):
-      Merge tag 'nvme-6.15-2025-04-02' of git://git.infradead.org/nvme into block-6.15
-
-John Meneghini (2):
-      nvme: update the multipath warning in nvme_init_ns_head
-      nvme-multipath: change the NVME_MULTIPATH config option
-
-Maurizio Lombardi (1):
-      nvme-pci: skip nvme_write_sq_db on empty rqlist
-
-Ming Lei (1):
-      block: don't grab elevator lock during queue initialization
-
-Nitesh Shetty (1):
-      block: remove unused nseg parameter
-
- block/blk-mq.c                | 29 +++++++++++-------
- drivers/nvme/host/Kconfig     | 13 ++++++---
- drivers/nvme/host/core.c      |  2 +-
- drivers/nvme/host/ioctl.c     | 68 +++++++++++++++++++++++--------------------
- drivers/nvme/host/pci.c       |  3 ++
- drivers/nvme/target/pci-epf.c | 63 ++++++++++++++++-----------------------
- 6 files changed, 94 insertions(+), 84 deletions(-)
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
