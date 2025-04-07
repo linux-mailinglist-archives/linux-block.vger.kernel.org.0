@@ -1,62 +1,46 @@
-Return-Path: <linux-block+bounces-19226-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19228-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7E8FA7D44E
-	for <lists+linux-block@lfdr.de>; Mon,  7 Apr 2025 08:39:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4015FA7D4CA
+	for <lists+linux-block@lfdr.de>; Mon,  7 Apr 2025 08:59:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81D107A2CBF
-	for <lists+linux-block@lfdr.de>; Mon,  7 Apr 2025 06:38:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA6BA188EDDD
+	for <lists+linux-block@lfdr.de>; Mon,  7 Apr 2025 06:59:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A66122539E;
-	Mon,  7 Apr 2025 06:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ad27Wh01"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB022206B5;
+	Mon,  7 Apr 2025 06:54:20 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3059D221DAB
-	for <linux-block@vger.kernel.org>; Mon,  7 Apr 2025 06:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD29279F2
+	for <linux-block@vger.kernel.org>; Mon,  7 Apr 2025 06:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007947; cv=none; b=RMWVfC8GcAKkGBg0N65Apk6ucRGmXib+Gvbe8W3ZQtHzTmUpl2dDHsGz1LUQiFcrJZTaijeBeBJTIuKgwqkCIAC3aeHqtGCbBHKb1ERM0KWiq2uSKLKrhKZPdj/KT7uIsiXrAY1cWOCp7U87P3DKbUmG4xLBne+yPbUila3xXoA=
+	t=1744008860; cv=none; b=KvIEYDXZENDJDBmjCK3lNiwDs6xqVc0rQygmWXzRs5rGcuxWXUfrmZtG6zNLLijJdqYkOXvP0i38YtfLJHXDytWqQRomd9vBbw76e2jdhcrENC9TJebMKyydAib/RzAuem3InndAifQSQvLFL7CJs52WRHkqiEnma8d5Y2sJy3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007947; c=relaxed/simple;
-	bh=poBghNGz4hlb750IQ3Wu0740jtYVra8LsizCRs/XIvQ=;
+	s=arc-20240116; t=1744008860; c=relaxed/simple;
+	bh=Zq9IJUGurKGqEMYEq4hns9JhyaXFEjT89kLDNmsXlyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Llc4Ox0SlF81mU1z61ga4UvL/fVZSGqAJwt15lHkzLLwKuf5ZUqHtylMaJcYzWJUOAIpQMTXBW/WdKAshwzS85zqFjVfGkMjkkOZiKzmzbcXtEXVhCEBcf+fadSoCtT0Rtb9m7TbulM8s7WzI5LeJofj7jBhPyj4W8PCeUChRjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ad27Wh01; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=drSbq0KZf46iWEvCfgHN7bHPFVJcUCPR/oNPquQ9VEI=; b=ad27Wh017aF5juAz+eeeUdLYOz
-	w1DCjuYXTGs6CHMjXX2l/Aeuc0ZXqVVxqz8lA7MYffTvpmM66PmERpAJk71kMsfE63gJEbRM/gPTB
-	K5lXgkylK8OMLbperHapLUbc3a7DxoPCjzFaiP8X0GmXi8KjQz2ntQBZEERG6BpnMXLbUyfqBvL6k
-	cVF8ok3UeUF2Lr+SI2Zl3ZB24esZs/jRHcPnuz+CPG2WU5bLJO3QY5ba14cQrWJB4NsRdrRHKhxlN
-	VHf1XWrY5YD07utROIGuYy1FxTebY6skg8Z4rdhLp8uBP1BpZHxSEU8tMyZc08jj5FHNh0LleIQKk
-	CpSI+SlA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1g8L-0000000Gb3M-0MzH;
-	Mon, 07 Apr 2025 06:39:01 +0000
-Date: Sun, 6 Apr 2025 23:39:01 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	David Howells <dhowells@redhat.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	willy@infradead.org, linux-mm@kvack.org,
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: Does GUP page unpinning have to be done in the pinning context?
-Message-ID: <Z_NzBWIy-QvFBQZk@infradead.org>
-References: <939183.1743762009@warthog.procyon.org.uk>
- <67d4486b-658e-4f3f-9a67-8785616e6905@redhat.com>
- <dcb80dc4-a9f7-44d8-b88c-7221ea29deab@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcR02ZlBolGOv74L8kTRpZYFmRa2Em30+ew9Ouh2JU4XuDkwV+kjzzreJmNZgrI2fOEIoF/yZwEWjDpLJQ9AeNhqHw76qxvkDGTZXVYo3lhcY/8WCsQRgJmdhzXh/VgDzUabogfZUWFUwWYGdg3Hfqdht2dJ3EqqDicURWicCPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8625668B05; Mon,  7 Apr 2025 08:48:06 +0200 (CEST)
+Date: Mon, 7 Apr 2025 08:48:06 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, Nilay Shroff <nilay@linux.ibm.com>,
+	syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com
+Subject: Re: [PATCH] loop: replace freezing queue with quiesce when
+ changing loop specific setting
+Message-ID: <20250407064806.GA18766@lst.de>
+References: <20250403105414.1334254-1-ming.lei@redhat.com> <20250404091149.GC12163@lst.de> <Z-_LLTtusK8g0rlM@fedora>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -65,25 +49,45 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dcb80dc4-a9f7-44d8-b88c-7221ea29deab@nvidia.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <Z-_LLTtusK8g0rlM@fedora>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Apr 04, 2025 at 09:59:40AM -0700, John Hubbard wrote:
-> > gup_put_folio() seems to only rely on per-folio information (esp.
-> > node_stat_mod_folio).
+On Fri, Apr 04, 2025 at 08:06:05PM +0800, Ming Lei wrote:
+> On Fri, Apr 04, 2025 at 11:11:49AM +0200, Christoph Hellwig wrote:
+> > On Thu, Apr 03, 2025 at 06:54:14PM +0800, Ming Lei wrote:
+> > > freeze queue should be used for changing block layer generic setting, such
+> > > as logical block size, PI, ..., and it is enough to quiesce queue for
+> > > changing loop specific setting.
 > > 
-> > So there should not be such a context requirement.
+> > Why?  A queue should generally be frozen for any setting affecting the
+> > I/O path.  Nothing about generic or internal.
 > 
-> That is correct. The essence of gup/pup is that it operates on
-> struct pages, and doesn't have any "moral" connection to higher
-> layers or additional process context.
+> For any driver specific setting, quiesce is enough, because these settings
+> are only visible in driver IO code path, quiesce does provide the
+> required protection exactly.
 
-Hmm, indeed.  I misremembered why the block based direct I/O code is
-doing the process context offload, which is to call set_page_dirty to
-redirty pages where the dirty bit was cleared during direct I/O.
+What are "internal settings" please?  If you change the loop backing
+file outstanding I/O is relevant.  If you change NVMe ANA or retry
+policies are relevant as they are checked in the I/O completion handler.
 
-Which I think now that all block based file systems use FOLL_PIN
-shouldn't be needed anymore, because no one can clear the dirty bit
-while the folios are pinned?
+> > This also misses an explanation of what setting this protects and why
+> > you think this is safe and the sound fix.
+> 
+> 1) it is typical queue quiesce use case
+
+What is the typical queue quiesce use case?  Why is it "typical" and
+why is it safe.
+
+> 
+> 2) loop specific setting is only visible in loop queue_rq() & workfn, and
+> quiesce does provide the sync for queue_rq()
+
+_What_ loop specific setting.
+
+> 3) for driver, quiesce is always preferred over freeze, and freeze is
+> easily mis-used by driver, you know we have bad driver uses for freeze.
+
+I am actually much more worried about quiesce.  It is much less well
+defined.
 
 
