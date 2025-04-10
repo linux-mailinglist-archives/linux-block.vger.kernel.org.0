@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-19427-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19429-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 381FCA844EB
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 15:35:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA2C4A844ED
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 15:35:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7C711886E6E
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 13:31:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58DD616C5A5
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 13:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0B4154BE2;
-	Thu, 10 Apr 2025 13:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12AAF270EDD;
+	Thu, 10 Apr 2025 13:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K9knUBX/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CXb3k+A6"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F748633A
-	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 13:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0798633A
+	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 13:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291887; cv=none; b=Bf5X3DGzLHTFqUTb8FzOyJ6DCgqcQlioeMDiAT3TTZILFp4BFzru+/L5qs5GTI5qRDrdiKUP84BVXChDWsPcBobx7aFG6eMJG8pbVp2rT3og+NVmkch5//DBreRXh2qTMtR3R6CX/RTCGqdwcUTt2OhbQMI6cjoo956eVpsNs6Y=
+	t=1744291894; cv=none; b=dsFCNzCgtRRJs3HgPPbvP4GjULqYK1YUuKkcENOWzMYRLpUHYXxw7C4XgXy4qKZ4/zQvmTy2a87skWsBvVFOa+KF0jBym1sa5Zn2wVNcVesTKvAdM9XAkM5Zre1C0dwL8JDu59cURCj7air+33voqFjyMrC6H/0UlxYuC/hTlHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291887; c=relaxed/simple;
-	bh=yKoRJYYXrgSR4iQBbtWnOQyarXYrui4zmdZENlBIUMo=;
+	s=arc-20240116; t=1744291894; c=relaxed/simple;
+	bh=ys36xuRxasvFBQAggPOSKq0MJ+kOM4dkpKM1wXgaWKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wt9bUSoJBRuZQYPBNfwwykhsARYiWn/m69ZRF2Qk746j5p1LFk9X32vGxGctBL6abWKYVq981I1jeUg8DUo8vdqNXs+Q+C/IRgvt6lRCMy7r6N6UlztW6XOgMbakD2PAXNMhCiGu6LDgrJVNdHledBvOaJzIaVPLjg5qrRmNB84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K9knUBX/; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=YDu0a//XDDVhhkmcMUaWSYZiXbLRrCw8BCOkuUWODYzyjlS1noHyyAciQrlLZigYlXCduo/ib09bd/r5EVlU63OCvUGASkiYJB+QemqvlG4jcPKqktJnV46ggCrFRRBzBlkFA0bHxAtKniPoCyyrH3s0LYtyfwC1g6V8k0/FC0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CXb3k+A6; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744291884;
+	s=mimecast20190719; t=1744291890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q6yhpuePknjGj4Q76z4Q/TzgSmmjJhZfiXg0Eft7+eg=;
-	b=K9knUBX/etkaYelj5x9DUzkG8Q7mwL8SXI2t+9S5TmUVDrSjtleRk2qh4ft/cYcgJwVupW
-	jhtGC2fvHpL4aEJLfjqA8OYo61hDZzg4ju0NG4fWz0OINDAkrAU6lBA4uJXVb3s3aAhmqO
-	7sKqdNhiVudj+xBNfJyJQjWFPzEbp+s=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=F78dOB1IcPUXETUNoydupo0qY3sU/ZSPJ3VakeLk0+4=;
+	b=CXb3k+A6hJPUiuHZ9gw+x1iVyAPcrDqVQgAwJX1p/fbAAv0glFAqh04baOrzpZg/8Y0qpN
+	oZZkawZ47+KB3Lu/xmxc5A3yI6EoIFG55CwmQKviGuzICnAoLA0bwkV4LGhmbiyE6rJr7i
+	M8NNeLefiOkhdOoRS+I90Ic6bQbr5CM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-HE-8IBffN3CvoIJISHJonA-1; Thu,
- 10 Apr 2025 09:31:21 -0400
-X-MC-Unique: HE-8IBffN3CvoIJISHJonA-1
-X-Mimecast-MFC-AGG-ID: HE-8IBffN3CvoIJISHJonA_1744291878
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-_CT1uXJ_PmGcachMhWwE_Q-1; Thu,
+ 10 Apr 2025 09:31:26 -0400
+X-MC-Unique: _CT1uXJ_PmGcachMhWwE_Q-1
+X-Mimecast-MFC-AGG-ID: _CT1uXJ_PmGcachMhWwE_Q_1744291883
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51674180025C;
-	Thu, 10 Apr 2025 13:31:18 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0815C1801A06;
+	Thu, 10 Apr 2025 13:31:23 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.20])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5EDBD180B486;
-	Thu, 10 Apr 2025 13:31:16 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E767B1808882;
+	Thu, 10 Apr 2025 13:31:21 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
@@ -65,9 +65,9 @@ Cc: Nilay Shroff <nilay@linux.ibm.com>,
 	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 06/15] block: add helper of elevator_change()
-Date: Thu, 10 Apr 2025 21:30:18 +0800
-Message-ID: <20250410133029.2487054-7-ming.lei@redhat.com>
+Subject: [PATCH 07/15] block: move blk_unregister_queue() & device_del() after freeze wait
+Date: Thu, 10 Apr 2025 21:30:19 +0800
+Message-ID: <20250410133029.2487054-8-ming.lei@redhat.com>
 In-Reply-To: <20250410133029.2487054-1-ming.lei@redhat.com>
 References: <20250410133029.2487054-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -79,110 +79,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add elevator_change() to simplify elv_iosched_store() a bit, and the new
-helper will be used for unifying all scheduler change.
+Move blk_unregister_queue() & device_del() after freeze wait, and prepare
+for unifying elevator switch.
+
+This way is just fine, since bdev has been unhashed at the beginning of
+del_gendisk(), both blk_unregister_queue() & device_del() are dealing
+with kobject & debugfs thing only.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/elevator.c | 52 +++++++++++++++++++++++++++++-------------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+ block/genhd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/block/elevator.c b/block/elevator.c
-index 612fa2bdd40d..e028d2ff9624 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -53,6 +53,8 @@ static LIST_HEAD(elv_list);
-  */
- #define rq_hash_key(rq)		(blk_rq_pos(rq) + blk_rq_sectors(rq))
+diff --git a/block/genhd.c b/block/genhd.c
+index c2bd86cd09de..f426c13edf55 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -721,8 +721,6 @@ void del_gendisk(struct gendisk *disk)
+ 		bdi_unregister(disk->bdi);
+ 	}
  
-+static int elevator_change(struct request_queue *q, const char *name);
-+
- /*
-  * Query io scheduler to see if the current process issuing bio may be
-  * merged with rq.
-@@ -681,10 +683,6 @@ int __elevator_change(struct request_queue *q, const char *elevator_name,
- 	struct elevator_type *e;
- 	int ret;
- 
--	/* Make sure queue is not in the middle of being removed */
--	if (!blk_queue_registered(q))
--		return -ENOENT;
+-	blk_unregister_queue(disk);
 -
- 	if (!strncmp(elevator_name, "none", 4)) {
- 		if (q->elevator)
- 			elevator_disable(q);
-@@ -703,6 +701,29 @@ int __elevator_change(struct request_queue *q, const char *elevator_name,
- 	return ret;
- }
+ 	kobject_put(disk->part0->bd_holder_dir);
+ 	kobject_put(disk->slave_dir);
+ 	disk->slave_dir = NULL;
+@@ -731,10 +729,12 @@ void del_gendisk(struct gendisk *disk)
+ 	disk->part0->bd_stamp = 0;
+ 	sysfs_remove_link(block_depr, dev_name(disk_to_dev(disk)));
+ 	pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
+-	device_del(disk_to_dev(disk));
  
-+static int elevator_change(struct request_queue *q, const char *name)
-+{
-+	int ret, idx;
-+	unsigned int memflags;
-+	struct blk_mq_tag_set *set = q->tag_set;
+ 	blk_mq_freeze_queue_wait(q);
+ 
++	blk_unregister_queue(disk);
++	device_del(disk_to_dev(disk));
 +
-+	idx = srcu_read_lock(&set->update_nr_hwq_srcu);
-+
-+	if (set->flags & BLK_MQ_F_UPDATE_HW_QUEUES) {
-+		ret = -EBUSY;
-+		goto exit;
-+	}
-+
-+	memflags = blk_mq_freeze_queue(q);
-+	mutex_lock(&q->elevator_lock);
-+	ret = __elevator_change(q, name, false);
-+	mutex_unlock(&q->elevator_lock);
-+	blk_mq_unfreeze_queue(q, memflags);
-+exit:
-+	srcu_read_unlock(&set->update_nr_hwq_srcu, idx);
-+	return ret;
-+}
-+
- static void elv_iosched_load_module(char *elevator_name)
- {
- 	struct elevator_type *found;
-@@ -718,12 +739,10 @@ static void elv_iosched_load_module(char *elevator_name)
- ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- 			  size_t count)
- {
-+	struct request_queue *q = disk->queue;
- 	char elevator_name[ELV_NAME_MAX];
- 	char *name;
--	int ret, idx;
--	unsigned int memflags;
--	struct request_queue *q = disk->queue;
--	struct blk_mq_tag_set *set = q->tag_set;
-+	int ret;
+ 	blk_throtl_cancel_bios(disk);
  
- 	/*
- 	 * If the attribute needs to load a module, do it before freezing the
-@@ -735,22 +754,13 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- 
- 	elv_iosched_load_module(name);
- 
--	idx = srcu_read_lock(&set->update_nr_hwq_srcu);
--
--	if (set->flags & BLK_MQ_F_UPDATE_HW_QUEUES) {
--		ret = -EBUSY;
--		goto exit;
--	}
-+	/* Make sure queue is not in the middle of being removed */
-+	if (!blk_queue_registered(q))
-+		return -ENOENT;
- 
--	memflags = blk_mq_freeze_queue(q);
--	mutex_lock(&q->elevator_lock);
--	ret = __elevator_change(q, name, false);
-+	ret = elevator_change(q, name);
- 	if (!ret)
- 		ret = count;
--	mutex_unlock(&q->elevator_lock);
--	blk_mq_unfreeze_queue(q, memflags);
--exit:
--	srcu_read_unlock(&set->update_nr_hwq_srcu, idx);
- 	return ret;
- }
- 
+ 	blk_sync_queue(q);
 -- 
 2.47.0
 
