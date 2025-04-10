@@ -1,162 +1,185 @@
-Return-Path: <linux-block+bounces-19457-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19459-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9034A84B9C
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 19:49:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3335CA84C34
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 20:39:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E9B94E3F20
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 17:47:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02534188FEE6
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 18:38:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4679028D838;
-	Thu, 10 Apr 2025 17:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2CD7284B28;
+	Thu, 10 Apr 2025 18:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="MgKhBiI6"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HFN1Qp8C"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0258B28D84C;
-	Thu, 10 Apr 2025 17:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307174; cv=pass; b=TRdD2Dcd5PFdG+0A0LmZ8WBAo8Y7lj55t1psklGezT2ndtV2WePOX8L3Faa9tBx3cXetI6SLsQ3FPr4nLyhuDjZmSirbSvGf6NqnYk2LdUMeK5VBr0vxFIV8pfv+AGk8i7u1K+2cGMNqMJ6HhH8gKDhs2Po8IM3Uu9/top2ONPQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307174; c=relaxed/simple;
-	bh=uEbZwlPPg9IYz3mZAudwa/jYFoeS2LSfxPaSdvkbwXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PkOOXkm78otWRcnrbOBJeZMNjh8knyg6HZmWx4cDrJWXCbx2/SPKlt1gE1sPR1fOhjUlmQuJNzK6i8FEOIT0iA5Ec0/aFHW09yYq/W5GJomWZxxR4EFt9EL0NQ7+x/ImFCk51RDOjolbB9Qdi/mDoIQtjjpTaxM9b3+eklh/9dA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=MgKhBiI6; arc=pass smtp.client-ip=23.83.209.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0834621D96;
-	Thu, 10 Apr 2025 17:38:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a250.dreamhost.com (100-99-62-49.trex-nlb.outbound.svc.cluster.local [100.99.62.49])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 352DB220B6;
-	Thu, 10 Apr 2025 17:38:30 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1744306710; a=rsa-sha256;
-	cv=none;
-	b=uhV8s97LeM90FJZx7fYvLZ2aM3MkjQvCNxSWJu5cPzWrEoybpyobLCBPSw0TcVB3Ym53dG
-	BPPAmqwSSW9bwADMTpWdf+GMES5ZIExkItSKQ+QGOqr1R2ZMOuZcMg5MMsDoIDhSIFIZap
-	0r3WFd8XbOp/hjl1OkN192IBL4742gSxUkKN97TJ5KJTujgYnWd+s+GQYda8zpAwskXdMS
-	Kv0n7nD9b98vSKamED8RB/SFXS/0MNcmlHtdH0fXjE9K8DFYJxTQQ0T/7sxJXHAWM8r0Zm
-	iQngS/sxpZ5jJ0vRRcVRoVKTJHkhz99h9VALfEVXxNeqU0aLeWrXhixuH18o+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1744306710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=YwxaJTg4VJbIYIQ6s+Ic7Nv7sEsm9q3MKFC0yNU64hU=;
-	b=9T3qi4BdQ6ZKv4yqRKboQHeAH7oB08KMi1elDhXEW0rN5l0gAbNgd4H1mGec0yaeqoEobA
-	D46cYxDqie/rDibiSw4m9PEYkCIiB13JECatTB6dWRC6jp9v/qk2aSZ3XSTepdan0C8kSB
-	vIYydl3q/pP9haoVdAnTFHXd56N0XAMJBcGoyYM9DtkFKFqR0cOJIX7ADg191ZVNvWhJfK
-	KeumgMyLAteDG2p1TF0BynPGOyis1SlOqvyw/XpLfHVwjvTz0d8jE5ME7LCqFlaC6cZNjI
-	Nl++BbxOfvGRWwYeUq6R8fTHQfQu5ubKtzLgaMct9nMwPgDrTUUxiWNnTWrs4Q==
-ARC-Authentication-Results: i=1;
-	rspamd-75b96967bb-r662q;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Slimy-Language: 3f63b5ba177a6e50_1744306711855_2881099363
-X-MC-Loop-Signature: 1744306711853:187796569
-X-MC-Ingress-Time: 1744306711853
-Received: from pdx1-sub0-mail-a250.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.62.49 (trex/7.0.3);
-	Thu, 10 Apr 2025 17:38:31 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a250.dreamhost.com (Postfix) with ESMTPSA id 4ZYRqm0bssz70;
-	Thu, 10 Apr 2025 10:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1744306710;
-	bh=YwxaJTg4VJbIYIQ6s+Ic7Nv7sEsm9q3MKFC0yNU64hU=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=MgKhBiI69HXrwf01/pCiEXtBE6JBwR9Y1Z5yfP3KyiTkwq2mmN5P0NyW2pRhAY1qq
-	 YRo6dPXEpIV72q3digPVEezjwF3sCVOkocRnQhlUZDLEhOrpKaPERGmzF8eTUVZoDL
-	 dZNPOCb2vetDceHq1sYqwupZIBXk5U/E1d6DiY6XtTn3V+jLKkVGfLkkWtC15L3AQi
-	 JFG4NetVjuKrUx2mY0vEEXoJL4YfT6UIjj6lwkQA1KcW1wZ//zKsSfUH78sogpbkYD
-	 S8CgcAdfyPBa7PH6fK1a7gEMXpPOIspd6R0zwok7cIml0IyPtZhMClXoHw3losIOZ9
-	 LUW8qJUc51SIA==
-Date: Thu, 10 Apr 2025 10:38:17 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jan Kara <jack@suse.cz>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, brauner@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	riel@surriel.com, willy@infradead.org, hannes@cmpxchg.org,
-	oliver.sang@intel.com, david@redhat.com, axboe@kernel.dk,
-	hare@suse.de, david@fromorbit.com, djwong@kernel.org,
-	ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, p.raghav@samsung.com, da.gomez@samsung.com
-Subject: Re: [PATCH v2 2/8] fs/buffer: try to use folio lock for pagecache
- lookups
-Message-ID: <20250410173817.5cdlnnooxwgbkpov@offworld>
-Mail-Followup-To: Jan Kara <jack@suse.cz>,
-	Luis Chamberlain <mcgrof@kernel.org>, brauner@kernel.org,
-	tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	riel@surriel.com, willy@infradead.org, hannes@cmpxchg.org,
-	oliver.sang@intel.com, david@redhat.com, axboe@kernel.dk,
-	hare@suse.de, david@fromorbit.com, djwong@kernel.org,
-	ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, p.raghav@samsung.com, da.gomez@samsung.com
-References: <20250410014945.2140781-1-mcgrof@kernel.org>
- <20250410014945.2140781-3-mcgrof@kernel.org>
- <plt72kbiee2sz32mqslvhmmlny6dqfeccnf2d325cus45qpo3t@m6t563ijkvr5>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2821F03EF
+	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 18:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744310269; cv=none; b=HqUfYnD+rKwOLkXhF71YyN+IztOd2v/hGNWfr7JmfWnu2N8IXJ+LvPjw+QTwTwU+bJHQmAEKKMaympBsGRU3sQwkCNz/5eZxsqzDHmfXVzw3yPhI0V+bdzQu701Bp/4ek2tKtK14LhjZdZ7HIhDOtV/jC9ohHwXj/Y/uTATZBDU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744310269; c=relaxed/simple;
+	bh=qNTlcDL07LtjOnPKttMmzreAa1rq1d60wUtEEwWwdus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GgGtLSdYEGrzS9APIt5FWv9cINuvGxyhHEeX/y/AV6t31/38GqkwfKpUouOuy0cgoMzaXPNAAwJ/j5UxJAueL+71NQw1a3tNl7suX23LyU4iiHCq0UnZ5b+d+2Yp5LhA+FE38PljzVgCSos4uLmrZCcFDISwQ1xv/Lwy5joDfMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HFN1Qp8C; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ABMICw018446;
+	Thu, 10 Apr 2025 18:37:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=PUyQPt
+	futjLaSXzwyQknc3lxG487OIQ8C53l29gICuU=; b=HFN1Qp8C9+K9VtxQyR+uMR
+	MiN9XtJZGhQT+5RBYDDMlrorb30I46+ISAQgMwU36oeJ2zkBvyvuDaxCr8AIuQiW
+	3jSR39NhSy4Ijqf5Ejtd2/SYs83ehvflSZsjKFyfy7eJy+5HpUfKaNRyyRQe0ugq
+	qcBabt0Xdfj/TO0NHXmG7+nWIRbvlK7JmnuaHYX4hhjxLiiEoflnFrMac7Cg7gUw
+	h6tZ5f/N4kQl827xgfecCnpKb0/PrDnqdh+kCDjMr/MAsEo7ahNzWUctom3XqOiV
+	2jWv/n6hil9bqQs5kfiMhVwk5Nc30vyrsGhzwESmuLHR8BAYBU1q7BWmkDkEZn8w
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x6ca4tf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 18:37:40 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53AFoE3e011522;
+	Thu, 10 Apr 2025 18:37:39 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yykn4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 18:37:39 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53AIbc6O16712218
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 18:37:38 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 63E8558054;
+	Thu, 10 Apr 2025 18:37:38 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4218B5805A;
+	Thu, 10 Apr 2025 18:37:36 +0000 (GMT)
+Received: from [9.171.89.192] (unknown [9.171.89.192])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Apr 2025 18:37:35 +0000 (GMT)
+Message-ID: <83f5e47a-8738-4776-ae23-7ff0cad7ba48@linux.ibm.com>
+Date: Fri, 11 Apr 2025 00:07:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <plt72kbiee2sz32mqslvhmmlny6dqfeccnf2d325cus45qpo3t@m6t563ijkvr5>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/15] block: unifying elevator change
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20250410133029.2487054-1-ming.lei@redhat.com>
+ <20250410133029.2487054-10-ming.lei@redhat.com>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <20250410133029.2487054-10-ming.lei@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RQRAjFyx1WbjQN7mM6lmNcOLmfvZ5HmQ
+X-Proofpoint-ORIG-GUID: RQRAjFyx1WbjQN7mM6lmNcOLmfvZ5HmQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 spamscore=0 clxscore=1011 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504100133
 
-On Thu, 10 Apr 2025, Jan Kara wrote:
 
->I'd rather do:
->
->	if (atomic) {
->		spin_lock(&bd_mapping->i_private_lock);
->		folio_locked = false;
->	} else {
->		folio_lock(folio);
->	}
->
 
-Fine with me. I just think the trylock for the atomic scenario would have
-given greater chances of successful migration, but at a lack of determinism,
-of course.
+On 4/10/25 7:00 PM, Ming Lei wrote:
+>  /*
+>   * Use the default elevator settings. If the chosen elevator initialization
+>   * fails, fall back to the "none" elevator (no elevator).
+>   */
+> -void elevator_init_mq(struct request_queue *q)
+> +void elevator_set_default(struct request_queue *q)
+>  {
+> -	struct elevator_type *e;
+> -	unsigned int memflags;
+> +	struct elev_change_ctx ctx = { };
+>  	int err;
+>  
+> -	WARN_ON_ONCE(blk_queue_registered(q));
+> -
+> -	if (unlikely(q->elevator))
+> +	if (!queue_is_mq(q))
+>  		return;
+>  
+> -	e = elevator_get_default(q);
+> -	if (!e)
+> +	ctx.name = use_default_elevator(q) ? "mq-deadline" : "none";
+> +	if (!q->elevator && !strcmp(ctx.name, "none"))
+>  		return;
+> +	err = elevator_change(q, &ctx);
+> +	if (err < 0)
+> +		pr_warn("\"%s\" set elevator failed %d, "
+> +			"falling back to \"none\"\n", ctx.name, err);
+> +}
+>  
+If we fail to set the evator to default (mq-deadline) while registering queue, 
+because nr_hw_queue update is simultaneously running then we may end up setting 
+the queue elevator to none and that's not correct. Isn't it?
 
->I'd actually love to do something like:
->
->	if (atomic) {
->		if (!folio_trylock(folio))
->			bail...
->	} else {
->		folio_lock(folio);
->	}
->
->but that may be just too radical this point and would need some serious
->testing how frequent the trylock failures are. No point in blocking this
->series with it. So just go with the deterministic use of i_private_lock for
->atomic users for now.
+> +void elevator_set_none(struct request_queue *q)
+> +{
+> +	struct elev_change_ctx ctx = {
+> +		.name	= "none",
+> +		.uevent = 1,
+> +	};
+> +	int err;
+>  
+> -	blk_mq_unfreeze_queue(q, memflags);
+> +	if (!queue_is_mq(q))
+> +		return;
+>  
+> -	if (err) {
+> -		pr_warn("\"%s\" elevator initialization failed, "
+> -			"falling back to \"none\"\n", e->elevator_name);
+> -	}
+> +	if (!q->elevator)
+> +		return;
+>  
+> -	elevator_put(e);
+> +	err = elevator_change(q, &ctx);
+> +	if (err < 0)
+> +		pr_warn("%s: set none elevator failed %d\n", __func__, err);
+>  }
+>  
+Here as well if we fail to disable/exit elevator while deleting disk 
+because nr_hw_queue update is simultaneously running  then we may
+leak elevator resource? 
 
-This acually crossed my mind, but I also considered the scheme a little
-too much for this series.
+> @@ -565,11 +559,7 @@ int __must_check add_disk_fwnode(struct device *parent, struct gendisk *disk,
+>  	if (disk->major == BLOCK_EXT_MAJOR)
+>  		blk_free_ext_minor(disk->first_minor);
+>  out_exit_elevator:
+> -	if (disk->queue->elevator) {
+> -		mutex_lock(&disk->queue->elevator_lock);
+> -		elevator_exit(disk->queue);
+> -		mutex_unlock(&disk->queue->elevator_lock);
+> -	}
+> +	elevator_set_none(disk->queue);
+Same comment as above here as well but this is in add_disk code path.
+
+Thanks,
+--Nilay
+
 
