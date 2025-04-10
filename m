@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-19426-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19428-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3D7DA844CF
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 15:31:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 105A0A844EA
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 15:35:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 087177AE141
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 13:30:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B44B416B400
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 13:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA6D28A3EA;
-	Thu, 10 Apr 2025 13:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9636D28A3F2;
+	Thu, 10 Apr 2025 13:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4MiWT5V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E1J9vDxX"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E593270EDD
-	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 13:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0234270EDD
+	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 13:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291877; cv=none; b=EwLnyw2FSOpEFbU/b/taCZ+QqTUymQ+++OOCIBQMdE75yHqj6mvOe26F8WxhPwv31+KL+5vdM+fksySC7BwGTxtnIBdvP/fbT5CvyVzcvM91EX+hbheepkFCbCsJI5QCBjqPJKB28kOkoDioCffwF6JZk7ngL4/LdbqcfPm9WUA=
+	t=1744291888; cv=none; b=dtAgB8B6hWR/IpFUYXIcuVzoqn6uPxD5XmdBFKGxU7nZ96rjvYvS5N+zmhBXa8Y5Zw5J6mHDfkuVDxyS+mnmDspUU+cMEnW1u27taVxNGrCuW3GIMQ6yPbR7JP6Zmb37xN4eHFFLNHVQNYvSkXt/EaUTCJVO7KwuUqxv8Qec2ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291877; c=relaxed/simple;
-	bh=vB94mJlJVNxRktJmKMzj1ehDRWHsgE+mw5WQGHr9uA0=;
+	s=arc-20240116; t=1744291888; c=relaxed/simple;
+	bh=bIItKvllyzkv/stnQfIRoG2izOGgwrCVHEYBbl+75sA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RSm4H5t2zjnWnuZlYazexWZ4RQPl4tmfXcUDCSAJC16bAOeTImzXnlFqzTADR1M5TnYYk5+R2m7WI+/GLlCLN8LnU1OhD2Wj5zXdDSvHNaEzUqN4ckmSThSRM61QrdWXBC9o8pDC/fftkuVTbXR4nW5mYrxP4VjJ021+HchMG/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X4MiWT5V; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=bR1XoDnVVPUoJTOMCNzDaWBVAuvlWnsdErvNbjXfKxUsKlePDa5xhvFMiEs5qYfB+hzzBA2Q1RyfognGt8vnlzAvLnR7+BEGc7SDssFwzk5KUCjIMxIrgsciaO1PMKCWsgYLbaoXjga2gEuP4aQwdUUMJA1QdL/AKkwRf15yTFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E1J9vDxX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744291874;
+	s=mimecast20190719; t=1744291885;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E6agpd/d3D4wyti/Vo36daRc/khYWwqjQIgEm97GzwE=;
-	b=X4MiWT5ViPYV1lGXTuVK1DiryvGlNdR4WMlfn+BvOSj4LWGG9/oJgmqU7LGdOeVBRJwpH7
-	WqcHzdqin6z3qLCjgRDYb2wwmXhHA82rINZsNj0JwVoxaY6rM5R4NOIu1jfDjQj+nuLBCV
-	JSNdCRWSY2py0SRmJp9JH/VYv8zTqqg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=iSAjPXD943HbiwtD4xIES+89vR/waJNMHZahYJfS6Kw=;
+	b=E1J9vDxX+6/kkOSKuZ8atj28GYwVPyFp1/xSbreroQQB9GzEoPqrPlTOSn8Jk2me3ffCqR
+	AfSqEZlEwsnsRc9Yai4rGi0IEs5j1DT21qol3I8gjsbLoic4FWR3OfEoJ33sssbuJ8kzeV
+	fUHK9EqgfXhN9PNO3uwDRzlxX0Iy4xw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-WjOQ-DTqOBuhgbuBkSfreQ-1; Thu,
- 10 Apr 2025 09:31:10 -0400
-X-MC-Unique: WjOQ-DTqOBuhgbuBkSfreQ-1
-X-Mimecast-MFC-AGG-ID: WjOQ-DTqOBuhgbuBkSfreQ_1744291869
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-TZl929hcPeCoXB1PeJr3-g-1; Thu,
+ 10 Apr 2025 09:31:18 -0400
+X-MC-Unique: TZl929hcPeCoXB1PeJr3-g-1
+X-Mimecast-MFC-AGG-ID: TZl929hcPeCoXB1PeJr3-g_1744291874
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 405DD1954B32;
-	Thu, 10 Apr 2025 13:31:09 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06077180882E;
+	Thu, 10 Apr 2025 13:31:14 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.20])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F8901808882;
-	Thu, 10 Apr 2025 13:31:07 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BC3EE180174E;
+	Thu, 10 Apr 2025 13:31:12 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
@@ -65,9 +65,9 @@ Cc: Nilay Shroff <nilay@linux.ibm.com>,
 	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 04/15] block: prevent elevator switch during updating nr_hw_queues
-Date: Thu, 10 Apr 2025 21:30:16 +0800
-Message-ID: <20250410133029.2487054-5-ming.lei@redhat.com>
+Subject: [PATCH 05/15] block: simplify elevator reset for updating nr_hw_queues
+Date: Thu, 10 Apr 2025 21:30:17 +0800
+Message-ID: <20250410133029.2487054-6-ming.lei@redhat.com>
 In-Reply-To: <20250410133029.2487054-1-ming.lei@redhat.com>
 References: <20250410133029.2487054-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -77,158 +77,216 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-updating nr_hw_queues is usually used for error handling code, when it
-doesn't make sense to allow blk-mq elevator switching, since nr_hw_queues
-may change, and elevator tags depends on nr_hw_queues.
+In blk_mq_update_nr_hw_queues(), nr_hw_queues may change, so elevator has
+to be reset after nr_hw_queues is changed.
 
-Prevent elevator switch during updating nr_hw_queues by setting flag of
-BLK_MQ_F_UPDATE_HW_QUEUES, and use srcu to fail elevator switch during
-the period. Here elevator switch code is srcu reader of nr_hw_queues,
-and blk_mq_update_nr_hw_queues() is the writer.
+Now elevator switch isn't allowed during blk_mq_update_nr_hw_queues(), so
+we can simply call elevator_change() to reset elevator sched tags after
+nr_hw_queues is updated.
 
-This way avoids lot of trouble.
-
-Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Closes: https://lore.kernel.org/linux-block/mz4t4tlwiqjijw3zvqnjb7ovvvaegkqganegmmlc567tt5xj67@xal5ro544cnc/
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq-debugfs.c |  1 +
- block/blk-mq.c         | 19 ++++++++++++++++++-
- block/elevator.c       | 12 +++++++++++-
- include/linux/blk-mq.h | 10 +++++++++-
- 4 files changed, 39 insertions(+), 3 deletions(-)
+ block/blk-mq.c   | 99 +++++-------------------------------------------
+ block/blk.h      |  4 +-
+ block/elevator.c | 12 +++---
+ 3 files changed, 18 insertions(+), 97 deletions(-)
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index c308699ded58..27f984311bb7 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -180,6 +180,7 @@ static const char *const hctx_flag_name[] = {
- 	HCTX_FLAG_NAME(BLOCKING),
- 	HCTX_FLAG_NAME(TAG_RR),
- 	HCTX_FLAG_NAME(NO_SCHED_BY_DEFAULT),
-+	HCTX_FLAG_NAME(UPDATE_HW_QUEUES),
- };
- #undef HCTX_FLAG_NAME
- 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index d7a103dc258b..4b0707fb7ae3 100644
+index 4b0707fb7ae3..b7e3cd355e66 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -4785,12 +4785,16 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 			goto out_free_srcu;
- 	}
- 
-+	ret = init_srcu_struct(&set->update_nr_hwq_srcu);
-+	if (ret)
-+		goto out_cleanup_srcu;
-+
- 	ret = -ENOMEM;
- 	set->tags = kcalloc_node(set->nr_hw_queues,
- 				 sizeof(struct blk_mq_tags *), GFP_KERNEL,
- 				 set->numa_node);
- 	if (!set->tags)
--		goto out_cleanup_srcu;
-+		goto out_cleanup_hwq_srcu;
- 
- 	for (i = 0; i < set->nr_maps; i++) {
- 		set->map[i].mq_map = kcalloc_node(nr_cpu_ids,
-@@ -4819,6 +4823,8 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 	}
- 	kfree(set->tags);
- 	set->tags = NULL;
-+out_cleanup_hwq_srcu:
-+	cleanup_srcu_struct(&set->update_nr_hwq_srcu);
- out_cleanup_srcu:
- 	if (set->flags & BLK_MQ_F_BLOCKING)
- 		cleanup_srcu_struct(set->srcu);
-@@ -5081,7 +5087,18 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues)
- {
- 	mutex_lock(&set->tag_list_lock);
-+	/*
-+	 * Mark us in updating nr_hw_queues for preventing switching
-+	 * elevator
-+	 *
-+	 * Elevator switch code can _not_ acquire ->tag_list_lock
-+	 */
-+	set->flags |= BLK_MQ_F_UPDATE_HW_QUEUES;
-+	synchronize_srcu(&set->update_nr_hwq_srcu);
-+
- 	__blk_mq_update_nr_hw_queues(set, nr_hw_queues);
-+
-+	set->flags &= BLK_MQ_F_UPDATE_HW_QUEUES;
- 	mutex_unlock(&set->tag_list_lock);
- }
- EXPORT_SYMBOL_GPL(blk_mq_update_nr_hw_queues);
-diff --git a/block/elevator.c b/block/elevator.c
-index cf48613c6e62..7d7b77dd4341 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -718,9 +718,10 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- {
- 	char elevator_name[ELV_NAME_MAX];
- 	char *name;
--	int ret;
-+	int ret, idx;
- 	unsigned int memflags;
- 	struct request_queue *q = disk->queue;
-+	struct blk_mq_tag_set *set = q->tag_set;
- 
- 	/*
- 	 * If the attribute needs to load a module, do it before freezing the
-@@ -732,6 +733,13 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- 
- 	elv_iosched_load_module(name);
- 
-+	idx = srcu_read_lock(&set->update_nr_hwq_srcu);
-+
-+	if (set->flags & BLK_MQ_F_UPDATE_HW_QUEUES) {
-+		ret = -EBUSY;
-+		goto exit;
-+	}
-+
- 	memflags = blk_mq_freeze_queue(q);
- 	mutex_lock(&q->elevator_lock);
- 	ret = elevator_change(q, name);
-@@ -739,6 +747,8 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
- 		ret = count;
- 	mutex_unlock(&q->elevator_lock);
- 	blk_mq_unfreeze_queue(q, memflags);
-+exit:
-+	srcu_read_unlock(&set->update_nr_hwq_srcu, idx);
+@@ -4930,88 +4930,10 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
  	return ret;
  }
  
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 8eb9b3310167..473871c760e1 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -527,6 +527,7 @@ struct blk_mq_tag_set {
- 	struct mutex		tag_list_lock;
- 	struct list_head	tag_list;
- 	struct srcu_struct	*srcu;
-+	struct srcu_struct	update_nr_hwq_srcu;
- };
+-/*
+- * request_queue and elevator_type pair.
+- * It is just used by __blk_mq_update_nr_hw_queues to cache
+- * the elevator_type associated with a request_queue.
+- */
+-struct blk_mq_qe_pair {
+-	struct list_head node;
+-	struct request_queue *q;
+-	struct elevator_type *type;
+-};
+-
+-/*
+- * Cache the elevator_type in qe pair list and switch the
+- * io scheduler to 'none'
+- */
+-static bool blk_mq_elv_switch_none(struct list_head *head,
+-		struct request_queue *q)
+-{
+-	struct blk_mq_qe_pair *qe;
+-
+-	qe = kmalloc(sizeof(*qe), GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY);
+-	if (!qe)
+-		return false;
+-
+-	/* Accessing q->elevator needs protection from ->elevator_lock. */
+-	mutex_lock(&q->elevator_lock);
+-
+-	if (!q->elevator) {
+-		kfree(qe);
+-		goto unlock;
+-	}
+-
+-	INIT_LIST_HEAD(&qe->node);
+-	qe->q = q;
+-	qe->type = q->elevator->type;
+-	/* keep a reference to the elevator module as we'll switch back */
+-	__elevator_get(qe->type);
+-	list_add(&qe->node, head);
+-	elevator_disable(q);
+-unlock:
+-	mutex_unlock(&q->elevator_lock);
+-
+-	return true;
+-}
+-
+-static struct blk_mq_qe_pair *blk_lookup_qe_pair(struct list_head *head,
+-						struct request_queue *q)
+-{
+-	struct blk_mq_qe_pair *qe;
+-
+-	list_for_each_entry(qe, head, node)
+-		if (qe->q == q)
+-			return qe;
+-
+-	return NULL;
+-}
+-
+-static void blk_mq_elv_switch_back(struct list_head *head,
+-				  struct request_queue *q)
+-{
+-	struct blk_mq_qe_pair *qe;
+-	struct elevator_type *t;
+-
+-	qe = blk_lookup_qe_pair(head, q);
+-	if (!qe)
+-		return;
+-	t = qe->type;
+-	list_del(&qe->node);
+-	kfree(qe);
+-
+-	mutex_lock(&q->elevator_lock);
+-	elevator_switch(q, t);
+-	/* drop the reference acquired in blk_mq_elv_switch_none */
+-	elevator_put(t);
+-	mutex_unlock(&q->elevator_lock);
+-}
+-
+ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 							int nr_hw_queues)
+ {
+ 	struct request_queue *q;
+-	LIST_HEAD(head);
+ 	int prev_nr_hw_queues = set->nr_hw_queues;
+ 	unsigned int memflags;
+ 	int i;
+@@ -5029,15 +4951,6 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_freeze_queue_nomemsave(q);
  
- /**
-@@ -681,7 +682,14 @@ enum {
- 	 */
- 	BLK_MQ_F_NO_SCHED_BY_DEFAULT	= 1 << 6,
+-	/*
+-	 * Switch IO scheduler to 'none', cleaning up the data associated
+-	 * with the previous scheduler. We will switch back once we are done
+-	 * updating the new sw to hw queue mappings.
+-	 */
+-	list_for_each_entry(q, &set->tag_list, tag_set_list)
+-		if (!blk_mq_elv_switch_none(&head, q))
+-			goto switch_back;
+-
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
+ 		blk_mq_debugfs_unregister_hctxs(q);
+ 		blk_mq_sysfs_unregister_hctxs(q);
+@@ -5071,9 +4984,15 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 		blk_mq_debugfs_register_hctxs(q);
+ 	}
  
--	BLK_MQ_F_MAX = 1 << 7,
-+	/*
-+	 * True when updating nr_hw_queues is in-progress
-+	 *
-+	 * tag_set only flag, not usable for hctx
-+	 */
-+	BLK_MQ_F_UPDATE_HW_QUEUES	= 1 << 7,
+-switch_back:
+-	list_for_each_entry(q, &set->tag_list, tag_set_list)
+-		blk_mq_elv_switch_back(&head, q);
++	list_for_each_entry(q, &set->tag_list, tag_set_list) {
++		const char *name = "none";
 +
-+	BLK_MQ_F_MAX = 1 << 8,
- };
++		mutex_lock(&q->elevator_lock);
++		if (q->elevator && !blk_queue_dying(q))
++			name = q->elevator->type->elevator_name;
++		__elevator_change(q, name, true);
++		mutex_unlock(&q->elevator_lock);
++	}
  
- #define BLK_MQ_MAX_DEPTH	(10240)
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_unfreeze_queue_nomemrestore(q);
+diff --git a/block/blk.h b/block/blk.h
+index 006e3be433d2..0c3cc1af2525 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -319,8 +319,8 @@ bool blk_bio_list_merge(struct request_queue *q, struct list_head *list,
+ 
+ bool blk_insert_flush(struct request *rq);
+ 
+-int elevator_switch(struct request_queue *q, struct elevator_type *new_e);
+-void elevator_disable(struct request_queue *q);
++int __elevator_change(struct request_queue *q, const char *elevator_name,
++		      bool force);
+ void elevator_exit(struct request_queue *q);
+ int elv_register_queue(struct request_queue *q, bool uevent);
+ void elv_unregister_queue(struct request_queue *q);
+diff --git a/block/elevator.c b/block/elevator.c
+index 7d7b77dd4341..612fa2bdd40d 100644
+--- a/block/elevator.c
++++ b/block/elevator.c
+@@ -619,7 +619,7 @@ void elevator_init_mq(struct request_queue *q)
+  * If switching fails, we are most likely running out of memory and not able
+  * to restore the old io scheduler, so leaving the io scheduler being none.
+  */
+-int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
++static int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
+ {
+ 	int ret;
+ 
+@@ -655,7 +655,7 @@ int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
+ 	return ret;
+ }
+ 
+-void elevator_disable(struct request_queue *q)
++static void elevator_disable(struct request_queue *q)
+ {
+ 	WARN_ON_ONCE(q->mq_freeze_depth == 0);
+ 	lockdep_assert_held(&q->elevator_lock);
+@@ -675,7 +675,8 @@ void elevator_disable(struct request_queue *q)
+ /*
+  * Switch this queue to the given IO scheduler.
+  */
+-static int elevator_change(struct request_queue *q, const char *elevator_name)
++int __elevator_change(struct request_queue *q, const char *elevator_name,
++		      bool force)
+ {
+ 	struct elevator_type *e;
+ 	int ret;
+@@ -690,7 +691,8 @@ static int elevator_change(struct request_queue *q, const char *elevator_name)
+ 		return 0;
+ 	}
+ 
+-	if (q->elevator && elevator_match(q->elevator->type, elevator_name))
++	if (!force && q->elevator &&
++	    elevator_match(q->elevator->type, elevator_name))
+ 		return 0;
+ 
+ 	e = elevator_find_get(elevator_name);
+@@ -742,7 +744,7 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
+ 
+ 	memflags = blk_mq_freeze_queue(q);
+ 	mutex_lock(&q->elevator_lock);
+-	ret = elevator_change(q, name);
++	ret = __elevator_change(q, name, false);
+ 	if (!ret)
+ 		ret = count;
+ 	mutex_unlock(&q->elevator_lock);
 -- 
 2.47.0
 
