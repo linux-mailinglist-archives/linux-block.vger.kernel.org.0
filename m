@@ -1,86 +1,207 @@
-Return-Path: <linux-block+bounces-19405-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19409-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CAD2A83B6F
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 09:40:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DFDBA83D03
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 10:32:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BFEF188E8A3
-	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 07:40:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C59D01B825C4
+	for <lists+linux-block@lfdr.de>; Thu, 10 Apr 2025 08:32:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC4A1E32C3;
-	Thu, 10 Apr 2025 07:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y2WCDTj6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5370220298C;
+	Thu, 10 Apr 2025 08:31:35 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE021DDC15;
-	Thu, 10 Apr 2025 07:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17C21E833F
+	for <linux-block@vger.kernel.org>; Thu, 10 Apr 2025 08:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.23.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270817; cv=none; b=BcVvmOK9HvQii8A5B2Si/kp0OmVNCYYDNOj0UpB9jQ1EHASli+EV2uGh4/7btmdAYrZzgxdq6MiVwOfebhgX3AbEGxypu6Tjy8vuLzVKEnL3aw2fnvc36tDXwqMsQ6VKIWgU5/qASdJ7acgKgHsWthuHz6HSWv8VzDARs40SMas=
+	t=1744273895; cv=none; b=QMIzNKoLRAEwRmKsqQ8YFF+QEQsMaNyCsrJSRPsmqTRwWYs6fLq9aUQhPUNoIk399HSPp95/cFgAmcuvylJjzbRT/4AQ6rV/vxruqE+f0AVWPJ0Pmli8g6bhBA8L2wqi3TAKXA/VhB098mLqu89sVs+oaqW2+aMsNN+xwBf+o/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270817; c=relaxed/simple;
-	bh=ztqsTTcHOGytcHIA2rtOvbbiMGZZBwiVn7qPcC3HuFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nnee0FJZsrqCbrz8Xkx2TbZcnBTUps1TxKv+MO6FFVDzmFs1+qOE8vHEn5vdgUSrOThuuGA0bPe3P4WJXxSJc771XejxsbP8UkQerfmtfWR8yy9VIf92S8APnUM/d14xxLvM3gc0HYocXXhFWlfOKPzZj4FQWHjBmlg9pAK4cNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Y2WCDTj6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SzrEiCnT63jVe3C2a/P8jyKS7uOpDFoAJei40tblVa4=; b=Y2WCDTj63XxxIDRN3r+YE6rJE0
-	f0EpnT9lKC4MbPOULgJOwkJHmLBfOx+VqyRYpo/pxc/HYd/jkpSv7HpbnxTkO8eciHJX5We4uXCrs
-	ce9tzWte+2TWYwqiHvSlDqTzWm2PbWv23iC2B1mKwkuKtXd6KohjCBOkLop1aw2j5RqEpq3DhjN9n
-	GSKACyHNI5tOaaITGqA7TK9pUnwT4HC0qnl528O1ny/4cGcrE25qvx4XP2Z1cgHh3NilpAN5gQgCs
-	5E8lQi81z+S/r3vjTrdmKpMJFMbWGlKR2gkqUVtEgdbZrb4w0RhXlToQph7xDrFSV7wVeL/gWmBVG
-	a46ZhgUA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2mWF-00000009bQm-1dGZ;
-	Thu, 10 Apr 2025 07:40:15 +0000
-Date: Thu, 10 Apr 2025 00:40:15 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	linux-block <linux-block@vger.kernel.org>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Weird blockdev crash in 6.15-rc1?
-Message-ID: <Z_d13yReJn2vqxCL@infradead.org>
-References: <20250408175125.GL6266@frogsfrogsfrogs>
- <20250409173015.GN6266@frogsfrogsfrogs>
- <20250409190907.GO6266@frogsfrogsfrogs>
+	s=arc-20240116; t=1744273895; c=relaxed/simple;
+	bh=MH9inepon/NwBHx7CSMIuKgmZl41UPCwzOKE9quAemE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=FaIUm8FyfnUO0KqbyFE8GMTd4SzyBw/lGnoUmxrZS/EBmTyHMvVPmLw3jtqa6i8gFQH7rAuboE60GAHdTdnBfH07yT1T2EmbTj/yAWqy1aDy1zDGm/shB/Xx6AQo7Qr7lmS3Ko5DLN1ZhL/9itga4nmqKrBOrrNJ7shyBhKyJ44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.23.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
+	by 156.147.23.51 with ESMTP; 10 Apr 2025 17:01:30 +0900
+X-Original-SENDERIP: 156.147.1.125
+X-Original-MAILFROM: chanho.min@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.178.31.96)
+	by 156.147.1.125 with ESMTP; 10 Apr 2025 17:01:30 +0900
+X-Original-SENDERIP: 10.178.31.96
+X-Original-MAILFROM: chanho.min@lge.com
+From: Chanho Min <chanho.min@lge.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>
+Cc: linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	Christoph Hellwig <hch@lst.de>,
+	gunho.lee@lge.com,
+	Chanho Min <chanho.min@lge.com>
+Subject: [PATCH] block/dm: add early_lookup_ready_bdev to ensure ready device lookup
+Date: Thu, 10 Apr 2025 17:00:56 +0900
+Message-Id: <20250410080056.43247-1-chanho.min@lge.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409190907.GO6266@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Apr 09, 2025 at 12:09:07PM -0700, Darrick J. Wong wrote:
-> Subject: [PATCH] block: fix race between set_blocksize and IO paths
-> 
-> With the new large sector size support, it's now the case that
-> set_blocksize needs to change i_blksize and the folio order with no
-> folios in the pagecache because the geometry changes cause problems with
-> the bufferhead code.
+The dm-init code, waiting for devices specified by dm-mod.waitfor (e.g.,
+root=/dev/dm-0, dm-mod.waitfor=/dev/mmcblk0p23), fails sporadically with
+dm-verity setups, as reported in:
+https://lore.kernel.org/all/e746b8b5-c04c-4982-b4bc-0fa240742755@schwermer.no/T/
 
-Urrg.  I wish we could just get out of the game of messing with
-block device inode settings from file systems.  I guess doing it when
-using buffer_heads is hard, but file systems without buffer heads
-should have a way out of even propagating their block size to the
-block device inode.  And file systems with buffer heads should probably
-not support large folios like this :P
+This occurs because early_lookup_bdev() uses blk_lookup_devt(), which, since
+commit 41b8c853a4954 ("block: fix booting from partitioned md array"),
+returns a dev_t for non-existent partitions to support MD RAID booting. This
+leads dm-init to proceed with invalid dev_t values, causing "Data device
+lookup failed (-ENXIO)". The issue became more noticeable after commit
+238d991f054a6e2d ("dm: use fsleep() instead of msleep() for deterministic
+sleep duration").
+
+This patch introduces early_lookup_ready_bdev(), a variant of
+early_lookup_bdev() that only returns dev_t for devices with ready partitions,
+by adding a 'ready' flag to blk_lookup_devt(). The original early_lookup_bdev()
+is preserved for MD RAID compatibility, while dm-init switches to the new
+function to wait for actual device availability. This resolves dm-verity boot
+failures cleanly at the block layer, avoiding DM-specific workarounds.
+
+Tested with dm-verity (root=/dev/dm-0, dm-mod.waitfor=/dev/mmcblk0p23), this
+eliminates boot issues without impacting MD RAID.
+
+Signed-off-by: Chanho Min <chanho.min@lge.com>
+---
+ block/early-lookup.c   | 26 ++++++++++++++++++--------
+ drivers/md/dm-init.c   |  2 +-
+ include/linux/blkdev.h |  2 ++
+ 3 files changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/block/early-lookup.c b/block/early-lookup.c
+index 3fb57f7d2b127..011cfda5e4843 100644
+--- a/block/early-lookup.c
++++ b/block/early-lookup.c
+@@ -121,7 +121,7 @@ static int __init devt_from_partlabel(const char *label, dev_t *devt)
+ 	return 0;
+ }
+ 
+-static dev_t __init blk_lookup_devt(const char *name, int partno)
++static dev_t __init blk_lookup_devt(const char *name, int partno, bool ready)
+ {
+ 	dev_t devt = MKDEV(0, 0);
+ 	struct class_dev_iter iter;
+@@ -134,7 +134,7 @@ static dev_t __init blk_lookup_devt(const char *name, int partno)
+ 		if (strcmp(dev_name(dev), name))
+ 			continue;
+ 
+-		if (partno < disk->minors) {
++		if (!ready && partno < disk->minors) {
+ 			/* We need to return the right devno, even
+ 			 * if the partition doesn't exist yet.
+ 			 */
+@@ -150,7 +150,7 @@ static dev_t __init blk_lookup_devt(const char *name, int partno)
+ 	return devt;
+ }
+ 
+-static int __init devt_from_devname(const char *name, dev_t *devt)
++static int __init devt_from_devname(const char *name, dev_t *devt, bool ready)
+ {
+ 	int part;
+ 	char s[32];
+@@ -164,7 +164,7 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
+ 			*p = '!';
+ 	}
+ 
+-	*devt = blk_lookup_devt(s, 0);
++	*devt = blk_lookup_devt(s, 0, ready);
+ 	if (*devt)
+ 		return 0;
+ 
+@@ -180,7 +180,7 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
+ 	/* try disk name without <part number> */
+ 	part = simple_strtoul(p, NULL, 10);
+ 	*p = '\0';
+-	*devt = blk_lookup_devt(s, part);
++	*devt = blk_lookup_devt(s, part, ready);
+ 	if (*devt)
+ 		return 0;
+ 
+@@ -188,7 +188,7 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
+ 	if (p < s + 2 || !isdigit(p[-2]) || p[-1] != 'p')
+ 		return -ENODEV;
+ 	p[-1] = '\0';
+-	*devt = blk_lookup_devt(s, part);
++	*devt = blk_lookup_devt(s, part, ready);
+ 	if (*devt)
+ 		return 0;
+ 	return -ENODEV;
+@@ -241,17 +241,27 @@ static int __init devt_from_devnum(const char *name, dev_t *devt)
+  *	name contains slashes, the device name has them replaced with
+  *	bangs.
+  */
+-int __init early_lookup_bdev(const char *name, dev_t *devt)
++int __init __early_lookup_bdev(const char *name, dev_t *devt, bool ready)
+ {
+ 	if (strncmp(name, "PARTUUID=", 9) == 0)
+ 		return devt_from_partuuid(name + 9, devt);
+ 	if (strncmp(name, "PARTLABEL=", 10) == 0)
+ 		return devt_from_partlabel(name + 10, devt);
+ 	if (strncmp(name, "/dev/", 5) == 0)
+-		return devt_from_devname(name + 5, devt);
++		return devt_from_devname(name + 5, devt, ready);
+ 	return devt_from_devnum(name, devt);
+ }
+ 
++int __init early_lookup_bdev(const char *name, dev_t *devt)
++{
++	return __early_lookup_bdev(name, devt, 0);
++}
++
++int __init early_lookup_ready_bdev(const char *name, dev_t *devt)
++{
++	return __early_lookup_bdev(name, devt, 1);
++}
++
+ static char __init *bdevt_str(dev_t devt, char *buf)
+ {
+ 	if (MAJOR(devt) <= 0xff && MINOR(devt) <= 0xff) {
+diff --git a/drivers/md/dm-init.c b/drivers/md/dm-init.c
+index 81b8bbd1b63a8..1adfeb4ff8ce3 100644
+--- a/drivers/md/dm-init.c
++++ b/drivers/md/dm-init.c
+@@ -301,7 +301,7 @@ static int __init dm_init_init(void)
+ 			dev_t dev;
+ 
+ 			DMINFO("waiting for device %s ...", waitfor[i]);
+-			while (early_lookup_bdev(waitfor[i], &dev))
++			while (early_lookup_ready_bdev(waitfor[i], &dev))
+ 				fsleep(5000);
+ 		}
+ 	}
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 50c3b959da281..f520540ad6a69 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1614,7 +1614,9 @@ int sync_blockdev_nowait(struct block_device *bdev);
+ void sync_bdevs(bool wait);
+ void bdev_statx(struct path *, struct kstat *, u32);
+ void printk_all_partitions(void);
++int __init __early_lookup_bdev(const char *pathname, dev_t *dev, bool ready);
+ int __init early_lookup_bdev(const char *pathname, dev_t *dev);
++int __init early_lookup_ready_bdev(const char *pathname, dev_t *dev);
+ #else
+ static inline void invalidate_bdev(struct block_device *bdev)
+ {
+-- 
+2.17.1
 
 
