@@ -1,141 +1,171 @@
-Return-Path: <linux-block+bounces-19497-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19499-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 102A7A86A0A
-	for <lists+linux-block@lfdr.de>; Sat, 12 Apr 2025 03:25:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7E2CA86A6B
+	for <lists+linux-block@lfdr.de>; Sat, 12 Apr 2025 04:31:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 319BD1BA3F41
-	for <lists+linux-block@lfdr.de>; Sat, 12 Apr 2025 01:25:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9422A7B7C90
+	for <lists+linux-block@lfdr.de>; Sat, 12 Apr 2025 02:29:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A143612C470;
-	Sat, 12 Apr 2025 01:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF6D33EC;
+	Sat, 12 Apr 2025 02:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqBjHODZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZTM5mhJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1761126C1E
-	for <linux-block@vger.kernel.org>; Sat, 12 Apr 2025 01:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197EA4A08
+	for <linux-block@vger.kernel.org>; Sat, 12 Apr 2025 02:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744421124; cv=none; b=FIvX5XfsaDmOqIydGXSWjj7426+TNC0hfSttjnsdJBSbniHh2hSMIf8HJsbEfb1jGs0VH5Vu0FrtPMZcXxq++JW9SqeCXs7/Q/ZlWmbMWTFZ2+o+o+MTGAdxYB3rp2zjgcjvXO5wXk3trc4AQ9t+LIOUOspRwMXQegWYu6Ft5lo=
+	t=1744425061; cv=none; b=r4kxuDVw7nYsL+ag56tT4CposuDGcXW5UEJZAUADmTGfpaNICoNkU3/GO55u+Ibj5b6vc27iyZU4eWKB8ZDdZVrr3s2fs5glrjNsJb8ima/r9sTXMkLvUjhv8KA0GHICaSkyFp/VhNpqQ6voBYIqS8e9Q4FqUZJxjF8RKvcwrVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744421124; c=relaxed/simple;
-	bh=5UeX5RiZJVhD4I8h/Pmw4+5cG26ufvPCZjBBYW7NMEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mDx1zb5+6mUabt/TSbcVoc47UTqmxz56LKRn7snF4gUpaWkUOv3nmQ0+FDei2ujRAYsW9QY/KYAQ1fBfazTwa9aiznjlfG5C+xeoYyW0GdUe/0ZCd7LBUY23KdNwOqifOSqjgnubFvDYhMpZzMCtuWoqqkZipf2bQo+j+tB3fAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqBjHODZ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1744425061; c=relaxed/simple;
+	bh=K11n1iCPGAK7NWbPTyASLszti/kXnv0MxLO1P2QAe/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CK+JpVvjM3U+qVpYtyyxeokj86foW7DEmUcT5bk3y9iAA0vAcM7sWt+kZdIua6Xi2xrKZGIHpvhiHrVnHAQQYqAKj59tfy6duswen4KiXJh2PI0sBFhJ7+Rce3uFacMKcCeMNU0MXVL9vaBlvRkQBBtrd5kH+A0LHotsHUZt5Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PZTM5mhJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744421121;
+	s=mimecast20190719; t=1744425057;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2vjf9vXx9JkuxASxNHGliuMLD++yjQxtGQUYtfvuOoM=;
-	b=FqBjHODZYq5RdoKTAsyqQyVFoW0Asq0pro0UHtAit8y82gkoEbYD4rFIo/CZs/CyWqPrhu
-	M/fr50+XEBHMAjSYVOiTgENks9hDYDDnvoGR6DqDofasY+QNQPKupS0smXHpy8WDRW+B6z
-	XwPK6s0i7LaGtqJo2ErtdHhbhcvGs5w=
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com
- [209.85.222.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-BsETidx7M8GMG4JzcSkM6w-1; Fri, 11 Apr 2025 21:25:19 -0400
-X-MC-Unique: BsETidx7M8GMG4JzcSkM6w-1
-X-Mimecast-MFC-AGG-ID: BsETidx7M8GMG4JzcSkM6w_1744421119
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-86cce6363f6so2481360241.1
-        for <linux-block@vger.kernel.org>; Fri, 11 Apr 2025 18:25:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744421119; x=1745025919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2vjf9vXx9JkuxASxNHGliuMLD++yjQxtGQUYtfvuOoM=;
-        b=k8slktwJmWQz/Cw4IAv3IUVPL8Iyc145qW4uSB8qKKL6weIwzXRy7o50JwsiFzgzYs
-         xv3Whce+AFrrH/kV89JeLDKBdNGO96rnfcq3NDLIcmHZapq6BYmthIqyDNndOk31tuJn
-         37neYveXCEejR+X9O4B1SXqieTKV5JQP6NOeNTPtFAl+CRAmb5QzLbELLUxfHiTIAGKX
-         HgRY7kcQPD52TqkmPfr6o7JKVyfu0sOPOgCfndtWHcrTrKw4WPwxbFeXOEc2M+RBsXrz
-         2Jt2ksN9uuq82BJvoc3g/eb8t8fbzJlYHaflGdjc5rutlVKj3dL8Ai8u8TXlHxDoZLB8
-         Ffcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIitkHcP7vs6+rJL+h94ufxPe5x0p2t3oAb/mrf0hXEWvD18NiThLbADb2BiwXprrJ9A+ok1ySaBFYfg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4FDUPZyYFfR0NpIPBqfu/p8zTLFE8wWlXKmX6GNUFaL1P6vgk
-	P4ABjPU8dvrEPMFYTpp8A9LbwvEIWh22Mq7jxBPbmDkCTnOO39rYBgFEglaR8eueSr8UGcpQH16
-	2x1M8eOu76gbskO1pTkiGonga6k906mYdhQq4+DAMzkttYTeFol+wJLooJ0gpshteMWEZcC88qA
-	kAogWHegcwwd1718J59d6N2vl7o51fh/dIrmmvrLXbtbwNRN9W
-X-Gm-Gg: ASbGncv6/asLtMxcwAVskf8CgbdGFe+ZKUXoHtoZg3zrw/m4cIwdkJlM8DQUPMPa2Lt
-	K8f1y35gvHs3bQ/9v3hNMGIXXBMezaL8w9szGnFMQuM2n1YIFCeGZNId46ca5ql1e9X253g==
-X-Received: by 2002:a05:6102:1481:b0:4c3:69f:5be with SMTP id ada2fe7eead31-4c9d3f8d210mr7901229137.7.1744421118901;
-        Fri, 11 Apr 2025 18:25:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRqLaRyPhfsLt7QcpcOLXf5X5TpXbcakHcPVH9K4aRD/E42ibSE6eTZWSyKb5TBZ1n9Wor+sMyVLuurY8gaMo=
-X-Received: by 2002:a05:6102:1481:b0:4c3:69f:5be with SMTP id
- ada2fe7eead31-4c9d3f8d210mr7901217137.7.1744421118383; Fri, 11 Apr 2025
- 18:25:18 -0700 (PDT)
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OvJeTDzXoORR/6zOVom79oVMNaH+288Y/L/1zBEmEeg=;
+	b=PZTM5mhJXgzUGrbiUgHBNN+MqdczC4cHE32mcd1/U3RY2EPMtJuNHDo4RfD1BVqiG70bwP
+	yrOuJqRI/pjTRqMKjI3PeUtRcXE2rg9xYLdh8X+YGcCul+87Cn8BaCon6diE/X2zgF0tqR
+	ZRER9JfmuftVCYL43iArqQQaL/j6ywc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-l-_3M4nWMcWlnWCdCF7RCA-1; Fri,
+ 11 Apr 2025 22:30:52 -0400
+X-MC-Unique: l-_3M4nWMcWlnWCdCF7RCA-1
+X-Mimecast-MFC-AGG-ID: l-_3M4nWMcWlnWCdCF7RCA_1744425047
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B7CBA1809CA5;
+	Sat, 12 Apr 2025 02:30:46 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.41])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9CEB2180B487;
+	Sat, 12 Apr 2025 02:30:44 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V2 00/13] selftests: ublk: test cleanup & add more tests
+Date: Sat, 12 Apr 2025 10:30:16 +0800
+Message-ID: <20250412023035.2649275-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407131526.1927073-1-ming.lei@redhat.com> <20250407131526.1927073-3-ming.lei@redhat.com>
- <37a69ba9-7928-4b4a-a887-1ec0b35a25e9@wdc.com>
-In-Reply-To: <37a69ba9-7928-4b4a-a887-1ec0b35a25e9@wdc.com>
-From: Ming Lei <ming.lei@redhat.com>
-Date: Sat, 12 Apr 2025 09:25:07 +0800
-X-Gm-Features: ATxdqUG0V90K1U_S5BiPXO3DYS4B0ChtfCBNl0dzhnhHHsbCvus12hnRzLdgmh4
-Message-ID: <CAFj5m9K1ePNk_RS-UZWac6F_vdzF9fg_s23uB6DUN-L9PHJveg@mail.gmail.com>
-Subject: Re: [PATCH 02/13] selftests: ublk: fix ublk_find_tgt()
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc: Jens Axboe <axboe@kernel.dk>, 
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, Caleb Sander Mateos <csander@purestorage.com>, 
-	Uday Shankar <ushankar@purestorage.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, Apr 8, 2025 at 2:05=E2=80=AFPM Johannes Thumshirn
-<Johannes.Thumshirn@wdc.com> wrote:
->
-> On 07.04.25 15:18, Ming Lei wrote:
-> > Bounds check for iterator variable `i` is missed, so add it and fix
-> > ublk_find_tgt().
-> >
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >   tools/testing/selftests/ublk/kublk.c | 3 +--
-> >   1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selft=
-ests/ublk/kublk.c
-> > index 91c282bc7674..5c03c776426f 100644
-> > --- a/tools/testing/selftests/ublk/kublk.c
-> > +++ b/tools/testing/selftests/ublk/kublk.c
-> > @@ -14,13 +14,12 @@ static const struct ublk_tgt_ops *tgt_ops_list[] =
-=3D {
-> >
-> >   static const struct ublk_tgt_ops *ublk_find_tgt(const char *name)
-> >   {
-> > -     const struct ublk_tgt_ops *ops;
-> >       int i;
-> >
-> >       if (name =3D=3D NULL)
-> >               return NULL;
-> >
-> > -     for (i =3D 0; sizeof(tgt_ops_list) / sizeof(ops); i++)
-> > +     for (i =3D 0; i < sizeof(tgt_ops_list) / sizeof(tgt_ops_list[0]);=
- i++)
->
-> Why not
->
->         for (i=3D0; i < ARRAY_SIZE(tgt_ops_list); i++)
+Hello Jens,
 
-It is because ARRAY_SIZE isn't defined as one generic helper for
-test code.
+This patchset cleans up ublk selftests and add more tests:
 
-But it is more readable, so I will add it in ublk header.
+- two bug fixes(1, 2)
+
+- cleanup (3, 4)
+
+- allow to run tests in parallel(5), also big simplification on
+test script
+
+- add two stress tests for zero copy(6)
+
+- kublk misc change(7, 8, 9), helps for evaluating performance
+
+- support target specific command line, so help to add new
+target(Uday is working on fault-inject target) (10)
+
+- add two tests for covering recovery features(11)
+
+- add one heavy io & remove test over recovery enabled device(12),
+which can catch io hang triggered by several recent patches.
+
+- the last patch is for making sure ublk temp file is cleaned up
+if test is skipped
+
+With this change, kernel built-in ublk selftests can :
+
+- cover almost all tests done by ublksrv 'make test T=generic', which has
+been effective to capture driver issue early, so it will make ublk driver
+development more efficiently
+
+- add more stress tests for covering ublk zc feature, which has found one
+kernel panic issue introduced recently, fix merged already
+
+- help to add new tests, such as per-target command line, which
+will help to write fault-inject target
+
 
 Thanks,
+
+V2:
+	- use ARRAY_SIZE() (Johannes Thumshirn)
+	- drop one driver bug fix
+	- fix ublk temp file cleanup
+	- improve document
+
+Ming Lei (13):
+  selftests: ublk: fix ublk_find_tgt()
+  selftests: ublk: add io_uring uapi header
+  selftests: ublk: cleanup backfile automatically
+  selftests: ublk: make sure _add_ublk_dev can return in sub-shell
+  selftests: ublk: run stress tests in parallel
+  selftests: ublk: add two stress tests for zero copy feature
+  selftests: ublk: setup ring with
+    IORING_SETUP_SINGLE_ISSUER/IORING_SETUP_DEFER_TASKRUN
+  selftests: ublk: set queue pthread's cpu affinity
+  selftests: ublk: increase max nr_queues and queue depth
+  selftests: ublk: support target specific command line
+  selftests: ublk: support user recovery
+  selftests: ublk: add test_stress_05.sh
+  selftests: ublk: move creating UBLK_TMP into _prep_test()
+
+ tools/testing/selftests/ublk/Makefile         |   5 +
+ tools/testing/selftests/ublk/kublk.c          | 342 ++++++++++++++++--
+ tools/testing/selftests/ublk/kublk.h          |  39 +-
+ tools/testing/selftests/ublk/stripe.c         |  28 +-
+ tools/testing/selftests/ublk/test_common.sh   | 142 ++++++--
+ .../testing/selftests/ublk/test_generic_04.sh |  40 ++
+ .../testing/selftests/ublk/test_generic_05.sh |  44 +++
+ tools/testing/selftests/ublk/test_loop_01.sh  |   8 +-
+ tools/testing/selftests/ublk/test_loop_02.sh  |   8 +-
+ tools/testing/selftests/ublk/test_loop_03.sh  |   8 +-
+ tools/testing/selftests/ublk/test_loop_04.sh  |   9 +-
+ tools/testing/selftests/ublk/test_loop_05.sh  |   8 +-
+ .../testing/selftests/ublk/test_stress_01.sh  |  45 +--
+ .../testing/selftests/ublk/test_stress_02.sh  |  45 +--
+ .../testing/selftests/ublk/test_stress_03.sh  |  38 ++
+ .../testing/selftests/ublk/test_stress_04.sh  |  37 ++
+ .../testing/selftests/ublk/test_stress_05.sh  |  64 ++++
+ .../testing/selftests/ublk/test_stripe_01.sh  |  12 +-
+ .../testing/selftests/ublk/test_stripe_02.sh  |  13 +-
+ .../testing/selftests/ublk/test_stripe_03.sh  |  12 +-
+ .../testing/selftests/ublk/test_stripe_04.sh  |  13 +-
+ 21 files changed, 786 insertions(+), 174 deletions(-)
+ create mode 100755 tools/testing/selftests/ublk/test_generic_04.sh
+ create mode 100755 tools/testing/selftests/ublk/test_generic_05.sh
+ create mode 100755 tools/testing/selftests/ublk/test_stress_03.sh
+ create mode 100755 tools/testing/selftests/ublk/test_stress_04.sh
+ create mode 100755 tools/testing/selftests/ublk/test_stress_05.sh
+
+-- 
+2.47.0
 
 
