@@ -1,142 +1,210 @@
-Return-Path: <linux-block+bounces-19526-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19528-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E60FBA87551
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 03:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BC3EA87565
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 03:45:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BAF13AB1FA
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 01:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0C853B164E
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 01:45:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C362657C93;
-	Mon, 14 Apr 2025 01:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD8F18FC92;
+	Mon, 14 Apr 2025 01:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/e0ZaY9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UDMZP1m1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7F254670
-	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 01:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0974F18BC3B
+	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 01:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744594954; cv=none; b=AMURoizKFczk6AwcxzRkoNaSxhSFjVZ3mF8ET+W7StQTxyFwh+SNhE9EcSYj41ehtFWKvAiJWQMaJN08fGYg0MWSIqAjKgMkF6pGgw/ZhtGdcjhaBzSUSBCaHufWpdLxro/5krao6mzaHMYHh2Fk3LnKi0Pf5raxImhCWCk6Uv0=
+	t=1744595131; cv=none; b=i7rwwrMYEXOrx7R8vH+PMZ3k6+UV8OuRXJJFf5zga6jrz9gdXwIwXxOJUA+pMfhOCYqVJ8GM5LiWXnCvbQPPk0kW8k3Sr8qYKxqUtItP0D9zaccY2WLawVN1dXfPP9Nu4bh5HjCQlnTN8/16AmG8gWsa6yypvqB/8Avb8lkqdhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744594954; c=relaxed/simple;
-	bh=tTzLH01omU9vHNiWsUw8fdB7L8dSVasqeEkzTJme8V0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJFD4kXrtl7UVRIOzRoS3ZFMjcKCAooG/g7Ar2qOr9l352+BT7TBkzYwKJrFgl2lIgzKS1rzhXKbNF2qxHzyiOVvGqC/fTOQWstzRr2ZfOgrFjiD5z6vqTR8kJGQq9bnR4zG5aYsT6naMorbywnwGOckyT499VCjd7ptntAayN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/e0ZaY9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744594951;
+	s=arc-20240116; t=1744595131; c=relaxed/simple;
+	bh=VDotD7oSieRhWwt3FOJbrqG71tCS1rEtkkGWAJQolBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Yj3U48jyo2pTVUt5GGAU8uAEjBQUxpJv+p8dZAtR4bJLN0/ZDzYxDOHAIAH/deXRBmi3YwVFYCkZR/E0HaEVFAejtla3oZs4n4qSOYMPgGqAsY6ifvUm3s2y8WzwO9W2LX4nIeAn7SjlJMEay1lYmIY9JA9GIQrMUcMgbYxU4y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UDMZP1m1; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744595118;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eVoD+uDQMYsapWUiieCR1tEJiuOZJ3frkSJB/4rSdzE=;
-	b=W/e0ZaY9NNDy1AhOsdCG+OoNcDqtHB5/zDs7GQ6qxLScW7bvp+d8VCDRCnpRSk+Frwxopc
-	6031mkbB67CcQT5Qbk3/PRiSkZ6n4LKis4l4O1MJ9/aej0HaBThE2CQUhFr9A4LgY3s2Un
-	98W3MN0raG1sjW3zCyveKYRqo7VIm9s=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-FOYlsNFCN0eA9Xw6fgsqVA-1; Sun,
- 13 Apr 2025 21:42:28 -0400
-X-MC-Unique: FOYlsNFCN0eA9Xw6fgsqVA-1
-X-Mimecast-MFC-AGG-ID: FOYlsNFCN0eA9Xw6fgsqVA_1744594947
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE166180049D;
-	Mon, 14 Apr 2025 01:42:26 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.68])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 93A793001D13;
-	Mon, 14 Apr 2025 01:42:22 +0000 (UTC)
-Date: Mon, 14 Apr 2025 09:42:17 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 12/15] block: move debugfs/sysfs register out of freezing
- queue
-Message-ID: <Z_xn-Zl5FDGdZ_Bk@fedora>
-References: <20250410133029.2487054-1-ming.lei@redhat.com>
- <20250410133029.2487054-13-ming.lei@redhat.com>
- <b28d98a6-b406-45b0-a5db-11bc600be75f@linux.ibm.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WN8BMkg2EfJd25dvCHhmAO8SWHxStxQWrlaYsrb/zVg=;
+	b=UDMZP1m15JLJ325YbSLgvsNJmmIJmWrgryBWzUGVYnp9qtAmf209U3nRjJBa/gwalcjVT/
+	WRDLS6HyP2VMZWpl4udBq192pdEeAzY1zygvzeRcLu9hXcw5Nhlgxx5gxLLMYT4M1te399
+	AKGga+oXa7LWVmcsx6+jlqZF6wdZ29w=
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: axboe@kernel.dk,
+	hch@lst.de,
+	dan.j.williams@intel.com,
+	gregory.price@memverge.com,
+	John@groves.net,
+	Jonathan.Cameron@Huawei.com,
+	bbhushan2@marvell.com,
+	chaitanyak@nvidia.com,
+	rdunlap@infradead.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-bcache@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	Dongsheng Yang <dongsheng.yang@linux.dev>
+Subject: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block Devices
+Date: Mon, 14 Apr 2025 01:44:54 +0000
+Message-Id: <20250414014505.20477-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b28d98a6-b406-45b0-a5db-11bc600be75f@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 11, 2025 at 12:27:17AM +0530, Nilay Shroff wrote:
-> 
-> 
-> On 4/10/25 7:00 PM, Ming Lei wrote:
-> > Move debugfs/sysfs register out of freezing queue in
-> > __blk_mq_update_nr_hw_queues(), so that the following lockdep dependency
-> > can be killed:
-> > 
-> > 	#2 (&q->q_usage_counter(io)#16){++++}-{0:0}:
-> > 	#1 (fs_reclaim){+.+.}-{0:0}:
-> > 	#0 (&sb->s_type->i_mutex_key#3){+.+.}-{4:4}: //debugfs
-> > 
-> > And registering/un-registering debugfs/sysfs does not require queue to be
-> > frozen.
-> > 
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  block/blk-mq.c | 20 ++++++++++----------
-> >  1 file changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index 7219b01764da..0fb72a698d77 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -4947,15 +4947,15 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
-> >  	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
-> >  		return;
-> >  
-> > -	memflags = memalloc_noio_save();
-> > -	list_for_each_entry(q, &set->tag_list, tag_set_list)
-> > -		blk_mq_freeze_queue_nomemsave(q);
-> > -
-> >  	list_for_each_entry(q, &set->tag_list, tag_set_list) {
-> >  		blk_mq_debugfs_unregister_hctxs(q);
-> >  		blk_mq_sysfs_unregister_hctxs(q);
-> >  	}
-> As we removed hctx sysfs protection while un-registering it, this might
-> cause crash or other side-effect if simultaneously these sysfs attributes
-> are accessed. The read access of these attributes are still protected 
-> using ->elevator_lock. 
+Hi All,
 
-The ->elevator_lock in ->show() is useless except for reading the elevator
-internal data(sched tags, requests, ...), even for reading elevator data,
-it should have been relying on elevator reference, instead of lock, but
-that is another topic & improvement in future.
+    This patchset introduces a new Linux block layer module called
+**pcache**, which uses persistent memory (pmem) as a cache for block
+devices.
 
-Also this patch does _not_ change ->elevator_lock for above debugfs/sysfs
-unregistering, does it? It is always done without holding ->elevator_lock.
-Also ->show() does not require ->q_usage_counter too.
+Originally, this functionality was implemented as `cbd_cache` within the
+CBD (CXL Block Device). However, after thorough consideration,
+it became clear that the cache design was not limited to CBD's pmem
+device or infrastructure. Instead, it is broadly applicable to **any**
+persistent memory device that supports DAX. Therefore, I have split
+pcache out of cbd and refactored it into a standalone module.
 
-As I mentioned, kobject/sysfs provides protection between ->show()/->store()
-and kobject_del(), isn't it the reason why you want to remove ->sys_lock?
+Although Intel's Optane product line has been discontinued, the Storage
+Class Memory (SCM) field continues to evolve. For instance, Numemory
+recently launched their Optane successor product, the NM101 SCM:
+https://www.techpowerup.com/332914/numemory-releases-optane-successor-nm101-storage-class-memory
 
-https://lore.kernel.org/linux-block/20250226124006.1593985-1-nilay@linux.ibm.com/
+### About pcache
 
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Feature                       | pcache                       | bcache                       | dm-writecache                |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| pmem access method            | DAX                          | bio                          | DAX                          |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Write Latency (4K randwrite)  | ~7us                         | ~20us                        | ~7us                         |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Concurrency                   | Multi-tree per backend,      | Shared global index tree,    | single indexing tree and     |
+|                               | fully utilizing pmem         |                              | global wc_lock               |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| IOPS (4K randwrite 32 numjobs)| 2107K                        | 352K                         | 283K                         |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Read Cache Support            | YES                          | YES                          | NO                           |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Deployment Flexibility        | No reformat needed           | Requires formatting backend  | Depends on dm framework,     |
+|                               |                              | devices                      | less intuitive to deploy     |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Writeback Model               | log-structure; preserves     | no guarantee between         | no guarantee writeback       |
+|                               | backing crash-consistency;   | flush order and app IO order;| ordering                     |
+|                               | important for checkpoint     | may lose ordering in backing |                              |
++-------------------------------+------------------------------+------------------------------+------------------------------+
+| Data Integrity                | CRC on both metadata and     | CRC on metadata only         | No CRC                       |
+|                               | data (data crc is optional)  |                              |                              |
++-------------------------------+------------------------------+------------------------------+------------------------------+
 
-Thanks,
-Ming
+### Repository
+
+- Kernel code: https://github.com/DataTravelGuide/linux/tree/pcache
+- Userspace tool: https://github.com/DataTravelGuide/pcache-utils
+
+### Example Usage
+
+```bash
+$ insmod /workspace/linux_compile/drivers/block/pcache/pcache.ko
+$ pcache cache-start --path /dev/pmem1 --format --force
+$ pcache backing-start --path /dev/vdh --cache-size 50G --queues 16
+/dev/pcache0
+$ pcache backing-list
+[
+    {
+        "backing_id": 0,
+        "backing_path": "/dev/vdh",
+        "cache_segs": 3200,
+        "cache_gc_percent": 70,
+        "cache_used_segs": 2238,
+        "logic_dev": "/dev/pcache0"
+    }
+]
+```
+
+Thanks for reviewing!
+
+Dongsheng Yang (11):
+  pcache: introduce cache_dev for managing persistent memory-based cache
+    devices
+  pcache: introduce segment abstraction
+  pcache: introduce meta_segment abstraction
+  pcache: introduce cache_segment abstraction
+  pcache: introduce lifecycle management of pcache_cache
+  pcache: gc and writeback
+  pcache: introduce cache_key infrastructure for persistent metadata
+    management
+  pcache: implement request processing and cache I/O path in cache_req
+  pcache: introduce logic block device and request handling
+  pcache: add backing device management
+  block: introduce pcache (persistent memory to be cache for block
+    device)
+
+ MAINTAINERS                            |   8 +
+ drivers/block/Kconfig                  |   2 +
+ drivers/block/Makefile                 |   2 +
+ drivers/block/pcache/Kconfig           |  16 +
+ drivers/block/pcache/Makefile          |   4 +
+ drivers/block/pcache/backing_dev.c     | 593 +++++++++++++++++
+ drivers/block/pcache/backing_dev.h     | 105 +++
+ drivers/block/pcache/cache.c           | 394 +++++++++++
+ drivers/block/pcache/cache.h           | 612 +++++++++++++++++
+ drivers/block/pcache/cache_dev.c       | 808 ++++++++++++++++++++++
+ drivers/block/pcache/cache_dev.h       |  81 +++
+ drivers/block/pcache/cache_gc.c        | 150 +++++
+ drivers/block/pcache/cache_key.c       | 885 +++++++++++++++++++++++++
+ drivers/block/pcache/cache_req.c       | 812 +++++++++++++++++++++++
+ drivers/block/pcache/cache_segment.c   | 247 +++++++
+ drivers/block/pcache/cache_writeback.c | 183 +++++
+ drivers/block/pcache/logic_dev.c       | 348 ++++++++++
+ drivers/block/pcache/logic_dev.h       |  73 ++
+ drivers/block/pcache/main.c            | 194 ++++++
+ drivers/block/pcache/meta_segment.c    |  61 ++
+ drivers/block/pcache/meta_segment.h    |  46 ++
+ drivers/block/pcache/pcache_internal.h | 185 ++++++
+ drivers/block/pcache/segment.c         | 175 +++++
+ drivers/block/pcache/segment.h         |  78 +++
+ 24 files changed, 6062 insertions(+)
+ create mode 100644 drivers/block/pcache/Kconfig
+ create mode 100644 drivers/block/pcache/Makefile
+ create mode 100644 drivers/block/pcache/backing_dev.c
+ create mode 100644 drivers/block/pcache/backing_dev.h
+ create mode 100644 drivers/block/pcache/cache.c
+ create mode 100644 drivers/block/pcache/cache.h
+ create mode 100644 drivers/block/pcache/cache_dev.c
+ create mode 100644 drivers/block/pcache/cache_dev.h
+ create mode 100644 drivers/block/pcache/cache_gc.c
+ create mode 100644 drivers/block/pcache/cache_key.c
+ create mode 100644 drivers/block/pcache/cache_req.c
+ create mode 100644 drivers/block/pcache/cache_segment.c
+ create mode 100644 drivers/block/pcache/cache_writeback.c
+ create mode 100644 drivers/block/pcache/logic_dev.c
+ create mode 100644 drivers/block/pcache/logic_dev.h
+ create mode 100644 drivers/block/pcache/main.c
+ create mode 100644 drivers/block/pcache/meta_segment.c
+ create mode 100644 drivers/block/pcache/meta_segment.h
+ create mode 100644 drivers/block/pcache/pcache_internal.h
+ create mode 100644 drivers/block/pcache/segment.c
+ create mode 100644 drivers/block/pcache/segment.h
+
+-- 
+2.34.1
 
 
