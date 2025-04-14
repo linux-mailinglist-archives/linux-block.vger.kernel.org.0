@@ -1,48 +1,59 @@
-Return-Path: <linux-block+bounces-19549-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19550-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73AFAA877D6
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 08:22:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB7AA877DB
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 08:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1CAD188AC90
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 06:22:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9E2D3AEE69
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 06:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BDED45C18;
-	Mon, 14 Apr 2025 06:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8191A4E9E;
+	Mon, 14 Apr 2025 06:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTMFSdZD"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2A564D
-	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 06:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E9713E02A;
+	Mon, 14 Apr 2025 06:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744611735; cv=none; b=gD6Gqfh+xsYNqBnXHcmHH7Ehh5bUijZsbbJ6uIJSi3c5n83YVuSKnU5dbZLNNW3ndkIIV6dJuL+e65zhyO9f7kXmXBFgZJjDQPPCyvIoB7WtJ3Z/KuWd+JSnO7L8A+JdbQLfDxTdOEIp3qmXBrxoTJ4A9oQmnT3kZAHu70vjhqA=
+	t=1744612120; cv=none; b=QT1dNbwIETcrDOfM+ugfXb23E/vnE0lVcrQa6zLZf7oX82URgkvAJ7pnzxoOqf6xrD1JAtPSiN+wtYR8IWHm95O6/cXSLzv5iUwT9pDFT/dTTHjBAk0hrmGPgizBa8Dj9Fu+MaFkCgg3zqfsk3veysrRPVHZI7pOf1nmvfGtY3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744611735; c=relaxed/simple;
-	bh=bi36p4h7k/uuv1GuMNQouB5a0cwMVbfVaw01Gysdjdk=;
+	s=arc-20240116; t=1744612120; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBfIflk7JoBrAUz+eG0UlUvYBrPF8eFltQOVbK+HkAKZ0u0FryYrXxEzqJN+Y7ZXKW/eVlbMJ0Ya3OQb41VZl7IA05hCGyKTEhAVvEdr/DluWcg+7kT6h5zid+Eh68Wo5FUtgQMvLUQ/EH+mQQX1OIVrnw4/K4foyPzHNRiUNks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9787E67373; Mon, 14 Apr 2025 08:22:09 +0200 (CEST)
-Date: Mon, 14 Apr 2025 08:22:09 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 10/15] block: pass elevator_queue to elv_register_queue
- & unregister_queue
-Message-ID: <20250414062209.GC6673@lst.de>
-References: <20250410133029.2487054-1-ming.lei@redhat.com> <20250410133029.2487054-11-ming.lei@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEqm3XlGvPc5as2s3xnYnGPGYjVCl+HVGyXwwVqToBCw5Ab4c+a02x7+oKNAkmKfrtwzKilgMhG9Ssb3EOTyA5o1gmXqvnv5dDO0a2njpFtQb04L/QZ23Njw6Q4RlDdvyDQEBhoXRkr6pI0+wJIM0zX8zuOiJQtoLDm6DisouqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTMFSdZD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=LTMFSdZDjrOh6fAH/nEU2pq5H8
+	2SU/lT+fcHtJdNGAZu9ugyiyo1QklQ6gqCsqntLAXviXmU+KT4YuxFD/hi5n3vAnb4eFOQ2MX8Qpg
+	TSIEXukbdjVq1mrRI9idUzysZXf/divH/Ft8KEqzcrdhe355BdpoZRCchfuFpoNjhS+vzOldrxKoO
+	NeIYi5utesz8+5lXuEzDpoF+3XSTn38LLktzbn1JDThUMrZTzzh7PHYaRGUr+Ryv1AUiLB1dA+HU+
+	DJg2RKCvWoDJMzJqyMus88AsdE9D6jQvgD3nyC1L34SIBi22UXyrX7oRR1M5POFFIQtehzyvUYT+Y
+	KjStaQDA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4DJ7-00000000nSx-2pAA;
+	Mon, 14 Apr 2025 06:28:37 +0000
+Date: Sun, 13 Apr 2025 23:28:37 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+	yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com
+Subject: Re: [PATCH] block: fix resource leak in blk_register_queue() error
+ path
+Message-ID: <Z_yrFeucUl6xemgc@infradead.org>
+References: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -51,17 +62,11 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410133029.2487054-11-ming.lei@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Apr 10, 2025 at 09:30:22PM +0800, Ming Lei wrote:
-> Pass elevator_queue reference to elv_register_queue() &
-> elv_unregister_queue().
-> 
-> No functional change, and prepare for moving the two out of elevator
-> lock.
+Looks good:
 
-Can you explain a bit more why passing a seemlingly duplicate argument
-helps further down the series?
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
