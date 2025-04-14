@@ -1,197 +1,117 @@
-Return-Path: <linux-block+bounces-19574-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19582-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53341A8828C
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 15:39:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04A6BA88447
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 16:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D89C93BA3A5
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 13:34:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD52D168E05
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 14:09:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC8AF28A1C2;
-	Mon, 14 Apr 2025 13:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eY2Ls3DO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EXSXSMS3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="plL9FqEB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iL8dfw7j"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E20B2797B6;
+	Mon, 14 Apr 2025 13:37:25 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44FB28936E
-	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 13:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB13B15F306
+	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 13:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637248; cv=none; b=G3LGm65hMH/IoNQ3zcpD4uXWQH5qPQSpPZAWtnrZbPTRqZ/Qee568/TmTcF4fDRUnelz6VAVMQMMzaeZSzk0Ce8czTpOyuMv1bJjzWknDWTJZ7fyF7dTQFkYDal76xWQabjnEvZfjHhL2PiOqGsKQDgfzkCWe8Q/V7RkjWIb/jk=
+	t=1744637845; cv=none; b=OLYZ1W7bVigA5B/0EW471JXJGJG/xSoYEMNyHY7JlXgIQdEIJE7LIU8Y9+zCOymF8Q+pCEdgg2pcpzpPdf7+8zodOKGwp1JyV96I1RHmFdTtupLItyEBYVjNSGQx4S+96bOMzhnYZleJ5iUAgS7xE322dxqVSEcTeCKux34Mp2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637248; c=relaxed/simple;
-	bh=YsF3n9pMjB+H9cBFX9Ut43zGVnrSXD7izxLnfMrU1e0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAoMSXlGWjwIfY9cmJUVjgBCPyYinIsCDEui8zA3AbFSsl+a4+MQFrneo2/7c5wCNKy0S82J5CFgZCE8ADbEL/Ub/6W/j8wqYzXuOlClLM9SvlIyyVYf80M3BHy+uyCJtW1peFBn3lWNb6oA1HDvEK3icaFMjzrwahXhxbIuEJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eY2Ls3DO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EXSXSMS3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=plL9FqEB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iL8dfw7j; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E14461F83B;
-	Mon, 14 Apr 2025 13:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744637245; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EQAswdNX2zA4HbhXkzwmrcygZ7OSsJClYP1qML8B+1k=;
-	b=eY2Ls3DORKO6q/rtZRVWNE1hdKzfW8POWQW5t2061N/cR8cOF+gLZHsmDvkspy/sXiJQ2t
-	IZqSgagkFsWkllnMmCwNPpk3G4znGbqfeKAVuIBlOuszQG4Q/jI7ei13WgdUaVMFAXAKDA
-	LRD1RtB+8ktqPqfUbF0cOgQPx1vR1uU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744637245;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EQAswdNX2zA4HbhXkzwmrcygZ7OSsJClYP1qML8B+1k=;
-	b=EXSXSMS359Ox3BwJJCcmBHNGlSwrPX7NlttR1hMg5cprcRq0nkA9YQe12JgKJfm4DDW4a2
-	wlxL82REBOomgLBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744637244; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EQAswdNX2zA4HbhXkzwmrcygZ7OSsJClYP1qML8B+1k=;
-	b=plL9FqEB4RG+SR4f39OuOhhUDN2/QizDsd0ifO8XcG9kJGd8/SZnDiyyXJr6w12uQUUHo8
-	Pfv212B1AbytwLc8HoOEpWLxA1ZKai+TD7FyV8iH5vr7LKX4M0zYbo6lIZm8clmQAQTHRr
-	2th2grCwp/oqV7Xc4bjyl8Fn4wWZCVQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744637244;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EQAswdNX2zA4HbhXkzwmrcygZ7OSsJClYP1qML8B+1k=;
-	b=iL8dfw7jbygnUuKCntS3cCk2MaPQuGJp/W8oHQXtu9dpAdLYhX+fcG9l6MkztRTb0Pqgdy
-	kjOOP8+lVyAbvADg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D20DE136A7;
-	Mon, 14 Apr 2025 13:27:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3CRpMjwN/WcVfQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Mon, 14 Apr 2025 13:27:24 +0000
-Date: Mon, 14 Apr 2025 15:27:24 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH blktests v2 4/4] nvme/061: add test teardown and setup
- fabrics target during I/O
-Message-ID: <84be67a8-f406-4ed2-a8c3-6d7b3ae86b94@flourine.local>
-References: <20250408-test-target-v2-0-e9e2512586f8@kernel.org>
- <20250408-test-target-v2-4-e9e2512586f8@kernel.org>
- <x3nhda5qyj4o5qf5uiohzuulyimlef4x7ov3itx77ghni5s3fz@4hpttpchyj2v>
+	s=arc-20240116; t=1744637845; c=relaxed/simple;
+	bh=aHALtZuZlmwLX902cyZ802hELlO07nD4Z466j2QN5xw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U4EUIZSAJNIo7Wa9m2llJlfzC+OxkiBUl3gA1c3uuHmoGGYX2gaoZtU+U+pl5d4hmSRe1DpguPSsYp8zJ0+rmSOA1r3loFmzj+j5MnPnSKTyvWPEBTKklLf49nzmrB8RFMWAoejfZrW05aHMdJsGoYFcPX6YLV5n1IAao8mvrb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZbpHX5P9yzsSnH;
+	Mon, 14 Apr 2025 21:37:12 +0800 (CST)
+Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9FFA31A0188;
+	Mon, 14 Apr 2025 21:37:18 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.188) by
+ kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 14 Apr 2025 21:37:17 +0800
+From: Zizhi Wo <wozizhi@huawei.com>
+To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC: <yangerkun@huawei.com>, <yukuai3@huawei.com>, <wozizhi@huawei.com>,
+	<ming.lei@redhat.com>, <tj@kernel.org>
+Subject: [PATCH 0/7] blk-throttle: Split the blkthrotl queue to solve the IO delay issue
+Date: Mon, 14 Apr 2025 21:27:24 +0800
+Message-ID: <20250414132731.167620-1-wozizhi@huawei.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <x3nhda5qyj4o5qf5uiohzuulyimlef4x7ov3itx77ghni5s3fz@4hpttpchyj2v>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf100017.china.huawei.com (7.202.181.16)
 
-On Mon, Apr 14, 2025 at 12:18:05PM +0000, Shinichiro Kawasaki wrote:
-> On Apr 08, 2025 / 18:26, Daniel Wagner wrote:
-> > Add a new test case which forcefully removes the target and setup it
-> > again.
-> > 
-> > Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> 
-> When I ran this test case for tr=loop, it fails.
-> 
-> The out file is as follows:
-> 
->   $ cat ./results/nodev_tr_loop/nvme/061.out.bad
->   Running nvme/061
->   iteration 0
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   grep: /sys/class/nvme-fabrics/ctl//state: No such file or directory
->   expected state "connecting" not  reached within 5 seconds
-> 
-> And kernel reported the "invalid parameter" message:
-> 
->   [  888.896492][ T3112] run blktests nvme/061 at 2025-04-14 21:11:18
->   [  888.937128][ T3158] loop0: detected capacity change from 0 to 2097152
->   [  888.949671][ T3161] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
->   [  888.997790][ T3170] nvme_fabrics: invalid parameter 'reconnect_delay=%d'
-> 
-> In the v1 series, you noted that your fc-loop fixes will avoid the
-> failure.
+[BUG]
+The current blkthrotl code provides two types of throttling: BPS limit and
+IOPS limit. When both limits are enabled, an IO is only dispatched if it
+meets both the BPS and IOPS restrictions. However, when both BPS and IOPS
+are limited simultaneously, an IO delayed dispatch issue can occur due to
+IO splitting. For example, if two 1MB IOs are issued with a BPS limit of
+1MB/s and a very high IOPS limit, the IO splitting will cause both IOs to
+complete almost "simultaneously" in 2 seconds.
 
-Yes, the fcloop fixes will address the fc transport failures. The above
-failure is caused by the same issue as in 060: the loop transport
-doesn't know about reconnect_delay, thus the requires should list tcp,
-rdma and fc as valid transport and not loop.
+[CAUSE]
+The root cause of this issue is that blkthrotl mixes BPS and IOPS into a
+single queue. When issuing multiple IOs sequentially, the continuously
+split IOs will repeatedly enter the same queue. As they alternately go
+through the throtl process, IOs that have already been throttled will have
+to wait for IOs that have not yet been throttled. As a result, all IOs will
+eventually complete almost together.
 
-> But the failure was observed with tr=loop, so I'm not sure fc-loop fixes
-> will avoids the failure. I'm wondering if this test case is for rdma/tcp/fc
-> transports only and suspecting it may not be intended for the loop
-> transport.
+[FIX]
+Since IO requests that have already been split no longer need to go through
+BPS throttling but still require IOPS control, this patchset splits the
+existing blkthrotl queue into two separate queues: BPS and IOPS.
+1) IO requests must first pass through the BPS queue.
+2) Once they meet the BPS limit, they proceed to the IOPS queue before
+being dispatched.
+3) Already split IO requests bypass the BPS queue and go directly to the
+IOPS queue.
 
-Yes, this is correct. My test script listed only tcp, rdma and fc, so I
-didn't catch the error with loop.
+[OVERVIEW]
+This patchset consists of 7 patches:
+1) Patch 1 is a simple clean_up.
+2) Patch 2-4, to facilitate the subsequent splitting of queues. Patch 2-3
+separate the -dispatch- and -charge- functions based on the BPS and IOPS.
+Patch 4 introduce a new flag to prevent double counting.
+3) Patch 5-6 splits the original single queue into two separate queues(BPS
+and IOPS) without altering the existing code logic.
+4) Patch 7 ensures that split IO requests bypass the BPS queue, preventing
+unnecessary throttling and eliminating the delay issue.
 
-> > +	nvmedev=$(_find_nvme_dev "${def_subsysnqn}")
-> > +	state_file="/sys/class/nvme-fabrics/ctl/${nvmedev}/state"
-> > +	for ((i = 0; i <= 5; i++)); do
-> > +		echo "iteration $i"
-> > +
-> > +		_nvmet_target_cleanup
-> > +
-> > +		_nvmf_wait_for_state "${def_subsysnqn}" "connecting" || return 1
-> > +		echo "state: $(cat ${state_file})"
-> 
-> The line above needs one more pair of double quotations to avoid the
-> shellcheck warn:
-> 
-> 		echo "state: $(cat "${state_file}")"
+Zizhi Wo (7):
+  blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
+  blk-throttle: Refactor tg_dispatch_time by extracting
+    tg_dispatch_bps/iops_time
+  blk-throttle: Split throtl_charge_bio() into bps and iops functions
+  blk-throttle: Introduce flag "BIO_TG_BPS_THROTTLED"
+  blk-throttle: Split the blkthrotl queue
+  blk-throttle: Split the service queue
+  blk-throttle: Prevents the bps restricted io from entering the bps
+    queue again
 
-I didn't know this is actually allowed and even required. Sure, will
-update the patches accordingly.
+ block/blk-throttle.c      | 288 +++++++++++++++++++++++++-------------
+ block/blk-throttle.h      |  14 +-
+ include/linux/blk_types.h |   5 +
+ 3 files changed, 202 insertions(+), 105 deletions(-)
 
-Thanks,
-Daniel
+-- 
+2.46.1
+
 
