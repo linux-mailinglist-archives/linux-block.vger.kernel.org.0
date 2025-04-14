@@ -1,338 +1,98 @@
-Return-Path: <linux-block+bounces-19565-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19567-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B042BA87EFA
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 13:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05554A87F3E
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 13:39:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F26C1889020
-	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 11:27:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 556B3189666D
+	for <lists+linux-block@lfdr.de>; Mon, 14 Apr 2025 11:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39083283697;
-	Mon, 14 Apr 2025 11:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E59296172;
+	Mon, 14 Apr 2025 11:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGc23G7s"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f6GUFixh"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473A31714B3
-	for <linux-block@vger.kernel.org>; Mon, 14 Apr 2025 11:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEDE280CDC;
+	Mon, 14 Apr 2025 11:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630009; cv=none; b=qUsb0lUr8KMFYzUjsJRKnOlvpe8IybWnO44oad+0MgoKK5jNqpdNO6Aj5MR5VypcYa+GRN3T3mSFUcDZp4CCmtK/L52vhHXszLRXoNskklqrenTh61zbdYUILQfCN0bw/nO1JyAhRPDtYnP6N3xkL0VHzzM5/ifZkaRLyFjdfb0=
+	t=1744630748; cv=none; b=noFpRon12a5fahCgCNk2ZFMZVfdHbpXuEMQWiophr2fx6o0mBbQKRrcij6MF61kiX2bscMolUCm++A0jZklbElXYK8FGVrL51AB5MXJFHh4U8qsuBoZ6b6m0Xs1q4XSWl6BAEQtXJEGOWNXD7MEilgTartKBD4stCZNjVBhhCsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630009; c=relaxed/simple;
-	bh=YpzY/PxkqmdLdgoRUW8GT1KwE3+f0UxQeXSsITFAJWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E6HmVc3TYyMkhykiME864QcaX4XbPR4T+bnrJb2Yp0qQvuzB5gGnQ2Je9D6yCrLPU6dORhFPDUYJ86YSz1lD503IlxVtbqemFFbWsxUKjYxXncyfcmf3mkXHKOYbbhCme/TaLoNAlithav/AXbZKKO3qdF+4OAFhcnqFs9pUAus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGc23G7s; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744630005;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7b2LxptHBN/rkK2Q9H7e142g/d5WV1lB/Nb5AFd6DVY=;
-	b=KGc23G7sKmTI70W95cyYEj/oq5P5jAIRgUABFpBE0ODbHrDLy5BVCzDSG0rloD7s/2Rjxn
-	XlBIeufgfyDxlNWE4iZPjSCJx2Y5/+qHMIb6R3QaLB8+gDqpOcYWiXQFaSxS5yewTFqqXE
-	eSBq7XCxOR+jtqc+D2ACLUDIaLuZ/yI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-298-5B1ci2YyNyCp692TWyuK-w-1; Mon,
- 14 Apr 2025 07:26:42 -0400
-X-MC-Unique: 5B1ci2YyNyCp692TWyuK-w-1
-X-Mimecast-MFC-AGG-ID: 5B1ci2YyNyCp692TWyuK-w_1744630001
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71CC9180899B;
-	Mon, 14 Apr 2025 11:26:41 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.48])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48EDF1801A6D;
-	Mon, 14 Apr 2025 11:26:39 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	Uday Shankar <ushankar@purestorage.com>,
-	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 9/9] selftests: ublk: add generic_06 for covering fault inject
-Date: Mon, 14 Apr 2025 19:25:50 +0800
-Message-ID: <20250414112554.3025113-10-ming.lei@redhat.com>
-In-Reply-To: <20250414112554.3025113-1-ming.lei@redhat.com>
-References: <20250414112554.3025113-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1744630748; c=relaxed/simple;
+	bh=JPHN+jpWD9t+wJ6xtaBll58pm1u68FXkwIkn2RM7j84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTyKsNss3ycflLqTAe3eqbJGmwkG74dm4ezis8hGdU+XG3UDlP11dIcAmnt43obYRNdz13zBsFg+wuGMpOMXyqZH/mCyw9jFAu4o3NWpI/0S6xps7nJPmShJ03IBdg76MwTzylUS/eU3nhxNdNNvUVXChsiUEXKYfMcnAbVT250=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f6GUFixh; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8tXU7TjKACyyS9aliZITUswNNUYWl81wkuwfMZnjmYg=; b=f6GUFixhYRUezBgFjY82+UJqPU
+	LjQPp31MU/rWulduLV3GFImPuHOY67DQT6zth90CNJFtrikdxQPxji4BhXNyqRNzG4KL88doiSFS9
+	yEVeS9nrGeSz0Ii/RNyHLHWgpNqMq1Vq7kx6hAsYnOSX51xdNiSG+9pPaDb9h+pVZMYvD4mqzi4BJ
+	8G1ypN2kMwRfjPnjlFsR4q/mVobtahFpQVO/k7qpNkS/cuGm5oKsCArlMavhbXSAzE8YdMC+YVEOy
+	4MFTsuj7/c4vYm/fU+dPEXhzy6vUNs3K/RTdVjvjg5u+EylXMY8vXRmz5CGriZlcho4jRpiVqoIm6
+	i7brOdTg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4I9Z-00000001nOb-07yt;
+	Mon, 14 Apr 2025 11:39:05 +0000
+Date: Mon, 14 Apr 2025 04:39:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk, song@kernel.org,
+	xni@redhat.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH 1/4] block: export part_in_flight()
+Message-ID: <Z_zz2RY3zHVGScCK@infradead.org>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+ <20250412073202.3085138-2-yukuai1@huaweicloud.com>
+ <Z_yr67xrbkuQwy0P@infradead.org>
+ <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Uday Shankar <ushankar@purestorage.com>
+On Mon, Apr 14, 2025 at 02:48:23PM +0800, Yu Kuai wrote:
+> > If we export this it needs a kerneldoc comment, and probably also
+> > a better name.
+> 
+> Sure about comment.
 
-Add one simple fault inject target, and verify if it can be exited in
-expected period.
+I think a name like bdev_count_inflight might also be helpful as there
+is nothing partition-specific in the helper.
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- tools/testing/selftests/ublk/Makefile         |  4 +-
- tools/testing/selftests/ublk/fault_inject.c   | 98 +++++++++++++++++++
- tools/testing/selftests/ublk/kublk.c          |  3 +-
- tools/testing/selftests/ublk/kublk.h          | 12 ++-
- .../testing/selftests/ublk/test_generic_06.sh | 41 ++++++++
- 5 files changed, 155 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/ublk/fault_inject.c
- create mode 100755 tools/testing/selftests/ublk/test_generic_06.sh
+> There are two kinds of helpers:
+> 
+> 1) part_in_flight and part_in_flight_rw
+> 2) blk_mq_in_flight and blk_mq_in_flight_rw
+> 
+> 1) is accounted at blk_account_io_start(), while 2) is
+> blk_mq_start_request(), I think this is the essential difference.
+> 
+> part_in_flight_rw() and blk_mq_in_flight_rw() is also used in sysfs API
+> inflight for bio/rq based device. And commit 7be835694dae ("block: fix
+> that util can be greater than 100%") convert blk_mq_in_flight() to
+> part_in_flight() from disk stats API. Now I just checked there is no use
+> for blk_mq_in_flight() anymore and maybe it can be removed.
 
-diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-index dddc64036aa1..ec4624a283bc 100644
---- a/tools/testing/selftests/ublk/Makefile
-+++ b/tools/testing/selftests/ublk/Makefile
-@@ -8,6 +8,7 @@ TEST_PROGS += test_generic_02.sh
- TEST_PROGS += test_generic_03.sh
- TEST_PROGS += test_generic_04.sh
- TEST_PROGS += test_generic_05.sh
-+TEST_PROGS += test_generic_06.sh
- 
- TEST_PROGS += test_null_01.sh
- TEST_PROGS += test_null_02.sh
-@@ -31,7 +32,8 @@ TEST_GEN_PROGS_EXTENDED = kublk
- 
- include ../lib.mk
- 
--$(TEST_GEN_PROGS_EXTENDED): kublk.c null.c file_backed.c common.c stripe.c
-+$(TEST_GEN_PROGS_EXTENDED): kublk.c null.c file_backed.c common.c stripe.c \
-+	fault_inject.c
- 
- check:
- 	shellcheck -x -f gcc *.sh
-diff --git a/tools/testing/selftests/ublk/fault_inject.c b/tools/testing/selftests/ublk/fault_inject.c
-new file mode 100644
-index 000000000000..94a8e729ba4c
---- /dev/null
-+++ b/tools/testing/selftests/ublk/fault_inject.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Fault injection ublk target. Hack this up however you like for
-+ * testing specific behaviors of ublk_drv. Currently is a null target
-+ * with a configurable delay before completing each I/O. This delay can
-+ * be used to test ublk_drv's handling of I/O outstanding to the ublk
-+ * server when it dies.
-+ */
-+
-+#include "kublk.h"
-+
-+static int ublk_fault_inject_tgt_init(const struct dev_ctx *ctx,
-+				      struct ublk_dev *dev)
-+{
-+	const struct ublksrv_ctrl_dev_info *info = &dev->dev_info;
-+	unsigned long dev_size = 250UL << 30;
-+
-+	dev->tgt.dev_size = dev_size;
-+	dev->tgt.params = (struct ublk_params) {
-+		.types = UBLK_PARAM_TYPE_BASIC,
-+		.basic = {
-+			.logical_bs_shift	= 9,
-+			.physical_bs_shift	= 12,
-+			.io_opt_shift		= 12,
-+			.io_min_shift		= 9,
-+			.max_sectors		= info->max_io_buf_bytes >> 9,
-+			.dev_sectors		= dev_size >> 9,
-+		},
-+	};
-+
-+	dev->private_data = (void *)(unsigned long)(ctx->fault_inject.delay_us * 1000);
-+	return 0;
-+}
-+
-+static int ublk_fault_inject_queue_io(struct ublk_queue *q, int tag)
-+{
-+	const struct ublksrv_io_desc *iod = ublk_get_iod(q, tag);
-+	struct io_uring_sqe *sqe;
-+	struct __kernel_timespec ts = {
-+		.tv_nsec = (long long)q->dev->private_data,
-+	};
-+
-+	ublk_queue_alloc_sqes(q, &sqe, 1);
-+	io_uring_prep_timeout(sqe, &ts, 1, 0);
-+	sqe->user_data = build_user_data(tag, ublksrv_get_op(iod), 0, 1);
-+
-+	ublk_queued_tgt_io(q, tag, 1);
-+
-+	return 0;
-+}
-+
-+static void ublk_fault_inject_tgt_io_done(struct ublk_queue *q, int tag,
-+					  const struct io_uring_cqe *cqe)
-+{
-+	const struct ublksrv_io_desc *iod = ublk_get_iod(q, tag);
-+
-+	if (cqe->res != -ETIME)
-+		ublk_err("%s: unexpected cqe res %d\n", __func__, cqe->res);
-+
-+	if (ublk_completed_tgt_io(q, tag))
-+		ublk_complete_io(q, tag, iod->nr_sectors << 9);
-+	else
-+		ublk_err("%s: io not complete after 1 cqe\n", __func__);
-+}
-+
-+static void ublk_fault_inject_cmd_line(struct dev_ctx *ctx, int argc, char *argv[])
-+{
-+	static const struct option longopts[] = {
-+		{ "delay_us", 	1,	NULL,  0  },
-+		{ 0, 0, 0, 0 }
-+	};
-+	int option_idx, opt;
-+
-+	ctx->fault_inject.delay_us = 0;
-+	while ((opt = getopt_long(argc, argv, "",
-+				  longopts, &option_idx)) != -1) {
-+		switch (opt) {
-+		case 0:
-+			if (!strcmp(longopts[option_idx].name, "delay_us"))
-+				ctx->fault_inject.delay_us = strtoll(optarg, NULL, 10);
-+		}
-+	}
-+}
-+
-+static void ublk_fault_inject_usage(const struct ublk_tgt_ops *ops)
-+{
-+	printf("\tfault_inject: [--delay_us us (default 0)]\n");
-+}
-+
-+const struct ublk_tgt_ops fault_inject_tgt_ops = {
-+	.name = "fault_inject",
-+	.init_tgt = ublk_fault_inject_tgt_init,
-+	.queue_io = ublk_fault_inject_queue_io,
-+	.tgt_io_done = ublk_fault_inject_tgt_io_done,
-+	.parse_cmd_line = ublk_fault_inject_cmd_line,
-+	.usage = ublk_fault_inject_usage,
-+};
-diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index 0cd6dce3f303..759f06637146 100644
---- a/tools/testing/selftests/ublk/kublk.c
-+++ b/tools/testing/selftests/ublk/kublk.c
-@@ -12,6 +12,7 @@ static const struct ublk_tgt_ops *tgt_ops_list[] = {
- 	&null_tgt_ops,
- 	&loop_tgt_ops,
- 	&stripe_tgt_ops,
-+	&fault_inject_tgt_ops,
- };
- 
- static const struct ublk_tgt_ops *ublk_find_tgt(const char *name)
-@@ -1234,7 +1235,7 @@ static void __cmd_create_help(char *exe, bool recovery)
- {
- 	int i;
- 
--	printf("%s %s -t [null|loop|stripe] [-q nr_queues] [-d depth] [-n dev_id]\n",
-+	printf("%s %s -t [null|loop|stripe|fault_inject] [-q nr_queues] [-d depth] [-n dev_id]\n",
- 			exe, recovery ? "recover" : "add");
- 	printf("\t[--foreground] [--quiet] [-z] [--debug_mask mask] [-r 0|1 ] [-g 0|1]\n");
- 	printf("\t[-e 0|1 ] [-i 0|1]\n");
-diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-index 3d2b9f14491c..29571eb296f1 100644
---- a/tools/testing/selftests/ublk/kublk.h
-+++ b/tools/testing/selftests/ublk/kublk.h
-@@ -68,6 +68,11 @@ struct stripe_ctx {
- 	unsigned int    chunk_size;
- };
- 
-+struct fault_inject_ctx {
-+	/* fault_inject */
-+	unsigned long   delay_us;
-+};
-+
- struct dev_ctx {
- 	char tgt_type[16];
- 	unsigned long flags;
-@@ -81,6 +86,9 @@ struct dev_ctx {
- 	unsigned int	fg:1;
- 	unsigned int	recovery:1;
- 
-+	/* fault_inject */
-+	long long	delay_us;
-+
- 	int _evtfd;
- 	int _shmid;
- 
-@@ -88,7 +96,8 @@ struct dev_ctx {
- 	struct ublk_dev *shadow_dev;
- 
- 	union {
--		struct stripe_ctx  stripe;
-+		struct stripe_ctx 	stripe;
-+		struct fault_inject_ctx fault_inject;
- 	};
- };
- 
-@@ -384,6 +393,7 @@ static inline int ublk_queue_use_zc(const struct ublk_queue *q)
- extern const struct ublk_tgt_ops null_tgt_ops;
- extern const struct ublk_tgt_ops loop_tgt_ops;
- extern const struct ublk_tgt_ops stripe_tgt_ops;
-+extern const struct ublk_tgt_ops fault_inject_tgt_ops;
- 
- void backing_file_tgt_deinit(struct ublk_dev *dev);
- int backing_file_tgt_init(struct ublk_dev *dev);
-diff --git a/tools/testing/selftests/ublk/test_generic_06.sh b/tools/testing/selftests/ublk/test_generic_06.sh
-new file mode 100755
-index 000000000000..b67230c42c84
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_generic_06.sh
-@@ -0,0 +1,41 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="generic_06"
-+ERR_CODE=0
-+
-+_prep_test "fault_inject" "fast cleanup when all I/Os of one hctx are in server"
-+
-+# configure ublk server to sleep 2s before completing each I/O
-+dev_id=$(_add_ublk_dev -t fault_inject -q 2 -d 1 --delay_us 2000000)
-+_check_add_dev $TID $?
-+
-+STARTTIME=${SECONDS}
-+
-+dd if=/dev/urandom of=/dev/ublkb${dev_id} oflag=direct bs=4k count=1 status=none > /dev/null 2>&1 &
-+dd_pid=$!
-+
-+__ublk_kill_daemon ${dev_id} "DEAD"
-+
-+wait $dd_pid
-+dd_exitcode=$?
-+
-+ENDTIME=${SECONDS}
-+ELAPSED=$(($ENDTIME - $STARTTIME))
-+
-+# assert that dd sees an error and exits quickly after ublk server is
-+# killed. previously this relied on seeing an I/O timeout and so would
-+# take ~30s
-+if [ $dd_exitcode -eq 0 ]; then
-+        echo "dd unexpectedly exited successfully!"
-+        ERR_CODE=255
-+fi
-+if [ $ELAPSED -ge 5 ]; then
-+        echo "dd took $ELAPSED seconds to exit (>= 5s tolerance)!"
-+        ERR_CODE=255
-+fi
-+
-+_cleanup_test "fault_inject"
-+_show_result $TID $ERR_CODE
--- 
-2.47.0
-
+Yeah.  I'm still confused about having the different methods to count
+the _rw vs non-_rw variants for blk-mq, but I guess that's not really
+in scope for your series.
 
