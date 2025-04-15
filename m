@@ -1,154 +1,146 @@
-Return-Path: <linux-block+bounces-19618-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19620-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72359A89184
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 03:40:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2452A8918B
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 03:44:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5037A165162
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 01:40:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EE65189BF2D
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 01:44:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91DE119644B;
-	Tue, 15 Apr 2025 01:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKIjm79w"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D001A238E;
+	Tue, 15 Apr 2025 01:43:58 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43C5EEA9
-	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 01:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4633A1BA
+	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 01:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744681235; cv=none; b=bNuGsJ4cvzC2dXXXmn0j5xMqGe5goDJp0cDFrZZ0RHQZy3ZpKuCWK/pQnubHYONiM6iORa/wkL94TPLzrw2NLr0sc8nWcwfFQfjZwaN6IoUFqVGbMEJtzIo3XodAk25s8uAFBEMYQ2FQGPQNHBK3izbcFd4fQ8cIWzTZJKP6Vu4=
+	t=1744681438; cv=none; b=ZA1HFn/fR7DEJXHGxYN6ZzTWGIZJlO62j+v8iuImnNlQTHRTrLEz0UO6Ocb1vyfkWp2B2tL//FWS/9a5ahvTMup9zQ/UY0YpiBHmyDpQn6L8wELUYPGObm4MwW+2kNY3jy5ErXDEZW9blDLfZfaXscDQbg5M22Xf10USYlkPQxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744681235; c=relaxed/simple;
-	bh=waTqZlG5RUrdk/kyX1B3JrEAaqCI6o8Wzn0Eb0H8FxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JFnHfsaJWzaQn6S2qjw5ioVluUg25dShZ0Tg3T0F8+aUgKCGLM02lI+BQjBkaOfoLssjvBkzVyoR7VCWhbHuDo31lL1Mx3HEFYxnJmgBNCSMPVP1yP05Eq4o/6IbfVXceIZoqygjFumypDwh1A8NfNqUFkGppu0hfCxlgtUdVQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JKIjm79w; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744681230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BzJIIGO4h1ov0FNztGZbtQ8RL/hoNax/EvxMwQw1rZA=;
-	b=JKIjm79wOR2eC48dnCxbWGYxE8ykAly3vuJRhgRwHNvVOiTIYt3bW9PdF0ddeN/w3L8pYW
-	/publv+/xIND17TGDkRQMdzGaOiUT9O6BulQfP+scKN/p5qlOGj4CEF+C3NmeRSP1/ZBBF
-	f7VFgfd09oLLqcztfOjANO+kmtD4b/g=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-261-MPbOv-2yNCiT8WkrDukkkw-1; Mon,
- 14 Apr 2025 21:40:23 -0400
-X-MC-Unique: MPbOv-2yNCiT8WkrDukkkw-1
-X-Mimecast-MFC-AGG-ID: MPbOv-2yNCiT8WkrDukkkw_1744681221
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EDCDD1956089;
-	Tue, 15 Apr 2025 01:40:20 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.40])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68D041808867;
-	Tue, 15 Apr 2025 01:40:17 +0000 (UTC)
-Date: Tue, 15 Apr 2025 09:40:12 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: Re: [PATCH 2/9] ublk: properly serialize all FETCH_REQs
-Message-ID: <Z_24_D-uadrycz7i@fedora>
-References: <20250414112554.3025113-1-ming.lei@redhat.com>
- <20250414112554.3025113-3-ming.lei@redhat.com>
- <Z/1o946/z43QETPr@dev-ushankar.dev.purestorage.com>
- <dc912318-f649-46bd-8d7b-e5d18b3c45b5@kernel.dk>
- <Z/11q+J0rW6rAJI9@dev-ushankar.dev.purestorage.com>
+	s=arc-20240116; t=1744681438; c=relaxed/simple;
+	bh=Dt8WxWb4WRd2i7AOWVZlGDbElOhiVhREcXRM3Hj8hg4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fPsG6CjzXdP7YAsL21KJ1Egv138Y5SbYXWSwHe215v/8lUkXzr5YtQw+pss3MtQ5VzJIcKkt2CwoqX5QAt+LvT2hJSyeXoO+Wua/6Qf8Uqq6idKdaMVK0jb9x7bLiur5eB5dNMTlTbLSfT4zPmuwhUZGT4QGvNKKlO9zc3CK4Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zc6Pd0kYLz4f3jt8
+	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 09:43:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E1AA1A06D7
+	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 09:43:51 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2DUuf1nOuoOJg--.42767S3;
+	Tue, 15 Apr 2025 09:43:49 +0800 (CST)
+Subject: Re: [PATCH 0/7] blk-throttle: Split the blkthrotl queue to solve the
+ IO delay issue
+To: Zizhi Wo <wozizhi@huawei.com>, axboe@kernel.dk,
+ linux-block@vger.kernel.org
+Cc: yangerkun@huawei.com, ming.lei@redhat.com, tj@kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250414132731.167620-1-wozizhi@huawei.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <49ba168b-1f8d-cbff-4d4e-0f913a0d264b@huaweicloud.com>
+Date: Tue, 15 Apr 2025 09:43:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z/11q+J0rW6rAJI9@dev-ushankar.dev.purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250414132731.167620-1-wozizhi@huawei.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHK2DUuf1nOuoOJg--.42767S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCrWkuw43AF4DZF18WryrCrg_yoW5WrWxpr
+	WfWa1Yka1kAFsrK34fWr1aqaySq3yxJry3Cr97Jr43JrykZry0qF4ftrW8ZFWxAF9Iga1a
+	gryUtF93u3WUZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Mon, Apr 14, 2025 at 02:52:59PM -0600, Uday Shankar wrote:
-> On Mon, Apr 14, 2025 at 02:39:33PM -0600, Jens Axboe wrote:
-> > On 4/14/25 1:58 PM, Uday Shankar wrote:
-> > > +static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_device *ub,
-> > > +		      struct ublk_queue *ubq, struct ublk_io *io,
-> > > +		      const struct ublksrv_io_cmd *ub_cmd,
-> > > +		      unsigned int issue_flags)
-> > > +{
-> > > +	int ret = 0;
-> > > +
-> > > +	if (issue_flags & IO_URING_F_NONBLOCK)
-> > > +		return -EAGAIN;
-> > > +
-> > > +	mutex_lock(&ub->mutex);
-> > 
-> > This looks like overkill, if we can trylock the mutex that should surely
-> > be fine? And I would imagine succeed most of the time, hence making the
-> > inline/fastpath fine with F_NONBLOCK?
+Hi,
+
+ÔÚ 2025/04/14 21:27, Zizhi Wo Ð´µÀ:
+> [BUG]
+> The current blkthrotl code provides two types of throttling: BPS limit and
+> IOPS limit. When both limits are enabled, an IO is only dispatched if it
+> meets both the BPS and IOPS restrictions. However, when both BPS and IOPS
+> are limited simultaneously, an IO delayed dispatch issue can occur due to
+> IO splitting. For example, if two 1MB IOs are issued with a BPS limit of
+> 1MB/s and a very high IOPS limit, the IO splitting will cause both IOs to
+> complete almost "simultaneously" in 2 seconds.
 > 
-> Yeah, makes sense. How about this?
+> [CAUSE]
+> The root cause of this issue is that blkthrotl mixes BPS and IOPS into a
+> single queue. When issuing multiple IOs sequentially, the continuously
+> split IOs will repeatedly enter the same queue. As they alternately go
+> through the throtl process, IOs that have already been throttled will have
+> to wait for IOs that have not yet been throttled. As a result, all IOs will
+> eventually complete almost together.
 > 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index cdb1543fa4a9..bf4a88cb1413 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -1832,8 +1832,8 @@ static void ublk_nosrv_work(struct work_struct *work)
->  
->  /* device can only be started after all IOs are ready */
->  static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
-> +	__must_hold(&ub->mutex)
->  {
-> -	mutex_lock(&ub->mutex);
->  	ubq->nr_io_ready++;
->  	if (ublk_queue_ready(ubq)) {
->  		ubq->ubq_daemon = current;
-> @@ -1845,7 +1845,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
->  	}
->  	if (ub->nr_queues_ready == ub->dev_info.nr_hw_queues)
->  		complete_all(&ub->completion);
-> -	mutex_unlock(&ub->mutex);
->  }
->  
->  static void ublk_handle_need_get_data(struct ublk_device *ub, int q_id,
-> @@ -1929,6 +1928,55 @@ static int ublk_unregister_io_buf(struct io_uring_cmd *cmd,
->  	return io_buffer_unregister_bvec(cmd, index, issue_flags);
->  }
->  
-> +static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_device *ub,
-> +		      struct ublk_queue *ubq, struct ublk_io *io,
-> +		      const struct ublksrv_io_cmd *ub_cmd,
-> +		      unsigned int issue_flags)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!mutex_trylock(&ub->mutex)) {
-> +		if (issue_flags & IO_URING_F_NONBLOCK)
-> +			return -EAGAIN;
-> +		else
-> +			mutex_lock(&ub->mutex);
+> [FIX]
+> Since IO requests that have already been split no longer need to go through
+> BPS throttling but still require IOPS control, this patchset splits the
+> existing blkthrotl queue into two separate queues: BPS and IOPS.
+> 1) IO requests must first pass through the BPS queue.
+> 2) Once they meet the BPS limit, they proceed to the IOPS queue before
+> being dispatched.
+> 3) Already split IO requests bypass the BPS queue and go directly to the
+> IOPS queue.
+> 
+> [OVERVIEW]
+> This patchset consists of 7 patches:
+> 1) Patch 1 is a simple clean_up.
+> 2) Patch 2-4, to facilitate the subsequent splitting of queues. Patch 2-3
+> separate the -dispatch- and -charge- functions based on the BPS and IOPS.
+> Patch 4 introduce a new flag to prevent double counting.
+> 3) Patch 5-6 splits the original single queue into two separate queues(BPS
+> and IOPS) without altering the existing code logic.
+> 4) Patch 7 ensures that split IO requests bypass the BPS queue, preventing
+> unnecessary throttling and eliminating the delay issue.
+> 
+> Zizhi Wo (7):
+>    blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
+>    blk-throttle: Refactor tg_dispatch_time by extracting
+>      tg_dispatch_bps/iops_time
+>    blk-throttle: Split throtl_charge_bio() into bps and iops functions
+>    blk-throttle: Introduce flag "BIO_TG_BPS_THROTTLED"
+>    blk-throttle: Split the blkthrotl queue
+>    blk-throttle: Split the service queue
+>    blk-throttle: Prevents the bps restricted io from entering the bps
+>      queue again
+> 
+>   block/blk-throttle.c      | 288 +++++++++++++++++++++++++-------------
+>   block/blk-throttle.h      |  14 +-
+>   include/linux/blk_types.h |   5 +
+>   3 files changed, 202 insertions(+), 105 deletions(-)
+> 
 
-Thinking of further, looks ub->mutex has been fat enough, here we can
-use ub->lock(spin lock) to serialize the setup, then trylock & -EAGAIN
-can be avoided.
+Noted, a regression test is posted earlier:
 
-It is fine to replace the mutex in ublk_mark_io_ready() with spinlock
-actually.
-
-
+https://lore.kernel.org/all/20250307080318.3860858-3-yukuai1@huaweicloud.com/
 
 Thanks,
-Ming
+Kuai
 
 
