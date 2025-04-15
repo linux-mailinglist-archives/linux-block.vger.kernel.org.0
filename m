@@ -1,93 +1,119 @@
-Return-Path: <linux-block+bounces-19655-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19657-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5B01A89978
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 12:07:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A195A899B1
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 12:19:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 815853B9FFE
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 10:07:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 428E5178FB4
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 10:19:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE8B61F17E8;
-	Tue, 15 Apr 2025 10:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E147288C9A;
+	Tue, 15 Apr 2025 10:18:59 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DB41EA7DE
-	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 10:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB97288C96;
+	Tue, 15 Apr 2025 10:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711624; cv=none; b=Zxzvu9DOqFWOe1ykyRr9yjGBDNSws6O98R1QhV/kJjyPAG9v0cjXn6G0bkgz1VEIHJeW4qve127hyVP13EYtIOHzO0NhjRJ/ZstUVMLFNSl/qczoRidzqR02Onzis1xa51RW9UWDy3loXNRy7q/BqHCL8Ybbxui24ZyWMz57Mzk=
+	t=1744712339; cv=none; b=A4exmcYAoO1xXz1Je0J7/F8JfEPkRrsRT8U1gSm2dmFq+/pkxkqoY79ausLbD8rqyrI38r1/35KGimKCYcJ9IUfbfVxHyj/Wq8Fp0P8heCrU0/GZrBSq13x6u94nXLCSFG7eDZTHYgi7cP5axvGslaiS9ZxmJlrG4frqEHdUo30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711624; c=relaxed/simple;
-	bh=LemxrSgbISHecGwZDg8d1YDEy+VHGq0FxK3EasKvRmc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=EdUEsqF2oixwq6v4BLFWbyY0KJIQs58pCH/RWxo1XmwLwf4jzZgIQ+ZvjLy/3uR1WkJ4NqggQZypamXB3/udWtu4gh3HPtPvHVk9umcu0XDnDfo0/xuZomI1QjOx2sKn1GRsg3Ch3wiDNUmA3evLstUGCXFO9GDi+oO+9fhXAUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d6e10f8747so50976355ab.3
-        for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 03:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744711622; x=1745316422;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ekxtkAYIfj9WYYWGRtuMIkrL5W+mUE1d81+QmoJC3I0=;
-        b=Zy0oVT29VOcAF38rV/QSJfMbFHnov3Db5JgA22sPtY5QmUvYz3HGKGj1JugzrAAiCd
-         S1XkUSY8Z7J2Dy1G8mh56xuGe/g0Yt6RY3mCc/w62g9KnymdfYFclGVDySsg7itxSsqJ
-         seZINAo5asUl4VQ+iaL2vAPVSQRuGMnoVgurZRL+b7gB9MX5bmqklRQHZLPgvDWHiPdy
-         uvO3MxVLKL+cp6P1c3NfPpc4N+SC8B/1xWzAcVQMQFW3+Vwt/d7p4ULHxaA3j84hsd/d
-         gXTzDhET5WQQbPPBLwy/Cuxzce0U0Q3j4OqWiK4ZTL59Hfx5pvDlJs+up7zV+7fwK2PF
-         z6uw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSg1ZLdONvLqVj9i+Ez3uAS7wqnsmWQf6yPK6GSXOxOYY7GRcy++hw5MTdvRXlG0F1do9DmNt6O2Zt6g==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9w0YO7jqTADAsPEmlaOZag33qbO2+8pol1xqd3PC7BaiI00AV
-	sOD+/aPF44ipfHniDYXXykhMh9XM1jhPcvNegz2IlTU47UQq64gbcqByIjhNpscPJiCLnVf3H8j
-	G36xgFkb0cCZVtpDXQv3DJwT5Sn7mVlJlB0UN9hXFmxx2yVJxG3MiBf4=
-X-Google-Smtp-Source: AGHT+IF0T2CRgbXUbT4vmgmK1YTgZn8RZJgbSXksVxvQoT0lh3iTSFP4A3u0nMuYNkC3SkdO7G3r0lGa9db6H/6xjiyKgPaRyX8a
+	s=arc-20240116; t=1744712339; c=relaxed/simple;
+	bh=8k9HyLOQVX2DKJes33OnB1ZdwzaKh2WQzdSqAfqGrUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ooVvomOvwrmcTXy3cvshcuMnwaNnxOjuCUxC7e/tiHzxmGWTAU9cwjCREatOwV4f7gOm8+Xez3zw15kpsempBmqpJB8Tu0ldaqE7q27ebkadOOk7N8NsGStUOcMuybCBMn/XJiztfRRHTMgGhnLyv7RE9SQg7yBu+fNiAkZJVUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0674C4CEDD;
+	Tue, 15 Apr 2025 10:18:57 +0000 (UTC)
+Date: Tue, 15 Apr 2025 12:18:55 +0200
+From: Greg KH <greg@kroah.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>,
+	Alyssa Ross <hi@alyssa.is>, Christoph Hellwig <hch@lst.de>,
+	Jan Kara <jack@suse.cz>, John Ogness <john.ogness@linutronix.de>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] loop: properly send KOBJ_CHANGED uevent for disk
+ device
+Message-ID: <2025041548-preplan-reaffirm-510a@gregkh>
+References: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1888:b0:3d3:fdb8:1792 with SMTP id
- e9e14a558f8ab-3d7ec265578mr137221655ab.14.1744711622446; Tue, 15 Apr 2025
- 03:07:02 -0700 (PDT)
-Date: Tue, 15 Apr 2025 03:07:02 -0700
-In-Reply-To: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fe2fc6.050a0220.3483fc.004c.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs] general protection fault in bioset_exit (2)
-From: syzbot <syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
 
-syzbot suspects this issue was fixed by commit:
+On Tue, Apr 15, 2025 at 10:51:47AM +0200, Thomas Weiﬂschuh wrote:
+> The original commit message and the wording "uncork" in the code comment
+> indicate that it is expected that the suppressed event instances are
+> automatically sent after unsuppressing.
+> This is not the case, instead they are discarded.
+> In effect this means that no "changed" events are emitted on the device
+> itself by default.
+> While each discovered partition does trigger a changed event on the
+> device, devices without partitions don't have any event emitted.
+> 
+> This makes udev miss the device creation and prompted workarounds in
+> userspace. See the linked util-linux/losetup bug.
+> 
+> Explicitly emit the events and drop the confusingly worded comments.
+> 
+> Link: https://github.com/util-linux/util-linux/issues/2434
+> Fixes: 498ef5c777d9 ("loop: suppress uevents while reconfiguring the device")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> ---
+> Changes in v2:
+> - Use correct Fixes tag
+> - Rework commit message slightly
+> - Rebase onto v6.15-rc1
+> - Link to v1: https://lore.kernel.org/r/20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de
+> ---
+>  drivers/block/loop.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 674527d770dc669e982a2b441af1171559aa427c..09a725710a21171e0adf5888f929ccaf94e98992 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -667,8 +667,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+>  
+>  	error = 0;
+>  done:
+> -	/* enable and uncork uevent now that we are done */
+>  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
+> +	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+>  	return error;
+>  
+>  out_err:
+> @@ -1129,8 +1129,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+>  	if (partscan)
+>  		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
+>  
+> -	/* enable and uncork uevent now that we are done */
+>  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
+> +	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+>  
+>  	loop_global_unlock(lo, is_loop);
+>  	if (partscan)
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250307-loop-uevent-changed-aa3690f43e03
+> 
+> Best regards,
+> -- 
+> Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> 
 
-commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-Author: Alan Huang <mmpgouride@gmail.com>
-Date:   Fri Mar 7 16:58:27 2025 +0000
-
-    bcachefs: Fix b->written overflow
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c360cc580000
-start commit:   76544811c850 Merge tag 'drm-fixes-2025-02-28' of https://g..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
-dashboard link: https://syzkaller.appspot.com/bug?extid=76f13f2acac84df26aae
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159248b7980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13152a97980000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: bcachefs: Fix b->written overflow
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
