@@ -1,184 +1,184 @@
-Return-Path: <linux-block+bounces-19654-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19656-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EAFDA8988C
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 11:47:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16843A8997B
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 12:07:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CF9717CFF7
-	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 09:47:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1958F17C598
+	for <lists+linux-block@lfdr.de>; Tue, 15 Apr 2025 10:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C891A1EEA39;
-	Tue, 15 Apr 2025 09:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68165289371;
+	Tue, 15 Apr 2025 10:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkA1JMbq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E287242922;
-	Tue, 15 Apr 2025 09:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163327B4EF
+	for <linux-block@vger.kernel.org>; Tue, 15 Apr 2025 10:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710474; cv=none; b=X3vH9/I0ZXaiTB91UgAuahsiweIIsn9YKYVBJlSnVoVwcERIapUOaS9ifmxpydMEiMDnTIJaaSv+kVLk0Ho24RcnjUn+btK5YTTrylNxtkcHDR3oEoEKGyvXzZspyU774su8vExs2sj4mDiZev7GOsfRxPySFKlGtN6vwWda8GU=
+	t=1744711635; cv=none; b=pYPq7WAFxB+zo6giEjYTg/7OkQdRqOA4l6KhtlittMygRRhh6qmGebOfH+bBmF8JXBQDBwj3EXnScr+U3YdKGlfhMT2ltHW5WS/hts+HA8WFT1/MNnWpqgkv7p9wJe4aiGYOyvDh7Gui22BaXXGsybCN911P6QReTIvO1mzeR5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710474; c=relaxed/simple;
-	bh=jS/+2OJPyZ3oKIEjOakuHXM2rsqbRqWQE4x118sJ64g=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=H1I0ttI2HTlMTFLyYduF5oGqYOUSoS8fUG/XpR0CFiItR2stAR1AgObprEqlX2k7FYN1pxF7RX56UdaAhxwn+97GUZUGKq3hoT3d15coBGrb4JX6xU2A249YKRqkgBb1Siem24kuhwXSVUU2DwA6JT8dcmMNjhWZ4Y9kLdZjSEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
-X-CID-CACHE: Type:Local,Time:202504151727+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:3b51f057-3b06-44d4-9b2a-22a6424bd06e,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:91d667a05389e8de83db14486b642671,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <liujiajia@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 992271736; Tue, 15 Apr 2025 17:47:41 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 6CBB3E000081;
-	Tue, 15 Apr 2025 17:47:40 +0800 (CST)
-X-ns-mid: postfix-67FE2B3B-868366657
-Received: from kylin.lan (unknown [172.25.120.81])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 1BD9EE000F3B;
-	Tue, 15 Apr 2025 17:47:37 +0800 (CST)
-From: Jiajia Liu <liujiajia@kylinos.cn>
-To: Jens Axboe <axboe@kernel.dk>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH] scsi: fix potential USB flash loss after reboot
-Date: Tue, 15 Apr 2025 17:47:37 +0800
-Message-Id: <20250415094737.1394310-1-liujiajia@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744711635; c=relaxed/simple;
+	bh=xtVrwFh5e41vTbYXDsUVTvtC+AGL5L9u1d6CZeCO0yA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J4w3nvO27/y8ilDgEjmBKWKFqXNsCCLxtrybtdfmO3iGgeo75W2xjrIjj301r1+na7wqYolDJbWn1wky+4kHBb0F3hL9rglxbwIxm6+/TX7N20T9r88FUvFg38TUcJW+pjNG29nbstxSbKKXXLzU6P2WQBnt4W33P/m8lwbi4fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VkA1JMbq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744711632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3iqVuxZodv/9DdNyAXc6CM9l0J63zHrWcD6alJGhj0c=;
+	b=VkA1JMbqoKDsClPdQiTDmpymxS3n3EXjBeqj6fWMKIgpiUuXqlOx1yxsoyhwcId4/g5QmV
+	sTYoJ5eiF2dqScE+bGeGewscvMY4KIuM/q7JL1xM03iZtn3RSOyA8nWbVvMe9VWr3h/qVy
+	Wokb/A3FoRY+H3T3bd/C4JsfrLIZE8M=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-YgMcZQjOO56CTMAQmS-_MQ-1; Tue,
+ 15 Apr 2025 06:07:08 -0400
+X-MC-Unique: YgMcZQjOO56CTMAQmS-_MQ-1
+X-Mimecast-MFC-AGG-ID: YgMcZQjOO56CTMAQmS-_MQ_1744711627
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD9871955BC9;
+	Tue, 15 Apr 2025 10:07:06 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.70])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B64331808867;
+	Tue, 15 Apr 2025 10:07:02 +0000 (UTC)
+Date: Tue, 15 Apr 2025 18:06:57 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 12/15] block: move debugfs/sysfs register out of freezing
+ queue
+Message-ID: <Z_4vwU7HMLCShZUO@fedora>
+References: <20250410133029.2487054-1-ming.lei@redhat.com>
+ <20250410133029.2487054-13-ming.lei@redhat.com>
+ <b28d98a6-b406-45b0-a5db-11bc600be75f@linux.ibm.com>
+ <Z_xn-Zl5FDGdZ_Bk@fedora>
+ <96d870d2-19f2-489e-951f-b92a56b59bf6@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96d870d2-19f2-489e-951f-b92a56b59bf6@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-If device shutdown is blocking for a few seconds after xhci_pci_shutdown,
-disk_check_events will get scheduled becase block.events_dfl_poll_msecs
-is set to 2000 by user space. usb-storage can get USB access error and
-then call usb_reset_device.
+On Tue, Apr 15, 2025 at 03:07:18PM +0530, Nilay Shroff wrote:
+> 
+> 
+> On 4/14/25 7:12 AM, Ming Lei wrote:
+> > On Fri, Apr 11, 2025 at 12:27:17AM +0530, Nilay Shroff wrote:
+> >>
+> >>
+> >> On 4/10/25 7:00 PM, Ming Lei wrote:
+> >>> Move debugfs/sysfs register out of freezing queue in
+> >>> __blk_mq_update_nr_hw_queues(), so that the following lockdep dependency
+> >>> can be killed:
+> >>>
+> >>> 	#2 (&q->q_usage_counter(io)#16){++++}-{0:0}:
+> >>> 	#1 (fs_reclaim){+.+.}-{0:0}:
+> >>> 	#0 (&sb->s_type->i_mutex_key#3){+.+.}-{4:4}: //debugfs
+> >>>
+> >>> And registering/un-registering debugfs/sysfs does not require queue to be
+> >>> frozen.
+> >>>
+> >>> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> >>> ---
+> >>>  block/blk-mq.c | 20 ++++++++++----------
+> >>>  1 file changed, 10 insertions(+), 10 deletions(-)
+> >>>
+> >>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> >>> index 7219b01764da..0fb72a698d77 100644
+> >>> --- a/block/blk-mq.c
+> >>> +++ b/block/blk-mq.c
+> >>> @@ -4947,15 +4947,15 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+> >>>  	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
+> >>>  		return;
+> >>>  
+> >>> -	memflags = memalloc_noio_save();
+> >>> -	list_for_each_entry(q, &set->tag_list, tag_set_list)
+> >>> -		blk_mq_freeze_queue_nomemsave(q);
+> >>> -
+> >>>  	list_for_each_entry(q, &set->tag_list, tag_set_list) {
+> >>>  		blk_mq_debugfs_unregister_hctxs(q);
+> >>>  		blk_mq_sysfs_unregister_hctxs(q);
+> >>>  	}
+> >> As we removed hctx sysfs protection while un-registering it, this might
+> >> cause crash or other side-effect if simultaneously these sysfs attributes
+> >> are accessed. The read access of these attributes are still protected 
+> >> using ->elevator_lock. 
+> > 
+> > The ->elevator_lock in ->show() is useless except for reading the elevator
+> > internal data(sched tags, requests, ...), even for reading elevator data,
+> > it should have been relying on elevator reference, instead of lock, but
+> > that is another topic & improvement in future.
+> > 
+> > Also this patch does _not_ change ->elevator_lock for above debugfs/sysfs
+> > unregistering, does it? It is always done without holding ->elevator_lock.
+> > Also ->show() does not require ->q_usage_counter too.
+> > 
+> > As I mentioned, kobject/sysfs provides protection between ->show()/->store()
+> > and kobject_del(), isn't it the reason why you want to remove ->sys_lock?
+> > 
+> > https://lore.kernel.org/linux-block/20250226124006.1593985-1-nilay@linux.ibm.com/
+> > 
+> Yes you were correct, that was the reason we wanted to remove ->sysfs_lock.
+> However for these particular hctx sysfs attributes (nr_tags and nr_reserved_tags)
+> could be updated simultaneously from another blk-mq sysfs attribute named nr_requests.
+> Hence IMO, the default protection provided by sysfs/kernfs may not be sufficient and
+> so we need to protect those attributes using ->elevator_lock.
 
-Some SanDisk USB flashes, 0781:5567 and 0781:5581, are lost after reboot.
+Yes, what is why this patchset doesn't kill more ->elevator_lock uses, such
+as, the uses in blk-mq-debugs, update_nr_requests, but many of them can be
+replaced with grabbing elevator reference.
 
-This can be simulated by injecting mdelay(5000) at the end of
-i915_driver_shutdown. Add event block in sd_shutdown to prevent
-disk_check_events scheduled during the potential blocking.
+But with/without this patch, the touched register/unregisger code does not
+require ->elevator_lock:
 
-[   27.324042][    T1] shutdown[1]: Rebooting.
-[   27.548410][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
-[   30.060554][  T225] usb 4-4: device not accepting address 2, error -10=
-8
-[   32.838110][    T1] ACPI: PM: Preparing to enter system sleep state S5
-[   32.851746][    T1] reboot: Restarting system
-[   32.856127][    T1] reboot: machine restart
+                blk_mq_debugfs_unregister_hctxs(q);
+                blk_mq_sysfs_unregister_hctxs(q);
 
-Before bd738d859e71 ("drm/i915: Prevent modesets during driver init/ shut=
-down"),
-plymouthd can commit modeset during i915 shutdown process, this brings
-ten seconds delay.
+so I don't understand why you argue here about ->elevator_lock use?
 
-[   36.519606][    T1] shutdown[1]: Rebooting.
-[   36.763427][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
-[   37.229513][ T7030] i915 0000:00:02.0: drm_WARN_ON(!intel_irqs_enabled=
-(dev_priv))
-...
-[   39.008748][ T4356] usb 4-4: device not accepting address 2, error -10=
-8
-[   43.116781][ T4356] usb usb4-port4: Cannot enable. Maybe the USB cable=
- is bad?
-[   47.196768][  T185] usb usb4-port4: Cannot enable. Maybe the USB cable=
- is bad?
-[   47.204511][  T185] usb 4-4: USB disconnect, device number 2
-[   48.438385][    T1] i915 0000:00:02.0: i915 raw-wakerefs=3D6 wakelocks=
-=3D6 on cleanup
+> 
+> Consider this case: While blk_mq_update_nr_hw_queues removes hctx attributes,
+> and simultaneously if nr_requests is also updating num of tags, would that not 
+> cause any side effect?
 
-Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
----
- block/disk-events.c    | 1 +
- drivers/scsi/sd.c      | 4 ++++
- drivers/scsi/sd.h      | 1 +
- include/linux/blkdev.h | 1 +
- 4 files changed, 7 insertions(+)
+Why is updating nr_requests related with removing hctx attributes?
 
-diff --git a/block/disk-events.c b/block/disk-events.c
-index 2f697224386a..2c998fb360a5 100644
---- a/block/disk-events.c
-+++ b/block/disk-events.c
-@@ -94,6 +94,7 @@ void disk_block_events(struct gendisk *disk)
-=20
- 	mutex_unlock(&ev->block_mutex);
- }
-+EXPORT_SYMBOL_GPL(disk_block_events);
-=20
- static void __disk_unblock_events(struct gendisk *disk, bool check_now)
- {
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 950d8c9fb884..86199991f2e3 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -4064,6 +4064,7 @@ static int sd_remove(struct device *dev)
-=20
- 	device_del(&sdkp->disk_dev);
- 	del_gendisk(sdkp->disk);
-+	sdkp->remove =3D 1;
- 	if (!sdkp->suspended)
- 		sd_shutdown(dev);
-=20
-@@ -4162,6 +4163,9 @@ static void sd_shutdown(struct device *dev)
- 	if (!sdkp)
- 		return;         /* this can happen */
-=20
-+	if (sdkp->device->removable && !sdkp->remove)
-+		disk_block_events(sdkp->disk);
-+
- 	if (pm_runtime_suspended(dev))
- 		return;
-=20
-diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
-index 36382eca941c..ff7004681267 100644
---- a/drivers/scsi/sd.h
-+++ b/drivers/scsi/sd.h
-@@ -156,6 +156,7 @@ struct scsi_disk {
- 	unsigned	ignore_medium_access_errors : 1;
- 	unsigned	rscs : 1; /* reduced stream control support */
- 	unsigned	use_atomic_write_boundary : 1;
-+	unsigned	remove : 1;
- };
- #define to_scsi_disk(obj) container_of(obj, struct scsi_disk, disk_dev)
-=20
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index e39c45bc0a97..7739713c5202 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -879,6 +879,7 @@ int __register_blkdev(unsigned int major, const char =
-*name,
- void unregister_blkdev(unsigned int major, const char *name);
-=20
- bool disk_check_media_change(struct gendisk *disk);
-+void disk_block_events(struct gendisk *disk);
- void set_capacity(struct gendisk *disk, sector_t size);
-=20
- #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
---=20
-2.25.1
+Can you explain the side effect in details?
+
+> Maybe we also want to protect blk_mq_update_nr_requests
+> with srcu read lock (set->update_nr_hwq_srcu) so that it couldn't run while  
+> blk_mq_update_nr_hw_queues is in progress?
+
+Yeah, agree, and it can be one new patch for covering race between
+blk_mq_update_nr_requests and blk_mq_update_nr_hw_queues, the point is just
+that nr_hw_queues is being changed, and not related with removing hctx
+attributes, IMO.
+
+
+Thanks,
+Ming
 
 
