@@ -1,120 +1,100 @@
-Return-Path: <linux-block+bounces-19867-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19870-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B53AA91C56
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 14:33:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54320A91E14
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 15:31:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E6ED5A589F
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 12:33:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E44A819E721D
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 13:31:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5AC92309AF;
-	Thu, 17 Apr 2025 12:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="P9eWbfNY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8485946F;
+	Thu, 17 Apr 2025 13:30:57 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB252472BC
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 12:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F0117E00E
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 13:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893193; cv=none; b=DQvatJ6Q8aDDHAj8YawHWaXwqDpzneRAW9es7TmpIVAH0UAQeYdtVOBSzWlb/j/z4XRPIB8rMltCTtwYdAB36hHI74P+Rcnz441ZGvLTl248WRZmuVaQtAoN+Fj9DOa+q+RNZ3+yuAlS8ufF6n2RILmO1zVFrEL+Baeg+kFPO+I=
+	t=1744896657; cv=none; b=FMM/ydKSlyGi/7zvG4TIzwRsFuT1bq3evM/OQxN3o/+ZyKujyJbdKRbnsVPQpf4tWt9iPIy0kSciQwCw25Y7zkp62JJd/rTXlwg5hnVw5rqeL54ulMKbPuYVTzs4jcdh33M27MuXX6GdDcB4rQ+4PIRkJg1MC3u1ykzKZz6yww0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893193; c=relaxed/simple;
-	bh=1MV/K3U8QeTgYmL4TX71oMEy7/LuN+sXfozWdi6/Wjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lBrbPOgSPzGR+WU2Mpr1SiE8WRYFwZYGmGBMFCocSdugujM+9uBIbpQ3LK3sxE3vHLBSzn3oKdwTRbodnSybqRKgkhd4AP6swimikQ/4r5xI5DvQFpAyh2wdSO9RKihuNNZ44W3KVnXy1FW1yTFTZd+BdmCPZXWJj/GcPNPBliw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=P9eWbfNY; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d58908c43fso2191775ab.0
-        for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 05:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744893189; x=1745497989; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SXppVvtbavbNcWmjc74YE35lG9q2D2kQ7SUthb89yf4=;
-        b=P9eWbfNYP6/fmcHDlJwPlH3rPxHKy9jWHwdn2daJmshkGq3xpjMhIgM2+woJ/eI+Uh
-         3VJR33mIV6K1QFSfjYbp/2AYm494w0ygkWa5lW0JF+ZwfaaVatWP47CmfBTrgh1WJ6zf
-         ga642wEbG6sc9V6xNeOpHDGKYBSkZgVhdE/qXmjk9WSspBrX8TWuC1aZjxWSYeR2VvrG
-         jJrcHI882A6KIO3z2pZFcHj7GN9Vey2pbt1XMKD0/Cg3nem475b7nnEwGGhU+PusYhnV
-         rsFhdrn3lJVHtfTNOT9X/S/LGgozxkWrXqspkv8jnZAR3qr5X8awxGoSd8j8qxSk7I7H
-         aDgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893189; x=1745497989;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SXppVvtbavbNcWmjc74YE35lG9q2D2kQ7SUthb89yf4=;
-        b=X3CPtyBWEbhiW6P9Vl8WGy0o8U1VzDeTcZGlAK3JHB9JDGedOcbv+NoE4FOEi/SqHv
-         +S5XQGAwLhzjov6oIzJeaYQK3cmYCbEzniejWgF9tEjS+pWf7pkbzGjGeH7rayLWOhaQ
-         7+3nK09t4O+6FS6oRdxydCgO8/A5gaeDn1xIhxz+/TDwQ84hl5KbMopWt4SEFfxwMpG+
-         7k4lMVtCHbAXHjF/3m0GUrsbwTAHS/EYydLeojmOyjkoSJuo2IJpIgjXPHtDUrilpdsu
-         AvWjQfrd/Kx3o1uMaKL3D96GHbPSkrZiXBbHHS1dTIJZbM4OHaFjAYsdkQtSPPeJEagZ
-         Yalw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrYnqv3snZUpLtqRWg6u+okQ8yf8phnYaz4/DhblkX5gVR7lVqs4123GxMjEecfdR4nRiaClumg20zvA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmms2rUMHRdMJ+cKDBm3jkcWBSvTWoWDU3cgtoOLXUYiBF7Ag4
-	gKViKH7EYGvFHSI3MGUwTk6GsWk2W+wLniCUzG4dFpRuCRAcFVtRWnrieLuHiQMA9flHnu6vz+D
-	d
-X-Gm-Gg: ASbGncuruql3SjWcsaZrBsakyAKs3v72/pnHC18WJiXtDo1LxVpiLFHsVQ55q8Rn7b1
-	t4q8mRuAgBCDmWHu4XR10NQ1pW4F6AufTtfov0qXzNLvYiHmpR1LB+4hB9pTeQr0UBiIqo58VKr
-	J+zXV5DEif4ppR9pHF6OwvY6yshhoJaZg/wxecYS5QZhS/cKzIcOOX25Q9qmG0yoO6wRfw6l30f
-	Sxih05lXobU++492P8HXykideIuhNpspOnmBdSwiwFQg2cuuZMuRgnkMzZ8eBdfj6MV247v/zvE
-	ukGqlHXLL5WIk+zMIOu5PP8hZqZAPjMEQXChldda/xUTPdvH
-X-Google-Smtp-Source: AGHT+IElAYMVC6sV+C8C47JpQv/6xHE6np7R9DqAHzl2vmiT+hY/9n5GM7YdQEh13S99/K1mboPw3g==
-X-Received: by 2002:a92:c263:0:b0:3d6:d162:be02 with SMTP id e9e14a558f8ab-3d815b70c98mr57649405ab.21.1744893189577;
-        Thu, 17 Apr 2025 05:33:09 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d81716f4c2sm6222775ab.23.2025.04.17.05.33.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 05:33:08 -0700 (PDT)
-Message-ID: <89994086-e750-4dd8-9931-f2777890ab97@kernel.dk>
-Date: Thu, 17 Apr 2025 06:33:08 -0600
+	s=arc-20240116; t=1744896657; c=relaxed/simple;
+	bh=u1alj+Qix8CevZwSf56DQzAQ1XpFM/axvjDx3sybMFs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D9/Nrh7qh8+c/6mDcq+K2wr9Q4+BbFfarvcIDZscKN6PFzII3ODlX0vyxvtoMYHi/y47Bis329TOPqsprZRrKqhiplcULTane9e5YakBRO7S1CkwuSScwlRzHwW87AoJCHVFoXtNW8ZD1uNI5oQiGc5TgCYO3SHuk1PITXBRtTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zdf0K5f0wz4f3lg9
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 21:30:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 1473A1A06DC
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 21:30:51 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl+KAgFoiwYGJw--.9194S4;
+	Thu, 17 Apr 2025 21:30:50 +0800 (CST)
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org
+Cc: yangerkun@huawei.com,
+	yukuai3@huawei.com,
+	wozizhi@huaweicloud.com,
+	ming.lei@redhat.com,
+	tj@kernel.org
+Subject: [PATCH V2 0/3] blk-throttle: Some bugfixes and modifications
+Date: Thu, 17 Apr 2025 21:20:51 +0800
+Message-ID: <20250417132054.2866409-1-wozizhi@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: blk-rq-qos: guard rq-qos helpers by static key
-To: Yu Kuai <yukuai1@huaweicloud.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <ee26d050-dd58-4672-93c2-d5b3fa63bbae@kernel.dk>
- <207f1ba2-125c-66b1-a5e5-d336f3705ad9@huaweicloud.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <207f1ba2-125c-66b1-a5e5-d336f3705ad9@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl+KAgFoiwYGJw--.9194S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF4DAFy5Cw4DurW8XryDGFg_yoW3Jrc_XF
+	Z7tFyrJw1UXa4rAFZ3GFn5uryjka1jgr18C3Z8KFW3Ary7J3W5Xr97t3yxWFsrZayI9FyD
+	Jrn0qF1rAr1SqjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvXd8UUU
+	UU=
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-On 4/17/25 5:08 AM, Yu Kuai wrote:
-> 在 2025/04/15 22:52, Jens Axboe 写道:
->> Even if blk-rq-qos isn't used or configured, dipping into the queue to
->> fetch ->rq_qos is a noticeable slowdown and visible in profiles. Add an
->> unlikely static key around blk-rq-qos, to avoid fetching this cacheline
->> if blk-iolatency or blk-wbt isn't configured or used.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>
->> ---
->>
-> LGTM
-> 
-> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-> 
-> BTW, do we want the same thing for q->td?
+Changes since V1:
+Modified patch 1 and 3 to make the changes more concise, without
+introducing additional logic changes.
 
-We may want to do that - I haven't seen that in the hot path yet,
-but I also think I may have it configured out...
+The patchset mainly address the update logic of tg->[bytes/io]_disp and add
+related overflow checks. The last patch also simplified the process.
+
+Zizhi Wo (3):
+  blk-throttle: Fix wrong tg->[bytes/io]_disp update in
+    __tg_update_carryover()
+  blk-throttle: Delete unnecessary carryover-related fields from
+    throtl_grp
+  blk-throttle: Add an additional overflow check to the call
+    calculate_bytes/io_allowed
+
+ block/blk-throttle.c | 113 +++++++++++++++++++++++++++++++------------
+ block/blk-throttle.h |  19 +++-----
+ 2 files changed, 90 insertions(+), 42 deletions(-)
 
 -- 
-Jens Axboe
+2.46.1
 
 
