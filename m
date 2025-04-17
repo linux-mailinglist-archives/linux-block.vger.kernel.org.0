@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-19860-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19864-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC486A91A0C
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 13:08:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B416BA91A0F
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 13:08:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3A0C3B74DF
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 11:08:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2604619E4D00
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 11:09:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342782356B1;
-	Thu, 17 Apr 2025 11:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95146235C00;
+	Thu, 17 Apr 2025 11:08:42 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D115C22AE74
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 11:08:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681B82356CA
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 11:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888121; cv=none; b=C2vDt13wXakaI9WZwyRzHt4PEwc4GHgBD3tJ+XSeaxJj1jHhqyERAu01tzywKH0VmDXFOry/Yg39braIjlgEdnlBgXVrk+b0gs6iQsvUoYmwD4JYWZxdsCcGYaDga4dCzcGDbPYfjf/42dXcAFdCbO87RXv9u5tmnW0FVDkiAfs=
+	t=1744888122; cv=none; b=fSY6mGbOIMSTF96mPEOkcmgR2sY+7ITI7EG7t32dFpGk+JUBEx6iLEBhesZPQXXa3Rm3R2PYYtvgCfB9+McTINX0HFWNt8dRwgMizOpB41OXFsqgikOhYmDwL1d2OdWay9m5/nVYbjbPI53hbUirN3ORrjPOAtLMz8HG+9kwSb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888121; c=relaxed/simple;
-	bh=C7h4JePUzyuPmQOS4n7fYcAG45/rSbNIWBwh81LbkfM=;
+	s=arc-20240116; t=1744888122; c=relaxed/simple;
+	bh=rq2nzB6AGN+njRKRrRXGx+qRmOmuKYg6BXl3Ej5JXxA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HT14sOZXuMLBasSsvXJA3NHlowhO40h7n6Q4qr2EnT284IK2vOQssM/owLbEXr1TqANnic+8IEq8xWxkJZfirugjXdQYc/Ks89FO52hwKhgYAHO2osT8iIV4Jv6HJh+ASqqCT8MHK+WIvGttwgQTbsvvHg9ZUuMP+QKY3i/5LkY=
+	 MIME-Version; b=fqKdeaLgGLnKrhpkcjG9am2VqI3Cv4qUiS5ZwEKWMyhrERCIg2oEufiCFTy6pE5FaWZl40NrDyoUi28xe8v8dB5CqJ+UVzkX7AUVoX8n6+/5wspiQyha4lhrh72htpfYdJ6xRizNz9EY4wqQKkIHSXKjOIZ3AHQYPV/QDl4JzfU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZdZrD1BD6z4f3jtT
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 19:08:12 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZdZr549GPz4f3m7D
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 19:08:05 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 87E451A058E
+	by mail.maildlp.com (Postfix) with ESMTP id D5B0B1A06D7
 	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 19:08:30 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgC3Gl8s4QBoyDT8Jg--.2150S5;
+	by APP4 (Coremail) with SMTP id gCh0CgC3Gl8s4QBoyDT8Jg--.2150S6;
 	Thu, 17 Apr 2025 19:08:30 +0800 (CST)
 From: Zizhi Wo <wozizhi@huawei.com>
 To: axboe@kernel.dk,
@@ -46,9 +46,9 @@ Cc: yangerkun@huawei.com,
 	wozizhi@huaweicloud.com,
 	ming.lei@redhat.com,
 	tj@kernel.org
-Subject: [PATCH V2 1/7] blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
-Date: Thu, 17 Apr 2025 18:58:27 +0800
-Message-ID: <20250417105833.1930283-2-wozizhi@huawei.com>
+Subject: [PATCH V2 2/7] blk-throttle: Refactor tg_dispatch_time by extracting tg_dispatch_bps/iops_time
+Date: Thu, 17 Apr 2025 18:58:28 +0800
+Message-ID: <20250417105833.1930283-3-wozizhi@huawei.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250417105833.1930283-1-wozizhi@huawei.com>
 References: <20250417105833.1930283-1-wozizhi@huawei.com>
@@ -59,13 +59,13 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3Gl8s4QBoyDT8Jg--.2150S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4rKFy5tw17KFW8Cry5CFg_yoWrArW8pF
-	W2kF45Wa18JFsFkr43ZFnrCFyrtws7X3srGrZ3G3ySya1jvr98tFn5ZryFyFWxAF93WFsI
-	vrWvy3srG3WjyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmCb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+X-CM-TRANSID:gCh0CgC3Gl8s4QBoyDT8Jg--.2150S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3WF4fKFWDGr4kAFykuF15Jwb_yoW7uw1kpr
+	W3Ca1jqF48XFn7KFW3Zrn8GayFkws7Ar9rJa9rGryDAF4YvFyDKF1kZryYvFW5AF97ua17
+	AFyqv347Ca1qyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
+	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
 	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
 	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
@@ -76,132 +76,168 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGr4rKFy5tw17KFW8Cry5CFg_yoWrArW8pF
 	106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
 	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
 	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jb5rcUUUUU=
+	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYXdbUUUUU=
 Sender: wozizhi@huaweicloud.com
 X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-tg_may_dispatch() can directly indicate whether bio can be dispatched by
-returning the time to wait, without the need for the redundant "wait"
-parameter. Remove it and modify the function's return type accordingly.
+tg_dispatch_time() contained both bps and iops throttling logic. We now
+split its internal logic into tg_dispatch_bps/iops_time() to improve code
+consistency for future separation of the bps and iops queues.
 
-Since we have determined by the return time whether bio can be dispatched,
-rename tg_may_dispatch() to tg_dispatch_time().
+Besides, merge time_before() from caller into throtl_extend_slice() to make
+code cleaner.
 
 Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
 Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/blk-throttle.c | 40 +++++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+ block/blk-throttle.c | 98 +++++++++++++++++++++++++-------------------
+ 1 file changed, 55 insertions(+), 43 deletions(-)
 
 diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 91dab43c65ab..dc23c961c028 100644
+index dc23c961c028..0633ae0cce90 100644
 --- a/block/blk-throttle.c
 +++ b/block/blk-throttle.c
-@@ -743,14 +743,13 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+@@ -520,6 +520,9 @@ static inline void throtl_set_slice_end(struct throtl_grp *tg, bool rw,
+ static inline void throtl_extend_slice(struct throtl_grp *tg, bool rw,
+ 				       unsigned long jiffy_end)
+ {
++	if (!time_before(tg->slice_end[rw], jiffy_end))
++		return;
++
+ 	throtl_set_slice_end(tg, rw, jiffy_end);
+ 	throtl_log(&tg->service_queue,
+ 		   "[%c] extend slice start=%lu end=%lu jiffies=%lu",
+@@ -682,10 +685,6 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
+ 	int io_allowed;
+ 	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
+ 
+-	if (iops_limit == UINT_MAX) {
+-		return 0;
+-	}
+-
+ 	jiffy_elapsed = jiffies - tg->slice_start[rw];
+ 
+ 	/* Round up to the next throttle slice, wait time must be nonzero */
+@@ -711,11 +710,6 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+ 	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
+ 	unsigned int bio_size = throtl_bio_data_size(bio);
+ 
+-	/* no need to throttle if this bio's bytes have been accounted */
+-	if (bps_limit == U64_MAX || bio_flagged(bio, BIO_BPS_THROTTLED)) {
+-		return 0;
+-	}
+-
+ 	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
+ 
+ 	/* Slice has just started. Consider one slice interval */
+@@ -742,6 +736,54 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+ 	return jiffy_wait;
  }
  
++/*
++ * If previous slice expired, start a new one otherwise renew/extend existing
++ * slice to make sure it is at least throtl_slice interval long since now.
++ * New slice is started only for empty throttle group. If there is queued bio,
++ * that means there should be an active slice and it should be extended instead.
++ */
++static void tg_update_slice(struct throtl_grp *tg, bool rw)
++{
++	if (throtl_slice_used(tg, rw) && !(tg->service_queue.nr_queued[rw]))
++		throtl_start_new_slice(tg, rw, true);
++	else
++		throtl_extend_slice(tg, rw, jiffies + tg->td->throtl_slice);
++}
++
++static unsigned long tg_dispatch_bps_time(struct throtl_grp *tg, struct bio *bio)
++{
++	bool rw = bio_data_dir(bio);
++	u64 bps_limit = tg_bps_limit(tg, rw);
++	unsigned long bps_wait;
++
++	/* no need to throttle if this bio's bytes have been accounted */
++	if (bps_limit == U64_MAX || tg->flags & THROTL_TG_CANCELING ||
++	    bio_flagged(bio, BIO_BPS_THROTTLED))
++		return 0;
++
++	tg_update_slice(tg, rw);
++	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
++	throtl_extend_slice(tg, rw, jiffies + bps_wait);
++
++	return bps_wait;
++}
++
++static unsigned long tg_dispatch_iops_time(struct throtl_grp *tg, struct bio *bio)
++{
++	bool rw = bio_data_dir(bio);
++	u32 iops_limit = tg_iops_limit(tg, rw);
++	unsigned long iops_wait;
++
++	if (iops_limit == UINT_MAX || tg->flags & THROTL_TG_CANCELING)
++		return 0;
++
++	tg_update_slice(tg, rw);
++	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
++	throtl_extend_slice(tg, rw, jiffies + iops_wait);
++
++	return iops_wait;
++}
++
  /*
-- * Returns whether one can dispatch a bio or not. Also returns approx number
-- * of jiffies to wait before this bio is with-in IO rate and can be dispatched
-+ * Returns approx number of jiffies to wait before this bio is with-in IO rate
-+ * and can be dispatched.
-  */
--static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
--			    unsigned long *wait)
-+static unsigned long tg_dispatch_time(struct throtl_grp *tg, struct bio *bio)
+  * Returns approx number of jiffies to wait before this bio is with-in IO rate
+  * and can be dispatched.
+@@ -749,9 +791,7 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+ static unsigned long tg_dispatch_time(struct throtl_grp *tg, struct bio *bio)
  {
  	bool rw = bio_data_dir(bio);
--	unsigned long bps_wait = 0, iops_wait = 0, max_wait = 0;
-+	unsigned long bps_wait, iops_wait, max_wait;
- 	u64 bps_limit = tg_bps_limit(tg, rw);
- 	u32 iops_limit = tg_iops_limit(tg, rw);
- 
-@@ -765,11 +764,8 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 
- 	/* If tg->bps = -1, then BW is unlimited */
- 	if ((bps_limit == U64_MAX && iops_limit == UINT_MAX) ||
--	    tg->flags & THROTL_TG_CANCELING) {
--		if (wait)
--			*wait = 0;
--		return true;
--	}
-+	    tg->flags & THROTL_TG_CANCELING)
-+		return 0;
+-	unsigned long bps_wait, iops_wait, max_wait;
+-	u64 bps_limit = tg_bps_limit(tg, rw);
+-	u32 iops_limit = tg_iops_limit(tg, rw);
++	unsigned long bps_wait, iops_wait;
  
  	/*
- 	 * If previous slice expired, start a new one otherwise renew/extend
-@@ -789,21 +785,15 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
+  	 * Currently whole state machine of group depends on first bio
+@@ -762,38 +802,10 @@ static unsigned long tg_dispatch_time(struct throtl_grp *tg, struct bio *bio)
+ 	BUG_ON(tg->service_queue.nr_queued[rw] &&
+ 	       bio != throtl_peek_queued(&tg->service_queue.queued[rw]));
  
- 	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
- 	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
--	if (bps_wait + iops_wait == 0) {
--		if (wait)
--			*wait = 0;
--		return true;
--	}
-+	if (bps_wait + iops_wait == 0)
-+		return 0;
- 
- 	max_wait = max(bps_wait, iops_wait);
- 
--	if (wait)
--		*wait = max_wait;
+-	/* If tg->bps = -1, then BW is unlimited */
+-	if ((bps_limit == U64_MAX && iops_limit == UINT_MAX) ||
+-	    tg->flags & THROTL_TG_CANCELING)
+-		return 0;
 -
- 	if (time_before(tg->slice_end[rw], jiffies + max_wait))
- 		throtl_extend_slice(tg, rw, jiffies + max_wait);
+-	/*
+-	 * If previous slice expired, start a new one otherwise renew/extend
+-	 * existing slice to make sure it is at least throtl_slice interval
+-	 * long since now. New slice is started only for empty throttle group.
+-	 * If there is queued bio, that means there should be an active
+-	 * slice and it should be extended instead.
+-	 */
+-	if (throtl_slice_used(tg, rw) && !(tg->service_queue.nr_queued[rw]))
+-		throtl_start_new_slice(tg, rw, true);
+-	else {
+-		if (time_before(tg->slice_end[rw],
+-		    jiffies + tg->td->throtl_slice))
+-			throtl_extend_slice(tg, rw,
+-				jiffies + tg->td->throtl_slice);
+-	}
+-
+-	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
+-	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
+-	if (bps_wait + iops_wait == 0)
+-		return 0;
+-
+-	max_wait = max(bps_wait, iops_wait);
+-
+-	if (time_before(tg->slice_end[rw], jiffies + max_wait))
+-		throtl_extend_slice(tg, rw, jiffies + max_wait);
++	bps_wait = tg_dispatch_bps_time(tg, bio);
++	iops_wait = tg_dispatch_iops_time(tg, bio);
  
--	return false;
-+	return max_wait;
+-	return max_wait;
++	return max(bps_wait, iops_wait);
  }
  
  static void throtl_charge_bio(struct throtl_grp *tg, struct bio *bio)
-@@ -854,16 +844,16 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
- static void tg_update_disptime(struct throtl_grp *tg)
- {
- 	struct throtl_service_queue *sq = &tg->service_queue;
--	unsigned long read_wait = -1, write_wait = -1, min_wait = -1, disptime;
-+	unsigned long read_wait = -1, write_wait = -1, min_wait, disptime;
- 	struct bio *bio;
- 
- 	bio = throtl_peek_queued(&sq->queued[READ]);
- 	if (bio)
--		tg_may_dispatch(tg, bio, &read_wait);
-+		read_wait = tg_dispatch_time(tg, bio);
- 
- 	bio = throtl_peek_queued(&sq->queued[WRITE]);
- 	if (bio)
--		tg_may_dispatch(tg, bio, &write_wait);
-+		write_wait = tg_dispatch_time(tg, bio);
- 
- 	min_wait = min(read_wait, write_wait);
- 	disptime = jiffies + min_wait;
-@@ -941,7 +931,7 @@ static int throtl_dispatch_tg(struct throtl_grp *tg)
- 	/* Try to dispatch 75% READS and 25% WRITES */
- 
- 	while ((bio = throtl_peek_queued(&sq->queued[READ])) &&
--	       tg_may_dispatch(tg, bio, NULL)) {
-+	       tg_dispatch_time(tg, bio) == 0) {
- 
- 		tg_dispatch_one_bio(tg, READ);
- 		nr_reads++;
-@@ -951,7 +941,7 @@ static int throtl_dispatch_tg(struct throtl_grp *tg)
- 	}
- 
- 	while ((bio = throtl_peek_queued(&sq->queued[WRITE])) &&
--	       tg_may_dispatch(tg, bio, NULL)) {
-+	       tg_dispatch_time(tg, bio) == 0) {
- 
- 		tg_dispatch_one_bio(tg, WRITE);
- 		nr_writes++;
-@@ -1610,7 +1600,7 @@ static bool tg_within_limit(struct throtl_grp *tg, struct bio *bio, bool rw)
- 	if (tg->service_queue.nr_queued[rw])
- 		return false;
- 
--	return tg_may_dispatch(tg, bio, NULL);
-+	return tg_dispatch_time(tg, bio) == 0;
- }
- 
- bool __blk_throtl_bio(struct bio *bio)
 -- 
 2.46.1
 
