@@ -1,214 +1,121 @@
-Return-Path: <linux-block+bounces-19857-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19866-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A8CEA91A09
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 13:08:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EA12A91BC7
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 14:19:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2665A448609
-	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 11:08:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 216F417DE30
+	for <lists+linux-block@lfdr.de>; Thu, 17 Apr 2025 12:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926282356AA;
-	Thu, 17 Apr 2025 11:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2995A1DE883;
+	Thu, 17 Apr 2025 12:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="FEaGlaHO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220DF2356CC
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 11:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDDB39851
+	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 12:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888117; cv=none; b=lAVVyBsl4XXXaaL8bigLmmWohWciWFgx0Efcq/5IyJEuGny9qOElt7ufjmjAfDSmytnQWZ5w5CiE3EDw1dfV2uwOvPjcSW5BYoR9oPcWBjvYD8MGkyYBp2c++cyla2SfRqMFaBR4sNEIiUByw9ydrqPMeHPw3hWbe57xJYa4peI=
+	t=1744892371; cv=none; b=fsAfNwBaKMjhS6OhKXwxwIFYH5RNceG6rKXhPQHAkiI0B/gEiZA7nEC23QhDHy30okoeRiPm0E3IXjlt0VuGXK6KMPHeTCGMgJkVYRCRAuH3sWuOkku8PT52RXnwS/eUhlnP+tWX9GRl6I7X6bVoYjr8NMyk/I6HYmorbcBF8XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888117; c=relaxed/simple;
-	bh=hpN27cK8ZTlZcMnSjcLPkBBPWb3mhrsfrucA7TbsWCo=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ORG4Z0VbV2BNfcz7Hdb9CaOOTE3yfhFpLlH/47aEJupH1481K9qc9FDLe1SGUMXxBg7iV2RWEDcEB2VVfZ3BwTfDJHZK4vZ8cDKnCEs3ZTWpwidjxtRpVy55CRm5Qo0u2R/P47ECJgRR/UYjzZIuvEZimVo5Ft7Vz6zvpGw2TKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZdZqz4gQTz4f3jsp
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 19:07:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 62C181A06D7
-	for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 19:08:23 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2Al4QBo0zL8Jg--.5423S3;
-	Thu, 17 Apr 2025 19:08:23 +0800 (CST)
-Subject: Re: [PATCH] block: blk-rq-qos: guard rq-qos helpers by static key
-To: Jens Axboe <axboe@kernel.dk>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <ee26d050-dd58-4672-93c2-d5b3fa63bbae@kernel.dk>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <207f1ba2-125c-66b1-a5e5-d336f3705ad9@huaweicloud.com>
-Date: Thu, 17 Apr 2025 19:08:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1744892371; c=relaxed/simple;
+	bh=VRmZUZ7hzW28HRtQvdGXN6KU2MCZx4r7s3085QPjl9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mshNnGVn/mu6rTKRUpnhpf6jCEqKe+AM2BSX1gBWyc+JJ5fgcKgo/QT4J1X5R4NcM7taSNNf/w51+v3tr65iw5JuXVSlyW4aW9g3/WRGAPqz4BVChJnQhqjEGIGDHbEHJh9DuxDVZtV48NejZloCQ2zqobeKqpvlupN9k4z+Sj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=FEaGlaHO; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85b3f92c866so14475539f.3
+        for <linux-block@vger.kernel.org>; Thu, 17 Apr 2025 05:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744892366; x=1745497166; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bCVyYVrtKOBFzuIw/BRxSXJq2vJQsJUFfVx+zDaigBY=;
+        b=FEaGlaHOEhFy8wo9JNpkE6aA5GQ1pUUTezTCi0ifhT0j7wT4u0LQiT2eRdRX/aiD0i
+         OO6HiyFVvOYwo7xmIASOZ+M5uaSnc8Hr3PBFAQfg7QXcTIJffeX4GZ+OE96LMbTmLF8f
+         Cmb3DjnjUTWwkHdbyyu3zziiGlDAalCxNjvdwpWcDjmbvaigePv0dnI4kKwZ/mrbnEjo
+         XnE6rYxZ/tIz1ZmNCxVzh9S5rVIYLQY8equzzOh9eOWl8oy/RowdKPH1WFDvCLiYWeCM
+         nHm/Oqdcr3Q2DBSMJSnvzHbnH3SO8PIdJgz7juwDf618Fap1FSfzgvP3qrGnTbpHv9RZ
+         q5lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744892366; x=1745497166;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bCVyYVrtKOBFzuIw/BRxSXJq2vJQsJUFfVx+zDaigBY=;
+        b=ljd9O3xFauEeB+MpqbMHs5OIPCS9wZp09q57L8lQj9aTJBT/zW8SGnvlB0pN/FIdT1
+         mskDX7IUAGUnYsVBPb5pc/L/FfFzEbUTmAZCGrLUzvZW9cws7cZbeJVfJQjhE8q+YXKJ
+         nQJ1ZgpteVvqtut45UijWx4nHmZev6evaLy4OGhglZEq7X1M63iZ0OQpQszR226diLvG
+         sTo66026ncjN44BmRLFmybzAPfL/1LWqhTzVXJFM/RMkARjh00n1XSDm+I6EBkwvmcIk
+         Jo5X9Ax6SXJqBzM8o4QtoTcLxgwHIXropgMHThGR1Wty8X4PvIMCoOOWz37VqcXuwJan
+         7jEA==
+X-Gm-Message-State: AOJu0YxLdrPZuvLvsFib9bMvmsC412Q9IrwK0akDkJ/ClPV8Leg88AXC
+	pIZix2sgK90m5E3eQWe2eHYM2wpRnew4Wovx8bHW3XpIPGBvNfOiyoAnwj3NJR8=
+X-Gm-Gg: ASbGncuDTZvUb0FwBGkgBRPu98/IqN2gUlPcS2OC1A4dHtyLhGqXMFm3V9dcaPePtcW
+	rrPit46pxvGlZlOgHph9bHx1ZgfX8D8l1zVxSCn8sFfl47nGsdEqpXDAvlvdJU595OjI8km3tNO
+	4laQwQaDwcKlwjbSYpYo+FZ7W/bBslm0h3AhK7dEYsPq8DiIBIzzExSmKHq8PtnO5hj3atgvxIk
+	gr1O+CVpmhwZ4g7rcpg27iDvjXresw+oBYHxkUGCtGW+6KAT7iWSaJIaRSEPQAUVuqjlDH0IlJt
+	m/gXb7+bN/bWnRwMtb54MBAXRqAyddNpqSPSVEMKFV3+0wP4
+X-Google-Smtp-Source: AGHT+IFxN2fVUF8+aXwwbC3OrT+G4BayntFAvihGJjXPkvu6KzSNQ0SIqbg1CP/sS7JBnPH5xE1/vQ==
+X-Received: by 2002:a05:6602:4006:b0:855:cca0:ed2c with SMTP id ca18e2360f4ac-861c57bc69emr600785439f.10.1744892366322;
+        Thu, 17 Apr 2025 05:19:26 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505d16679sm4193000173.35.2025.04.17.05.19.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 05:19:25 -0700 (PDT)
+Message-ID: <b84e959c-c8a9-4f73-aaad-5b905117e3af@kernel.dk>
+Date: Thu, 17 Apr 2025 06:19:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ee26d050-dd58-4672-93c2-d5b3fa63bbae@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3W2Al4QBo0zL8Jg--.5423S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWry3KrWrtr1ruw18CFWUCFg_yoWrCw4xpa
-	yUKF47ArWUWFs5WaykGw4ku39xJrnIkry7ArW3J3yfAFn8Jr12yF18JFy0qrZ2yrWUCr48
-	Xrs5trs3Jrs0qrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] nvme fixes for Linux 6.15
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org
+References: <aACj5pg7dLAsfZ1u@infradead.org>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <aACj5pg7dLAsfZ1u@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-在 2025/04/15 22:52, Jens Axboe 写道:
-> Even if blk-rq-qos isn't used or configured, dipping into the queue to
-> fetch ->rq_qos is a noticeable slowdown and visible in profiles. Add an
-> unlikely static key around blk-rq-qos, to avoid fetching this cacheline
-> if blk-iolatency or blk-wbt isn't configured or used.
+On 4/17/25 12:47 AM, Christoph Hellwig wrote:
+> The following changes since commit 0b7a4817756c7906d0a8112c953ce88d7cd8d4c6:
 > 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>   ublk: don't suggest CONFIG_BLK_DEV_UBLK=Y (2025-04-15 18:59:33 -0600)
 > 
-> ---
+> are available in the Git repository at:
 > 
-LGTM
-
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-
-BTW, do we want the same thing for q->td?
-
-Thanks,
-Kuai
-
-> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-> index 95982bc46ba1..848591fb3c57 100644
-> --- a/block/blk-rq-qos.c
-> +++ b/block/blk-rq-qos.c
-> @@ -2,6 +2,8 @@
->   
->   #include "blk-rq-qos.h"
->   
-> +__read_mostly DEFINE_STATIC_KEY_FALSE(block_rq_qos);
-> +
->   /*
->    * Increment 'v', if 'v' is below 'below'. Returns true if we succeeded,
->    * false if 'v' + 1 would be bigger than 'below'.
-> @@ -317,6 +319,7 @@ void rq_qos_exit(struct request_queue *q)
->   		struct rq_qos *rqos = q->rq_qos;
->   		q->rq_qos = rqos->next;
->   		rqos->ops->exit(rqos);
-> +		static_branch_dec(&block_rq_qos);
->   	}
->   	mutex_unlock(&q->rq_qos_mutex);
->   }
-> @@ -343,6 +346,7 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
->   		goto ebusy;
->   	rqos->next = q->rq_qos;
->   	q->rq_qos = rqos;
-> +	static_branch_inc(&block_rq_qos);
->   
->   	blk_mq_unfreeze_queue(q, memflags);
->   
-> diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-> index 37245c97ee61..39749f4066fb 100644
-> --- a/block/blk-rq-qos.h
-> +++ b/block/blk-rq-qos.h
-> @@ -12,6 +12,7 @@
->   #include "blk-mq-debugfs.h"
->   
->   struct blk_mq_debugfs_attr;
-> +extern struct static_key_false block_rq_qos;
->   
->   enum rq_qos_id {
->   	RQ_QOS_WBT,
-> @@ -112,31 +113,33 @@ void __rq_qos_queue_depth_changed(struct rq_qos *rqos);
->   
->   static inline void rq_qos_cleanup(struct request_queue *q, struct bio *bio)
->   {
-> -	if (q->rq_qos)
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
->   		__rq_qos_cleanup(q->rq_qos, bio);
->   }
->   
->   static inline void rq_qos_done(struct request_queue *q, struct request *rq)
->   {
-> -	if (q->rq_qos && !blk_rq_is_passthrough(rq))
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos &&
-> +	    !blk_rq_is_passthrough(rq))
->   		__rq_qos_done(q->rq_qos, rq);
->   }
->   
->   static inline void rq_qos_issue(struct request_queue *q, struct request *rq)
->   {
-> -	if (q->rq_qos)
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
->   		__rq_qos_issue(q->rq_qos, rq);
->   }
->   
->   static inline void rq_qos_requeue(struct request_queue *q, struct request *rq)
->   {
-> -	if (q->rq_qos)
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
->   		__rq_qos_requeue(q->rq_qos, rq);
->   }
->   
->   static inline void rq_qos_done_bio(struct bio *bio)
->   {
-> -	if (bio->bi_bdev && (bio_flagged(bio, BIO_QOS_THROTTLED) ||
-> +	if (static_branch_unlikely(&block_rq_qos) &&
-> +	    bio->bi_bdev && (bio_flagged(bio, BIO_QOS_THROTTLED) ||
->   			     bio_flagged(bio, BIO_QOS_MERGED))) {
->   		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
->   		if (q->rq_qos)
-> @@ -146,7 +149,7 @@ static inline void rq_qos_done_bio(struct bio *bio)
->   
->   static inline void rq_qos_throttle(struct request_queue *q, struct bio *bio)
->   {
-> -	if (q->rq_qos) {
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos) {
->   		bio_set_flag(bio, BIO_QOS_THROTTLED);
->   		__rq_qos_throttle(q->rq_qos, bio);
->   	}
-> @@ -155,14 +158,14 @@ static inline void rq_qos_throttle(struct request_queue *q, struct bio *bio)
->   static inline void rq_qos_track(struct request_queue *q, struct request *rq,
->   				struct bio *bio)
->   {
-> -	if (q->rq_qos)
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
->   		__rq_qos_track(q->rq_qos, rq, bio);
->   }
->   
->   static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
->   				struct bio *bio)
->   {
-> -	if (q->rq_qos) {
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos) {
->   		bio_set_flag(bio, BIO_QOS_MERGED);
->   		__rq_qos_merge(q->rq_qos, rq, bio);
->   	}
-> @@ -170,7 +173,7 @@ static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
->   
->   static inline void rq_qos_queue_depth_changed(struct request_queue *q)
->   {
-> -	if (q->rq_qos)
-> +	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
->   		__rq_qos_queue_depth_changed(q->rq_qos);
->   }
->   
+>   git://git.infradead.org/nvme.git tags/nvme-6.15-2025-04-17
 > 
+> for you to fetch changes up to ad91308d3bdeb9d90ef4a400f379ce461f0fb6a7:
+> 
+>   nvmet: pci-epf: cleanup link state management (2025-04-16 07:37:37 +0200)
+> 
+> ----------------------------------------------------------------
+> nvme fixes for Linux 6.15
+> 
+>  - fix scan failure for non-ANA multipath controllers (Hannes Reinecke)
+>  - fix multipath sysfs links creation for some cases (Hannes Reinecke)
+>  - PCIe endpoint fixes (Damien Le Moal)
+>  - use NULL instead of 0 in the auth code (Damien Le Moal)
+
+Pulled, thanks.
+
+-- 
+Jens Axboe
 
 
