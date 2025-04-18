@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-19965-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-19967-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40699A93577
-	for <lists+linux-block@lfdr.de>; Fri, 18 Apr 2025 11:46:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60D51A9357A
+	for <lists+linux-block@lfdr.de>; Fri, 18 Apr 2025 11:46:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB5E08A5EBD
-	for <lists+linux-block@lfdr.de>; Fri, 18 Apr 2025 09:45:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCB338A5D43
+	for <lists+linux-block@lfdr.de>; Fri, 18 Apr 2025 09:45:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64B5E270EDB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0A92741BA;
 	Fri, 18 Apr 2025 09:45:40 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596EA204F6F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBC320897F;
 	Fri, 18 Apr 2025 09:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969540; cv=none; b=QPH3JD9lECSsQhABqVkiB5TWoaSNH5d/U1w2htC84s+JSRMQYSSrIODPAAYYtJohYdqBB0LXEB3mhPQyAz7RVLt8O2uLfEUMrBFt+vtAF3xfxRViBL08PcE1Q9OY7T7j+SMReA2QSehDy0uRE33XvySl3r4KF4C+Rj3mYZ6zw50=
+	t=1744969540; cv=none; b=fwls1fP1OB845A7PGHYo2OiZgfLvYKZl5hPT8Dk1gAQgWzQuSqT1KIYov5ZKIlouUaVl29TYYik5Kl3i5nTxTqG2Nm5FnyT18lJlAqnXjOhGLymF46TURcYGcdYBya+aBeNimwdPNhtVslK+8rpjuUrpEOi/ndcP7yTIfUzPI4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744969540; c=relaxed/simple;
-	bh=4zPHwMiowHy/kThRUPCqNfHIPBFyzhAe1GkacMCd7FA=;
+	bh=Mck/DO6u1pZ0xBBp03punXg1wKhSA4AsVw2tCWvDC5E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XogboFBS5R4lmltOywfDwAVxv9NriyvQ3bm2LWhUl1T7HR24qUeLeaZUBBG9ZXfudb7TYuyJ0R72WSOwO50znu5qylB2zdKEk65wgaadj2qfEd80gpegS4jQwczEJlQVNO95by4Yxr+EzVGHpdJ8UIAQLmmSy7khDOrwiS5Q/v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=FiUHLu7RT6IRn1+FMEBJcdOEjeqXyA+D8tasibarlEqTf7+bvUESSAaHEyt8Ds/+Dw0Zxu3prITxMT97wQ9TzrS8Iz8hY7zNPf2kgJ+AcymVWWLFmmaeIMbRnTeaOAYmVCAEvZxxtVEp1v4U7qZQJwhcUO21Sh00uskMzq2MMZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zf8xy6ySsz4f3jHh;
-	Fri, 18 Apr 2025 17:45:10 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zf8xx68RVz4f3lDF;
+	Fri, 18 Apr 2025 17:45:09 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BA1561A1B91;
-	Fri, 18 Apr 2025 17:45:34 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 2E13E1A06DC;
+	Fri, 18 Apr 2025 17:45:35 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBHrGA6HwJozQ1aJw--.29179S8;
+	by APP4 (Coremail) with SMTP id gCh0CgBHrGA6HwJozQ1aJw--.29179S9;
 	Fri, 18 Apr 2025 17:45:34 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -48,9 +48,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH 4/5] brd: fix discard end sector
-Date: Fri, 18 Apr 2025 17:38:25 +0800
-Message-Id: <20250418093826.3149293-5-yukuai1@huaweicloud.com>
+Subject: [PATCH 5/5] brd: zero data for discard that is not aligned to page
+Date: Fri, 18 Apr 2025 17:38:26 +0800
+Message-Id: <20250418093826.3149293-6-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250418093826.3149293-1-yukuai1@huaweicloud.com>
 References: <20250418093826.3149293-1-yukuai1@huaweicloud.com>
@@ -61,11 +61,11 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHrGA6HwJozQ1aJw--.29179S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1rCrWxuFW7Kr4UGw15Arb_yoW8Xw1rpF
-	4UJFZ29ry5Cr1UK3WYq3s8uryFqayxGa4fKay7u3yYkw4fGF9Fka97t34rXay8GrWfury3
-	A3Z3t34rZrykA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgBHrGA6HwJozQ1aJw--.29179S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7urW5GF43uFWrAF1rAF43Jrb_yoW8Cw4DpF
+	4DJryIkrW5Kr17Kw13Jwn8ZFyFv34xGayrGay7u3909w1rGF9Fyas5t3WSqFy8GrWfWF13
+	Aan7tryF9r1kA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
@@ -75,58 +75,70 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1rCrWxuFW7Kr4UGw15Arb_yoW8Xw1rpF
 	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUtV
 	W8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
 	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUOyIUUUUU
-	U
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJw
+	CI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbPC7UUU
+	UUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-brd_do_discard() just aligned start sector to page, this can only work
-if the discard size if at least one page. For example:
-
-blkdiscard /dev/ram0 -o 5120 -l 1024
-
-In this case, size = (1024 - (8192 - 5120)), which is a huge value.
-
-Fix the problem by round_down() the end sector.
+Currently brd_do_discard() will just skip unaligned sectors, and in this
+case user will still get old data after discard. Fix this by writing
+zero data to unaligned sectors.
 
 Fixes: 9ead7efc6f3f ("brd: implement discard support")
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/brd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/block/brd.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 21e841e09a89..bf1e1b2a0d28 100644
+index bf1e1b2a0d28..b5908703fb4b 100644
 --- a/drivers/block/brd.c
 +++ b/drivers/block/brd.c
-@@ -234,18 +234,21 @@ static void brd_free_one_page(struct rcu_head *head)
+@@ -224,6 +224,21 @@ static int brd_do_bvec(struct brd_device *brd, struct page *page,
+ 	return err;
+ }
+ 
++static void brd_zero_range(struct brd_device *brd, sector_t sector, u32 size)
++{
++	unsigned int offset = (sector & (PAGE_SECTORS-1)) << SECTOR_SHIFT;
++	struct page *page;
++	void *dst;
++
++	page = brd_lookup_page(brd, sector);
++	if (!page)
++		return;
++
++	dst = kmap_local_page(page);
++	memset(dst + offset, 0, size);
++	kunmap_local(dst);
++}
++
+ static void brd_free_one_page(struct rcu_head *head)
+ {
+ 	struct page *page = container_of(head, struct page, rcu_head);
+@@ -234,10 +249,17 @@ static void brd_free_one_page(struct rcu_head *head)
  static void brd_do_discard(struct brd_device *brd, sector_t sector, u32 size)
  {
  	sector_t aligned_sector = round_up(sector, PAGE_SECTORS);
-+	sector_t aligned_end = round_down(sector + (size >> SECTOR_SHIFT),
-+					  PAGE_SECTORS);
+-	sector_t aligned_end = round_down(sector + (size >> SECTOR_SHIFT),
+-					  PAGE_SECTORS);
++	sector_t sector_end = sector + (size >> SECTOR_SHIFT);
++	sector_t aligned_end = round_down(sector_end, PAGE_SECTORS);
  	struct page *page;
  
--	size -= (aligned_sector - sector) * SECTOR_SIZE;
-+	if (aligned_end <= aligned_sector)
-+		return;
++	if (aligned_sector > sector)
++		brd_zero_range(brd, sector,
++			       (aligned_sector - sector) << SECTOR_SHIFT);
++	if (aligned_end < sector_end)
++		brd_zero_range(brd, aligned_end,
++			       (sector_end - aligned_end) << SECTOR_SHIFT);
 +
- 	xa_lock(&brd->brd_pages);
--	while (size >= PAGE_SIZE && aligned_sector < rd_size * 2) {
-+	while (aligned_sector < aligned_end && aligned_sector < rd_size * 2) {
- 		page = __xa_erase(&brd->brd_pages, aligned_sector >> PAGE_SECTORS_SHIFT);
- 		if (page) {
- 			call_rcu(&page->rcu_head, brd_free_one_page);
- 			brd->brd_nr_pages--;
- 		}
- 		aligned_sector += PAGE_SECTORS;
--		size -= PAGE_SIZE;
- 	}
- 	xa_unlock(&brd->brd_pages);
- }
+ 	if (aligned_end <= aligned_sector)
+ 		return;
+ 
 -- 
 2.39.2
 
