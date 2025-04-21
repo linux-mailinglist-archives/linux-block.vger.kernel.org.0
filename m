@@ -1,140 +1,94 @@
-Return-Path: <linux-block+bounces-20134-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20136-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F66A959E2
-	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 01:46:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F320A959F9
+	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 02:00:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95766189548D
-	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 23:47:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66B0A7A56C1
+	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 23:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F7AF230D08;
-	Mon, 21 Apr 2025 23:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71714230274;
+	Tue, 22 Apr 2025 00:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="V4SW4bgt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W8E+U49u"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f97.google.com (mail-io1-f97.google.com [209.85.166.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D3D213E7B
-	for <linux-block@vger.kernel.org>; Mon, 21 Apr 2025 23:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D927139D
+	for <linux-block@vger.kernel.org>; Tue, 22 Apr 2025 00:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745279205; cv=none; b=Q4bOl5/iLEXbNgkysvTTR0esHSp7HYr2BflohxSqVAAzx8wRj7U7IfFLFAoI+b875f41WT4TKcQaINfGb7zjzLNBxfu5xt5glpf0plz8a7RLBg2pOYl1zRTk81bAU98CRHPUGnlRAi9+jVRbyHtxkHuMYL/AMavWtCtcAd6tvKw=
+	t=1745280003; cv=none; b=EPf9kUNMg2YUorzZ7SZUyrDBn119SrW5Q3ceUuYA5RHle6deGPUx5JdW3xa3xDV3WqVmaYyGmSSJtM4k5NaHgLIeT5CGUX7eWd6IrPLduAUL2onAfudUHJJx3dfKnHULqBCyO0hKHtwcep1dfWTPpH9S8SYEmEvIfeOOqNKlIqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745279205; c=relaxed/simple;
-	bh=mcgOA6RJ6YcO2wxxjMR3tXWhG6Ehq/v0rWuRIp/xytA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o5ViDZIMZ2p3rKEJuQz/yICBRQeY4mgRav1kLaIVORItF4Z3uMwcRva+YUrSePxXVLb9rf4afyhYWH6kuIjWfJsU3tnS9AvNqBwpSg+weKtW+25HJ9wbE8Oj2CfJ9i1aktXawxFCs5cbV61LH5t0vjePisMuF0ar3SiEAoFHstg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=V4SW4bgt; arc=none smtp.client-ip=209.85.166.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-io1-f97.google.com with SMTP id ca18e2360f4ac-85db3475637so158438939f.1
-        for <linux-block@vger.kernel.org>; Mon, 21 Apr 2025 16:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745279202; x=1745884002; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g8OfCdyPLDsCsG60ZcCmWO2IkmLngYrZyR838vN7s8U=;
-        b=V4SW4bgt/w75J4mM/WOTvKvHz6HDgakGecW+kiuDh7WIoo6bzGJGr7pnnau9Qn/ueU
-         JmQYIqjEKMSuUtbjA9vr6FjUm624DTf0v/F/4c0K1ejwoVgPY/F+aOWGkTV9WNhMrRvm
-         z1dU4T8G3VZV0YPsOuROLqm+Qu8yMv2cCI8zH81rNxFPnT/IZyxG/Tv6Bf9ydPp79pKa
-         SQ+axSv+qde91mUwx9OZyvS33Zgyx04nT3LkjUhN98Br2azO4RSiTPe4weuYxJ9fK6U0
-         /TFNo7f88kzMsx/YFPwWM5Sw61OZPLD2Bn8oIK4ou2togYwkDHv7G/Yd1/tsB4ISmBXI
-         Q7BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745279202; x=1745884002;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g8OfCdyPLDsCsG60ZcCmWO2IkmLngYrZyR838vN7s8U=;
-        b=PUrXdVRJiFyHF0LNP8tpFM2LgPlrMeLtJNfLkpJYnDcRwNufEODxfNep8JLF7XweaK
-         QGGmEazZCBiZsWHun1SMGvGWd3eCXynDbJNp06BNa9s/fco43dYhi6MW/sZJ7o8ZI4L9
-         2AihIG+zVOAyQ9qnnnjY/KOB1H8QlSN6y4tibYHmVcd6bNz98eHb3w13ZglvNNfAJZMi
-         tJmrJgyI7ZPk1Sn+QCtIUKsj8DEKCguHAhwwMDm3BNCtpZz8k5rCDGlblW8SPH249Cre
-         Y1W87R10NqTWNp3cvKYy22DnWWj6YUWcBLadQS8GnH+tLuwzYTHKyYuqUHeVMrwPCEkk
-         HhwQ==
-X-Gm-Message-State: AOJu0YyskcdgT975DckoVAXXG90v8RVo5ww7AWPh8XLEsBtMMKp0rmur
-	ZeKI+UINb+FaNSwTqsd/tlrs/RADJa+G5pn6D9WYgu8lNy3XjJY5oe5C7q/IIqyjYbaFCKeqvvm
-	Pg/ErF5PRNN67NgjjGZJ0RZXB1hj+9DHlonLD2SNwxQP6g5+O
-X-Gm-Gg: ASbGnctcV8Vdom3lHjnLbGw8UoGUEQajiGQdTqYwwnU84blO1zfLMLQn4ti9OH1A01l
-	LzZfkNqTPgZFrBcB+zWDWqs+FeI3y4bLgGyc460CG4YJqycdT6j+HuY3rBoGBLGf22xsCyzc/qo
-	+/u4wsn91Y/aG0vY9iGZXL5YLbun74b7fOiPFmc0tzNUSKjP9mRvA+n85Od0AABLc5Nur6q3veH
-	cQ+XT9fNeULeIZzUVX6cpjYpluc34IGzTUSiOsmhdmlGBZS0s90FMSAGh28trplQQqrMxXG
-X-Google-Smtp-Source: AGHT+IGNBKWm/sabUXkKBKqJtCQdg8fOpkWpAHWVtDPSNSz+vx6YbANCTyDZ3Puj8hONyu743OFhLRKS7ciF
-X-Received: by 2002:a6b:4e0b:0:b0:858:7b72:ec89 with SMTP id ca18e2360f4ac-861d89f12d9mr1244904639f.5.1745279202358;
-        Mon, 21 Apr 2025 16:46:42 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-861d963ba38sm30747839f.13.2025.04.21.16.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 16:46:42 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0157C340776;
-	Mon, 21 Apr 2025 17:46:41 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id F3579E40835; Mon, 21 Apr 2025 17:46:40 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Mon, 21 Apr 2025 17:46:43 -0600
-Subject: [PATCH 4/4] ublk: factor out error handling in __ublk_ch_uring_cmd
+	s=arc-20240116; t=1745280003; c=relaxed/simple;
+	bh=ERQr4h9JHECXQg9Qx+AdDxjhPkmj9l+qjz8mHA631o0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWSm0ZkM1c0T2LmtBn9oK5apYflryEHFuTE94xXKGePeV1eSYm81YObvrZPfgdiXOsiFRleoS3B5wv8RN0CiS6mm2srtPrx2oWRfEU3bnhzYDOK5/bwTzHmHwP1z4g+eWRO+DLEA5U8esgi+olcBZuRWni7Pbf2rGEZKEmqbEfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W8E+U49u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745279999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OGZ59D5xSbt4+QuxkQmnqmaWIrsABMYX/8X7u0TqSH4=;
+	b=W8E+U49u4/5Aov3cknTVyOg3uKvtXUuldmrTAyc5gGGY8GlvWMH4C2xCuWfEJmzUJ+P+lj
+	QeaX0Lg+YyovgtHYu318zGCssHsWzrkZQZgyMN/R09KcviDMbdtSeGlxGnsw48wxcJZ/+w
+	d2piZalhq/+tHtngoSDAFcw4UQSSX6o=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-6vwHZdyEP0O3rw-q6rxt6A-1; Mon,
+ 21 Apr 2025 19:59:57 -0400
+X-MC-Unique: 6vwHZdyEP0O3rw-q6rxt6A-1
+X-Mimecast-MFC-AGG-ID: 6vwHZdyEP0O3rw-q6rxt6A_1745279996
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D7AA180034E;
+	Mon, 21 Apr 2025 23:59:56 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.24])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 64714180045C;
+	Mon, 21 Apr 2025 23:59:54 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 6.15 0/2] selftests: ublk: two fixes
+Date: Tue, 22 Apr 2025 07:59:40 +0800
+Message-ID: <20250421235947.715272-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250421-ublk_constify-v1-4-3371f9e9f73c@purestorage.com>
-References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
-In-Reply-To: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-There is a tiny bit of error handling code in __ublk_ch_uring_cmd which
-is repeated thrice. Factor it out of the switch statement.
+Hello Jens,
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
- drivers/block/ublk_drv.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+The 1st patch fixes recover test & ublk utility, and the 2nd patch removes
+one useless variable from 'struct dev_ctx', both are introduced recently.
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index f5d4593d5941931efa7bc7d2106830cd2981f4bd..31ebfdf52a8986e879c136ea546755a2fbe15315 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -2095,22 +2095,18 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		return ublk_unregister_io_buf(cmd, ub_cmd->addr, issue_flags);
- 	case UBLK_IO_FETCH_REQ:
- 		ret = ublk_fetch(cmd, ubq, io, ub_cmd->addr);
--		if (ret)
--			goto out;
- 		break;
- 	case UBLK_IO_COMMIT_AND_FETCH_REQ:
- 		ret = ublk_commit_and_fetch(ubq, io, cmd, ub_cmd);
--		if (ret)
--			goto out;
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
- 		ret = ublk_get_data(ubq, io, cmd, ub_cmd);
--		if (ret)
--			goto out;
- 		break;
- 	default:
- 		goto out;
- 	}
-+	if (ret)
-+		goto out;
- 	ublk_prep_cancel(cmd, issue_flags, ubq, tag);
- 	return -EIOCBQUEUED;
- 
+Thanks,
+
+Ming Lei (2):
+  selftests: ublk: fix recover test
+  selftests: ublk: remove useless 'delay_us' from 'struct dev_ctx'
+
+ tools/testing/selftests/ublk/kublk.c            | 1 +
+ tools/testing/selftests/ublk/kublk.h            | 3 ---
+ tools/testing/selftests/ublk/test_generic_05.sh | 2 +-
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
 -- 
-2.34.1
+2.47.0
 
 
