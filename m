@@ -1,49 +1,62 @@
-Return-Path: <linux-block+bounces-20089-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20090-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43FA1A94D50
-	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 09:39:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40822A94D89
+	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 09:58:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32A1A188E614
-	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 07:39:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 373D33A8391
+	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 07:57:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D615820E01A;
-	Mon, 21 Apr 2025 07:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F50420E032;
+	Mon, 21 Apr 2025 07:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2izEraiJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BACB67F;
-	Mon, 21 Apr 2025 07:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E084142A82;
+	Mon, 21 Apr 2025 07:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745221175; cv=none; b=WQmh3XuJyVmbFWZuCmk9a2z5iNgb01BJAU5qo6F3wNWAeOUZ9LcYCyin5ixwj2ncc6emWFWvqGM/fxhL6rvnFqL/dUzucZIcl+JI9AxGMJ+DPEp7pwdeQd14OA1HluWaZDlxV5Ucey8O64lzN/VltzE6SD1QdjZoKCPEDndsQus=
+	t=1745222290; cv=none; b=kWpKrMBsaSanO4SuwYSbZDcIKhobMkKhNfnf+RykLJeUtB+o4Ngmwhi4kcQs8OQW0NQ8nRvssqKLIBGpfCCD7WXkZRerVZHZlfiH+UWQMf0co43VtUaDBr1bvcHq1B+xdVin2JguhbsB6zJGxVpSVkbHEOPxWoAGD4ljwd3kDEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745221175; c=relaxed/simple;
-	bh=boRLROJn4ucEtnjOb76u7xegVX7n55u48HuLH2Zc5uQ=;
+	s=arc-20240116; t=1745222290; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YNws1mHA59ZprQlsfZDmWi7umNTjQjHYZrBH0Mz3pd7bc3K16bgmZWfrMcL6SMMUr40AwrG8Czx1Q7nTzUu459X8515eR+OW3rUoFg4DdKz+zSuZ6gzIN8jGubJUhQAeLByiFrG0gpwbJP74pfjEkBS4Qg2DS4gDu2fmgmlMNI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C2CA067373; Mon, 21 Apr 2025 09:39:22 +0200 (CEST)
-Date: Mon, 21 Apr 2025 09:39:22 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, xni@redhat.com, colyli@kernel.org,
-	axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org,
-	mpatocka@redhat.com, song@kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com, kbusch@kernel.org,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
-Message-ID: <20250421073922.GA19465@lst.de>
-References: <20250328060853.4124527-1-yukuai1@huaweicloud.com> <Z-aCzTWXzFWe4oxU@infradead.org> <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com> <20250409083208.GA2326@lst.de> <115c3b08-aff1-dd97-fe6a-7901452ce62c@huaweicloud.com> <20250409094019.GA3890@lst.de> <28bb1c35-5f75-4e1c-4b5d-32bcb87050ce@huaweicloud.com> <54ab4291-9152-44d1-bf6c-675b58cfcea8@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlYjFTqs7mjhrJxVrgCUjFxuPfoKgSen4A2GgK5akWVE5q9FEiZsyxcf1HFBHrsBfYyShUPzafkUm++YY+P9ANAE/AYzluKXkcpOk/3bO8q9QMb3t77CUkVY1R9z5jnO80EAzaRM73pimDZzZoBAekPi0WsarynQyQ6tX/zRLQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2izEraiJ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=2izEraiJKRD4d0JrLx24rh4ahR
+	8nJRck9Fnmu6n+QKGdAvKETl1wkVBmMlGGF9zR23VXcs33uCYJxLhNpCo9UDAodnBELSWKQa36Qtl
+	fS27KsTAnWIcVBLT6Q7A/OJizOCC3Ab8czDwDFy3WMvlYQRDXzeGrEX7OO6LKIjiZ6V+1fgedfIbF
+	rVjocoqYTXqzrkuVzo/1vQNnBes4uAE7LSIM9zoQZcruMJtu0n1BOCz8fiNkzjz9zQ8XJAWP5Llra
+	nZf1fULKPuK3ybPjljpQ3Jc2P4x+i2DjccKG6APRbTEC1v232Kvox0chPc1MZgrb/IO1EvDg/X9J9
+	fqmgVhqg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u6m2Z-00000003q8H-38hC;
+	Mon, 21 Apr 2025 07:58:07 +0000
+Date: Mon, 21 Apr 2025 00:58:07 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	linux-block <linux-block@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 1/2] block: fix race between set_blocksize and read paths
+Message-ID: <aAX6jypNa15e2d95@infradead.org>
+References: <20250418155458.GR25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,18 +65,11 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <54ab4291-9152-44d1-bf6c-675b58cfcea8@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250418155458.GR25675@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sat, Apr 19, 2025 at 04:46:03PM +0800, Yu Kuai wrote:
-> So, today I implement a version, and I do admit this way is much
-> simpler, turns out total 200 less code lines.
+Looks good:
 
-That's what I thought :)
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-> And can you check the
-> following untested code if you agree with the implementation? I'll
-> start to work a new version if you agree.
-
-From a very quick look this looks great.
 
