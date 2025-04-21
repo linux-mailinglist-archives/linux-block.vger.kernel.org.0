@@ -1,201 +1,131 @@
-Return-Path: <linux-block+bounces-20130-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20135-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84708A957D5
-	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 23:18:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16825A959E3
+	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 01:46:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B24B1733C2
-	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 21:18:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 504BC170C69
+	for <lists+linux-block@lfdr.de>; Mon, 21 Apr 2025 23:46:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940902165E9;
-	Mon, 21 Apr 2025 21:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393D62356DD;
+	Mon, 21 Apr 2025 23:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWbByfGy"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dmE+0fG8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f104.google.com (mail-pj1-f104.google.com [209.85.216.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568421DEFDD;
-	Mon, 21 Apr 2025 21:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9385B1E51E3
+	for <linux-block@vger.kernel.org>; Mon, 21 Apr 2025 23:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745270303; cv=none; b=Hclo0GMqd0jU7X5wP9eWOc+zUcmgCMjbhzvydV5KGQHiQN6BQPa0BPgYQAk9DO9Ky/8dmrLJWerOScbSAT1dRKWV+DO5awuW3dIQtjpleMQ/WlZrB/fAjMPtZppjlUEWfS7jsUfMuVgOyegIJZWi22HGC/sB42S5ILxjCH76PtI=
+	t=1745279205; cv=none; b=CMuSyxnDC850hYlv0nG7OpbiNpycojV5QrMZTfkeTSiz4DL16UJ0tWe7gQ7ut0lKPH53J+dZ47Iu66CBZ/4oPV6EhUOzlWeEnMkh2bGB/EHfL+Z+Z8rGZAX+oO8d2uMeI7FV8lYodciQuWrS7Azt0TRvYhcLKr4GDLj/2VTCu98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745270303; c=relaxed/simple;
-	bh=nm/spt30O/o+pWKt15dVV16PBqrGcK+Efxp5WTZ2q6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smcROfiPRPZA/TePjKbihSrBlvq7TCvldH85ZtLCJQDrAEKzYRXz0dSFJ0yzEjmA3a4LtbZVtPeTS0GJlwO89tWxbcqw8yOS4kJyRlqVKBnBtFgt1739DGvCjD7vvhmQTwrLOQuz6GHtKFKMaoMbJlj/RDc9lSTLq6dzOd8Angc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWbByfGy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A947C4CEE4;
-	Mon, 21 Apr 2025 21:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745270302;
-	bh=nm/spt30O/o+pWKt15dVV16PBqrGcK+Efxp5WTZ2q6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pWbByfGyg2xHttX9Ke26F3lJ1auGSoAUUYDxTSvYY6oNDze89JhBx8wO6MuaIB8iC
-	 hxkrcEKiVfGpKMchkp24LvMHJ1VOxPz0QCcQEQ3EFFPxOTfvUKMcm9UNAzioMoQRhw
-	 i56Dxsawujw3GjTPFtyTOFSa1uWp1GlEXQTea26FmqBRDro+VlbHXBU3CUcmPu9NiZ
-	 myflRWL5UcGgR1Cof63Af0ZwwUByuJ/YMuYnpvfTKBMFbSVLhPtPHMclwJwCy3ECe2
-	 DzDI4+Uk4keuyw+wju8weC66y0XX682AXNQRr2eDWLX+e7iNok28P0D1WldgSuA2JK
-	 L5zNy4wM6v+QQ==
-Date: Mon, 21 Apr 2025 14:18:20 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: John Garry <john.g.garry@oracle.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>
-Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>,
-	Daniel Gomez <da.gomez@samsung.com>
-Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
-Message-ID: <aAa2HMvKcIGdbJlF@bombadil.infradead.org>
-References: <20250415121425.4146847-1-john.g.garry@oracle.com>
- <20250415121425.4146847-12-john.g.garry@oracle.com>
+	s=arc-20240116; t=1745279205; c=relaxed/simple;
+	bh=MgZlolvtjiXQgwF7T8ugwhe+ecGe6HjkZ/Z4cLljf0U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UkL7DE0+nZKEGNMdIxDzs9A6bHBT5Q0lVSSBo+ZNZvcZq0VXRC4YzxALV4SlkGhfmgvm9BgdAUjjgAZEv9lEjjBor7upJ6jVBZbwDV05O4e8hWR/Hnxt/TW8os7lF2kjngoBAWSpeH6Z5FFfOGWrVm5+duYIXomR28Inz74wpjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dmE+0fG8; arc=none smtp.client-ip=209.85.216.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pj1-f104.google.com with SMTP id 98e67ed59e1d1-30863b48553so4732706a91.0
+        for <linux-block@vger.kernel.org>; Mon, 21 Apr 2025 16:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745279202; x=1745884002; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTxwRN46KxmBWYrElcrYvw4CJWFiySXxgp0fC8wvHYQ=;
+        b=dmE+0fG8Umu7oOMaqaDc+fhyyrd6/CxYzo76k4ezgdrPx8HX4zniM6EFiSuZIOrUvM
+         kn7flimx8cV5i/QJEutxqh4nCTFxZy5erG5ffYqgi07XfmU6bob4/BWhIUrtd358KWhm
+         QpkCjC8Q+HxeveRqjq0KBGolcq8kwHi13OwcyXUXeVYrBh2ADOhfeDwDBQ96TphiqV2j
+         iqIgL5FhLIwubUqRCyJDpQSa7TJxhylOKEAzrmVEq5AozkJja3i3Xbu3Tjs8RZ77Q4P7
+         mvSwyHw43UfnbIzua9ibzLx5HFMEg40xpRQUmqlqqJe1k4xOeARgmgOEXXZNioOUXFI9
+         Qfbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745279202; x=1745884002;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KTxwRN46KxmBWYrElcrYvw4CJWFiySXxgp0fC8wvHYQ=;
+        b=kKBXc7v7my8Z6brzRzu5xuJfeSaEtx2mqYok+O8BJhkPyAJDnSFZCxCYU97jLUsTcm
+         GcXcdkBhCM/JqLEbX8PGRpMh8BRUNZT4cNxuV+FP7/Q23BPjlwiaYl/LhiX3z7EkCjAK
+         MnY7/cmtA2awgmEVucdBuH14RXN2YgiShonqMoZFZWv/+imoSEvitshWeeaShX3g7Bjf
+         U2/adegN6YIOPdHaW6vGzssknHJmfumWOMP8/togoNX9r3xOcjRzgIdUf0DVzRsBVMpB
+         Jtxm7rzlueLMMPUDaanP95SykYjnq3Th/4sJb98dCa49YHsTBp+TaBWS9KfanDkd4q06
+         3XFg==
+X-Gm-Message-State: AOJu0Ywi/RwZ9tm7lorfNEg/fDIsdi4ddlj72tl6WmOJoEERXXCYR1cG
+	fFnqlOSKxHXiTf2za6BuzYThsq1h83fhDMa0YuO8AZb6sHOfAeU5xqvDvURSG8ncjz4STJ6hxfG
+	xryvmc0Ew6GBs4DKE7YVSAexXrpO1q2AfhGokcBNaNFk8M82X
+X-Gm-Gg: ASbGnct1Z/VNmvEj89VvBrenQXHPaf+cGPRq7Rxh6CELML7OP0YiP+RJJ+3P59wDtsk
+	70VU9YpEDRkzLWcuqShTFOZk5IBO/AKe/iIltpxZIWDN66eZSqRwqwkVhOGzkPPJrkKgrXKYuav
+	Os5M17YAVpO75p6dcK8Xrvko0oTMmzoMJ4Fubc5e00r2Dk7TRPxOCw+lxxK6AfN9QWaFHCybhIC
+	GyxoEdv0cws1FaxcckNWg02m2I4S0i5njJJUqjaYnxYlNIqkJGDILI9Bj4FiVPV+XM2smMv
+X-Google-Smtp-Source: AGHT+IG5VlJ1RIxmxTNJQSsKgUu08tRnQu4AxwH+uNxOrySYInQwR2aUQ0baLfIWdUvV8P/PJ+ZEdv6C/VZb
+X-Received: by 2002:a17:90b:2705:b0:2ee:8cbb:de28 with SMTP id 98e67ed59e1d1-3087c2ca65fmr21290540a91.8.1745279201745;
+        Mon, 21 Apr 2025 16:46:41 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3087e05ee89sm512928a91.15.2025.04.21.16.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 16:46:41 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id E2FEC3403C6;
+	Mon, 21 Apr 2025 17:46:40 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id D7462E4055F; Mon, 21 Apr 2025 17:46:40 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH 0/4] ublk: refactor __ublk_ch_uring_cmd
+Date: Mon, 21 Apr 2025 17:46:39 -0600
+Message-Id: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415121425.4146847-12-john.g.garry@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN/YBmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyND3dKknOz45Py84pLMtEpdY+PUVMNEMxMLs8RkJaCegqLUtMwKsHn
+ RsbW1AA0uycxfAAAA
+X-Change-ID: 20250421-ublk_constify-33ee1a6486ac
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Uday Shankar <ushankar@purestorage.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 15, 2025 at 12:14:22PM +0000, John Garry wrote:
-> Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
-> 
-> The function works based on two operating modes:
-> - HW offload, i.e. REQ_ATOMIC-based
-> - CoW based with out-of-places write and atomic extent remapping
-> 
-> The preferred method is HW offload as it will be faster. If HW offload is
-> not possible, then we fallback to the CoW-based method.
-> 
-> HW offload would not be possible for the write length exceeding the HW
-> offload limit, the write spanning multiple extents, unaligned disk blocks,
-> etc.
-> 
-> Apart from the write exceeding the HW offload limit, other conditions for
-> HW offload can only be detected in the iomap handling for the write. As
-> such, we use a fallback method to issue the write if we detect in the
-> ->iomap_begin() handler that HW offload is not possible. Special code
-> -ENOPROTOOPT is returned from ->iomap_begin() to inform that HW offload
-> not possible.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-> ---
->  fs/xfs/xfs_file.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index ba4b02abc6e4..81a377f65aa3 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -728,6 +728,72 @@ xfs_file_dio_write_zoned(
->  	return ret;
->  }
->  
-> +/*
-> + * Handle block atomic writes
-> + *
-> + * Two methods of atomic writes are supported:
-> + * - REQ_ATOMIC-based, which would typically use some form of HW offload in the
-> + *   disk
-> + * - COW-based, which uses a COW fork as a staging extent for data updates
-> + *   before atomically updating extent mappings for the range being written
-> + *
-> + */
-> +static noinline ssize_t
-> +xfs_file_dio_write_atomic(
-> +	struct xfs_inode	*ip,
-> +	struct kiocb		*iocb,
-> +	struct iov_iter		*from)
-> +{
-> +	unsigned int		iolock = XFS_IOLOCK_SHARED;
-> +	ssize_t			ret, ocount = iov_iter_count(from);
-> +	const struct iomap_ops	*dops;
-> +
-> +	/*
-> +	 * HW offload should be faster, so try that first if it is already
-> +	 * known that the write length is not too large.
-> +	 */
-> +	if (ocount > xfs_inode_buftarg(ip)->bt_bdev_awu_max)
-> +		dops = &xfs_atomic_write_cow_iomap_ops;
-> +	else
-> +		dops = &xfs_direct_write_iomap_ops;
-> +
-> +retry:
-> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = xfs_file_write_checks(iocb, from, &iolock, NULL);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	/* Demote similar to xfs_file_dio_write_aligned() */
-> +	if (iolock == XFS_IOLOCK_EXCL) {
-> +		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
-> +		iolock = XFS_IOLOCK_SHARED;
-> +	}
-> +
-> +	trace_xfs_file_direct_write(iocb, from);
-> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
-> +			0, NULL, 0);
-> +
-> +	/*
-> +	 * The retry mechanism is based on the ->iomap_begin method returning
-> +	 * -ENOPROTOOPT, which would be when the REQ_ATOMIC-based write is not
-> +	 * possible. The REQ_ATOMIC-based method typically not be possible if
-> +	 * the write spans multiple extents or the disk blocks are misaligned.
-> +	 */
-> +	if (ret == -ENOPROTOOPT && dops == &xfs_direct_write_iomap_ops) {
+Refactor __ublk_ch_uring_cmd to:
 
-Based on feedback from LSFMM, due to the performance variaibility this
-can introduce, it sounded like some folks would like to opt-in to not
-have a software fallback and just require an error out.
+- Have one function per operation instead of handling operations
+  directly in the switch statement.
+- Mark most ublk_queue pointers as const. Given efforts to allow
+  concurrent operations on one ublk_queue [1], it is important that
+  ublk_queue be read-only (or accesses to it be properly synchronized)
+  to avoid data races.
 
-Could an option be added to not allow the software fallback?
+This series is split off from [1]. No functional changes are expected.
 
-If so, then I think the next patch would also need updating.
+[1] https://lore.kernel.org/linux-block/20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com/
 
-Or are you suggesting that without the software fallback atomic writes
-greater than fs block size are not possible?
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Uday Shankar (4):
+      ublk: factor out ublk_commit_and_fetch
+      ublk: mark ublk_queue as const for ublk_register_io_buf
+      ublk: factor out ublk_get_data
+      ublk: factor out error handling in __ublk_ch_uring_cmd
 
-  Luis
+ drivers/block/ublk_drv.c | 133 +++++++++++++++++++++++------------------------
+ 1 file changed, 65 insertions(+), 68 deletions(-)
+---
+base-commit: edbaa72ba1bd21040df81f7c63851093264c7955
+change-id: 20250421-ublk_constify-33ee1a6486ac
 
-> +		xfs_iunlock(ip, iolock);
-> +		dops = &xfs_atomic_write_cow_iomap_ops;
-> +		goto retry;
-> +	}
-> +
-> +out_unlock:
-> +	if (iolock)
-> +		xfs_iunlock(ip, iolock);
-> +	return ret;
-> +}
-> +
->  /*
->   * Handle block unaligned direct I/O writes
->   *
-> @@ -843,6 +909,8 @@ xfs_file_dio_write(
->  		return xfs_file_dio_write_unaligned(ip, iocb, from);
->  	if (xfs_is_zoned_inode(ip))
->  		return xfs_file_dio_write_zoned(ip, iocb, from);
-> +	if (iocb->ki_flags & IOCB_ATOMIC)
-> +		return xfs_file_dio_write_atomic(ip, iocb, from);
->  	return xfs_file_dio_write_aligned(ip, iocb, from,
->  			&xfs_direct_write_iomap_ops, &xfs_dio_write_ops, NULL);
->  }
-> -- 
-> 2.31.1
-> 
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
 
