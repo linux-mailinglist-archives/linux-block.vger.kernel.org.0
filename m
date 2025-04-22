@@ -1,167 +1,98 @@
-Return-Path: <linux-block+bounces-20153-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20151-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02EBBA95B44
-	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 04:22:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14180A95B3E
+	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 04:21:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3656B1761DF
-	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 02:22:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95DCC1897B3D
+	for <lists+linux-block@lfdr.de>; Tue, 22 Apr 2025 02:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D63F2561D6;
-	Tue, 22 Apr 2025 02:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16FA0255229;
+	Tue, 22 Apr 2025 02:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8xWYilY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cAaKazv9"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137052561A6;
-	Tue, 22 Apr 2025 02:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC68254AED
+	for <linux-block@vger.kernel.org>; Tue, 22 Apr 2025 02:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288222; cv=none; b=khcRiPtPS/UoSEL1BUxKYnvIfZd8fS1ROszfIH3wseBUJEE4ixDLzTr5icEve5Nv5jjfEc/hGJKrbNku+AlKZY92K0CyJ28ofmQvDOOaISFKVNIss/lxQcgS6UPd8icbb5hG9qUhHm4n4SZuEE6SqneMiV71lbBzXRGKPOS3rek=
+	t=1745288202; cv=none; b=quIb8as6jw8ngJKLTbBNMlQEgXHSz+Qpg7A4bhiqzp3rrACQNOAuThCESosN5yXa3b70JJpQ1PwOIE4jabL3p86IeLRRZ3ozpDfkb4sRsHWupX4U8vfMu6bDV2m3Y1rh6T5tcS6ifOZiMMviwrV9pNpAGIO8vQLY6sLIVoY3Wxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288222; c=relaxed/simple;
-	bh=BKA1MVDM/vMZ2AYHLBeHtOtEbqYd2oJfJ3npMfZteUo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E+TKXu3msRESIH43EBfg9kiTX92U3L1nFLLilW5Bnsou+fDLYUhn5I42hP3AIRuS7I+y/+3GHYAOknF7H+cexgOFdtZoXBobeaHcTWfKovDGCWBODtGAQcIM95waSyxX6ua/3eflZGAknUl+vOeoC736qF4o5M1CtUf7ZquZC1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8xWYilY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FF6C4CEEE;
-	Tue, 22 Apr 2025 02:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288221;
-	bh=BKA1MVDM/vMZ2AYHLBeHtOtEbqYd2oJfJ3npMfZteUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D8xWYilY/Jj4uLDAc36nGaf8UBvOGhOVi3HW5x/KzGzQXaZAYBDdRjc0xwdMGA4Yl
-	 xenYXuVo2JAADD8U9ppYhHcZrWVZeA9zzfp777LEqYwcU7kVh8o3MMcnuITm8NAAkG
-	 2mDvmQROSI84fxw5edR8oHZRwToXal51+3oWjv7mpming85DQm1Lpvqzq/yv1iPY0q
-	 EsHrfqlevqRXi6xV+g3G8+01A/f7PjSlp2X/BaVUNhxfeTutLJvzMOfbNBKpeqCYUZ
-	 dUjxM0VtirISDLzikT7/hFYbCB0kAPqiTtNfTJXNMkxf9LLy33A9djLg0xb2lEN/aY
-	 7yYlFwE0klVeg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Uday Shankar <ushankar@purestorage.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 29/30] ublk: rely on ->canceling for dealing with ublk_nosrv_dev_should_queue_io
-Date: Mon, 21 Apr 2025 22:15:49 -0400
-Message-Id: <20250422021550.1940809-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
-References: <20250422021550.1940809-1-sashal@kernel.org>
+	s=arc-20240116; t=1745288202; c=relaxed/simple;
+	bh=m4SH1HDvHugwMTrd3sTk2tokzTcOFXyDZ2ZZ77+0jfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdDnx5eWAz34DZmwYz44hPB+o9RwSbxeOweG/uINzVM2iBBq/fwpXyqQUwmvtBPfjcHEnjy1blx49Dv41leZxV5Etbn0iFk9DOKsYqkr1pZwBdQwsLrNb5RMEY3GOLIRS+htMNM3zXP+XlCRjxzJSdUsQ4Lu9lqF/czv0oG55D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cAaKazv9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745288199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7gdgW5eS93if/nqlNpCjp3rr+e7Hdfk5SuDUBkR/RYQ=;
+	b=cAaKazv9/BOSBZAeDnUG0XUXdJ7lJIUueVKUMPFbNnyLdXE9XPUkFXTU6P77A7C0uMDHO6
+	18JW34nHAp//gqvgrRerN7Jmlazn7SmpD7UsVYljx8oaajRj4LGh3MRgVsiORmDImnToAc
+	M2PXwLLuWLoBjvWvLSNbfxZ3sgBP1kA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-sTJXc5RTNJG1oQ1umttCFg-1; Mon,
+ 21 Apr 2025 22:16:35 -0400
+X-MC-Unique: sTJXc5RTNJG1oQ1umttCFg-1
+X-Mimecast-MFC-AGG-ID: sTJXc5RTNJG1oQ1umttCFg_1745288194
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 114141800264;
+	Tue, 22 Apr 2025 02:16:34 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.137])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47F4D195608F;
+	Tue, 22 Apr 2025 02:16:29 +0000 (UTC)
+Date: Tue, 22 Apr 2025 10:16:25 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: Re: [PATCH 1/4] ublk: factor out ublk_commit_and_fetch
+Message-ID: <aAb7-Wjj6xgymVve@fedora>
+References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
+ <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-From: Ming Lei <ming.lei@redhat.com>
+On Mon, Apr 21, 2025 at 05:46:40PM -0600, Uday Shankar wrote:
+> Move the logic for the UBLK_IO_COMMIT_AND_FETCH_REQ opcode into its own
+> function. This also allows us to mark ublk_queue pointers as const for
+> that operation, which can help prevent data races since we may allow
+> concurrent operation on one ublk_queue in the future. Also open code
+> ublk_commit_completion in ublk_commit_and_fetch to reduce the number of
+> parameters/avoid a redundant lookup.
+> 
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 
-[ Upstream commit 7e26cb69c5e62152a6f05a2ae23605a983a8ef31 ]
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Now ublk deals with ublk_nosrv_dev_should_queue_io() by keeping request
-queue as quiesced. This way is fragile because queue quiesce crosses syscalls
-or process contexts.
 
-Switch to rely on ubq->canceling for dealing with
-ublk_nosrv_dev_should_queue_io(), because it has been used for this purpose
-during io_uring context exiting, and it can be reused before recovering too.
-In ublk_queue_rq(), the request will be added to requeue list without
-kicking off requeue in case of ubq->canceling, and finally requests added in
-requeue list will be dispatched from either ublk_stop_dev() or
-ublk_ctrl_end_recovery().
-
-Meantime we have to move reset of ubq->canceling from ublk_ctrl_start_recovery()
-to ublk_ctrl_end_recovery(), when IO handling can be recovered completely.
-
-Then blk_mq_quiesce_queue() and blk_mq_unquiesce_queue() are always used
-in same context.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Uday Shankar <ushankar@purestorage.com>
-Link: https://lore.kernel.org/r/20250416035444.99569-4-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/ublk_drv.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 611a4b2afbbf3..264b332a5faaf 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1629,13 +1629,19 @@ static void ublk_wait_tagset_rqs_idle(struct ublk_device *ub)
- 
- static void __ublk_quiesce_dev(struct ublk_device *ub)
- {
-+	int i;
-+
- 	pr_devel("%s: quiesce ub: dev_id %d state %s\n",
- 			__func__, ub->dev_info.dev_id,
- 			ub->dev_info.state == UBLK_S_DEV_LIVE ?
- 			"LIVE" : "QUIESCED");
- 	blk_mq_quiesce_queue(ub->ub_disk->queue);
-+	/* mark every queue as canceling */
-+	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-+		ublk_get_queue(ub, i)->canceling = true;
- 	ublk_wait_tagset_rqs_idle(ub);
- 	ub->dev_info.state = UBLK_S_DEV_QUIESCED;
-+	blk_mq_unquiesce_queue(ub->ub_disk->queue);
- }
- 
- static void ublk_force_abort_dev(struct ublk_device *ub)
-@@ -2785,7 +2791,6 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
- 	/* We have to reset it to NULL, otherwise ub won't accept new FETCH_REQ */
- 	ubq->ubq_daemon = NULL;
- 	ubq->timeout = false;
--	ubq->canceling = false;
- 
- 	for (i = 0; i < ubq->q_depth; i++) {
- 		struct ublk_io *io = &ubq->ios[i];
-@@ -2874,20 +2879,18 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	pr_devel("%s: new ublksrv_pid %d, dev id %d\n",
- 			__func__, ublksrv_pid, header->dev_id);
- 
--	if (ublk_nosrv_dev_should_queue_io(ub)) {
--		ub->dev_info.state = UBLK_S_DEV_LIVE;
--		blk_mq_unquiesce_queue(ub->ub_disk->queue);
--		pr_devel("%s: queue unquiesced, dev id %d.\n",
--				__func__, header->dev_id);
--		blk_mq_kick_requeue_list(ub->ub_disk->queue);
--	} else {
--		blk_mq_quiesce_queue(ub->ub_disk->queue);
--		ub->dev_info.state = UBLK_S_DEV_LIVE;
--		for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
--			ublk_get_queue(ub, i)->fail_io = false;
--		}
--		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	blk_mq_quiesce_queue(ub->ub_disk->queue);
-+	ub->dev_info.state = UBLK_S_DEV_LIVE;
-+	for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-+		struct ublk_queue *ubq = ublk_get_queue(ub, i);
-+
-+		ubq->canceling = false;
-+		ubq->fail_io = false;
- 	}
-+	blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	pr_devel("%s: queue unquiesced, dev id %d.\n",
-+			__func__, header->dev_id);
-+	blk_mq_kick_requeue_list(ub->ub_disk->queue);
- 
- 	ret = 0;
-  out_unlock:
--- 
-2.39.5
+Thanks,
+Ming
 
 
