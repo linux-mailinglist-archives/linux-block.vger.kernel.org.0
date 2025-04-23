@@ -1,132 +1,105 @@
-Return-Path: <linux-block+bounces-20352-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20353-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 083E5A984F1
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 11:10:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B60ACA98559
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 11:24:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56A0117B443
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 09:10:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5F8F44041A
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 09:24:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B26269AF3;
-	Wed, 23 Apr 2025 09:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26837244689;
+	Wed, 23 Apr 2025 09:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPZH5y7J"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E6C269AFB;
-	Wed, 23 Apr 2025 09:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74115223DCD
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 09:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399161; cv=none; b=dHhAZ4T/pkrlxHz+IyIzp5SZFoab4/NKu3YzgyX7xQWb8uYQu5NSdlwxPVW7+OyD9LQpf/NjHzxVxZSelV4WPHEXI9qBJ8CbcPNLnnSV7o1HuYoIa3CvXpQYiIp0d6QuOhyvho/W35598RorK30aS8H1gV/GVFWprKnlhbpKQqQ=
+	t=1745400267; cv=none; b=NMH/7cCAxa2IdSCppm/IMFx2V/qIUdusOyVf/FcToxjXhYKQHtrqXUByCKXCtwyp5PHlkTcY+sAa3xo3Oz7DXsMYlFUjlHLJDH+0YwJJY6oxgq31g/JOB2elYN07wvwCxWtvs/Mza9i8utOdyRYytp3SPiCtw174qMLJ0FXFo14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399161; c=relaxed/simple;
-	bh=yZ14u45nosFnORYpl+CjzdK4IPUWLeh5MUca7Ao0xuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=toAk8Qwy0Yc8J2hdl2I0X9vZWSXI+892xu3PsxCJxjvuerbc0zMfHKCmDp6ju0mBzjZGy5u3tkFrgfG555Xp/GDV8Cy+gaVneYMltWejNtonnhd9hcVUCsb98RF+2hGDnL3p+t7x01yQhDb4za332cJ7UD1b1CtCpxm2o52GyBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E400768AFE; Wed, 23 Apr 2025 11:05:52 +0200 (CEST)
-Date: Wed, 23 Apr 2025 11:05:52 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v9 22/24] nvme-pci: use a better encoding for small prp
- pool allocations
-Message-ID: <20250423090552.GA381@lst.de>
-References: <cover.1745394536.git.leon@kernel.org> <973ed41249e12766383b3cedac799692f9bda3b8.1745394536.git.leon@kernel.org>
+	s=arc-20240116; t=1745400267; c=relaxed/simple;
+	bh=uhxWzwWdk7pH9GY9QqZbvp7tHr7um+B1yunR9MR0AWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l5KdbWcrlFdSIGaf9VKTCsDLGbO9URaPSB007855GFfGaC2mmtr7loXbHVVOkn6LWyTtHF8YVpKLhmU5aqojc2+90JKGXkQ9fl/liqww1RfHpHdDvw++jwIAnELGQ36p9loPSYV4afIctECdMUTlfzJXGck9+dzaLkxvc57HGoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QPZH5y7J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745400263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=B25CbmgCFwZ0O4hl8fWejX1u5z7/b7An7iv3+BzNojk=;
+	b=QPZH5y7JfERAPE49TDM0RLRYbNU85bXyeajDWZrihdJ+ZtbkcdHat9JWqCJFV9SppaVl6m
+	nGSO2hEjpnKpfaSPTZ5xMMtzaKX9lhHy553VuhmuwCyWvbcckVuBKzSggooYWQ3UIC1FHl
+	E8oRSQT7PSZqiH0LG/p7HtgRZjuzKcE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-n9eoAhzhNhW2oCR-oQro3A-1; Wed,
+ 23 Apr 2025 05:24:17 -0400
+X-MC-Unique: n9eoAhzhNhW2oCR-oQro3A-1
+X-Mimecast-MFC-AGG-ID: n9eoAhzhNhW2oCR-oQro3A_1745400256
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9EB02195609D;
+	Wed, 23 Apr 2025 09:24:15 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.81])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7AA8D195608D;
+	Wed, 23 Apr 2025 09:24:13 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Guy Eisenberg <geisenberg@nvidia.com>,
+	Jared Holzman <jholzman@nvidia.com>,
+	Yoav Cohen <yoav@nvidia.com>,
+	Omri Levi <omril@nvidia.com>,
+	Ofer Oshri <ofer@nvidia.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/2] ublk: fix race between io_uring_cmd_complete_in_task and ublk_cancel_cmd
+Date: Wed, 23 Apr 2025 17:24:01 +0800
+Message-ID: <20250423092405.919195-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <973ed41249e12766383b3cedac799692f9bda3b8.1745394536.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Apr 23, 2025 at 11:13:13AM +0300, Leon Romanovsky wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> There is plenty of unused space in the iod next to nr_descriptors.
-> Add a separate flag to encode that the transfer is using the full
-> page sized pool, and use a normal 0..n count for the number of
-> descriptors.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Tested-by: Jens Axboe <axboe@kernel.dk>
-> [ Leon: changed original bool variable to be flag as was proposed by Kanchan ]
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/nvme/host/pci.c | 93 ++++++++++++++++++++---------------------
->  1 file changed, 46 insertions(+), 47 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 638e759b29ad..7e93536d01cb 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -44,6 +44,7 @@
->  #define NVME_MAX_SEGS	128
->  #define NVME_MAX_META_SEGS 15
->  #define NVME_MAX_NR_DESCRIPTORS	5
-> +#define NVME_SMALL_DESCRIPTOR_SIZE 256
->  
->  static int use_threaded_interrupts;
->  module_param(use_threaded_interrupts, int, 0444);
-> @@ -219,6 +220,10 @@ struct nvme_queue {
->  	struct completion delete_done;
->  };
->  
-> +enum {
-> +	IOD_LARGE_DESCRIPTORS = 1, /* uses the full page sized descriptor pool */
+Hello Jens,
 
-This is used as a ORable flag, I'd make that explicit:
+The 2 patches try to fix race between between io_uring_cmd_complete_in_task
+and ublk_cancel_cmd, please don't apply until Jared verifies them.
 
-	/* uses the full page sized descriptor pool */
-	IOD_LARGE_DESCRIPTORS		= 1U << 0,
+Jared, please test and see if the two can fix your crash issue on v6.15-rc3.
 
-and similar for the next flag added in the next patch.
+If you can't reproduce it on v6.15-rc3, please backport them to v6.14, and I
+can help the backport if you need.
 
->  	struct nvme_request req;
->  	struct nvme_command cmd;
->  	bool aborted;
-> -	/* # of PRP/SGL descriptors: (0 for small pool) */
-> -	s8 nr_descriptors;
-> +	u8 nr_descriptors;	/* # of PRP/SGL descriptors */
-> +	unsigned int flags;
+Thanks,
+Ming
 
-And this should be limited to a u16 to not bloat the structure.
+Ming Lei (2):
+  ublk: call ublk_dispatch_req() for handling UBLK_U_IO_NEED_GET_DATA
+  ublk: fix race between io_uring_cmd_complete_in_task and
+    ublk_cancel_cmd
+
+ drivers/block/ublk_drv.c | 51 ++++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
+
+-- 
+2.47.0
 
 
