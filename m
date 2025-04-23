@@ -1,250 +1,131 @@
-Return-Path: <linux-block+bounces-20287-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20289-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF3A9A97CD6
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 04:33:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F19CA97D08
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 04:50:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE17D3BF97A
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 02:33:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA22F7A7E5A
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 02:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716921F7075;
-	Wed, 23 Apr 2025 02:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2ABD262D0C;
+	Wed, 23 Apr 2025 02:50:15 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A722620E7
-	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 02:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FEF263C8C;
+	Wed, 23 Apr 2025 02:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745375607; cv=none; b=TqTrJOB6WOpfEFOfia5ovotSWWD1qmCK9s42Wnb33ZsYKrrMIuimjrM6zQJifuSsZiLbrJVs/92LLenR6fOnt+CVayZ3G9IDvlTrhBEgs86OOq4wrAhABjnmqhiMsq4ioAN2wMPpgjStZ1kGeQJVD3MNYKXvRswmT3FkjZq6meQ=
+	t=1745376615; cv=none; b=aVyrE4qZg300lGIfHlO9Y1bhUdW1QnokDj+gcpMHvVrUN0oZfj92rArTZKK15vAFIAuSydAPPPMu1CTxiBCNv8sapF1rvLeiXaoPKxCSK6y9bZ/khOMvhJmtl4pRCsb5hGdbQucuPJj5Osj4PjJ06aOO5FJSl7zsJuf/NjDvidQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745375607; c=relaxed/simple;
-	bh=rC998mdAdRBItuCB23cv0Z4W04t2X+nxujxtnyTb6vE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R3ie5JfnH4wKM/cWSfgAehvQRJXzvAQkPvZhUSfmQPlUb2YAwYhcBIC/fTiUHvNNA1YXkcrrF74NYpIf47UVH2+LMjecI20F4NK/3IVn0uaQKqI9Q/WFk1t57J+u7vKwH9BbhnjWqGEQ9yEyAN9elSwrZzfEx7H3sZHzAyiOKRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj3734RZfz4f3jkw
-	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 10:33:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 43FE51A0359
-	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 10:33:22 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgB3219rUQhoCGcsKQ--.37591S11;
-	Wed, 23 Apr 2025 10:33:22 +0800 (CST)
-From: Zizhi Wo <wozizhi@huaweicloud.com>
-To: axboe@kernel.dk,
-	linux-block@vger.kernel.org
-Cc: yangerkun@huawei.com,
-	yukuai3@huawei.com,
-	wozizhi@huaweicloud.com,
-	ming.lei@redhat.com,
-	tj@kernel.org
-Subject: [PATCH V4 7/7] blk-throttle: Prevents the bps restricted io from entering the bps queue again
-Date: Wed, 23 Apr 2025 10:23:01 +0800
-Message-ID: <20250423022301.3354136-8-wozizhi@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250423022301.3354136-1-wozizhi@huaweicloud.com>
-References: <20250423022301.3354136-1-wozizhi@huaweicloud.com>
+	s=arc-20240116; t=1745376615; c=relaxed/simple;
+	bh=O4yPbNBaYFoNwQKOXxtrIJpWTe+WoiDQpV/8tZmutZI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WAHRaFXMOFzj2mXyKuH0ROe4Q20inSudxhiX2u8i0F3JzEGJ6dnHgXvhoWGdJGe5LT4je1w0vWNb+JyJqD+c1A/y0NiLQdVlayf8yuDfmDcJKsp9vU+L/htNZVmNUYClaIxH7N/dEAUJI2/uKsrIov8kuajXZPlq9XFcqjZx5cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a8055cf61fed11f0a216b1d71e6e1362-20250423
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:11a8d7b1-49d3-47a3-be11-ac6ee2574613,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:6eeaac85ebf38b026436a2303d6455f7,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a8055cf61fed11f0a216b1d71e6e1362-20250423
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <tanzheng@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1467068272; Wed, 23 Apr 2025 10:50:03 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 4564516003841;
+	Wed, 23 Apr 2025 10:50:03 +0800 (CST)
+X-ns-mid: postfix-6808555B-151785318
+Received: from localhost.localdomain (unknown [10.42.20.206])
+	by node4.com.cn (NSMail) with ESMTPA id D8C1A16003840;
+	Wed, 23 Apr 2025 02:50:02 +0000 (UTC)
+From: tanzheng <tanzheng@kylinos.cn>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tanzheng <tanzheng@kylinos.cn>
+Subject: [PATCH v1] block: Fix bio complete cannot be traced
+Date: Wed, 23 Apr 2025 10:49:59 +0800
+Message-Id: <20250423024959.2051923-1-tanzheng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB3219rUQhoCGcsKQ--.37591S11
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF15WFWkCF1fXrWrGFWxJFb_yoWxXF18pF
-	WxCF4rJa1ktrsrKr1fXF17GFWSvw4fJrW3ArZ3GrySy3y2vr10gr1qvryrZFWrAF93Cr43
-	ZF45KrZ5C3WUA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAV
-	WUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYcTQUUUU
-	U
-X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
+Content-Transfer-Encoding: quoted-printable
 
-From: Zizhi Wo <wozizhi@huawei.com>
+Now all bio that enters bio_endio through blk_update_request
+and blk_mq_end_request_batch will not be traced because the
+BIO_TRACE_COMPLETION flag has been cleared before entering
+bio_endio.
 
-[BUG]
-There has an issue of io delayed dispatch caused by io splitting. Consider
-the following scenario:
-1) If we set a BPS limit of 1MB/s and restrict the maximum IO size per
-dispatch to 4KB, submitting -two- 1MB IO requests results in completion
-times of 1s and 2s, which is expected.
-2) However, if we additionally set an IOPS limit of 1,000,000/s with the
-same BPS limit of 1MB/s, submitting -two- 1MB IO requests again results in
-both completing in 2s, even though the IOPS constraint is being met.
+To fix it, BIO_TRACE_COMPLETION needs to be cleared after bio_endio.
 
-[CAUSE]
-This issue arises because BPS and IOPS currently share the same queue in
-the blkthrotl mechanism:
-1) This issue does not occur when only BPS is limited because the split IOs
-return false in blk_should_throtl() and do not go through to throtl again.
-2) For split IOs, even if they have been tagged with BIO_BPS_THROTTLED,
-they still get queued alternately in the same list due to continuous
-splitting and reordering. As a result, the two IO requests are both
-completed at the 2-second mark, causing an unintended delay.
-3) It is not difficult to imagine that in this scenario, if N 1MB IOs are
-issued at once, all IOs will eventually complete together in N seconds.
-
-[FIX]
-With the queue separation introduced in the previous patches, we now have
-separate BPS and IOPS queues. For IOs that have already passed the BPS
-limitation, they do not need to re-enter the BPS queue and can directly
-placed to the IOPS queue.
-
-Since we have split the queues, when the IOPS queue is previously empty
-and a new bio is added to the first qnode->bios_iops list in the
-service_queue, we also need to update the disptime. This patch introduces
-"THROTL_TG_IOPS_WAS_EMPTY" flag to mark it.
-
-Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Zheng tan <tanzheng@kylinos.cn>
 ---
- block/blk-throttle.c | 53 +++++++++++++++++++++++++++++++++++++-------
- block/blk-throttle.h | 11 ++++++---
- 2 files changed, 53 insertions(+), 11 deletions(-)
+ block/blk-mq.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 3b01f2ad717a..52431b2352b1 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -163,7 +163,12 @@ static void throtl_qnode_add_bio(struct bio *bio, struct throtl_qnode *qn,
- {
- 	bool rw = bio_data_dir(bio);
- 
--	if (bio_flagged(bio, BIO_TG_BPS_THROTTLED)) {
-+	/*
-+	 * Split bios have already been throttled by bps, so they are
-+	 * directly queued into the iops path.
-+	 */
-+	if (bio_flagged(bio, BIO_TG_BPS_THROTTLED) ||
-+	    bio_flagged(bio, BIO_BPS_THROTTLED)) {
- 		bio_list_add(&qn->bios_iops, bio);
- 		sq->nr_queued_iops[rw]++;
- 	} else {
-@@ -895,6 +900,15 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
- 
- 	throtl_qnode_add_bio(bio, qn, sq);
- 
-+	/*
-+	 * Since we have split the queues, when the iops queue is
-+	 * previously empty and a new @bio is added into the first @qn,
-+	 * we also need to update the @tg->disptime.
-+	 */
-+	if (bio_flagged(bio, BIO_BPS_THROTTLED) &&
-+	    bio == throtl_peek_queued(&sq->queued[rw]))
-+		tg->flags |= THROTL_TG_IOPS_WAS_EMPTY;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ae8494d88897..17c19eaf8f1e 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -876,13 +876,14 @@ static void blk_complete_request(struct request *re=
+q)
+ 	do {
+ 		struct bio *next =3D bio->bi_next;
+=20
+-		/* Completion has already been traced */
+-		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+-
+ 		blk_zone_update_request_bio(req, bio);
+=20
+ 		if (!is_flush)
+ 			bio_endio(bio);
 +
- 	throtl_enqueue_tg(tg);
- }
- 
-@@ -922,6 +936,7 @@ static void tg_update_disptime(struct throtl_grp *tg)
- 
- 	/* see throtl_add_bio_tg() */
- 	tg->flags &= ~THROTL_TG_WAS_EMPTY;
-+	tg->flags &= ~THROTL_TG_IOPS_WAS_EMPTY;
- }
- 
- static void start_parent_slice_with_credit(struct throtl_grp *child_tg,
-@@ -1109,7 +1124,8 @@ static void throtl_pending_timer_fn(struct timer_list *t)
- 
- 	if (parent_sq) {
- 		/* @parent_sq is another throl_grp, propagate dispatch */
--		if (tg->flags & THROTL_TG_WAS_EMPTY) {
-+		if (tg->flags & THROTL_TG_WAS_EMPTY ||
-+		    tg->flags & THROTL_TG_IOPS_WAS_EMPTY) {
- 			tg_update_disptime(tg);
- 			if (!throtl_schedule_next_dispatch(parent_sq, false)) {
- 				/* window is already open, repeat dispatching */
-@@ -1654,9 +1670,28 @@ void blk_throtl_cancel_bios(struct gendisk *disk)
- 
- static bool tg_within_limit(struct throtl_grp *tg, struct bio *bio, bool rw)
- {
--	/* throtl is FIFO - if bios are already queued, should queue */
--	if (sq_queued(&tg->service_queue, rw))
-+	struct throtl_service_queue *sq = &tg->service_queue;
++		/* Completion has already been traced */
++		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
 +
-+	/*
-+	 * For a split bio, we need to specifically distinguish whether the
-+	 * iops queue is empty.
-+	 */
-+	if (bio_flagged(bio, BIO_BPS_THROTTLED))
-+		return sq->nr_queued_iops[rw] == 0 &&
-+				tg_dispatch_iops_time(tg, bio) == 0;
+ 		bio =3D next;
+ 	} while (bio);
+=20
+@@ -969,8 +970,6 @@ bool blk_update_request(struct request *req, blk_stat=
+us_t error,
+ 			bio->bi_status =3D BLK_STS_IOERR;
+ 		}
+=20
+-		/* Completion has already been traced */
+-		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+ 		if (unlikely(quiet))
+ 			bio_set_flag(bio, BIO_QUIET);
+=20
+@@ -983,6 +982,9 @@ bool blk_update_request(struct request *req, blk_stat=
+us_t error,
+ 				bio_endio(bio);
+ 		}
+=20
++		/* Completion has already been traced */
++		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
 +
-+	/*
-+	 * Throtl is FIFO - if bios are already queued, should queue.
-+	 * If the bps queue is empty and @bio is within the bps limit, charge
-+	 * bps here for direct placement into the iops queue.
-+	 */
-+	if (sq_queued(&tg->service_queue, rw)) {
-+		if (sq->nr_queued_bps[rw] == 0 &&
-+		    tg_dispatch_bps_time(tg, bio) == 0)
-+			throtl_charge_bps_bio(tg, bio);
-+
- 		return false;
-+	}
- 
- 	return tg_dispatch_time(tg, bio) == 0;
- }
-@@ -1737,11 +1772,13 @@ bool __blk_throtl_bio(struct bio *bio)
- 
- 	/*
- 	 * Update @tg's dispatch time and force schedule dispatch if @tg
--	 * was empty before @bio.  The forced scheduling isn't likely to
--	 * cause undue delay as @bio is likely to be dispatched directly if
--	 * its @tg's disptime is not in the future.
-+	 * was empty before @bio, or the iops queue is empty and @bio will
-+	 * add to.  The forced scheduling isn't likely to cause undue
-+	 * delay as @bio is likely to be dispatched directly if its @tg's
-+	 * disptime is not in the future.
- 	 */
--	if (tg->flags & THROTL_TG_WAS_EMPTY) {
-+	if (tg->flags & THROTL_TG_WAS_EMPTY ||
-+	    tg->flags & THROTL_TG_IOPS_WAS_EMPTY) {
- 		tg_update_disptime(tg);
- 		throtl_schedule_next_dispatch(tg->service_queue.parent_sq, true);
- 	}
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 04e92cfd0ab1..3b6e8184984a 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -55,9 +55,14 @@ struct throtl_service_queue {
- };
- 
- enum tg_state_flags {
--	THROTL_TG_PENDING	= 1 << 0,	/* on parent's pending tree */
--	THROTL_TG_WAS_EMPTY	= 1 << 1,	/* bio_lists[] became non-empty */
--	THROTL_TG_CANCELING	= 1 << 2,	/* starts to cancel bio */
-+	THROTL_TG_PENDING		= 1 << 0,	/* on parent's pending tree */
-+	THROTL_TG_WAS_EMPTY		= 1 << 1,	/* bio_lists[] became non-empty */
-+	/*
-+	 * The sq's iops queue is empty, and a bio is about to be enqueued
-+	 * to the first qnode's bios_iops list.
-+	 */
-+	THROTL_TG_IOPS_WAS_EMPTY	= 1 << 2,
-+	THROTL_TG_CANCELING		= 1 << 3,	/* starts to cancel bio */
- };
- 
- struct throtl_grp {
--- 
-2.46.1
+ 		total_bytes +=3D bio_bytes;
+ 		nr_bytes -=3D bio_bytes;
+=20
+--=20
+2.25.1
 
 
