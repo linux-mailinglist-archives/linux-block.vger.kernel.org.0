@@ -1,115 +1,144 @@
-Return-Path: <linux-block+bounces-20280-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20282-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 941A7A97C99
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 04:09:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34939A97CD1
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 04:33:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AA017ACA55
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 02:08:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9D9D3BF95B
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 02:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE0A710F9;
-	Wed, 23 Apr 2025 02:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="HmpxRr9X"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C6B263C8C;
+	Wed, 23 Apr 2025 02:33:26 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6477D263F45
-	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 02:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E111F16B
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 02:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745374172; cv=none; b=FOHcUfc6hmAtO6bAcBV2WI4+iREwBeODaNOxfqVz5JeuCtlKC7+UEOAmyzsN42g8rSyabYP/VFJVAHUhCPBAHk80uxnZLQPkdSp/29OEi4Ny+EcoAua2yzGwYOhYwq+CvNF4WD0+zyRCflGth7LS5N25Gsry9TFANzEewcTGano=
+	t=1745375605; cv=none; b=bc85SYKqA9o9LhEXggB2hNB21PAFPhEynye2AWcoMlva6LfAuQkgBVhh7O0y7HLl4BTMwhA06dj46Rz9c+7ZzEGL3RFZBLiBRoZLqgS9hqNDkCiLd5wcT5N46yOociEsolGkZUxHcdvmmrBEurSb/Vr2h42Oum7L3QiSxxtuK3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745374172; c=relaxed/simple;
-	bh=/NMem5ifgNES89PzacLrSaCky+MNKn14k07t4KV28GM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QAVA1pZchwFr5pNKII4gzk+YOWJRYzt0hHggLHPIDCe/aMypgte/KayUh0GxvIETpcecMeGqaDqyGxDECEEWpfEBmbmT1qP1DRTC4oNYjrsq3+LTkLPMv9S2J7gF2qtNwKN40zsGzN7jamZD338s8VyTWPAZTeuviT9F5uxFlYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=HmpxRr9X; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86135d11760so134931739f.2
-        for <linux-block@vger.kernel.org>; Tue, 22 Apr 2025 19:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745374168; x=1745978968; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bDncI1nPVws6EBYZHfi3/MSZu0PJAZs4upykCL1QGVY=;
-        b=HmpxRr9XLvbg9aiOvT5GTRaVODwGD7ofjXEmI0NwV4mXDTX9c9xT18WKlMiNLLzLhe
-         xrij/9gDLXH5y3jEZZp+vLbhb7n/F0CC3QeLEGCnDMKzNWQ8L1y1AQNZ+Ta1qm18l9z2
-         wE07bVYvVwuek2g3oLKugarlNElfoB5gQ4Xzw0hSGK1A4m/IaRqmWM3Teb8fwU2h4sTi
-         jiH3ukql4dSeqmrFEPft6vrv+cUKY4DfHEHGXF/NK6ux0GkmlmQ65lUI3TcDy6izoMQU
-         X71XS1GRKJj2c/L/7J8meH0hOz9bXh5EEtQ8+TNpVIYwcpvc6MuAwuz4P9jow5t4l00t
-         suiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745374168; x=1745978968;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bDncI1nPVws6EBYZHfi3/MSZu0PJAZs4upykCL1QGVY=;
-        b=wQK8STfCmBz6AHGOms83tYRqiKDar9TJN2sI/tc8OrPcd9DrskO0zGCkYsINBwqmk1
-         aKQkXTjCZYw2TEacfkQa+yDYlqLDskwix4VDt8/1reNidEMStpeYU+PgR7pT/MzG9l1q
-         J8ycXdrgxWQZc7p+p2KG+mjhUKRAl3/RnbpEuzYezL3ctv8CJ1I7Tc9iWbLMhhbqiok7
-         +WhY1bGjWBHPQl8zzMsTpgmgug0XarbvmZmZ9gmXIKSEH0gYSOO6s4LJ0qcefnj4vgaM
-         v7JxOdXmhrXPuRrzn27NBTFAQTteTfFtjwAGkCWtaKZx3pSbubb0aJpyrixxWsu8BJ6I
-         eGzw==
-X-Gm-Message-State: AOJu0YyFZER/gwzOMuFzlgt2zie/8eimC2nA6V+eyFUEWxAzzIjUCHml
-	AlBHG3IUmHexsYRq15pnWztIwle3/JABFkBu0O8wNc2ugDUn3P0sjp5INbtYVlE=
-X-Gm-Gg: ASbGnctuXzm/tlu6exWwOsdulXtz+ZM4AXkxTXLRyq6PR79uiVWMbILlcuhgEZ5bFTP
-	Pi3Uw6rGz2ytp4FSHaufSZBqKEYEbyL+mTL6oEtR7SpUiUv7pKmxiHZQkKVGyVvdVSN/XpCfzvR
-	5Y+atVRW0z203i/Ktp1ONHTIjrswTH0lzTcVGNo9FVPBhTKv4n+nbTxV1auFRFnwIw6pJRDisEV
-	tdZzCa1l7v1AdTv+aKVmGwxnE4g1GjirruFgXEJ8n48nGurMao9V0v4zsvl/TVmeX/jywmpNLjj
-	qULM26Wr/IU614Q3Xoi47kPAjQDro7Bc
-X-Google-Smtp-Source: AGHT+IEgm4a1sBAZfV84Lo+Jj62woBUyaarGSN3fVcO/fQpfQe7SP2Yo0ZBKUHqWAvQ1YYJuA9QRsQ==
-X-Received: by 2002:a05:6602:7506:b0:861:722e:2cbc with SMTP id ca18e2360f4ac-861dbedeb19mr2091941839f.12.1745374168145;
-        Tue, 22 Apr 2025 19:09:28 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3933d27sm2593769173.90.2025.04.22.19.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 19:09:27 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Ming Lei <ming.lei@redhat.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250416170154.3621609-1-csander@purestorage.com>
-References: <20250416170154.3621609-1-csander@purestorage.com>
-Subject: Re: [PATCH] ublk: remove unnecessary ubq checks
-Message-Id: <174537416718.373753.18092056116763739728.b4-ty@kernel.dk>
-Date: Tue, 22 Apr 2025 20:09:27 -0600
+	s=arc-20240116; t=1745375605; c=relaxed/simple;
+	bh=q8iNEepY34XyAFsk9ihOW1EbKY18bisuBlVuVP8CCDE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kSN7DleoGppTHx918Lz+QdT3XHmmzqmE7nOczD+7f2XatJxUavOATSns5XrpzbKlMzM6sheI5fA2lMo196FN3E2Iej7ZSnYyZ9qHTp74taWFIr4xJYWpyIgPTNoe0Q8X5EZ8DaR1vZlP2ZqFJyxDSU0wPYz4X1WF0w+9LpxNFYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj3711LFhz4f3kJw
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 10:33:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CDA2E1A07BB
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 10:33:19 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgB3219rUQhoCGcsKQ--.37591S4;
+	Wed, 23 Apr 2025 10:33:17 +0800 (CST)
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org
+Cc: yangerkun@huawei.com,
+	yukuai3@huawei.com,
+	wozizhi@huaweicloud.com,
+	ming.lei@redhat.com,
+	tj@kernel.org
+Subject: [PATCH V4 0/7] blk-throttle: Split the blkthrotl queue to solve the IO delay issue
+Date: Wed, 23 Apr 2025 10:22:54 +0800
+Message-ID: <20250423022301.3354136-1-wozizhi@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB3219rUQhoCGcsKQ--.37591S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFyfuryfAw4rAFW8Wr13XFb_yoW5Aw47pr
+	WfWw4Yk3WkJFsrK34fWrnIqaySq3ykJrZrCr97JrW3J3WkZrW0qr1fKrW8ZFWxAF9xWa1a
+	gryUtrs5uF1UZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
+	UU=
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
+Changes since V1-3:
+1) Updated the comments in patches 4 and 6 for greater specificity.
+2) In patch 6, replaced the @queued parameter with @sq in both
+throtl_qnode_add_bio and throtl_pop_queued to facilitate internal changes.
+And the potential problem of null pointer dereference has been fixed.
 
-On Wed, 16 Apr 2025 11:01:53 -0600, Caleb Sander Mateos wrote:
-> ublk_init_queues() ensures that all nr_hw_queues queues are initialized,
-> with each ublk_queue's q_id set to its index. And ublk_init_queues() is
-> called before ublk_add_chdev(), which creates the cdev. Is is therefore
-> impossible for the !ubq || ub_cmd->q_id != ubq->q_id condition to hit in
-> __ublk_ch_uring_cmd(). Remove it to avoids some branches in the I/O path.
-> 
-> 
-> [...]
+[BUG]
+The current blkthrotl code provides two types of throttling: BPS limit and
+IOPS limit. When both limits are enabled, an IO is only dispatched if it
+meets both the BPS and IOPS restrictions. However, when both BPS and IOPS
+are limited simultaneously, an IO delayed dispatch issue can occur due to
+IO splitting. For example, if two 1MB IOs are issued with a BPS limit of
+1MB/s and a very high IOPS limit, the IO splitting will cause both IOs to
+complete almost "simultaneously" in 2 seconds.
 
-Applied, thanks!
+[CAUSE]
+The root cause of this issue is that blkthrotl mixes BPS and IOPS into a
+single queue. When issuing multiple IOs sequentially, the continuously
+split IOs will repeatedly enter the same queue. As they alternately go
+through the throtl process, IOs that have already been throttled will have
+to wait for IOs that have not yet been throttled. As a result, all IOs will
+eventually complete almost together.
 
-[1/1] ublk: remove unnecessary ubq checks
-      commit: 4c7d3c88c77bf227c12ef13e8461a0c940f775e8
+[FIX]
+Since IO requests that have already been split no longer need to go through
+BPS throttling but still require IOPS control, this patchset splits the
+existing blkthrotl queue into two separate queues: BPS and IOPS.
+1) IO requests must first pass through the BPS queue.
+2) Once they meet the BPS limit, they proceed to the IOPS queue before
+being dispatched.
+3) Already split IO requests bypass the BPS queue and go directly to the
+IOPS queue.
 
-Best regards,
+[OVERVIEW]
+This patchset consists of 7 patches:
+1) Patch 1 is a simple clean_up.
+2) Patch 2-4, to facilitate the subsequent splitting of queues. Patch 2-3
+separate the -dispatch- and -charge- functions based on the BPS and IOPS.
+Patch 4 introduce a new flag to prevent double counting.
+3) Patch 5-6 splits the original single queue into two separate queues(BPS
+and IOPS) without altering the existing code logic.
+4) Patch 7 ensures that split IO requests bypass the BPS queue, preventing
+unnecessary throttling and eliminating the delay issue.
+
+Noted, a regression test is posted earlier:
+https://lore.kernel.org/all/20250307080318.3860858-3-yukuai1@huaweicloud.com/
+
+Zizhi Wo (7):
+  blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
+  blk-throttle: Refactor tg_dispatch_time by extracting
+    tg_dispatch_bps/iops_time
+  blk-throttle: Split throtl_charge_bio() into bps and iops functions
+  blk-throttle: Introduce flag "BIO_TG_BPS_THROTTLED"
+  blk-throttle: Split the blkthrotl queue
+  blk-throttle: Split the service queue
+  blk-throttle: Prevents the bps restricted io from entering the bps
+    queue again
+
+ block/blk-throttle.c      | 302 ++++++++++++++++++++++++--------------
+ block/blk-throttle.h      |  17 ++-
+ include/linux/blk_types.h |   8 +
+ 3 files changed, 214 insertions(+), 113 deletions(-)
+
 -- 
-Jens Axboe
-
-
+2.46.1
 
 
