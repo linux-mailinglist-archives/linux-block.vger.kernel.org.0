@@ -1,138 +1,135 @@
-Return-Path: <linux-block+bounces-20418-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20420-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 216C8A99ABE
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 23:29:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DAF9A99C03
+	for <lists+linux-block@lfdr.de>; Thu, 24 Apr 2025 01:28:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3732C1B681F1
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 21:29:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE1285A49A9
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 23:28:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F6B5268688;
-	Wed, 23 Apr 2025 21:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3012622F773;
+	Wed, 23 Apr 2025 23:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="R3bsEbHl"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V9t8UuGX"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F6C24468F
-	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 21:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466DB535D8
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 23:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745443747; cv=none; b=SaGCU7vz1B0DW7RtxMPlpZpldi/simG/2w9AEZLB+t5nvaQOExbcVxOh3uejyNeEEQqDQZnybo8SGN269fgLYi+xhdCZFKZuwdrN5OPpo5aaw5VHv94QaMB0SwpC2NMHDkRQW9MfzUdsTHeqvbHeIqrrymbjY2JTVf8DzWoX4Lw=
+	t=1745450913; cv=none; b=QeLuDvBW0gddeMWpMBLp5HTQnruB2fdizWGk5gB4Ac8XXPxMqwgjDKCcZOjhluBQJT+JTZ0GjCCLf1D8uW4p9p6go3t4wmWtQpZifQmC3HuNCR7i5VfgZBYpmQTCuRzV986jVFrXSBgO/IQOCEGRUd5LOHwsWMj63BN1Grc0ue4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745443747; c=relaxed/simple;
-	bh=VQOLPE77VFynA3OuP+UbKKlDLBd4nZcwYEnXe3Z4ge0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aBRTzIZEsTOmER+Sw6qi3PmdSWW/RqIUvzaHtLNRhB6Tebx4AhxDxR/bkFoAqxYovaUNCggqGT6hE/8PpZpXwSdvGycwde4kKgd/tlDxjdgCyaz4HtlnE0r/wDfgG8Raaqmjhh5ndHINUoXM3OYcCZrpswU00dqpjwWm1PS8tfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=R3bsEbHl; arc=none smtp.client-ip=209.85.219.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-6e900a7ce55so5312556d6.3
-        for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 14:29:05 -0700 (PDT)
+	s=arc-20240116; t=1745450913; c=relaxed/simple;
+	bh=a/m1kWZ0mMaRN3QIj2DGTgl1rk+XNi+SIx+XcpVWSeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=allkhwKxv4wAIXGZtPZpuui//C9/eQAKjXV6RzuqWGnafZrkYE0n5qHXXy0XgEcaKteEV895KnvP0G8dtz4ONT42XXxlsGz7E2wWRIRojKDV5TpmeJUcPYUXeKNyxKEfFTJbqdVVD9DuhGYzPsFvoE4Vu4dPRmEX2L9qgLBNrO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=V9t8UuGX; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5f720c717so178628885a.0
+        for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 16:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745443744; x=1746048544; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JCLEBLaRRQintuh2DWGEvr+93VgxR5KQlNFuF1s8elg=;
-        b=R3bsEbHl9k2XqkAG7VrttB9h0tJ+LLbqMhDgYj68NVu0/IEuF54hp1SoZYxQ/LUdR8
-         itGUpTUfUBM01vhn7NqHG8qOiXuvIoNbLHusrvykp+OHvqVIQ4uxebZ/SsuudI/124C6
-         mJKupJqejpnQVmKPcmLItLAYF/RH+w3rnWLGVcoFCbndPZn2MAB/PlrePnCp6iko/LUy
-         UN3Jbr0vV7LVlHt+5h35V/VfzAXtfFEyWT3x7NjuR687uEZjLtaRRv2BoimDGUxACFz9
-         cjLjq6aZPUf+B9DCg6qN8HZHMueuMC/0fDUHqNyc+nyeww1FxU0AjeEzcSnhTyI7Al6e
-         MJew==
+        d=ziepe.ca; s=google; t=1745450910; x=1746055710; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Go7qZaXvLQqCMqWTP9/Yf9f9Qu/B9pFeocBe+GrV9o=;
+        b=V9t8UuGXDFmTJrX2GuNBpF+35WEPvkVNvWY8r1L9hjJapeb+jb7Ce88japOM3vnENz
+         3RwZrf657MtShlvVnMrGuC7cZcKU8ofbe7YGWOVvN91vUualRrIH/gRseGCvdGkj9NG/
+         Ouh4B3Kf/ageHGydKSIQu5E4Ne4rxYQgQmsW8gojTKaxUbHSyTUGCmhEj1Or+XTQhcN4
+         cxLKHyHSpA42e+eoUA+JjP0yQSOGnfyrqmBZZumfsndKzCQ6HbTG3ahQv812gpJDwreu
+         eB5QSugKVOAWTM+tZ6x30M9o8jgtjt8moswwujXVwmrrloZkzEmh5UCv+a0Y8CpCAvud
+         VkTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745443744; x=1746048544;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JCLEBLaRRQintuh2DWGEvr+93VgxR5KQlNFuF1s8elg=;
-        b=c8AKUsmMiVfFSH1noK2yF4j78uZZ4vZ8Bbx5XKoa6B9PvD9bUaCfFTz0LoSi2fsH5o
-         HeE/49MRdabIrXuwcBuu+PUZucvzYSyJAun1wpjyPo5BXXJ0zqxUhDocOSlJBaQ+CCqC
-         1SKOuILTO621i5tj+0qw3cYzXqRxoK6T5uSXoup5+C7xBOzTadzsQ7T11WLVUIxox19u
-         OlnjZ1g3HqBLb+9xuw6ukyB+lJ+EvnmziE7+5bq5fH61WfmxFJyggQpA/ZAQcDKpzSia
-         GemPtNEHB3LefyXjXK1wZi7ZqwmYJWDWS2QXD+i48LrLGOib8eVYasC3V/Rus6gg8iNw
-         Vr2Q==
-X-Gm-Message-State: AOJu0YyuZHWU8mM+8uFg8Avgp/5EA5gHoLyTHXiut8T8mllzF2oVQ2Zb
-	l2tvDMPbaNR4T1UEeLlRG7eNpmig1W1hBZMddJEgqgAfQpjyH+klQRIB5NDy1hoxGZHHaXlPYcG
-	Ps24qyfqSpyusOOMuf0/Ryqrnf3BxbyYBk6YPXNiVBmEvEaKq
-X-Gm-Gg: ASbGncv/x4DMXMKmY6HcbnQlNXlj6JVabow3Z81lVgbw8XUPgt5qltIhyyeeT3ALKXE
-	o7ehA4mErPlz+WZb6Isx2yUVWjo23mWgd5alh4H2lbdIOMfr8Xezd6rwW21II0STEgi6BI6LZG4
-	FledRnGzVwLHyyZo9mXjD9Xq1N3tZEYGoVz+HP92bdnjAwEx8MUb4T+SjMi01eT8zizPXrqzQ0e
-	KXE4M3uWJqb0DWKJwmbgG6cqB5gAfbW53FauqqmX8nI92tpNRVfzcJ4GuM3AEMpIK+XPH/L8PnZ
-	Gv2TUBclL3P2bpA2VZRhy4MWC8ZKHQU=
-X-Google-Smtp-Source: AGHT+IHnxwparxBZcK/VdcwSG32LkVIXSTRmpTrN+S3RXdjd04hZ9i9TCbHB9cDNMgycgsgCMiBSIn3HDpqA
-X-Received: by 2002:a05:6214:500d:b0:6ea:d629:f492 with SMTP id 6a1803df08f44-6f4bfc7a7d9mr3649076d6.29.1745443744638;
-        Wed, 23 Apr 2025 14:29:04 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f2c2b1e111sm5267576d6.37.2025.04.23.14.29.04
+        d=1e100.net; s=20230601; t=1745450910; x=1746055710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Go7qZaXvLQqCMqWTP9/Yf9f9Qu/B9pFeocBe+GrV9o=;
+        b=QNSBCW1hWHxFpoFQVtHWqAgtAXc6OiYNdndfKVtwuFi558aw9LLNsS6vggkTGyTqQV
+         /Y4a8eF/Q6fQtxkbX5J6H/802GKhDmmOtDSU98+ndrzYl8ZxqnMArXJ9vnmeKb3vMdmW
+         FwAHxp4Gdr6PAetNCSC2BngIVqyAd0KYBdQHVA7HoHTlQhGxCcq/TeZ03LCub4qFc4db
+         0/CAYWDT17h/lN9v9KzyWrS8MLw3O3yEJoSwdiWbDgDXAUoJxcDW1WTGW+7K5PYahSAT
+         oQvOSNiKhCjzoBRk2m62qyYPri58EjTkwNbmDpS7DeSEkaE6MJNQR+yu3Q3+XEbBvzPD
+         mlBg==
+X-Forwarded-Encrypted: i=1; AJvYcCULTEbfw07awSacHBJ9cLfhCxez7n7TDPapwbHLdHeq28cANhU/X7JhrLrLhEHRfk7Hi+Gl4H8H1oc7HQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmDGQXi2p12D6Kj/cBXJ/ugpFwdjqWzFDTdpUFsLX4oH/T3bVX
+	MMvWuFG+IjNmT+z6iS5TJkM27t3TmX3pf5+Xc1PRCNUY5uo+xryDDDHJ/DJkr6k=
+X-Gm-Gg: ASbGncv7ZrMKc1IKgZHeLBpfIbCFOIF/Dzoyw18kdoXb+5DjBY0yNKfmGOByk2/HvCS
+	BAtpK0BnyJ0GbLNapofnTdG4iXU1XjaTJwTJfAzVLR3s08TLPbW23pT6tcDxfSGFYJxwiIZDY4Y
+	BGlcgeVyJoKm/IwZDdP8hWQiDVc9+EXcgRC6QtHopPQn3Adm/z7b2C4599YeurYS+xy037H3IUi
+	RBeBRTtxtWtaeCdtego+nt+dsaaHemwgNlHvsicG4jeV2+vh0r8htsfXbP+jJ/mx0M4ovlM1wcV
+	G05ixO1B/3/ArZ1sOS5Z1204oUYcAqf3bgB4t5MlZjKChhFaMovjuPpkfmgJUhJPtFoCUAi8QJc
+	l3+MmTUGeCB5TsPWj6Qo=
+X-Google-Smtp-Source: AGHT+IHQwoUGFyqXOFOgVitrB4+AxVC8d+UTNu2w6OYf0KswkT4EXsvYxHqs0LgYSSaBSDPbedDu/w==
+X-Received: by 2002:a05:620a:2887:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c9585c5877mr36268185a.11.1745450909829;
+        Wed, 23 Apr 2025 16:28:29 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958e7f154sm2581385a.76.2025.04.23.16.28.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 14:29:04 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id F2CA43409F5;
-	Wed, 23 Apr 2025 15:29:03 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id EBDFBE40E4A; Wed, 23 Apr 2025 15:29:03 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Wed, 23 Apr 2025 15:29:03 -0600
-Subject: [PATCH 2/2] selftests: ublk: common: fix _get_disk_dev_t for
- pre-9.0 coreutils
+        Wed, 23 Apr 2025 16:28:29 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7jW0-00000007PIX-0JOv;
+	Wed, 23 Apr 2025 20:28:28 -0300
+Date: Wed, 23 Apr 2025 20:28:28 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: jane.chu@oracle.com
+Cc: logane@deltatee.com, hch@lst.de, gregkh@linuxfoundation.org,
+	willy@infradead.org, kch@nvidia.com, axboe@kernel.dk,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org
+Subject: Re: Report: Performance regression from ib_umem_get on zone device
+ pages
+Message-ID: <20250423232828.GV1213339@ziepe.ca>
+References: <fe761ea8-650a-4118-bd53-e1e4408fea9c@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-ublk_selftests-v1-2-7d060e260e76@purestorage.com>
-References: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
-In-Reply-To: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe761ea8-650a-4118-bd53-e1e4408fea9c@oracle.com>
 
-Some distributions, such as centos stream 9, still have a version of
-coreutils which does not yet support the %Hr and %Lr formats for stat(1)
-[1, 2]. Running ublk selftests on these distributions results in the
-following error in tests that use the _get_disk_dev_t helper:
+On Wed, Apr 23, 2025 at 12:21:15PM -0700, jane.chu@oracle.com wrote:
 
-line 23: ?r: syntax error: operand expected (error token is "?r")
+> So this looks like a case of CPU cache thrashing, but I don't know to fix
+> it. Could someone help address the issue?  I'd be happy to help verifying.
 
-To better accommodate older distributions, rewrite _get_disk_dev_t to
-use the much older %t and %T formats for stat instead.
+I don't know that we can even really fix it if that is the cause.. But
+it seems suspect, if you are only doing 2M at a time per CPU core then
+that is only 512 struct pages or 32k of data. The GUP process will
+have touched all of that if device-dax is not creating folios. So why
+did it fall out of the cache?
 
-[1] https://github.com/coreutils/coreutils/blob/v9.0/NEWS#L114
-[2] https://pkgs.org/download/coreutils
+If it is creating folios then maybe we can improve things by
+recovering the folios before adding the pages.
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
- tools/testing/selftests/ublk/test_common.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Or is something weird going on like the device-dax is using 1G folios
+and all of these pins and checks are sharing and bouncing the same
+struct page cache lines?
 
-diff --git a/tools/testing/selftests/ublk/test_common.sh b/tools/testing/selftests/ublk/test_common.sh
-index 9fc111f64576f91adb731d436c2d535f7dfe5c2e..a81210ca3e99d264f84260aab35827e0c00add01 100755
---- a/tools/testing/selftests/ublk/test_common.sh
-+++ b/tools/testing/selftests/ublk/test_common.sh
-@@ -17,8 +17,8 @@ _get_disk_dev_t() {
- 	local minor
- 
- 	dev=/dev/ublkb"${dev_id}"
--	major=$(stat -c '%Hr' "$dev")
--	minor=$(stat -c '%Lr' "$dev")
-+	major="0x"$(stat -c '%t' "$dev")
-+	minor="0x"$(stat -c '%T' "$dev")
- 
- 	echo $(( (major & 0xfff) << 20 | (minor & 0xfffff) ))
- }
+Can the device-dax implement memfd_pin_folios()?
 
--- 
-2.34.1
+> The flow of a single test run:
+>   1. reserve virtual address space for (61440 * 2MB) via mmap with PROT_NONE
+> and MAP_ANONYMOUS | MAP_NORESERVE| MAP_PRIVATE
+>   2. mmap ((61440 * 2MB) / 12) from each of the 12 device-dax to the
+> reserved virtual address space sequentially to form a continual VA
+> space
 
+Like is there any chance that each of these 61440 VMA's is a single
+2MB folio from device-dax, or could it be?
+
+IIRC device-dax does could not use folios until 6.15 so I'm assuming
+it is not folios even if it is a pmd mapping?
+
+Jason
 
