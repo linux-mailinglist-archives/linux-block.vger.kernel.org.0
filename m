@@ -1,141 +1,135 @@
-Return-Path: <linux-block+bounces-20412-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20414-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25EA3A9997A
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 22:30:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56CCFA999B9
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 22:51:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C874F3A8A32
-	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 20:30:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97FEA463B24
+	for <lists+linux-block@lfdr.de>; Wed, 23 Apr 2025 20:51:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BEC0267736;
-	Wed, 23 Apr 2025 20:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F8E27935A;
+	Wed, 23 Apr 2025 20:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGUzH74f"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cTghGSDb"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f98.google.com (mail-pj1-f98.google.com [209.85.216.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C54686331;
-	Wed, 23 Apr 2025 20:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7311E2701BC
+	for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 20:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440230; cv=none; b=JQhMdnkTDNFFGwPdy2oAt96tQ8mWM8NNROKpulKfTbE+i7oQAvpwpPEiqQaXZLGvbC5ly1VbVyc+HCbRXNN5yseMIjh0Omrb+aEZnU2d+gesjwjNz8mcCjPKMbVmahuDgRQOixArHpCqe4+oeFezc6fYD36o+82Sd9m32zKEBXQ=
+	t=1745441497; cv=none; b=bVtzSaQkmnpnIyY4nAdiq1JALU6fiK8c0bdBes4d0kgKgMqNkwbOlJXgbZo4/rU7MarQdWKWROjMQ2joA7BCLMyX8t1ug9EswP+MLf8mOo/zjKSfKDKJJ7YtTrGZfa4AMk3i8J6SNlju+9cFTHVg47LI762Ue/XRAFTlDZmmfqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440230; c=relaxed/simple;
-	bh=zfnpkNpzO3aNFO+OP3lzklECKkdME0YLtwNkLDKthmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDzncxWFQOGzKuQjNJYn6yQVtIFWuvR4y890u3MMF7+fiVoKD3WyR6odx4QLbpZ0uMIlcw2Qn3SyZzgOtFazRvpBSpYrQe7o2PnS5nKrWMc1IvrKawEk0YDG184vtYIVT86zrxJdj9nuhxgyB+vdDBPendJEs3lxU4vgi6cKocU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGUzH74f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D447C4CEE2;
-	Wed, 23 Apr 2025 20:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745440229;
-	bh=zfnpkNpzO3aNFO+OP3lzklECKkdME0YLtwNkLDKthmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TGUzH74f/LbW6NCs62Zff+JfuLGq6keOuX4IvbzDuB7DNJNOg0P2wi/F/C8ehdk/k
-	 ko8avwyRSiYSNEzgOsF4orsz8i9yDCmLrQxklSvOxJvkHTtlgat36TbLOwMPEdgKks
-	 KqHhJjwCXz5fTZQzE9VhKvnXn4xGy5U/r+Dj3pIlWPS9FsefEAqf4rDvIG4/soxd3m
-	 QrGvXKFNUMWec92qJbCiTboJ5duU4pSb/Wu0PuCu6Hh2mhTKjgtQG2gC3sbfUSoxRP
-	 w2Ye2tW/1DgeFAXPwVlFyc7gyNmbc/Ij6EHFU/3HxoeSkLq0+6GWFKN4+/OrtRCoKf
-	 y27BZigv4ldQA==
-Date: Wed, 23 Apr 2025 13:30:27 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: dave@stgolabs.net, brauner@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	riel@surriel.com, willy@infradead.org, hannes@cmpxchg.org,
-	oliver.sang@intel.com, david@redhat.com, axboe@kernel.dk,
-	hare@suse.de, david@fromorbit.com, djwong@kernel.org,
-	ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, p.raghav@samsung.com, da.gomez@samsung.com,
-	syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 1/8] migrate: fix skipping metadata buffer heads on
- migration
-Message-ID: <aAlN4-pMHoc-PZ1G@bombadil.infradead.org>
-References: <20250410014945.2140781-1-mcgrof@kernel.org>
- <20250410014945.2140781-2-mcgrof@kernel.org>
- <dpn6pb7hwpmajoh5k5zla6x7fsmh4rlttstj3hkuvunp6tok3j@ikz2fxpikfv4>
- <Z_6Gwl6nowYnsO3w@bombadil.infradead.org>
- <mxmnbr6gni2lupljf7pzkhs6f3hynr2lq2nshbgcmzg77jduwk@wn76alaoxjts>
- <Z__hthNd2nj9QjrM@bombadil.infradead.org>
- <jwciumjkfwwjeoklsi6ubcspcjswkz5s5gtttzpjqft6dtb7sp@c4ae6y5pix5w>
+	s=arc-20240116; t=1745441497; c=relaxed/simple;
+	bh=Hk4CcxicHHVtPH18BOXInku52HV1nXKPB08vqHt5p+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mct3tHc/vju3H+b+8j15wtJTFWCK4oSMidUXff93EJHrS0iaPSJOI4nO72QaghLA4x0Io7sX8XW/Ws5Uy6keHNaHW285CxKJ2uuUClH2QFOq2QKomTE/aOSLhR7Hagz/0NON493qeOQ7X5RY54pE+LuzHiBzvzplapBzK0Y8nsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cTghGSDb; arc=none smtp.client-ip=209.85.216.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pj1-f98.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so34652a91.3
+        for <linux-block@vger.kernel.org>; Wed, 23 Apr 2025 13:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745441494; x=1746046294; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=goNu6vGqXHnJ8RO1fz4V5E7ge6aZfBjCMg2/5j2/saU=;
+        b=cTghGSDbEm+c2zlXX2a4rzHKFCXmrry4/ieFC/wkXO3FO1J2X2mv/6WD/QQ5Wotlmz
+         Xrknb4ySo4wohzfcyrGfdIv2KiB5wPm7w2kuqeEfxt0Bd3OAyR7b04SRnegHrqCzdPi/
+         vV9FkIl0HQCPkjBJpKdNFjFEqRbYaWW1D+GlDP/8n5eipnnRZ9sXH7dAwbAH0XwSGNTb
+         V5ooOeYo3DQAwjqiCZa+hYIWXdHZIvfXEGSBJfUSs72uzNYQaKXAv0gMQ1/n9zFHmLuN
+         cFEGDSmPtQkGegIaYDOwWR5A5we8swoNejZcRD4Svn2cHs9DUZ1/SwW3Fk3SK+4h7516
+         NZkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745441494; x=1746046294;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=goNu6vGqXHnJ8RO1fz4V5E7ge6aZfBjCMg2/5j2/saU=;
+        b=n+4w5Qa9GhvlJbR6CWwOk5AtG6EmVhz7pOTBXcMEUfjxEefPt5t7V2igQHf2+aqizs
+         W/rr4CPKeEEO5NgvEOgWgFjwV2FwNp0loZ4W7vuImxR0h6uV9BDlf3IAuYNHdanCzOcM
+         HSxiTwEL4laKf3cMrQDxnKqe7Kjmp6/OtXZVnHmc9n0WpIT7897qIbrI/FsrpX+WNvDr
+         EME438dEPSpVZTrsoJuw3ymiW3P1U3Qt0qd+0F9oA1mCdUJdCotDk5YpzwCmcdZWf840
+         65EyIf8H5VEErnxu7WMX1lyhfGXhoTFUIML8GvlI8Pc0vUm/WyORMyaTqSb53au6hecm
+         nW6g==
+X-Gm-Message-State: AOJu0Ywo3+Y/dE5X59g81Coto5CsfHsYsEGmpv/uxVp1XU1KfzoepoH5
+	FXmn7QR4c1ojF1hBffNE3QHQPMD/yQZb1ucyUTegCscfgyVtf74jnVXqciOO5uMb2enACfoNSix
+	3XAmlBHm3uaMCrljIm5PnFMJ0ec283SjJintOBhuivqe8+Btn
+X-Gm-Gg: ASbGncsrirnBmozNIEO3jH97NFvG+Vd3u96J0kOlVUeIt7tIiWmAh1IDUJreUlubk/e
+	khARVNI3oE56b1RbCRE/+e2hG6KT+/TZLzqgAGoOShqpB+2gu2hLOd+oX8nddZVIrig7ouiDz67
+	+SfP8KKU9qNNqZjFUcNliUNTb+cSh9vmwM6Sf0JaErTuKNa55rcbAZrib1nHQo/bIHby6lQtFt3
+	ymtYTHaeKTCPdLJAsFzwsV/FHOXEstMwZFcP94iDqPNQDlHuJGVG9QtpmXEw+U1+0zvkRZj52rZ
+	WSQCXPbeb3U3lLtWX1aYYe2iPtteYQ==
+X-Google-Smtp-Source: AGHT+IEZRHcMFxF+HVqKALRsVl/gqkKMSWX6d9LvtJXMiaBIYMjl7zUK+xTB64fko8CZygZIAEAvBSRvj0Jx
+X-Received: by 2002:a17:90b:33d0:b0:2ee:f59a:94d3 with SMTP id 98e67ed59e1d1-309ed3ce35cmr109800a91.0.1745441493574;
+        Wed, 23 Apr 2025 13:51:33 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-309df9daeefsm131362a91.2.2025.04.23.13.51.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 13:51:33 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id C8319340159;
+	Wed, 23 Apr 2025 14:51:32 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id B3126E428A5; Wed, 23 Apr 2025 14:51:32 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH 0/3] block: avoid hctx spinlock for plug with multiple queues
+Date: Wed, 23 Apr 2025 14:51:24 -0600
+Message-ID: <20250423205127.2976981-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jwciumjkfwwjeoklsi6ubcspcjswkz5s5gtttzpjqft6dtb7sp@c4ae6y5pix5w>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 07:09:28PM +0200, Jan Kara wrote:
-> On Wed 16-04-25 09:58:30, Luis Chamberlain wrote:
-> > On Tue, Apr 15, 2025 at 06:28:55PM +0200, Jan Kara wrote:
-> > > > So I tried:
-> > > > 
-> > > > root@e1-ext4-2k /var/lib/xfstests # fsck /dev/loop5 -y 2>&1 > log
-> > > > e2fsck 1.47.2 (1-Jan-2025)
-> > > > root@e1-ext4-2k /var/lib/xfstests # wc -l log
-> > > > 16411 log
-> > > 
-> > > Can you share the log please?
-> > 
-> > Sure, here you go:
-> > 
-> > https://github.com/linux-kdevops/20250416-ext4-jbd2-bh-migrate-corruption
-> > 
-> > The last trace-0004.txt is a fresh one with Davidlohr's patches
-> > applied. It has trace-0004-fsck.txt.
-> 
-> Thanks for the data! I was staring at them for some time and at this point
-> I'm leaning towards a conclusion that this is actually not a case of
-> metadata corruption but rather a bug in ext4 transaction credit computation
-> that is completely independent of page migration.
-> 
-> Based on the e2fsck log you've provided the only damage in the filesystem
-> is from the aborted transaction handle in the middle of extent tree growth.
-> So nothing points to a lost metadata write or anything like that. And the
-> credit reservation for page writeback is indeed somewhat racy - we reserve
-> number of transaction credits based on current tree depth. However by the
-> time we get to ext4_ext_map_blocks() another process could have modified
-> the extent tree so we may need to modify more blocks than we originally
-> expected and reserved credits for.
-> 
-> Can you give attached patch a try please?
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+blk_mq_flush_plug_list() has a fast path if all requests in the plug
+are destined for the same request_queue. It calls ->queue_rqs() with the
+whole batch of requests, falling back on ->queue_rq() for any requests
+not handled by ->queue_rqs(). However, if the requests are destined for
+multiple queues, blk_mq_flush_plug_list() has a slow path that calls
+blk_mq_dispatch_list() repeatedly to filter the requests by ctx/hctx.
+Each queue's requests are inserted into the hctx's dispatch list under a
+spinlock, then __blk_mq_sched_dispatch_requests() takes them out of the
+dispatch list (taking the spinlock again), and finally
+blk_mq_dispatch_rq_list() calls ->queue_rq() on each request.
 
-> From 4c53fb9f4b9b3eb4a579f69b7adcb6524d55629c Mon Sep 17 00:00:00 2001
-> From: Jan Kara <jack@suse.cz>
-> Date: Wed, 23 Apr 2025 18:10:54 +0200
-> Subject: [PATCH] ext4: Fix calculation of credits for extent tree modification
-> 
-> Luis and David are reporting that after running generic/750 test for 90+
-> hours on 2k ext4 filesystem, they are able to trigger a warning in
-> jbd2_journal_dirty_metadata() complaining that there are not enough
-> credits in the running transaction started in ext4_do_writepages().
-> 
-> Indeed the code in ext4_do_writepages() is racy and the extent tree can
-> change between the time we compute credits necessary for extent tree
-> computation and the time we actually modify the extent tree. Thus it may
-> happen that the number of credits actually needed is higher. Modify
-> ext4_ext_index_trans_blocks() to count with the worst case of maximum
-> tree depth.
-> 
-> Link: https://lore.kernel.org/all/20250415013641.f2ppw6wov4kn4wq2@offworld
-> Reported-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reported-by: Luis Chamberlain <mcgrof@kernel.org>
-> Signed-off-by: Jan Kara <jack@suse.cz>
+Acquiring the hctx spinlock twice and calling ->queue_rq() instead of
+->queue_rqs() makes the slow path significantly more expensive. Thus,
+batching more requests into a single plug (e.g. io_uring_enter syscall)
+can counterintuitively hurt performance by causing the plug to span
+multiple queues. We have observed 2-3% of CPU time spent acquiring the
+hctx spinlock alone on workloads issuing requests to multiple NVMe
+devices in the same io_uring SQE batches.
 
-I kicked off tests! Let's see after ~ 90 hours!
+Add a medium path in blk_mq_flush_plug_list() for plugs that don't have
+elevators or come from a schedule, but do span multiple queues. Filter
+the requests by queue and call ->queue_rqs()/->queue_rq() on the list of
+requests destined to each request_queue.
 
-  Luis
+With this change, we no longer see any CPU time spent in _raw_spin_lock
+from blk_mq_flush_plug_list and throughput increases accordingly.
+
+Caleb Sander Mateos (3):
+  block: take rq_list instead of plug in dispatch functions
+  block: factor out blk_mq_dispatch_queue_requests() helper
+  block: avoid hctx spinlock for plug with multiple queues
+
+ block/blk-mq.c      | 106 +++++++++++++++++++++++++++++++-------------
+ block/mq-deadline.c |   2 +-
+ 2 files changed, 75 insertions(+), 33 deletions(-)
+
+-- 
+2.45.2
+
 
