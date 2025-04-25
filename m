@@ -1,80 +1,83 @@
-Return-Path: <linux-block+bounces-20566-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20568-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C6C6A9C5A0
-	for <lists+linux-block@lfdr.de>; Fri, 25 Apr 2025 12:36:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4838CA9C5A2
+	for <lists+linux-block@lfdr.de>; Fri, 25 Apr 2025 12:36:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0484C189537F
-	for <lists+linux-block@lfdr.de>; Fri, 25 Apr 2025 10:34:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE96A16ACCB
+	for <lists+linux-block@lfdr.de>; Fri, 25 Apr 2025 10:34:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A8A219305;
-	Fri, 25 Apr 2025 10:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67EC18D;
+	Fri, 25 Apr 2025 10:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hmu2loh5"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TOVDi8yP"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549FA20102B
-	for <linux-block@vger.kernel.org>; Fri, 25 Apr 2025 10:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BEB19D8A7
+	for <linux-block@vger.kernel.org>; Fri, 25 Apr 2025 10:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577239; cv=none; b=DmUNeySG2RrztZ4415BEO6NBvSfqfO1exGeoz2zvPeaRKdT8ma3frdhb223MPeJqB0XjGHQy0SZPCLlklcqQCM+MDY8uRVDMvhxs/ViCMceKu1hQ1I2nPbpnezI21m8uMznhxlcTAjko2XkMJWY3ajMOQB/Iy2wiZRAzyxSptSQ=
+	t=1745577242; cv=none; b=YvTWjSKm0DlEBU32+mE73s/AXsmtRCmcE8Da920Qk2Xnbp8kyLH6uevlR4ItGuwz7+5vGMUy5OLhOU8FD1j0oEkhEa3iLxdtNkzuh2ohru8UYvNOBPR2VAOxTWF/BCCDOKHZ9vdx4Zf63oOKWauQT3swEVFF6+fX62LYkh2idTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577239; c=relaxed/simple;
-	bh=igcYz/L6Ab150PMarOKiRTEJ4k+OD0mC6k3Ha2eImnE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lTcwySsiTHiAueMwrmdpjClkXJjQ5FfupGAMsKtCj5ST4FcoODpD3rR21CLuacJjzeM+oQDV91zdbloX6ygFrTB0W0oShY4dSnZDy0uCaunjOFpEw2tD6tc/Nji9GNXyEykw5UbLo/k8To/8+KId14str2efaQqv29tpNC1CIGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hmu2loh5; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1745577242; c=relaxed/simple;
+	bh=vOg1w1bfdJxjCjgWjOm90o/ZVH17RqFXlboUi2SB4S4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Fld6hMn04f03P6MSPk5UdSBNwr3t+eBUdoJlhxO6NtDcYba6qdBExgOkh0quyereKR6JAcJGa3SgpDTqyVt9Lfl6+LS7JBW04zUFoPsxEzhx+mCCh7ymIr97UOTfvSTyLt7LSxI/HzNL7DzuxSikzzggjYuA+fNIn1QKKEwdunA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TOVDi8yP; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P9jsI9025843;
-	Fri, 25 Apr 2025 10:33:27 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8BOj6023585;
+	Fri, 25 Apr 2025 10:33:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=1Jm8Wwm8ypDbV+3LHaBooGsLA7z5orOub9/v/ehTS
-	yo=; b=hmu2loh5bDjk3YRSjcQ+koX7wU4Xdny5O1tPsyxMgD0/kF0YwN4UVevXJ
-	xW5zMn8dIUY9ll3NjtLXbRWqKC+nlwSu3R6LugJ9eM32Uhqu51fG7uJmGUZKdvAb
-	lc1eKcM8wyP+x+cu0nq5PDhMG9zD4aSY8bvaJlOdMjjKkaE5KVL4w4PG1EiKGVdR
-	PnL1DOxXUcn3eBTzuxcx3d7U2s/gAWaaflBmQr6UmkOT4JMUrbYuo+BsLVpU/04Z
-	MoVFwYLToJMD2gXsuDxl41M9AF62Dt3jy444SVzIBwzrr4KXh3bHJ8ERK1G9BqzH
-	Qcjh2ICuOuR4sxEhSKN0VL8ZavZzQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467y90t9dp-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=7pFzRnJiEU0xCg0J2
+	cfbd3MR8Avp3RNWpuH9UseBap4=; b=TOVDi8yPQj1tCG6+AxBTc5TVDRsWK/QMs
+	1LArnbPdw85PAAVdKdak9NagEe8SnWUNQ1gPbtPSskHS3ILLre/yNbghRaAsnrET
+	EZHuCVbyoOC/JZAVyscWub7+UyJmjDXHZQB+FDSI+m6NzWoGlF0692QlTNwk1Y2g
+	vOBSIe4UoEnkZVa4N96/t4P6t9My9tU7BzcPtchl3CwT3F0TPv8ZA/jbgZ9OMxiW
+	OQFVdi6u+asIO1zoBfq60Nl3loWyf9f373NdSJaJz7L4qgKHl69KbUVnevUnoGZn
+	gOdChTJ8mWMKnb+c2RV8hifAPI2+3H91ZJPjxGUZlWfBPJpNNVJFA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467krswsek-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 10:33:27 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8UWvc028447;
-	Fri, 25 Apr 2025 10:33:26 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvvrkv-1
+	Fri, 25 Apr 2025 10:33:31 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8E5rQ000973;
+	Fri, 25 Apr 2025 10:33:30 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfy4sds-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 10:33:26 +0000
+	Fri, 25 Apr 2025 10:33:30 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53PAXO2440304990
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53PAXS0d30605612
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 10:33:24 GMT
+	Fri, 25 Apr 2025 10:33:28 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 86D6120043;
-	Fri, 25 Apr 2025 10:33:24 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4BBED20043;
+	Fri, 25 Apr 2025 10:33:28 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6D4D520040;
-	Fri, 25 Apr 2025 10:33:21 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 20E6A20040;
+	Fri, 25 Apr 2025 10:33:25 +0000 (GMT)
 Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.43.102.9])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 25 Apr 2025 10:33:21 +0000 (GMT)
+	Fri, 25 Apr 2025 10:33:24 +0000 (GMT)
 From: Nilay Shroff <nilay@linux.ibm.com>
 To: linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
 Cc: hch@lst.de, kbusch@kernel.org, hare@suse.de, sagi@grimberg.me,
         jmeneghi@redhat.com, axboe@kernel.dk, martin.petersen@oracle.com,
         gjoyce@ibm.com
-Subject: [RFC PATCHv2 0/3] improve NVMe multipath handling
-Date: Fri, 25 Apr 2025 16:03:07 +0530
-Message-ID: <20250425103319.1185884-1-nilay@linux.ibm.com>
+Subject: [RFC PATCHv2 1/3] nvme-multipath: introduce delayed removal of the multipath head node
+Date: Fri, 25 Apr 2025 16:03:08 +0530
+Message-ID: <20250425103319.1185884-2-nilay@linux.ibm.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425103319.1185884-1-nilay@linux.ibm.com>
+References: <20250425103319.1185884-1-nilay@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -83,93 +86,374 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=aZRhnQot c=1 sm=1 tr=0 ts=680b64f7 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=9r6QK0OtAAAA:8 a=VnNF1IyMAAAA:8 a=j6BUnaCqT4P7MYeGl-oA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA3MyBTYWx0ZWRfX4YOHG8m1XCgX TIcidunC/a6pQjzGUDpFH1gyrPv/4UAWOoyDSIvU9ywY2qjo/67MKH4e9JUfWus4GXrSw8iG7gr yqP5Kmvy/K6zSQbm4icAgDwERbZiG6DKVM0r890XB7H+k0E7jOyE+fjFDjZUqpBsXG+KTu14tCr
+ qVdZHjSkMPHU0/9l8MQnWYKEKzXbkj7r1/Nc80muC/I4PnlWspEsMl9kBqZ7C35IgfSl/jTQwuf VfTMKhg9ONYlkqMRpTuZ/o1GNJ7jA3yHaNqTQfCM+niSH17njgfy/LtojjMbBtMkdQvDehzkltR nTDQtCM/TgX9YaZMdjAD0fzf7KRZguxLwJG8oBNbPWBfXb/hyAKAcwsU0LsSqWdyP3cZAd7Uhhp
+ xHj7owgGwsEHNo4JBTFcS6rtI1bLSHNRMoe2Mrstj8tLDwB9j7dqSbUscKv2xU9mHetWRsyn
+X-Proofpoint-GUID: Qh1aVyoHQYumjNeZuXGYLm1rjHO_BoFr
+X-Authority-Analysis: v=2.4 cv=IciHWXqa c=1 sm=1 tr=0 ts=680b64fb cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=9r6QK0OtAAAA:8 a=VnNF1IyMAAAA:8 a=m8i3lSHGKz98L6CpTF4A:9
  a=1CNFftbPRP8L7MoqJWF3:22 a=TxIH8fH_K59pr5-VUUuU:22
-X-Proofpoint-GUID: NhMmGBaqEXdsqtqKqQ7s7fI2tcpUK8w8
-X-Proofpoint-ORIG-GUID: NhMmGBaqEXdsqtqKqQ7s7fI2tcpUK8w8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA3MyBTYWx0ZWRfX7heYKteHaZ8U PMYJ4d0EYxihQRuce7Gr9XwGggZyHepxYM/ZRFq4dtQQnf/FfI1ADHChZorucIg2CUCR+RjdUUS TdrZyaysDZQGGYV1eztH/+0rlUrExJ6rAPnqDg43dLdeW2ehEh2tjbEAFp/myJZ3ipyO63lzHkD
- wK3jSl6MlIqZfBY5jBCd+uPaR0FBApGmWM/vHSObMgi0gbqxtviaWa7aMBLBZydGDbx8p4EuTKA WJodlkq5jvMK2HCcn/ALxw5HtbDIwCTT0a3I9ualyIUfzq3+N95ub1mxJ7KVy24XXjyujWNZXhR muQgzhWt0eSDqPDMk/n1V4nU4C27aOlJzPxZNKWXiJJR89dQH0SbVpUrN39+gQc+SatpZd6FNOF
- aPoIYckgPaM7v0f3kTLY9Fu96CKUH5pdnKtXBU5PjpE2UORzs3rTV15t/ZWxX6TYbwcDyuGp
+X-Proofpoint-ORIG-GUID: Qh1aVyoHQYumjNeZuXGYLm1rjHO_BoFr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- clxscore=1015 mlxlogscore=999 impostorscore=0 mlxscore=0 malwarescore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504250073
 
-Hi,
+Currently, the multipath head node of a PCIe NVMe disk is removed
+immediately as soon as all paths of the disk are removed. However,
+this can cause issues in scenarios where:
 
-This patch series introduces improvements to NVMe multipath handling by
-refining the removal behavior of the multipath head node and simplifying
-configuration options. The idea/POC for this change was originally
-proposed by Christoph[1] and Keith[2]. I worked upon their original
-idea/POC and implemented this series.
-
-The first patch in the series addresses an issue where the multipath
-head node of a PCIe NVMe disk is removed immediately when all disk paths
-are lost. This can cause problems in scenarios such as:
-- Hot removal and re-addition of a disk.
+- The disk hot-removal followed by re-addition.
 - Transient PCIe link failures that trigger re-enumeration,
-  briefly removing and restoring the disk.
+  temporarily removing and then restoring the disk.
 
-In such cases, premature removal of the head node may result in a device
-node name change, requiring applications to reopen device handles if
-they were performing I/O during the failure. To mitigate this, we
-introduce a delayed removal mechanism. Instead of removing the head node
-immediately, the system waits for a configurable timeout, allowing the
-disk to recover. If the disk comes back online within this window, the
-head node remains unchanged, ensuring uninterrupted workloads.
+In these cases, removing the head node prematurely may lead to a head
+disk node name change upon re-addition, requiring applications to
+reopen their handles if they were performing I/O during the failure.
 
-A new sysfs attribute, delayed_removal_secs, allows users to configure
-this timeout. By default, it is set to 0 seconds, preserving the
-existing behavior unless explicitly changed.
+To address this, introduce a delayed removal mechanism of head disk
+node. During transient failure, instead of immediate removal of head
+disk node, the system waits for a configurable timeout, allowing the
+disk to recover.
 
-The second patch in the series introduced multipath_head_always module
-param. When this option is set, it force creating multipath head disk
-node even for single ported NVMe disks or private namespaces and thus
-allows delayed head node removal. This would help handle transient PCIe
-link failures transparently even in case of single ported NVMe disk or a
-private namespace
+During transient disk failure, if application sends any IO then we
+queue it instead of failing such IO immediately. If the disk comes back
+online within the timeout, the queued IOs are resubmitted to the disk
+ensuring seamless operation. In case disk couldn't recover from the
+failure then queued IOs are failed to its completion and application
+receives the error.
 
-The third patch in the series doesn't make any functional changes but
-just renames few of the function name which improves code readability
-and it better aligns function names with their actual roles.
+So this way, if disk comes back online within the configured period,
+the head node remains unchanged, ensuring uninterrupted workloads
+without requiring applications to reopen device handles.
 
-These changes should help improve NVMe multipath reliability and simplify
-configuration. Feedback and testing are welcome!
+A new sysfs attribute, named "delayed_removal_secs" is added under head
+disk blkdev for user who wish to configure time for the delayed removal
+of head disk node. The default value of this attribute is set to zero
+second ensuring no behavior change unless explicitly configured.
 
-[1] https://lore.kernel.org/linux-nvme/Y9oGTKCFlOscbPc2@infradead.org/
-[2] https://lore.kernel.org/linux-nvme/Y+1aKcQgbskA2tra@kbusch-mbp.dhcp.thefacebook.com/
+Link: https://lore.kernel.org/linux-nvme/Y9oGTKCFlOscbPc2@infradead.org/
+Link: https://lore.kernel.org/linux-nvme/Y+1aKcQgbskA2tra@kbusch-mbp.dhcp.thefacebook.com/
+Suggested-by: Keith Busch <kbusch@kernel.org>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+[nilay: reworked based on the original idea/POC from Christoph and Keith]
+Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+---
+ drivers/nvme/host/core.c      |  16 ++---
+ drivers/nvme/host/multipath.c | 119 +++++++++++++++++++++++++++++++---
+ drivers/nvme/host/nvme.h      |  12 ++++
+ drivers/nvme/host/sysfs.c     |  13 ++++
+ 4 files changed, 141 insertions(+), 19 deletions(-)
 
-Changes from v1:
-    - Renamed delayed_shutdown_sec to delayed_removal_secs as "shutdown"
-      has a special meaning when used with NVMe device (Martin Petersen)
-    - Instead of adding mpath head disk node always by default, added new
-      module option nvme_core.multipath_head_always which when set creates
-      mpath head disk node (even for a private namespace or a namespace
-      backed by single ported nvme disk). This way we can preserve the
-      default old behavior.(hch)
-    - Renamed nvme_mpath_shutdown_disk function as shutdown as in the NVMe
-      context, the term "shutdown" has a specific technical meaning. (hch)
-    - Undo changes which removed multipath module param as this param is
-      still useful and used for many different things.
-
-Link to v1: https://lore.kernel.org/all/20250321063901.747605-1-nilay@linux.ibm.com/
-
-Nilay Shroff (3):
-  nvme-multipath: introduce delayed removal of the multipath head node
-  nvme: introduce multipath_head_always module param
-  nvme: rename nvme_mpath_shutdown_disk to nvme_mpath_remove_disk
-
- drivers/nvme/host/core.c      |  18 ++--
- drivers/nvme/host/multipath.c | 193 ++++++++++++++++++++++++++++++----
- drivers/nvme/host/nvme.h      |  20 +++-
- drivers/nvme/host/sysfs.c     |  13 +++
- 4 files changed, 211 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index eb6ea8acb3cc..5755069e6974 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3560,7 +3560,7 @@ static struct nvme_ns_head *nvme_find_ns_head(struct nvme_ctrl *ctrl,
+ 		 */
+ 		if (h->ns_id != nsid || !nvme_is_unique_nsid(ctrl, h))
+ 			continue;
+-		if (!list_empty(&h->list) && nvme_tryget_ns_head(h))
++		if (nvme_tryget_ns_head(h))
+ 			return h;
+ 	}
+ 
+@@ -3688,6 +3688,8 @@ static struct nvme_ns_head *nvme_alloc_ns_head(struct nvme_ctrl *ctrl,
+ 	ratelimit_state_init(&head->rs_nuse, 5 * HZ, 1);
+ 	ratelimit_set_flags(&head->rs_nuse, RATELIMIT_MSG_ON_RELEASE);
+ 	kref_init(&head->ref);
++	if (ctrl->opts)
++		nvme_mpath_set_fabrics(head);
+ 
+ 	if (head->ids.csi) {
+ 		ret = nvme_get_effects_log(ctrl, head->ids.csi, &head->effects);
+@@ -3804,7 +3806,8 @@ static int nvme_init_ns_head(struct nvme_ns *ns, struct nvme_ns_info *info)
+ 		}
+ 	} else {
+ 		ret = -EINVAL;
+-		if (!info->is_shared || !head->shared) {
++		if ((!info->is_shared || !head->shared) &&
++		    !list_empty(&head->list)) {
+ 			dev_err(ctrl->device,
+ 				"Duplicate unshared namespace %d\n",
+ 				info->nsid);
+@@ -3986,8 +3989,6 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
+ 
+ static void nvme_ns_remove(struct nvme_ns *ns)
+ {
+-	bool last_path = false;
+-
+ 	if (test_and_set_bit(NVME_NS_REMOVING, &ns->flags))
+ 		return;
+ 
+@@ -4007,10 +4008,6 @@ static void nvme_ns_remove(struct nvme_ns *ns)
+ 
+ 	mutex_lock(&ns->ctrl->subsys->lock);
+ 	list_del_rcu(&ns->siblings);
+-	if (list_empty(&ns->head->list)) {
+-		list_del_init(&ns->head->entry);
+-		last_path = true;
+-	}
+ 	mutex_unlock(&ns->ctrl->subsys->lock);
+ 
+ 	/* guarantee not available in head->list */
+@@ -4028,8 +4025,7 @@ static void nvme_ns_remove(struct nvme_ns *ns)
+ 	mutex_unlock(&ns->ctrl->namespaces_lock);
+ 	synchronize_srcu(&ns->ctrl->srcu);
+ 
+-	if (last_path)
+-		nvme_mpath_shutdown_disk(ns->head);
++	nvme_mpath_shutdown_disk(ns->head);
+ 	nvme_put_ns(ns);
+ }
+ 
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 250f3da67cc9..68318337c275 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -442,6 +442,23 @@ static bool nvme_available_path(struct nvme_ns_head *head)
+ 			break;
+ 		}
+ 	}
++
++	/*
++	 * If "head->delayed_removal_secs" is configured (i.e., non-zero), do
++	 * not immediately fail I/O. Instead, requeue the I/O for the configured
++	 * duration, anticipating that if there's a transient link failure then
++	 * it may recover within this time window. This parameter is exported to
++	 * userspace via sysfs, and its default value is zero.
++	 * Note: This option is not exposed to the users for NVMeoF connections.
++	 * In fabric-based setups, fabric link failure is managed through other
++	 * parameters such as "reconnect_delay" and "max_reconnects" which is
++	 * handled at respective fabric driver layer. Therefor, head->delayed_
++	 * removal_secs" is intended exclusively for non-fabric (e.g., PCIe)
++	 * multipath configurations.
++	 */
++	if (head->delayed_removal_secs)
++		return true;
++
+ 	return false;
+ }
+ 
+@@ -617,6 +634,40 @@ static void nvme_requeue_work(struct work_struct *work)
+ 	}
+ }
+ 
++static void nvme_remove_head(struct nvme_ns_head *head)
++{
++	if (test_and_clear_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
++		/*
++		 * requeue I/O after NVME_NSHEAD_DISK_LIVE has been cleared
++		 * to allow multipath to fail all I/O.
++		 */
++		kblockd_schedule_work(&head->requeue_work);
++
++		nvme_cdev_del(&head->cdev, &head->cdev_device);
++		synchronize_srcu(&head->srcu);
++		del_gendisk(head->disk);
++		nvme_put_ns_head(head);
++	}
++}
++
++static void nvme_remove_head_work(struct work_struct *work)
++{
++	struct nvme_ns_head *head = container_of(to_delayed_work(work),
++			struct nvme_ns_head, remove_work);
++	bool shutdown = false;
++
++	mutex_lock(&head->subsys->lock);
++	if (list_empty(&head->list)) {
++		list_del_init(&head->entry);
++		shutdown = true;
++	}
++	mutex_unlock(&head->subsys->lock);
++	if (shutdown)
++		nvme_remove_head(head);
++
++	module_put(THIS_MODULE);
++}
++
+ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
+ {
+ 	struct queue_limits lim;
+@@ -626,6 +677,8 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
+ 	spin_lock_init(&head->requeue_lock);
+ 	INIT_WORK(&head->requeue_work, nvme_requeue_work);
+ 	INIT_WORK(&head->partition_scan_work, nvme_partition_scan_work);
++	INIT_DELAYED_WORK(&head->remove_work, nvme_remove_head_work);
++	head->delayed_removal_secs = 0;
+ 
+ 	/*
+ 	 * Add a multipath node if the subsystems supports multiple controllers.
+@@ -659,6 +712,7 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
+ 	set_bit(GD_SUPPRESS_PART_SCAN, &head->disk->state);
+ 	sprintf(head->disk->disk_name, "nvme%dn%d",
+ 			ctrl->subsys->instance, head->instance);
++	nvme_tryget_ns_head(head);
+ 	return 0;
+ }
+ 
+@@ -1015,6 +1069,40 @@ static ssize_t numa_nodes_show(struct device *dev, struct device_attribute *attr
+ }
+ DEVICE_ATTR_RO(numa_nodes);
+ 
++static ssize_t delayed_removal_secs_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct gendisk *disk = dev_to_disk(dev);
++	struct nvme_ns_head *head = disk->private_data;
++	int ret;
++
++	mutex_lock(&head->subsys->lock);
++	ret = sysfs_emit(buf, "%u\n", head->delayed_removal_secs);
++	mutex_unlock(&head->subsys->lock);
++	return ret;
++}
++
++static ssize_t delayed_removal_secs_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct gendisk *disk = dev_to_disk(dev);
++	struct nvme_ns_head *head = disk->private_data;
++	unsigned int sec;
++	int ret;
++
++	ret = kstrtouint(buf, 0, &sec);
++	if (ret < 0)
++		return ret;
++
++	mutex_lock(&head->subsys->lock);
++	head->delayed_removal_secs = sec;
++	mutex_unlock(&head->subsys->lock);
++
++	return count;
++}
++
++DEVICE_ATTR_RW(delayed_removal_secs);
++
+ static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
+ 		struct nvme_ana_group_desc *desc, void *data)
+ {
+@@ -1138,18 +1226,31 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, __le32 anagrpid)
+ 
+ void nvme_mpath_shutdown_disk(struct nvme_ns_head *head)
+ {
+-	if (!head->disk)
+-		return;
+-	if (test_and_clear_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
+-		nvme_cdev_del(&head->cdev, &head->cdev_device);
++	bool shutdown = false;
++
++	mutex_lock(&head->subsys->lock);
++
++	if (!list_empty(&head->list))
++		goto out;
++
++	if (head->delayed_removal_secs) {
+ 		/*
+-		 * requeue I/O after NVME_NSHEAD_DISK_LIVE has been cleared
+-		 * to allow multipath to fail all I/O.
++		 * Ensure that no one could remove this module while the head
++		 * remove work is pending.
+ 		 */
+-		synchronize_srcu(&head->srcu);
+-		kblockd_schedule_work(&head->requeue_work);
+-		del_gendisk(head->disk);
++		if (!try_module_get(THIS_MODULE))
++			goto out;
++		queue_delayed_work(nvme_wq, &head->remove_work,
++				head->delayed_removal_secs * HZ);
++	} else {
++		list_del_init(&head->entry);
++		if (head->disk)
++			shutdown = true;
+ 	}
++out:
++	mutex_unlock(&head->subsys->lock);
++	if (shutdown)
++		nvme_remove_head(head);
+ }
+ 
+ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 51e078642127..74cd569882ce 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -503,7 +503,10 @@ struct nvme_ns_head {
+ 	struct work_struct	partition_scan_work;
+ 	struct mutex		lock;
+ 	unsigned long		flags;
++	struct delayed_work	remove_work;
++	unsigned int		delayed_removal_secs;
+ #define NVME_NSHEAD_DISK_LIVE	0
++#define NVME_NSHEAD_FABRICS	1
+ 	struct nvme_ns __rcu	*current_path[];
+ #endif
+ };
+@@ -986,12 +989,17 @@ extern struct device_attribute dev_attr_ana_grpid;
+ extern struct device_attribute dev_attr_ana_state;
+ extern struct device_attribute dev_attr_queue_depth;
+ extern struct device_attribute dev_attr_numa_nodes;
++extern struct device_attribute dev_attr_delayed_removal_secs;
+ extern struct device_attribute subsys_attr_iopolicy;
+ 
+ static inline bool nvme_disk_is_ns_head(struct gendisk *disk)
+ {
+ 	return disk->fops == &nvme_ns_head_ops;
+ }
++static inline void nvme_mpath_set_fabrics(struct nvme_ns_head *head)
++{
++	set_bit(NVME_NSHEAD_FABRICS, &head->flags);
++}
+ #else
+ #define multipath false
+ static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+@@ -1078,6 +1086,10 @@ static inline void nvme_mpath_end_request(struct request *rq)
+ static inline bool nvme_disk_is_ns_head(struct gendisk *disk)
+ {
+ 	return false;
++}
++static inline void nvme_mpath_set_fabrics(struct nvme_ns_head *head)
++{
++
+ }
+ #endif /* CONFIG_NVME_MULTIPATH */
+ 
+diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+index 6d31226f7a4f..51633670d177 100644
+--- a/drivers/nvme/host/sysfs.c
++++ b/drivers/nvme/host/sysfs.c
+@@ -260,6 +260,7 @@ static struct attribute *nvme_ns_attrs[] = {
+ 	&dev_attr_ana_state.attr,
+ 	&dev_attr_queue_depth.attr,
+ 	&dev_attr_numa_nodes.attr,
++	&dev_attr_delayed_removal_secs.attr,
+ #endif
+ 	&dev_attr_io_passthru_err_log_enabled.attr,
+ 	NULL,
+@@ -296,6 +297,18 @@ static umode_t nvme_ns_attrs_are_visible(struct kobject *kobj,
+ 		if (nvme_disk_is_ns_head(dev_to_disk(dev)))
+ 			return 0;
+ 	}
++	if (a == &dev_attr_delayed_removal_secs.attr) {
++		struct nvme_ns_head *head = dev_to_ns_head(dev);
++		struct gendisk *disk = dev_to_disk(dev);
++
++		/*
++		 * This attribute is only valid for head node and non-fabric
++		 * setup.
++		 */
++		if (!nvme_disk_is_ns_head(disk) ||
++				test_bit(NVME_NSHEAD_FABRICS, &head->flags))
++			return 0;
++	}
+ #endif
+ 	return a->mode;
+ }
 -- 
 2.49.0
 
