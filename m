@@ -1,223 +1,99 @@
-Return-Path: <linux-block+bounces-20643-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20645-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C17D0A9DE5B
-	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 03:26:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AE98A9DE63
+	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 03:37:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07A6346235B
-	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 01:26:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B8715A06D1
+	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 01:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4A4182D0;
-	Sun, 27 Apr 2025 01:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yt4WyB7X"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2231FFC55;
+	Sun, 27 Apr 2025 01:37:18 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113CA17C91
-	for <linux-block@vger.kernel.org>; Sun, 27 Apr 2025 01:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86C5661;
+	Sun, 27 Apr 2025 01:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745717189; cv=none; b=BDuQBwFggXI9l8XzRmPDvFAZ2121Vo2FCkZVawOtZTnQsymut+BIHysF/OnIRfMpjmzxN+n2CsNxdDXDFnRIEE6x5sOt1uACgDvjTsJ563XxSLPIH3sJIjw2CwsB351Qlb3hLMy0qcagJ3tufI2LNbpBFrFV/wW4CZqxhdy2r6Q=
+	t=1745717838; cv=none; b=fJLUWz8YESQtjodFa1vds99e1Q3UjnHoarOeJdjOdJxQq9MHfZTtG4rF88MvI8AWzf7s3GJHrtv4AjS9SzmCSfAL/IMy4VFywxkGYa4RnO+B64g//ol7LTCcg38A4X9FBd9+JaWGCPJnX1d890h6jDBGiJzRxZk367opvlorTaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745717189; c=relaxed/simple;
-	bh=LAauA1t2p/T8IfzM3YUFW1sC6Ik7MGlFPYmcBco6lTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQvE2jYkjf3LaoJOopet4uBwLeX4t3d+10lgeuNhUYehZaHIM32nSayo/xNBem4LddWIZMUm8/yXrzW/aDB6iUjlZ5Dt6XLikbM0DrcLcT/t5ioFEb19cddohkImE8XdT6itUmMU0eqAmwfmhUGzZUr6Y2OR39Fhnv8+MK4O9VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yt4WyB7X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745717185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mWBKW94kK3rvtGGVcXAV595CfInb3nXTmlwJBdxCNz8=;
-	b=Yt4WyB7XSWsLaxAiWiZN2GqCaKvKj0fGZmn38jQzzNzUAOU3pwfmcuhSaSd/TG8czD0zgD
-	zoDOZRxgchtXo8o7o7KLHzbe2NDoQ//GlRXX6iUAgGYQJ33I5y2uwajLAZvJZItIas+aTL
-	CKuWHaUlVR5pBPXv1m9792nZAqFQTLE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-245-S-zGSGT8M36pfKYVPgcAFg-1; Sat,
- 26 Apr 2025 21:26:23 -0400
-X-MC-Unique: S-zGSGT8M36pfKYVPgcAFg-1
-X-Mimecast-MFC-AGG-ID: S-zGSGT8M36pfKYVPgcAFg_1745717182
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6720B1800261;
-	Sun, 27 Apr 2025 01:26:22 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.41])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE89118002AD;
-	Sun, 27 Apr 2025 01:26:18 +0000 (UTC)
-Date: Sun, 27 Apr 2025 09:26:13 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Uday Shankar <ushankar@purestorage.com>
-Subject: Re: [PATCH 1/4] selftests: ublk: fix UBLK_F_NEED_GET_DATA
-Message-ID: <aA2HtRzfVEVmJeUG@fedora>
-References: <20250426094111.1292637-1-ming.lei@redhat.com>
- <20250426094111.1292637-2-ming.lei@redhat.com>
- <CADUfDZobcEmDMOYTJh5E5FFsLdYaio3xK96amLm1_MCtpyv0FA@mail.gmail.com>
+	s=arc-20240116; t=1745717838; c=relaxed/simple;
+	bh=FvBxvV778LoatI+v+YK3cVyGvx8TJr8MXzRsyaqkYbU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=T9WAA1gI3g8wwJt1wRuHgilG1XTtPEW/545A2yEuoHnCLP03+5UEp9vKxCXMFL2Tz/4qaVoS+5fSomRkzgYLiyE4W/QS+kFT7eFqwnPNzLTi5tmntHRqB7QDvZgH1hZsh1vMngnB2stAe9THk+vVKqXx40RlTX7zTNEzCoWm2wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZlTh80Dlsz4f3kvh;
+	Sun, 27 Apr 2025 09:36:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A05181A06D7;
+	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCH618+ig1obRS4Kg--.18096S3;
+	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
+Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ song@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+ nadav.amit@gmail.com, ubizjak@gmail.com, cl@linux.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
+ <20250418010941.667138-5-yukuai1@huaweicloud.com>
+ <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <f14eac30-ab65-85b2-3e65-de6d50ea15e2@huaweicloud.com>
+Date: Sun, 27 Apr 2025 09:37:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADUfDZobcEmDMOYTJh5E5FFsLdYaio3xK96amLm1_MCtpyv0FA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-CM-TRANSID:gCh0CgCH618+ig1obRS4Kg--.18096S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_GFv_Wryl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	OmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Sat, Apr 26, 2025 at 01:15:58PM -0700, Caleb Sander Mateos wrote:
-> On Sat, Apr 26, 2025 at 2:41 AM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > Commit 57e13a2e8cd2 ("selftests: ublk: support user recovery") starts to
-> > support UBLK_F_NEED_GET_DATA for covering recovery feature, however the
-> > ublk utility implementation isn't done correctly.
-> >
-> > Fix it by supporting UBLK_F_NEED_GET_DATA correctly.
-> >
-> > Also add test generic_07 for covering UBLK_F_NEED_GET_DATA.
-> 
-> Looks good to me, just a few minor comments.
-> 
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
-> 
-> >
-> > Fixes: 57e13a2e8cd2 ("selftests: ublk: support user recovery")
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  tools/testing/selftests/ublk/Makefile         |  1 +
-> >  tools/testing/selftests/ublk/kublk.c          | 11 +++++---
-> >  tools/testing/selftests/ublk/kublk.h          |  1 +
-> >  .../testing/selftests/ublk/test_generic_07.sh | 25 +++++++++++++++++++
-> >  4 files changed, 35 insertions(+), 3 deletions(-)
-> >  create mode 100755 tools/testing/selftests/ublk/test_generic_07.sh
-> >
-> > diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-> > index ec4624a283bc..f34ac0bac696 100644
-> > --- a/tools/testing/selftests/ublk/Makefile
-> > +++ b/tools/testing/selftests/ublk/Makefile
-> > @@ -9,6 +9,7 @@ TEST_PROGS += test_generic_03.sh
-> >  TEST_PROGS += test_generic_04.sh
-> >  TEST_PROGS += test_generic_05.sh
-> >  TEST_PROGS += test_generic_06.sh
-> > +TEST_PROGS += test_generic_07.sh
-> >
-> >  TEST_PROGS += test_null_01.sh
-> >  TEST_PROGS += test_null_02.sh
-> > diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-> > index e57a1486bb48..701b47f98902 100644
-> > --- a/tools/testing/selftests/ublk/kublk.c
-> > +++ b/tools/testing/selftests/ublk/kublk.c
-> > @@ -538,10 +538,12 @@ int ublk_queue_io_cmd(struct ublk_queue *q, struct ublk_io *io, unsigned tag)
-> >
-> >         /* we issue because we need either fetching or committing */
-> >         if (!(io->flags &
-> > -               (UBLKSRV_NEED_FETCH_RQ | UBLKSRV_NEED_COMMIT_RQ_COMP)))
-> > +               (UBLKSRV_NEED_FETCH_RQ | UBLKSRV_NEED_COMMIT_RQ_COMP | UBLKSRV_NEED_GET_DATA)))
-> 
-> Comment could use an update
-> 
-> >                 return 0;
-> >
-> > -       if (io->flags & UBLKSRV_NEED_COMMIT_RQ_COMP)
-> > +       if (io->flags & UBLKSRV_NEED_GET_DATA)
-> > +               cmd_op = UBLK_U_IO_NEED_GET_DATA;
-> > +       else if (io->flags & UBLKSRV_NEED_COMMIT_RQ_COMP)
-> >                 cmd_op = UBLK_U_IO_COMMIT_AND_FETCH_REQ;
-> >         else if (io->flags & UBLKSRV_NEED_FETCH_RQ)
-> >                 cmd_op = UBLK_U_IO_FETCH_REQ;
-> > @@ -658,6 +660,9 @@ static void ublk_handle_cqe(struct io_uring *r,
-> >                 assert(tag < q->q_depth);
-> >                 if (q->tgt_ops->queue_io)
-> >                         q->tgt_ops->queue_io(q, tag);
-> > +       } else if (cqe->res == UBLK_IO_RES_NEED_GET_DATA) {
-> > +               io->flags |= UBLKSRV_NEED_GET_DATA | UBLKSRV_IO_FREE;
-> > +               ublk_queue_io_cmd(q, io, tag);
-> >         } else {
-> >                 /*
-> >                  * COMMIT_REQ will be completed immediately since no fetching
-> > @@ -1313,7 +1318,7 @@ int main(int argc, char *argv[])
-> >
-> >         opterr = 0;
-> >         optind = 2;
-> > -       while ((opt = getopt_long(argc, argv, "t:n:d:q:r:e:i:az",
-> > +       while ((opt = getopt_long(argc, argv, "t:n:d:q:r:e:i:g:az",
-> >                                   longopts, &option_idx)) != -1) {
-> 
-> It's a little strange for -g to take an argument since it's basically
-> a boolean flag. But it looks like several other flags behave the same
-> way.
+Hi,
 
-Yeah, we can make it one bool flag.
+在 2025/04/22 14:35, Xiao Ni 写道:
+>> +       unsigned long                   last_events;    /* IO event timestamp */
+> Can we use another name? Because mddev has events counter. This name
+> can easily be confused with that counter.
 
+Sorry for the late reply.
 
-> 
-> >                 switch (opt) {
-> >                 case 'a':
-> > diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-> > index 918db5cd633f..44ee1e4ac55b 100644
-> > --- a/tools/testing/selftests/ublk/kublk.h
-> > +++ b/tools/testing/selftests/ublk/kublk.h
-> > @@ -115,6 +115,7 @@ struct ublk_io {
-> >  #define UBLKSRV_NEED_FETCH_RQ          (1UL << 0)
-> >  #define UBLKSRV_NEED_COMMIT_RQ_COMP    (1UL << 1)
-> >  #define UBLKSRV_IO_FREE                        (1UL << 2)
-> > +#define UBLKSRV_NEED_GET_DATA           (1UL << 3)
-> >         unsigned short flags;
-> >         unsigned short refs;            /* used by target code only */
-> >
-> > diff --git a/tools/testing/selftests/ublk/test_generic_07.sh b/tools/testing/selftests/ublk/test_generic_07.sh
-> > new file mode 100755
-> > index 000000000000..5d82b5955006
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ublk/test_generic_07.sh
-> > @@ -0,0 +1,25 @@
-> > +#!/bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-> > +
-> > +TID="generic_07"
-> > +ERR_CODE=0
-> > +
-> > +_prep_test "generic" "test UBLK_F_NEED_GET_DATA"
-> > +
-> > +_create_backfile 0 256M
-> > +dev_id=$(_add_ublk_dev -t loop -q 2 -g 1 "${UBLK_BACKFILES[0]}")
-> > +_check_add_dev $TID $?
-> > +
-> > +# run fio over the ublk disk
-> > +if ! _run_fio_verify_io --filename=/dev/ublkb"${dev_id}" --size=256M; then
-> > +       _cleanup_test "generic"
-> > +       _show_result $TID 255
-> 
-> Propagate the return code from fio?
+Sure, how about, normal_IO_events?
 
-OK.
-
-> 
-> > +fi
-> 
-> All the other tests that use _run_fio_verify_io appear to check
-> _have_program fio first. Is that necessary here too?
-
-Will add the check.
-
-
-Thanks, 
-Ming
+Thanks,
+Kuai
 
 
