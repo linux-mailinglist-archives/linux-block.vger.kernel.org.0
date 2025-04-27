@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-20672-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20675-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B874A9E0EE
-	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 10:37:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D889CA9E0F6
+	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 10:38:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35E7217D6F5
-	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 08:37:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1E9F3BBF37
+	for <lists+linux-block@lfdr.de>; Sun, 27 Apr 2025 08:37:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8592A24C080;
-	Sun, 27 Apr 2025 08:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417D224EF6B;
+	Sun, 27 Apr 2025 08:37:15 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1872459EC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB8B2475CB;
 	Sun, 27 Apr 2025 08:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745743034; cv=none; b=EcuASN7XfEUVMOYsGZGS//PTkL+2rkh6x1C4eYQYb/6tjge2zTxSUHO3ZRtEQoZn20hXyklaHIyx2vu8EhR6wN0abeQZJjlYs2h0kI1+nnIJRYRiTY3wQGariHz3NCXdUmiXZAON66nQHjWlZ1QJs5r/byEBe1m+8lgRKB3E1sA=
+	t=1745743035; cv=none; b=nTmrhuyuTxIAhbSCdGOLzg4ea1/QSig7zDPFy+uk4kdXOUvDwFPlNajmfjnpgjBzLOtvY3/ByeebQeIlXNkv/vKMldrjLazLSYaRQ8TiRwLKVLXrM+AhDK72D62FWrvJKwd+zdEIBKvD8Oo1aIjBIVOn2ZcXcTCW/S3xq8ucmXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745743034; c=relaxed/simple;
-	bh=Fy+XrpR+XQNXmNL2PJU2JswxEOnS0jPUJGAsgpm1quQ=;
+	s=arc-20240116; t=1745743035; c=relaxed/simple;
+	bh=fXcNQwWqeVyBqzxcd5v2VPNaXfbyZPMYGJAkOljc/Ac=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GOjQhXOZgsecyb6FUkgovizlF80JzYVfAGUbAbT0MxuOOrAYTXFwIPd8XYaQmUKC08yErkne6gdAI1JE8IbdD/IFGrhs2MZ8WTyeeBUr8ym1tHVQA1YLT99bBk+EhatlxCVrGGYeHtlmso1rLzxa4Tdp0BTJBEgAC7Ik3Vb1mUs=
+	 MIME-Version; b=g12tvrsahpblczQitw2wg7iplKZFMrpwGx/FnZ/fvTneroCyxDTy8D/B1pOVJuSUppXyeyuEzjc0dEq62VAeqjrDetBZdMJh3PAbG/IHPtR+D0ftZlT9q0dSqJh1RtJo+makircFuCxhJAyuqyNAYZ3ZmyltwvwvFEnEsHfmYTw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zlg0x4RYDz4f3jtW;
-	Sun, 27 Apr 2025 16:36:49 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zlg0y2Pmqz4f3jqb;
+	Sun, 27 Apr 2025 16:36:50 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 607361A18EC;
-	Sun, 27 Apr 2025 16:37:08 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 2656D1A0ECD;
+	Sun, 27 Apr 2025 16:37:09 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgDHGsWx7A1oOv4xKg--.7274S5;
+	by APP3 (Coremail) with SMTP id _Ch0CgDHGsWx7A1oOv4xKg--.7274S6;
 	Sun, 27 Apr 2025 16:37:08 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@infradead.org,
@@ -59,9 +59,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v2 1/9] blk-mq: remove blk_mq_in_flight()
-Date: Sun, 27 Apr 2025 16:29:20 +0800
-Message-Id: <20250427082928.131295-2-yukuai1@huaweicloud.com>
+Subject: [PATCH v2 2/9] block: reuse part_in_flight_rw for part_in_flight
+Date: Sun, 27 Apr 2025 16:29:21 +0800
+Message-Id: <20250427082928.131295-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250427082928.131295-1-yukuai1@huaweicloud.com>
 References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
@@ -72,70 +72,77 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDHGsWx7A1oOv4xKg--.7274S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFyrKrW7Wry8ArW3Kw4kZwb_yoW8Jw4UpF
-	W5Gan8CrW2gr18uFy8tanrX3Wayws8KryxAwsxAry5tr18Kr13ZF18Zr4kZr4SvrZ3uFZr
-	uFs0yFy7CF10g37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
-	0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7sRMv31JUUUUU==
+X-CM-TRANSID:_Ch0CgDHGsWx7A1oOv4xKg--.7274S6
+X-Coremail-Antispam: 1UD129KBjvJXoWrtFyUXryDCr48Xr1UGF43GFg_yoW8Jr48pr
+	4SkasIyFWDGr1fur10qr4xXa4ftw4UK34xZ343A34ftF4UJFnxZr93Kwn2yrySvr97Zay5
+	u34YyFy7GF1UZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjTRNiSHDUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-It's not used and can be removed.
+They are almost identical, to make code cleaner.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/blk-mq.c | 10 ----------
- block/blk-mq.h |  2 --
- 2 files changed, 12 deletions(-)
+ block/genhd.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c2697db59109..301dbd3e1743 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -101,16 +101,6 @@ static bool blk_mq_check_inflight(struct request *rq, void *priv)
- 	return true;
+diff --git a/block/genhd.c b/block/genhd.c
+index c2bd86cd09de..f671d9ee00c4 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -125,21 +125,6 @@ static void part_stat_read_all(struct block_device *part,
+ 	}
  }
  
--unsigned int blk_mq_in_flight(struct request_queue *q,
--		struct block_device *part)
+-unsigned int part_in_flight(struct block_device *part)
 -{
--	struct mq_inflight mi = { .part = part };
+-	unsigned int inflight = 0;
+-	int cpu;
 -
--	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, &mi);
+-	for_each_possible_cpu(cpu) {
+-		inflight += part_stat_local_read_cpu(part, in_flight[0], cpu) +
+-			    part_stat_local_read_cpu(part, in_flight[1], cpu);
+-	}
+-	if ((int)inflight < 0)
+-		inflight = 0;
 -
--	return mi.inflight[0] + mi.inflight[1];
+-	return inflight;
 -}
 -
- void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
+ static void part_in_flight_rw(struct block_device *part,
  		unsigned int inflight[2])
  {
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 3011a78cf16a..a23d5812d08f 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -246,8 +246,6 @@ static inline bool blk_mq_hw_queue_mapped(struct blk_mq_hw_ctx *hctx)
- 	return hctx->nr_ctx && hctx->tags;
+@@ -157,6 +142,15 @@ static void part_in_flight_rw(struct block_device *part,
+ 		inflight[1] = 0;
  }
  
--unsigned int blk_mq_in_flight(struct request_queue *q,
--		struct block_device *part);
- void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
- 		unsigned int inflight[2]);
- 
++unsigned int part_in_flight(struct block_device *part)
++{
++	unsigned int inflight[2];
++
++	part_in_flight_rw(part, inflight);
++
++	return inflight[READ] + inflight[WRITE];
++}
++
+ /*
+  * Can be deleted altogether. Later.
+  *
 -- 
 2.39.2
 
