@@ -1,156 +1,125 @@
-Return-Path: <linux-block+bounces-20813-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20817-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89624A9FD86
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 01:08:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5947A9FD97
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 01:11:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B8001898EBB
-	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 23:09:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68A0F189A89D
+	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 23:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFB9F20E71E;
-	Mon, 28 Apr 2025 23:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB6F214A75;
+	Mon, 28 Apr 2025 23:10:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAo2m5kD"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="KkgYZ2sK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942A51FDE33;
-	Mon, 28 Apr 2025 23:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDECD2139BF
+	for <linux-block@vger.kernel.org>; Mon, 28 Apr 2025 23:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881734; cv=none; b=p0ujX1j8tEtMaLnh1HpiqE/OU4nBiMB+4B8sMexUDXHM/4o4VI39OVHb68MOdP/Nld/zdpMX4ROzzmjeDsv4/0vCD8iXcxM5S7hoQV61zVZz+Stxg8xq1DHFYl9KhI8DpVlz6BnQYvsEi2V7QLMZDAppL8Oq4Miced57aHrLbJw=
+	t=1745881846; cv=none; b=ly6u/Bk3N7tViHcK0jsrcNBCtWK7Z2d5StjvapDxqJcqEihYtvI5iHoRGemPDpY6c3k+XXGc+i9IcTNBuZFcsjrw30IVoAZo0kPYCE1sb3Lha8ZiaxjHMN6pEbatsAZxSQjRBs/nPw1XpbentQS1CbkxYrad+6HGH/iKYDB7uhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881734; c=relaxed/simple;
-	bh=vqxx5ITJdSbi8gq6eMAJPI6323cJXEPOZV0uX68kTH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMDvgKKDVLWdgod4YnuUx/8UoK54+Y/pJoFu+avEyvl8wvPROmFRSJ/lqJF2e8WAIyUIEcvMinmC874lyQWuN7gB+Ly9f02YZX1QLi8a3NnI4lS6cRNQUTRjQpAv+PmIXUfnvBHPe2UY0OzLwwLWEVPkw4mwkCMPJQLsiUepJ5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAo2m5kD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 758BEC4CEEA;
-	Mon, 28 Apr 2025 23:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745881734;
-	bh=vqxx5ITJdSbi8gq6eMAJPI6323cJXEPOZV0uX68kTH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iAo2m5kDb/pyyuC1rocXxoL0N1J5litPpu4IU4vvH9RlaSurRgMiRuC0StJYwJ6ZX
-	 Q1I0GxiJP02d1MFtoUl9pIlXptXQyJ2X9XqF6jAH++8FsnuYu4V36TsMG3GG5HMK3k
-	 n91FsddH55UK4FiM12V+6iRlQTSUXLjGuCw4MVwqScW6T0TSxTl1vsJ9MWlHNasAUJ
-	 q/Jaw/mD4HJtSHOu5rpx/hNziVnnZCnj6+RcGXaNcueNqwzfTTCKL32m2Doe0t5fnV
-	 AUhQ6ESgl/O4EI59CoEIXtx/PIZ7OnE590VpI1x6QJ1rLGuowPdRY28JebcVDePVNg
-	 0xMYFw45xkBpw==
-Date: Mon, 28 Apr 2025 16:08:52 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: dave@stgolabs.net, brauner@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	riel@surriel.com, willy@infradead.org, hannes@cmpxchg.org,
-	oliver.sang@intel.com, david@redhat.com, axboe@kernel.dk,
-	hare@suse.de, david@fromorbit.com, djwong@kernel.org,
-	ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, p.raghav@samsung.com, da.gomez@samsung.com,
-	syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 1/8] migrate: fix skipping metadata buffer heads on
- migration
-Message-ID: <aBAKhPBAdGVrII2Y@bombadil.infradead.org>
-References: <20250410014945.2140781-1-mcgrof@kernel.org>
- <20250410014945.2140781-2-mcgrof@kernel.org>
- <dpn6pb7hwpmajoh5k5zla6x7fsmh4rlttstj3hkuvunp6tok3j@ikz2fxpikfv4>
- <Z_6Gwl6nowYnsO3w@bombadil.infradead.org>
- <mxmnbr6gni2lupljf7pzkhs6f3hynr2lq2nshbgcmzg77jduwk@wn76alaoxjts>
- <Z__hthNd2nj9QjrM@bombadil.infradead.org>
- <jwciumjkfwwjeoklsi6ubcspcjswkz5s5gtttzpjqft6dtb7sp@c4ae6y5pix5w>
- <aAlN4-pMHoc-PZ1G@bombadil.infradead.org>
- <aAwSCSG1c-t8ATr3@bombadil.infradead.org>
+	s=arc-20240116; t=1745881846; c=relaxed/simple;
+	bh=V6z7U2aK13VlHSymACPvCl0r1Hj+jEq5qL59ctGJ8CE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GfR7m64LmxhzS1e27+ddYEO7nTPAqdusW83T7QxhD3NmL22XBOtKw3l6i9H69pNkqTSXbrP1XeDPcyDwmBGXvrZ0pp26PbnvEk9YfYaa5QHNhJZuG+dXgHD9Qgh4qElyTMWkfwFfgxf4qj0HxqpwOlU/Z+Mss0unoFHYDyFQnUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=KkgYZ2sK; arc=none smtp.client-ip=209.85.166.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d4436ba324so51882295ab.2
+        for <linux-block@vger.kernel.org>; Mon, 28 Apr 2025 16:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745881843; x=1746486643; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uoJLVk2Sn62iG3PhsVN8tZ93FRDpe04tgFauvMGG8/c=;
+        b=KkgYZ2sK2Ukxo33EhXPUzCCASiABHFHNrttxWcm85bkJPll48PxGzr2RgE2DQudMWN
+         TAn1o9037H9ULzRijwpOy53jN7zFdfb8Yhg4V1cuWWt7rWYHA9/0Z70AB9C9rQy88kYd
+         cBSWO1KBS7X6dFik7uDd62LzmRk6IXFoDBLOLUCYT9TmaFsmfSOZzHxPa1Mt+uk9wBIU
+         CtMwotGFnqG31iXyLzYj2fFCz3gxUwYqAXNIsn3cALOOvjzEgaAicbbxqG2rkdTpZ88p
+         EIDyq3e3cGHv9UP1MWEytKLAscXNPI1Mitui1TE/IFToEPgvIj0huKrQRkgrCg0yjLox
+         gISA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745881843; x=1746486643;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uoJLVk2Sn62iG3PhsVN8tZ93FRDpe04tgFauvMGG8/c=;
+        b=nonMgrSY0dAGTCO/UHyVr2pYtDQFtMgMBgMu82mlrgvcrqHRVC8lTKogjHr31EUG+K
+         ASTk3CMkdrAjWrt7FptGFuhZuHj7tI2emkZBOq8rFUf7B9XTKZqxVjGAjCvZcdHyhTpj
+         Y/zdB6qM1Z6ZL1KXrrI/p6Dn5i3eybRimCuJsGbOkuLiK7vyNaQ72g/S0T7uILNs7UNo
+         +B9IVpJzvQuPNJqvuEyvXSplHaf2emFhPAMgHGrKADFu1raG1N4Ze66F56SvK60KxxU6
+         HJ0VsEgQU4iJ/u5z8jSA+dnAT9cEmvLTGZwnPboyx1BJ8IVwssPZim7TWUGy8WKXdrkm
+         qmAQ==
+X-Gm-Message-State: AOJu0Yz7x2qzWMiHjOw5Cq/XEabEJgxrHwy6VOE1Dpz3/e3GwFs2Kz7z
+	YmKnUaPmf0yWcN2drfpAQbLHcllgANQrq84zG/o4UNlVxW9dtC+UQhn78WO/fHkmntDBQlrbWR5
+	DUqFNlZl/gsgWqNPCW7oT2PAQW6nTK+PC
+X-Gm-Gg: ASbGncudlbQNI3G111LYPfn6o1Bw+HVOd6j65pMTqv2G69WWKj8c2kebEXyOrvzCHbC
+	JvlXV9sWZfPuuCeXNGfsI5nYWhCLRjx5vV1H64PYmQevzKi+ErvCOS3xlceMlo9MjHO6igQlwIV
+	Ci4qtuETLERV3hTBQuUJHKItg2SpECfn4rVjgGRNYr3X+QtAHytUtrSydVc7m/NaL3JGU+bXJSJ
+	I6ebSh1Z9gDV33H1rSX6JVCjh/tvM1HAnwJHQjO86SMsnaJXQ//iXYaHM0lw92YSXptHbldJcq+
+	UG3G1nVEWLlHX0x29C1n4xX/aEKeV3Idw3LlDxUckiKDBw==
+X-Google-Smtp-Source: AGHT+IGe5A9W9y3Mo5+kfpnNwmt5KhFphAnNJ2Rtm6xsdCtc5buF0dbnv7TNmO2d5giTwkyXslJWgll3DbLo
+X-Received: by 2002:a05:6e02:2146:b0:3d6:d145:2ffb with SMTP id e9e14a558f8ab-3d942e42573mr129606055ab.21.1745881842428;
+        Mon, 28 Apr 2025 16:10:42 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d95f45294dsm80395ab.44.2025.04.28.16.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 16:10:42 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 41243340BC4;
+	Mon, 28 Apr 2025 17:10:41 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 30933E4191D; Mon, 28 Apr 2025 17:10:41 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH 0/3] selftests: ublk: more misc fixes
+Date: Mon, 28 Apr 2025 17:10:19 -0600
+Message-Id: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAwSCSG1c-t8ATr3@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANsKEGgC/x3M0QpAQBBA0V/RPNtas7bwK5Kwg4nQzpKSf7d5P
+ A/3PiDkmQSq5AFPFwvvW0SWJjDM3TaRYhcNqNHqHAt19uvSCq1jIAmiysJgrp3pDFqI0eFp5Ps
+ f1s37fvvmW3hgAAAA
+X-Change-ID: 20250428-ublk_selftests-983240d3a325
+To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-On Fri, Apr 25, 2025 at 03:51:55PM -0700, Luis Chamberlain wrote:
-> On Wed, Apr 23, 2025 at 01:30:29PM -0700, Luis Chamberlain wrote:
-> > On Wed, Apr 23, 2025 at 07:09:28PM +0200, Jan Kara wrote:
-> > > On Wed 16-04-25 09:58:30, Luis Chamberlain wrote:
-> > > > On Tue, Apr 15, 2025 at 06:28:55PM +0200, Jan Kara wrote:
-> > > > > > So I tried:
-> > > > > > 
-> > > > > > root@e1-ext4-2k /var/lib/xfstests # fsck /dev/loop5 -y 2>&1 > log
-> > > > > > e2fsck 1.47.2 (1-Jan-2025)
-> > > > > > root@e1-ext4-2k /var/lib/xfstests # wc -l log
-> > > > > > 16411 log
-> > > > > 
-> > > > > Can you share the log please?
-> > > > 
-> > > > Sure, here you go:
-> > > > 
-> > > > https://github.com/linux-kdevops/20250416-ext4-jbd2-bh-migrate-corruption
-> > > > 
-> > > > The last trace-0004.txt is a fresh one with Davidlohr's patches
-> > > > applied. It has trace-0004-fsck.txt.
-> > > 
-> > > Thanks for the data! I was staring at them for some time and at this point
-> > > I'm leaning towards a conclusion that this is actually not a case of
-> > > metadata corruption but rather a bug in ext4 transaction credit computation
-> > > that is completely independent of page migration.
-> > > 
-> > > Based on the e2fsck log you've provided the only damage in the filesystem
-> > > is from the aborted transaction handle in the middle of extent tree growth.
-> > > So nothing points to a lost metadata write or anything like that. And the
-> > > credit reservation for page writeback is indeed somewhat racy - we reserve
-> > > number of transaction credits based on current tree depth. However by the
-> > > time we get to ext4_ext_map_blocks() another process could have modified
-> > > the extent tree so we may need to modify more blocks than we originally
-> > > expected and reserved credits for.
-> > > 
-> > > Can you give attached patch a try please?
-> > > 
-> > > 								Honza
-> > > -- 
-> > > Jan Kara <jack@suse.com>
-> > > SUSE Labs, CR
-> > 
-> > > From 4c53fb9f4b9b3eb4a579f69b7adcb6524d55629c Mon Sep 17 00:00:00 2001
-> > > From: Jan Kara <jack@suse.cz>
-> > > Date: Wed, 23 Apr 2025 18:10:54 +0200
-> > > Subject: [PATCH] ext4: Fix calculation of credits for extent tree modification
-> > > 
-> > > Luis and David are reporting that after running generic/750 test for 90+
-> > > hours on 2k ext4 filesystem, they are able to trigger a warning in
-> > > jbd2_journal_dirty_metadata() complaining that there are not enough
-> > > credits in the running transaction started in ext4_do_writepages().
-> > > 
-> > > Indeed the code in ext4_do_writepages() is racy and the extent tree can
-> > > change between the time we compute credits necessary for extent tree
-> > > computation and the time we actually modify the extent tree. Thus it may
-> > > happen that the number of credits actually needed is higher. Modify
-> > > ext4_ext_index_trans_blocks() to count with the worst case of maximum
-> > > tree depth.
-> > > 
-> > > Link: https://lore.kernel.org/all/20250415013641.f2ppw6wov4kn4wq2@offworld
-> > > Reported-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > Reported-by: Luis Chamberlain <mcgrof@kernel.org>
-> > > Signed-off-by: Jan Kara <jack@suse.cz>
-> > 
-> > I kicked off tests! Let's see after ~ 90 hours!
-> 
-> Tested-by: kdevops@lists.linux.dev
-> 
-> I have run the test over 3 separate guests and each one has tested this
-> over 48 hours each. There is no ext4 fs corruption reported, all is
-> good, so I do believe thix fixes the issue. One of the guests was on
-> Linus't tree which didn't yet have Davidlorh's fixes for folio migration.
-> And so I believe this patch should have a stable tag fix so stable gets it.
+Fix some more minor issues in ublk selftests.
 
-Jan, my testing has passed 120 hours now on multiple guests. This is
-certainly a fixed bug with your patch.
+The first patch is from
+https://lore.kernel.org/linux-block/20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com/
+with a modification requested by Jens. The others are new.
 
-  Luis
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Uday Shankar (3):
+      selftests: ublk: kublk: build with -Werror iff CONFIG_WERROR=y
+      selftests: ublk: make test_generic_06 silent on success
+      selftests: ublk: kublk: fix include path
+
+ tools/testing/selftests/ublk/Makefile           | 4 +++-
+ tools/testing/selftests/ublk/kublk.h            | 1 -
+ tools/testing/selftests/ublk/test_generic_06.sh | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+---
+base-commit: 53ec1abce79c986dc59e59d0c60d00088bcdf32a
+change-id: 20250428-ublk_selftests-983240d3a325
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
 
