@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-20759-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20761-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67CB5A9ED3D
-	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 11:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16351A9ED3F
+	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 11:51:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7ED63AA5BE
-	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 09:48:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA1BB3ACD2F
+	for <lists+linux-block@lfdr.de>; Mon, 28 Apr 2025 09:48:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42A5B267728;
-	Mon, 28 Apr 2025 09:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DA4267AFA;
+	Mon, 28 Apr 2025 09:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POImf0+O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fxunqud0"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9040626771F
-	for <linux-block@vger.kernel.org>; Mon, 28 Apr 2025 09:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DDB267AF4
+	for <linux-block@vger.kernel.org>; Mon, 28 Apr 2025 09:45:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833495; cv=none; b=fCgHlwygBl9xR8fUDKFz+KVEIlGhb1qNntzxtMLGbgZODqfn0HybvLM8Tq7dI5sQMJ4fpC2YVjbGHU0O3Ouhj5ACj8DyGeyYCpjCbT27iE5l8fpaeb1zcHP6M78mweqFR8YRtfzD42gX/QgBaPg+ugNSvGnMyUWVbncRjrWeBqc=
+	t=1745833503; cv=none; b=V2mkaudE9Rl0jO3VQ6Y9gyylnqFuDthp5UX6DmY1XtDuYgmfPOBD5d3nyu0Y4SqaCh2HO5NtHztc0ae5RMkguduwAnK2em422Qtym6XBTy615I2Ksi9VAYaDviFNlKzDALsDlo6KN706asdMugyQJADw5LObWBZl3zh4FO5V+xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833495; c=relaxed/simple;
-	bh=RySI8+IEkHwxsSJMl3215Shy2Tpsccb02c7PDAMc1g0=;
+	s=arc-20240116; t=1745833503; c=relaxed/simple;
+	bh=4u5F4/wIhDQfBfAzaPzbbPLZ6VnPCk1PliIafV6JKt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VYkmtCkGH2l7JbKDNP4vlOH4n1a5Lh3DJdP+ttBf8mXk18perIaFYbflTQExiByYbMwFcXIIisc2QezMQXCeOTqQcx25x5bPbvNt5RPlAQfYjX/+PMSLXbTwykwFBv01KzbkUamGZkMOnXYxzrWlobsZ0nEzsY3KiebUX/SQLnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=POImf0+O; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=DnBpABiTV8LNLPC3A0U/9lagLeKzzCSOotBngCUZoFkeuG6RNeCNrwWQV0YFvAXkgOgX1zP7xRcPxaOzVigRkCOYiqEZ+K52+2NYRfzawHMXK8RXO2f4axvChsiyEVB+VkIaiJgK75pkH21/itAOBh4/AR6VEDDSIbbMlo4S6SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fxunqud0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745833492;
+	s=mimecast20190719; t=1745833500;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VED5b4K6fUG2nVI2j3FYZcFqAe41fY2ybvhVS20nA6s=;
-	b=POImf0+OJiUASN4pNO0TMHF6PNd891avA/+z4D2Zc7mEGvrH1tED3DI6483Ff0g9UhCSh/
-	nRhtMsJ2GmNATt8ajb4zY6eFuRhYVuZ10H56wVgDvzLol2HVYiDH8rM1a3MYDXxF0aanRP
-	Z7VBAWjqsVItKgUmtsOJCk1mFx6wC9o=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=QP01s+NoXelB0ooV/FSKEfgslbq8CyPujrmfjLYSHV0=;
+	b=Fxunqud0PIsi9UGx2O9c/oWK5hw+jYR73Xnr5+DydlVOwn73BZCUOnBg8bwDTvaWodeJWL
+	N44jdcjVrqPsxjxXsy6HxJIwuQrljWYGrsE/9Q3mah14bJfGyUt0uezsN6cCW+/xKYvBoC
+	hDh/g+BuSMgZn9ABPuGMCH752m7gw5k=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-310-Vb3aI88KOZ6n3fzMzaTXIg-1; Mon,
- 28 Apr 2025 05:44:48 -0400
-X-MC-Unique: Vb3aI88KOZ6n3fzMzaTXIg-1
-X-Mimecast-MFC-AGG-ID: Vb3aI88KOZ6n3fzMzaTXIg_1745833486
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-H6jL_4WUNAqlHRUmvbQw8Q-1; Mon,
+ 28 Apr 2025 05:44:57 -0400
+X-MC-Unique: H6jL_4WUNAqlHRUmvbQw8Q-1
+X-Mimecast-MFC-AGG-ID: H6jL_4WUNAqlHRUmvbQw8Q_1745833491
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A25971955DC5;
-	Mon, 28 Apr 2025 09:44:46 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0EF11800373;
+	Mon, 28 Apr 2025 09:44:50 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.134])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9FDE919560A3;
-	Mon, 28 Apr 2025 09:44:44 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A9EB519560A3;
+	Mon, 28 Apr 2025 09:44:49 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	io-uring@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc: Uday Shankar <ushankar@purestorage.com>,
 	Caleb Sander Mateos <csander@purestorage.com>,
 	Keith Busch <kbusch@kernel.org>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [RFC PATCH 3/7] io_uring: support to register bvec buffer to specified io_uring
-Date: Mon, 28 Apr 2025 17:44:14 +0800
-Message-ID: <20250428094420.1584420-4-ming.lei@redhat.com>
+Subject: [RFC PATCH 4/7] ublk: convert to refcount_t
+Date: Mon, 28 Apr 2025 17:44:15 +0800
+Message-ID: <20250428094420.1584420-5-ming.lei@redhat.com>
 In-Reply-To: <20250428094420.1584420-1-ming.lei@redhat.com>
 References: <20250428094420.1584420-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -78,142 +78,83 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Extend io_buffer_register_bvec() and io_buffer_unregister_bvec() for
-supporting to register/unregister bvec buffer to specified io_uring,
-which FD is usually passed from userspace.
+Convert to refcount_t and prepare for supporting to register bvec buffer
+automatically, which needs to initialize reference counter as 2, and
+kref doesn't provide this interface, so convert to refcount_t.
 
+Suggested-by: Caleb Sander Mateos <csander@purestorage.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- include/linux/io_uring/cmd.h |  4 ++
- io_uring/rsrc.c              | 83 +++++++++++++++++++++++++++---------
- 2 files changed, 67 insertions(+), 20 deletions(-)
+ drivers/block/ublk_drv.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/io_uring/cmd.h b/include/linux/io_uring/cmd.h
-index 78fa336a284b..7516fe5cd606 100644
---- a/include/linux/io_uring/cmd.h
-+++ b/include/linux/io_uring/cmd.h
-@@ -25,6 +25,10 @@ struct io_uring_cmd_data {
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index ac56482b55f5..9cd331d12fa6 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -79,7 +79,7 @@
+ 	 UBLK_PARAM_TYPE_DMA_ALIGN | UBLK_PARAM_TYPE_SEGMENT)
  
- struct io_buf_data {
- 	unsigned short index;
-+	bool has_fd;
-+	bool registered_fd;
-+
-+	int ring_fd;
- 	struct request *rq;
- 	void (*release)(void *);
+ struct ublk_rq_data {
+-	struct kref ref;
++	refcount_t ref;
  };
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index 5f8ab130a573..701dd33fecf7 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -969,21 +969,6 @@ static int __io_buffer_register_bvec(struct io_ring_ctx *ctx,
- 	return 0;
+ 
+ struct ublk_uring_cmd_pdu {
+@@ -484,7 +484,6 @@ static blk_status_t ublk_setup_iod_zoned(struct ublk_queue *ubq,
+ #endif
+ 
+ static inline void __ublk_complete_rq(struct request *req);
+-static void ublk_complete_rq(struct kref *ref);
+ 
+ static dev_t ublk_chr_devt;
+ static const struct class ublk_chr_class = {
+@@ -644,7 +643,7 @@ static inline void ublk_init_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
+ 
+-		kref_init(&data->ref);
++		refcount_set(&data->ref, 1);
+ 	}
  }
  
--int io_buffer_register_bvec(struct io_uring_cmd *cmd,
--			    struct io_buf_data *buf,
--			    unsigned int issue_flags)
+@@ -654,7 +653,7 @@ static inline bool ublk_get_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
+ 
+-		return kref_get_unless_zero(&data->ref);
++		return refcount_inc_not_zero(&data->ref);
+ 	}
+ 
+ 	return true;
+@@ -666,7 +665,8 @@ static inline void ublk_put_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
+ 
+-		kref_put(&data->ref, ublk_complete_rq);
++		if(refcount_dec_and_test(&data->ref))
++			__ublk_complete_rq(req);
+ 	} else {
+ 		__ublk_complete_rq(req);
+ 	}
+@@ -1124,15 +1124,6 @@ static inline void __ublk_complete_rq(struct request *req)
+ 	blk_mq_end_request(req, res);
+ }
+ 
+-static void ublk_complete_rq(struct kref *ref)
 -{
--	struct io_ring_ctx *ctx = cmd_to_io_kiocb(cmd)->ctx;
--	int ret;
+-	struct ublk_rq_data *data = container_of(ref, struct ublk_rq_data,
+-			ref);
+-	struct request *req = blk_mq_rq_from_pdu(data);
 -
--	io_ring_submit_lock(ctx, issue_flags);
--	ret = __io_buffer_register_bvec(ctx, buf);
--	io_ring_submit_unlock(ctx, issue_flags);
--
--	return ret;
+-	__ublk_complete_rq(req);
 -}
--EXPORT_SYMBOL_GPL(io_buffer_register_bvec);
 -
- static int __io_buffer_unregister_bvec(struct io_ring_ctx *ctx,
- 				       struct io_buf_data *buf)
+ static void ublk_complete_io_cmd(struct ublk_io *io, struct request *req,
+ 				 int res, unsigned issue_flags)
  {
-@@ -1006,19 +991,77 @@ static int __io_buffer_unregister_bvec(struct io_ring_ctx *ctx,
- 	return 0;
- }
- 
--int io_buffer_unregister_bvec(struct io_uring_cmd *cmd,
--			      struct io_buf_data *buf,
--			      unsigned int issue_flags)
-+static inline int do_reg_unreg_bvec(struct io_ring_ctx *ctx,
-+				    struct io_buf_data *buf,
-+				    unsigned int issue_flags,
-+				    bool reg)
- {
--	struct io_ring_ctx *ctx = cmd_to_io_kiocb(cmd)->ctx;
- 	int ret;
- 
- 	io_ring_submit_lock(ctx, issue_flags);
--	ret = __io_buffer_unregister_bvec(ctx, buf);
-+	if (reg)
-+		ret = __io_buffer_register_bvec(ctx, buf);
-+	else
-+		ret = __io_buffer_unregister_bvec(ctx, buf);
- 	io_ring_submit_unlock(ctx, issue_flags);
- 
- 	return ret;
- }
-+
-+static int io_buffer_reg_unreg_bvec(struct io_ring_ctx *ctx,
-+				    struct io_buf_data *buf,
-+				    unsigned int issue_flags,
-+				    bool reg)
-+{
-+	struct io_ring_ctx *remote_ctx = ctx;
-+	struct file *file = NULL;
-+	int ret;
-+
-+	if (buf->has_fd) {
-+		file = io_uring_register_get_file(buf->ring_fd, buf->registered_fd);
-+		if (IS_ERR(file))
-+			return PTR_ERR(file);
-+		remote_ctx = file->private_data;
-+		if (!remote_ctx)
-+			return -EINVAL;
-+	}
-+
-+	if (remote_ctx == ctx) {
-+		do_reg_unreg_bvec(ctx, buf, issue_flags, reg);
-+	} else {
-+		if (!(issue_flags & IO_URING_F_UNLOCKED))
-+			mutex_unlock(&ctx->uring_lock);
-+
-+		do_reg_unreg_bvec(remote_ctx, buf, IO_URING_F_UNLOCKED, reg);
-+
-+		if (!(issue_flags & IO_URING_F_UNLOCKED))
-+			mutex_lock(&ctx->uring_lock);
-+	}
-+
-+	if (file)
-+		fput(file);
-+
-+	return ret;
-+}
-+
-+int io_buffer_register_bvec(struct io_uring_cmd *cmd,
-+			    struct io_buf_data *buf,
-+			    unsigned int issue_flags)
-+{
-+	struct io_ring_ctx *ctx = cmd_to_io_kiocb(cmd)->ctx;
-+
-+	return io_buffer_reg_unreg_bvec(ctx, buf, issue_flags, true);
-+}
-+EXPORT_SYMBOL_GPL(io_buffer_register_bvec);
-+
-+int io_buffer_unregister_bvec(struct io_uring_cmd *cmd,
-+			      struct io_buf_data *buf,
-+			      unsigned int issue_flags)
-+{
-+	struct io_ring_ctx *ctx = cmd_to_io_kiocb(cmd)->ctx;
-+
-+	return io_buffer_reg_unreg_bvec(ctx, buf, issue_flags, false);
-+}
- EXPORT_SYMBOL_GPL(io_buffer_unregister_bvec);
- 
- static int validate_fixed_range(u64 buf_addr, size_t len,
 -- 
 2.47.0
 
