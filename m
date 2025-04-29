@@ -1,98 +1,133 @@
-Return-Path: <linux-block+bounces-20913-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20915-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFE9FAA1CBF
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 23:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1408FAA3BA3
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 00:41:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C75375A808B
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 21:17:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72C17981FF7
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 22:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72B12233722;
-	Tue, 29 Apr 2025 21:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E075B276025;
+	Tue, 29 Apr 2025 22:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dnhqm6NA"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="e4efcvoR"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f228.google.com (mail-il1-f228.google.com [209.85.166.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DA214A9E
-	for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 21:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C40277022
+	for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 22:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745961459; cv=none; b=RSlgI+THYsWg9GKE765roW38LkoVitFEYWBI5jPTHt1pbE9TsoeEUF08MChhp3wZDtJf0dacnAN+utHbJ/5lqlbiwyjHg53YxrqNCKwieX7fpg7pcaotEpdau0TCoeM5wqQW7rjjHuFQqMMtawu9L21wdJRNXL3Q86D81rDFWS4=
+	t=1745966473; cv=none; b=gSyNoKvUz2WLUcbqsumCwhrR5Y9jS7Sc0ebxizK+iSummHXKF/+Y0921jByLUTHvQeZvxQV4j1Qu8uSDeJNQmPH/wXFrcNe4OF1jYLkvyjWRDlBe88TrgTbTv/D+TIOggjytZcGZQf58sl9ldofiXtuhuUminZu2KvzyZ740974=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745961459; c=relaxed/simple;
-	bh=ILyIraECtaz9moYPMp4r0hYSNQ987m8GrztYryJuwbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7XXBb0fif3xAdsDLu/N1P1LPGoJ7C75hvRZhuuDawhFEAPvxCsXZH7bBHzE9kCcjGYUiebvNwXmsI5D+KbcjoVihEU3DUJTY6Gkgohefyj7CS6aIct2x05ELdF3Q7D5HLL1tEyS5AyMkPfCp3ILKGMTiDZ7+heU/cRNEk+bGlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dnhqm6NA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8768EC4CEE3;
-	Tue, 29 Apr 2025 21:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745961458;
-	bh=ILyIraECtaz9moYPMp4r0hYSNQ987m8GrztYryJuwbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dnhqm6NA0Lv/pMFLvgnebr5Wlei31wY7iwH0uBp81dwR4tE28Sw4YTstL5NpAhZTr
-	 uU3Or0hTZ3TD1skNrFAGpzrCX9dol6yT9wWWzW2WZjE4MKiwV+AP66hEHPO5exGECf
-	 0Ont5X04CBEb0z38TNsHrNI1SOkqNK1Ts4bV2HDvG0PldHGp1eOWHdFB8f058m0lbF
-	 nNceHxCQPaCsVhhOSiEPJt3aWMQnSJwpz+h2Zuo7IPVi0MnSqsuVjiWdiO40cXW3/+
-	 5LzmTc0FQv99V+dwg6Lwd22uh0gBo5qL4HC88RaOBXV/OfvB6sTGZFixzDSrZc0a83
-	 n71bqGVudH2Ew==
-Date: Tue, 29 Apr 2025 14:17:36 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH 4/5] brd: split I/O at page boundaries
-Message-ID: <aBFB8JDESV1V4epi@kbusch-mbp>
-References: <20250428141014.2360063-1-hch@lst.de>
- <20250428141014.2360063-5-hch@lst.de>
- <aA_Dyp97AIAqJ70G@kbusch-mbp.dhcp.thefacebook.com>
- <221bce43-83b7-b5ac-c6d2-ded23158dd06@huaweicloud.com>
- <20250429121529.GB12411@lst.de>
+	s=arc-20240116; t=1745966473; c=relaxed/simple;
+	bh=9WWclwrCg2TvbbTylHUPNf0AHpKWev2f2XnfjrSo0dg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Tas3ddQM/8SE1xW2gp5zpj5r+3cwLSRWCOV7qvpowLPP62s2jMPj+MNQ1QTbu7HNF0RXt8wbjx/eTbgeDEKzpZuTW031wQ0++btpBk0Tw98LU7Wsxp9Jn8zUZm4klhGGW5sDF6YJJ5f6zhs+g2p0mJGJn8TxB0BogNCrIuDn5W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=e4efcvoR; arc=none smtp.client-ip=209.85.166.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-il1-f228.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso38248605ab.1
+        for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 15:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745966470; x=1746571270; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zfQT2w7zXD5LlB+aHplKgN57RpOC1FTB5zWyhqieJWc=;
+        b=e4efcvoR2C8bHWQtUEfzSUSTjBRt/bvr01PClQ13GPLnOvn9YIK+GF4Yiz7ReyOA0Q
+         qCmXJDoeCyZwtF2ubcZRYqJg8m+E/pVBUPmzJPlLidwJeDHbOY8y2IdoUm1BOmLmRlrU
+         BrCLoTUGpQcqiFHvN9hPcQQ3F4W+a6wKSBH6GBalhE6SwdtO/aLTrLDZF6Z564JhYp1A
+         2wAB/IPjKC3Iv63nkIV05vijAgtm/FTRYNuYDcRUamhRmRqeWZFd7a8Q8H2qzxOwqaGR
+         WdtKetcFO18I1yk/PJImRLi+VieV1Jx/yClhVWhuJx9TSnmcYcjN3+bS4VPrTBjtvV7D
+         Ejrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745966470; x=1746571270;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zfQT2w7zXD5LlB+aHplKgN57RpOC1FTB5zWyhqieJWc=;
+        b=jzFXKvcNsLQz7TQe5pNL+ttybirRYshK6Of35F9qSG5k5mhtNvdIJVwDbzgV5RQ1rZ
+         0UPk0963f6+0GH9UGK/AZS7tJ/vfWFhtcG6hv/6SKILy8Q1ZNlULd1TKt+iTH0oS/nYN
+         MIykChNxRIggEMXB2deSx8GZXXBJw2KmYzSO6cONG8SrY0Pxs8tfw5vPAxr0NrC6baiA
+         rL0G4If0C1DJMtWqF+ljfP6F63133flBI9qfhGx6E1P2NtLLeqRtQ3yH/vUBB1R2ynUs
+         +N7kzFOsU4cwThKue2AeNUcdZlY8ipZyYxJ3tmRj5onQRfGwQoiz6QNUsOKz3WcIthzV
+         UeDw==
+X-Gm-Message-State: AOJu0Yw2vRkGYpltsLht92D65yuPKufg1rdx3SUHnWa9Tz6XA9ALKpT0
+	pKLd0K1GA49amyUDI73AoTHhiXGV3q/MPNab/UxHiy2nuhbPCsqkc8vVfuk2LIKUydq/XnUHpJh
+	xjfIFRJO5T1HhtWJge/ppTwRyG1AZZI5Q
+X-Gm-Gg: ASbGnctNaotSSCZPjfRrx9HsPyzJEXjeiL4aL6W3s64KvDK4VguCgQt81Q0ainWsizI
+	BeP47BT1EuJtCVi3zA1pJjJDQTGxTsjpHb3G505RmkPsjO/QiImCJN/qBqRf76819MyeaIW4UST
+	Zcvp5sn6fBYzMj3+xEJ3DSmmMYPmPoyxXtYGWwURu1u6ergFHRiqDnQ1pgUt4kS7l5JkqIIzq/l
+	Ilaif+vxj7nPlkE/2ZrhKRdugl0Xk53H80FAaze5dr8o5Z5UqtFVxrGaOAtCR+9JDPKF0w0lGiI
+	uUWBaqpmW2HCsX/3YIFL2QNzmMGvyoW2EFxsPf/jfbNYvw==
+X-Google-Smtp-Source: AGHT+IHLrjPX8uIJEDj5oQlazw0ZvIAp6m9XfLG15y+LyDl9K6XmhE298LlPMgUlZIHAr8kwO+8SDz8hGUv0
+X-Received: by 2002:a05:6602:6a47:b0:85b:476e:ede2 with SMTP id ca18e2360f4ac-8649805ea02mr5457739f.13.1745966470122;
+        Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-8648bf34e49sm19972639f.7.2025.04.29.15.41.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id EC0BD3400C9;
+	Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id DE629E40ECE; Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH v2 0/3] selftests: ublk: more misc fixes
+Date: Tue, 29 Apr 2025 16:41:02 -0600
+Message-Id: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429121529.GB12411@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH5VEWgC/3WMQQ6DIBAAv2L2XBoEidpT/9GYBnFVUiuGVdLG8
+ Pei9x5nkpkdCL1Fglu2g8dgybo5gbhkYEY9D8hslxgEF4oXomJbO72ehFO/Iq3E6kqKgndSS6E
+ gRYvH3n7O4aNJPFpanf+e/5Af9u8q5IwzVdaqL1vOTafvy+bxyPWAV+Pe0MQYf5wyVKCyAAAA
+X-Change-ID: 20250428-ublk_selftests-983240d3a325
+To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 29, 2025 at 02:15:29PM +0200, Christoph Hellwig wrote:
-> On Tue, Apr 29, 2025 at 09:38:28AM +0800, Yu Kuai wrote:
-> > Hi,
-> >
-> > 在 2025/04/29 2:07, Keith Busch 写道:
-> >> On Mon, Apr 28, 2025 at 07:09:50AM -0700, Christoph Hellwig wrote:
-> >>> A lot of complexity in brd stems from the fact that it tries to handle
-> >>> I/O spanning two backing pages.  Instead limit the size of a single
-> >>> bvec iteration so that it never crosses a page boundary and remove all
-> >>> the now unneeded code.
-> >>
-> >> Doesn't bio_for_each_segment() already limit bvecs on page boundaries?
-> >> You'd need to use bio_for_each_bvec() to get multi-page bvecs.
-> >
-> > I think it only limit bvecs on page boundaries on the issue side, not
-> > disk side.
-> >
-> > For example, if user issue an IO (2k + 4k), will bio_for_each_segment()
-> > split this IO into (2k + 2k) and (4k + 2k), I do not test yet, but I
-> > think the answer is no.
-> 
-> Exactly.  I got this wrong with zram, where it only triggers with larger
-> than 4k page sizes, and I got this wrong here on my first attempt as
-> well.  Fortunately testing found it quickly.  I thought the comment and
-> commit message document the issue well enough, but I'm open to better
-> wording.
+Fix some more minor issues in ublk selftests.
 
-Ah, it just clicked for me that you're talking about the pages returned
-from brd_lookup_page (the "backing pages", as you said), not the bio's
-pages. Sorry about that.
+The first patch is from
+https://lore.kernel.org/linux-block/20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com/
+with a modification requested by Jens. The others are new.
+
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Changes in v2:
+- Use a test-specific WERROR flag instead of reusing CONFIG_WERROR from
+  the kernel build for deciding whether or not to use -Werror for the
+  kublk build. The default behavior is to use -Werror (Ming Lei)
+- Link to v1: https://lore.kernel.org/r/20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com
+
+---
+Uday Shankar (3):
+      selftests: ublk: kublk: build with -Werror iff WERROR!=0
+      selftests: ublk: make test_generic_06 silent on success
+      selftests: ublk: kublk: fix include path
+
+ tools/testing/selftests/ublk/Makefile           | 6 +++++-
+ tools/testing/selftests/ublk/kublk.h            | 1 -
+ tools/testing/selftests/ublk/test_generic_06.sh | 2 +-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+---
+base-commit: 53ec1abce79c986dc59e59d0c60d00088bcdf32a
+change-id: 20250428-ublk_selftests-983240d3a325
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
 
