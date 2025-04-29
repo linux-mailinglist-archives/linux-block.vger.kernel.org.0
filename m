@@ -1,125 +1,119 @@
-Return-Path: <linux-block+bounces-20838-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20841-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D40CA9FF31
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 03:48:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DB32A9FF96
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 04:16:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C39FA1B60524
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 01:48:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ECEB3B0F4A
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 02:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08CDB1DF98E;
-	Tue, 29 Apr 2025 01:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0E5258CC0;
+	Tue, 29 Apr 2025 02:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="mhiVYgSv"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mail2.out.titan.email (mail2.out.titan.email [23.23.7.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06321CA9C;
-	Tue, 29 Apr 2025 01:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87452586F6
+	for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 02:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.23.7.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745891298; cv=none; b=D6K/aK9HUnBHWKsd0RC4lP5TBZ+9iA5ApcQpYZg/zkgYmfWdmiIbxmDC/5t9Q3v8+h/hmgUUQEjKD//aiQp//A2uIi/Gs6B2mVkQNygLsRUDRHlRYBQmWBcTrihRZKNzqyP7HDGTgtX2DUtYVaNyv01IlFXV/8pO7rZoob9JMpc=
+	t=1745892982; cv=none; b=bvHypoV/Ql1mQVqwJ0yxtktdf9//X2TprtFuhDrbePduAIbZqmJbauijxuse4FrDIyBc2rBQ+eQ6hdbcXL/w+xM/z3DT+Lh/Bikj/8+HBJBlZusapPRVqw94abNsjvXyZhs9el40O8toIqklsDb8y7fv38VCcHSXImpkjRUINhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745891298; c=relaxed/simple;
-	bh=PJ40Ky8bkjg+BOc4I0/brfIGn/WDXPe1tD9/zb9a6Mg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GoveFgrWY0YbRP7a5nCLsgK/8O2sOI29MHMd6/gjvbn9CFCMC0fbt+oKe0JdJ/XOtB6nf0jLSwmholJUmEc5mcvrPa+HCSw22zstgfqxcH/c6gmyfWu18NrDxgsW7vwm4dUnHZODqEzOmZsq3ju4rYg6Y2Ih+ZUHoDhfE6wkAjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZmjrZ3vMbzYQttP;
-	Tue, 29 Apr 2025 09:48:14 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 06B341A0AF2;
-	Tue, 29 Apr 2025 09:48:14 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_dLxBoVoqBKw--.58321S3;
-	Tue, 29 Apr 2025 09:48:13 +0800 (CST)
-Subject: Re: [PATCH v2 1/3] brd: protect page with rcu
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, kbusch@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250427083925.157984-1-yukuai1@huaweicloud.com>
- <20250427083925.157984-2-yukuai1@huaweicloud.com>
- <20250428125207.GB27794@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <cdca4c95-27a0-5964-e242-173281c4e8f9@huaweicloud.com>
-Date: Tue, 29 Apr 2025 09:48:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745892982; c=relaxed/simple;
+	bh=gZAOuS44MYhz7NBYoj56A+0XayAShTo+iK6h4Wr0/zc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=axkaO7naD32Y5TIL72Mud1IGqdoCNjPnVHNM8vdLHItvoHrdP4nJsreQhXFtRX6RrykyKhgHDHzADoUmtVXCNR7C2M+29eeNpMUgUSFMfX6uJVmpIaLrNjAozd7Ii4olJ2GNjDLvsFsT764v4/FerP6jux6Wqols2sQmaQsbJOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=mhiVYgSv; arc=none smtp.client-ip=23.23.7.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 3CEEE60472;
+	Tue, 29 Apr 2025 02:07:11 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=gZAOuS44MYhz7NBYoj56A+0XayAShTo+iK6h4Wr0/zc=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=message-id:references:mime-version:subject:date:from:in-reply-to:cc:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1745892431; v=1;
+	b=mhiVYgSvo8a4gBeShc7PpourNwPH3KKLmy1CRTfFs7pFHZtO8r4reAKeYjhFEOnOaGJ9/shg
+	n+KcM5zpLmfFOqCYSdzWayLPVbbsCh7pnUwklQl0SVRGvlxRGF2ElPDf9nVEwRARBhWYlly4ok7
+	azd+pMZuRheeXmbqIhItRxxI=
+Received: from smtpclient.apple (tk2-118-59677.vs.sakura.ne.jp [153.121.56.181])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 6FF7E60484;
+	Tue, 29 Apr 2025 02:07:03 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250428125207.GB27794@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl_dLxBoVoqBKw--.58321S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr43tF1fAw4DJFWfGw17Jrb_yoWfCwbEka
-	13W3srta43ury0ya13W343X397tFWkCa1qvr1fAFs3XFW5JrZFyw4xJws5ta40qF1293yx
-	GF9rAa45G342qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbS8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUpwZcUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH 07/17] bcache: use bio_add_virt_nofail
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <227da5a0-c5fd-432a-8227-7a5d8883ca0d@kernel.org>
+Date: Tue, 29 Apr 2025 10:06:50 +0800
+Cc: Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org,
+ "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+ Jack Wang <jinpu.wang@ionos.com>,
+ Coly Li <colyli@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Mike Snitzer <snitzer@kernel.org>,
+ Mikulas Patocka <mpatocka@redhat.com>,
+ Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>,
+ Andreas Gruenbacher <agruenba@redhat.com>,
+ Carlos Maiolino <cem@kernel.org>,
+ Naohiro Aota <naohiro.aota@wdc.com>,
+ Johannes Thumshirn <jth@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Pavel Machek <pavel@kernel.org>,
+ linux-bcache@vger.kernel.org,
+ dm-devel@lists.linux.dev,
+ linux-btrfs@vger.kernel.org,
+ gfs2@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org,
+ linux-xfs@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F6D90517-F3D2-4E32-85FE-53B20710E13D@coly.li>
+References: <20250422142628.1553523-1-hch@lst.de>
+ <20250422142628.1553523-8-hch@lst.de>
+ <227da5a0-c5fd-432a-8227-7a5d8883ca0d@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1745892431077720643.5242.6730310602892018715@prod-use1-smtp-out1001.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=6810344f
+	a=hXS1xhdqaCDGgKeHTjTB6g==:117 a=hXS1xhdqaCDGgKeHTjTB6g==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
+	a=9MUAQWKrSuUz9z0uTEMA:9 a=QEXdDO2ut3YA:10
 
-Hi,
 
-ÔÚ 2025/04/28 20:52, Christoph Hellwig Ð´µÀ:
-> On Sun, Apr 27, 2025 at 04:39:23PM +0800, Yu Kuai wrote:
->>   	page = brd_lookup_page(brd, sector);
->>   
->>   	kaddr = bvec_kmap_local(&bv);
->>   	if (op_is_write(opf)) {
->> -		BUG_ON(!page);
->> -		memcpy_to_page(page, offset, kaddr, bv.bv_len);
->> +		if (page)
->> +			memcpy_to_page(page, offset, kaddr, bv.bv_len);
-> 
-> This could use a comment on why page can be NULL here.
-OK
 
-> 
->>   	} else if (page) {
->>   		memcpy_from_page(kaddr, page, offset, bv.bv_len);
->>   	} else {
->>   		memset(kaddr, 0, bv.bv_len);
-> 
-> And why the above change my if/else cascade doesn't really make much sense
-> any more and this should become:
-> 
-> 	} else {
-> 		if (page)
-> 	 		memcpy_from_page(kaddr, page, offset, bv.bv_len);
-> 		else
-> 	 		memset(kaddr, 0, bv.bv_len);
->   	}
-OK, I will send a new version soon.
+> 2025=E5=B9=B44=E6=9C=8824=E6=97=A5 14:14=EF=BC=8CDamien Le Moal =
+<dlemoal@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On 4/22/25 23:26, Christoph Hellwig wrote:
+>> Convert the __bio_add_page(..., virt_to_page(), ...) pattern to the
+>> bio_add_virt_nofail helper implementing it.
+>>=20
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Thanks for the review!
-Kuai
+For bcache part,
 
-> 
-> Otherwise looks good:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> .
-> 
+Acked-by: Coly Li <colyli@kernel.org>
+
+Thanks.
+
+Coly Li
 
 
