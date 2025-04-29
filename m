@@ -1,144 +1,282 @@
-Return-Path: <linux-block+bounces-20919-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20921-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCD8AAA3BB3
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 00:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60CD7AA3D73
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 01:59:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2E179A42C4
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 22:46:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5919E3A069C
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 23:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1858B1F0E58;
-	Tue, 29 Apr 2025 22:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6C88256993;
+	Tue, 29 Apr 2025 23:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eEnYViyt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aggCRTar"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89622211C
-	for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 22:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3AA256987;
+	Tue, 29 Apr 2025 23:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966780; cv=none; b=mDYn41fNqYadi861vz+wehn7DbbjgOW8FDQ5sjz6U0eLGdlXpmiQsfvzbyNbfH9sM9WKL91tomhnMMAY8REBtFTenN5RHU79V5Jp3wQrpD/isLIszo1CIiyz6Lgdl993qUdfFMBa+9nzNQCSuizAQHeNSMuNcxQJf0iF+a/j79M=
+	t=1745970678; cv=none; b=Jnp7ErVzRnyRlqX1BNyhdkH0P/43GFgz6EyeeEgpUZCjPiFsW9wMD+cG53bf/fFdNrlSQaCxqe9BxnpftvRQcDdylNp/2+8NFp+HITbxakul1vRjMp/10hFHU6wRl0kF1VEsg09+S0tWvVh9LEWTj6/RDIvRr245SrdzPcYx5yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966780; c=relaxed/simple;
-	bh=YQGldYYZN+M+lMKEvXamPZpN40rNMsoWh5qt4/JT0LA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEienMj0T9Ev7ZvJCoKw9JMK8MdvEDriuJqoND7CK6ujsE9wbfbLeoCStnMvajbkfH+yvFx6WR77J8wk/frxLOjus1NyeIf1pEoGigI3QAV/xJj6YkSxZIBTCQMV+puMxP+3Vy9tu52G03eButOR90/4qfXkSL/4Fj/aOEppe/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eEnYViyt; arc=none smtp.client-ip=209.85.166.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so32074565ab.3
-        for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 15:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745966776; x=1746571576; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
-        b=eEnYViytMzkG/tKt//nQPEIKIurRr5yfH+7MFcgmbfjzoaZRjAksLm+vk2PI0yNJ0a
-         cpZ+6rWpHJh02LBCjd8HJCDfmIUeipzDmXPar1rLxb0wIgDYFFsltEo8Y1GTFkaZx23n
-         /oS0o4vNO1Pf8w2Ouid91DFpI7rE6GO3zLCpUH9YtALvWQeKFYylKLBXpXrAX3w4Z85T
-         q8DcY4dx7/N0urlsiQ/MlBXk2oJ94xqa9kiBFTaAtQba7IDfW2N6fU+xMQhlqTdTWwIo
-         JedC+UIeBH0944n8c+1f06T2rXdgW8yKQ3LUWOwrZYxXa/nmczxJ5hpNjJ9QW1jIqLa8
-         6VaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966776; x=1746571576;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
-        b=I6M4ViRTNUWdzXRGkr6jvYhXdiCGfI/qTBvuJ8rf5J2VQ1eiFHyQbTKcOkJy9NacEo
-         d1USgSeBzYAWe3tHgmUYFZci9MmMuARc5GNtMwrkWqzrdznb+pMXbkzcOPEl352Ceoaf
-         sBRsNlPhS5r6eD2u+3kPNkE3GW9Yj6XGTZUo90O1eYrPVyfzSo9qNzxn8ooWfCTLqIQG
-         428n5TdtH1UF557wsX+lBmwZcF5fqHXL2/H7zlyCVCnflAWLDdgefo4jwQheOe9tdiTU
-         P8SEwq7biQo1ZFVCTb48lg5ouUc5AlVaunWXoITubgpNuIWF1rkvTomF6z4rCS3bq3bi
-         6aDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFNqL3ciVoaYSaPqFSaYI8Pc2fzVpDrPaGRVBFomi7n50/ZRbVj8poFnO4N406Mc4ELJC4Dh3gWSUdtQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+SIUGwwx3IIccgmh98nwm/U4KqUlldODT55EHMRSX8ic+JhDB
-	c40bTRm0Mk1tEwqlXgcLmY4bpZEFp3BUWNdzEXNUop3EQ4CoLgi+0yEtwvfsdgEZrv/Q2L8kzb3
-	Q/u6X2ebE87vyjCkihsOHihR8tND3aHnx
-X-Gm-Gg: ASbGnctHJrYtm4HRUDie5ov6NfqYEhWPC97sPnRtABbskXOWBapvmzhMNcHAE9xLrte
-	y45qXj5vAEyO8iZ+QOno4v+b31/foo0SEmrPFbUiFMtrrUVADnnRbp+M6wtMyHj15jpL3D1HXgY
-	oK2JgbGUNg1rzx92iaWHTkaj97EK3S6/beqIgZYdKPlJM5bq9c/EbU93PKrZ3whfvAWSTcxQyPc
-	fWw7xQz0NKMdBHPnEXoPOy6W6UpJsfI9Ovqxb5JqXmqJp6nuPQ5itoRmjZenW6KMEzHd5NDTPmh
-	+CcDAKir7nk268WuS26C4GI5gEBbiCrlxuIkx1P5eQ93Fg==
-X-Google-Smtp-Source: AGHT+IE+G/JgBSc4QPhJO/JMssnCs47xAcdzkMDhhI6dkdMavoR9/32QK0KRcpc8my2GqlxfzQ2mMpfpLE2Y
-X-Received: by 2002:a05:6e02:b42:b0:3d9:644c:e3b7 with SMTP id e9e14a558f8ab-3d967ffec1dmr3337395ab.15.1745966776636;
-        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d967d2b553sm155645ab.25.2025.04.29.15.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0BCFD3400C9;
-	Tue, 29 Apr 2025 16:46:15 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id A4D78E404E6; Tue, 29 Apr 2025 16:46:14 -0600 (MDT)
-Date: Tue, 29 Apr 2025 16:46:14 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] selftests: ublk: kublk: build with -Werror iff
- CONFIG_WERROR=y
-Message-ID: <aBFWtvHv84aPTMvi@dev-ushankar.dev.purestorage.com>
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <20250428-ublk_selftests-v1-1-5795f7b00cda@purestorage.com>
- <aBAnKZCUZWyEJhfS@fedora>
+	s=arc-20240116; t=1745970678; c=relaxed/simple;
+	bh=3Hq0+3fikZdKmWGQCgTuNKo8TznptLpGgnA0iUcVDuw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DnxpRdun45XoC+yXpirC1ieGk+tqXZpMCOI2Ycth7vXrsTRSVYuVBenVtS/93eD7tdvzzyCuEmQILSNkO4ZpVaLEPWrvZEotATwwqixVM5Ku3PRMcG+JTSGAQVsng5zU/K8pt1XTd3JW64Qq6Xc48AsWcCyrJzZchmb1oFD6I00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aggCRTar; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BCFC4CEE3;
+	Tue, 29 Apr 2025 23:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745970676;
+	bh=3Hq0+3fikZdKmWGQCgTuNKo8TznptLpGgnA0iUcVDuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aggCRTarJKYqwUgaRFKtk+RTgbdQCmfxgVFrS2skZTLJxTiA891KTuqJ7wCtU93qb
+	 GPgfnrm0M9k5LqTdudorlv4RMx8112If9s36wRyMb6XanTQCKt8BIpFJV5pJbUUdCe
+	 6lHw1QqTVnvaeIyDHMQ6O7SwmVfCm4ISrXllUnCt+7QmJYpxLTmXfDqfYMujYVHf+m
+	 ZFzcv+c6wxJIo7J21qRwAMyh3Zc/fLj9GkQFMGEhAipNy1TyqS+IlCgjNVhz3WOqH9
+	 X1R1d3WAv7IRHrk6f1hozlzzWzGQaGnD2ACcFMwE7Aj9a/8NGdLc35VVv6wHaXbUiU
+	 Lh4KQYTDmKgkA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 35/39] block: fix race between set_blocksize and read paths
+Date: Tue, 29 Apr 2025 19:50:02 -0400
+Message-Id: <20250429235006.536648-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250429235006.536648-1-sashal@kernel.org>
+References: <20250429235006.536648-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBAnKZCUZWyEJhfS@fedora>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.4
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 09:11:05AM +0800, Ming Lei wrote:
-> On Mon, Apr 28, 2025 at 05:10:20PM -0600, Uday Shankar wrote:
-> > Compiler warnings can catch bugs at compile time. They can also produce
-> > annoying false positives. Due to this duality, the kernel provides
-> > CONFIG_WERROR so that the developer can choose whether or not they want
-> > compiler warnings to fail the build. Use this same config options to
-> > control whether or not warnings in building kublk fail its build.
-> > 
-> > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> > ---
-> >  tools/testing/selftests/ublk/Makefile | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-> > index ec4624a283bce2ebeed80509be6573c1b7a3623d..86474cfe8d03b2df3f8c9bc1a5902701a0f72f58 100644
-> > --- a/tools/testing/selftests/ublk/Makefile
-> > +++ b/tools/testing/selftests/ublk/Makefile
-> > @@ -1,6 +1,8 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  
-> > -CFLAGS += -O3 -Wl,-no-as-needed -Wall -I $(top_srcdir)
-> > +CONFIG = $(top_srcdir)/include/config/auto.conf
-> > +WERROR = $(if $(shell grep CONFIG_WERROR=y ${CONFIG}),-Werror,)
-> > +CFLAGS += -O3 -Wl,-no-as-needed -Wall ${WERROR} -I $(top_srcdir)
-> >  LDLIBS += -lpthread -lm -luring
-> 
-> I think it isn't good to reuse kernel CONFIG_WERROR for test code.
-> 
-> But it can be done in the following way by passing 'WERROR=1' to make
-> command line:
-> 
-> +ifneq ($(WERROR),0)
-> +       CFLAGS += -Werror
-> +endif
+From: "Darrick J. Wong" <djwong@kernel.org>
 
-I've taken this approach in [1]. It actually passes -Werror by default,
-but it gives the developer a way to disable it with
+[ Upstream commit c0e473a0d226479e8e925d5ba93f751d8df628e9 ]
 
-make WERROR=0 TARGETS=ublk kselftest
+With the new large sector size support, it's now the case that
+set_blocksize can change i_blksize and the folio order in a manner that
+conflicts with a concurrent reader and causes a kernel crash.
 
-[1] https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com/
+Specifically, let's say that udev-worker calls libblkid to detect the
+labels on a block device.  The read call can create an order-0 folio to
+read the first 4096 bytes from the disk.  But then udev is preempted.
+
+Next, someone tries to mount an 8k-sectorsize filesystem from the same
+block device.  The filesystem calls set_blksize, which sets i_blksize to
+8192 and the minimum folio order to 1.
+
+Now udev resumes, still holding the order-0 folio it allocated.  It then
+tries to schedule a read bio and do_mpage_readahead tries to create
+bufferheads for the folio.  Unfortunately, blocks_per_folio == 0 because
+the page size is 4096 but the blocksize is 8192 so no bufferheads are
+attached and the bh walk never sets bdev.  We then submit the bio with a
+NULL block device and crash.
+
+Therefore, truncate the page cache after flushing but before updating
+i_blksize.  However, that's not enough -- we also need to lock out file
+IO and page faults during the update.  Take both the i_rwsem and the
+invalidate_lock in exclusive mode for invalidations, and in shared mode
+for read/write operations.
+
+I don't know if this is the correct fix, but xfs/259 found it.
+
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Link: https://lore.kernel.org/r/174543795699.4139148.2086129139322431423.stgit@frogsfrogsfrogs
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/bdev.c      | 17 +++++++++++++++++
+ block/blk-zoned.c |  5 ++++-
+ block/fops.c      | 16 ++++++++++++++++
+ block/ioctl.c     |  6 ++++++
+ 4 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/block/bdev.c b/block/bdev.c
+index 9d73a8fbf7f99..06b8cab31d759 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -167,9 +167,26 @@ int set_blocksize(struct file *file, int size)
+ 
+ 	/* Don't change the size if it is same as current */
+ 	if (inode->i_blkbits != blksize_bits(size)) {
++		/*
++		 * Flush and truncate the pagecache before we reconfigure the
++		 * mapping geometry because folio sizes are variable now.  If a
++		 * reader has already allocated a folio whose size is smaller
++		 * than the new min_order but invokes readahead after the new
++		 * min_order becomes visible, readahead will think there are
++		 * "zero" blocks per folio and crash.  Take the inode and
++		 * invalidation locks to avoid racing with
++		 * read/write/fallocate.
++		 */
++		inode_lock(inode);
++		filemap_invalidate_lock(inode->i_mapping);
++
+ 		sync_blockdev(bdev);
++		kill_bdev(bdev);
++
+ 		inode->i_blkbits = blksize_bits(size);
+ 		kill_bdev(bdev);
++		filemap_invalidate_unlock(inode->i_mapping);
++		inode_unlock(inode);
+ 	}
+ 	return 0;
+ }
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 0c77244a35c92..8f15d1aa6eb89 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -343,6 +343,7 @@ int blkdev_zone_mgmt_ioctl(struct block_device *bdev, blk_mode_t mode,
+ 		op = REQ_OP_ZONE_RESET;
+ 
+ 		/* Invalidate the page cache, including dirty pages. */
++		inode_lock(bdev->bd_mapping->host);
+ 		filemap_invalidate_lock(bdev->bd_mapping);
+ 		ret = blkdev_truncate_zone_range(bdev, mode, &zrange);
+ 		if (ret)
+@@ -364,8 +365,10 @@ int blkdev_zone_mgmt_ioctl(struct block_device *bdev, blk_mode_t mode,
+ 	ret = blkdev_zone_mgmt(bdev, op, zrange.sector, zrange.nr_sectors);
+ 
+ fail:
+-	if (cmd == BLKRESETZONE)
++	if (cmd == BLKRESETZONE) {
+ 		filemap_invalidate_unlock(bdev->bd_mapping);
++		inode_unlock(bdev->bd_mapping->host);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/block/fops.c b/block/fops.c
+index be9f1dbea9ce0..e221fdcaa8aaf 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -746,7 +746,14 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 			ret = direct_write_fallback(iocb, from, ret,
+ 					blkdev_buffered_write(iocb, from));
+ 	} else {
++		/*
++		 * Take i_rwsem and invalidate_lock to avoid racing with
++		 * set_blocksize changing i_blkbits/folio order and punching
++		 * out the pagecache.
++		 */
++		inode_lock_shared(bd_inode);
+ 		ret = blkdev_buffered_write(iocb, from);
++		inode_unlock_shared(bd_inode);
+ 	}
+ 
+ 	if (ret > 0)
+@@ -757,6 +764,7 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 
+ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
++	struct inode *bd_inode = bdev_file_inode(iocb->ki_filp);
+ 	struct block_device *bdev = I_BDEV(iocb->ki_filp->f_mapping->host);
+ 	loff_t size = bdev_nr_bytes(bdev);
+ 	loff_t pos = iocb->ki_pos;
+@@ -793,7 +801,13 @@ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 			goto reexpand;
+ 	}
+ 
++	/*
++	 * Take i_rwsem and invalidate_lock to avoid racing with set_blocksize
++	 * changing i_blkbits/folio order and punching out the pagecache.
++	 */
++	inode_lock_shared(bd_inode);
+ 	ret = filemap_read(iocb, to, ret);
++	inode_unlock_shared(bd_inode);
+ 
+ reexpand:
+ 	if (unlikely(shorted))
+@@ -836,6 +850,7 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+ 	if ((start | len) & (bdev_logical_block_size(bdev) - 1))
+ 		return -EINVAL;
+ 
++	inode_lock(inode);
+ 	filemap_invalidate_lock(inode->i_mapping);
+ 
+ 	/*
+@@ -868,6 +883,7 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+ 
+  fail:
+ 	filemap_invalidate_unlock(inode->i_mapping);
++	inode_unlock(inode);
+ 	return error;
+ }
+ 
+diff --git a/block/ioctl.c b/block/ioctl.c
+index 6554b728bae6a..919066b4bb49c 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -141,6 +141,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 	if (err)
+ 		return err;
+ 
++	inode_lock(bdev->bd_mapping->host);
+ 	filemap_invalidate_lock(bdev->bd_mapping);
+ 	err = truncate_bdev_range(bdev, mode, start, start + len - 1);
+ 	if (err)
+@@ -173,6 +174,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 	blk_finish_plug(&plug);
+ fail:
+ 	filemap_invalidate_unlock(bdev->bd_mapping);
++	inode_unlock(bdev->bd_mapping->host);
+ 	return err;
+ }
+ 
+@@ -198,12 +200,14 @@ static int blk_ioctl_secure_erase(struct block_device *bdev, blk_mode_t mode,
+ 	    end > bdev_nr_bytes(bdev))
+ 		return -EINVAL;
+ 
++	inode_lock(bdev->bd_mapping->host);
+ 	filemap_invalidate_lock(bdev->bd_mapping);
+ 	err = truncate_bdev_range(bdev, mode, start, end - 1);
+ 	if (!err)
+ 		err = blkdev_issue_secure_erase(bdev, start >> 9, len >> 9,
+ 						GFP_KERNEL);
+ 	filemap_invalidate_unlock(bdev->bd_mapping);
++	inode_unlock(bdev->bd_mapping->host);
+ 	return err;
+ }
+ 
+@@ -235,6 +239,7 @@ static int blk_ioctl_zeroout(struct block_device *bdev, blk_mode_t mode,
+ 		return -EINVAL;
+ 
+ 	/* Invalidate the page cache, including dirty pages */
++	inode_lock(bdev->bd_mapping->host);
+ 	filemap_invalidate_lock(bdev->bd_mapping);
+ 	err = truncate_bdev_range(bdev, mode, start, end);
+ 	if (err)
+@@ -245,6 +250,7 @@ static int blk_ioctl_zeroout(struct block_device *bdev, blk_mode_t mode,
+ 
+ fail:
+ 	filemap_invalidate_unlock(bdev->bd_mapping);
++	inode_unlock(bdev->bd_mapping->host);
+ 	return err;
+ }
+ 
+-- 
+2.39.5
 
 
