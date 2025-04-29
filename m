@@ -1,119 +1,124 @@
-Return-Path: <linux-block+bounces-20841-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20839-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DB32A9FF96
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 04:16:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 167CEA9FF80
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 04:13:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ECEB3B0F4A
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 02:16:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21678920766
+	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 02:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0E5258CC0;
-	Tue, 29 Apr 2025 02:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3DE25395D;
+	Tue, 29 Apr 2025 02:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="mhiVYgSv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NMPPqWUL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail2.out.titan.email (mail2.out.titan.email [23.23.7.130])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87452586F6
-	for <linux-block@vger.kernel.org>; Tue, 29 Apr 2025 02:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.23.7.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1D9253B55;
+	Tue, 29 Apr 2025 02:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745892982; cv=none; b=bvHypoV/Ql1mQVqwJ0yxtktdf9//X2TprtFuhDrbePduAIbZqmJbauijxuse4FrDIyBc2rBQ+eQ6hdbcXL/w+xM/z3DT+Lh/Bikj/8+HBJBlZusapPRVqw94abNsjvXyZhs9el40O8toIqklsDb8y7fv38VCcHSXImpkjRUINhg=
+	t=1745892780; cv=none; b=WaW0c/33T3dvAD7Qc5POaa1Ysnm8wdxxJXqixBBHF/xDEtDjNlPgxOpwb0tF8LPMnGEI37gvIXrumMDGf5DUTHjy2dI6Foaq4y5oOq4MgjWZz7sKlfC/tigT2Bdpdcl9FP03p87N73SCd/EsmuFrGYBR8+6/jrVfX721NmABaNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745892982; c=relaxed/simple;
-	bh=gZAOuS44MYhz7NBYoj56A+0XayAShTo+iK6h4Wr0/zc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=axkaO7naD32Y5TIL72Mud1IGqdoCNjPnVHNM8vdLHItvoHrdP4nJsreQhXFtRX6RrykyKhgHDHzADoUmtVXCNR7C2M+29eeNpMUgUSFMfX6uJVmpIaLrNjAozd7Ii4olJ2GNjDLvsFsT764v4/FerP6jux6Wqols2sQmaQsbJOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=mhiVYgSv; arc=none smtp.client-ip=23.23.7.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 3CEEE60472;
-	Tue, 29 Apr 2025 02:07:11 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=gZAOuS44MYhz7NBYoj56A+0XayAShTo+iK6h4Wr0/zc=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=message-id:references:mime-version:subject:date:from:in-reply-to:cc:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1745892431; v=1;
-	b=mhiVYgSvo8a4gBeShc7PpourNwPH3KKLmy1CRTfFs7pFHZtO8r4reAKeYjhFEOnOaGJ9/shg
-	n+KcM5zpLmfFOqCYSdzWayLPVbbsCh7pnUwklQl0SVRGvlxRGF2ElPDf9nVEwRARBhWYlly4ok7
-	azd+pMZuRheeXmbqIhItRxxI=
-Received: from smtpclient.apple (tk2-118-59677.vs.sakura.ne.jp [153.121.56.181])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 6FF7E60484;
-	Tue, 29 Apr 2025 02:07:03 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1745892780; c=relaxed/simple;
+	bh=zIBZEkzEz0qHWJg5nnrZmToWJe3AlL91ty8mA9UxuEk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUCwl+r908L/6duPZ08XuhS0Ah7FNCX31rv3Zw4UFygMmF7zMz4B6ODAUSRFnY2EiONegxsh+oac9XXKwjaJigyPqfpRAbqULDvzxgIY/k0wev9SSHZ7/rd/odtHWZeMdEaJnuajrREHAu/f78ghDMpS1aUBsYmAXLzQrcqiWY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NMPPqWUL; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745892779; x=1777428779;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zIBZEkzEz0qHWJg5nnrZmToWJe3AlL91ty8mA9UxuEk=;
+  b=NMPPqWULTuiZj5r+11XyLIcFclry8JZ8qz1qfNyFz0fF2MSe/5wfYFvG
+   Zkfhda/f38AT3e3F5OcuptLqGsDTGTmAjzpsV7vg00lKwWiyyivu8SQBm
+   Ttp5vSkMekVXUrbC1VLaSaYaiIEARKOqXHZ6CrKz5E+ttHkfz8o2CeVIP
+   2CcFHDjwEFHqrn4p+C1EQW7T/THSgeddRZ57NV5l01mE7OYrKEPDxvv2F
+   ckoXuWV9qkdEhSXSkpB/92XYl/PYmnzBWRbrRvGasdWpSnrlXATn67nHV
+   tFTgkAl5HW1PKXPpD0yMu9KR5gB22h/TN3+N+1ux+DsuSe4fS4pZnOkVp
+   w==;
+X-CSE-ConnectionGUID: oTI2g/51Soe2Glddd+HPAg==
+X-CSE-MsgGUID: HZN1SV/EScGO/cdKaCd/wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47641264"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="47641264"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 19:12:58 -0700
+X-CSE-ConnectionGUID: PgtT/sVnTcyJIj7GTIKVrA==
+X-CSE-MsgGUID: VBjHGcPQSj2zSMxum7MGbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="137721801"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 19:12:50 -0700
+Message-ID: <c0d729e4-1082-486c-9aac-39ae1a2bbd41@linux.intel.com>
+Date: Tue, 29 Apr 2025 10:08:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH 07/17] bcache: use bio_add_virt_nofail
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <227da5a0-c5fd-432a-8227-7a5d8883ca0d@kernel.org>
-Date: Tue, 29 Apr 2025 10:06:50 +0800
-Cc: Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org,
- "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
- Jack Wang <jinpu.wang@ionos.com>,
- Coly Li <colyli@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>,
- Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>,
- Andreas Gruenbacher <agruenba@redhat.com>,
- Carlos Maiolino <cem@kernel.org>,
- Naohiro Aota <naohiro.aota@wdc.com>,
- Johannes Thumshirn <jth@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Pavel Machek <pavel@kernel.org>,
- linux-bcache@vger.kernel.org,
- dm-devel@lists.linux.dev,
- linux-btrfs@vger.kernel.org,
- gfs2@lists.linux.dev,
- linux-fsdevel@vger.kernel.org,
- linux-xfs@vger.kernel.org,
- linux-pm@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F6D90517-F3D2-4E32-85FE-53B20710E13D@coly.li>
-References: <20250422142628.1553523-1-hch@lst.de>
- <20250422142628.1553523-8-hch@lst.de>
- <227da5a0-c5fd-432a-8227-7a5d8883ca0d@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1745892431077720643.5242.6730310602892018715@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=6810344f
-	a=hXS1xhdqaCDGgKeHTjTB6g==:117 a=hXS1xhdqaCDGgKeHTjTB6g==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=9MUAQWKrSuUz9z0uTEMA:9 a=QEXdDO2ut3YA:10
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/24] PCI/P2PDMA: Refactor the p2pdma mapping helpers
+To: Leon Romanovsky <leon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Niklas Schnelle <schnelle@linux.ibm.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Dan Williams
+ <dan.j.williams@intel.com>, Kanchan Joshi <joshi.k@samsung.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
+References: <cover.1745831017.git.leon@kernel.org>
+ <3ad16e0fc3b8f66593a837c9cdcd34bda1e1ab22.1745831017.git.leon@kernel.org>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <3ad16e0fc3b8f66593a837c9cdcd34bda1e1ab22.1745831017.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 4/28/25 17:22, Leon Romanovsky wrote:
+> From: Christoph Hellwig<hch@lst.de>
+> 
+> The current scheme with a single helper to determine the P2P status
+> and map a scatterlist segment force users to always use the map_sg
+> helper to DMA map, which we're trying to get away from because they
+> are very cache inefficient.
+> 
+> Refactor the code so that there is a single helper that checks the P2P
+> state for a page, including the result that it is not a P2P page to
+> simplify the callers, and a second one to perform the address translation
+> for a bus mapped P2P transfer that does not depend on the scatterlist
+> structure.
+> 
+> Signed-off-by: Christoph Hellwig<hch@lst.de>
+> Reviewed-by: Logan Gunthorpe<logang@deltatee.com>
+> Acked-by: Bjorn Helgaas<bhelgaas@google.com>
+> Tested-by: Jens Axboe<axboe@kernel.dk>
+> Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
+> Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
 
-
-> 2025=E5=B9=B44=E6=9C=8824=E6=97=A5 14:14=EF=BC=8CDamien Le Moal =
-<dlemoal@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On 4/22/25 23:26, Christoph Hellwig wrote:
->> Convert the __bio_add_page(..., virt_to_page(), ...) pattern to the
->> bio_add_virt_nofail helper implementing it.
->>=20
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-For bcache part,
-
-Acked-by: Coly Li <colyli@kernel.org>
-
-Thanks.
-
-Coly Li
-
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
