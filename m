@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-20944-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20947-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D168DAA4200
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 06:37:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B36EBAA41F7
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 06:37:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 161503AFA75
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 04:36:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20D974C0B9F
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 04:37:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4D415D1;
-	Wed, 30 Apr 2025 04:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 252831D89E3;
+	Wed, 30 Apr 2025 04:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/TISD20"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YF3e6NW3"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B23210FB
-	for <linux-block@vger.kernel.org>; Wed, 30 Apr 2025 04:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC5679FE
+	for <linux-block@vger.kernel.org>; Wed, 30 Apr 2025 04:36:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745987810; cv=none; b=njMyRmNrHCwamA4xA1q8hAqjX0uBIuM/DVSQJUOR2wWzw2MQ5/7O0r4bvLSp0CoRWMPkjXWp6ndPLndfcsnM4YbszUg2C8UoKYFWr1fI4g6US9ayQTLo3pC5eSCuygG6ZO4ykQc0x3TxHY3GXdBaz6tb62Q516JCIrj3XeKQyXk=
+	t=1745987820; cv=none; b=kFVdXhNAmae6FEuZzUA0SzKI9LMJGRzUMMpmYNpWhFHqGhZ444A3+Pfbx02oiXCCbHndILBkoMmFOfrP+DcX59WXjLqb09CZj9pjjEAkRbo3lOv2tuloDbvrcGBJpEH/u3v8+Jv+QeBPAA44MbPsRUHdiovfDIBUz7cuJtjjbuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745987810; c=relaxed/simple;
-	bh=bSfiMhtpd5ddG+uTOi4aUVTsk9c32RkWN91HR16Z6PI=;
+	s=arc-20240116; t=1745987820; c=relaxed/simple;
+	bh=xlkSSMa37tQlJREq2N/F2S5hoEJYm+62FDA+UV8eAnE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pXAfkQjIdLJ/ROcXyCVCYSMhl1HOwCNREY6WAg/5IeTkwCz5Nh5xpmFmiPDIfc/d6zxsArBiCe+04jwu20G3HIjpFMk5rN1Fiwr2WywtaSUF56997s4Qv6ldvyuw0l8I5FMzTyitzqZNFqO6E5lXbIWW1ZbTwCgASHP9MNTBMWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a/TISD20; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ho6roS+k+/as29vpMXc+dXhcUGIhcfnXTk8UcCOIIex/i51BHquA/gjcYOXeOojZawXaazhab+ANNDhSOuS8I5VyJkZlINnW4wqkerzU9kqC8pD7BJPNwYDkPBCf88HYqNHEBivQajQr5F/ZGQpyqqGQ9mnlB3jl54M3OIuV/68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YF3e6NW3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745987807;
+	s=mimecast20190719; t=1745987813;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rMDoSAyTwzcYL9bf+goJ4obTuaPsOtOLkHKKRZLOKqM=;
-	b=a/TISD20OFdlUIZUNH4RoB7yzHyUdaZmtqfK4OEJPAtvIvP1iaSajNsSsy0HoefyCeinKM
-	M1QO2/BUaZY6xSfgeNR82IqdkxR0SrcJ2+hckkrcmsGjsCrlwFdmp6nycpQinaUs+O7Ocd
-	vEWwJR+xorpZZ8nCYwwlat+ls0RiSBU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=PP2rbkmmgVz0z0wAfW4yxpOlTdwkr9x/e4k5k3sT0Mk=;
+	b=YF3e6NW3nkqb5Op8+TaBeJ3pFBGb+KNlOxdO9cXclouD/LdxZA+syipnwstRw4n+zCV5NS
+	Y8TYRo5JSwMsoDfX96cCYdGzKXjVJh9pn/rvdXOXQl56j7B07WmbFuVjiVoLHn4FuRV7mZ
+	6+71vq8EDtoVezHwCd7HSsXSou40LRc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-454-B4oM-kpvOdiP_oLeZbpfwA-1; Wed,
- 30 Apr 2025 00:36:42 -0400
-X-MC-Unique: B4oM-kpvOdiP_oLeZbpfwA-1
-X-Mimecast-MFC-AGG-ID: B4oM-kpvOdiP_oLeZbpfwA_1745987801
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-326-AuEj_MmeNGq1stMgSeh0Ng-1; Wed,
+ 30 Apr 2025 00:36:47 -0400
+X-MC-Unique: AuEj_MmeNGq1stMgSeh0Ng-1
+X-Mimecast-MFC-AGG-ID: AuEj_MmeNGq1stMgSeh0Ng_1745987805
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E2D21956089;
-	Wed, 30 Apr 2025 04:36:41 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD1A91800873;
+	Wed, 30 Apr 2025 04:36:44 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.48])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2FD6E1956094;
-	Wed, 30 Apr 2025 04:36:39 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 18018180045C;
+	Wed, 30 Apr 2025 04:36:43 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
@@ -65,9 +65,9 @@ Cc: Nilay Shroff <nilay@linux.ibm.com>,
 	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 17/24] block: remove elevator queue's type check in elv_attr_show/store()
-Date: Wed, 30 Apr 2025 12:35:19 +0800
-Message-ID: <20250430043529.1950194-18-ming.lei@redhat.com>
+Subject: [PATCH V4 18/24] block: fail to show/store elevator sysfs attribute if elevator is dying
+Date: Wed, 30 Apr 2025 12:35:20 +0800
+Message-ID: <20250430043529.1950194-19-ming.lei@redhat.com>
 In-Reply-To: <20250430043529.1950194-1-ming.lei@redhat.com>
 References: <20250430043529.1950194-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -77,41 +77,88 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-elevatore queue's type is assigned since its allocation, and never
-get cleared until it is released.
+Prepare for moving elv_register[unregister]_queue out of elevator_lock
+& queue freezing, so we may have to call elv_unregister_queue() after
+elevator ->exit() is called, then there is small window for user to
+call into ->show()/store(), and user-after-free can be caused.
 
-So its ->type is always not NULL, remove the unnecessary check.
+Fail to show/store elevator sysfs attribute if elevator is dying by
+adding one new flag of ELEVATOR_FLAG_DYNG, which is protected by
+elevator ->sysfs_lock.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/elevator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-mq-sched.c |  1 +
+ block/elevator.c     | 10 ++++++----
+ block/elevator.h     |  1 +
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 336a15ffecfa..55a0fd105147 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -551,5 +551,6 @@ void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e)
+ 	if (e->type->ops.exit_sched)
+ 		e->type->ops.exit_sched(e);
+ 	blk_mq_sched_tags_teardown(q, flags);
++	set_bit(ELEVATOR_FLAG_DYING, &q->elevator->flags);
+ 	q->elevator = NULL;
+ }
 diff --git a/block/elevator.c b/block/elevator.c
-index 2b16394972c0..86e448bc12ae 100644
+index 86e448bc12ae..fd0bcf22aaee 100644
 --- a/block/elevator.c
 +++ b/block/elevator.c
-@@ -425,7 +425,7 @@ elv_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
+@@ -418,14 +418,15 @@ elv_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
+ {
+ 	const struct elv_fs_entry *entry = to_elv(attr);
+ 	struct elevator_queue *e;
+-	ssize_t error;
++	ssize_t error = -ENODEV;
+ 
+ 	if (!entry->show)
+ 		return -EIO;
  
  	e = container_of(kobj, struct elevator_queue, kobj);
  	mutex_lock(&e->sysfs_lock);
--	error = e->type ? entry->show(e, page) : -ENOENT;
-+	error = entry->show(e, page);
+-	error = entry->show(e, page);
++	if (!test_bit(ELEVATOR_FLAG_DYING, &e->flags))
++		error = entry->show(e, page);
  	mutex_unlock(&e->sysfs_lock);
  	return error;
  }
-@@ -443,7 +443,7 @@ elv_attr_store(struct kobject *kobj, struct attribute *attr,
+@@ -436,14 +437,15 @@ elv_attr_store(struct kobject *kobj, struct attribute *attr,
+ {
+ 	const struct elv_fs_entry *entry = to_elv(attr);
+ 	struct elevator_queue *e;
+-	ssize_t error;
++	ssize_t error = -ENODEV;
+ 
+ 	if (!entry->store)
+ 		return -EIO;
  
  	e = container_of(kobj, struct elevator_queue, kobj);
  	mutex_lock(&e->sysfs_lock);
--	error = e->type ? entry->store(e, page, length) : -ENOENT;
-+	error = entry->store(e, page, length);
+-	error = entry->store(e, page, length);
++	if (!test_bit(ELEVATOR_FLAG_DYING, &e->flags))
++		error = entry->store(e, page, length);
  	mutex_unlock(&e->sysfs_lock);
  	return error;
  }
+diff --git a/block/elevator.h b/block/elevator.h
+index 9198676644a9..76a90a1b7ed6 100644
+--- a/block/elevator.h
++++ b/block/elevator.h
+@@ -121,6 +121,7 @@ struct elevator_queue
+ };
+ 
+ #define ELEVATOR_FLAG_REGISTERED	0
++#define ELEVATOR_FLAG_DYING		1
+ 
+ /*
+  * block elevator interface
 -- 
 2.47.0
 
