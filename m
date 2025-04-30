@@ -1,405 +1,128 @@
-Return-Path: <linux-block+bounces-20984-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20986-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D7CAA51B5
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 18:30:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BAD4AA56C2
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 23:25:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 414083A68BF
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 16:30:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01BE71C237F1
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 21:26:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A701C5F23;
-	Wed, 30 Apr 2025 16:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5CF2D4B68;
+	Wed, 30 Apr 2025 21:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ElgW31II"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EbcXvme0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16703219A7E
-	for <linux-block@vger.kernel.org>; Wed, 30 Apr 2025 16:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD3F2D0261;
+	Wed, 30 Apr 2025 21:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746030631; cv=none; b=sj0gKv+bC99x4rTg+soaNU1bPTlXarfYsTfsTyMaDM0NKhtz8tQAT/+qe4Bvf0Ff5Ly9j5l38o+eFfG/Pc297/fplRgggm2YqeINUWd3br83tcYg4iCu69gKNopsfe1iXDdEP6uYpHax8RxYunz3U3K/VNwoP4QOc+gu9qXfcsI=
+	t=1746048128; cv=none; b=O/1Ot/bqoMxcERxthcsZaO5IKbHfHYAR0jE6/CITfYwTV8j/klVqJgLwDkNx2lzv/U0LbnexhyPDQ9iyybyq3txQ//irMVe4H6yuGklIsHrWiGyBI+5yqeGH9bx2g+DlXIzbEAVEgfDYp+j9MQNTM7hK49aSEP9H/cZIHUQsuGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746030631; c=relaxed/simple;
-	bh=oQjUgycwXSq6SkvdSFPI7nVp61tVGEpiZTKwlO8cTcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9SuFNL3tC8ER1Y5Zyl3wPAELofY7/FyzfT2QohU3c8zi1+VOAYO7e000VlYNU0v/NbZWHC5mexAapz7x0whxpHvzrTnFPJNG2imzBVkrv169doquzXzo1o7W6hPOL18jAnKMtzyJbvXdpH+Ed9/b+tGfpge5sY+pzosIt7xGJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ElgW31II; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224172f32b3so18395ad.2
-        for <linux-block@vger.kernel.org>; Wed, 30 Apr 2025 09:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746030628; x=1746635428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DofSiTMBmY5pAgMuZj9W3vjOJDY4yg7UuqE8Ycn9Q2c=;
-        b=ElgW31IIbghIHflli5hwZYCFmloAHfg8NyYGciVqVDkabKmf9kKfKR+u4YtwPwVjdc
-         ya/+ReuOJ96eR6oaT+OoxZCNiXQ9KhX594r14PM/zGywO2rMzsUMswl80Xz+9cfybadp
-         WyQmYIAQZ45oaX4MURiuTAAhPcgihweJFYKSfqJfUw/zcmrQBNA/M1aHqT/eKKsrp0wJ
-         NG+PRmPtp9NCpgsjB4FpGgW5z3zmVJg26/a+3on9Cs2DyVjAcVUNbgsyy7Mm15rDrATV
-         Gc6nmLXK0FS+/7mSdZwb71BOvYljiB2DOGtLqn/1hRw6pU7xgyaetyIy+Ndi2733tUGT
-         IDOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746030628; x=1746635428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DofSiTMBmY5pAgMuZj9W3vjOJDY4yg7UuqE8Ycn9Q2c=;
-        b=iGXpIshymdwIs6s2AwYaD7UDfLSlcX0j+TtjT09sf4gUTOWetUXzHyV2adTh7GdwR1
-         E2eYZitNovSRF10r53CNueHDa4o1yJ1FP7Cmm1y+XZXKReFfuO63K3a/uDUeQ59rbRzn
-         85OUAltik8YjYgqlq4l3M3P91dUjV21VMcu+7g2qqRxtWzkQh5Y7FDRlaNy3gJJrIzwW
-         2VJByTEu8GcJsiqR1t43YFZdHS7czEVUFwH6XlL0AnLi7wrO685ADaxWHUToEBPuJd0s
-         2fPUgaBWstVhae2HRAbF73ckfnk5FfYbz+v7XOvKvKIcW+z4QVJYNrsZXsyJ9lDi9Orv
-         vuFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSCby0MfpSK+Eun8euVp3H3MM8wR68ACLxnqOrOyioGthab21qaEAadyDGu8GTnt3Lt5ZmOCRyhOj3Ew==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv/pXH1cKGDGVmC5ncB7Kxy9/j1Gzwf+Z8wZP4eAhZUXoLFOgD
-	fe+wg2Zug8jiD6ZgAOJ7IoTAfaJ1ygCqleeF4MzhP/94bU/bifLT3jeR7HKzgXiGV8cv204R/yb
-	5Ahafsb5yAGc2OeDSbAPPmNKfhSthcyTn5v/cqw==
-X-Gm-Gg: ASbGncu3awkwzQtC3jkIvcQNneRpjcLvqQ9l318YkibENitP8gbOGXQL57bkm5kovaK
-	Ybv24bFZkig6tvXyRVZ98wBv2M9PTBco01u2CPMzE93RK4Be11/EP0NcPzP+yNO2Un2YzIHnE7K
-	TcNunA+22O//w6TH9B1jup
-X-Google-Smtp-Source: AGHT+IFhPlXJ3dr4dHz7nD/ls/UhEcsFNOIjJIfHnI1vsJk/uK12XmNfWbgNZ4LnSPQD4H+erpf0rnt8u9cUdeYx69Q=
-X-Received: by 2002:a17:903:3c6b:b0:224:13a2:ab9a with SMTP id
- d9443c01a7336-22df57b001amr17468525ad.7.1746030628093; Wed, 30 Apr 2025
- 09:30:28 -0700 (PDT)
+	s=arc-20240116; t=1746048128; c=relaxed/simple;
+	bh=aSuIrbsU7iPfmUiQAkVCXhmL6aZYHSF3QTItzix92p0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mS3NRfaSk5H/B/wXlC+fdyM781p0AREenX9TiDPwED7qDUXijwjqU+C/VZBOylImItuA2sfVmGH/QM2T3N7iKOsx9WEXyxtHo6SXIqRLzZctSNl7izHQUzZKTxUm9S7DIm+mV6hM9RKP/P5OyGMhZxkiZSiUdH9eXkMu7GVDP7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EbcXvme0; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=j24qsqHxCKaWzZXCgXMBqVsWj3DT0iprynbePLhpEf8=; b=EbcXvme0E0cBsWY54dwvJZZqer
+	uIZ0ovYKY7tb0g5mesAB2Aa53BsNGnyUpr0aIhFwDxVuZ7QEzSrwaB/QpKI2UmZRBwlzldilEkyZE
+	/gsDx6ahG4xHt7dwOn0hsCwoB0wjk12SWjASHgCAhzz+jEdla3bAoVaBllqIGdKmLGe2xlVhivkHV
+	Ybrv4J51tZ1WKFDny0HFc5MJuPRCC6iQACPMdU1mrvbibbspt0NZ93Hw0ygM6ryqYp2i2ZyKZI5jm
+	P548WpXmX+694wfG3IGVmh0RoJ/M6pCAU5mD6ne7Bu67yQMrRCpQKA5GfD8c2V69LUv8UIMW6iNdI
+	9jXs5dKQ==;
+Received: from [206.0.71.65] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAEsT-0000000E2VP-3mpt;
+	Wed, 30 Apr 2025 21:22:02 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Jack Wang <jinpu.wang@ionos.com>,
+	Coly Li <colyli@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	frank.li@vivo.com,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-btrfs@vger.kernel.org,
+	gfs2@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: add more bio helpers v2
+Date: Wed, 30 Apr 2025 16:21:30 -0500
+Message-ID: <20250430212159.2865803-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428094420.1584420-1-ming.lei@redhat.com> <20250428094420.1584420-7-ming.lei@redhat.com>
- <CADUfDZrFDbYmnm7LEt94UVhn-tqGM6Fnfqvc2fuq8OqQPdNu3Q@mail.gmail.com> <aBJFk0FuWwt9GpC_@fedora>
-In-Reply-To: <aBJFk0FuWwt9GpC_@fedora>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 30 Apr 2025 09:30:16 -0700
-X-Gm-Features: ATxdqUE3bPhror1fT4Kv4SHKjs9zwuOqvGTjOUKvi2UNh1sGNtR8FGVQhISkoI4
-Message-ID: <CADUfDZq=3it0OAaSysHtdQ_+EdMwCNJ38HH1R6EdJM5U3JdkOA@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/7] ublk: register buffer to specified io_uring & buf
- index via UBLK_F_AUTO_BUF_REG
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, 
-	Pavel Begunkov <asml.silence@gmail.com>, linux-block@vger.kernel.org, 
-	Uday Shankar <ushankar@purestorage.com>, Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Apr 30, 2025 at 8:45=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
-e:
->
-> On Mon, Apr 28, 2025 at 05:52:28PM -0700, Caleb Sander Mateos wrote:
-> > On Mon, Apr 28, 2025 at 2:45=E2=80=AFAM Ming Lei <ming.lei@redhat.com> =
-wrote:
-> > >
-> > > Add UBLK_F_AUTO_BUF_REG for supporting to register buffer automatical=
-ly
-> > > to specified io_uring context and buffer index.
-> > >
-> > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > ---
-> > >  drivers/block/ublk_drv.c      | 56 ++++++++++++++++++++++++++++-----=
---
-> > >  include/uapi/linux/ublk_cmd.h | 38 ++++++++++++++++++++++++
-> > >  2 files changed, 84 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > index 1fd20e481a60..e82618442749 100644
-> > > --- a/drivers/block/ublk_drv.c
-> > > +++ b/drivers/block/ublk_drv.c
-> > > @@ -66,7 +66,8 @@
-> > >                 | UBLK_F_USER_COPY \
-> > >                 | UBLK_F_ZONED \
-> > >                 | UBLK_F_USER_RECOVERY_FAIL_IO \
-> > > -               | UBLK_F_UPDATE_SIZE)
-> > > +               | UBLK_F_UPDATE_SIZE \
-> > > +               | UBLK_F_AUTO_BUF_REG)
-> > >
-> > >  #define UBLK_F_ALL_RECOVERY_FLAGS (UBLK_F_USER_RECOVERY \
-> > >                 | UBLK_F_USER_RECOVERY_REISSUE \
-> > > @@ -146,7 +147,10 @@ struct ublk_uring_cmd_pdu {
-> > >
-> > >  struct ublk_io {
-> > >         /* userspace buffer address from io cmd */
-> > > -       __u64   addr;
-> > > +       union {
-> > > +               __u64   addr;
-> > > +               struct ublk_auto_buf_reg buf;
-> >
-> > Maybe add a comment justifying why these fields can overlap? From my
-> > understanding, buf is valid iff UBLK_F_AUTO_BUF_REG is set on the
-> > ublk_queue and addr is valid iff neither UBLK_F_USER_COPY,
-> > UBLK_F_SUPPORT_ZERO_COPY, nor UBLK_F_AUTO_BUF_REG is set.
->
-> ->addr is for storing the userspace buffer, which is only used in
-> non-zc cases(zc, auto_buf_reg) or user copy case.
+Hi all,
 
-Right, could you add a comment to that effect? I think using
-overlapping fields is subtle and has the potential to break in the
-future if the usage of the fields changes. Documenting the assumptions
-clearly would go a long way.
+this series adds more block layer helpers to remove boilerplate code when
+adding memory to a bio or to even do the entire synchronous I/O.
 
->
-> >
-> > > +       };
-> > >         unsigned int flags;
-> > >         int res;
-> > >
-> > > @@ -626,7 +630,7 @@ static inline bool ublk_support_zero_copy(const s=
-truct ublk_queue *ubq)
-> > >
-> > >  static inline bool ublk_support_auto_buf_reg(const struct ublk_queue=
- *ubq)
-> > >  {
-> > > -       return false;
-> > > +       return ubq->flags & UBLK_F_AUTO_BUF_REG;
-> > >  }
-> > >
-> > >  static inline bool ublk_support_user_copy(const struct ublk_queue *u=
-bq)
-> > > @@ -1177,6 +1181,16 @@ static inline void __ublk_abort_rq(struct ublk=
-_queue *ubq,
-> > >                 blk_mq_end_request(rq, BLK_STS_IOERR);
-> > >  }
-> > >
-> > > +
-> > > +static inline void ublk_init_auto_buf_reg(const struct ublk_io *io,
-> > > +                                         struct io_buf_data *data)
-> > > +{
-> > > +       data->index =3D io->buf.index;
-> > > +       data->ring_fd =3D io->buf.ring_fd;
-> > > +       data->has_fd =3D true;
-> > > +       data->registered_fd =3D io->buf.flags & UBLK_AUTO_BUF_REGISTE=
-RED_RING;
-> > > +}
-> > > +
-> > >  static bool ublk_auto_buf_reg(struct ublk_queue *ubq, struct request=
- *req,
-> > >                               struct ublk_io *io, unsigned int issue_=
-flags)
-> > >  {
-> > > @@ -1187,6 +1201,9 @@ static bool ublk_auto_buf_reg(struct ublk_queue=
- *ubq, struct request *req,
-> > >         };
-> > >         int ret;
-> > >
-> > > +       if (ublk_support_auto_buf_reg(ubq))
-> >
-> > This check seems redundant with the check in the caller? Same comment
-> > about ublk_auto_buf_unreg(). That would allow you to avoid adding the
-> > ubq argument to ublk_auto_buf_unreg().
->
-> Yeah, actually I removed one feature which just registers buffer to
-> the uring command context, then forget to update the check.
->
-> >
-> > > +               ublk_init_auto_buf_reg(io, &data);
-> > > +
-> > >         /* one extra reference is dropped by ublk_io_release */
-> > >         ublk_init_req_ref(ubq, req, 2);
-> > >         ret =3D io_buffer_register_bvec(io->cmd, &data, issue_flags);
-> > > @@ -2045,7 +2062,7 @@ static int ublk_fetch(struct io_uring_cmd *cmd,=
- struct ublk_queue *ubq,
-> > >                  */
-> > >                 if (!buf_addr && !ublk_need_get_data(ubq))
-> > >                         goto out;
-> > > -       } else if (buf_addr) {
-> > > +       } else if (buf_addr && !ublk_support_auto_buf_reg(ubq)) {
-> > >                 /* User copy requires addr to be unset */
-> > >                 ret =3D -EINVAL;
-> > >                 goto out;
-> > > @@ -2058,13 +2075,17 @@ static int ublk_fetch(struct io_uring_cmd *cm=
-d, struct ublk_queue *ubq,
-> > >         return ret;
-> > >  }
-> > >
-> > > -static void ublk_auto_buf_unreg(struct ublk_io *io, struct io_uring_=
-cmd *cmd,
-> > > +static void ublk_auto_buf_unreg(const struct ublk_queue *ubq,
-> > > +                               struct ublk_io *io, struct io_uring_c=
-md *cmd,
-> > >                                 struct request *req, unsigned int iss=
-ue_flags)
-> > >  {
-> > >         struct io_buf_data data =3D {
-> > >                 .index =3D req->tag,
-> > >         };
-> > >
-> > > +       if (ublk_support_auto_buf_reg(ubq))
-> > > +               ublk_init_auto_buf_reg(io, &data);
-> > > +
-> > >         WARN_ON_ONCE(io_buffer_unregister_bvec(cmd, &data, issue_flag=
-s));
-> > >         io->flags &=3D ~UBLK_IO_FLAG_AUTO_BUF_REG;
-> > >  }
-> > > @@ -2088,7 +2109,8 @@ static int ublk_commit_and_fetch(const struct u=
-blk_queue *ubq,
-> > >                 if (!ub_cmd->addr && (!ublk_need_get_data(ubq) ||
-> > >                                         req_op(req) =3D=3D REQ_OP_REA=
-D))
-> > >                         return -EINVAL;
-> > > -       } else if (req_op(req) !=3D REQ_OP_ZONE_APPEND && ub_cmd->add=
-r) {
-> > > +       } else if ((req_op(req) !=3D REQ_OP_ZONE_APPEND &&
-> > > +                               !ublk_support_auto_buf_reg(ubq)) && u=
-b_cmd->addr) {
-> > >                 /*
-> > >                  * User copy requires addr to be unset when command i=
-s
-> > >                  * not zone append
-> > > @@ -2097,7 +2119,7 @@ static int ublk_commit_and_fetch(const struct u=
-blk_queue *ubq,
-> > >         }
-> > >
-> > >         if (io->flags & UBLK_IO_FLAG_AUTO_BUF_REG)
-> > > -               ublk_auto_buf_unreg(io, cmd, req, issue_flags);
-> > > +               ublk_auto_buf_unreg(ubq, io, cmd, req, issue_flags);
-> > >
-> > >         ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
-> > >
-> > > @@ -2788,6 +2810,11 @@ static int ublk_ctrl_add_dev(const struct ublk=
-srv_ctrl_cmd *header)
-> > >         else if (!(info.flags & UBLK_F_UNPRIVILEGED_DEV))
-> > >                 return -EPERM;
-> > >
-> > > +       /* F_AUTO_BUF_REG and F_SUPPORT_ZERO_COPY can't co-exist */
-> > > +       if ((info.flags & UBLK_F_AUTO_BUF_REG) &&
-> > > +                       (info.flags & UBLK_F_SUPPORT_ZERO_COPY))
-> > > +               return -EINVAL;
-> > > +
-> > >         /* forbid nonsense combinations of recovery flags */
-> > >         switch (info.flags & UBLK_F_ALL_RECOVERY_FLAGS) {
-> > >         case 0:
-> > > @@ -2817,8 +2844,11 @@ static int ublk_ctrl_add_dev(const struct ublk=
-srv_ctrl_cmd *header)
-> > >                  * For USER_COPY, we depends on userspace to fill req=
-uest
-> > >                  * buffer by pwrite() to ublk char device, which can'=
-t be
-> > >                  * used for unprivileged device
-> > > +                *
-> > > +                * Same with zero copy or auto buffer register.
-> > >                  */
-> > > -               if (info.flags & (UBLK_F_USER_COPY | UBLK_F_SUPPORT_Z=
-ERO_COPY))
-> > > +               if (info.flags & (UBLK_F_USER_COPY | UBLK_F_SUPPORT_Z=
-ERO_COPY |
-> > > +                                       UBLK_F_AUTO_BUF_REG))
-> > >                         return -EINVAL;
-> > >         }
-> > >
-> > > @@ -2876,17 +2906,22 @@ static int ublk_ctrl_add_dev(const struct ubl=
-ksrv_ctrl_cmd *header)
-> > >                 UBLK_F_URING_CMD_COMP_IN_TASK;
-> > >
-> > >         /* GET_DATA isn't needed any more with USER_COPY or ZERO COPY=
- */
-> > > -       if (ub->dev_info.flags & (UBLK_F_USER_COPY | UBLK_F_SUPPORT_Z=
-ERO_COPY))
-> > > +       if (ub->dev_info.flags & (UBLK_F_USER_COPY | UBLK_F_SUPPORT_Z=
-ERO_COPY |
-> > > +                               UBLK_F_AUTO_BUF_REG))
-> > >                 ub->dev_info.flags &=3D ~UBLK_F_NEED_GET_DATA;
-> > >
-> > >         /*
-> > >          * Zoned storage support requires reuse `ublksrv_io_cmd->addr=
-` for
-> > >          * returning write_append_lba, which is only allowed in case =
-of
-> > >          * user copy or zero copy
-> > > +        *
-> > > +        * UBLK_F_AUTO_BUF_REG can't be enabled for zoned because it =
-need
-> > > +        * the space for getting ring_fd and buffer index.
-> > >          */
-> > >         if (ublk_dev_is_zoned(ub) &&
-> > >             (!IS_ENABLED(CONFIG_BLK_DEV_ZONED) || !(ub->dev_info.flag=
-s &
-> > > -            (UBLK_F_USER_COPY | UBLK_F_SUPPORT_ZERO_COPY)))) {
-> > > +            (UBLK_F_USER_COPY | UBLK_F_SUPPORT_ZERO_COPY)) ||
-> > > +            (ub->dev_info.flags & UBLK_F_AUTO_BUF_REG))) {
-> > >                 ret =3D -EINVAL;
-> > >                 goto out_free_dev_number;
-> > >         }
-> > > @@ -3403,6 +3438,7 @@ static int __init ublk_init(void)
-> > >
-> > >         BUILD_BUG_ON((u64)UBLKSRV_IO_BUF_OFFSET +
-> > >                         UBLKSRV_IO_BUF_TOTAL_SIZE < UBLKSRV_IO_BUF_OF=
-FSET);
-> > > +       BUILD_BUG_ON(sizeof(struct ublk_auto_buf_reg) !=3D sizeof(__u=
-64));
-> > >
-> > >         init_waitqueue_head(&ublk_idr_wq);
-> > >
-> > > diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_=
-cmd.h
-> > > index be5c6c6b16e0..3d7c8c69cf06 100644
-> > > --- a/include/uapi/linux/ublk_cmd.h
-> > > +++ b/include/uapi/linux/ublk_cmd.h
-> > > @@ -219,6 +219,30 @@
-> > >   */
-> > >  #define UBLK_F_UPDATE_SIZE              (1ULL << 10)
-> > >
-> > > +/*
-> > > + * request buffer is registered automatically to ublk server specifi=
-ed
-> > > + * io_uring context before delivering this io command to ublk server=
-,
-> > > + * meantime it is un-registered automatically when completing this i=
-o
-> > > + * command.
-> > > + *
-> > > + * For using this feature:
-> > > + *
-> > > + * - ublk server has to create sparse buffer table
-> > > + *
-> > > + * - pass io_ring context FD from `ublksrv_io_cmd.buf.ring_fd`, and =
-the FD
-> > > + *   can be registered io_ring FD if `UBLK_AUTO_BUF_REGISTERED_RING`=
- is set
-> > > + *   in `ublksrv_io_cmd.flags`, or plain FD
-> > > + *
-> > > + * - pass buffer index from `ublksrv_io_cmd.buf.index`
-> > > + *
-> > > + * This way avoids extra cost from two uring_cmd, but also simplifie=
-s backend
-> > > + * implementation, such as, the dependency on IO_REGISTER_IO_BUF and
-> > > + * IO_UNREGISTER_IO_BUF becomes not necessary.
-> > > + *
-> > > + * This feature isn't available for UBLK_F_ZONED
-> > > + */
-> > > +#define UBLK_F_AUTO_BUF_REG    (1ULL << 11)
-> > > +
-> > >  /* device state */
-> > >  #define UBLK_S_DEV_DEAD        0
-> > >  #define UBLK_S_DEV_LIVE        1
-> > > @@ -339,6 +363,14 @@ static inline __u32 ublksrv_get_flags(const stru=
-ct ublksrv_io_desc *iod)
-> > >         return iod->op_flags >> 8;
-> > >  }
-> > >
-> > > +struct ublk_auto_buf_reg {
-> > > +       __s32  ring_fd;
-> > > +       __u16  index;
-> > > +#define UBLK_AUTO_BUF_REGISTERED_RING            (1 << 0)
-> > > +       __u8   flags;
-> >
-> > The flag could potentially be stored in ublk_io's flags field instead
-> > to avoid taking up this byte.
->
-> `ublk_auto_buf_reg` takes the exact ->addr space in both 'struct ublk_io'
-> and 'struct ublksrv_io_cmd', this way won't take extra byte, but keep cod=
-e simple
-> and reuse for dealing with auto_buf_reg from both 'struct ublk_io' and
-> 'struct ublksrv_io_cmd'.
+The main aim is to avoid having to convert to a struct page in the caller
+when adding kernel direct mapping or vmalloc memory.
 
-Sure, either way is fine by me.
+Changes since v1:
+ - typo fixes
+ - improve commit messages and kerneldoc comments
+ - move bio_add_virt_nofail out of line
+ - make the number of bio_vecs calculation helper more generic
+ - add another vmalloc helper for the common case
 
-Best,
-Caleb
+Diffstat:
+ block/bio.c                   |  101 +++++++++++++++++++++++++++++++++++++++++
+ block/blk-map.c               |   92 +++++++++----------------------------
+ drivers/block/pktcdvd.c       |    2 
+ drivers/block/rnbd/rnbd-srv.c |    7 --
+ drivers/block/ublk_drv.c      |    3 -
+ drivers/block/virtio_blk.c    |    4 -
+ drivers/md/bcache/super.c     |    3 -
+ drivers/md/dm-bufio.c         |    2 
+ drivers/md/dm-integrity.c     |   16 ++----
+ drivers/nvme/host/core.c      |    2 
+ drivers/scsi/scsi_ioctl.c     |    2 
+ drivers/scsi/scsi_lib.c       |    3 -
+ fs/btrfs/scrub.c              |   10 ----
+ fs/gfs2/ops_fstype.c          |   24 +++------
+ fs/hfsplus/wrapper.c          |   46 +++---------------
+ fs/xfs/xfs_bio_io.c           |   30 ++++--------
+ fs/xfs/xfs_buf.c              |   43 +++--------------
+ fs/xfs/xfs_log.c              |   32 ++-----------
+ fs/zonefs/super.c             |   34 ++++---------
+ include/linux/bio.h           |   25 +++++++++-
+ include/linux/blk-mq.h        |    4 -
+ kernel/power/swap.c           |  103 ++++++++++++++++++------------------------
+ 22 files changed, 270 insertions(+), 318 deletions(-)
 
