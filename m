@@ -1,154 +1,116 @@
-Return-Path: <linux-block+bounces-20920-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-20923-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DE3BAA3D70
-	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 01:59:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D47E6AA3E9F
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 02:25:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A82F23ACE78
-	for <lists+linux-block@lfdr.de>; Tue, 29 Apr 2025 23:58:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DACB24814CF
+	for <lists+linux-block@lfdr.de>; Wed, 30 Apr 2025 00:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDBEE256980;
-	Tue, 29 Apr 2025 23:51:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 266832B9A9;
+	Wed, 30 Apr 2025 00:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUhNe/vy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJ3IBiUq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35D425696C;
-	Tue, 29 Apr 2025 23:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B82B33086
+	for <linux-block@vger.kernel.org>; Wed, 30 Apr 2025 00:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970677; cv=none; b=Q99BAc8G9Kuo1JsQVcIkAu97kQ9rQwEmr2srx86ZCijvWyNII+YkHb8b+VWFiSA3ZC1d+pFhT2NITsWr9QTq88oaLK9NqJuOESJslkUWja0eIeOM7BjbRV2BhTt+tAixSZiSZuYTVzUSq1jZGMK6Ut81hZH8i0lq3c3oUxXPLy4=
+	t=1745971771; cv=none; b=P5bvtKzQSEnlpXY0j64zfaKIUB1v0UCZvD46HnbpGD+YijYxjDT5GTj+ERoss46kA0P+3bht95Wf/0ZWJxKKCB+sLqzM3KiWVzNfDvytCN6MU3wEvD26hmDzS1jvzQcO14XNteJnWITJBacEJEqgNp9xs5nB/ug/LSFnEhKq0E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970677; c=relaxed/simple;
-	bh=2gvr+tfeQlHcRGJ8gH3wuldebmB4K931xOHT8FRYLmw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pUXVUvTNi402UDt/xgwP41ZW2IKTgQxyxZuRTWijbsXAunJGwp+3DRF0q9wV9cgE35ftkM+ahlcmeJEnikpsvANzl9Zh1u+FK/GC3rlbvqwNW8L4GpNXnHvtz1N8qiOvhjR6IvXA5mb0SXaRlqIWaLz+SAQ9wLP/dACqBX6J69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUhNe/vy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DC9C4CEEE;
-	Tue, 29 Apr 2025 23:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970677;
-	bh=2gvr+tfeQlHcRGJ8gH3wuldebmB4K931xOHT8FRYLmw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QUhNe/vyjSfqZzaul6H81bvbh7yrnF3KcdfxDb5Wu9HfcbuOEI3OEoGQ8fyWSEsyU
-	 1UKul/jUuk3qlq+I1l6HWU3kWDz57Qvrj56vKDau5SzaVQp3n7QbCNn09ntSD0N2Qz
-	 UXYtn3OhkhMorJQmhSiJED9Nk76PTMwD/iwGbafx8BD7s0yRZ5iQ3JRF9bCmiPyi64
-	 LdGLUDwOLqSjHljhefS0QSBLW3bLvU5mQWQRhhfz7rb5t+kOZYtI38T1c/ZcrOX8Hy
-	 ULsurxf1LJixtWdw10uVkjQTMJ7IVo1jFxpvlPfpwgMiVLEJqV83wqXU+NWY/XRAjO
-	 h+InWE/LXLYLg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 36/39] block: hoist block size validation code to a separate function
-Date: Tue, 29 Apr 2025 19:50:03 -0400
-Message-Id: <20250429235006.536648-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429235006.536648-1-sashal@kernel.org>
-References: <20250429235006.536648-1-sashal@kernel.org>
+	s=arc-20240116; t=1745971771; c=relaxed/simple;
+	bh=nWIRVXNziIXV8U6vS6Ynr/rXvc0HzMyqYPWLe66JFJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZM1Ev+x9CkNmdOXGu6YvcRtwDhaQW08qRwm3Snhqw3FurU5kLCz1lPi4yiOkgK9dTZgdmBGbGBOYNFR/vvGcOVRMXQl2276bDW/HKfIcZTOcHykQTAiG5CXLu+VZc/9zbDgCH97C63QY39KmWh+bYlLtE4SGOpFO17AiZA8aiIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XJ3IBiUq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745971768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5lJzIa8zN478vM1h2v+0aBrpsB1V2UdrD0VW9ycWo8Y=;
+	b=XJ3IBiUqn2xIiOoebwmH/HefniBL2McqdOPN8xjewehlv7LusxvrOSZgfUhoP5R0IXyG9S
+	MNfp1mq3wDvnkpvBKMOf0LUNFlnP9saV1q57GYaSKeQ9sC8iTrl1tSQWYBR//cxj+edgSV
+	luhCOr/STnEY2wILwYoYYHwgLjdNeyc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-qBZhgEgIOvWeqh89gKFP4g-1; Tue,
+ 29 Apr 2025 20:09:23 -0400
+X-MC-Unique: qBZhgEgIOvWeqh89gKFP4g-1
+X-Mimecast-MFC-AGG-ID: qBZhgEgIOvWeqh89gKFP4g_1745971762
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8099180056F;
+	Wed, 30 Apr 2025 00:09:21 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.13])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A1E919560A3;
+	Wed, 30 Apr 2025 00:09:17 +0000 (UTC)
+Date: Wed, 30 Apr 2025 08:09:13 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] selftests: ublk: kublk: build with -Werror iff
+ WERROR!=0
+Message-ID: <aBFqKZFAqwc5dEYl@fedora>
+References: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
+ <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.4
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+On Tue, Apr 29, 2025 at 04:41:03PM -0600, Uday Shankar wrote:
+> Compiler warnings can catch bugs at compile time; thus, heeding them is
+> usually a good idea. Turn warnings into errors by default for the kublk
+> build so that anyone making changes is forced to heed them. Compiler
+> warnings can also sometimes produce annoying false positives, so provide
+> a flag WERROR that the developer can use as follows to have the build
+> and selftests run go through even if there are warnings:
+> 
+> make WERROR=0 TARGETS=ublk kselftest
 
-[ Upstream commit e03463d247ddac66e71143468373df3d74a3a6bd ]
+I thought WERROR is 0 default, but actually the default value is 1.
 
-Hoist the block size validation code to bdev_validate_blocksize so that
-we can call it from filesystems that don't care about the bdev pagecache
-manipulations of set_blocksize.
+Just tried gcc 14/15 and clang 18/20, looks everything works fine.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/174543795720.4139148.840349813093799165.stgit@frogsfrogsfrogs
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/bdev.c           | 33 +++++++++++++++++++++++++++------
- include/linux/blkdev.h |  1 +
- 2 files changed, 28 insertions(+), 6 deletions(-)
+For kernel selftests, I guess the usual way is to do it explicitly
+by passing 'make -C tools/testing/selftests TARGETS=ublk'.
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 06b8cab31d759..e5af18bc43082 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -150,18 +150,39 @@ static void set_init_blocksize(struct block_device *bdev)
- 	BD_INODE(bdev)->i_blkbits = blksize_bits(bsize);
- }
- 
--int set_blocksize(struct file *file, int size)
-+/**
-+ * bdev_validate_blocksize - check that this block size is acceptable
-+ * @bdev:	blockdevice to check
-+ * @block_size:	block size to check
-+ *
-+ * For block device users that do not use buffer heads or the block device
-+ * page cache, make sure that this block size can be used with the device.
-+ *
-+ * Return: On success zero is returned, negative error code on failure.
-+ */
-+int bdev_validate_blocksize(struct block_device *bdev, int block_size)
- {
--	struct inode *inode = file->f_mapping->host;
--	struct block_device *bdev = I_BDEV(inode);
--
--	if (blk_validate_block_size(size))
-+	if (blk_validate_block_size(block_size))
- 		return -EINVAL;
- 
- 	/* Size cannot be smaller than the size supported by the device */
--	if (size < bdev_logical_block_size(bdev))
-+	if (block_size < bdev_logical_block_size(bdev))
- 		return -EINVAL;
- 
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(bdev_validate_blocksize);
-+
-+int set_blocksize(struct file *file, int size)
-+{
-+	struct inode *inode = file->f_mapping->host;
-+	struct block_device *bdev = I_BDEV(inode);
-+	int ret;
-+
-+	ret = bdev_validate_blocksize(bdev, size);
-+	if (ret)
-+		return ret;
-+
- 	if (!file->private_data)
- 		return -EINVAL;
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index d37751789bf58..ef98bcca7f5f7 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1593,6 +1593,7 @@ static inline void bio_end_io_acct(struct bio *bio, unsigned long start_time)
- 	return bio_end_io_acct_remapped(bio, start_time, bio->bi_bdev);
- }
- 
-+int bdev_validate_blocksize(struct block_device *bdev, int block_size);
- int set_blocksize(struct file *file, int size);
- 
- int lookup_bdev(const char *pathname, dev_t *dev);
--- 
-2.39.5
+Even though the build fails for people who is running the test on purpose,
+or doling whole kernel selfests, they still can:
+
+- report the failure
+
+- skip ublk test by adding 'SKIP_TARGETS=ublk' to command line
+
+Also this ways has been used by perf, lib/api, lib/subcmd and lib/sysmbol in
+linux kernel tools/, so I feel the change should be doable, but let Jens decide
+if it is fine to pass -Werror at default:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Otherwise, it still can be enabled conditionally with default off.
+
+
+Thanks,
+Ming
 
 
