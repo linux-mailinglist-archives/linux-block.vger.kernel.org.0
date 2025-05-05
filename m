@@ -1,58 +1,57 @@
-Return-Path: <linux-block+bounces-21250-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21253-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24C26AAAE6C
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 04:56:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98AFDAAB111
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 05:52:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4B533A9097
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 02:51:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 771823B0F20
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 03:48:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1066436EF4B;
-	Mon,  5 May 2025 22:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12CB732B2AD;
+	Tue,  6 May 2025 00:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTOYTq/Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUNZLWfN"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F581D88BE;
-	Mon,  5 May 2025 22:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C08B2BFC82;
+	Mon,  5 May 2025 22:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485223; cv=none; b=cEVFNzhK/6Qsj94UyJasIS5P0I/7DHfXeqaxHAXYaLGEime96wKcqL1qrDyPKUat9whRXa4OZSLgbxfm4DB8oB73kfFO4VHu93aIsRHvpPefIuGFt3O64zK02mKak93RvGtsZWrUIVgB+XrXeMK8GH/FvEuWIhHfBcSzbNZx+vU=
+	t=1746485320; cv=none; b=VaJDpC++i38kz8UcQ7GnwqiBP7wtnEbO3YwXDmOZLen32zYfbijgwbtlIe3El2c+N+AXEa9ceC16ZNPgyCvTOb3WpYjeB+R36J35NrQlDSKwhgpghLfLex/P9UGM9L2GHHmtJTYMBAh3zJ8DUsPr9dcG4ddCVG/48I6Qb0s6ux0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485223; c=relaxed/simple;
-	bh=HvXI5JY7ZUo1VtaL6xdtKZzJ312mMM79yGF5Q5ULP3s=;
+	s=arc-20240116; t=1746485320; c=relaxed/simple;
+	bh=t+QCatSdLPN21Wm4l9aOfZivRhcWh+CBaN4H/deEcXQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qxL6NtcDBFU5ZnvSE53HffeqRShuCY8cnwuWqCjj98wVnesJBi0x62mvlrHTXoYAvExQE9+3rfELw11TYqDHQsQAJ3wYYI0jA/pqj1fWO4D6HxRKEF2JmsOkZWU/pzFigj+iOfGYOYFgSWgy291KIhV+N6n2JkRllloBU0uYm6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTOYTq/Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21A3C4CEED;
-	Mon,  5 May 2025 22:47:01 +0000 (UTC)
+	 MIME-Version; b=kXDEdXvO4DaEe0/XT4/9MGvpFql2E9SU4DnhWB5kLF8SOxShdhQi4DuOsL21ZA4HG1mHfuMA3yCedW4u20B1UArJt1NDt6UgflyuoyXmUjC1NMf+bWnb9LGEjIVS9B/RYHgrE3srIq3M+oXezgKrAETVEFlzZbsAuo1g2hkgDI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUNZLWfN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F485C4CEED;
+	Mon,  5 May 2025 22:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485222;
-	bh=HvXI5JY7ZUo1VtaL6xdtKZzJ312mMM79yGF5Q5ULP3s=;
+	s=k20201202; t=1746485320;
+	bh=t+QCatSdLPN21Wm4l9aOfZivRhcWh+CBaN4H/deEcXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eTOYTq/ZXFVMDv7ex6AMQkhvPR0tCs7WQ5QbqiZe9CQIOkkuSb9RFwyimT6nnFj4c
-	 yuyY6+eqErVjKHUyey2jLfVFitDyVVGis16of1YviZaG2DJDP4zhuBNM7cP+H1K1Tv
-	 HIg5ee7ovvUOiQH1uX7fxO9H9pctP9GDCQG3OKFUFsfmSIXQWqntS+GL/0K3tkc5Ws
-	 mOUX9hnB49L/pHRXdyvVTM0ipsulPLVLQDKnBQZFwC+iI90LBUSIfCUcwZAr3Ya+SM
-	 rOu2RN8NY4X8CYNvjDoEWC9I5oVjAr5uKrFIWRqAlvWt7jLlOeGxJErll68BwPwcHA
-	 sryrohjKBI38w==
+	b=lUNZLWfN9WLUDasz7iDlIcFrBEDAUzvn3G4/H4qmAP4XVW8tFAMWurmg2fC+3d7lD
+	 zlkwTl6zZhcBCuKHVN1FxmaXFTtmIzVRI821aj8P1BGzkzW09J7X03/QfMZsV0k5iI
+	 mU2KjE7zb9BBBoBbGppbjP1yuCr5sS6wYfQKfQZvPdZSdBS1PdueYWLTIipsTR5mpr
+	 9HkYc0Ks6t2ZLe5Q5u3qF0RvFbA7Tk5udzVmTugldm3KHaZSD7f1jBNXuQjaLHk9Lr
+	 UugKDSk4rIdj7itVhq7lUMWqyWjbFLLcibLdcSSZo2BrgSwMCq646PGA4Y39ng5v5l
+	 ydPHlnOg0BUuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	Keith Busch <kbusch@kernel.org>,
+Cc: Christoph Hellwig <hch@lst.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 219/486] ublk: complete command synchronously on error
-Date: Mon,  5 May 2025 18:34:55 -0400
-Message-Id: <20250505223922.2682012-219-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 265/486] loop: check in LO_FLAGS_DIRECT_IO in loop_default_blocksize
+Date: Mon,  5 May 2025 18:35:41 -0400
+Message-Id: <20250505223922.2682012-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -67,72 +66,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Caleb Sander Mateos <csander@purestorage.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 603f9be21c1894e462416e3324962d6c9c2b95f8 ]
+[ Upstream commit f6f9e32fe1e454ae8ac0190b2c2bd6074914beec ]
 
-In case of an error, ublk's ->uring_cmd() functions currently return
--EIOCBQUEUED and immediately call io_uring_cmd_done(). -EIOCBQUEUED and
-io_uring_cmd_done() are intended for asynchronous completions. For
-synchronous completions, the ->uring_cmd() function can just return the
-negative return code directly. This skips io_uring_cmd_del_cancelable(),
-and deferring the completion to task work. So return the error code
-directly from __ublk_ch_uring_cmd() and ublk_ctrl_uring_cmd().
+We can't go below the minimum direct I/O size no matter if direct I/O is
+enabled by passing in an O_DIRECT file descriptor or due to the explicit
+flag.  Now that LO_FLAGS_DIRECT_IO is set earlier after assigning a
+backing file, loop_default_blocksize can check it instead of the
+O_DIRECT flag to handle both conditions.
 
-Update ublk_ch_uring_cmd_cb(), which currently ignores the return value
-from __ublk_ch_uring_cmd(), to call io_uring_cmd_done() for synchronous
-completions.
-
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Link: https://lore.kernel.org/r/20250225212456.2902549-1-csander@purestorage.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Link: https://lore.kernel.org/r/20250131120120.1315125-4-hch@lst.de
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/ublk_drv.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/block/loop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 5ec5d580ef506..a01a547c562f3 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1881,10 +1881,9 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 	return -EIOCBQUEUED;
- 
-  out:
--	io_uring_cmd_done(cmd, ret, 0, issue_flags);
- 	pr_devel("%s: complete: cmd op %d, tag %d ret %x io_flags %x\n",
- 			__func__, cmd_op, tag, ret, io->flags);
--	return -EIOCBQUEUED;
-+	return ret;
- }
- 
- static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
-@@ -1940,7 +1939,10 @@ static inline int ublk_ch_uring_cmd_local(struct io_uring_cmd *cmd,
- static void ublk_ch_uring_cmd_cb(struct io_uring_cmd *cmd,
- 		unsigned int issue_flags)
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 8827a768284ac..9f7147bf8646d 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -905,7 +905,7 @@ static unsigned int loop_default_blocksize(struct loop_device *lo,
+ 		struct block_device *backing_bdev)
  {
--	ublk_ch_uring_cmd_local(cmd, issue_flags);
-+	int ret = ublk_ch_uring_cmd_local(cmd, issue_flags);
-+
-+	if (ret != -EIOCBQUEUED)
-+		io_uring_cmd_done(cmd, ret, 0, issue_flags);
+ 	/* In case of direct I/O, match underlying block size */
+-	if ((lo->lo_backing_file->f_flags & O_DIRECT) && backing_bdev)
++	if ((lo->lo_flags & LO_FLAGS_DIRECT_IO) && backing_bdev)
+ 		return bdev_logical_block_size(backing_bdev);
+ 	return SECTOR_SIZE;
  }
- 
- static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
-@@ -3065,10 +3067,9 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 	if (ub)
- 		ublk_put_device(ub);
-  out:
--	io_uring_cmd_done(cmd, ret, 0, issue_flags);
- 	pr_devel("%s: cmd done ret %d cmd_op %x, dev id %d qid %d\n",
- 			__func__, ret, cmd->cmd_op, header->dev_id, header->queue_id);
--	return -EIOCBQUEUED;
-+	return ret;
- }
- 
- static const struct file_operations ublk_ctl_fops = {
 -- 
 2.39.5
 
