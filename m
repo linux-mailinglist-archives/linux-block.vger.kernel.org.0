@@ -1,60 +1,62 @@
-Return-Path: <linux-block+bounces-21249-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21246-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D85CAAA9E1
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 03:24:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292F7AAADDE
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 04:44:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 14C7A7A1C3F
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 01:22:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D757462940
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 02:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C436A36EF3C;
-	Mon,  5 May 2025 22:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1BBE35B94C;
+	Mon,  5 May 2025 22:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bc2NPgeV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb9nWJx9"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D431B3731BE;
-	Mon,  5 May 2025 22:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F62F2989BC;
+	Mon,  5 May 2025 22:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485222; cv=none; b=LlsINTEAPmcjZWh8K9vFQ82ta7oJwAaO25r6Lher3EmCCMczp5DMjNapqqjwzJ4osxFxMelpxsTiZi1OlzL5iH2imITTePysG1qw8HP8RZBobTrJY6ZIh4BAF1L8rZOSGUTEeJjoxnqbXj5LQQAE8DSzCs+/mDYIFRV+JPTEl1U=
+	t=1746484927; cv=none; b=tNkheTeaGqMfGKBYCqLZw0lVwK6wRuCGdXnK4xByHqwBx2pgnzR/cDW30JYkwbfiT3K3qn+rrEuit2JDfFGywUre8yvTfu8DwfSbkKAgel/TILu+KFcVQSof/t3jly0u1r+qGyyZIV7QziEFU5lOL8iHCUmUwHswwVc70vhXtYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485222; c=relaxed/simple;
-	bh=bJPC8aEH45sWOWUt08yBygJpgHxGSQ08PVjPaYXWK/4=;
+	s=arc-20240116; t=1746484927; c=relaxed/simple;
+	bh=B2Sst9Y20fMXhTIfWJF5SBOWaQ6eWmMfQDIXffAOvlA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QTG4Z912lWyK+/LztciEjfvY3QLqFaAz+T+Md+LYsbAchWcsF2SCq4cMPkDl5sW61VOaEmedgIsUgNjngKzvbL+vX3WoQfK1ljzTsNS6E6onCm5z8TNVsaWh3MHRo//RS69Z4aTS3Pr0n56mVIDLkaLzYbY+G0W1fIxjPQ+5A88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bc2NPgeV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3682EC4CEE4;
-	Mon,  5 May 2025 22:47:00 +0000 (UTC)
+	 MIME-Version:Content-Type; b=G1kS+X8bYaI0gUkGKHcqs1946APNgJtYaypJRec557OmcY3OtOBfGNKWooVe7HIN5Jo84EhjBbUBmUqZyTg6vjBmSyLjP4hH88Uf6zi0DFkbMy/b30KEcU86AHnh1SpSmZxP1IS2ZbnTz1m7v3hvyzYw8XxYZ7t8ctinTMcA0mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb9nWJx9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4D9C4CEE4;
+	Mon,  5 May 2025 22:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485221;
-	bh=bJPC8aEH45sWOWUt08yBygJpgHxGSQ08PVjPaYXWK/4=;
+	s=k20201202; t=1746484927;
+	bh=B2Sst9Y20fMXhTIfWJF5SBOWaQ6eWmMfQDIXffAOvlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bc2NPgeVDpJd+ScN7PxGmV1bq+bsah+O5W/eFbq2hxEGPPArddLHEbEXufdjAh7Dg
-	 LD5pSppp7pYxNN83fSxdhbpQ96U/y80TuSUDrRvUhPSddTP237P6sc1VmCTlTrNkKA
-	 cQoQSkrLSp8UdX9TUQPAhqy1wgWmztC7hmzjQpPkV1mzTrp0tyDw0HL+v4zlwRVwjy
-	 frt5CV2L/RQDskKv+BC62igkd1oMJuCbHJz33oXhI93N4HztnLJrKoxWEzAuoH6ews
-	 2mkyVHVyCIq2+UjrivxVkD0UaWa1E01xQ80gVRBMPeatV8C3KBnxRcCEUU/sFcMBbf
-	 uHyv6hgMriHzw==
+	b=Hb9nWJx9jAkW7fLAF2692dwSeRTezWjTDm4XI3G1MwvkxqTfiqLZJzaeTpGO7PViQ
+	 Kja52wHCuDjLc7ZF4hCyKX3Bt03BTEzmveAPGdJOh15dqY6UesNtLJV6Hj84oAXzjc
+	 pinorqfuxIiGPKhzdoQ9HZlNO9om9gbZ9XMULaOb3kwBAq1/Ok3oI2dwXGWb0lFrPo
+	 S954TqUduuQxE1RIsX2GtSXdoNTHRqFDUjnbcGxwWI/1z7LceuuWwjOBn50F7c5WgN
+	 ymbBBIz3ifpNBhznbL6sLEmgp7b8Ga3aMY1YwrOJz+D6YJPZWbr9Ob+foy7LGHthf7
+	 zqx3koGf9LNOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Anuj Gupta <anuj20.g@samsung.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>,
+	Wen Tao <wentao@uniontech.com>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Tejun Heo <tj@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
+	josef@toxicpanda.com,
+	cgroups@vger.kernel.org,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 218/486] block: mark bounce buffering as incompatible with integrity
-Date: Mon,  5 May 2025 18:34:54 -0400
-Message-Id: <20250505223922.2682012-218-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 081/486] blk-cgroup: improve policy registration error handling
+Date: Mon,  5 May 2025 18:32:37 -0400
+Message-Id: <20250505223922.2682012-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -64,62 +66,95 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
 
-[ Upstream commit 5fd0268a8806d35dcaf89139bfcda92be51b2b2f ]
+[ Upstream commit e1a0202c6bfda24002a3ae2115154fa90104c649 ]
 
-None of the few drivers still using the legacy block layer bounce
-buffering support integrity metadata.  Explicitly mark the features as
-incompatible and stop creating the slab and mempool for integrity
-buffers for the bounce bio_set.
+This patch improve the returned error code of blkcg_policy_register().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Link: https://lore.kernel.org/r/20250225154449.422989-2-hch@lst.de
+1. Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn
+   function pairs to the start of blkcg_policy_register(). This ensures
+   we immediately return -EINVAL if the function pairs are not correctly
+   provided, rather than returning -ENOSPC after locking and unlocking
+   mutexes unnecessarily.
+
+   Those locks should not contention any problems, as error of policy
+   registration is a super cold path.
+
+2. Return -ENOMEM when cpd_alloc_fn() failed.
+
+Co-authored-by: Wen Tao <wentao@uniontech.com>
+Signed-off-by: Wen Tao <wentao@uniontech.com>
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-settings.c | 5 +++++
- block/bounce.c       | 2 --
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ block/blk-cgroup.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 1e63e3dd54402..7858c92b44834 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -124,6 +124,11 @@ static int blk_validate_integrity_limits(struct queue_limits *lim)
- 		return 0;
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index f1cf7f2909f3a..643d6bf66522e 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1725,27 +1725,27 @@ int blkcg_policy_register(struct blkcg_policy *pol)
+ 	struct blkcg *blkcg;
+ 	int i, ret;
+ 
++	/*
++	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
++	 * without pd_alloc_fn/pd_free_fn can't be activated.
++	 */
++	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
++	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
++		return -EINVAL;
++
+ 	mutex_lock(&blkcg_pol_register_mutex);
+ 	mutex_lock(&blkcg_pol_mutex);
+ 
+ 	/* find an empty slot */
+-	ret = -ENOSPC;
+ 	for (i = 0; i < BLKCG_MAX_POLS; i++)
+ 		if (!blkcg_policy[i])
+ 			break;
+ 	if (i >= BLKCG_MAX_POLS) {
+ 		pr_warn("blkcg_policy_register: BLKCG_MAX_POLS too small\n");
++		ret = -ENOSPC;
+ 		goto err_unlock;
  	}
  
-+	if (lim->features & BLK_FEAT_BOUNCE_HIGH) {
-+		pr_warn("no bounce buffer support for integrity metadata\n");
-+		return -EINVAL;
-+	}
-+
- 	if (!IS_ENABLED(CONFIG_BLK_DEV_INTEGRITY)) {
- 		pr_warn("integrity support disabled.\n");
- 		return -EINVAL;
-diff --git a/block/bounce.c b/block/bounce.c
-index 0d898cd5ec497..09a9616cf2094 100644
---- a/block/bounce.c
-+++ b/block/bounce.c
-@@ -41,8 +41,6 @@ static void init_bounce_bioset(void)
+-	/*
+-	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
+-	 * without pd_alloc_fn/pd_free_fn can't be activated.
+-	 */
+-	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
+-	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
+-		goto err_unlock;
+-
+ 	/* register @pol */
+ 	pol->plid = i;
+ 	blkcg_policy[pol->plid] = pol;
+@@ -1756,8 +1756,10 @@ int blkcg_policy_register(struct blkcg_policy *pol)
+ 			struct blkcg_policy_data *cpd;
  
- 	ret = bioset_init(&bounce_bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
- 	BUG_ON(ret);
--	if (bioset_integrity_create(&bounce_bio_set, BIO_POOL_SIZE))
--		BUG_ON(1);
+ 			cpd = pol->cpd_alloc_fn(GFP_KERNEL);
+-			if (!cpd)
++			if (!cpd) {
++				ret = -ENOMEM;
+ 				goto err_free_cpds;
++			}
  
- 	ret = bioset_init(&bounce_bio_split, BIO_POOL_SIZE, 0, 0);
- 	BUG_ON(ret);
+ 			blkcg->cpd[pol->plid] = cpd;
+ 			cpd->blkcg = blkcg;
 -- 
 2.39.5
 
