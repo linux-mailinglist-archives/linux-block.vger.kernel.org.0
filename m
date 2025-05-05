@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-21208-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21207-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A4E9AA9587
-	for <lists+linux-block@lfdr.de>; Mon,  5 May 2025 16:20:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29C7FAA9583
+	for <lists+linux-block@lfdr.de>; Mon,  5 May 2025 16:20:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE231178F72
-	for <lists+linux-block@lfdr.de>; Mon,  5 May 2025 14:20:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AFFE3BB8B3
+	for <lists+linux-block@lfdr.de>; Mon,  5 May 2025 14:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF1225B69D;
-	Mon,  5 May 2025 14:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B7425C70B;
+	Mon,  5 May 2025 14:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sdh64H+Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MOkgEJz1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29F825A647
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C8C25B69D
 	for <linux-block@vger.kernel.org>; Mon,  5 May 2025 14:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746454778; cv=none; b=sPxW+q7WUBFp8kFC6DDEv82bHjYqQMK91xmyKud4LjwpdqKH4op2T/tY5fSo4fARiQeU6NQbCJwxoZVx+7Z5O0SbtM9vi31vtZEP9dB35LssI/HeQszqnqDwcEAnppLR/gvIHcL17TxHZpMFa6hChIQMvYl4Z95RJ/siYWaSYwE=
+	t=1746454777; cv=none; b=Mxdyg8OkwUFJQ06OpDVaqDAxIi7UFjLB40q81xkqY4YZU7i8v2XCqnb+2YGsKiQS5WFOrRp/yWzzmMx4+1P7gSoxXxgVLp+oXhf+jQ9xpE+bIfS2b+LAhdvsbDGXLL7EQ/epj1PIMAEuPVWjVxbwZgb6njPgZDmqXOeuO5BCt04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746454778; c=relaxed/simple;
-	bh=Um8T6b4cSmFwwW1MvXCVa6u2PuTHetm7pvF9ebLePT4=;
+	s=arc-20240116; t=1746454777; c=relaxed/simple;
+	bh=qvpyfY9N2mQyCQ4/EAs3fXFy0n3s1W6G7rr0VjTsfGk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z7h1MmVd5nuoo0WuTu9DlevPQDoZlSoDbp/R4BKYv4IX3h8p3JgkQhV5n+LPcAAxCMri3yP3PllexmTM4COmJn/j472VuptbVFjlWmRTEFypPF0sxpUg6/e/b0KT8Bi/Jeo15cXZxQz2xlgh2tNATZu5PUYQlbp154UdFdMYOYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sdh64H+Q; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=UAGEdseueKqWOvfdFsg/IwIoL676BQZb9hejRusQ0vR+V3BFokCOOlMR5sFdaH2jMh2rEj975/c6lmgxUiLswtrHjBZpcuFBpioE/hTvSOHQlhOsUSmrjsWHk3MtI0B6Lm1UU7vuYoe/Ex6A1TlnQ89plL05088fTJI0UWBG0B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MOkgEJz1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746454774;
+	s=mimecast20190719; t=1746454775;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ri1aBOm3ff7Dx5/qf5HdzQvsz4TKsruSrd76qFlOgmY=;
-	b=Sdh64H+QHRJB2EHX760IGAIaWkfSRkRuSvnJR5whfH5RHPBWdUQhV8kQYT8BF5x/RG88MP
-	oUh/CAKsJpxIm4E5QnlEB7J52In1OdZ0H0i9X63K1nb20Hwkdy/8n+G/kHLdShJpy7AmDn
-	PZdk002oFpAkCNaD4Xnneg7QF0DegYE=
+	bh=hWtrxTqRlgy/L+cSC7FeoKi93ReJRcoBdlt8DUKBTM8=;
+	b=MOkgEJz1nt3r1wjGWzBfD4y4QAaORJ7+afW9HL03zk7Xso5N8qH7GQh1AAIvli+ez6TmKy
+	njZvpGyGBvGyzeULROkDuqLNhKJDx7c1HeZKMBQi5ydMuoZ+sllYhF5agFFLFeP6HK4brN
+	ryMfgPal29dkUQPpWR83fcNltZknDjw=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-601-55HTdkHBNAWMsO808eMfkQ-1; Mon,
- 05 May 2025 10:19:29 -0400
-X-MC-Unique: 55HTdkHBNAWMsO808eMfkQ-1
-X-Mimecast-MFC-AGG-ID: 55HTdkHBNAWMsO808eMfkQ_1746454768
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-58-xDvc1UwuPFmHIPyYXIFVww-1; Mon,
+ 05 May 2025 10:19:33 -0400
+X-MC-Unique: xDvc1UwuPFmHIPyYXIFVww-1
+X-Mimecast-MFC-AGG-ID: xDvc1UwuPFmHIPyYXIFVww_1746454772
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6705118001CA;
-	Mon,  5 May 2025 14:19:28 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82E751800983;
+	Mon,  5 May 2025 14:19:32 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.4])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 838CF30001A2;
-	Mon,  5 May 2025 14:19:27 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 65878180045B;
+	Mon,  5 May 2025 14:19:30 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
@@ -66,9 +66,9 @@ Cc: Nilay Shroff <nilay@linux.ibm.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Ming Lei <ming.lei@redhat.com>,
 	Hannes Reinecke <hare@suse.de>
-Subject: [PATCH V5 17/25] block: pass elevator_queue to elv_register_queue & unregister_queue
-Date: Mon,  5 May 2025 22:17:55 +0800
-Message-ID: <20250505141805.2751237-18-ming.lei@redhat.com>
+Subject: [PATCH V5 18/25] block: remove elevator queue's type check in elv_attr_show/store()
+Date: Mon,  5 May 2025 22:17:56 +0800
+Message-ID: <20250505141805.2751237-19-ming.lei@redhat.com>
 In-Reply-To: <20250505141805.2751237-1-ming.lei@redhat.com>
 References: <20250505141805.2751237-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -78,72 +78,44 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Pass elevator_queue reference to elv_register_queue() & elv_unregister_queue().
+elevatore queue's type is assigned since its allocation, and never
+get cleared until it is released.
 
-No functional change, and prepare for moving the two out of elevator
-lock & freezing queue, when we need to store the old & new elevator
-queue in `struct elv_change_ctx` instance, then both two can co-exist
-for short while, so we have to pass the exact elevator_queue instance
-to elv_register_queue & unregister_queue.
+So its ->type is always not NULL, remove the unnecessary check.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+Suggested-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/elevator.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ block/elevator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/block/elevator.c b/block/elevator.c
-index 540542cee21c..eb7140a678d5 100644
+index eb7140a678d5..fa436417da3b 100644
 --- a/block/elevator.c
 +++ b/block/elevator.c
-@@ -458,9 +458,10 @@ static const struct kobj_type elv_ktype = {
- 	.release	= elevator_release,
- };
+@@ -425,7 +425,7 @@ elv_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
  
--static int elv_register_queue(struct request_queue *q, bool uevent)
-+static int elv_register_queue(struct request_queue *q,
-+			      struct elevator_queue *e,
-+			      bool uevent)
- {
--	struct elevator_queue *e = q->elevator;
- 	int error;
- 
- 	lockdep_assert_held(&q->elevator_lock);
-@@ -488,10 +489,9 @@ static int elv_register_queue(struct request_queue *q, bool uevent)
+ 	e = container_of(kobj, struct elevator_queue, kobj);
+ 	mutex_lock(&e->sysfs_lock);
+-	error = e->type ? entry->show(e, page) : -ENOENT;
++	error = entry->show(e, page);
+ 	mutex_unlock(&e->sysfs_lock);
  	return error;
  }
+@@ -443,7 +443,7 @@ elv_attr_store(struct kobject *kobj, struct attribute *attr,
  
--static void elv_unregister_queue(struct request_queue *q)
-+static void elv_unregister_queue(struct request_queue *q,
-+				 struct elevator_queue *e)
- {
--	struct elevator_queue *e = q->elevator;
--
- 	lockdep_assert_held(&q->elevator_lock);
- 
- 	if (e && test_and_clear_bit(ELEVATOR_FLAG_REGISTERED, &e->flags)) {
-@@ -584,7 +584,7 @@ static int elevator_switch(struct request_queue *q, struct elv_change_ctx *ctx)
- 	blk_mq_quiesce_queue(q);
- 
- 	if (q->elevator) {
--		elv_unregister_queue(q);
-+		elv_unregister_queue(q, q->elevator);
- 		elevator_exit(q);
- 	}
- 
-@@ -592,7 +592,7 @@ static int elevator_switch(struct request_queue *q, struct elv_change_ctx *ctx)
- 		ret = blk_mq_init_sched(q, new_e);
- 		if (ret)
- 			goto out_unfreeze;
--		ret = elv_register_queue(q, !ctx->no_uevent);
-+		ret = elv_register_queue(q, q->elevator, !ctx->no_uevent);
- 		if (ret) {
- 			elevator_exit(q);
- 			goto out_unfreeze;
+ 	e = container_of(kobj, struct elevator_queue, kobj);
+ 	mutex_lock(&e->sysfs_lock);
+-	error = e->type ? entry->store(e, page, length) : -ENOENT;
++	error = entry->store(e, page, length);
+ 	mutex_unlock(&e->sysfs_lock);
+ 	return error;
+ }
 -- 
 2.47.0
 
