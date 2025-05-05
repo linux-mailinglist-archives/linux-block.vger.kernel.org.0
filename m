@@ -1,60 +1,63 @@
-Return-Path: <linux-block+bounces-21245-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21247-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55012AAA4E1
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 01:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98215AAA9F2
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 03:25:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C3F81886CA1
-	for <lists+linux-block@lfdr.de>; Mon,  5 May 2025 23:35:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60838188F6E7
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 01:22:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F28DF305F2B;
-	Mon,  5 May 2025 22:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3E735ABAC;
+	Mon,  5 May 2025 22:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDynibQd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLFhGxn7"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C936A305F37;
-	Mon,  5 May 2025 22:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86121364CE1;
+	Mon,  5 May 2025 22:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484074; cv=none; b=q+EhGBeIzOOf6EgOD3rW+UD/CCLr8Qxr0Pji5y7wWhwtBHQ0WbKX3iAovb2Yh5uTNTyD/D7evHX09EL0peX67MAhM5ds52XOejCjF7GG09zdgwxUFJZ5YSDxliGm4BgNAPSYaVmM6SPORyMcFsvtiklJlLqWD/EuJESlQBHBJ08=
+	t=1746485164; cv=none; b=WjTdUtHJSTrDEg9IA1IefHAfyDgjfDCqaxV+EID/cgXkpFbDxxOoUd4JsCQj2h6BVHAPND2esO6itqrn7xFXt5wBHcBhau7hhU/VJwFXIMrxOotJedyDyOpV8r7jcZszzWfyyDz15uSLOVUlK/zQinaCEG+NUtgRSp3pGz0JGtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484074; c=relaxed/simple;
-	bh=aFQhGFvxnrjur6qu9AGhaT/avWTiCZyTVs2nMq3QG5Q=;
+	s=arc-20240116; t=1746485164; c=relaxed/simple;
+	bh=8QG2JEc/XDbVunCQ1nHXCEhHcU6dQ7rNYCL/gowOj5w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dtcegr2J3gIxxc7pQrYjQJsk05H2iwKsSMFajNSJqaULCcdxEL9qowMQ3ULfEM9J2rP8+GXAJZKzpFRJgG0Vspc2lNCTjaHTQ7zQ1+ZyRPnmiLRR+XVA980EsnG1MTwH+jRiiZDL5UjNbP3/dyupdqKjDgRVU9fBajBzhrcsf3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDynibQd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0822C4CEE4;
-	Mon,  5 May 2025 22:27:53 +0000 (UTC)
+	 MIME-Version; b=BMhf7wNYKxffA1pTb1Cu4DoKURF5k2gmCGo8JNQ52tzvolapavoOjAIlSYFNsDYW8zAPyG724qI5xrcR7ELzCOs5s83+FszTouiJp3UnehYa2Y1gKZsgyOM5Yqfrgvql7uGKC/Cktbv1KyiKOHLeMW8Lk24dIQiJnN5W2RSiJ5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLFhGxn7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB81CC4CEE4;
+	Mon,  5 May 2025 22:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484074;
-	bh=aFQhGFvxnrjur6qu9AGhaT/avWTiCZyTVs2nMq3QG5Q=;
+	s=k20201202; t=1746485163;
+	bh=8QG2JEc/XDbVunCQ1nHXCEhHcU6dQ7rNYCL/gowOj5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iDynibQdjByp9zNcdwwVQXBOq89ayPWkfrVmcCU2RcXugJeRwcKjuxi+2MJK4P5Vc
-	 gfS9EoKg6ZYhhLjps5O+0DHjpgqCIG1oewIBYckONyB+YUTRSFR9pYIBOUqk7Vdtmd
-	 inY/rbemajyVgURDOfFAC38mtgV+uRA6hjrnGaiOKXNC9Afbre0UbhwtePqlWrr82E
-	 DliJB9juuIQQxq5RvYMkqs95mNJh3BCXf6ZWmb4KwB5dgLo0tTaDBBPrPzH3eLoai9
-	 uOVKok2tTH7+qoe5NzS5D/4qamdH//0KKebhSQ8XYXPXTjRsfU1l2WkDL9Ij9DofaS
-	 vliMVEOWDbVSg==
+	b=OLFhGxn7hRICeORQ+/bG0OJWdnVZwkVom2PHv+aPjJJ79djgbXJhkTFqkDUyAQzXD
+	 T6I3e+NZzEgueRMBeMXUFSdMk3/HM3l94LTTd4v2zRLPH/HLJ/sk/UYgagxELzhwCH
+	 UA4GBZT+da391oc/ZOYsxop+aS+M9Yg9Db0/ohkhEqGmMm1t7vopdfWoIWvghkColm
+	 bjLDnz+37MQFnq9ewZE4NIZdmvwVd3KZDhixBm+WfrVyxvj3hAp9OryuQsLFTBWHSO
+	 qDVPeg2HwLAt+w80I1YVdioeKG2+IhBOoXx3WwKUS2EFZSuLcmgeE/k4XCaxUGC3MW
+	 U8oyKQuw/JLEQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Yu Kuai <yukuai3@huawei.com>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
+	cgroups@vger.kernel.org,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 337/642] loop: check in LO_FLAGS_DIRECT_IO in loop_default_blocksize
-Date: Mon,  5 May 2025 18:09:13 -0400
-Message-Id: <20250505221419.2672473-337-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 194/486] blk-throttle: don't take carryover for prioritized processing of metadata
+Date: Mon,  5 May 2025 18:34:30 -0400
+Message-Id: <20250505223922.2682012-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -63,41 +66,64 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
+X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit f6f9e32fe1e454ae8ac0190b2c2bd6074914beec ]
+[ Upstream commit a9fc8868b350cbf4ff730a4ea9651319cc669516 ]
 
-We can't go below the minimum direct I/O size no matter if direct I/O is
-enabled by passing in an O_DIRECT file descriptor or due to the explicit
-flag.  Now that LO_FLAGS_DIRECT_IO is set earlier after assigning a
-backing file, loop_default_blocksize can check it instead of the
-O_DIRECT flag to handle both conditions.
+Commit 29390bb5661d ("blk-throttle: support prioritized processing of metadata")
+takes bytes/ios carryover for prioritized processing of metadata. Turns out
+we can support it by charging it directly without trimming slice, and the
+result is same with carryover.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Link: https://lore.kernel.org/r/20250131120120.1315125-4-hch@lst.de
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Link: https://lore.kernel.org/r/20250305043123.3938491-3-ming.lei@redhat.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-throttle.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 1a90d7bd212e6..b8dcf24fab7de 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -900,7 +900,7 @@ static unsigned int loop_default_blocksize(struct loop_device *lo,
- 		struct block_device *backing_bdev)
- {
- 	/* In case of direct I/O, match underlying block size */
--	if ((lo->lo_backing_file->f_flags & O_DIRECT) && backing_bdev)
-+	if ((lo->lo_flags & LO_FLAGS_DIRECT_IO) && backing_bdev)
- 		return bdev_logical_block_size(backing_bdev);
- 	return SECTOR_SIZE;
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index 2c4192e12efab..6b82fcbd7e774 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -1593,13 +1593,6 @@ static bool tg_within_limit(struct throtl_grp *tg, struct bio *bio, bool rw)
+ 	return tg_may_dispatch(tg, bio, NULL);
  }
+ 
+-static void tg_dispatch_in_debt(struct throtl_grp *tg, struct bio *bio, bool rw)
+-{
+-	if (!bio_flagged(bio, BIO_BPS_THROTTLED))
+-		tg->carryover_bytes[rw] -= throtl_bio_data_size(bio);
+-	tg->carryover_ios[rw]--;
+-}
+-
+ bool __blk_throtl_bio(struct bio *bio)
+ {
+ 	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+@@ -1636,10 +1629,12 @@ bool __blk_throtl_bio(struct bio *bio)
+ 			/*
+ 			 * IOs which may cause priority inversions are
+ 			 * dispatched directly, even if they're over limit.
+-			 * Debts are handled by carryover_bytes/ios while
+-			 * calculating wait time.
++			 *
++			 * Charge and dispatch directly, and our throttle
++			 * control algorithm is adaptive, and extra IO bytes
++			 * will be throttled for paying the debt
+ 			 */
+-			tg_dispatch_in_debt(tg, bio, rw);
++			throtl_charge_bio(tg, bio);
+ 		} else {
+ 			/* if above limits, break to queue */
+ 			break;
 -- 
 2.39.5
 
