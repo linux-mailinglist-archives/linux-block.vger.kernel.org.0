@@ -1,58 +1,57 @@
-Return-Path: <linux-block+bounces-21251-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21248-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EA35AAB09C
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 05:42:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14912AAAE5E
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 04:55:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 26A7B4E2681
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 03:41:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6BC43B880B
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 02:50:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D7B431AA0C;
-	Tue,  6 May 2025 00:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2E5F280333;
+	Mon,  5 May 2025 22:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKMAxRLm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFyvsR83"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E4E277815;
-	Mon,  5 May 2025 22:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498892D2CAD;
+	Mon,  5 May 2025 22:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485104; cv=none; b=KgFwCoB/gGNyeca2nxW4qto8vvrLrrdupGYsZE/rbZI+w7pWpXUMk7lbgHRQ0VN4SpCBMgxmahC1Qv6wRThRAw02eqFscXrfQXIR/p7mL0uPS9m0tQ4ZJ+Y4Z52ZCO5TOrbDuT7jxy3X5RDkC83QeWaf0FbZh0kZJn6Dj0sTOFk=
+	t=1746485204; cv=none; b=GQMRcm723YceGmqdUDARnjwe8/nsSLNnV3c4xO4bpl/uIri9xtuou9tuvVtR4UJo+PBQexWxFbrSHmwHRDfD6JBG44VDLxm/G6ivV09dyKbzNgkUthqF68wO/TqAXopjLpUkcbvdWTtc6h7hWBn73WLmhfO4xxMtdTmAtM108e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485104; c=relaxed/simple;
-	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
+	s=arc-20240116; t=1746485204; c=relaxed/simple;
+	bh=aSLgbfzk2HEG9qUqlIxdd5CqAMFUEsWG6Ay2waY87o8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kovgte84Gy/71bkB75cgfqbCdkdZ5V4TZk+NXaf34CNJ3yNh/V80WYEArTKTzoX/U2PSZwZwMW3hPCPStqwhmL0wzN2r/uAMQFUyWoI9TVX0V+Ve3M55ozGof5YW9fkbP0yfDZOyramIojQ8gQhLPFN8HqgGOBEZmzJWSpRs2TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKMAxRLm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD11C4CEE4;
-	Mon,  5 May 2025 22:45:03 +0000 (UTC)
+	 MIME-Version; b=S28tzY+Vdxn+sr4xbiwLiYkKJfQNy0oocq75brfHrywhDKv0yDKIaW+uDeZal0LbSF9kOINgCNcRaFmcanCnI9MqTWBGQvr6sxq2exva3+znF/mR93JGpThFh9Vg24cevIbw5596Q6AGsqG7cYFXp15vj0Plz8hO7JltzTOE0iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFyvsR83; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A111C4CEEE;
+	Mon,  5 May 2025 22:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485104;
-	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
+	s=k20201202; t=1746485204;
+	bh=aSLgbfzk2HEG9qUqlIxdd5CqAMFUEsWG6Ay2waY87o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iKMAxRLmRFST8T1BZQbJA/nnc4z/QUyEEkOLD6x7NK+b3SR+XCYcR2nuNLjFR2RUb
-	 hw+K8Wn/iLwP4mE2WBNvWGCOmYTmpgYI1nqXLP7RAUnKIsf5DxrBv9hee72kb+h4dy
-	 2/RNoHV3LPwBUDTLgSNEazbuwBU0xKdXCA8kFOv6s7dkJQ/q8ZiiSm5tZmz8ZDXZOm
-	 C3MXYfOudk50CAK7hVDJvSVXezSyYDmaFLT7U0ayVAxlRrq4lU+mYwG/8rRvYaHQMG
-	 PltmyXxmQd9GRhVincba4GbG5o8N30s+bk5pkGfPoKnIr1urvVium04eo04WK8wWKF
-	 NJmU9X48jCTWQ==
+	b=EFyvsR83v2EBMFs2Wh8xm17aSmJI/AkLC+KNFxeLZZr1Xddm8NeYz7gFQeSBYMfTi
+	 dr7mnKutX7v87lVm7l5O8/3CkNEm2ZVO2aFkasQpQzeemHsoSRSl0oxMvM3MRYPSb0
+	 x0w50tfCP6fZ1YKQTSmr8qhEMEBuvxKbm++qJk8hfa3pLowT7Q5cO9I3VYNMw5ykFE
+	 qH8ZO4WP4ftcx2vaXKeZe4EqcpX1S0PWammmsNbx5rDmuV+/oJBQ3Cf0eKcg8sBjK2
+	 7/a4/Z9BXPg3Nrn5ybpZ047seOZVc2UnEOH+kNahjnzUNioMfNV2fFcvGEFTQSI1fU
+	 UOIjSV6BivFbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Coly Li <colyli@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Yu Kuai <yukuai3@huawei.com>,
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 163/486] badblocks: Fix a nonsense WARN_ON() which checks whether a u64 variable < 0
-Date: Mon,  5 May 2025 18:33:59 -0400
-Message-Id: <20250505223922.2682012-163-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 209/486] ublk: enforce ublks_max only for unprivileged devices
+Date: Mon,  5 May 2025 18:34:45 -0400
+Message-Id: <20250505223922.2682012-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -67,52 +66,134 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Coly Li <colyli@kernel.org>
+From: Uday Shankar <ushankar@purestorage.com>
 
-[ Upstream commit 7e76336e14de9a2b67af96012ddd46c5676cf340 ]
+[ Upstream commit 80bdfbb3545b6f16680a72c825063d08a6b44c7a ]
 
-In _badblocks_check(), there are lines of code like this,
-1246         sectors -= len;
-[snipped]
-1251         WARN_ON(sectors < 0);
+Commit 403ebc877832 ("ublk_drv: add module parameter of ublks_max for
+limiting max allowed ublk dev"), claimed ublks_max was added to prevent
+a DoS situation with an untrusted user creating too many ublk devices.
+If that's the case, ublks_max should only restrict the number of
+unprivileged ublk devices in the system. Enforce the limit only for
+unprivileged ublk devices, and rename variables accordingly. Leave the
+external-facing parameter name unchanged, since changing it may break
+systems which use it (but still update its documentation to reflect its
+new meaning).
 
-The WARN_ON() at line 1257 doesn't make sense because sectors is
-unsigned long long type and never to be <0.
+As a result of this change, in a system where there are only normal
+(non-unprivileged) devices, the maximum number of such devices is
+increased to 1 << MINORBITS, or 1048576. That ought to be enough for
+anyone, right?
 
-Fix it by checking directly checking whether sectors is less than len.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Coly Li <colyli@kernel.org>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20250309160556.42854-1-colyli@kernel.org
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Link: https://lore.kernel.org/r/20250228-ublks_max-v1-1-04b7379190c0@purestorage.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/badblocks.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/block/ublk_drv.c | 42 ++++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index db4ec8b9b2a8c..a9709771a1015 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -1349,14 +1349,15 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- 	len = sectors;
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 38b9e485e520d..5ec5d580ef506 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -484,15 +484,17 @@ static wait_queue_head_t ublk_idr_wq;	/* wait until one idr is freed */
  
- update_sectors:
-+	/* This situation should never happen */
-+	WARN_ON(sectors < len);
+ static DEFINE_MUTEX(ublk_ctl_mutex);
+ 
 +
- 	s += len;
- 	sectors -= len;
++#define UBLK_MAX_UBLKS UBLK_MINORS
++
+ /*
+- * Max ublk devices allowed to add
++ * Max unprivileged ublk devices allowed to add
+  *
+  * It can be extended to one per-user limit in future or even controlled
+  * by cgroup.
+  */
+-#define UBLK_MAX_UBLKS UBLK_MINORS
+-static unsigned int ublks_max = 64;
+-static unsigned int ublks_added;	/* protected by ublk_ctl_mutex */
++static unsigned int unprivileged_ublks_max = 64;
++static unsigned int unprivileged_ublks_added; /* protected by ublk_ctl_mutex */
  
- 	if (sectors > 0)
- 		goto re_check;
+ static struct miscdevice ublk_misc;
  
--	WARN_ON(sectors < 0);
--
- 	if (unacked_badblocks > 0)
- 		rv = -1;
- 	else if (acked_badblocks > 0)
+@@ -2203,7 +2205,8 @@ static int ublk_add_chdev(struct ublk_device *ub)
+ 	if (ret)
+ 		goto fail;
+ 
+-	ublks_added++;
++	if (ub->dev_info.flags & UBLK_F_UNPRIVILEGED_DEV)
++		unprivileged_ublks_added++;
+ 	return 0;
+  fail:
+ 	put_device(dev);
+@@ -2241,12 +2244,17 @@ static int ublk_add_tag_set(struct ublk_device *ub)
+ 
+ static void ublk_remove(struct ublk_device *ub)
+ {
++	bool unprivileged;
++
+ 	ublk_stop_dev(ub);
+ 	cancel_work_sync(&ub->stop_work);
+ 	cancel_work_sync(&ub->quiesce_work);
+ 	cdev_device_del(&ub->cdev, &ub->cdev_dev);
++	unprivileged = ub->dev_info.flags & UBLK_F_UNPRIVILEGED_DEV;
+ 	ublk_put_device(ub);
+-	ublks_added--;
++
++	if (unprivileged)
++		unprivileged_ublks_added--;
+ }
+ 
+ static struct ublk_device *ublk_get_device_from_id(int idx)
+@@ -2495,7 +2503,8 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
+ 		return ret;
+ 
+ 	ret = -EACCES;
+-	if (ublks_added >= ublks_max)
++	if ((info.flags & UBLK_F_UNPRIVILEGED_DEV) &&
++	    unprivileged_ublks_added >= unprivileged_ublks_max)
+ 		goto out_unlock;
+ 
+ 	ret = -ENOMEM;
+@@ -3123,23 +3132,26 @@ static void __exit ublk_exit(void)
+ module_init(ublk_init);
+ module_exit(ublk_exit);
+ 
+-static int ublk_set_max_ublks(const char *buf, const struct kernel_param *kp)
++static int ublk_set_max_unprivileged_ublks(const char *buf,
++					   const struct kernel_param *kp)
+ {
+ 	return param_set_uint_minmax(buf, kp, 0, UBLK_MAX_UBLKS);
+ }
+ 
+-static int ublk_get_max_ublks(char *buf, const struct kernel_param *kp)
++static int ublk_get_max_unprivileged_ublks(char *buf,
++					   const struct kernel_param *kp)
+ {
+-	return sysfs_emit(buf, "%u\n", ublks_max);
++	return sysfs_emit(buf, "%u\n", unprivileged_ublks_max);
+ }
+ 
+-static const struct kernel_param_ops ublk_max_ublks_ops = {
+-	.set = ublk_set_max_ublks,
+-	.get = ublk_get_max_ublks,
++static const struct kernel_param_ops ublk_max_unprivileged_ublks_ops = {
++	.set = ublk_set_max_unprivileged_ublks,
++	.get = ublk_get_max_unprivileged_ublks,
+ };
+ 
+-module_param_cb(ublks_max, &ublk_max_ublks_ops, &ublks_max, 0644);
+-MODULE_PARM_DESC(ublks_max, "max number of ublk devices allowed to add(default: 64)");
++module_param_cb(ublks_max, &ublk_max_unprivileged_ublks_ops,
++		&unprivileged_ublks_max, 0644);
++MODULE_PARM_DESC(ublks_max, "max number of unprivileged ublk devices allowed to add(default: 64)");
+ 
+ MODULE_AUTHOR("Ming Lei <ming.lei@redhat.com>");
+ MODULE_DESCRIPTION("Userspace block device");
 -- 
 2.39.5
 
