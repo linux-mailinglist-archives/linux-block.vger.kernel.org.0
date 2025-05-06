@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-21353-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21355-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1168AAAC4C5
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 14:57:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE86AAC4E2
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 14:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 792B8179B09
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 12:57:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F15761BA50C5
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 12:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51AA2280022;
-	Tue,  6 May 2025 12:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B7C280A2F;
+	Tue,  6 May 2025 12:57:21 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9FF28000E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636F6280009;
 	Tue,  6 May 2025 12:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536240; cv=none; b=UaEjCT70xqN7809+4gFaPjsjjs9TxB+EqkGci/QULC9RGmn1Z3nH3FkLy7Wgku75xv8INWkQ/R+jqYULMVvNcdy3PEnwlF7tuPD01Gw+6hjuVctTjWW3iRZ29Uog52dvwc4TK2TtwX+uzSlnNNmONKHwECoj59R8V40EUQtKWNk=
+	t=1746536241; cv=none; b=ARiWvei4A40Ysr68GwOuXbLequvNa8xatXmPTm8jpLF8VUuH7Ltt1gtKOomVp6+7TZh/Zr/yJKvkt40jJVI01xHTYuDGdhDIMGE328zDH9XaT2QCQfaj7Rv75ZEuTT3NIYXJ5odCBRY0YZ9n6yvvT01Nqez8KeN5N0cyWJtIioQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746536240; c=relaxed/simple;
-	bh=saEcFj+KXFIN8lSpRxf00Xv6969suwf4SqX88dg2bPc=;
+	s=arc-20240116; t=1746536241; c=relaxed/simple;
+	bh=ZoZGyy2ujKeJNBjtpyNvAj92ghOzTBMJqipLUBQTMBo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=alddMlzJ1ofqSKHvcJtQvxMdZk0FjJ5mtkecrQGDiYUMiZW6m9jwmjWO4nnSjvG9TcA+5U5k94zY+IaAWuO0s6s3sPCTnwn4urSlyYrwZgd/6OVPGda2wvA9TRjzTE5EFtd7GU/LIjahYq1SkmTzYV+8z7vORCBPCZ17C8w5Qh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=o9CJhJdELScCTDLSW/GOvGqXL69j1O0qBR567hM8QGYy6gEcjksZRld8CMJRaGMCZnnF/hoYr28HR+4cLXMcxRh5D3rVoMAFw1xgTOctlF/ULk0knMx/Z9d0ItneNZMBhO1N3cOh2OyciDKDjcVIeV8u3VJiSlEMMmEbAZ7bIJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZsJLw0gqVz4f3jq5;
-	Tue,  6 May 2025 20:56:56 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZsJMJ46ChzYQvCN;
+	Tue,  6 May 2025 20:57:16 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4FE531A0359;
+	by mail.maildlp.com (Postfix) with ESMTP id E8DC51A18C2;
 	Tue,  6 May 2025 20:57:15 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl8pBxpoilNvLg--.37994S4;
-	Tue, 06 May 2025 20:57:14 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl8pBxpoilNvLg--.37994S5;
+	Tue, 06 May 2025 20:57:15 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	agk@redhat.com,
@@ -56,12 +56,13 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v3 1/9] blk-mq: remove blk_mq_in_flight()
-Date: Tue,  6 May 2025 20:48:54 +0800
-Message-Id: <20250506124903.2540268-1-yukuai1@huaweicloud.com>
+Subject: [PATCH v3 2/9] block: reuse part_in_flight_rw for part_in_flight
+Date: Tue,  6 May 2025 20:48:55 +0800
+Message-Id: <20250506124903.2540268-2-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250506124658.2537886-1-yukuai1@huaweicloud.com>
+In-Reply-To: <20250506124903.2540268-1-yukuai1@huaweicloud.com>
 References: <20250506124658.2537886-1-yukuai1@huaweicloud.com>
+ <20250506124903.2540268-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -69,73 +70,80 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl8pBxpoilNvLg--.37994S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ary7AFykKrW3Ww1xWw17KFg_yoW8Xw18pF
-	W3Ga15CrW2gr18uFyxtanxXayakwsrKryxXan3A345Kr18Kry3ZF10qr4kXrZYvrZ3AFsr
-	uF1ayFy8GF18K37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
+X-CM-TRANSID:gCh0CgDXOl8pBxpoilNvLg--.37994S5
+X-Coremail-Antispam: 1UD129KBjvfXoW3ZF18CFW7CrWfAFW5p5X_Gr4ruoWUZwsIq3
+	WfJr4UuFWUG348CF93uws5Jw45CFyrZF1Duw1xJw1YvFyY9w4DK3Wrua4YkF9xXFWDZ3W3
+	Cr47JF1kn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3AaLaJ3Uj
+	IYCTnIWjp_UUUO47AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E
+	3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r18M28IrcIa0xkI8VCY1x
+	0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xII
+	jxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjc
+	xK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IY
+	c4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI
+	0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY
+	0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7
+	CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
+	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+	v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
+	x2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU
+	0xZFpf9x0pR75rsUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-After commit 7be835694dae ("block: fix that util can be greater than
-100%"), it's not used and can be removed.
+They are almost identical, to make code cleaner.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/blk-mq.c | 10 ----------
- block/blk-mq.h |  2 --
- 2 files changed, 12 deletions(-)
+ block/genhd.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 83c651a7facd..45989960a89d 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -101,16 +101,6 @@ static bool blk_mq_check_inflight(struct request *rq, void *priv)
- 	return true;
+diff --git a/block/genhd.c b/block/genhd.c
+index c2bd86cd09de..f671d9ee00c4 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -125,21 +125,6 @@ static void part_stat_read_all(struct block_device *part,
+ 	}
  }
  
--unsigned int blk_mq_in_flight(struct request_queue *q,
--		struct block_device *part)
+-unsigned int part_in_flight(struct block_device *part)
 -{
--	struct mq_inflight mi = { .part = part };
+-	unsigned int inflight = 0;
+-	int cpu;
 -
--	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, &mi);
+-	for_each_possible_cpu(cpu) {
+-		inflight += part_stat_local_read_cpu(part, in_flight[0], cpu) +
+-			    part_stat_local_read_cpu(part, in_flight[1], cpu);
+-	}
+-	if ((int)inflight < 0)
+-		inflight = 0;
 -
--	return mi.inflight[0] + mi.inflight[1];
+-	return inflight;
 -}
 -
- void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
+ static void part_in_flight_rw(struct block_device *part,
  		unsigned int inflight[2])
  {
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index d15ff1e130c8..eeac0d47c878 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -246,8 +246,6 @@ static inline bool blk_mq_hw_queue_mapped(struct blk_mq_hw_ctx *hctx)
- 	return hctx->nr_ctx && hctx->tags;
+@@ -157,6 +142,15 @@ static void part_in_flight_rw(struct block_device *part,
+ 		inflight[1] = 0;
  }
  
--unsigned int blk_mq_in_flight(struct request_queue *q,
--		struct block_device *part);
- void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
- 		unsigned int inflight[2]);
- 
++unsigned int part_in_flight(struct block_device *part)
++{
++	unsigned int inflight[2];
++
++	part_in_flight_rw(part, inflight);
++
++	return inflight[READ] + inflight[WRITE];
++}
++
+ /*
+  * Can be deleted altogether. Later.
+  *
 -- 
 2.39.2
 
