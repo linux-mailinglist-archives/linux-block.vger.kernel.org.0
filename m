@@ -1,42 +1,43 @@
-Return-Path: <linux-block+bounces-21269-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21267-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DB21AAB93A
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 08:52:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4585AAAB933
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 08:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E6B84A2E81
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 06:49:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2A5B4A10F9
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 06:49:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E3ED22D793;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AC722B590;
 	Tue,  6 May 2025 04:01:38 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DC92FF2B5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C152FF2B4
 	for <linux-block@vger.kernel.org>; Tue,  6 May 2025 02:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498043; cv=none; b=CBQ9E31sCgVb0y/kJLDUnUmXEqSYwDR3dda498wZsz+lQI8KMRSo2fw3+Po9j4ryjrp/fQBZWBuSkYYLncd5i79ru3dPk1jqpU3TwstZRcP1OjfHq1Rms7OsWUz+NV6UNgWubl06qVX6NIkvzg3N3iumBW1E6R3nRpDWPj8AcC0=
+	t=1746498043; cv=none; b=cJxoHzPrYLbqqiTPZUfAvux0K/FnEdc/jlZ9bA3daRCkzNKeeHHLpoU7gCQsZHieGSAZc9AnHLy9vBgOGayZ/+2pXkaBXWKU7SdL9MndfhEDNGqQIwSeePIP3Ci9Y7g+fiByVI0WcxBiHq7SgG5dg57XvrKf8E6TQrkKLG0gGr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746498043; c=relaxed/simple;
-	bh=OD0+JvfZvsAqZv4GDomtpHD/2lTEqO3/fs9DnX+gGWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jObWXMcY4Z5GGKwlPs11WqDH0QTfPXaJxRJiBf4zpqn2VlrXH+gYW2qfA9mHmMPrDy6przbnQiBaM1Qfd96pivZ0vdmV9CIHX4YTa6RPPgkupUdebOjW2sl/291dSVdczlBqfj1TRPnOD4YvZUV8PTInSr9QWzKQIAdwcg/ybL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	bh=+ykYjiOJa9pS7RXzHKek2OiLLuEEoOrvpjAm0Xy6wjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TVCiFZLfxIC22M5WmWxlDYv5rpi4i5aBTdU06Td7Lhsn0Au56jJCralGuS4Z5W+uJVmRUfmgOJuDE01kCdpuLn8Jg8oj/ky/23VzxwKVypXTOrvlqkIyQR2CD5cmw/RxY0cQsvlEIz7CV/Pi2KmfX/nbwxPYfyN3fOaCrWzijhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zs2DD1Ggyz4f3l2k
-	for <linux-block@vger.kernel.org>; Tue,  6 May 2025 10:20:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zs2DC0FPyz4f3lDK
+	for <linux-block@vger.kernel.org>; Tue,  6 May 2025 10:20:11 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9C2EE1A0359
+	by mail.maildlp.com (Postfix) with ESMTP id F37D71A0D63
 	for <linux-block@vger.kernel.org>; Tue,  6 May 2025 10:20:36 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGDxcRloS3NDLg--.28694S4;
-	Tue, 06 May 2025 10:20:35 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGDxcRloS3NDLg--.28694S5;
+	Tue, 06 May 2025 10:20:36 +0800 (CST)
 From: Zizhi Wo <wozizhi@huaweicloud.com>
 To: axboe@kernel.dk,
 	linux-block@vger.kernel.org
@@ -45,10 +46,12 @@ Cc: yangerkun@huawei.com,
 	wozizhi@huaweicloud.com,
 	ming.lei@redhat.com,
 	tj@kernel.org
-Subject: [PATCH V5 0/7] blk-throttle: Split the blkthrotl queue to solve the IO delay issue
-Date: Tue,  6 May 2025 10:09:27 +0800
-Message-ID: <20250506020935.655574-1-wozizhi@huaweicloud.com>
+Subject: [PATCH V5 1/7] blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
+Date: Tue,  6 May 2025 10:09:28 +0800
+Message-ID: <20250506020935.655574-2-wozizhi@huaweicloud.com>
 X-Mailer: git-send-email 2.46.1
+In-Reply-To: <20250506020935.655574-1-wozizhi@huaweicloud.com>
+References: <20250506020935.655574-1-wozizhi@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -56,91 +59,150 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGDxcRloS3NDLg--.28694S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFyfuryfAw4rAFW8Wr13XFb_yoW5CF1fpr
-	WfWw4Yka1kAFsrK34fWrnFqaySq3ykJrZrCr97JrW3J3Z5ZrW0qr4Syr48ZFWxAasxW3Wa
-	gryUtrs5uF1UZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
-	UU=
+X-CM-TRANSID:gCh0CgBXvGDxcRloS3NDLg--.28694S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr4rKFy5tw1xJF45JF4xJFb_yoWrCr4UpF
+	W7CF45Wa1kJFsFkr43ZFnrCFy5tws7X3srGrZ3G3ySya1jvr9xKFn5ZryFyFWxZF93WFsI
+	vrWvy347G3WjyrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWx
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjX18JUUUUU==
 X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-Changes since V4:
-Patch 6 was modified to resolve the conflict.
+From: Zizhi Wo <wozizhi@huawei.com>
 
-Changes since V1-3:
-1) Updated the comments in patches 4 and 6 for greater specificity.
-2) In patch 6, replaced the @queued parameter with @sq in both
-throtl_qnode_add_bio and throtl_pop_queued to facilitate internal changes.
-And the potential problem of null pointer dereference has been fixed.
+tg_may_dispatch() can directly indicate whether bio can be dispatched by
+returning the time to wait, without the need for the redundant "wait"
+parameter. Remove it and modify the function's return type accordingly.
 
-[BUG]
-The current blkthrotl code provides two types of throttling: BPS limit and
-IOPS limit. When both limits are enabled, an IO is only dispatched if it
-meets both the BPS and IOPS restrictions. However, when both BPS and IOPS
-are limited simultaneously, an IO delayed dispatch issue can occur due to
-IO splitting. For example, if two 1MB IOs are issued with a BPS limit of
-1MB/s and a very high IOPS limit, the IO splitting will cause both IOs to
-complete almost "simultaneously" in 2 seconds.
+Since we have determined by the return time whether bio can be dispatched,
+rename tg_may_dispatch() to tg_dispatch_time().
 
-[CAUSE]
-The root cause of this issue is that blkthrotl mixes BPS and IOPS into a
-single queue. When issuing multiple IOs sequentially, the continuously
-split IOs will repeatedly enter the same queue. As they alternately go
-through the throtl process, IOs that have already been throttled will have
-to wait for IOs that have not yet been throttled. As a result, all IOs will
-eventually complete almost together.
+Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Zizhi Wo <wozizhi@huaweicloud.com>
+---
+ block/blk-throttle.c | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-[FIX]
-Since IO requests that have already been split no longer need to go through
-BPS throttling but still require IOPS control, this patchset splits the
-existing blkthrotl queue into two separate queues: BPS and IOPS.
-1) IO requests must first pass through the BPS queue.
-2) Once they meet the BPS limit, they proceed to the IOPS queue before
-being dispatched.
-3) Already split IO requests bypass the BPS queue and go directly to the
-IOPS queue.
-
-[OVERVIEW]
-This patchset consists of 7 patches:
-1) Patch 1 is a simple clean_up.
-2) Patch 2-4, to facilitate the subsequent splitting of queues. Patch 2-3
-separate the -dispatch- and -charge- functions based on the BPS and IOPS.
-Patch 4 introduce a new flag to prevent double counting.
-3) Patch 5-6 splits the original single queue into two separate queues(BPS
-and IOPS) without altering the existing code logic.
-4) Patch 7 ensures that split IO requests bypass the BPS queue, preventing
-unnecessary throttling and eliminating the delay issue.
-
-Noted, a regression test is posted earlier:
-https://lore.kernel.org/all/20250307080318.3860858-3-yukuai1@huaweicloud.com/
-
-Zizhi Wo (7):
-  blk-throttle: Rename tg_may_dispatch() to tg_dispatch_time()
-  blk-throttle: Refactor tg_dispatch_time by extracting
-    tg_dispatch_bps/iops_time
-  blk-throttle: Split throtl_charge_bio() into bps and iops functions
-  blk-throttle: Introduce flag "BIO_TG_BPS_THROTTLED"
-  blk-throttle: Split the blkthrotl queue
-  blk-throttle: Split the service queue
-  blk-throttle: Prevents the bps restricted io from entering the bps
-    queue again
-
- block/blk-throttle.c      | 300 ++++++++++++++++++++++++--------------
- block/blk-throttle.h      |  17 ++-
- include/linux/blk_types.h |   8 +
- 3 files changed, 213 insertions(+), 112 deletions(-)
-
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index 5263609ebd95..55596eb9aa08 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -794,14 +794,13 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+ }
+ 
+ /*
+- * Returns whether one can dispatch a bio or not. Also returns approx number
+- * of jiffies to wait before this bio is with-in IO rate and can be dispatched
++ * Returns approx number of jiffies to wait before this bio is with-in IO rate
++ * and can be dispatched.
+  */
+-static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
+-			    unsigned long *wait)
++static unsigned long tg_dispatch_time(struct throtl_grp *tg, struct bio *bio)
+ {
+ 	bool rw = bio_data_dir(bio);
+-	unsigned long bps_wait = 0, iops_wait = 0, max_wait = 0;
++	unsigned long bps_wait, iops_wait, max_wait;
+ 	u64 bps_limit = tg_bps_limit(tg, rw);
+ 	u32 iops_limit = tg_iops_limit(tg, rw);
+ 
+@@ -816,11 +815,8 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
+ 
+ 	/* If tg->bps = -1, then BW is unlimited */
+ 	if ((bps_limit == U64_MAX && iops_limit == UINT_MAX) ||
+-	    tg->flags & THROTL_TG_CANCELING) {
+-		if (wait)
+-			*wait = 0;
+-		return true;
+-	}
++	    tg->flags & THROTL_TG_CANCELING)
++		return 0;
+ 
+ 	/*
+ 	 * If previous slice expired, start a new one otherwise renew/extend
+@@ -840,21 +836,15 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
+ 
+ 	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
+ 	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
+-	if (bps_wait + iops_wait == 0) {
+-		if (wait)
+-			*wait = 0;
+-		return true;
+-	}
++	if (bps_wait + iops_wait == 0)
++		return 0;
+ 
+ 	max_wait = max(bps_wait, iops_wait);
+ 
+-	if (wait)
+-		*wait = max_wait;
+-
+ 	if (time_before(tg->slice_end[rw], jiffies + max_wait))
+ 		throtl_extend_slice(tg, rw, jiffies + max_wait);
+ 
+-	return false;
++	return max_wait;
+ }
+ 
+ static void throtl_charge_bio(struct throtl_grp *tg, struct bio *bio)
+@@ -905,16 +895,16 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
+ static void tg_update_disptime(struct throtl_grp *tg)
+ {
+ 	struct throtl_service_queue *sq = &tg->service_queue;
+-	unsigned long read_wait = -1, write_wait = -1, min_wait = -1, disptime;
++	unsigned long read_wait = -1, write_wait = -1, min_wait, disptime;
+ 	struct bio *bio;
+ 
+ 	bio = throtl_peek_queued(&sq->queued[READ]);
+ 	if (bio)
+-		tg_may_dispatch(tg, bio, &read_wait);
++		read_wait = tg_dispatch_time(tg, bio);
+ 
+ 	bio = throtl_peek_queued(&sq->queued[WRITE]);
+ 	if (bio)
+-		tg_may_dispatch(tg, bio, &write_wait);
++		write_wait = tg_dispatch_time(tg, bio);
+ 
+ 	min_wait = min(read_wait, write_wait);
+ 	disptime = jiffies + min_wait;
+@@ -992,7 +982,7 @@ static int throtl_dispatch_tg(struct throtl_grp *tg)
+ 	/* Try to dispatch 75% READS and 25% WRITES */
+ 
+ 	while ((bio = throtl_peek_queued(&sq->queued[READ])) &&
+-	       tg_may_dispatch(tg, bio, NULL)) {
++	       tg_dispatch_time(tg, bio) == 0) {
+ 
+ 		tg_dispatch_one_bio(tg, READ);
+ 		nr_reads++;
+@@ -1002,7 +992,7 @@ static int throtl_dispatch_tg(struct throtl_grp *tg)
+ 	}
+ 
+ 	while ((bio = throtl_peek_queued(&sq->queued[WRITE])) &&
+-	       tg_may_dispatch(tg, bio, NULL)) {
++	       tg_dispatch_time(tg, bio) == 0) {
+ 
+ 		tg_dispatch_one_bio(tg, WRITE);
+ 		nr_writes++;
+@@ -1661,7 +1651,7 @@ static bool tg_within_limit(struct throtl_grp *tg, struct bio *bio, bool rw)
+ 	if (tg->service_queue.nr_queued[rw])
+ 		return false;
+ 
+-	return tg_may_dispatch(tg, bio, NULL);
++	return tg_dispatch_time(tg, bio) == 0;
+ }
+ 
+ bool __blk_throtl_bio(struct bio *bio)
 -- 
 2.46.1
 
