@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-21354-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21356-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF633AAC4D4
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 14:58:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43B2BAAC4CE
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 14:58:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 044171B671B5
-	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 12:57:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 710A05229C7
+	for <lists+linux-block@lfdr.de>; Tue,  6 May 2025 12:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56358280020;
-	Tue,  6 May 2025 12:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD64280CEA;
+	Tue,  6 May 2025 12:57:22 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA74280010;
-	Tue,  6 May 2025 12:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB54280038;
+	Tue,  6 May 2025 12:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536240; cv=none; b=hMEIy7U7KSkBzWhGqfjfdPoOUiWHzQa95BRNtDsOC4rtAf4xNfUYMO7YjOlfW6CMEoM+lPXTFc0HYe+SAIEsmpc9AIuZ4dcgAVVGyBA3yfKcxH2RKQakbTDO9r8tlx3FyUYdSdw516dSmRnDVvrSMfA1JnUib3rAP8P7ZQAfamE=
+	t=1746536242; cv=none; b=eMe28nX4477QEpkdaea5BvMeAnC+Ejxx6HnONEWM3zKEbeIgyxzv0fdekZW5xvq/y9cHbPR7qwraQriRl1nU55zukiHCIUVTuQ0cJprLtg8L1ZM9zP8oXEmiKg+tSIPTM1c7RSBD/dHy+aI7rYHXZwjj0gWMCy1HsjxwW0ctAkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746536240; c=relaxed/simple;
-	bh=dubRGQ41s/YBbBIHyAC9Um1h25oGLsq+DX0KW1xvEfk=;
+	s=arc-20240116; t=1746536242; c=relaxed/simple;
+	bh=JSvR7C4+yIzGcyP4RuB4kV0hCZ9UNCP5oQNtJtfpLpA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rhp7nlDsbhWQTYOXi/qWG21s9v7JBF+caQXz/4z65jXSu9jUYNeiNS4t9ZkXDq5O6IO6ronHmKybtQOmztBej9VzyFkfVrQQw+ShfJBcSl95rKT1u4+gV4fAu44Hy7FJFWJd/YkdRiq4VGO6BNXWwGcWC1QKnlcwh2mHKdTafb8=
+	 MIME-Version; b=kxyzzC9E4MH/ETO/TrOrlQKjaKb7CV7id+UA0/nMO77BV8uTq//SIN7rikrMOqqkTH07d1Rs2bwRTZXK3YrZaDKu9iAM+V99iGernqrcpZgztgpsmPWGHw4yFLWygrWcX15/gxvXdfD70cj68o8yUDd5o+0P6nbpl8BLj9uJY+s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZsJMK1rQRzYQvCX;
-	Tue,  6 May 2025 20:57:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZsJLy04Ntz4f3jt8;
+	Tue,  6 May 2025 20:56:58 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9B3461A018D;
-	Tue,  6 May 2025 20:57:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 39FA71A0F01;
+	Tue,  6 May 2025 20:57:17 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl8pBxpoilNvLg--.37994S6;
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl8pBxpoilNvLg--.37994S7;
 	Tue, 06 May 2025 20:57:16 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -56,9 +56,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v3 3/9] block: WARN if bdev inflight counter is negative
-Date: Tue,  6 May 2025 20:48:56 +0800
-Message-Id: <20250506124903.2540268-3-yukuai1@huaweicloud.com>
+Subject: [PATCH v3 4/9] block: clean up blk_mq_in_flight_rw()
+Date: Tue,  6 May 2025 20:48:57 +0800
+Message-Id: <20250506124903.2540268-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250506124903.2540268-1-yukuai1@huaweicloud.com>
 References: <20250506124658.2537886-1-yukuai1@huaweicloud.com>
@@ -70,54 +70,163 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl8pBxpoilNvLg--.37994S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrtF18GF48Xr1fKw15AFy3CFg_yoWfuFc_GF
-	92v34UZw15JrZxArn8ZF4YvrWv9w18XFZxJFy7tF9xGr4UXr9Igr1qyws8JrZ8Xa98KFyS
-	yF9rZF1jyr9IqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbkAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRRCJPDUUUU
+X-CM-TRANSID:gCh0CgDXOl8pBxpoilNvLg--.37994S7
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF15Jw1rWrWfXFyxury5twb_yoWrZw45pr
+	45Ka98JrW5Wr1S9r1xtan7XFyfKw48KryIvwnxAr1ayr18Kr9xZFy8Gw1ktr1IvrykCFW3
+	C3WYyFy7GF1UG37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7VUUbAw7UUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Which means there is a bug for related bio-based disk driver, or blk-mq
-for rq-based disk, it's better not to hide the bug.
+Also add comment for part_inflight_show() for the difference between
+bio-based and rq-based device.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/genhd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-mq.c | 12 ++++++------
+ block/blk-mq.h |  3 +--
+ block/genhd.c  | 43 +++++++++++++++++++++++++------------------
+ 3 files changed, 32 insertions(+), 26 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index f671d9ee00c4..d158c25237b6 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -136,9 +136,9 @@ static void part_in_flight_rw(struct block_device *part,
- 		inflight[0] += part_stat_local_read_cpu(part, in_flight[0], cpu);
- 		inflight[1] += part_stat_local_read_cpu(part, in_flight[1], cpu);
- 	}
--	if ((int)inflight[0] < 0)
-+	if (WARN_ON_ONCE((int)inflight[0] < 0))
- 		inflight[0] = 0;
--	if ((int)inflight[1] < 0)
-+	if (WARN_ON_ONCE((int)inflight[1] < 0))
- 		inflight[1] = 0;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 45989960a89d..4722a4ad4121 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -89,7 +89,7 @@ struct mq_inflight {
+ 	unsigned int inflight[2];
+ };
+ 
+-static bool blk_mq_check_inflight(struct request *rq, void *priv)
++static bool blk_mq_check_in_driver(struct request *rq, void *priv)
+ {
+ 	struct mq_inflight *mi = priv;
+ 
+@@ -101,14 +101,14 @@ static bool blk_mq_check_inflight(struct request *rq, void *priv)
+ 	return true;
  }
  
+-void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
+-		unsigned int inflight[2])
++void blk_mq_in_driver_rw(struct block_device *part, unsigned int inflight[2])
+ {
+ 	struct mq_inflight mi = { .part = part };
+ 
+-	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, &mi);
+-	inflight[0] = mi.inflight[0];
+-	inflight[1] = mi.inflight[1];
++	blk_mq_queue_tag_busy_iter(bdev_get_queue(part), blk_mq_check_in_driver,
++				   &mi);
++	inflight[READ] = mi.inflight[READ];
++	inflight[WRITE] = mi.inflight[WRITE];
+ }
+ 
+ #ifdef CONFIG_LOCKDEP
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index eeac0d47c878..affb2e14b56e 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -246,8 +246,7 @@ static inline bool blk_mq_hw_queue_mapped(struct blk_mq_hw_ctx *hctx)
+ 	return hctx->nr_ctx && hctx->tags;
+ }
+ 
+-void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
+-		unsigned int inflight[2]);
++void blk_mq_in_driver_rw(struct block_device *part, unsigned int inflight[2]);
+ 
+ static inline void blk_mq_put_dispatch_budget(struct request_queue *q,
+ 					      int budget_token)
+diff --git a/block/genhd.c b/block/genhd.c
+index d158c25237b6..2470099b492b 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -126,27 +126,32 @@ static void part_stat_read_all(struct block_device *part,
+ }
+ 
+ static void part_in_flight_rw(struct block_device *part,
+-		unsigned int inflight[2])
++		unsigned int inflight[2], bool mq_driver)
+ {
+ 	int cpu;
+ 
+-	inflight[0] = 0;
+-	inflight[1] = 0;
+-	for_each_possible_cpu(cpu) {
+-		inflight[0] += part_stat_local_read_cpu(part, in_flight[0], cpu);
+-		inflight[1] += part_stat_local_read_cpu(part, in_flight[1], cpu);
++	if (mq_driver) {
++		blk_mq_in_driver_rw(part, inflight);
++	} else {
++		for_each_possible_cpu(cpu) {
++			inflight[READ] += part_stat_local_read_cpu(
++						part, in_flight[READ], cpu);
++			inflight[WRITE] += part_stat_local_read_cpu(
++						part, in_flight[WRITE], cpu);
++		}
+ 	}
+-	if (WARN_ON_ONCE((int)inflight[0] < 0))
+-		inflight[0] = 0;
+-	if (WARN_ON_ONCE((int)inflight[1] < 0))
+-		inflight[1] = 0;
++
++	if (WARN_ON_ONCE((int)inflight[READ] < 0))
++		inflight[READ] = 0;
++	if (WARN_ON_ONCE((int)inflight[WRITE] < 0))
++		inflight[WRITE] = 0;
+ }
+ 
+ unsigned int part_in_flight(struct block_device *part)
+ {
+-	unsigned int inflight[2];
++	unsigned int inflight[2] = {0};
+ 
+-	part_in_flight_rw(part, inflight);
++	part_in_flight_rw(part, inflight, false);
+ 
+ 	return inflight[READ] + inflight[WRITE];
+ }
+@@ -1036,19 +1041,21 @@ ssize_t part_stat_show(struct device *dev,
+ 		(unsigned int)div_u64(stat.nsecs[STAT_FLUSH], NSEC_PER_MSEC));
+ }
+ 
++/*
++ * Show the number of IOs issued to driver.
++ * For bio-based device, started from bdev_start_io_acct();
++ * For rq-based device, started from blk_mq_start_request();
++ */
+ ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+ {
+ 	struct block_device *bdev = dev_to_bdev(dev);
+ 	struct request_queue *q = bdev_get_queue(bdev);
+-	unsigned int inflight[2];
++	unsigned int inflight[2] = {0};
+ 
+-	if (queue_is_mq(q))
+-		blk_mq_in_flight_rw(q, bdev, inflight);
+-	else
+-		part_in_flight_rw(bdev, inflight);
++	part_in_flight_rw(bdev, inflight, queue_is_mq(q));
+ 
+-	return sysfs_emit(buf, "%8u %8u\n", inflight[0], inflight[1]);
++	return sysfs_emit(buf, "%8u %8u\n", inflight[READ], inflight[WRITE]);
+ }
+ 
+ static ssize_t disk_capability_show(struct device *dev,
 -- 
 2.39.2
 
