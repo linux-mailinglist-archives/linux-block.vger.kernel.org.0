@@ -1,252 +1,129 @@
-Return-Path: <linux-block+bounces-21451-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21458-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DB78AAEE17
-	for <lists+linux-block@lfdr.de>; Wed,  7 May 2025 23:50:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E5CAAEE44
+	for <lists+linux-block@lfdr.de>; Wed,  7 May 2025 23:59:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 680415222EB
-	for <lists+linux-block@lfdr.de>; Wed,  7 May 2025 21:50:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 559374C2AA0
+	for <lists+linux-block@lfdr.de>; Wed,  7 May 2025 21:59:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7C7B28F948;
-	Wed,  7 May 2025 21:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5043928C2CB;
+	Wed,  7 May 2025 21:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bbe1FQYy"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="a6ydvmT0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582C328937E
-	for <linux-block@vger.kernel.org>; Wed,  7 May 2025 21:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE058231A24
+	for <linux-block@vger.kernel.org>; Wed,  7 May 2025 21:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746654594; cv=none; b=Q77HWhL15vdKNy8HDYI4g2v/ZycvEbi2YJVIeGJj2ipOGXCFhEynyAu5Ayq6ns228OfSrF36ViFMWtY2EybMkXJvT5w6hK2/4UsIcz6Tr3yqXnzRdskPSXyVsC6CxixpubSXYBzCy7V9idsMoBdypmVPg458U6VORfkffZup3dU=
+	t=1746655174; cv=none; b=uzvQDAOV0XdDp+G3sOMLb3iLatjT4UxRwUBOWJ5VFxZHlOhGyUwLEWCPAMa0fBVcCEMKTRa42GT0ModFNOyS5MSzGoqrdFlEahJBEOr2aXJBq+KVrJjMAH8uSMNCs84MltflunnCDnW8gjgf23daknVYwVsYAFePQGg7HfppIAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746654594; c=relaxed/simple;
-	bh=GH638GY73r0Mdx5gXs4XdWZrOecOpLJcjLkaiWFYBrs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ERZR/pcZMZk6GmxfkGvfjl8B6Alc1DeoOn1mVB9ZlT33W3tIOEKLq7UAkxHg3nqkLn2ZeAVWvkRLW9QMmuxqAxLpUAwuhn+ZxmEf7rwthltRs+RRTj3+zPVkDN0uLuzJEEjTodowKZy7RJg3Ny/9UjtgQbwCuyVCuTK7PZLhLfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bbe1FQYy; arc=none smtp.client-ip=209.85.166.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3d8020ba858so2857115ab.0
-        for <linux-block@vger.kernel.org>; Wed, 07 May 2025 14:49:50 -0700 (PDT)
+	s=arc-20240116; t=1746655174; c=relaxed/simple;
+	bh=qmK0HZdksunB42Iw/hplJY6dcjWGH1zn3JnnaPJEi5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1ynNlgb4lOekJTGWFYDlbLcqG502X/fGuXymOdwylaueOsuRl1bUlePPPP0CpRf31U9XYrNbqgZJ8vsMHdOYfTFnQ5n0cKBblA0xEc8vQwxT/JSLJjall89DYmFT5K/tfyPVpZPW+Y0+EVHGCNEqHNmzawEw7gTErU7+9J+mkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=a6ydvmT0; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33677183so3981985ad.2
+        for <linux-block@vger.kernel.org>; Wed, 07 May 2025 14:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746654590; x=1747259390; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LlFzXt2hHWUpYx58m/1na3BQhxXxvWmUQd43rvkUPu4=;
-        b=bbe1FQYyY+njdlft6If1Iumzz7Hs2nR7KiSNbGwUwJJdtSQmKBJuSn68jPgbZXqOkA
-         KZo8W0lOQtxJ/r/gT1DaGXswYDZYQI1KwgpG9rB3EI6b7ZjNnUbeJp4zNzYChYAST6xb
-         2pHTUT6+0sl9TUBnjr18ccfe7CZoGo4Wp6cRNIfnAVdXDY3mSZ4Gzx70dN0x2TgpmccH
-         0grD2X1cZpvNwfUIcWt8ASBEW0V1z4TSw0HoiZ4TXNTf3UJI3x5trVYxK58cg1YvDTk6
-         dArhHx1475vg1m5kMk2rMfuSVr80WNQaGXt5/gXBn3tDAbugoLCL2EyTc1Z9JUNjA6qB
-         5gCg==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1746655172; x=1747259972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rh4j5BvAfXZF7bmpZu0jQ/ugGagunI5OepSAuxXPpsE=;
+        b=a6ydvmT056ujp9FcGOCZI8XvxFuJK6lJnNNl8hoxqfbR0qHNB3vy2/MEH5Rvvs67RV
+         hHr/4+Xvui2AnGihzyMxdzP3lt3oBfHt8E9ss+JlaoKtkhkcJ+MrgAX4fmtE/m4vgFpR
+         t/ybZccqvql+9H74eY3ndR4N8VlhOE5WQFl52FtVU3OiIMw8mA+ppP8s8zrNQ46Ticvw
+         PQxd+jYBkRz1whbL9SG3hOurLgcdyJrhkRY4RdteUiRacRS0pC1e1Xmk//uzaA8znObH
+         54jvNazL4LRI0jC7urrQZk6dCM4KCOQJA2wjNjPJDMPTTf+nEUGpQ1l7OBFhq7g1irMN
+         kAZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746654590; x=1747259390;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LlFzXt2hHWUpYx58m/1na3BQhxXxvWmUQd43rvkUPu4=;
-        b=uRaPfAZ8p44MhslDfqatkfPtTF9SKDZuffnoUzjA+as1TvKSTVZ0wip5D5vjMwPxOE
-         lvYrbQlw5RENQ1mu4+9Eb9rLA+gYWhQ22RZzZsXRk90ZW4iAgwba+WpLroCvgKiBJ2sv
-         CReUtVanVJx7jftgf2WvOOEY2deStMKdemQaYV7xmeuccnp9mJgIQYPiBlB0lKD60WtN
-         VO1QcMs2+JVuoG7NbKdAUXGgtltFEFq02rhadD3jftBGzxZxHdsMjgj6ZWz8mdBhJH7x
-         L5fvZTN1JZz5MYbrcyJVk8q6MkT3y510e9R3xF4ZRo84tMGbS0PpLHdia/5dUQD1Dic0
-         yJ3g==
-X-Gm-Message-State: AOJu0Yyn9QbHkQHzLZmlpc4h//IdQHszhvbpljkGUyXnZSneaZdCPT68
-	uAKlEek95T+AzVcAmYMc7vwBOcpVx82rS0jhOUKtugcIr0asCkA1Iv41fWGL6tHsFqjmyU9LGA8
-	6sUolRtz90RXgFVbJUT7cTRw/8jE9dFml
-X-Gm-Gg: ASbGncumQw/nUYPWDKYnRbCQs44J+liEEFW8moSo9D72YOLVAn2QIGfCJovHYrObemn
-	ooWxNZO4vFiyV7orN3jjI/6OpRAKCGCuqvafPH+009aAcDpHnVSbB7T0iz3fg8A7ZTIcn/vg3xf
-	fm/Wp9Uz4CvZ+ypXkpzvDl2ZN9nJz6vFE6xJQZTmvmXMgtNtNQ7vZU1cGZc4taPf5N1nNEsDWuj
-	qZd+ZtUwxQBl26qlxxbeCiPD35rwlTLZZEzhzjerTbvYlMiV2C2dQePRU1ziftww9+K/PKHFUKd
-	yXtSaxT74swJfqSG8pqa1I1J5vtFNjBHiWjjoWniXiHAVQ==
-X-Google-Smtp-Source: AGHT+IHiE3AbjUxsTTNoeWc14v4DyZF9G4LPQtQ+ZRF7G5I0SC25C/5ymJCmeOQ+YE/QyiamUzwfJ8o9cF1F
-X-Received: by 2002:a05:6e02:1aa6:b0:3da:7176:81c3 with SMTP id e9e14a558f8ab-3da785af2b9mr17210585ab.22.1746654590265;
-        Wed, 07 May 2025 14:49:50 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4f88aa9cf6csm2207849173.69.2025.05.07.14.49.50
+        d=1e100.net; s=20230601; t=1746655172; x=1747259972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rh4j5BvAfXZF7bmpZu0jQ/ugGagunI5OepSAuxXPpsE=;
+        b=ik5PH/TYD77o0GTJR2p9zcDhWwMEJIjPJufVs1pQEUv+PLVTnz/Tc5KeZ6A4ecVNAS
+         IqvdFJPJsYUG6cS5B6q1CDiNyIW2EItMQHbjLH8sdGsFt/7hxF8IFsGecZFhiPqcnsar
+         MHXORtdOYluOMvLPov8hec8BhxvEceQSg5VljO5sGWe7+H3mcHY7sw5ocUIYw1CoOdzz
+         ga7uihCWLedhZslbeR13y+TvyHEFKuLbVC/fuTdAFdZH2vuNSjD/aVEzpoIGak+X586J
+         UEExomjo0nGgw3jV9VewPVTnDB7kZO8VPawjE+1TDkqtXEn2r3NyxKeP0BZ3mkaaeBqH
+         WE8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWcF1NV/ISVqM1U7UtK7ABg9Zo3NyzbXx1ynVuG8roDexWBAcBKAfq9sOC3mgte3uXjDC3hBSusp1O6kw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbGjOR9HFrUbrQjp2Uk4cSol3hxnLNq13T2oamUKwi4AVEUvfj
+	mus9cEAIy0g7w4DiJmy0sEbDtn07ZFMqN/1fZvcdiB4KC+NIOcbO87rMcxNP140=
+X-Gm-Gg: ASbGnctawvpBzxQuJ5ebNZzNwiDZi4YPmfblUuhah9E4lMO0hgF7jvlcR7/wBuxHUN4
+	/6ENTVdQ60XqYTa0M3rtnF6BDGqOmZi24tZ9lpoMTpglHLaEXhDyjs+RoNcBbng+MSbtg3oN03O
+	jWF8n2wLJtt64yZckqp+xBExcrwv2Yr2Jw0/1I1jBvKApBMB0MM6CuR1l2iDE0zaLdPg/wCBpKl
+	ZDmvU63cp1dpZiBMBsKR/OZU/yQ3uPZzNmgxuLVk/vCyiII+dscC59pxZf1jU9o75YIEBWACqxX
+	sic6c9GxCsCXh0Ag33acL4Qh6lGk2PdGl1y7jbIZDU751n2qxca7Jasn0q5ZRFWLWqGbml+UgtZ
+	522nylczQIqaPqgz20iVDHxLe
+X-Google-Smtp-Source: AGHT+IE1xxxerfJkV5Vbq7cdaXtmbfAA/IeC6rJzLbxihaJKNjABSSmh0OYDfzxkDN41CkecVlaUHQ==
+X-Received: by 2002:a17:903:2286:b0:21f:988d:5756 with SMTP id d9443c01a7336-22e5ecdafcbmr68689475ad.42.1746655172014;
+        Wed, 07 May 2025 14:59:32 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fd4fsm99541775ad.146.2025.05.07.14.59.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 14:49:50 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 6874E340C23;
-	Wed,  7 May 2025 15:49:49 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 63DC1E40A46; Wed,  7 May 2025 15:49:49 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Wed, 07 May 2025 15:49:42 -0600
-Subject: [PATCH v6 8/8] Documentation: ublk: document UBLK_F_RR_TAGS
+        Wed, 07 May 2025 14:59:31 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98.2)
+	(envelope-from <david@fromorbit.com>)
+	id 1uCmnY-00000000gXW-3xM7;
+	Thu, 08 May 2025 07:59:29 +1000
+Date: Thu, 8 May 2025 07:59:28 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Anton Gavriliuk <antosha20xx@gmail.com>
+Cc: Laurence Oberman <loberman@redhat.com>, linux-nvme@lists.infradead.org,
+	linux-xfs@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: Sequential read from NVMe/XFS twice slower on Fedora 42 than on
+ Rocky 9.5
+Message-ID: <aBvXwComvV-uAqmb@dread.disaster.area>
+References: <CAAiJnjoo0--yp47UKZhbu8sNSZN6DZ-QzmZBMmtr1oC=fOOgAQ@mail.gmail.com>
+ <aBaVsli2AKbIa4We@dread.disaster.area>
+ <CAAiJnjor+=Zn62n09f-aJw2amX2wxQOb-2TB3rea9wDCU7ONoA@mail.gmail.com>
+ <aBfhDQ6lAPmn81j0@dread.disaster.area>
+ <7c33f38a52ccff8b94f20c0714b60b61b061ad58.camel@redhat.com>
+ <a1f322ab801e7f7037951578d289c5d18c6adc4d.camel@redhat.com>
+ <aBlCDTm-grqM4WtY@dread.disaster.area>
+ <CAAiJnjo87CEeFrkHbXtQM-=+K9M8uEpythLthWTwM_-i4HMA_Q@mail.gmail.com>
+ <aBqDGY1i3RePyzaB@dread.disaster.area>
+ <CAAiJnjp6WuVaxXbjndF8dB3fuWCuWz7Nqzpz0uEu2BOqyZUQHg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-ublk_task_per_io-v6-8-a2a298783c01@purestorage.com>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
-In-Reply-To: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
- Caleb Sander Mateos <csander@purestorage.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
- Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAiJnjp6WuVaxXbjndF8dB3fuWCuWz7Nqzpz0uEu2BOqyZUQHg@mail.gmail.com>
 
-Document the new flag UBLK_F_RR_TAGS along with its intended use case.
-Also describe the new restrictions on threading model imposed by
-ublk_drv (one (qid,tag) pair is can be served by only one thread), and
-remove references to ubq_daemon/per-queue threads, since such a concept
-no longer exists.
+On Wed, May 07, 2025 at 03:26:08PM +0300, Anton Gavriliuk wrote:
+> > `iostat -dxm 5` output during the fio run on both kernels will give us some indication of the differences in IO patterns, queue depths, etc.
+> 
+> iostat files attached.
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
- Documentation/block/ublk.rst | 83 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 72 insertions(+), 11 deletions(-)
+Yeah, that definitely looks like MD is the bottleneck. In both
+traces the NVMe drives are completing read IOs in about 110-120us.
+In fedora 42, the nvme drives are not at 100% utilisation so the md
+device is not feeding them fast enough.
 
-diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
-index 854f823b46c2add01d0b65ba36aecd26c45bb65d..e9cbabdd69c5539a02463780ba5e51de0416c3f6 100644
---- a/Documentation/block/ublk.rst
-+++ b/Documentation/block/ublk.rst
-@@ -115,15 +115,15 @@ managing and controlling ublk devices with help of several control commands:
- 
- - ``UBLK_CMD_START_DEV``
- 
--  After the server prepares userspace resources (such as creating per-queue
--  pthread & io_uring for handling ublk IO), this command is sent to the
-+  After the server prepares userspace resources (such as creating I/O handler
-+  threads & io_uring for handling ublk IO), this command is sent to the
-   driver for allocating & exposing ``/dev/ublkb*``. Parameters set via
-   ``UBLK_CMD_SET_PARAMS`` are applied for creating the device.
- 
- - ``UBLK_CMD_STOP_DEV``
- 
-   Halt IO on ``/dev/ublkb*`` and remove the device. When this command returns,
--  ublk server will release resources (such as destroying per-queue pthread &
-+  ublk server will release resources (such as destroying I/O handler threads &
-   io_uring).
- 
- - ``UBLK_CMD_DEL_DEV``
-@@ -208,15 +208,15 @@ managing and controlling ublk devices with help of several control commands:
-   modify how I/O is handled while the ublk server is dying/dead (this is called
-   the ``nosrv`` case in the driver code).
- 
--  With just ``UBLK_F_USER_RECOVERY`` set, after one ubq_daemon(ublk server's io
--  handler) is dying, ublk does not delete ``/dev/ublkb*`` during the whole
-+  With just ``UBLK_F_USER_RECOVERY`` set, after the ublk server exits,
-+  ublk does not delete ``/dev/ublkb*`` during the whole
-   recovery stage and ublk device ID is kept. It is ublk server's
-   responsibility to recover the device context by its own knowledge.
-   Requests which have not been issued to userspace are requeued. Requests
-   which have been issued to userspace are aborted.
- 
--  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after one ubq_daemon
--  (ublk server's io handler) is dying, contrary to ``UBLK_F_USER_RECOVERY``,
-+  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after the ublk server
-+  exits, contrary to ``UBLK_F_USER_RECOVERY``,
-   requests which have been issued to userspace are requeued and will be
-   re-issued to the new process after handling ``UBLK_CMD_END_USER_RECOVERY``.
-   ``UBLK_F_USER_RECOVERY_REISSUE`` is designed for backends who tolerate
-@@ -241,10 +241,11 @@ can be controlled/accessed just inside this container.
- Data plane
- ----------
- 
--ublk server needs to create per-queue IO pthread & io_uring for handling IO
--commands via io_uring passthrough. The per-queue IO pthread
--focuses on IO handling and shouldn't handle any control & management
--tasks.
-+The ublk server should create dedicated threads for handling I/O. Each
-+thread should have its own io_uring through which it is notified of new
-+I/O, and through which it can complete I/O. These dedicated threads
-+should focus on IO handling and shouldn't handle any control &
-+management tasks.
- 
- The's IO is assigned by a unique tag, which is 1:1 mapping with IO
- request of ``/dev/ublkb*``.
-@@ -265,6 +266,13 @@ with specified IO tag in the command data:
-   destined to ``/dev/ublkb*``. This command is sent only once from the server
-   IO pthread for ublk driver to setup IO forward environment.
- 
-+  Once a thread issues this command against a given (qid,tag) pair, the thread
-+  registers itself as that I/O's daemon. In the future, only that I/O's daemon
-+  is allowed to issue commands against the I/O. If any other thread attempts
-+  to issue a command against a (qid,tag) pair for which the thread is not the
-+  daemon, the command will fail. Daemons can be reset only be going through
-+  recovery.
-+
- - ``UBLK_IO_COMMIT_AND_FETCH_REQ``
- 
-   When an IO request is destined to ``/dev/ublkb*``, the driver stores
-@@ -309,6 +317,59 @@ with specified IO tag in the command data:
-   ``UBLK_IO_COMMIT_AND_FETCH_REQ`` to the server, ublkdrv needs to copy
-   the server buffer (pages) read to the IO request pages.
- 
-+Load balancing
-+--------------
-+
-+A simple approach to designing a ublk server might involve selecting a
-+number of I/O handler threads N, creating devices with N queues, and
-+pairing up I/O handler threads with queues, so that each thread gets a
-+unique qid, and it issues ``FETCH_REQ``s against all tags for that qid.
-+Indeed, before the introduction of the ``UBLK_F_RR_TAGS`` feature, this
-+was essentially the only option (*)
-+
-+This approach can run into performance issues under imbalanced load.
-+This architecture taken together with the `blk-mq architecture
-+<https://docs.kernel.org/block/blk-mq.html>`_ implies that there is a
-+fixed mapping from I/O submission CPU to the ublk server thread that
-+handles it. If the workload is CPU-bottlenecked, only allowing one ublk
-+server thread to handle all the I/O generated from a single CPU can
-+limit peak bandwidth.
-+
-+To address this issue, two changes were made:
-+
-+- ublk servers can now pair up threads with I/Os (i.e. (qid,tag) pairs)
-+  arbitrarily. In particular, the preexisting restriction that all I/Os
-+  in one queue must be served by the same thread is lifted.
-+- ublk servers can now specify ``UBLK_F_RR_TAGS`` when creating a ublk
-+  device to get round-robin tag allocation on each queue
-+
-+The ublk server can check for the presence of these changes by testing
-+for the ``UBLK_F_RR_TAGS`` feature.
-+
-+With these changes, a ublk server can balance load as follows:
-+
-+- create the device with ``UBLK_F_RR_TAGS`` set in
-+  ``ublksrv_ctrl_dev_info::flags`` when issuing the ``ADD_DEV`` command
-+- issue ``FETCH_REQ``s from ublk server threads to (qid,tag) pairs in
-+  a round-robin manner. For example, for a device configured with
-+  ``nr_hw_queues=2`` and ``queue_depth=4``, and a ublk server having 4
-+  I/O handling threads, ``FETCH_REQ``s could be issued as follows, where
-+  each entry in the table is the pair (``ublksrv_io_cmd::q_id``,
-+  ``ublksrv_io_cmd::tag``) in the payload of the ``FETCH_REQ``.
-+
-+  ======== ======== ======== ========
-+  thread 0 thread 1 thread 2 thread 3
-+  ======== ======== ======== ========
-+  (0, 0)   (0, 1)   (0, 2)   (0, 3)
-+  (1, 3)   (1, 0)   (1, 1)   (1, 2)
-+
-+With this setup, I/O submitted on a CPU which maps to queue 0 will be
-+balanced across all threads instead of all landing on the same thread.
-+Thus, a potential bottleneck is avoided.
-+
-+(*) technically, one I/O handling thread could service multiple queues
-+if it wanted to, but that doesn't help with imbalanced load
-+
- Zero copy
- ---------
- 
+That can also be seen in that the rocky 9.5 kernel with a nvme
+device queue depth of about 4 IOs, whilst it is only 1.5 for the
+fedora 42 kernel.
 
+Given that nobody from the block/MD side of things has responded
+with any ideas yet, you might just have to bisect it to find out
+where things went wrong...
+
+-Dave.
 -- 
-2.34.1
-
+Dave Chinner
+david@fromorbit.com
 
