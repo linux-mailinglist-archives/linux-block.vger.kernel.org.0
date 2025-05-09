@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-21533-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21535-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F5E3AB17F2
-	for <lists+linux-block@lfdr.de>; Fri,  9 May 2025 17:06:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96208AB17FC
+	for <lists+linux-block@lfdr.de>; Fri,  9 May 2025 17:07:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E5DA3ADC23
-	for <lists+linux-block@lfdr.de>; Fri,  9 May 2025 15:06:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D669D98043F
+	for <lists+linux-block@lfdr.de>; Fri,  9 May 2025 15:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 055A6233D86;
-	Fri,  9 May 2025 15:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5367234973;
+	Fri,  9 May 2025 15:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTwpEul/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KAAWSI3V"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411C02185BC
-	for <linux-block@vger.kernel.org>; Fri,  9 May 2025 15:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57A220FA8B
+	for <linux-block@vger.kernel.org>; Fri,  9 May 2025 15:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803190; cv=none; b=Yw+0FYuvqFNX2H07bLOtGR4GRgQCZfGWbNPshs45ssCxU3OxpHshN7JM/qF2z/5pomk/pXudozdbDiWqHoUZ9s5o9UFxfVY4AaIymoqEe/Ll6Ff/Dgq0cBKxD9gQs2MGHjl/YqVwZ28/X1L1pq4HX/eVTcSW9H0P6QcuUgHuIHA=
+	t=1746803200; cv=none; b=IsVZoeInkKinE32LdrOJ/HXjL6UKq/izenuKCZ97sH3MqOGYz0LFVFrk2QsW+OVmplYS/RQK0rbS5HK+SyYXmbKfce1ELGHmHYTrpZELt1EkBLrlmzsaA0MvFRiR2GyHLbQh8TrI68HFcOn6qzI3/vgeEwutmkAGjy1Vi+7BTJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803190; c=relaxed/simple;
-	bh=eXF8/XD01j2Ty9XvOcoySCOWkduVltm1ZqzpzJOWYrA=;
+	s=arc-20240116; t=1746803200; c=relaxed/simple;
+	bh=N0YZ9FKsxJ2LCFXlQK4trJTyoAuuDxYbBZmjDa49M9E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n1nuUiJaeBtsoSUAH9NSFASv4vR4iK8OiNBlge09wemZv0liokD9MLJ0LOsQ6pVdnHNZ+8TRo7SMa2ufeLFlnwAsnih6/msmgt0RCkS6hi1qvXT6cSQsarHDy4E4RqtCLLiry3e0VIpkAEUtNNJaeoc2l8wcI6zcQ4ve2vVkzp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MTwpEul/; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=bytp80Ej9cS9PNajTr664jCB2KVMSMmPR6bPd2beHo3wG/iwQ5Pv2mnRNdDLGJGpHjV2+7/KzJYZNcS7MQMmHyZW0v1gsMeLWmZTL1bnxUDtx4B2FFRIS4eCmGrujFnUQNRwFfYLQXIjOntPIQP/Z0XUrMGRSWhZZF6cUcpeKRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KAAWSI3V; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746803188;
+	s=mimecast20190719; t=1746803197;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CgSHXNDB26taU8EQAYo/AJdP3xa4h4q4NPUlH+u3ktQ=;
-	b=MTwpEul/IShdUJ9l9Koni1uFRcsQzQS7W3yT0cUZ7jIf0pnPLAuTW8G+o8ZOCR1APdS/Sz
-	083W1otG8Bx2MUO1pM6ilqT+twN0L7LhgVg7rj0+jFm3nsoSEsIUG2lx+vwHgBe6mzhlF8
-	hMvofLkvBgIVDf5F9+TyDbPfdIUghaE=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=in1A5ApuQDXmJwHneWph4saklElSzBjsT+g0rd0Ve+Y=;
+	b=KAAWSI3VJctRDp/MlsBXdKmE/JvEcXf3O/ZNJW/3H6dHh8mBIHUJ05LZXk6zE/TE+SJ8k8
+	dth41H6nZlDEIwGKYpLHARNr064ERBEhv2IufTWACixTQZ3siK5vGqnrVVcJP0GzABo/5P
+	euLNFT+K/TlOwcQg/m9jUGyyjuNile8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-uDj1HI9xP7-VmiwxVgik4g-1; Fri,
- 09 May 2025 11:06:26 -0400
-X-MC-Unique: uDj1HI9xP7-VmiwxVgik4g-1
-X-Mimecast-MFC-AGG-ID: uDj1HI9xP7-VmiwxVgik4g_1746803185
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-30-7iALsUeXMC2KO5_WKWi3TA-1; Fri,
+ 09 May 2025 11:06:31 -0400
+X-MC-Unique: 7iALsUeXMC2KO5_WKWi3TA-1
+X-Mimecast-MFC-AGG-ID: 7iALsUeXMC2KO5_WKWi3TA_1746803189
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B3FC195608E;
-	Fri,  9 May 2025 15:06:25 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A381219560B0;
+	Fri,  9 May 2025 15:06:29 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.140])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1A90618018B5;
-	Fri,  9 May 2025 15:06:23 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8101F3000221;
+	Fri,  9 May 2025 15:06:27 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
@@ -64,9 +64,9 @@ Cc: Uday Shankar <ushankar@purestorage.com>,
 	Caleb Sander Mateos <csander@purestorage.com>,
 	Keith Busch <kbusch@kernel.org>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V3 1/6] ublk: allow io buffer register/unregister command issued from other task contexts
-Date: Fri,  9 May 2025 23:06:04 +0800
-Message-ID: <20250509150611.3395206-2-ming.lei@redhat.com>
+Subject: [PATCH V3 2/6] ublk: convert to refcount_t
+Date: Fri,  9 May 2025 23:06:05 +0800
+Message-ID: <20250509150611.3395206-3-ming.lei@redhat.com>
 In-Reply-To: <20250509150611.3395206-1-ming.lei@redhat.com>
 References: <20250509150611.3395206-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -76,60 +76,84 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-`ublk_queue` is read only for io buffer register/unregister command. Both
-`ublk_io` and block layer request are read-only for IO buffer register/
-unregister command.
+Convert to refcount_t and prepare for supporting to register bvec buffer
+automatically, which needs to initialize reference counter as 2, and
+kref doesn't provide this interface, so convert to refcount_t.
 
-So the two command can be issued from other task contexts.
-
-Not same with other three ublk commands, these two are for handling target
-IO only, we shouldn't limit their issue task context, otherwise it becomes
-hard for ublk server(backend) to use zero copy feature.
-
-Reported-by: Uday Shankar <ushankar@purestorage.com>
-Closes: https://lore.kernel.org/linux-block/20250410-ublk_task_per_io-v3-2-b811e8f4554a@purestorage.com/
+Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+Suggested-by: Caleb Sander Mateos <csander@purestorage.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/block/ublk_drv.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index cb612151e9a1..31f06e734250 100644
+index 31f06e734250..ab5b0a5e98e9 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -2057,6 +2057,12 @@ static bool ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io)
- 	return ublk_start_io(ubq, req, io);
+@@ -79,7 +79,7 @@
+ 	 UBLK_PARAM_TYPE_DMA_ALIGN | UBLK_PARAM_TYPE_SEGMENT)
+ 
+ struct ublk_rq_data {
+-	struct kref ref;
++	refcount_t ref;
+ };
+ 
+ struct ublk_uring_cmd_pdu {
+@@ -488,7 +488,6 @@ static blk_status_t ublk_setup_iod_zoned(struct ublk_queue *ubq,
+ #endif
+ 
+ static inline void __ublk_complete_rq(struct request *req);
+-static void ublk_complete_rq(struct kref *ref);
+ 
+ static dev_t ublk_chr_devt;
+ static const struct class ublk_chr_class = {
+@@ -648,7 +647,7 @@ static inline void ublk_init_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
+ 
+-		kref_init(&data->ref);
++		refcount_set(&data->ref, 1);
+ 	}
  }
  
-+static bool is_io_buf_reg_unreg_cmd(unsigned int cmd_op)
-+{
-+	return _IOC_NR(cmd_op) == UBLK_IO_REGISTER_IO_BUF ||
-+		_IOC_NR(cmd_op) == UBLK_IO_UNREGISTER_IO_BUF;
-+}
-+
- static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 			       unsigned int issue_flags,
- 			       const struct ublksrv_io_cmd *ub_cmd)
-@@ -2076,8 +2082,15 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		goto out;
+@@ -658,7 +657,7 @@ static inline bool ublk_get_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
  
- 	ubq = ublk_get_queue(ub, ub_cmd->q_id);
--	if (ubq->ubq_daemon && ubq->ubq_daemon != current)
--		goto out;
-+	/*
-+	 * Both `ublk_io` and block layer request are read-only for IO
-+	 * buffer register/unregister command, so the two are allowed to be
-+	 * issued from other task contexts
-+	 */
-+	if (!is_io_buf_reg_unreg_cmd(cmd_op)) {
-+		if (ubq->ubq_daemon && ubq->ubq_daemon != current)
-+			goto out;
-+	}
+-		return kref_get_unless_zero(&data->ref);
++		return refcount_inc_not_zero(&data->ref);
+ 	}
  
- 	if (tag >= ubq->q_depth)
- 		goto out;
+ 	return true;
+@@ -670,7 +669,8 @@ static inline void ublk_put_req_ref(const struct ublk_queue *ubq,
+ 	if (ublk_need_req_ref(ubq)) {
+ 		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
+ 
+-		kref_put(&data->ref, ublk_complete_rq);
++		if (refcount_dec_and_test(&data->ref))
++			__ublk_complete_rq(req);
+ 	} else {
+ 		__ublk_complete_rq(req);
+ 	}
+@@ -1122,15 +1122,6 @@ static inline void __ublk_complete_rq(struct request *req)
+ 	blk_mq_end_request(req, res);
+ }
+ 
+-static void ublk_complete_rq(struct kref *ref)
+-{
+-	struct ublk_rq_data *data = container_of(ref, struct ublk_rq_data,
+-			ref);
+-	struct request *req = blk_mq_rq_from_pdu(data);
+-
+-	__ublk_complete_rq(req);
+-}
+-
+ static void ublk_complete_io_cmd(struct ublk_io *io, struct request *req,
+ 				 int res, unsigned issue_flags)
+ {
 -- 
 2.47.0
 
