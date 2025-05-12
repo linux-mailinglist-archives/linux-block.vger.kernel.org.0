@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-21562-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21563-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 334D6AB4186
-	for <lists+linux-block@lfdr.de>; Mon, 12 May 2025 20:07:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97619AB41AE
+	for <lists+linux-block@lfdr.de>; Mon, 12 May 2025 20:09:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C81C54639C2
-	for <lists+linux-block@lfdr.de>; Mon, 12 May 2025 18:06:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E2341B40063
+	for <lists+linux-block@lfdr.de>; Mon, 12 May 2025 18:10:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E49029824A;
-	Mon, 12 May 2025 18:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E3A29A330;
+	Mon, 12 May 2025 18:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNib/Eek"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CO7lEdgp"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D4D298242;
-	Mon, 12 May 2025 18:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABDB29A326;
+	Mon, 12 May 2025 18:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073054; cv=none; b=fB6zlKIjP51vLfi2i17+Fxl7smkkNcn01g5nin2aXiYiIWJtlH4kwnXRjgPvolay90hhDG0khBxXEQoApDkoYFRou+FrtT7kx8fHHDZP1oJmidrDU9JM1bLZGfGXmFiEub3YeUaXIKQtQB/4PBOY1iFYzQjg4XXTSuK45nFVIek=
+	t=1747073080; cv=none; b=QPWdMGG2g8fSuNBsRnHj1dA1M+0TBHxM654uGmLvHKXRmDG6OKJ/aWH69Ycpduc3NE7VTtjlEMqq+8NJAFJEa3YL7SxNCmsOHv3fZ/AzsMgnvjsONM9eZl7fkL7ge0midXAA5DT6RQMp5ghJCreLVtIpM2mynsGXS0/GFrOBb5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073054; c=relaxed/simple;
-	bh=L2k7cRkMJazui1TkT/w4yjvjzTYhEraMo91sqqKHc0A=;
+	s=arc-20240116; t=1747073080; c=relaxed/simple;
+	bh=q2GbhTnqw4HSKUD14vcZX5VevC9i7BETntU11kPDREM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EfgsczNzdjvOYVFERi2VwArA7mhJS8jmKuPtqVwGu7NKlu0oG4ErImDIJ2yon5qcT2ej5/T4Ncnlx3a3wEMyptPhK/8UrY7XE9mapXuT54OFBs4Py0eDfxZJjg9XJsH4sDXbwDp5doAbOqhLNzlv6hV5v/ai1KEsMThgTe5/aVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNib/Eek; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACCAC4CEF0;
-	Mon, 12 May 2025 18:04:12 +0000 (UTC)
+	 MIME-Version; b=PuaFCRrjuSVeDASSG7L/kB/1GNlUnaHfMqfjp759MjwrRX4h1ez/2oxraRnC7/2Uw7EW3OoG2HT3wAdI4tp48UQ9RNue7SUxOYccCrL8IEPNh8CLS7AD1vTYVISKVzYQS+IvPA7vxcONiCj1XuZP52criaVV7ibyRI9ur1CoH2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CO7lEdgp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B2EC4CEF0;
+	Mon, 12 May 2025 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747073053;
-	bh=L2k7cRkMJazui1TkT/w4yjvjzTYhEraMo91sqqKHc0A=;
+	s=k20201202; t=1747073080;
+	bh=q2GbhTnqw4HSKUD14vcZX5VevC9i7BETntU11kPDREM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tNib/Eekp66m5LPPzZWoExUbqNvHYCrju1FWqQ+HzyB1i4ux3iQteYIMX17slpdPC
-	 kdI5tAU2Dvi250OBMF04SaCcrPP6IVizJ35Li0k/IVxjJearTxJ8chnE/OFPMJGsda
-	 FEFP8Akzz4DgoLCg1yNdhpRdij1NiHnrRBVOh8NLbn/xTCX6VvB5uxRgWhO3ayv0lz
-	 qPseUQcTu0ZXr5XiiX++Eo7RE4dIMVmdjJpsv2+MnQpQ6KjD6Xl+ELgO0mMO02DrxH
-	 TC5L9H6QO9yU5DC1igvZsklFHTz+LGtOFGjK0kqxQ+GL5GWlF7+WEfXENcNp5uD7TP
-	 lCQ8mCWVS+sAQ==
+	b=CO7lEdgpABoI3UBXn8585HRIE5IrHNeF257GfqmKXgD+mcE2qT+h76iwlrIRwxZXG
+	 lFU2ndoDqcUAzVb44BSstxN5L1NLHCI9lpDgQforqIQ90FFyjVY/X3tp3lDo/yc2k3
+	 c03saBaapvFbQ+aS5HdMEH8XUca0UE4Od2dP01VAhbQhHZq/A540l25U3sTbxeuowu
+	 20/QEi/5A0ME++qDnQm81mr+BjWj5SQKDq/otLYmDsCdiTTNPYXOvjrWMTo7pmNCM/
+	 Y8/XUA/eeJs+hMMR7Cxr7zTAvsCwzy7BvjKWTQZY+6x6w9U5rS3naZNsWKmNS05+F9
+	 B4dpGquKYhlNw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 10/15] block: only update request sector if needed
-Date: Mon, 12 May 2025 14:03:45 -0400
-Message-Id: <20250512180352.437356-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 06/11] block: only update request sector if needed
+Date: Mon, 12 May 2025 14:04:21 -0400
+Message-Id: <20250512180426.437627-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250512180352.437356-1-sashal@kernel.org>
-References: <20250512180352.437356-1-sashal@kernel.org>
+In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
+References: <20250512180426.437627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.6
+X-stable-base: Linux 6.12.28
 Content-Transfer-Encoding: 8bit
 
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
@@ -96,10 +96,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/block/blk.h b/block/blk.h
-index 9dcc92c7f2b50..c14f415de5228 100644
+index 1426f9c281973..e91012247ff29 100644
 --- a/block/blk.h
 +++ b/block/blk.h
-@@ -480,7 +480,8 @@ static inline void blk_zone_update_request_bio(struct request *rq,
+@@ -482,7 +482,8 @@ static inline void blk_zone_update_request_bio(struct request *rq,
  	 * the original BIO sector so that blk_zone_write_plug_bio_endio() can
  	 * lookup the zone write plug.
  	 */
