@@ -1,123 +1,127 @@
-Return-Path: <linux-block+bounces-21840-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21842-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C02CDABE253
-	for <lists+linux-block@lfdr.de>; Tue, 20 May 2025 20:09:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13728ABE753
+	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 00:39:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF4321B67884
-	for <lists+linux-block@lfdr.de>; Tue, 20 May 2025 18:09:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B238E1B64C53
+	for <lists+linux-block@lfdr.de>; Tue, 20 May 2025 22:39:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CC3258CF7;
-	Tue, 20 May 2025 18:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36CB261372;
+	Tue, 20 May 2025 22:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="hDT6pRch"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iJKwUAVL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3866722DA16;
-	Tue, 20 May 2025 18:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56253256C95;
+	Tue, 20 May 2025 22:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747764567; cv=none; b=AISVpTOtp1SWerzhZ28stlYE2EKRjmUrNei+5yG3q2coRDKycEOCBV8toClyOXhylJrBufv4QJBzwBhAX+Ff8LFguvqASAoSFilLNw2xn8i9J9WdOcOD5F1lk0tEb9V9Xj7a+/TmegTn62o4BzycFxpTu8OwAASGaJwPPUdxOOg=
+	t=1747780762; cv=none; b=GzwHGpV4d/sMURgAk9/ALA1B59IE9C1uLjZy1VEpf1OOcY0ycbHVdVBEF5MC4bNemlYFx7T+Z2rFLQO/oIHcSEhgDk2nD4Fob+bKKl0+7Jy4GxMoTWC3WaeTh1jTADQ5FpBK6jFUViBJxbh6pahSFrOYpGUiB2iXinb79a6j8SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747764567; c=relaxed/simple;
-	bh=XPzARLkBvcJFmLTFMZW4+wt5UBWrFQ9ZwCb7j8lQ/30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxKGc+i206pSsRyV4NCsege7t5x6x6IuBcjd+FR5f/L50kCHq5aVfLSRtBHcIeqts6k1NpZXqnDJ1t2yWSEVNFiNFqHCcZzgchbadlX1AfMYSH3xe27d1KpAH8Cvp6TnfdZkbVyg6+p/mqQhBLudom7fhWBHLJYl3gOJEnbrjfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=hDT6pRch; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4b22cz6JJ6zlgqyG;
-	Tue, 20 May 2025 18:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1747764562; x=1750356563; bh=Byijd5r5XP31BtZ8ZR7CrdnO
-	sTA+YR7G3UabzhUTU0Q=; b=hDT6pRchf/JB1iMQV3oh4oUr4Fh4OVA/5Ne37f42
-	gIJugzX0BAvBxdgYASCE/tdWwhKp6f9BGXDtP6yQdFdMS47qfhxv0DCwG1ldV/Ne
-	Xe/fdDXJUEXaOtt2rY+MBdnNFckxqx20NpzTVGdZ2PbeyMO59+nDa4AtzZpvxyqF
-	XD7oIF1xUg+9jxVdOiSRI+in1Aso0iMjn5SX/UCb9IHvsfYi4BgLrJV56D9mbESb
-	rtDlR1ejP3CsjIWGc7fsZTfrtPSwlJDnza9RjL0tEXJHE4t6KrnUiLxgE7o/BjKQ
-	uLehHQU4YO7weIBhNTvSzv6Tktxjww2VQVEll2/BxC979g==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id EK_TemovTSWB; Tue, 20 May 2025 18:09:22 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4b22cs5v81zltKl7;
-	Tue, 20 May 2025 18:09:16 +0000 (UTC)
-Message-ID: <d28b6138-7618-4092-8e05-66be2625ecd9@acm.org>
-Date: Tue, 20 May 2025 11:09:15 -0700
+	s=arc-20240116; t=1747780762; c=relaxed/simple;
+	bh=KJLJl5G4ZEfIrYP7fvFanGybKGNHrPy/BUDBhJeSwyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DI4maeE0xOGGs+bHhetadQe5RT20BZ5uOxoQmorBa9+h2TssHc/dYqOWd6hLonnUht4enXqdyh95p4IGtvCTyxOFlI4F/faHiVMBdkMzx2Kj1n3Ip220QL/1AH3AttWbKTMuwPjBDHTwD1pEk/q2JhSAYvB2kPrYU/xFMO300fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iJKwUAVL; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=h5biAlmqEKw4A5Scse4dJjnS3AKbz0TdTPBvhrSpi/E=; b=iJKwUAVLeSAm4yCglWJSEzEVhC
+	l30/DXblP1bcU2a9tex2L/L8OcfB0COTH7jVVrt2/EQMIXxB2NbzNShoBO4JDAwBNdgS+NP1bANm5
+	ewy0Cqs9WgW7SGTAAhmXXcTw9Ctsemu/GX+b/LKCEIoOc9MVeoXGbY/yd3Ls6/SSZV9y34pPpyQT6
+	P/HBbNXs7f5fCL+mSaS77Hf6GQHomqfG5XDIGnjoo13T2FDOuPfEZ3fSHdkWjGA5D+EKi7702C+lG
+	R+U6pxygAvhl0DVFHXe8rchZJW9x9RHLU6VEAbYpoHw0qmEzcE2hyjsUxL1olPZoFuzhV8qnRARzC
+	hKM2f7+A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHVcA-0000000EIM8-0So0;
+	Tue, 20 May 2025 22:39:14 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: vkoul@kernel.org,
+	chenxiang66@hisilicon.com,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com,
+	leon@kernel.org,
+	jgg@nvidia.com,
+	alex.williamson@redhat.com,
+	joel.granados@kernel.org
+Cc: iommu@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	mcgrof@kernel.org
+Subject: [PATCH 0/6] dma: fake-dma and IOVA tests
+Date: Tue, 20 May 2025 15:39:07 -0700
+Message-ID: <20250520223913.3407136-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] block: Make __submit_bio_noacct() preserve the bio
- submission order
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>,
- Ming Lei <ming.lei@redhat.com>, stable@vger.kernel.org
-References: <20250514202937.2058598-1-bvanassche@acm.org>
- <20250514202937.2058598-2-bvanassche@acm.org> <20250516044754.GA12964@lst.de>
- <47b24ea0-ef8f-441f-b405-a062b986ce93@acm.org> <20250520135624.GA8472@lst.de>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250520135624.GA8472@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On 5/20/25 6:56 AM, Christoph Hellwig wrote:
-> On Mon, May 19, 2025 at 03:12:11PM -0700, Bart Van Assche wrote:
->> This new patch should address the concerns brought up in your latest
->> email:
-> 
-> No, we should never need to do a sort, as mentioned we need to fix
-> how stackable drivers split the I/O.  Or maybe even get them out of
-> all the splits that aren't required.
+We don't seem to have unit tests for the DMA IOVA API, so I figured
+we should add some so to ensure we don't regress moving forward, and it allows
+us to extend these later. Its best to just extend existing tests though. I've
+found two tests so I've extended them as part of this patchset:
 
-If the sequential write bios are split by the device mapper, sorting
-bios in the block layer is not necessary. Christoph and Damien, do you
-agree to replace the bio sorting code in my previous email with the
-patch below?
+  - drivers/dma/dmatest.c
+  - kernel/dma/map_benchmark.c
 
-Thanks,
+However running the dmatest requires some old x86 emulation or some
+non-upstream qemu patches for intel IOAT a q35 system. This make this
+easier by providing a simple in-kernel fake-dma controller to let you test
+run all dmatests on most systems. The only issue I found with that was not
+being able to get the platform device through an IOMMU for DMA. If folks have
+an idea of how to make it easy for a platform device to get an IOMMU for DMA
+it would make it easier to allow us to leverage the existing dmatest for
+IOVA as well. I only tried briefly with virtio and vfio_iommu_type1, but gave
+up fast. Not sure if its easy to later allow a platform device like this
+one to leverage it to make it easier for testing.
 
-Bart.
+The kernel/dma/map_benchmark.c test is extended as well, for that I was
+able to add follow the instructions on the first commit from that test,
+by unbinding a device and attaching it to the map benchmark.
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 3d419fd2be57..c41ab294987e 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1792,9 +1792,12 @@ static inline bool dm_zone_bio_needs_split(struct 
-mapped_device *md,
-  {
-  	/*
-  	 * For mapped device that need zone append emulation, we must
--	 * split any large BIO that straddles zone boundaries.
-+	 * split any large BIO that straddles zone boundaries. Additionally,
-+	 * split sequential writes to prevent that splitting lower in the stack
-+	 * causes reordering.
-  	 */
--	return dm_emulate_zone_append(md) && bio_straddles_zones(bio) &&
-+	return ((dm_emulate_zone_append(md) && bio_straddles_zones(bio)) ||
-+		bio_op(bio) == REQ_OP_WRITE) &&
-  		!bio_flagged(bio, BIO_ZONE_WRITE_PLUGGING);
-  }
-  static inline bool dm_zone_plug_bio(struct mapped_device *md, struct 
-bio *bio)
+I tried twiddle a mocked IOMMU with iommufd on a q35 guest, but alas,
+that just didn't work as I'd hope, ie, nothing, and so this is the best
+I have for now to help test IOVA DMA API on a virtualized setup.
+
+Let me know if others have other recomendations.
+
+The hope is to get a CI eventually going to ensure these don't regress.
+
+Luis Chamberlain (6):
+  fake-dma: add fake dma engine driver
+  dmatest: split dmatest_func() into helpers
+  dmatest: move printing to its own routine
+  dmatest: add IOVA tests
+  dma-mapping: benchmark: move validation parameters into a helper
+  dma-mapping: benchmark: add IOVA support
+
+ drivers/dma/Kconfig                           |  11 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/dmatest.c                         | 795 ++++++++++++------
+ drivers/dma/fake-dma.c                        | 718 ++++++++++++++++
+ include/linux/map_benchmark.h                 |  11 +
+ kernel/dma/Kconfig                            |   4 +-
+ kernel/dma/map_benchmark.c                    | 512 +++++++++--
+ .../testing/selftests/dma/dma_map_benchmark.c | 145 +++-
+ 8 files changed, 1864 insertions(+), 333 deletions(-)
+ create mode 100644 drivers/dma/fake-dma.c
+
+-- 
+2.47.2
 
 
