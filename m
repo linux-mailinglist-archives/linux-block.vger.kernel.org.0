@@ -1,59 +1,61 @@
-Return-Path: <linux-block+bounces-21848-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21850-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90313ABE86E
-	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 02:07:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 861FDABE870
+	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 02:07:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F27043AD889
-	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 00:06:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2B0F3AE914
+	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 00:06:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A19259C;
-	Wed, 21 May 2025 00:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7045B8F40;
+	Wed, 21 May 2025 00:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="vZfwER0w"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="rK2FE9/Y"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD49D186A
-	for <linux-block@vger.kernel.org>; Wed, 21 May 2025 00:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9C610D
+	for <linux-block@vger.kernel.org>; Wed, 21 May 2025 00:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747786019; cv=none; b=tHCAqmTvvgEFGDs94UJ6pMMSvruklIZ+LDwgExCxtgINTCEI1zyKdy5vADcVbMAaRvj/HmlSfeRivoeB+ktRdlvbqCtTZHIXetANuOxCUbB8SQPhB1wqgI2ltSD58+oqBr7zPqBbZDFSMjyu1P8gbaBNifsa4QYN033y/rblM9Y=
+	t=1747786022; cv=none; b=ULrAX4/AFlLUJSZIX7KNSIPqb8vZIAeysWHf+tuPvxJbzk5xuAUPWC68K0SLn4ejFGcFotqq5P9U8Vnh4Gs3lthHwpwMkaDT1FwGd95aUcTPlVIaolOHJx2CgClkbJebqI5dDGkM/dRSQoBlGqEvyZR742NA+CEXY+QF5sgpqdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747786019; c=relaxed/simple;
-	bh=fC0TnXuzr2UBrS/te2rNhxKQZXVh8jbAUqQoecnZZWQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sSP7PuQZlfqOWPjEzQK6i94jwWL9bCnOuu4tMYhjlsLXdKYaAOUQaDhSVHEvYicdpq+tZF51kHMRiy9mHg6V9YRbXATxP3tYoAzJnLPwroJ3VhklvI6NMOeo9lvv/tURnVss2UFB4j7cg3wklQPDNuiBE5WlBn7cpu27A9w6bnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=vZfwER0w; arc=none smtp.client-ip=199.89.3.6
+	s=arc-20240116; t=1747786022; c=relaxed/simple;
+	bh=X/mr8se+PZi+RI6vJ6L6PXqQKLtlf512LQEmCFKAvH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NK2kKDyHdopncAbyQZwExlxIVRbNuc8wSiveDuSMy5UJhIka7GcGG2ea31LjeKZVHasL9MIFxBrWePrH5Sg4zGQ15Q7awums7zQ4CMuK119O+lQlj+oQfsMX/6yrWLHmCUEfdBz4l6yZ5gCRk3b3Bjf1PpA7QZyHNoNvPMZLq9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=rK2FE9/Y; arc=none smtp.client-ip=199.89.3.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4b2BYP7132zlvq4d;
-	Wed, 21 May 2025 00:06:49 +0000 (UTC)
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4b2BYV3WKJzlvnM2;
+	Wed, 21 May 2025 00:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from:received:received; s=mr01; t=
-	1747786008; x=1750378009; bh=s5F7NYbJkLg+DszS7H93Tif47P7Hc4x2XQe
-	lK7FzKag=; b=vZfwER0w+nVjYHGqn0Uu+zrZAePk421IuAiofLIU2ttZik45biS
-	gRU+tzlaIBvs3DaE6M3Ph+BpjUEWJcm0q7o0xNZdQbMf3mkvScrC0q2OydJrN9bf
-	JUL8LETH7bPbKFUr+fVdKcB/ScQwM8GPaAyw5fyanKeYrNSQoHxo8d3X2viM55KA
-	MO+dG1sxGYEsYBfv+rI/iYs5IisLczH2RI1qsXJOgZbqjHog/1S19142yn5mYUje
-	pBdz3CKaV2aS9taP83Ms+Uk39VSFVnAfts4Fi6DLpbsDRJueHl1wWe3xmPSnOCmH
-	SJ9Bn0ICkysDuXJnGyVQ3x+uRnCYCMBAFyQ==
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from
+	:received:received; s=mr01; t=1747786013; x=1750378014; bh=OcwjU
+	dnp2wdQxVEeyNtLAZ0OFXE19NjpW1vik2Q/zeI=; b=rK2FE9/YL9gdk9yJypVwB
+	TJudZEeSK2Qz1d2ir0zSUYAWB0ydSS9Ko1Aj2o6dka+SrG/O9+iKSab0pPHEAJs9
+	Zgh3sLXghGaKu8eFSABxucJ4jOg/o3CFp94KDRrs8BqfOc/jtWvXEDipw3EJssNC
+	X8ZrBmNCMAogTg+dZ4x9HzkBeOafuguZEQt6YMwhTeQEVEf3TeluG11tRVJdTJVK
+	kj5lkDBk7nT+MeWz+xqe/l5ZiT8X/10ZKXmFj7DL3zkpJWx12d69iSWiolbLp8O0
+	v/ntxGGb82yswhQa26Y6gZxl4X40gqJnREcZY2hQJJ2AkCC11xzMHOG26CIrOedl
+	A==
 X-Virus-Scanned: by MailRoute
 Received: from 003.mia.mailroute.net ([127.0.0.1])
  by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 3daTQrfbmjHz; Wed, 21 May 2025 00:06:48 +0000 (UTC)
+ id Dlahm3bZOcrB; Wed, 21 May 2025 00:06:53 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4b2BYJ6mb7zlvnM2;
-	Wed, 21 May 2025 00:06:43 +0000 (UTC)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4b2BYP38dTzlvkTy;
+	Wed, 21 May 2025 00:06:48 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -61,10 +63,12 @@ Cc: linux-block@vger.kernel.org,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Niklas Cassel <cassel@kernel.org>,
 	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH 0/3] Hold the zoned write plug lock less long
-Date: Tue, 20 May 2025 17:06:23 -0700
-Message-ID: <20250521000626.1314859-1-bvanassche@acm.org>
+Subject: [PATCH 1/3] blk-zoned: Move locking into disk_zone_wplug_set_wp_offset()
+Date: Tue, 20 May 2025 17:06:24 -0700
+Message-ID: <20250521000626.1314859-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+In-Reply-To: <20250521000626.1314859-1-bvanassche@acm.org>
+References: <20250521000626.1314859-1-bvanassche@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -73,26 +77,113 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jens,
+Instead of holding zwplug->lock around disk_zone_wplug_set_wp_offset() ca=
+lls,
+move zwplug->lock locking into disk_zone_wplug_set_wp_offset(). Prepare f=
+or
+reducing the amount of code protected by zwplug->lock. No functionality h=
+as
+been changed.
 
-The zone write plug lock is taken in the submission and in the completion=
- path.
-Hence, it is important that this lock is held no longer than needed. This=
- patch
-series reduces how long the zone write plug lock is held. Please consider=
- this
-patch series for the next merge window.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-zoned.c | 38 ++++++++++++++++----------------------
+ 1 file changed, 16 insertions(+), 22 deletions(-)
 
-Thanks,
-
-Bart.
-
-Bart Van Assche (3):
-  blk-zoned: Move locking into disk_zone_wplug_set_wp_offset()
-  blk-zoned: Move locking into disk_zone_wplug_abort()
-  blk-zoned: Do not lock zwplug->lock recursively
-
- block/blk-zoned.c | 56 +++++++++++++++++++++++++----------------------
- 1 file changed, 30 insertions(+), 26 deletions(-)
-
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 8f15d1aa6eb8..75b01068b877 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -624,14 +624,19 @@ static void disk_zone_wplug_abort(struct blk_zone_w=
+plug *zwplug)
+  */
+ static void disk_zone_wplug_set_wp_offset(struct gendisk *disk,
+ 					  struct blk_zone_wplug *zwplug,
+-					  unsigned int wp_offset)
++					  unsigned int wp_offset,
++					  bool only_if_update_needed)
+ {
+-	lockdep_assert_held(&zwplug->lock);
+-
+-	/* Update the zone write pointer and abort all plugged BIOs. */
+-	zwplug->flags &=3D ~BLK_ZONE_WPLUG_NEED_WP_UPDATE;
+-	zwplug->wp_offset =3D wp_offset;
+-	disk_zone_wplug_abort(zwplug);
++	scoped_guard(spinlock_irqsave, &zwplug->lock) {
++		if (only_if_update_needed &&
++		    !(zwplug->flags & BLK_ZONE_WPLUG_NEED_WP_UPDATE))
++			return;
++
++		/* Update the zone write pointer and abort all plugged BIOs. */
++		zwplug->flags &=3D ~BLK_ZONE_WPLUG_NEED_WP_UPDATE;
++		zwplug->wp_offset =3D wp_offset;
++		disk_zone_wplug_abort(zwplug);
++	}
+=20
+ 	/*
+ 	 * The zone write plug now has no BIO plugged: remove it from the
+@@ -669,18 +674,13 @@ static void disk_zone_wplug_sync_wp_offset(struct g=
+endisk *disk,
+ 					   struct blk_zone *zone)
+ {
+ 	struct blk_zone_wplug *zwplug;
+-	unsigned long flags;
+=20
+ 	zwplug =3D disk_get_zone_wplug(disk, zone->start);
+ 	if (!zwplug)
+ 		return;
+=20
+-	spin_lock_irqsave(&zwplug->lock, flags);
+-	if (zwplug->flags & BLK_ZONE_WPLUG_NEED_WP_UPDATE)
+-		disk_zone_wplug_set_wp_offset(disk, zwplug,
+-					      blk_zone_wp_offset(zone));
+-	spin_unlock_irqrestore(&zwplug->lock, flags);
+-
++	disk_zone_wplug_set_wp_offset(disk, zwplug, blk_zone_wp_offset(zone),
++				      true);
+ 	disk_put_zone_wplug(zwplug);
+ }
+=20
+@@ -700,7 +700,6 @@ static bool blk_zone_wplug_handle_reset_or_finish(str=
+uct bio *bio,
+ 	struct gendisk *disk =3D bio->bi_bdev->bd_disk;
+ 	sector_t sector =3D bio->bi_iter.bi_sector;
+ 	struct blk_zone_wplug *zwplug;
+-	unsigned long flags;
+=20
+ 	/* Conventional zones cannot be reset nor finished. */
+ 	if (!bdev_zone_is_seq(bio->bi_bdev, sector)) {
+@@ -726,9 +725,7 @@ static bool blk_zone_wplug_handle_reset_or_finish(str=
+uct bio *bio,
+ 	 */
+ 	zwplug =3D disk_get_zone_wplug(disk, sector);
+ 	if (zwplug) {
+-		spin_lock_irqsave(&zwplug->lock, flags);
+-		disk_zone_wplug_set_wp_offset(disk, zwplug, wp_offset);
+-		spin_unlock_irqrestore(&zwplug->lock, flags);
++		disk_zone_wplug_set_wp_offset(disk, zwplug, wp_offset, false);
+ 		disk_put_zone_wplug(zwplug);
+ 	}
+=20
+@@ -739,7 +736,6 @@ static bool blk_zone_wplug_handle_reset_all(struct bi=
+o *bio)
+ {
+ 	struct gendisk *disk =3D bio->bi_bdev->bd_disk;
+ 	struct blk_zone_wplug *zwplug;
+-	unsigned long flags;
+ 	sector_t sector;
+=20
+ 	/*
+@@ -751,9 +747,7 @@ static bool blk_zone_wplug_handle_reset_all(struct bi=
+o *bio)
+ 	     sector +=3D disk->queue->limits.chunk_sectors) {
+ 		zwplug =3D disk_get_zone_wplug(disk, sector);
+ 		if (zwplug) {
+-			spin_lock_irqsave(&zwplug->lock, flags);
+-			disk_zone_wplug_set_wp_offset(disk, zwplug, 0);
+-			spin_unlock_irqrestore(&zwplug->lock, flags);
++			disk_zone_wplug_set_wp_offset(disk, zwplug, 0, false);
+ 			disk_put_zone_wplug(zwplug);
+ 		}
+ 	}
 
