@@ -1,180 +1,123 @@
-Return-Path: <linux-block+bounces-21899-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-21902-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70628ABFF91
-	for <lists+linux-block@lfdr.de>; Thu, 22 May 2025 00:31:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8E6BAC00BD
+	for <lists+linux-block@lfdr.de>; Thu, 22 May 2025 01:41:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBC6C1BC02E0
-	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 22:31:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D8253A8064
+	for <lists+linux-block@lfdr.de>; Wed, 21 May 2025 23:41:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1143B239E62;
-	Wed, 21 May 2025 22:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9655C23E329;
+	Wed, 21 May 2025 23:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="mVz0oXk/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qr9rr0HD"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921122FF2B
-	for <linux-block@vger.kernel.org>; Wed, 21 May 2025 22:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E7523E229;
+	Wed, 21 May 2025 23:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747866682; cv=none; b=mQzQt+YYgxFLezWewSI6Qe+KzgVeZ5E1Q4eHCaKzd/xYHfW0gawFxIQ8TJL1JDN8/Ah4v5fglxk4DBZBClCcXWXOZye8EvglOxEctEp5q8wqqHx1q8G0fB7kguQ5ohaof6jhNPPVX/aknTg19ya/vht030V5dFAaJ/150dgpTlc=
+	t=1747870898; cv=none; b=IFNGZKPX0G3vpSfgfnGhK0UK8OAPXDtbBon2eCzUJF6wFbZAhIxwm4taeE2iAHEB/paMvhu8jEwk7JAjrUezu7zNx5J2uLj++jL2vTbkUbe4Qnx0n1oSuWg1ZSN4jxvAKjABvAzN3mh6MQbkZD6KPjixC0t78FQt8RVpUcqzYHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747866682; c=relaxed/simple;
-	bh=MgU7Q6eB9bo6GhCtTMdVgb7hT4SO9gMlY5mSoWjdQnA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jqjlO/YTvTq99whTWTeHgOmsYOF0g1SuZwqRl0OP031MkWOk79Y5yKNKiyOGW8K+dfG0+IPNyB6VNnUIrsacM3jzVGV1/1Qp6xWx5IpsVN1DSVBsoNjVOl0wnNkQYXfSDJtaMVINjFJPcasOyI/3JmDN30jEG4tfFz4JvRuC2rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=mVz0oXk/; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LMQXch002432
-	for <linux-block@vger.kernel.org>; Wed, 21 May 2025 15:31:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=Sio+V6cBojGrbSouaYLC1pCKV+UnLmFhRTgPGfKJ4KA=; b=mVz0oXk/v522
-	8IgduQj0CuwXf3ymOgiD3kYiNyObAM7RotjP9UImESEj1lAQ8J4AzV6eahcPzeQz
-	bHsDTvlCxGxEAQ3hMUwd8MEmmVgUr2vY2kk4vY8WGiO1JR9ly/4FS/RX/jdoySl9
-	ma1oypmUkVH9HB7pDyUkYBxggegVgZ6n+dRIAf40jyd5bFrnzAz3kRbdb3HYqQis
-	afkDNv/Y0+lhGuo8vDEkTFg9Kbe23xrJxBDzQT14lnbSLFVIdAG3rNIzVrvAX6xR
-	sbVy8yc4gNDMyHW0W/21O8UbU4SYL+2NkcoH+nt/85bjijHH2VoJHgRrF6WvlIOu
-	y//hveFxJg==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46rwfgkp1x-13
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Wed, 21 May 2025 15:31:19 -0700 (PDT)
-Received: from twshared24170.03.ash8.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.10; Wed, 21 May 2025 22:31:15 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id D4CFD1BE54ACB; Wed, 21 May 2025 15:31:10 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
-CC: Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5/5] nvmet: implement copy support for bdev backed target
-Date: Wed, 21 May 2025 15:31:07 -0700
-Message-ID: <20250521223107.709131-6-kbusch@meta.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250521223107.709131-1-kbusch@meta.com>
-References: <20250521223107.709131-1-kbusch@meta.com>
+	s=arc-20240116; t=1747870898; c=relaxed/simple;
+	bh=dmXBPaP+dUDCyAOUcCFQ6VMDi1A2rED504MmFv/HvAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTCaI29FXFy97/taqDYWoDeh7OP8jL5S3l5chtvJacxDEyhJ5PgGWo1DBMGW8S/kdcrQLWXLGEWknfjc7JcIfK/7e9GWu2AeAueGXRWC5X9W7Tj6j77atJCczOcp8A+rOkzB/NiZYpFVtxVPgS+uDaK295r5aSPnaSbiv0sk7Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qr9rr0HD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747870897; x=1779406897;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dmXBPaP+dUDCyAOUcCFQ6VMDi1A2rED504MmFv/HvAs=;
+  b=Qr9rr0HDKWov/+Q0/NVRtGHnerwKY6vs4Pw6Yj6Ki/L4QhrsVsN3rn8h
+   uQSkYzc7WI+V3Wx9tFdK302nrqC8NfrHjX9CKTjrnTah4zeQ/vp6LhuMz
+   XM5Woe+XFGSwRLX/GF73WWgsWKom+xHuBh+67NdhLPBOY/5OobxzNoOtv
+   70UOEqtk7WsZSuKptfCgY9yT1fu+PDbF3qqvHEu81eLoBM+RPYPtgqtMb
+   lKptwtQAeCXVrKPMzkECmn2+jlV6rl6iX7QZSTv3xQmTtu7om5DIxOnzT
+   s4a9pDIoLIv4HabfO+3MXufk+oCG/HcPCQKiAnh7+YocCeCt82LNTONe2
+   g==;
+X-CSE-ConnectionGUID: LL7qSx7KQzCUsJvJ6Aii2A==
+X-CSE-MsgGUID: t9d+uEyOQXeQQ35mfQ+sPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="50014404"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="50014404"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:41:33 -0700
+X-CSE-ConnectionGUID: EZOuNzdTTNKiUHZ2LdKp4A==
+X-CSE-MsgGUID: Cu7r3II8RwerSm5FlU65kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="140836538"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 21 May 2025 16:41:28 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHt3u-000Ojg-18;
+	Wed, 21 May 2025 23:41:26 +0000
+Date: Thu, 22 May 2025 07:40:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Luis Chamberlain <mcgrof@kernel.org>, vkoul@kernel.org,
+	chenxiang66@hisilicon.com, m.szyprowski@samsung.com,
+	robin.murphy@arm.com, leon@kernel.org, jgg@nvidia.com,
+	alex.williamson@redhat.com, joel.granados@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, iommu@lists.linux.dev,
+	dmaengine@vger.kernel.org, linux-block@vger.kernel.org,
+	gost.dev@samsung.com, mcgrof@kernel.org
+Subject: Re: [PATCH 1/6] fake-dma: add fake dma engine driver
+Message-ID: <202505220711.3GeHexsR-lkp@intel.com>
+References: <20250520223913.3407136-2-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: ztkucTfhMa-Grq_w3NrcnEs_cKm3LoNR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDIyNCBTYWx0ZWRfX/ia/IM2hMZBd YDWeqpqbQ1P+kzDE8uPcx1tJQRLBL9tqhp0YBs4Gs18Y45YHpISHxk99EXBdEKXcI722twsdy9y fa3kPPON2+q8/nXa75a6rGGG5SsppZAt1s5X6wuAH14gNojmpmo1Lzmc3viXWjL/48gDeMVw4HW
- sNfNuHIp55T1Cn7GLbFSi7roxbFm3VM84XLRCAFs2pj1DseXeO4NMEUvy5+ZMxZCC7ptCKwpVr+ wUzm7D5d5BvlpaKbKtoZtJOlAInRQiuQFjkf5wG5Rj+pV9ursrKHHPTiPxmWZSCYI1N85t1Vvf+ zG9jiMHhCTx5ETv/bz+fjfzLExXoaHHpcLXZ+6AjK0zeK61ide5A5ezhtkFeRPxEutbThV6GyDe
- CNbImkVeQI/7XTpM1NhQE46B6l0UUF7V9TlMq736pWvtVxUIjQSMm9t5hdIOkVpxqZWF3q4i
-X-Authority-Analysis: v=2.4 cv=I9BlRMgg c=1 sm=1 tr=0 ts=682e5437 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=pyVl64N4sFQ6-zCv_koA:9
-X-Proofpoint-ORIG-GUID: ztkucTfhMa-Grq_w3NrcnEs_cKm3LoNR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_07,2025-05-20_03,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520223913.3407136-2-mcgrof@kernel.org>
 
-From: Keith Busch <kbusch@kernel.org>
+Hi Luis,
 
-The nvme block device target type does not have any particular limits on
-copy commands, so all the settings are the protocol's max.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/nvme/target/io-cmd-bdev.c | 52 +++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.15-rc7 next-20250521]
+[cannot apply to vkoul-dmaengine/next shuah-kselftest/next shuah-kselftest/fixes sysctl/sysctl-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-c=
-md-bdev.c
-index 83be0657e6df4..d90dedcd2352f 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -46,6 +46,11 @@ void nvmet_bdev_set_limits(struct block_device *bdev, =
-struct nvme_id_ns *id)
- 	id->npda =3D id->npdg;
- 	/* NOWS =3D Namespace Optimal Write Size */
- 	id->nows =3D to0based(bdev_io_opt(bdev) / bdev_logical_block_size(bdev)=
-);
-+
-+	/* Copy offload support */
-+	id->mssrl =3D cpu_to_le16(U16_MAX);
-+	id->mcl =3D cpu_to_le32(U32_MAX);
-+	id->msrc =3D U8_MAX;
- }
-=20
- void nvmet_bdev_ns_disable(struct nvmet_ns *ns)
-@@ -412,6 +417,50 @@ static void nvmet_bdev_execute_discard(struct nvmet_=
-req *req)
- 	}
- }
-=20
-+static void nvmet_bdev_execute_copy(struct nvmet_req *req)
-+{
-+	struct bio_vec *bv, fast_bv[UIO_FASTIOV];
-+	struct nvme_copy_range range;
-+	u64 dst_sector, slba;
-+	u16 status, nlb, nr;
-+	int ret, i;
-+
-+	nr =3D req->cmd->copy.nr_range + 1;
-+	if (nr <=3D UIO_FASTIOV) {
-+		bv =3D fast_bv;
-+	} else {
-+		bv =3D kmalloc_array(nr, sizeof(*bv), GFP_KERNEL);
-+		if (!bv) {
-+			status =3D NVME_SC_INTERNAL;
-+			goto done;
-+		}
-+	}
-+
-+	for (i =3D 0; i < nr; i++) {
-+		status =3D nvmet_copy_from_sgl(req, i * sizeof(range), &range,
-+				sizeof(range));
-+		if (status)
-+			goto done;
-+
-+		slba =3D le64_to_cpu(range.slba);
-+		nlb =3D le16_to_cpu(range.nlb) + 1;
-+		bv[i].bv_sector =3D nvmet_lba_to_sect(req->ns, slba);
-+		bv[i].bv_sectors =3D nvmet_lba_to_sect(req->ns, nlb);
-+	}
-+
-+	dst_sector =3D nvmet_lba_to_sect(req->ns, req->cmd->copy.sdlba);
-+	ret =3D blkdev_copy_range(req->ns->bdev, dst_sector, bv, nr, GFP_KERNEL=
-);
-+	if (ret) {
-+		req->error_slba =3D le64_to_cpu(dst_sector);
-+		status =3D errno_to_nvme_status(req, ret);
-+	} else
-+		status =3D NVME_SC_SUCCESS;
-+done:
-+	nvmet_req_complete(req, status);
-+	if (bv !=3D fast_bv)
-+		kfree(bv);
-+}
-+
- static void nvmet_bdev_execute_dsm(struct nvmet_req *req)
- {
- 	if (!nvmet_check_data_len_lte(req, nvmet_dsm_len(req)))
-@@ -474,6 +523,9 @@ u16 nvmet_bdev_parse_io_cmd(struct nvmet_req *req)
- 	case nvme_cmd_write_zeroes:
- 		req->execute =3D nvmet_bdev_execute_write_zeroes;
- 		return 0;
-+	case nvme_cmd_copy:
-+		req->execute =3D nvmet_bdev_execute_copy;
-+		return 0;
- 	default:
- 		return nvmet_report_invalid_opcode(req);
- 	}
---=20
-2.47.1
+url:    https://github.com/intel-lab-lkp/linux/commits/Luis-Chamberlain/fake-dma-add-fake-dma-engine-driver/20250521-064035
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250520223913.3407136-2-mcgrof%40kernel.org
+patch subject: [PATCH 1/6] fake-dma: add fake dma engine driver
+config: alpha-randconfig-r113-20250522 (https://download.01.org/0day-ci/archive/20250522/202505220711.3GeHexsR-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250522/202505220711.3GeHexsR-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505220711.3GeHexsR-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/dma/fake-dma.c:69:24: sparse: sparse: symbol 'single_fake_dma' was not declared. Should it be static?
+
+vim +/single_fake_dma +69 drivers/dma/fake-dma.c
+
+    68	
+  > 69	struct fake_dma_device *single_fake_dma;
+    70	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
