@@ -1,96 +1,267 @@
-Return-Path: <linux-block+bounces-22024-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22028-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C71A5AC3028
-	for <lists+linux-block@lfdr.de>; Sat, 24 May 2025 17:36:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6810BAC314C
+	for <lists+linux-block@lfdr.de>; Sat, 24 May 2025 22:34:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26F241880531
-	for <lists+linux-block@lfdr.de>; Sat, 24 May 2025 15:37:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DF1A9E120C
+	for <lists+linux-block@lfdr.de>; Sat, 24 May 2025 20:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4BF18E362;
-	Sat, 24 May 2025 15:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F8C280331;
+	Sat, 24 May 2025 20:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEN74HHq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zfyuojyw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95CB13C8E8
-	for <linux-block@vger.kernel.org>; Sat, 24 May 2025 15:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91C427F754;
+	Sat, 24 May 2025 20:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748101002; cv=none; b=as7JfqiUq0H/HIxEmjYSjFDkXT5alfjuwCuNKG+e8ETFezZg8Z0WdafRf5OXa2zzZwTaix1TkXHgGlGPfoL+A2DGZGDNYK+2uS+PSNzk5rWFTH7ZdO6DRLLJd+/K8EH5cXdWo3KNescAUQqF3NBxOtYkGmmXw6ZvDx8AzCfqGd0=
+	t=1748118813; cv=none; b=i3RFYGOPB7THA5xUWUJVvgWJ2LqR4IdK97JhjWGqt4Q9twzO67kx2LOy6d/mKZKuYcVqKzDBvhlvxqgWtR8sOEsZ+fobdmF1ha8oTs85zQrUzz3rTcVWvfexZ0/G15c1F8rf2bp4kY9rm1Rz3wzN6fyL8Ppfy3cLpGjrrnHdIKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748101002; c=relaxed/simple;
-	bh=/GglxHihHrVRRXGrMIYZ2jyVaXs+phP2PDRwzBSzNQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N5XdLO0sx7fEqBhJO75fHt8ZsVHMmwYGOY3J6TWLyOaaeNT1L/hBVYJUE+isQ906oPiBnO+5O1VzNJoToeGYAWXdsHvFJWhbVFQ74aC1VPf14cR9pGF4XZWFaIdYZONwsO23Z6XSvI2yvVIREW0CkDm2OcA1RFO1ZzMbaKVjjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEN74HHq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFD9C4CEE4;
-	Sat, 24 May 2025 15:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748101002;
-	bh=/GglxHihHrVRRXGrMIYZ2jyVaXs+phP2PDRwzBSzNQI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aEN74HHqhjfw5JGdUJYkMVbtjjeS2EqiTCzEFOTzUzhCc+VXnL/xV1eiec5u8ZUeU
-	 SlgxvZ6to9ch12RgGzkDq3sFJxompQ+KLdkWlkvvgLIdnAmfyLSUWLkyzj0YV81aQ5
-	 mzBBQELQfJ7YczfuZ5q0w9v4pX5JHkgNVlAoKsfi1NhkZ33I6gUQiuE6VUpaOkOJHn
-	 hYACsPMRzHuD2iLLDFt/MPx9RWsVNm9H7u0big4/58iCRKadb2GHb5jSn6L0xCKxBF
-	 rPudBChfnwELI3T+4+437AM729UoP68AtoxMZ9eL9sRJSB1NbkZ8FegUz5v3/vduzE
-	 qAB+fkhiBw1eA==
-Message-ID: <6365a731-0864-4564-b2f6-deeb4e3760f3@kernel.org>
-Date: Sat, 24 May 2025 17:36:36 +0200
+	s=arc-20240116; t=1748118813; c=relaxed/simple;
+	bh=y/agLfL8cvRLwjOLQ2FmgleRZcO69KtrQd6QQg0+Gcs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jhNUAorD2nYOq6LCOjkE7PM3nHrFy8ptVoDKOl3KQVHQiKQcnLSS6C6RChuTiLL4tlsewAtkpq7Bae4r8dsKwPnQwS+YvnMKvdMxlo0JppEqG2ylzk2bQN5SB7alqhRyTz+BwBz+c3YIy4PWKBhZ0umen6gEQfBEiiC7UsJ/394=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zfyuojyw; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so100204439f.1;
+        Sat, 24 May 2025 13:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748118810; x=1748723610; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDpP7s7cOkPavUulBU3Ba+a6zZqUiVMm4fW37bEOlm0=;
+        b=ZfyuojywW03t5ljuKajvfzL2pOBrB9ohgstqGCE4E9gYti65Kx6aJltzIdkZd05dzM
+         bK386Q62Y/lWzlIQwIDOabYN9TMfN6bKCTKNqXS7mQ0zhQzc8Qz0kemIW0urwahRgunw
+         6XqrFTXbwr2jjDvFeQLeOkMDo2bmiLo07RXhSg1faL+1LQam19FxD5mHm91izThd+VOv
+         GEkP4ARVOAlu5YGxEyfNM7XTtL5QDrVMCWfbzfhYQycx7BpnFFq8LC/t8C7z6mg/R5Iv
+         hQAZqB6tjtHNVJrElUs5168g2JKw6WTzU7UsMNe89kvooJSKEtOeRnm7CEdWi6bShlF6
+         ROkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748118810; x=1748723610;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gDpP7s7cOkPavUulBU3Ba+a6zZqUiVMm4fW37bEOlm0=;
+        b=sEP4mmGyo4Xtl19UxF9PS8JUH5ie/kefOWMvrcgj8k4aDH3vfuOK2bfd+weCTxTEUL
+         J1/HiEz0CLVff4BiKxq+bdzgBb7nVuAUMW25Kwayet1I2SFGO3+cjzBA8Lp9sHFucEBd
+         I8QNMQHzPPXhrPyZ9Ap8ybKCfHkc75MGxAvhlGUBwbZ8QFHCEnZbe9qXdO4Ty7P294WK
+         btoXjlYUZeG/u6wVMWFO5kGW54W3E3qKXAcFTy3CYM1mTP5Tw6Q3e+7NFOk1WM0IEj24
+         i1bbrjEcWfWuHv28TDxNZPYeCu5vSwykCZNJZz4Qlm6UCBoI+0+GeJSjuOgy6/UvvxF3
+         3vjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNyRZPELGRbSnZCICL8FUtGzqbFPKDL6mYdo97Yql/M4P8SI6wPJe++5ONoVgcw5WR1I+60uHf@vger.kernel.org, AJvYcCVSmRtjRGp/GegxB52OzztnWaeQtg9JybXSmApBaccmUU32LBDi19S6JPYFoNg0cVUeGNmt5L71eDqH@vger.kernel.org, AJvYcCWA2TR+Dk5RVhgmBG9WH5nfSp6Hua/9tRqrNOEoN9uoioaPT9BapIqDnyhPmf2rXTw1lbSrtangqPBi@vger.kernel.org, AJvYcCWBm90vx86KXDg/DO8/ViJ43uunxc6Uxj/NSxyquZUCX2qb/B2APgIOro5UKGt3UBojybaqUkRnQz+m9Kdt@vger.kernel.org, AJvYcCWO9ciJQbFrd4CXxPqRMhLTrLwNJjnXbcYkMJWp1gGVbBoWkvcN6GQMF07OLMw3ahDJEZM1Zz6baPe+Vvw=@vger.kernel.org, AJvYcCXi14CaEnhdHd8n7klGlmkHkJQ+i8HsW8AjrLE261lCXnIpxzzB7UmlEzCaEivdoaKiKp9gsCS+nG7OJ6vi48Om@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYkKycFw5NWODVBcwOSpRUufKiFJnhqQDoJrJsWHDKystq9hP8
+	H0wNjznl+xOQOdmG5H6h4RhN6q2YaqYaUmn7qV+SlVMp1MGXCiOFMfdiuxiNL50qTJk=
+X-Gm-Gg: ASbGnctwDjU4F1EKwZ030G1YVgX4dr5GCuYb+hv32+p1gmUF+qlgzY0fiKqryTOm9L+
+	clxj9/Dd2MB2hW/zOdpte176QLbjww6U3R7tkWSOoPT586eYbhEdsax2mi7U+klJtMYOHE6TX6m
+	N1SsVeCXDh/AoXJlZSm7Z7lex9EN8ZybPJDbBzBJfIJQ8VItQH9sxaJYB/sWUWeC0md1vpDy7SA
+	xbwCo+V67ZUwa9EV49h3VD/GZ9conLaVa99Y+3ro5EKLFmDbIJnUVgPoAlCmyBhf6ZCtkzy7G6f
+	kqIGAocui0bjtdkQFcZM3RKhi3xkIJnMI1VbPyWTqfMKKdooezrY2MDOASrJxRGXePhJi/Gkb6N
+	fdUXWpAXokwgvwrfmOZujgqpyeUAF2sd9kXv5byUVe1diciu8VudcRG2KJkcX3Zoqykz8x4ArF7
+	PCGYY=
+X-Google-Smtp-Source: AGHT+IEY1bus7pYi5JcXesXRddo5ekO8LWT2IX5dDBSF4gjuh1ID95e7jx0zQU9fIvHGHwyslvJU7A==
+X-Received: by 2002:a05:620a:44c2:b0:7c3:cd78:df43 with SMTP id af79cd13be357-7ceecc45f6amr602236985a.58.1748118799405;
+        Sat, 24 May 2025 13:33:19 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:8563:e370:791f:7436])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467d7fd1sm1379590085a.29.2025.05.24.13.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 13:33:17 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v10 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Sat, 24 May 2025 16:33:00 -0400
+Message-Id: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] block: Make __submit_bio_noacct() preserve the bio
- submission order
-To: Bart Van Assche <bvanassche@acm.org>, Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- Yu Kuai <yukuai1@huaweicloud.com>, Ming Lei <ming.lei@redhat.com>,
- Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-References: <20250514202937.2058598-1-bvanassche@acm.org>
- <20250514202937.2058598-2-bvanassche@acm.org> <20250516044754.GA12964@lst.de>
- <47b24ea0-ef8f-441f-b405-a062b986ce93@acm.org> <20250520135624.GA8472@lst.de>
- <d28b6138-7618-4092-8e05-66be2625ecd9@acm.org> <20250521055319.GA3109@lst.de>
- <24b5163c-1fc2-47a6-9dc7-2ba85d1b1f97@acm.org>
- <b130e8f0-aaf1-47c4-b35d-a0e5c8e85474@kernel.org>
- <4c66936f-673a-4ee6-a6aa-84c29a5cd620@acm.org>
- <e782f4f7-0215-4a6a-a5b5-65198680d9e6@kernel.org>
- <907cf988-372c-4535-a4a8-f68011b277a3@acm.org>
- <4128be53-b3be-48a5-8d53-9e0ef40c6d64@kernel.org>
- <a67e1ba3-e231-405f-9927-e6c40db3f71e@acm.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <a67e1ba3-e231-405f-9927-e6c40db3f71e@acm.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPwsMmgC/3XOy27DIBAF0F+JWJcIxvYAWeU/qi4wjxi1NhFYq
+ FHkfy+OlBZF6nIe5+reSXYpuExOhztJroQc4lIHzt4OxEx6uTgabF0QYDAwYJyavCZqYnLU9qM
+ aUXFgxpP6f03Oh+9H2PtHnX2KM12n5PQzoWeSKz50OOARpGSCAi3axhRL/rydrymucZl1+DqaO
+ O+RU8hrTLdHvYJ78LMINEUKUkZlj8pYtKC8PV9+Q/YiRfwrRZVWc1lPwPpOvkrZyq6Vskozdh7
+ QCYkSX6X6kx0XrVRVDtyiMQOAR2jltm0/fH5cIZQBAAA=
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+ nouveau@lists.freedesktop.org, linux-block@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On 5/24/25 16:05, Bart Van Assche wrote:
-> On 5/24/25 1:48 AM, Damien Le Moal wrote:
->> Note that our internal test suite runs *lots* of different zoned devices (SMR
->> HDD, ZNS SSDs, nullblk, tcmu-runner ZBC device, scsi_debug, qemu nvme zns
->> device) against *lots* of configurations for file systems (xfs, btrfs, zonefs)
->> and DM targets (dm-crypt, dm-linear) and we have not seen any reordering issue,
->> We run this test suite weekly against RC kernels and for-next branch.
-> 
-> Hi Damien,
-> 
-> Please consider adding this dm-crypt test to the weekly test run:
-> https://lore.kernel.org/linux-block/20250523164956.883024-1-bvanassche@acm.org
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-We run blktest too, of course. So when Shin'ichiro applies this, it will be part
-of the runs.
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v10:
+- Rebase on cbeaa41dfe26b72639141e87183cb23e00d4b0dd.
+- Implement Alice's suggestion to use a proc macro to work around orphan
+  rules otherwise preventing `core::ffi::CStr` to be directly printed
+  with `{}`.
+- Link to v9: https://lore.kernel.org/r/20250317-cstr-core-v9-0-51d6cc522f62@gmail.com
+
+Changes in v9:
+- Rebase on rust-next.
+- Restore `impl Display for BStr` which exists upstream[1].
+- Link: https://doc.rust-lang.org/nightly/std/bstr/struct.ByteStr.html#impl-Display-for-ByteStr [1]
+- Link to v8: https://lore.kernel.org/r/20250203-cstr-core-v8-0-cb3f26e78686@gmail.com
+
+Changes in v8:
+- Move `{from,as}_char_ptr` back to `CStrExt`. This reduces the diff
+  some.
+- Restore `from_bytes_with_nul_unchecked_mut`, `to_cstring`.
+- Link to v7: https://lore.kernel.org/r/20250202-cstr-core-v7-0-da1802520438@gmail.com
+
+Changes in v7:
+- Rebased on mainline.
+- Restore functionality added in commit a321f3ad0a5d ("rust: str: add
+  {make,to}_{upper,lower}case() to CString").
+- Used `diff.algorithm patience` to improve diff readability.
+- Link to v6: https://lore.kernel.org/r/20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com
+
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
+
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
+
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (5):
+      rust: retitle "Example" section as "Examples"
+      rust: support formatting of foreign types
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/block/rnull.rs               |   2 +-
+ drivers/gpu/drm/drm_panic_qr.rs      |   5 +-
+ drivers/gpu/nova-core/driver.rs      |   2 +-
+ drivers/gpu/nova-core/firmware.rs    |   2 +-
+ drivers/net/phy/ax88796b_rust.rs     |   8 +-
+ drivers/net/phy/qt2025.rs            |   6 +-
+ rust/kernel/block/mq.rs              |   2 +-
+ rust/kernel/device.rs                |   9 +-
+ rust/kernel/devres.rs                |   2 +-
+ rust/kernel/driver.rs                |   4 +-
+ rust/kernel/error.rs                 |  10 +-
+ rust/kernel/faux.rs                  |   5 +-
+ rust/kernel/firmware.rs              |  16 +-
+ rust/kernel/fmt.rs                   |  77 +++++++
+ rust/kernel/kunit.rs                 |  21 +-
+ rust/kernel/lib.rs                   |   3 +-
+ rust/kernel/miscdevice.rs            |   5 +-
+ rust/kernel/net/phy.rs               |  12 +-
+ rust/kernel/of.rs                    |   5 +-
+ rust/kernel/pci.rs                   |   2 +-
+ rust/kernel/platform.rs              |   6 +-
+ rust/kernel/prelude.rs               |   5 +-
+ rust/kernel/print.rs                 |   4 +-
+ rust/kernel/seq_file.rs              |   6 +-
+ rust/kernel/str.rs                   | 415 ++++++++++-------------------------
+ rust/kernel/sync.rs                  |   7 +-
+ rust/kernel/sync/condvar.rs          |   4 +-
+ rust/kernel/sync/lock.rs             |   4 +-
+ rust/kernel/sync/lock/global.rs      |   6 +-
+ rust/kernel/sync/poll.rs             |   1 +
+ rust/kernel/workqueue.rs             |   1 +
+ rust/macros/fmt.rs                   | 118 ++++++++++
+ rust/macros/kunit.rs                 |   6 +-
+ rust/macros/lib.rs                   |  21 +-
+ rust/macros/module.rs                |   2 +-
+ samples/rust/rust_driver_faux.rs     |   4 +-
+ samples/rust/rust_driver_pci.rs      |   4 +-
+ samples/rust/rust_driver_platform.rs |   4 +-
+ samples/rust/rust_misc_device.rs     |   3 +-
+ scripts/rustdoc_test_gen.rs          |   2 +-
+ 40 files changed, 426 insertions(+), 395 deletions(-)
+---
+base-commit: cbeaa41dfe26b72639141e87183cb23e00d4b0dd
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
 -- 
-Damien Le Moal
-Western Digital Research
+Tamir Duberstein <tamird@gmail.com>
+
 
