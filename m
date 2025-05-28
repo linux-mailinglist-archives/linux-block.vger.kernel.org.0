@@ -1,105 +1,91 @@
-Return-Path: <linux-block+bounces-22108-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22110-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0E5AAC609E
-	for <lists+linux-block@lfdr.de>; Wed, 28 May 2025 06:18:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B31EAC6348
+	for <lists+linux-block@lfdr.de>; Wed, 28 May 2025 09:46:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 748933BEBD5
-	for <lists+linux-block@lfdr.de>; Wed, 28 May 2025 04:18:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4D937A8F83
+	for <lists+linux-block@lfdr.de>; Wed, 28 May 2025 07:44:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B906F1E8331;
-	Wed, 28 May 2025 04:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 606428F6B;
+	Wed, 28 May 2025 07:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="alb3yn0w"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="04QGgMve"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831AE170826;
-	Wed, 28 May 2025 04:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4E5C96
+	for <linux-block@vger.kernel.org>; Wed, 28 May 2025 07:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748405902; cv=none; b=VrSfIX4EAhclANHPAhCwWl12EBMbXOjeviV/9zc0hhLGb/HwSIT4Z8SsqhqZiJBP7tEO9Lh/H3NP8UFqcb54EYqxaMstnLnNlU5SkkgUdd0/9odJo8QqriyYo6E9SGuhYJNaD2FYXlfybkPrcnWG6gS4jK6obCB1mIyaTjIA/mc=
+	t=1748418371; cv=none; b=CQ/Y8YojCD9rGQrDtino2Vmrm1V1PKVS0BgzhOSAiXQk+wTToHVC80rzaro2jQTwySMAomZepSY/JtmZ6No0oQq3bg+IA8X6Dy6Jzjk81+LMW6sQ7P+G7n1PUCpTBGqKO81S8NXibJ8UB3T+Lb9WcXF2W+sTXX69Zn3fpu/zCSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748405902; c=relaxed/simple;
-	bh=MvDl/MzUY3KR7w+lIeq0zd5B/vOkndPxkmobsRTItJo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qcCTS1OaNSSasDEskFPtiKY5g/OUvPep71kOoRnDGKOaqkRaoVwpgmruetAL0VjZz/f/3f1OfyNRDANZ9MJSXDGnmSN+380YrGhgS3gaFZIzevB4JxwgeAeZ+V3SOMvtyZhQkLuwmaOn0Jdti81m3vQe6EmX7gVNnKifoBTcxM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=alb3yn0w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D19C4CEE7;
-	Wed, 28 May 2025 04:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748405902;
-	bh=MvDl/MzUY3KR7w+lIeq0zd5B/vOkndPxkmobsRTItJo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=alb3yn0wMusQUv4YwGNPIm6FzSS2ST5UdxBnUGpCrAbNeb8Cy6airS8dgB9fruFU1
-	 ya6pU7Hwb5xBfz5QDzs3VunO9e9iHV+pyLyYhAYUWRF8bQ/PxmJGsvlme+y2bPBh3P
-	 B7Xgrr9oEpeBSNHmiTlpx4pg0EqtOgQufQbRWPQmlRZc463NFOp/rJOdMUmPzTogL9
-	 Sty0ZONiehdMt1auZD9OUdOrZABiFxKkfl7wxHe+NRQXomLgC4fYQMqVBjfZtf0zre
-	 fgBQcJnXeROouVuVS7g4EC+ixPZVGeUgTyqAOUDTABUTxCIJFjC0MFASwi4AoxjHBK
-	 KaO/p4kzXG+QA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2813822D1A;
-	Wed, 28 May 2025 04:18:57 +0000 (UTC)
-Subject: Re: [GIT PULL] dma-mapping update for Linux 6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250526121105.434835-1-m.szyprowski@samsung.com>
-References: <CGME20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d@eucas1p2.samsung.com> <20250526121105.434835-1-m.szyprowski@samsung.com>
-X-PR-Tracked-List-Id: <linux-rdma.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250526121105.434835-1-m.szyprowski@samsung.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.16-2025-05-26
-X-PR-Tracked-Commit-Id: 3ee7d9496342246f4353716f6bbf64c945ff6e2d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 23022f545610cceacd765bcd6c19102fa11755e0
-Message-Id: <174840593625.1893196.9279627536721857456.pr-tracker-bot@kernel.org>
-Date: Wed, 28 May 2025 04:18:56 +0000
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-nvme@lists.infr, adead.org@web.codeaurora.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
+	s=arc-20240116; t=1748418371; c=relaxed/simple;
+	bh=qOKrNuMta20CrWb3GcALVhjSVVlc2YmU1C5INDgHKW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dp5K/eUQfMjYLMDZfZfDf/cpIw6l8hA0HeYL4VTp7aQ4DBKrlyWVCY+PlapwErtAsIRm2lNAvANx5vEKP1mf7CbFAAWOSLg+Z5JWw/Cc6LWSZ627JfEOW2nnaqGc9RV8iSllLnpqHJIW57TgyzImIpHz038eK2MRJ+ehl94Tk48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=04QGgMve; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=o/VdYcODh0fa0SIBn/lhS7SE19ATz1ug168wcXxFUPY=; b=04QGgMveDFp9IawpSYXmxu9Zq5
+	TnHKRlg9VXoHb9iuEOKgVqlRJf5OqBqNwmKJ0UMQdgJ5DGuvGKpey1vdz/znMesAA0X6WBPf1SzP9
+	ZIvlb2S8AL0HhLKT3bJ3ZDbb9lUnC4XAdSXAuUXhoOlBWLzgRthKp3ADvfLT0/iGZD1zn7yrlIvYC
+	pU89LSDTjzWVjXYhtA/eLMN5aod+MqK4M/Bz8vtKasj2nmsQGvQ2VRnU8VKKkpWKb3ypDgjSRrAqD
+	47LoyVA+DiL5PJF3eFKc8QAKILl5bRnYP0IVe+kz3EvwCyCmFkqTixo0ixUkk9/mz8JMo91JTkKli
+	vahjug+g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKBUB-0000000CSzm-2e8O;
+	Wed, 28 May 2025 07:46:03 +0000
+Date: Wed, 28 May 2025 00:46:03 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Keith Busch <kbusch@meta.com>,
+	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+	Mark Harmstone <maharmstone@fb.com>
+Subject: Re: [PATCH 1/5] block: new sector copy api
+Message-ID: <aDa_O4HGWjy_35I7@infradead.org>
+References: <20250521223107.709131-1-kbusch@meta.com>
+ <20250521223107.709131-2-kbusch@meta.com>
+ <aDBt1qXj90JO1y2v@infradead.org>
+ <aDCqGLY4irp-6N5M@kbusch-mbp>
+ <aDP5o1qb02iwgw-V@infradead.org>
+ <aDX6NjOuGvxhbw7C@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDX6NjOuGvxhbw7C@kbusch-mbp>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The pull request you sent on Mon, 26 May 2025 14:11:05 +0200:
+On Tue, May 27, 2025 at 11:45:26AM -0600, Keith Busch wrote:
+> Just fyi, the initial user I was planning to target with the block
+> layer's copy fallback isn't in kernel yet. Just an RFC at this moment on
+> btrfs:
+> 
+>   https://lore.kernel.org/linux-btrfs/20250515163641.3449017-10-maharmstone@fb.com/
+> 
+> The blk-lib function could easily replace that patch's "do_copy()"
+> without to much refactoring on the btrfs side.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.16-2025-05-26
+Well, that code would be much better off using a long living buffer,
+because the frequent allocations are worse.  Also from talking to a btrfs
+guys sitting next to me at least the classic relocation can actually be
+in the normal write path, so you probably also don't want it to fail
+because a large memory allocation fails.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/23022f545610cceacd765bcd6c19102fa11755e0
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+What we did for the GC code in XFS that exists to basically do the same
+is to do a large allocation at mount time, and then just keep reusing
+it.
 
