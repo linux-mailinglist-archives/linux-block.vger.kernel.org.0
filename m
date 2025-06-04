@@ -1,120 +1,122 @@
-Return-Path: <linux-block+bounces-22245-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22257-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A568AACD543
-	for <lists+linux-block@lfdr.de>; Wed,  4 Jun 2025 04:20:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C07CACD64A
+	for <lists+linux-block@lfdr.de>; Wed,  4 Jun 2025 05:05:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F9513A2EF9
-	for <lists+linux-block@lfdr.de>; Wed,  4 Jun 2025 02:19:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE48B1BA0C78
+	for <lists+linux-block@lfdr.de>; Wed,  4 Jun 2025 03:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C99AB27462;
-	Wed,  4 Jun 2025 02:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32BE221297;
+	Wed,  4 Jun 2025 02:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="0cItEXK8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfVfYm+K"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B54B3D6D
-	for <linux-block@vger.kernel.org>; Wed,  4 Jun 2025 02:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE92171A1;
+	Wed,  4 Jun 2025 02:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749003614; cv=none; b=faWM2B7hzIebm6n30vVmGl761kmegP3SUb+cevAvlfPkA7auIwtnSQAlc2h6FBvtipexNYRC6LLS0FDw1fQ3N/m/eQcw3Gst/rGcvq/5OO7XDmE6RUs6Vt/DViEUrZIo39O8U3tZPG3s21+j2hRJ+gxcmlERCYJy9Rrfw5HJ6Lo=
+	t=1749005966; cv=none; b=EOtcN0HEHJngiBr0x3lkPAGdA41YvemLRjVQlLlVBz0diY1+yzi4KBFzli5s1rQnoPp34YU0SQ4SKbKl47SiVe/3uHB3/ZRFPIbUPVYPqxSZNTogb1J61+IagME9vQll4xD4Qv/tb04efRRyvWfTMFblLfMDn4kHB0Q/3gJKF7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749003614; c=relaxed/simple;
-	bh=aqRzIH4YZmOMMcRlcaEeuvd9lr4Eg/uYOhHtEzdtK8o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tvbxeSf5tp2CkX7fji9bZU8QO57N7Vy5p0soHVUmn0yRi4yDNE2afwTYcxJoUfOac9H3mGfGX1d0BBjDzqFs5sAX3ATl68oxIZ0oLAfSaTJu9FHCbmOYmk9NsTQNKD0giOVZ+8fTiza5muc+pCsvAP6gNPXAmIJu0H5Q1TRE9rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=0cItEXK8; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da82c6c5d4so51510335ab.1
-        for <linux-block@vger.kernel.org>; Tue, 03 Jun 2025 19:20:12 -0700 (PDT)
+	s=arc-20240116; t=1749005966; c=relaxed/simple;
+	bh=TzIfJSQiYccDaSYxU14uxVmwdxaEmC/dXhnVn6Nzsp4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=V+jqy59rQeMHw2lfditLd1EtNRfILM+OBZWLMlHJC/7PjINzDrEgjuRGTWYsRaE20k4StEQcDnWiQZ74Z1FfhGBk3qNK4REQ3F5Vt0e1dl6zGbs6AMJol2XxrFsnw7ERmTxmbidleJzTSEqlEBOCoXG3VwWOFVXhn0JoUT+3p0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfVfYm+K; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32925727810so55703061fa.0;
+        Tue, 03 Jun 2025 19:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749003611; x=1749608411; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qejrTtwV/N3l/netOhR9CrpngsFpqe2KTsbhYRzMHf0=;
-        b=0cItEXK8PFZ1VIm2GTZ2G7kXuONWELnJxtCCA/TZB7XlNkbwYcDxns9uXGcwi3H9nQ
-         3bcvzomnOoYbpNjx7L5B4W/3Tl97+85+vtSmxt1fQmVHVsx5aMJXFpsCupofjGVUwrKk
-         UiFuNWCmjJUi8Ky6zuqa8OT+euSseRwXgWiEAyJq3lvHHetkzOTAM77e2lrhEyNUJrAC
-         7MBKns5SkGNAKuk69JZgHhPGzfV2FJsfLveY7XZLFZjlLQEIB2koYX2j04D8ZKyWHmsD
-         kKgopRbIyruqOztETeZptuqjqrr9pHEu7+l4rfeuUsMc0NqIGeJIcyNb/RSocA+pOPkZ
-         qYrw==
+        d=gmail.com; s=20230601; t=1749005963; x=1749610763; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
+        b=RfVfYm+KQyOu7kVFxgwTYXRanrRAp836XE07K6k8r8gy86XBSQTkfZljPJbQYcplR7
+         7/swiIDqY9yLl+kr+W3MKyfm2LOFM1TzsTaIN25ZiQX4RXvC4H69FskffeM5v96CkaFk
+         6MOoustvJNLiDr4lYpIfKKE2rUtE41SMi/sSZWk7aQYNvM8TtKh46lx7DZeMJHGKLbPF
+         T2TT6Xn9/Kff4o/7RExFrF0Knatt/0LWUh0/vpNsvQo8W/nNm1HeQgTjLJ/H+17mDFil
+         N62EidjBo8osHqU/90gFnSM7zCbewIbqBumOZoz0FTRd1Wi+ZyEog2guD4JhwC+q4MQn
+         tLxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749003611; x=1749608411;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qejrTtwV/N3l/netOhR9CrpngsFpqe2KTsbhYRzMHf0=;
-        b=bGunl1e3ETFKIOB/QXpl+I8J+k2tzvNEsJQ9Hsr3raJuh8J5aL8gj+jHl49qjI0jmn
-         0AAnR3DUQ4bjwZ9cQ03i/RBkqlGguOEO0yU5Orj4WVGlX4KwTjIjZqLZBn35XnuOQOU8
-         HMNPe0DQcLlCyaF0gtRd8A36F0zebFr/5LRe4GF45JfYFfIPF0q88i4Fq5nOAjp+3TaB
-         9ey8NfPDUPNZSDMMOr0LIbRBAOtQwLC9R3GKwIAfNnHMTXaJ90Unfr9kOlcZXcYGqZC+
-         Q4KkyWfm2+dyI0LS5s0Q/2+SKxF/W0WYn1C3RJXnrO9vOY+HcBNGX2WG3S/vEdXPyI5M
-         j1UA==
-X-Gm-Message-State: AOJu0YypF0cBUm+AhmK5Y+lYt2nA0z0z/xugj+sl8qlTQk5Skc/ig4hG
-	m+jpIPSAynwrydr/yse8npMiFD6Cwwrr/y8TwIiYGk6d+/11dPIKQ2FtSe/qPzQW1n+3ldzB3ZB
-	q5Lpd
-X-Gm-Gg: ASbGncuWZ8gzQ4i1b+F+NojOi0ovANoUdxjCAAZtMql2OOFpvHQMybVvRA1WzkUZSc/
-	mRNicRAlcrm8o7GLvdWaw+o0Lz2QHE8uZWOkjOjYBt8slQnMYNiBwRSG5b7epO66eeD7R6GTe7P
-	XWdkXlIYeMkeqtVlJ1n9DQnjMzDYweBpIDnPl0TM8IkFw9FJN8t5xi4U8JCY/ngm2VlK2fAtte4
-	uH+dWRzKHwLnORgX1lZMNSqx3RwURnlKym3K+ZHHxWycdL+Rbey/fnuF2LsRE0AEHqusCSr2+QX
-	iFqHvTfKLo0IqmyB1w3B0GitkrzITBF10JsVY8c4ZcoeHCYvLTONKQ==
-X-Google-Smtp-Source: AGHT+IG0g/LKKvwE+q0o5yidPMzs2yIX6t0WlWWtUgIsIU2EQk6Leb9umH6a08mNT2boXGRAuOfyJQ==
-X-Received: by 2002:a05:6e02:3193:b0:3da:71c7:5c7f with SMTP id e9e14a558f8ab-3ddbedf6e64mr14260415ab.15.1749003611511;
-        Tue, 03 Jun 2025 19:20:11 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dd935a7ad0sm30334405ab.66.2025.06.03.19.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 19:20:10 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- Uday Shankar <ushankar@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250603-ublk_init_fail-v1-1-87c91486230e@purestorage.com>
-References: <20250603-ublk_init_fail-v1-1-87c91486230e@purestorage.com>
-Subject: Re: [PATCH] selftests: ublk: kublk: improve behavior on init
- failure
-Message-Id: <174900361050.109618.15847979671218890744.b4-ty@kernel.dk>
-Date: Tue, 03 Jun 2025 20:20:10 -0600
+        d=1e100.net; s=20230601; t=1749005963; x=1749610763;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
+        b=a3PFRRWfNJgAnnMic9vPr32MFqMpy0HmBAXzW5ez8Y5pFZW6nZ7a87hOD8283uG6bi
+         ZbOnDKF89g62bSZ4D0fEALCqjNMAztzurDqsxVj02aI+w79bVcS4dnjnKzZ0Ci+m7jn9
+         WTk0V1ilaMmijQV4Elum62aW5ANDllqQg4Aj6bwDdBzo28gNBqSDkM9vrOuBR/J/9Kio
+         CG++F8wt+9JYm/Ehx0CY8qq6VAb/U4xNdBslqjHcK/cozrNW2LoA49q6aGHrMYFHMqb9
+         UGL4dzw8G3jbkQOnUizCf7uGgXIow6ZCEXF7HHmlstpYqy81JcbeFSOeYJhL4GESsJ7d
+         iPVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWil84wrJODySdXRC2klcZa0j6UsoEBW49zpe6p5aGzx5mRQHWiPh/jYI6u3HvOwHBWmCc/2eHPdAdu19A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxpkR0/zStfH8oEYMD4r0VuDZsPaEgAg3tNaT3eyLi3PZ9Rx6E
+	PGtzpU8dzvQCBv0EyNTJOp7Z1u77OhRI90IUPHqh1lkP/Q1nPcu3dR0TsvHuzW6i8SDqiR0Fy5O
+	qY0KeqxkHqsZuc3OChiQ7Xl1DvGJatfU4ubgi
+X-Gm-Gg: ASbGncupaoF8t8rbVRdNOM+ErAZZxgIVyAs3ofc5Pa8JTj+7ehp3d98gU7djBOtvGIr
+	MyhLGEeg9Gy/ZO5H2XG6EsdIzFqMs8DUir+IQ2zaRoCcbBYP0XSkXD5FBHYMDLpPhDoYGs6ITvp
+	ZD+x4x4THIYH/QfkWGrBsPhZN0aWuerHN2bvt1n4q7JFBwHw==
+X-Google-Smtp-Source: AGHT+IGpADhxpISd06wLlevlEELZzMgnCLmJDRqqFzQ5oL0RY4VTWQo9W0dhgghHlRtrb6AuTYX9Hap9KM2OapJnhvA=
+X-Received: by 2002:a2e:8a87:0:b0:32a:6ccf:a48b with SMTP id
+ 38308e7fff4ca-32ac7258d5bmr2066341fa.38.1749005962528; Tue, 03 Jun 2025
+ 19:59:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 10:59:10 +0800
+X-Gm-Features: AX0GCFtnwCBZSk-d3y4Qa__7ovIgMlNq_oO-1gBs3-9Di2fZqeckIHPco1_CooE
+Message-ID: <CALm_T+1JyGaNwvZGfue7hDt7q4pk1wdgC6R47GyCZ3exLBSqwg@mail.gmail.com>
+Subject: [Bug] soft lockup in blk_rq_timed_out_timer in Linux v6.12
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Dear Kernel Maintainers,
 
-On Tue, 03 Jun 2025 17:38:33 -0600, Uday Shankar wrote:
-> Some failure modes are handled poorly by kublk. For example, if ublk_drv
-> is built as a module but not currently loaded into the kernel, ./kublk
-> add ... just hangs forever. This happens because in this case (and a few
-> others), the worker process does not notify its parent (via a write to
-> the shared eventfd) that it has tried and failed to initialize, so the
-> parent hangs forever. Fix this by ensuring that we always notify the
-> parent process of any initialization failure, and have the parent print
-> a (not very descriptive) log line when this happens.
-> 
-> [...]
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-Applied, thanks!
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
-[1/1] selftests: ublk: kublk: improve behavior on init failure
-      commit: a2f4c1ae163b815dc81e3cab97c3149fdc6639e3
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
+
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
+
+Bug Location:  blk_rq_timed_out_timer+0x40/0x58 block/blk-core.c:392
+
+Bug Report: https://hastebin.com/share/luqeturafo.bash
+
+Entire Log: https://hastebin.com/share/oxihuwisek.perl
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
 
 Best regards,
--- 
-Jens Axboe
-
-
-
+Luka
 
