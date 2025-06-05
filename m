@@ -1,122 +1,227 @@
-Return-Path: <linux-block+bounces-22283-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22285-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C697ACF0FF
-	for <lists+linux-block@lfdr.de>; Thu,  5 Jun 2025 15:42:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5EA5ACF1BD
+	for <lists+linux-block@lfdr.de>; Thu,  5 Jun 2025 16:26:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C26EC7A50BF
-	for <lists+linux-block@lfdr.de>; Thu,  5 Jun 2025 13:41:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B9003AED91
+	for <lists+linux-block@lfdr.de>; Thu,  5 Jun 2025 14:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50A8422FDFF;
-	Thu,  5 Jun 2025 13:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D301A21A447;
+	Thu,  5 Jun 2025 14:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="S3MFZdF8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lH7Z4DBw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68F62E40E
-	for <linux-block@vger.kernel.org>; Thu,  5 Jun 2025 13:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827921E834B
+	for <linux-block@vger.kernel.org>; Thu,  5 Jun 2025 14:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130943; cv=none; b=MfhssPmoy6xIrsIge4D+TsTsXoKIHoH45NXAAAo1lPnbuxWb+ERhdRZGrC/jKAw6SkwlT/3oeMKYt9KVgfFV8J7Z1zgfM46xaTRcTeV2mTWKqRMhQKeaj3bFYK6RSVmv2BvpmJjemWFHgGsHrn302BiFwR5oPmSRqH33iQcXS4o=
+	t=1749133432; cv=none; b=tRqOD2fPvE/O7zzOR2KYrtSAgk6SKbP7SbCYCzYjJZ6Ae8P5HFjdykSXaGjoJiRO3rtnhS/FwiKPrnXLbNxygu3moAoR4IJnUQmMzrYKFoJ9ei+3K9XR4A1sHriKfUBPXGVZklNQLhoRXPNUZfid8iUVR7D3AbpPUQ83A2OBEig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130943; c=relaxed/simple;
-	bh=uuU17LqMiV4IAFVN+4Ez+vDlX24XbFN/eQfiXdz1JTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OzK9OipU6u5zAZz/zCtZgNQqXrag4QTGPjALj43VrR24cKCNP/dR79lZitmWU1UIsf0IBL3Lxl5x+fX46K9u/jnYBClajIGJtsVilzOJzvP31TLGwaQGr4gOm/1q9gkAalbHh0GGP4ngc6gv5p3PT0O4FOikZ9febPmB0yModbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=S3MFZdF8; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86d0c598433so28588139f.3
-        for <linux-block@vger.kernel.org>; Thu, 05 Jun 2025 06:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749130938; x=1749735738; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pI8D5AUkm60Fo75qRERIbbgYVvFQrrXFj50MSrANZI4=;
-        b=S3MFZdF8aimJVHZbPUTiqX1DhlW0dWXR7ghhiHG5NTBSR0rOAtSUheIiWMWbPWLAsH
-         MwgcgSoMvV7eiq1qxfOlBT8azks6rMyBIwJrttyRTAH3spUTa4gi/pjMCry4wM8IViZQ
-         TzEbQoTSNgxH0h2AUsliJrotAiCC6I6V+s7W48tuqSMk76PHe/iRX31BoPBGeVavPxc0
-         MjC9wQKucmlSrifWVBg6M226BeEqv+VuBKxQl36lBrVlX2evz5Tso/qWCH3A8DKXZRQR
-         +o7FLMvGTjVoNxEggLP208OwmBch2+ohb7cDs0AYWVRSJJB+cj+KvWTbKMggBmqSjnO3
-         vOAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749130938; x=1749735738;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pI8D5AUkm60Fo75qRERIbbgYVvFQrrXFj50MSrANZI4=;
-        b=O4tKQ9PsJ0bN6WIO9AkQAZx/sJTFc3U/+EQB3hmE0mTDuUn1GyV3WOVPKfA0yHCepq
-         pL1h/FrutDddF7ZAgu8hWgRq759Zx8C10yr+FE+ca43W37Hlz5lllsROUUv41WFPRYZh
-         zgPsGUnOItGHqNQXOl5T1g08qeKVfnA+TX0iG07eJQYMW6FgH+BprEQ1NdSp12tOq/72
-         qit68Uu1MPGmnnf0SY08h0hHHQAHVfw3hOtRD0/kTVCQlWHs7jlI8/gADGQwLOYupvR1
-         aJLieU/wPfHQ9UgOPygAB46z98JXJhSMZc/AEH82xXAyrN4o5NPtdUn/mMv6qVouZm1R
-         4ECg==
-X-Gm-Message-State: AOJu0YzG4aglkotCPDYzJKydyNcT9NZH8vUEaqNsLoE2gt42Qap6yqsE
-	9ML/BpleEF4BdqVx4bA45nI/5z9AT/7gtd1sihbYJbxBfH0WJlzXo8nhuLSg995zA4s=
-X-Gm-Gg: ASbGncsnZzfixZIUgtT0D+tOmIKHVhqkANhvZePi+xWU9wbPueEeGdWSlm/Xv62A0oL
-	CQN7LQDwptiIqwSVhPPGFin++Hqy7JI3TgjoyTenbYyJsViTN5ol5J909ueJJUNRrXvfKxiiLUL
-	qwkRpDXoeiGQE5FNc1vHy2u1jRje35hlF5adiNuqkRH5qucgITRu8vUicek0gxr8XOLEyfXXkbs
-	o+bo6hPFiZdpbmzFGhQnZ7wkH+8QK5jWb4OloTyBvkRArmrB6eYQhTIbM8Cx6xRoZOm+BbWeHv9
-	WuQXeQyBWvJSeHLurbe1d9zmEEb/TcnILlQGdtR8rVbQGsU=
-X-Google-Smtp-Source: AGHT+IGNhE4Q/55V5nWoOcc9q6/ny7tf0HY4NW3rcwPvzDDBGap67w67idXKdSn7t3obEfaI1RhzlA==
-X-Received: by 2002:a05:6602:7218:b0:873:f22:92fb with SMTP id ca18e2360f4ac-8731c502c2fmr826279339f.1.1749130937774;
-        Thu, 05 Jun 2025 06:42:17 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdd7efce43sm3296048173.117.2025.06.05.06.42.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 06:42:17 -0700 (PDT)
-Message-ID: <cd702850-63b3-423b-b883-7b3737ef5e83@kernel.dk>
-Date: Thu, 5 Jun 2025 07:42:16 -0600
+	s=arc-20240116; t=1749133432; c=relaxed/simple;
+	bh=TdGonRu2CP9wmNv36VaNXN5SJd7fDe1WKLdw6M4RQcQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GnVOapBGHAm3H5QrJ45JvP5K1OWofjLqVLgeKwr/QGYEb1bFJEAKKaWEVINq4L/xvtC3EyTAgOunO2ogxVtrcGbPVDLnI1xEcJuMTCm9i7++wIjpJRaO64OJsPNKYX/WoFWTvW0xLZOM//AT3WQgF1Rs5PiXG46DuSX7IJFq+BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lH7Z4DBw; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749133418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TiuGB6Udmi6CtNlTJQ+UzrVJuLBs5/tk4UZYmqS+F4o=;
+	b=lH7Z4DBw1WmJ/FEgE+syjxGOPkMum3fuiB9DTRdt/Ep6G2VTlxcmLBMy4tyHW6pyX8MVdZ
+	s5zkK7KNHtGT+3TpXu5/rV/9JJJBHxsGKzui65rbavdeGIFqzzRt0LOfR0YXYXkYxOe1K7
+	MkW25ahj59xvMSEZiXU5SQvdLfdVtu8=
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: mpatocka@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@Huawei.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	dm-devel@lists.linux.dev,
+	Dongsheng Yang <dongsheng.yang@linux.dev>
+Subject: [RFC v2 00/11] dm-pcache – persistent-memory cache for block devices
+Date: Thu,  5 Jun 2025 14:22:55 +0000
+Message-Id: <20250605142306.1930831-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] nvme updates for Linux 6.16
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org
-References: <aEFkj8jfrDVGuG4_@infradead.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aEFkj8jfrDVGuG4_@infradead.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/5/25 3:34 AM, Christoph Hellwig wrote:
-> The following changes since commit a2f4c1ae163b815dc81e3cab97c3149fdc6639e3:
-> 
->   selftests: ublk: kublk: improve behavior on init failure (2025-06-03 20:19:44 -0600)
-> 
-> are available in the Git repository at:
-> 
->   git://git.infradead.org/nvme.git tags/nvme-6.16-2025-06-05
-> 
-> for you to fetch changes up to 44e479d7202070c3bc7f084a4951ee8689769f71:
-> 
->   nvme: spelling fixes (2025-06-04 10:23:28 +0200)
-> 
-> ----------------------------------------------------------------
-> nvme updates for Linux 6.16
-> 
->  - TCP error handling fix (Shin'ichiro Kawasaki)
->  - TCP I/O stall handling fixes (Hannes Reinecke)
->  - fix command limits status code (Keith Busch)
->  - support vectored buffers also for passthrough (Pavel Begunkov)
->  - spelling fixes (Yi Zhang)
+Hi Mikulas and all,
 
-Pulled, thanks.
+This is *RFC v2* of the *pcache* series, a persistent-memory backed cache.
+Compared with *RFC v1* 
+<https://lore.kernel.org/lkml/20250414014505.20477-1-dongsheng.yang@linux.dev/>  
+the most important change is that the whole cache has been *ported to
+the Device-Mapper framework* and is now exposed as a regular DM target.
+
+Code:
+    https://github.com/DataTravelGuide/linux/tree/dm-pcache
+
+Full RFC v2 test results:
+    https://datatravelguide.github.io/dtg-blog/pcache/pcache_rfc_v2_result/results.html
+
+    All 962 xfstests cases passed successfully under four different
+pcache configurations.
+
+    One of the detailed xfstests run:
+        https://datatravelguide.github.io/dtg-blog/pcache/pcache_rfc_v2_result/test-results/02-._pcache.py_PcacheTest.test_run-crc-enable-gc-gc0-test_script-xfstests-a515/debug.log
+
+Below is a quick tour through the three layers of the implementation,
+followed by an example invocation.
+
+----------------------------------------------------------------------
+1. pmem access layer
+----------------------------------------------------------------------
+
+* All reads use *copy_mc_to_kernel()* so that uncorrectable media
+  errors are detected and reported.
+* All writes go through *memcpy_flushcache()* to guarantee durability
+  on real persistent memory.
+
+----------------------------------------------------------------------
+2. cache-logic layer (segments / keys / workers)
+----------------------------------------------------------------------
+
+Main features
+  - 16 MiB pmem segments, log-structured allocation.
+  - Multi-subtree RB-tree index for high parallelism.
+  - Optional per-entry *CRC32* on cached data.
+  - Background *write-back* worker and watermark-driven *GC*.
+  - Crash-safe replay: key-sets are scanned from *key_tail* on start-up.
+
+Current limitations
+  - Only *write-back* mode implemented.
+  - Only FIFO cache invalidate; other (LRU, ARC...) planned.
+
+----------------------------------------------------------------------
+3. dm-pcache target integration
+----------------------------------------------------------------------
+
+* Table line  
+    `pcache <pmem_dev> <origin_dev> writeback <true|false>`
+* Features advertised to DM:
+  - `ti->flush_supported = true`, so *PREFLUSH* and *FUA* are honoured
+    (they force all open key-sets to close and data to be durable).
+* Not yet supported:
+  - Discard / TRIM.
+  - dynamic `dmsetup reload`.
+
+Runtime controls
+  - `dmsetup message <dev> 0 gc_percent <0-90>` adjusts the GC trigger.
+
+Status line reports super-block flags, segment counts, GC threshold and
+the three tail/head pointers (see the RST document for details).
+
+----------------------------------------------------------------------
+Example
+----------------------------------------------------------------------
+# 1. create a pmem and ssd
+pmem=/dev/pmem0
+ssd=/dev/sdb
+
+# 2. map a pcache device in front.
+dmsetup create pcache_sdb --table \
+  "0 $(blockdev --getsz $ssd) pcache $pmem $ssd writeback true"
+
+# 3. format and mount
+mkfs.ext4 /dev/mapper/pcache_sdb
+mount /dev/mapper/pcache_sdb /mnt
+
+# 4. tune GC to 80 %
+dmsetup message pcache_sdb 0 gc_percent 80
+
+# 5. monitor
+watch -n1 'dmsetup status pcache_sdb'
+
+Testing:
+    The test suite for pcache is hosted in the dtg-tests project, built
+on top of the Avocado Framework. It includes currently:
+        - Management-related test cases for pcache devices.
+        - Data verification and validation tests.
+        - Complete execution of xfstests suite under multiple
+          configurations.
+
+Thanx
+Dongsheng
+
+Dongsheng Yang (11):
+  dm-pcache: add pcache_internal.h
+  dm-pcache: add backing device management
+  dm-pcache: add cache device
+  dm-pcache: add segment layer
+  dm-pcache: add cache_segment
+  dm-pcache: add cache_writeback
+  dm-pcache: add cache_gc
+  dm-pcache: add cache_key
+  dm-pcache: add cache_req
+  dm-pcache: add cache core
+  dm-pcache: initial dm-pcache target
+
+ .../admin-guide/device-mapper/dm-pcache.rst   | 200 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/md/Kconfig                            |   2 +
+ drivers/md/Makefile                           |   1 +
+ drivers/md/dm-pcache/Kconfig                  |  17 +
+ drivers/md/dm-pcache/Makefile                 |   3 +
+ drivers/md/dm-pcache/backing_dev.c            | 305 ++++++
+ drivers/md/dm-pcache/backing_dev.h            |  84 ++
+ drivers/md/dm-pcache/cache.c                  | 443 +++++++++
+ drivers/md/dm-pcache/cache.h                  | 601 ++++++++++++
+ drivers/md/dm-pcache/cache_dev.c              | 310 ++++++
+ drivers/md/dm-pcache/cache_dev.h              |  70 ++
+ drivers/md/dm-pcache/cache_gc.c               | 170 ++++
+ drivers/md/dm-pcache/cache_key.c              | 907 ++++++++++++++++++
+ drivers/md/dm-pcache/cache_req.c              | 810 ++++++++++++++++
+ drivers/md/dm-pcache/cache_segment.c          | 300 ++++++
+ drivers/md/dm-pcache/cache_writeback.c        | 239 +++++
+ drivers/md/dm-pcache/dm_pcache.c              | 388 ++++++++
+ drivers/md/dm-pcache/dm_pcache.h              |  61 ++
+ drivers/md/dm-pcache/pcache_internal.h        | 116 +++
+ drivers/md/dm-pcache/segment.c                |  63 ++
+ drivers/md/dm-pcache/segment.h                |  74 ++
+ 22 files changed, 5173 insertions(+)
+ create mode 100644 Documentation/admin-guide/device-mapper/dm-pcache.rst
+ create mode 100644 drivers/md/dm-pcache/Kconfig
+ create mode 100644 drivers/md/dm-pcache/Makefile
+ create mode 100644 drivers/md/dm-pcache/backing_dev.c
+ create mode 100644 drivers/md/dm-pcache/backing_dev.h
+ create mode 100644 drivers/md/dm-pcache/cache.c
+ create mode 100644 drivers/md/dm-pcache/cache.h
+ create mode 100644 drivers/md/dm-pcache/cache_dev.c
+ create mode 100644 drivers/md/dm-pcache/cache_dev.h
+ create mode 100644 drivers/md/dm-pcache/cache_gc.c
+ create mode 100644 drivers/md/dm-pcache/cache_key.c
+ create mode 100644 drivers/md/dm-pcache/cache_req.c
+ create mode 100644 drivers/md/dm-pcache/cache_segment.c
+ create mode 100644 drivers/md/dm-pcache/cache_writeback.c
+ create mode 100644 drivers/md/dm-pcache/dm_pcache.c
+ create mode 100644 drivers/md/dm-pcache/dm_pcache.h
+ create mode 100644 drivers/md/dm-pcache/pcache_internal.h
+ create mode 100644 drivers/md/dm-pcache/segment.c
+ create mode 100644 drivers/md/dm-pcache/segment.h
 
 -- 
-Jens Axboe
+2.34.1
 
 
