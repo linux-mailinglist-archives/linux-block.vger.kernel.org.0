@@ -1,273 +1,327 @@
-Return-Path: <linux-block+bounces-22332-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22338-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E51AAD09A4
-	for <lists+linux-block@lfdr.de>; Fri,  6 Jun 2025 23:40:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B3E3AD0B60
+	for <lists+linux-block@lfdr.de>; Sat,  7 Jun 2025 08:13:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 723223B1AC3
-	for <lists+linux-block@lfdr.de>; Fri,  6 Jun 2025 21:40:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DE5E7A2B93
+	for <lists+linux-block@lfdr.de>; Sat,  7 Jun 2025 06:11:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D48ED238C0A;
-	Fri,  6 Jun 2025 21:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0BC61C6BE;
+	Sat,  7 Jun 2025 06:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="UOxYWkdP"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mOE7KYgx";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QnkaoKBm"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pf1-f228.google.com (mail-pf1-f228.google.com [209.85.210.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3477D2356DB
-	for <linux-block@vger.kernel.org>; Fri,  6 Jun 2025 21:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.228
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749246032; cv=none; b=RS7DA1Yh5Nq2/Xas3G4t0BXltuU3dz7IsstTgnu1ydYk17ekDb+vefocHJf6RivFuvg1TR1FfjLfIFu1zUh1FzpBBZvsQc28V6PhS3apP006L3TAFxTKyB4fXMJjkCReYSKHrgPrd2ZeijU03el3lxSyci1QiqTCisWUR+Jyo1I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749246032; c=relaxed/simple;
-	bh=t8sxgr3ZvImixG1380H4Y1MmSodcyubsERt15FglPcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hB9xx60ovpW3+sDPUXnXAnaVnj87+cNkve5LzyuKV03Ef+TfjUER3L8Jf5FWQ2WFskq9mgSFT3BF0R9TIAN8t6sTif3XB5r2hWmPxG3TmNEs22wpf3ScXi7xSfCVKL1HLxruvxu+Ov6ZMOgfaG+T0h1xXgbChkFdUmaCeQxG2Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=UOxYWkdP; arc=none smtp.client-ip=209.85.210.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f228.google.com with SMTP id d2e1a72fcca58-7376e00c0a2so189536b3a.3
-        for <linux-block@vger.kernel.org>; Fri, 06 Jun 2025 14:40:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9491367;
+	Sat,  7 Jun 2025 06:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749276786; cv=fail; b=MUkhMgU2W8AHxkDi0anPh+fWUOmmKL8nqx98z+2PmPRfVlfXaHe9gyVfKFvhpZN5iHADAkB0W/MzW2TvsvH1aKif00o5GtHKb3gaODNYOXtLf2+gbhoiVb8GG4/hSqXG6a2OT4+thhlxrLkH0zc89NnsPIBuk+rjW2EenBOY7lY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749276786; c=relaxed/simple;
+	bh=OtgrAvIlQM+qQkL4PajejoA/mY2NOiMgzEQdiMTvQn8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oW+wF0Vf44TSjXkTCLb0SfEP/UUkPXFF/0Ah2fGnvuWA+BwvDs8re0kGGZTsBsBg3QSipwuRjYn1k7sM47u5xRtT1zw9Ux1haAwAWgVxruQFNaLR5PzJFN3bz887dfLTFFloCFhrxnktfe72dSlvPJJRz8VBxDsQG3p2uUE7c3w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=mOE7KYgx; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=QnkaoKBm; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1749276784; x=1780812784;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=OtgrAvIlQM+qQkL4PajejoA/mY2NOiMgzEQdiMTvQn8=;
+  b=mOE7KYgxrczczuKJWw3CAvB3BegBXwHj3pGLrqvLLp+NnTjfMEj+SQjH
+   2brwZFXngIHQRnNFLckIWkvHknDYVwy2/kd5YJLSNYYkSXXypyjGmrf6B
+   RihCSS5rWDdtA6qfYit1mQLTnGW3T8M8GNBE9X2RMqcIiMRVMlJ2lYPCj
+   N5l3Bd9d7k0KrVSrb0qi4h+mFckDnVKW8CQo+Orx+4w56Av5tvCmhDhMu
+   adpCzdtIYTIj9R2ENHgasG0U1RqpaJZUfvNbzdYUahH7+uvDMz1O42vlE
+   a0qcse+PEzCiZiUfe63OhaIUKeqshGrJyLiwnj3n/DBcovQe5oxfR3WqO
+   Q==;
+X-CSE-ConnectionGUID: I80uQeWCR4mhDtmCilKFfw==
+X-CSE-MsgGUID: mo+dhavpRVyjgu7Mm1DZ6A==
+X-IronPort-AV: E=Sophos;i="6.16,217,1744041600"; 
+   d="scan'208";a="89089659"
+Received: from mail-mw2nam12on2051.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([40.107.244.51])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2025 14:12:57 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yoQsex3UOW+bbQnljhHvj2z2jyW8dTKqEVNNUix0GxymD/hAHcC9wok2E4HJ29yhq+8ol92F/VljyhOZ6jOQRQyaZ2WyMHZLy+UE02cxGn1zXAUXASC/4VklSXEXoI1LK0Ocr9QSz/F6vui0DXzErkR0k5uevqurJ8xluUNP2ZP10GAOEp717iZaHw6vjThbIRByC/NOBQaVDC7TjXYkMcHprsC30CAL9BeqpNmDvzjo/4NAuDEOVeMcd2d+Nt5rXrLKzPTXkrClrlnJQpQb+i7OKpbrCEO8J3TdAellPeBmjPi/SARsfz5wqPfQ8Ofk7lGFjfSmFwMUDqPLxqpu9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UBw+rVbFUZkPjdGImEcnvPowZBUZFRiJz76cTHEXbdQ=;
+ b=kfdW0VZOLC5xMRN/QbKIN9Rnu0WGtSN2XFuZDGnKud2bsDQartDL30HmvaO5rSC/AVAaWJs8C+GtZnendnCNHgX1zgSU8LD57rmO6+uHC1QKmrjxJ7niZcL3vzJImryJvBZuupo78lnW3zSLVcDULuWoMjcdDjorqowx1nD9c6AGvVZB23NrxMmS8fDacMHW0KcqIboueyBhsECavK3SfVsi95UcmTFLXRH+nEglhNg0EqeZooh2tEucrgMsMXefOP2BjLAlA1q7Vpz3sBPO42KddJrrpeEHa2qqNzoKnXKg00FE9T2kU2cH8MI7VMFz1RbGbeCa6BmRLqmZFY9xVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1749246030; x=1749850830; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s5BPaRgwoN2riUQck/ld6AUrgtqY+oS82fKQKuCNqi4=;
-        b=UOxYWkdPVyFhbhbdvia2RGDHTutDPgzQPok93p9W/nUpbmVGzAzla7mqO7YS5Btz2q
-         npAsWy3IXpsGfjlOpyklhh7799czNUaaDaDABnIJf7DCha/w5sm5Tv6T6wfhZyI1RL7N
-         miteE1SYSTu2s9vTLiPM9ekhoH0jplTJGpPh2a5/Rp4ZcqPb1kZiL8qVFiqUglnHg3ly
-         BWUCuHSwJMcex8LHPl9Es7MGXlfxwnlMwY+leESVDHVDW4Clh02OMmUoGwOaDsCK6vej
-         ZEUrTTDtVc7JwNb7aopdYpmtDh9N1r4ViwxRuZBH+KtINkNp3t2GfrW4Nmt2uH0pDdpc
-         S0CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749246030; x=1749850830;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s5BPaRgwoN2riUQck/ld6AUrgtqY+oS82fKQKuCNqi4=;
-        b=KMDhyMgW3heG/cfwnUl6IIaoKnfxzut9vZSgk43ZpoEhVQkZVG6fqdHajQkGlkYe+R
-         +5vQjx0RLvMkx0o+tQ32u8dtlmcI+vs19uwNsp/EpjXyi1svmsDm7xy4jU2ze8BRq+Sv
-         3UvqagblHYrX5SGyvSQQH596XblfxqZUQ614qfrtkaNP1/Tl3FFh1Bi2LtDN9emHjtLI
-         GaGaIH7pjHO88xIQCV0js3umAPYrDHUXjAV2A/6hlvw1wgFaHXE1p7NwlBIbL4cqQTlC
-         XPXoqmqTpMXj1FzGDu7jZn61bTUlsEulst0ZL2x2dxuoBBlcxiRxhTJ4dB4ZYzt+FDFP
-         ha6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWv8mL+ILy0m56XW5abPXX9vPJSmrIcxUrqJb+ETQOt1+GpKuCxjXFL0K3PwrTesqf/bIybIt8gD9D8+g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNTPAg/VjYezdiz6NI5/ql1XNwA4+dIe9qcJcRF1zk7v+HNpXn
-	cYcYy/hp9Mv5sryZReFHWp7Ir6QfwYlIDWDrsuVYDZd1JRxo2/brjimDdNX1lXbslurOaMczEMZ
-	0xNV8MGmnSjSJRCDy7uW2jkq2oKcm6nWtDx6phIH/58YKTqLJX3nX
-X-Gm-Gg: ASbGnctfjNoklhjJbFhtmQGamRVG7UxdnAZM1bKHNlkMOppaC9FFQuEn1wxjo0uw8Oj
-	cucSix7qLLzPBr9ct2VxC5BBFmrZBoCxga9TfbKTVO54EqZz5L/dsEURnXZ+nt9LrgM24MJhOn4
-	03Y59j59i6NxWfBXLbtnpF/vVTUBIMSMBmpi9ky/lMc5vJyVabcSsaC+6Ma+LsZt21LZ7xmooRJ
-	MRraR5eQLUOSeSSzG9//uGtW43/2SbhSK9rJkRQiq8cnvjB/XdCoJrHqaBukD+Co6+LaCjdonpv
-	KI/LJAAh7T8aB3mfglzR732Va7LMQvSC5Vf/nbLz
-X-Google-Smtp-Source: AGHT+IFDp1ZyuMEi/f/n9kBipffN13CNjnRphy3lAvPAngXhB/WxjgKMMR4M/A3b0ubyYOIbMwtCpwt6VwmX
-X-Received: by 2002:a17:902:e5cd:b0:233:fbbf:f8b3 with SMTP id d9443c01a7336-23601dec522mr25917935ad.14.1749246030487;
-        Fri, 06 Jun 2025 14:40:30 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2360330382esm1314385ad.83.2025.06.06.14.40.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 14:40:30 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id AC296340332;
-	Fri,  6 Jun 2025 15:40:29 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id A5428E41EEA; Fri,  6 Jun 2025 15:40:29 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Uday Shankar <ushankar@purestorage.com>,
-	linux-block@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 8/8] ublk: remove ubq checks from ublk_{get,put}_req_ref()
-Date: Fri,  6 Jun 2025 15:40:11 -0600
-Message-ID: <20250606214011.2576398-9-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250606214011.2576398-1-csander@purestorage.com>
-References: <20250606214011.2576398-1-csander@purestorage.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UBw+rVbFUZkPjdGImEcnvPowZBUZFRiJz76cTHEXbdQ=;
+ b=QnkaoKBmoF0KwLM98cdtzbVqakceURdoSc+HUf9+hKdP651pkCsBkvOsIcbLpU/t4EHFBs+wnnQjK39TFdSBcdZk48LIrv17M1poncE37yT9RxXmIkkY3+HNdu3myi1zGBR6F+opH4nQR+OGM4vnunXJiyHN7GUDuUlvYr/GhNk=
+Received: from SN7PR04MB8532.namprd04.prod.outlook.com (2603:10b6:806:350::6)
+ by SN7PR04MB8570.namprd04.prod.outlook.com (2603:10b6:806:32c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.36; Sat, 7 Jun
+ 2025 06:12:55 +0000
+Received: from SN7PR04MB8532.namprd04.prod.outlook.com
+ ([fe80::4e14:94e7:a9b3:a4d4]) by SN7PR04MB8532.namprd04.prod.outlook.com
+ ([fe80::4e14:94e7:a9b3:a4d4%5]) with mapi id 15.20.8792.034; Sat, 7 Jun 2025
+ 06:12:54 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Alan Adamson <alan.adamson@oracle.com>
+CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+Subject: Re: [PATCH blktests] md/002: add atomic write tests for md/stacked
+ devices
+Thread-Topic: [PATCH blktests] md/002: add atomic write tests for md/stacked
+ devices
+Thread-Index: AQHb1mvbZXfXEK+a1E2N6RVyMpJqrbP3OZCA
+Date: Sat, 7 Jun 2025 06:12:54 +0000
+Message-ID: <ncboqvpcxt44wyqukzukg5f27duwj7fcp3ueat3ocjkqlgvlci@ep5nc3at5vjg>
+References: <20250605225725.3352708-1-alan.adamson@oracle.com>
+In-Reply-To: <20250605225725.3352708-1-alan.adamson@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR04MB8532:EE_|SN7PR04MB8570:EE_
+x-ms-office365-filtering-correlation-id: 8af2b897-e5d1-4323-1465-08dda58a576f
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?DggXCz+NtKSCLNyc5tJN4+yyDnSLqDtpRDRx8hWXoR3L5oNfsHYta9RNXSYD?=
+ =?us-ascii?Q?TYPRmh62s7+oCSerZMJkeo946wsSb0qQxphDpjxjddE2JfNenceOKFQNPOOo?=
+ =?us-ascii?Q?Jy5e/82ElwvS9u6bZnjfcG11m7D9cvlKCwGaUl+l7eDYEfXVb3vLXLV4fc8/?=
+ =?us-ascii?Q?Bim2LWi8ixJcOekKz6f7S/ZhXmKAALQAT8NCbvkV4RhjjSiBt2ywfaxEbwnh?=
+ =?us-ascii?Q?I+c4lg0qoIlscW6kQXi+oycmfXxL57dSWPjWmtMl/LZwG6XNDXA42cdS0dUa?=
+ =?us-ascii?Q?Pegky4whlLle0tdnHys+ezoycgx+AB0YArVDeK2jGjWQiYGDVca0wljLQa4/?=
+ =?us-ascii?Q?USf4vU+B/XtzUTg5X+WZRT2SFGP4igaSIUvVFIDW7U8bwdq3QO8Q+IsHk9p5?=
+ =?us-ascii?Q?cOrHdskpgmQOBZOd9raVLrwpTfWVubC6N2z+F433rMo783uGVmAxyUF5degL?=
+ =?us-ascii?Q?QA0anAVa6FbXK/LlKCNMUipVpU6CHshQlzHEosdb16U/JyqiBdbGTl5v+IcR?=
+ =?us-ascii?Q?7EGI4eD4z01PAs2hUERMh3lITOE41YvCYADDFdu9lI+AKTY8yn3NP2gD/CGN?=
+ =?us-ascii?Q?iY4LaOvt9qeTkIy0M9eFbjLe8PcbyBC1dY06JS6IZY3feC4w9cuuZjVDkd2I?=
+ =?us-ascii?Q?Xf2sezqLOQOGKezwUFLsPJadnxBIVtdLl9QHOZn1/H/g/dtA8ZICwLw2WQmu?=
+ =?us-ascii?Q?US4xfz1HgkPlYVhNQGZoweNreBm2u9o0K9ZKw0g4sqDsSvMcNaf6J6x+j/bf?=
+ =?us-ascii?Q?WdI/ViW50ZuNWaeFsj/98CNkMDJzeTj49rMskK7udGkz4uUBx9rLIcV6+srz?=
+ =?us-ascii?Q?iuF4UvzPT3B0x+BugElqbWiJsjzoRedrTvoNoTFS8ylhN9UVezT32iUMLgWe?=
+ =?us-ascii?Q?KwJAa7nAPYftRdlrvqeLBgWqH9ACXluzOuI9O0k1fm/zCC6krRqJ/lSsXTxN?=
+ =?us-ascii?Q?FPPzp5G8HOB8tIlNnpeLBeM5N6Xe//VdqPoYOx2wm24vE0jPGxu3UPy8IKc2?=
+ =?us-ascii?Q?euPGOar6/f8yciPjp3iCVzIb5SRu0pRrvS3dgnTJNI3LYFj0AOR1QxYYlFqJ?=
+ =?us-ascii?Q?h3/gDOmZzeOi83xLoXbTH83HxNiV7Qvz7vtkcpdeipzKCk6MH4S+3wIb1xKM?=
+ =?us-ascii?Q?UJMaUBGTaV8dQ8W5dOk5M0cL0JagDbtk3qw8fcnuj8Kzr0BzFh2lsw1I0qyP?=
+ =?us-ascii?Q?z3PkeqCwIFzBZ2zJOaIOwPlIfSr5bUuD6seL34bGVeXmvKDyEPnXwOcfYYof?=
+ =?us-ascii?Q?ogmIijQeklyC5BBsxh1KgzG9VvbQPmLGJXkWYVYYqOtEo0Nz3L3DOEgUjb2P?=
+ =?us-ascii?Q?KdTb0ZxuoTPMcjTQQEVQ+/f8ShDWs+TRk2ogQbspzeI5VifUAkGpsQ1w9AWW?=
+ =?us-ascii?Q?lsX3FtOMY2oWiBnX7u/4TREwpzvlyx1oGZ0f3C52q63laKobsmKTjR8omPhW?=
+ =?us-ascii?Q?sib0alrauGSHEJoQkIyGqGaAfQRfOaIVIIFAG7uwbEO6Ki/reLlaiaqsqtms?=
+ =?us-ascii?Q?OY+lbQh/kK7cEI8=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR04MB8532.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?8Z/QM48ewob4JiHaw36dPvgReGCmkBCqmTOGJfFO0EwqiAmjg5/xpp0onorZ?=
+ =?us-ascii?Q?LV5p72O+msPp5wqNRpVetmDGUXRuUKdd7iqnWk0NMpaQBwjDpxpTw+FYnpip?=
+ =?us-ascii?Q?OedPBrsTKoIIwumDOgTFIAQmiM7ivrBZKjySzocULAa2J+oJS0QTbDGSDS9B?=
+ =?us-ascii?Q?+I4QA//nDjSWNi2R26Y0wq1FUL8f0fpuaOuejKVoic9ykpnZYn5UBEX+tm4Q?=
+ =?us-ascii?Q?02sStIQfvqOP97oib9yZKIcTi52yWsBFwy7YDjH59qcvQFaIGRfijzTxiR6E?=
+ =?us-ascii?Q?n1tDDV+nY+IIh1I2cI+Cy7EsumPMFHMjmH2ji7gEXKAqlNd7SLC+33wRII0a?=
+ =?us-ascii?Q?XTKmRpl/URXPzCwfqD00jugf2sCv2LWDamdguXFAYDtdr3p1kMMUatE9VwoL?=
+ =?us-ascii?Q?LL5rIbA5Kuv8lONJSpFMGEWjUxUXClujU4K3U6YS2dgtRnrSCQtGntQPn05f?=
+ =?us-ascii?Q?AVFSj/CJy6lULzRwKqeI6Cx3vSC2mB8EBfplS8maZDaMsyEEdN9dvXG7zAtr?=
+ =?us-ascii?Q?1GUCrhf6nMa1JCMlxVcjFf9SavWGOU6M2D34fmdlHf0OcS9L3k+jyDeeTurS?=
+ =?us-ascii?Q?NkASqOI6u3BPpDm8WHDEP22sEjZBYrog887nwQ4+UgK8sv8TYax3aFVl56i0?=
+ =?us-ascii?Q?toaMv0rkdoSRulUNS/DrUFOW8l+6zFHD6O1MzR7Uv0MjtsdWurfdodyNlWr1?=
+ =?us-ascii?Q?vQ5dvNGBWe5+99xbLb+obSGcMD1DVHs/JKiWLojzGgMQL9+kPdZfE3A/vSl0?=
+ =?us-ascii?Q?J0uGOMaaUoVYvDMzesY9OR8uWX9dOtl6pYjzjBsCoSoVou0jILtfi/bzCFcH?=
+ =?us-ascii?Q?VP5vlKGYDiu2zAv4t32k5zua0rhyna0njXtFp/+vcg406PWBXGCrmeMHYsjt?=
+ =?us-ascii?Q?eF1lEtalO6ZAD1yEgtfBMeBY2F5NhcZcc7A9qPDUpSh4Isx6fT1I2WnUFeud?=
+ =?us-ascii?Q?452kssFyUfIXrvv3AXtXDwyqJ6MmISDfi3Bgw3Cbtj7q83fNlKtQhu1EuZye?=
+ =?us-ascii?Q?J/fjMziUdWclb0XFFMVG5peCTdCvYOOkUt/anjCrfuUtQNMQPEwJ+PABydW4?=
+ =?us-ascii?Q?W8HTzsSUliHPDGij4MO9rPFHUajfEBtAgDNwRB1beGv6CLs6gntuZcCzRHJv?=
+ =?us-ascii?Q?zfXCH96ju5wAxu9bs8RC9U+XdU8q68nB5CxlIR/DFzWL1A+gPn2q+rG3dDYh?=
+ =?us-ascii?Q?B3q3A+x/Fh/2nhnnz1CDa92RqZV9iHdOsD5CBCdyvXNYeJ0TtNaFjQ/ilAab?=
+ =?us-ascii?Q?R7JWNZoGUfeAvlGNKZ297oJWy8vlq/1vOUiganQgx2D7A9GU4EmM/IyCl9eE?=
+ =?us-ascii?Q?kWnvDFVmNeHrxmzC5KUnMAwGpnSr8d59gD9yN+QkKO0NA64U4Vv+ninF5Dfd?=
+ =?us-ascii?Q?81wLevykwzDInl0LBqHbNGCy6ttaGs+5sMhCAVrZBuOECQPvX5e6HtNBVDfK?=
+ =?us-ascii?Q?+fQLEMToZmM6ILvhGSmjdcNcwAchnZfc7LiAFzJdt4zCYEjggA8wNmfr1BaQ?=
+ =?us-ascii?Q?xndl1jWzXjvAqG7ZgVkZ08EqiddvaSW9p1MmwCL5m7hL12US2q/HocVu83VC?=
+ =?us-ascii?Q?LwXRg0SpyHO65DgnFl4NQcd7lDzKcjODNGvVqWeX+cGznAwAOl0te4X1towu?=
+ =?us-ascii?Q?4g=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <08A4133B36B894418A4D72F1F927E6C8@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	pWOzFKA9LjzQKmLJWX/LRaLThXEFM1JKEgnHm3feHhjupyepGFKhzIh7k6tnBTIzYJLIPiNpdk+pqogbHTGUr+Kaav12GJSuD8ISGCczTLRZHFNENabp7YHdw7KfWoTC63BcXydE4AzRUCrLex3EiibaYxNV9hDRfRDR5axN5LmAxirR+ROmOnIL8qSSRsmPMm5Mx9gz9TnomFl3EwEivF32ErFbltEjlfIPvmGyDeMkGwKMyLUCHxeP7+j6fRFixKdZFOrsYZXQMwZqBWUNf7PMxw4ERxjm0zZbjRmlmIXK5F5ovZSLc3Zn1imTlFKTtRk13Olpku5IMrKUNDDpTJyJBFHuF4v4ZMXPt+lMnF0hTpNLCBYoesTrnCQcS3MKd6jGFE8or76iNna+ux/xt+Td7OKHfpPYtqMCuyQwsDqmYqf9JyTxWU1MypO3eVdmlz7pRxfQBB9XUoVe1YWaksnrabKW/zyYEYVy3AzoX6MRMfBwH2fUIuYvX0WHdAgFR4C72QIItT8Fjj1tvuH3UKwuwgZw/5JkQTQKSyD0lTPgVObhiSRU7SLn/fXs1JabW2p2fzvRlV/A5XFOz6XQN0VN6KXs6ZdDp0AI1cSR7pT8ZmgJ3WP1qD2oGBfz1XIW
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR04MB8532.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8af2b897-e5d1-4323-1465-08dda58a576f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2025 06:12:54.7218
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: T+R9x1x2gELHHTuJ0PSFubfKqx61ncSlyI69tlOkCA5kofBHWOwIT+ldUY709kWcI82cOIVwJ0jkLoTViEoY1PzQySdUP1s0WFluAk0Nneg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR04MB8570
 
-ublk_get_req_ref() and ublk_put_req_ref() currently call
-ublk_need_req_ref(ubq) to check whether the ublk device features require
-reference counting of its requests. However, all callers already know
-that reference counting is required:
-- __ublk_check_and_get_req() is only called from
-  ublk_check_and_get_req() if user copy is enabled, and from
-  ublk_register_io_buf() if zero copy is enabled
-- ublk_io_release() is only called for requests registered by
-  ublk_register_io_buf(), which requires zero copy
-- ublk_ch_read_iter() and ublk_ch_write_iter() only call
-  ublk_put_req_ref() if ublk_check_and_get_req() succeeded, which
-  requires user copy to be enabled
+On Jun 05, 2025 / 15:57, Alan Adamson wrote:
+> Add a new test (md/002) to verify atomic write support for MD devices
+> (RAID 0, 1, and 10) stacked on top of SCSI devices using scsi_debug with
+> atomic write emulation enabled.
+>=20
+> This test validates that atomic write sysfs attributes are correctly
+> propagated through MD layers, and that pwritev2() with RWF_ATOMIC
+> behaves as expected on these devices.
+>=20
+> Specifically, the test checks:
+>     - That atomic write attributes in /sys/block/.../queue are consistent
+>       between MD and underlying SCSI devices
+>     - That atomic write limits are respected in user-space via xfs_io
+>     - That statx reports accurate atomic_write_unit_{min,max} values
+>     - That invalid writes (too small or too large) fail as expected
+>     - That chunk size affects max atomic write limits (for RAID 0/10)
+>=20
+> Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
 
-So drop the ublk_need_req_ref() check and the ubq argument in
-ublk_get_req_ref() and ublk_put_req_ref().
+Hello Allan, thanks for the patch. I ran the new test case and it looks wor=
+king
+good. Please find my comments in line.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- drivers/block/ublk_drv.c | 41 +++++++++++++---------------------------
- 1 file changed, 13 insertions(+), 28 deletions(-)
+> ---
+>  tests/md/002     | 245 +++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/md/002.out |  43 +++++++++
+>  2 files changed, 288 insertions(+)
+>  create mode 100755 tests/md/002
+>  create mode 100644 tests/md/002.out
+>=20
+> diff --git a/tests/md/002 b/tests/md/002
+> new file mode 100755
+> index 000000000000..4b71ebf7d496
+> --- /dev/null
+> +++ b/tests/md/002
+> @@ -0,0 +1,245 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-3.0+
+> +# Copyright (C) 2025 Oracle and/or its affiliates
+> +#
+> +# Test SCSI Atomic Writes with MD devices
+> +
+> +. tests/scsi/rc
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index ec9e0fd21b0e..f9a6b2abfd20 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -690,33 +690,23 @@ static inline void ublk_init_req_ref(const struct ublk_queue *ubq,
- 		refcount_set(&data->ref, UBLK_REFCOUNT_INIT);
- 		data->buffers_registered = 0;
- 	}
- }
- 
--static inline bool ublk_get_req_ref(const struct ublk_queue *ubq,
--		struct request *req)
-+static inline bool ublk_get_req_ref(struct request *req)
- {
--	if (ublk_need_req_ref(ubq)) {
--		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
--
--		return refcount_inc_not_zero(&data->ref);
--	}
-+	struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
- 
--	return true;
-+	return refcount_inc_not_zero(&data->ref);
- }
- 
--static inline void ublk_put_req_ref(const struct ublk_queue *ubq,
--		struct request *req)
-+static inline void ublk_put_req_ref(struct request *req)
- {
--	if (ublk_need_req_ref(ubq)) {
--		struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
-+	struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
- 
--		if (refcount_dec_and_test(&data->ref))
--			__ublk_complete_rq(req);
--	} else {
-+	if (refcount_dec_and_test(&data->ref))
- 		__ublk_complete_rq(req);
--	}
- }
- 
- static inline void ublk_sub_req_ref(struct request *req)
- {
- 	struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
-@@ -2004,13 +1994,12 @@ static inline int ublk_set_auto_buf_reg(struct io_uring_cmd *cmd)
- }
- 
- static void ublk_io_release(void *priv)
- {
- 	struct request *rq = priv;
--	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
- 
--	ublk_put_req_ref(ubq, rq);
-+	ublk_put_req_ref(rq);
- }
- 
- static int ublk_register_io_buf(struct io_uring_cmd *cmd,
- 				const struct ublk_queue *ubq, unsigned int tag,
- 				unsigned int index, unsigned int issue_flags)
-@@ -2027,11 +2016,11 @@ static int ublk_register_io_buf(struct io_uring_cmd *cmd,
- 		return -EINVAL;
- 
- 	ret = io_buffer_register_bvec(cmd, req, ublk_io_release, index,
- 				      issue_flags);
- 	if (ret) {
--		ublk_put_req_ref(ubq, req);
-+		ublk_put_req_ref(req);
- 		return ret;
- 	}
- 
- 	return 0;
- }
-@@ -2303,11 +2292,11 @@ static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
- 
- 	req = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], tag);
- 	if (!req)
- 		return NULL;
- 
--	if (!ublk_get_req_ref(ubq, req))
-+	if (!ublk_get_req_ref(req))
- 		return NULL;
- 
- 	if (unlikely(!blk_mq_request_started(req) || req->tag != tag))
- 		goto fail_put;
- 
-@@ -2317,11 +2306,11 @@ static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
- 	if (offset > blk_rq_bytes(req))
- 		goto fail_put;
- 
- 	return req;
- fail_put:
--	ublk_put_req_ref(ubq, req);
-+	ublk_put_req_ref(req);
- 	return NULL;
- }
- 
- static inline int ublk_ch_uring_cmd_local(struct io_uring_cmd *cmd,
- 		unsigned int issue_flags)
-@@ -2431,46 +2420,42 @@ static struct request *ublk_check_and_get_req(struct kiocb *iocb,
- 		goto fail;
- 
- 	*off = buf_off;
- 	return req;
- fail:
--	ublk_put_req_ref(ubq, req);
-+	ublk_put_req_ref(req);
- 	return ERR_PTR(-EACCES);
- }
- 
- static ssize_t ublk_ch_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ublk_queue *ubq;
- 	struct request *req;
- 	size_t buf_off;
- 	size_t ret;
- 
- 	req = ublk_check_and_get_req(iocb, to, &buf_off, ITER_DEST);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 
- 	ret = ublk_copy_user_pages(req, buf_off, to, ITER_DEST);
--	ubq = req->mq_hctx->driver_data;
--	ublk_put_req_ref(ubq, req);
-+	ublk_put_req_ref(req);
- 
- 	return ret;
- }
- 
- static ssize_t ublk_ch_write_iter(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ublk_queue *ubq;
- 	struct request *req;
- 	size_t buf_off;
- 	size_t ret;
- 
- 	req = ublk_check_and_get_req(iocb, from, &buf_off, ITER_SOURCE);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 
- 	ret = ublk_copy_user_pages(req, buf_off, from, ITER_SOURCE);
--	ubq = req->mq_hctx->driver_data;
--	ublk_put_req_ref(ubq, req);
-+	ublk_put_req_ref(req);
- 
- 	return ret;
- }
- 
- static const struct file_operations ublk_ch_fops = {
--- 
-2.45.2
+I think you meant "tests/md/rc", didn't you?
 
+> +. common/scsi_debug
+> +. common/xfs
+> +
+> +DESCRIPTION=3D"test md atomic writes"
+> +QUICK=3D1
+> +
+> +requires() {
+> +	_have_kver 6 14 0
+
+I wanted to confirm that the kernel version check is the only way to
+confirm the kernel dependency of this test case. Is there any other
+way to check it from userland, such as sysfs attributes?
+
+> +	group_requires
+
+I don't think the line above is necessary.
+
+> +	_have_program mdadm
+> +	_have_driver scsi_debug
+> +	_have_xfs_io_atomic_write
+> +}
+> +
+> +test() {
+> +	local scsi_debug_atomic_wr_max_length
+> +	local scsi_debug_atomic_wr_gran
+> +	local scsi_sysfs_atomic_max_bytes
+> +	local scsi_sysfs_atomic_unit_max_bytes
+> +	local scsi_sysfs_atomic_unit_min_bytes
+> +	local md_atomic_max_bytes
+> +	local md_atomic_min_bytes
+> +	local md_sysfs_max_hw_sectors_kb
+> +	local md_max_hw_bytes
+> +	local md_chunk_size
+> +	local md_sysfs_logical_block_size
+> +	local md_sysfs_atomic_max_bytes
+> +	local md_sysfs_atomic_unit_max_bytes
+> +	local md_sysfs_atomic_unit_min_bytes
+> +	local bytes_to_write
+> +	local bytes_written
+> +	local test_desc
+> +	local scsi_0
+> +	local scsi_1
+> +	local scsi_2
+> +	local scsi_3
+> +	local scsi_dev_sysfs
+> +	local md_dev
+> +	local md_dev_sysfs
+> +	local scsi_debug_params=3D(
+> +		delay=3D0
+> +		atomic_wr=3D1
+> +		num_tgts=3D1
+> +		add_host=3D4
+> +		per_host_store=3Dtrue
+> +	)
+> +
+> +	echo "Running ${TEST_NAME}"
+> +
+> +	if ! _configure_scsi_debug "${scsi_debug_params[@]}"; then
+> +                return 1
+> +                fi
+
+Nit: Whitespaces are used for indenet in the above two lines.
+
+> +
+> +	scsi_0=3D"${SCSI_DEBUG_DEVICES[0]}"
+> +	scsi_1=3D"${SCSI_DEBUG_DEVICES[1]}"
+> +	scsi_2=3D"${SCSI_DEBUG_DEVICES[2]}"
+> +	scsi_3=3D"${SCSI_DEBUG_DEVICES[3]}"
+> +
+> +	scsi_dev_sysfs=3D"/sys/block/${scsi_0}"
+> +	scsi_sysfs_atomic_max_bytes=3D$(< "${scsi_dev_sysfs}"/queue/atomic_writ=
+e_max_bytes)
+> +	scsi_sysfs_atomic_unit_max_bytes=3D$(< "${scsi_dev_sysfs}"/queue/atomic=
+_write_unit_max_bytes)
+> +	scsi_sysfs_atomic_unit_min_bytes=3D$(< "${scsi_dev_sysfs}"/queue/atomic=
+_write_unit_min_bytes)
+> +	scsi_debug_atomic_wr_max_length=3D$(< /sys/module/scsi_debug/parameters=
+/atomic_wr_max_length)
+> +	scsi_debug_atomic_wr_gran=3D$(< /sys/module/scsi_debug/parameters/atomi=
+c_wr_gran)
+> +
+> +	for raid_level in 0 1 10; do
+
+Nit: this for loop block is rather large and has deep nest and long lines, =
+then
+it would be good to factor out it into another function (Bash users dynamic
+scoping then the local variables defined in test() will be usable in the ne=
+w
+function()). I'm ok with current implementation, just a mere suggestion.
+
+Thanks!=
 
