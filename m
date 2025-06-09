@@ -1,72 +1,47 @@
-Return-Path: <linux-block+bounces-22347-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22349-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1F74AD16C6
-	for <lists+linux-block@lfdr.de>; Mon,  9 Jun 2025 04:15:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5932DAD1790
+	for <lists+linux-block@lfdr.de>; Mon,  9 Jun 2025 06:00:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C84BE1882EB2
-	for <lists+linux-block@lfdr.de>; Mon,  9 Jun 2025 02:14:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53A103AAFFF
+	for <lists+linux-block@lfdr.de>; Mon,  9 Jun 2025 04:00:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B14A191F89;
-	Mon,  9 Jun 2025 02:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aRCWhAhZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB887080D;
+	Mon,  9 Jun 2025 04:00:35 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F9A18A6AB
-	for <linux-block@vger.kernel.org>; Mon,  9 Jun 2025 02:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FB1F19A
+	for <linux-block@vger.kernel.org>; Mon,  9 Jun 2025 04:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749435254; cv=none; b=s8BZJwua3BIbBvNx+Wn6BymgxJ8YVcL5xSvY2qCjS+Q9bpRDzfdSutz/dclTNJIcGlM41sunQY2IjIiJohtWG57+aBiND3ZbHW3wEbHsc3CEiGcSIfOdxaQH+lRneLTzYJmuzMS7Lx6O9nDhEdbzDwBEVRNGzmdVAp90gDlo5qQ=
+	t=1749441635; cv=none; b=modiYR0oAXkCzMntrL8jCVtAnw5NaPO+cjqzM7A95yYXaYaO2ysigDopg4N+Awb+x2XAW62rd/3NW8ilV4xGq8jYKFQ8tqq/LRABdksD4iRSBXmGd7Y3VkyjK0HlZvbwbvdsd2RnUEv87oBvyoGmzEZ750eKTqG9GXSRzVgbQos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749435254; c=relaxed/simple;
-	bh=X6pHW4rA+v0dZiXYc26DOCdwlAXcUG3rlrAwZnkrNj0=;
+	s=arc-20240116; t=1749441635; c=relaxed/simple;
+	bh=uc60Q85eHJWMuMjeeDugJatmZhqHLyLVKoHAywaZ9Rs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P3YPm+//aXhQ2n/fiL+VHqcQuxjatEN8cdeorRnbQHC11ITkxe0etmvTf3UIhLOvCFxeGps1RkphVnPa40l/xrHRLUW9mllGReufFjaW0kBScTrSZmEpEBEE23EGsqsMftmC35xQD6DEUm2fUIwjIdV1YPaGx59rlree7eR5X0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aRCWhAhZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749435250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2HcwFaH830Zah676918JZz4Nr3fHIwcb4N3zd+JXnrI=;
-	b=aRCWhAhZl+e/f1dsOHBEQ+lyryx+SoUcl3OsieMwzeRRoOiD1HpH54m28gCJplgg+bFCtq
-	1c5XekGLf3Q860b43Po1vGYlGJc+I5AcbYdhOSYeVofRZXjjnxCXbrDW7wsJcYHdkoaT3x
-	FGJ+BBijph0hMYEoEizexfvbDgQwUg0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-VBV6CgAqNUScjcNLU422bQ-1; Sun,
- 08 Jun 2025 22:14:07 -0400
-X-MC-Unique: VBV6CgAqNUScjcNLU422bQ-1
-X-Mimecast-MFC-AGG-ID: VBV6CgAqNUScjcNLU422bQ_1749435246
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C706F1800BF3;
-	Mon,  9 Jun 2025 02:14:05 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.120])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54A7A19560AB;
-	Mon,  9 Jun 2025 02:14:00 +0000 (UTC)
-Date: Mon, 9 Jun 2025 10:13:56 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Nilay Shroff <nilay@linux.ibm.com>
-Cc: linux-block@vger.kernel.org, hch@lst.de, axboe@kernel.dk,
-	sth@linux.ibm.com, gjoyce@ibm.com
-Subject: Re: [PATCHv2] block: fix lock dependency between percpu alloc lock
- and elevator lock
-Message-ID: <aEZDZJUVnYNPc9Sa@fedora>
-References: <20250528123638.1029700-1-nilay@linux.ibm.com>
- <aD60SF6QGMSPykq-@fedora>
- <9f5b0cbb-10cb-44a7-9565-28673bcbdf84@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eyr/4NOoo9v+DtDc+f8oI9qp37JFsi6n7VHMAovu8547SxlJfeqapOvlPN5KFcebwbmZanVDmBCIXhvIwBo+KcFJ70H6o/9gtSCwlKdkcqXBXYLF9QDBVRZMwx9ldJtLqTm86E26WDy8pHjW+iwFi+Og9ZpUnl9nPpRCXx58U6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 52B4468AFE; Mon,  9 Jun 2025 05:55:15 +0200 (CEST)
+Date: Mon, 9 Jun 2025 05:55:15 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Christoph Hellwig <hch@lst.de>, Damien Le Moal <dlemoal@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	Yu Kuai <yukuai1@huaweicloud.com>, Ming Lei <ming.lei@redhat.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: Re: [PATCH 1/2] block: Make __submit_bio_noacct() preserve the bio
+ submission order
+Message-ID: <20250609035515.GA26025@lst.de>
+References: <20250520135624.GA8472@lst.de> <d28b6138-7618-4092-8e05-66be2625ecd9@acm.org> <20250521055319.GA3109@lst.de> <24b5163c-1fc2-47a6-9dc7-2ba85d1b1f97@acm.org> <b130e8f0-aaf1-47c4-b35d-a0e5c8e85474@kernel.org> <4c66936f-673a-4ee6-a6aa-84c29a5cd620@acm.org> <e782f4f7-0215-4a6a-a5b5-65198680d9e6@kernel.org> <907cf988-372c-4535-a4a8-f68011b277a3@acm.org> <20250526052434.GA11639@lst.de> <a8a714c7-de3d-4cc9-8c23-38b8dc06f5bb@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -75,168 +50,32 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f5b0cbb-10cb-44a7-9565-28673bcbdf84@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <a8a714c7-de3d-4cc9-8c23-38b8dc06f5bb@acm.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jun 05, 2025 at 11:22:17AM +0530, Nilay Shroff wrote:
-> 
-> 
-> On 6/3/25 2:07 PM, Ming Lei wrote:
-> > On Wed, May 28, 2025 at 06:03:58PM +0530, Nilay Shroff wrote:
-> 
-> >> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> >> index 0cb1e9873aab..51d406da4abf 100644
-> >> --- a/block/bfq-iosched.c
-> >> +++ b/block/bfq-iosched.c
-> >> @@ -7232,17 +7232,12 @@ static void bfq_init_root_group(struct bfq_group *root_group,
-> >>  	root_group->sched_data.bfq_class_idle_last_service = jiffies;
-> >>  }
-> >>  
-> >> -static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
-> >> +static int bfq_init_queue(struct request_queue *q, struct elevator_queue *eq)
-> >>  {
-> >>  	struct bfq_data *bfqd;
-> >> -	struct elevator_queue *eq;
-> >>  	unsigned int i;
-> >>  	struct blk_independent_access_ranges *ia_ranges = q->disk->ia_ranges;
-> >>  
-> >> -	eq = elevator_alloc(q, e);
-> >> -	if (!eq)
-> >> -		return -ENOMEM;
-> >> -
-> > 
-> > Please make the above elevator interface change be one standalone patch if possible,
-> > which may help review much.
-> 
-> Yeah you're right, in fact I considered to make elevator interface changes into 
-> a separate patch however the changes are so much tightly coupled with block layer
-> change that I couldn't make it independent. As you may see here I replaced second
-> argument of ->init_sched from "struct elevator_type *" to "struct elevator_queue *".
-> And as you might have noticed we allocate the "struct elevator_queue *" very early
-> while switching the elevator and that's passed down to this ->init_sched function
-> through elv_change_ctx. So making elevator interface change a standalone patch 
-> is not possible.
+On Sun, Jun 08, 2025 at 03:07:30PM -0700, Bart Van Assche wrote:
+> On 5/25/25 10:24 PM, Christoph Hellwig wrote:
+>> Umm, Bart I really expected better from you.  You're ducking around
+>> providing a reproducer for over a week and waste multiple peoples
+>> time to tell us the only reproducer is your out of tree thingy
+>> reject upstream before?  That's not really how Linux developement
+>> works.
+>
+> A reproducer for the blktests framework is available below. It took me
+> more time than I had expected to come up with a reproducer because I was
+> initially looking in the wrong direction (device mapper). As one can
+> see, the reproducer below does not involve any device mapper driver.
+>
+> Do you plan to work on a fix or do you perhaps expect me to do this?
 
-You can make a patch to move elevator_queue allocation into
-blk_mq_init_sched() first, then pass it to all ->init_sched()
-implementation first. And you can avoid to pass 'elevator_queue *'
-from 'struct elv_change_ctx'.
+The problem here is that blk_crypto_fallback_split_bio_if_needed does
+sneaky splits behind the back of the main splitting code.
 
-> 
-> >>  
-> >> +int blk_mq_alloc_elevator_and_sched_tags(struct request_queue *q,
-> >> +		struct elv_change_ctx *ctx)
-> >> +{
-> >> +	unsigned long i;
-> >> +	struct elevator_queue *elevator;
-> >> +	struct elevator_type *e;
-> >> +	struct blk_mq_tag_set *set = q->tag_set;
-> >> +	gfp_t gfp = GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY;
-> >> +
-> >> +	if (strncmp(ctx->new.name, "none", 4)) {
-> > 
-> > You can return early if new name is "none", then all indent in the code
-> > block can be avoided.
-> Yeah agreed, will do it in the next patch.
-> 
-> > 
-> >> +
-> >> +		e = elevator_find_get(ctx->new.name);
-> >> +		if (!e)
-> >> +			return -EINVAL;
-> >> +
-> >> +		elevator = ctx->new.elevator = elevator_alloc(q, e);
-> > 
-> > You needn't to allocate elevator queue here, then the big elv_change_ctx change
-> > may be avoided by passing sched tags directly.
-> 
-> Hmm, okay so you recommend keeping allocation of elevator queue in ->init_sched
-> method as it's today?
+The fix is to include the limit imposed by it in __bio_split_to_limits
+as well if the crypto fallback is used.
 
-I meant you can move elevator queue allocation into blk_mq_init_sched(), then
-you just need to pass allocated sched tag via `elv_change_ctx` or function
-parameter.
-
-> If so then yes it could be done but then as I see the elvator 
-> queue is being freed in elevator_change_done() after we release ->elevator_lock
-> So I thought it's also quite possible in theory to allocate elevator queue outside
-> of ->elevator_lock. Moreover, we shall not require holding ->elevator_lock or 
-> ->freeze_lock while allocating elevator queue, and thus probably avoid holding
-> block layer locks while perfroming dynamic allocation, isn't it?
-> 
-> > 
-> > Also it may be fragile to allocate elevator queue here without holding elevator
-> > lock. You may have to document this way is safe by allocating elevator
-> > queue with specified elevator type lockless.
-> > 
-> Yes I'd document it. And looking through this code path it appears safe because
-> we first get reference to the elevator type before assiging elevator type to
-> the elevator queue in elevator_alloc(). Do you see any potential issue with 
-> this, if we were to allocate elevator queue lockless here?
-
-The correctness depends that our current implementation disables 
-updating nr_hw_queues by holding set->update_nr_hwq_lock, otherwise you
-have to double check nr_hw_queues after grabbing elevator_lock, so this
-point might need to document.
-
-> 
-> >> diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-> >> index 1326526bb733..6c0f1936b81c 100644
-> >> --- a/block/blk-mq-sched.h
-> >> +++ b/block/blk-mq-sched.h
-> >> @@ -7,6 +7,26 @@
-> >>  
-> >>  #define MAX_SCHED_RQ (16 * BLKDEV_DEFAULT_RQ)
-> >>  
-> >> +/* Holding context data for changing elevator */
-> >> +struct elv_change_ctx {
-> >> +	/* for unregistering/freeing old elevator */
-> >> +	struct {
-> >> +		struct elevator_queue *elevator;
-> >> +	} old;
-> >> +
-> >> +	/* for registering/allocating new elevator */
-> >> +	struct {
-> >> +		const char *name;
-> >> +		bool no_uevent;
-> >> +		unsigned long nr_requests;
-> >> +		struct elevator_queue *elevator;
-> >> +		int inited;
-> >> +	} new;
-> >> +
-> >> +	/* elevator switch status */
-> >> +	int status;
-> >> +};
-> >> +
-> > 
-> > As I mentioned, 'elv_change_ctx' becomes more complicated, which may be
-> > avoided.
-> Yes I agreed, however as I mentioned above if we choose to allocate 
-> elevator queue before we acquire ->elevator_lock or ->freeze_lock
-
-Allocating elevator queue is just plain kmalloc(), which can be done
-under ->elevator_lock or ->freeze_lock, since we have called
-memalloc_noio_save().
-
-> then we may need to keep this updated elv_change_ctx. So it depends
-> on whether we choose to allocate elevator queue befor acquiring locks or
-> keeping allocation under ->init_sched.
-> 
-> > Queue is still frozen, so the dependency between freeze lock and
-> > the global percpu allocation lock isn't cut completely.
-> > 
-> Yes correct and so in the commit message I mentioned that this depedency is
-> currenlty cut only while calling elevator switch from elv_iosched_store context
-> through sysfs. We do need to still cut it in the conetxt of elevator switch 
-> being called from blk_mq_update_nr_hw_queues context or called while unregistering 
-> queue from del_gendisk. And this I thought should be handled in a seperate patch.
-> Anyways, I would explicitly call this out in the commit message.
-
-OK, looks fine, I'd suggest to address them all in single patchset, because
-it is same problem, and helps us to review with single context.
-
-
-Thanks,
-Ming
+If you have time to fix this that would be great.  Otherwise I can
+give it a spin, but it's public holiday and travel season here, so
+my availability is a bit limited.
 
 
