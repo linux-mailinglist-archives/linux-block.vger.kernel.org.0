@@ -1,66 +1,86 @@
-Return-Path: <linux-block+bounces-22393-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22395-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C37D7AD2D00
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 07:04:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E58AD2D09
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 07:07:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AC53188BE02
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 05:04:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A27D43AB2AE
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 05:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A5121FF5D;
-	Tue, 10 Jun 2025 05:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 114D425D528;
+	Tue, 10 Jun 2025 05:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Urw7w+PN"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3224C96
-	for <linux-block@vger.kernel.org>; Tue, 10 Jun 2025 05:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB725D1F5
+	for <linux-block@vger.kernel.org>; Tue, 10 Jun 2025 05:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749531861; cv=none; b=Dhf8C45ReyUnSgBG86oKLW3BsxdbXQT8hkywtpvR1ydACnskxxCkQxtUpX9+qsg0Z56XZbyUqYXr06U2f4EIHLey02MQqAFHVXk03FEttl6Dd+PTloy255GvROJd2heiBIcrAS0RPPKmF/4hqNIRNcoLV+EfHBNbwmasO2bbQR8=
+	t=1749532046; cv=none; b=E3edU5C/KtABazUHbugVEtO7yIaVSGDm66WQdyE8NnV73Wme5fWXPIAA++G2veoVgjB/pct+6U7WRoaTN4AGYLPg4qrYiFzJvOQ0fKGH5vPGAAVhwt+uRgp24bfqsZGe8A5PGbT/MlLkPoG3eNcgBvnTVlkCFB64BQWQXoKIe+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749531861; c=relaxed/simple;
-	bh=Ncm7ohjFSf78pV5r24JWVmmPIcaeBhPrW5Bnm9tF9Yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DYLiDls3UmwDfUSnHWcfsLKKJtlMeg2rxM4gwcc6jADRL0HYJe6NRU0mZiIqeSW7CgDztzJ7feIA62rFZ3yLXl4Je8KNq1wdcZxIwzo9yURRx8cidEQbovcS1NIjfoxUcnCyLB+2M+i0SkuA55P5SQ69TtN8XbEMlY0NIQG+yzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6918068C4E; Tue, 10 Jun 2025 07:04:15 +0200 (CEST)
-Date: Tue, 10 Jun 2025 07:04:15 +0200
+	s=arc-20240116; t=1749532046; c=relaxed/simple;
+	bh=+4oMHWzkfNkh28O+tArBX25C5ib8mLSa2DDH8Ni+dLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UDOtsRWoN+xmxmo15ePz94Hk+1gLOUt+WHCEp/6WxyjDe88lf/ZH1Z3C/ODXJwk4Pn0vK2rrn/TkaWmsHG31QbmKPUfGQW2oYOr/Nkow+4LtfwdUL5atrsOgo1BJLNWcLT2n+6rLK7HCU2AWyEE6yQqhr0cUD/H5sAueB8C4IT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Urw7w+PN; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=WMnK/6ynhLT+c63+86ZArPvsHQRCDzd84muxxrMS1W8=; b=Urw7w+PNd5yIG+lCbAKItUlLE5
+	ayyyG91fHsmXdQjnjoFVytB7nMMSALhjBEIgJz8m8rRpuEdGXtAZr9OqAgDfufGkqGEF0dWN65le8
+	BWVtf316x10an/0GRerly1fJ1W0LiatPTIbHFpmFzn3wJdtekooTSeYEBuFtS5m6Z3WVML3Tdkt8T
+	cmezmve+ItfQnNrg4sH6/pT1xm1UgNCNnWePwKJR14IvmQxYXK9oywSfrVis4JrQwvfYdsvykWyYJ
+	MiHRJ9UvaInSTXtfGuRHp2mNudbSGZLGAR3lUIvA5OVzgWoopsvDg9/tfCdFKXWLNHZaVFkZPdXxW
+	cUCaovEA==;
+Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOrCf-00000005ndo-0la8;
+	Tue, 10 Jun 2025 05:07:17 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Yu Kuai <yukuai1@huaweicloud.com>, Ming Lei <ming.lei@redhat.com>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: Re: [PATCH 1/2] block: Make __submit_bio_noacct() preserve the bio
- submission order
-Message-ID: <20250610050415.GA25014@lst.de>
-References: <20250521055319.GA3109@lst.de> <24b5163c-1fc2-47a6-9dc7-2ba85d1b1f97@acm.org> <b130e8f0-aaf1-47c4-b35d-a0e5c8e85474@kernel.org> <4c66936f-673a-4ee6-a6aa-84c29a5cd620@acm.org> <e782f4f7-0215-4a6a-a5b5-65198680d9e6@kernel.org> <907cf988-372c-4535-a4a8-f68011b277a3@acm.org> <20250526052434.GA11639@lst.de> <a8a714c7-de3d-4cc9-8c23-38b8dc06f5bb@acm.org> <d8f5f6eb-42b8-4ce8-ac86-18db6d3d03d0@kernel.org> <a0c89df8-4b33-409c-ba43-f9543fb1b091@acm.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Nitesh Shetty <nj.shetty@samsung.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org
+Subject: new DMA API conversion for nvme-pci
+Date: Tue, 10 Jun 2025 07:06:38 +0200
+Message-ID: <20250610050713.2046316-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0c89df8-4b33-409c-ba43-f9543fb1b091@acm.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Jun 09, 2025 at 01:48:06PM -0700, Bart Van Assche wrote:
-> On 6/8/25 3:47 PM, Damien Le Moal wrote:
->> So yes, we need a fix. Can you work on one ?
->
-> The patch below seems to be sufficient but I'm not sure whether this
-> approach is acceptable:
+Hi all,
 
-It's still the wrong approach.  Please add the splitting needed for
-the blk-crypt fallback to __bio_split_to_limits instead.
+this series converts the nvme-pci driver to the new IOVA-based DMA API
+for the data path.  Note that I've dropped the the Tested-by: and
+Reviewed-by: tags from the version Leon sent out with the DMA API as
+there's been quite extensive changes.
 
+Diffstat:
+ block/bio-integrity.c      |    3 
+ block/bio.c                |   20 -
+ block/blk-mq-dma.c         |  162 +++++++++++
+ drivers/nvme/host/pci.c    |  615 +++++++++++++++++++++++++--------------------
+ include/linux/blk-mq-dma.h |   63 ++++
+ include/linux/blk_types.h  |    2 
+ 6 files changed, 596 insertions(+), 269 deletions(-)
 
