@@ -1,93 +1,127 @@
-Return-Path: <linux-block+bounces-22423-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22426-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 545A2AD39AD
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 15:45:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4D05AD3DC2
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 17:45:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A85B63A96DA
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 13:44:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E70C164500
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jun 2025 15:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6025629616A;
-	Tue, 10 Jun 2025 13:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD6B235048;
+	Tue, 10 Jun 2025 15:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlgVpsFm"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U4b8AvRQ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AF519CD0E;
-	Tue, 10 Jun 2025 13:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFDC230BF5
+	for <linux-block@vger.kernel.org>; Tue, 10 Jun 2025 15:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749563090; cv=none; b=RsxvS3QKS7VAhGqTItxfbW8h7P2l3ofOo7EwjO+4ncwgBSIP62+9A4c5z8lwrC5Hwzm1Fmus1wnlv63bMfltBMGI0KxRcWne31Q4glVCNcccvD7mqhaocMi7U3Z2VsSPFockouBWexoqG2eZKm1Q1CLVwy1dQ9J4jW9HwvxoudQ=
+	t=1749570277; cv=none; b=B+I7yGs8QIfGVOTR+mmW4WnbdGcfXb27bWtQS2WKyzZ/uLSwzB2jLxa/ZjYvf/fxOcIYhltI3jt8/ALhpFBLijf4KgzKilVqDxjvXT3BNpO2RW+HfJDJsjNc8EjLatLa5ZXh0GaEfMoyb0e+V8Hq165MfD9cJESLxWI55Uj9JWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749563090; c=relaxed/simple;
-	bh=weAdd0vuOTRXXeJOnmvc/uNNIePdWDoD10O9Jk90+GY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ceo5cRKrYHtfv7KjkHcZi4PT8BLBGI/QGxWkt6glIVK6bSjL8fvccb/ivUIOimxnZas1bDH1FtMp0Bfol9Gq+pplIiAFegacJ/b3hL8F3zbq0WoGouXYI9RFy7ceMJB8t6B3nVVBT0wkrryZc7AMu6Re+Ztkp6Qks6/0LUz+D+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlgVpsFm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA33DC4CEED;
-	Tue, 10 Jun 2025 13:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749563089;
-	bh=weAdd0vuOTRXXeJOnmvc/uNNIePdWDoD10O9Jk90+GY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nlgVpsFmUr9XRMtbWhwlFjG9Nv+DdMW6s3qNX42ami0uaIgU8Phf4Vlbowg2K+H21
-	 p+G4kVZTyylVwtv41syM45ek5MW4V7KipS9jo0YDQT5/Zuq69cEebaubISc5ewF7ZY
-	 +PIsfNpWWfocsN3PpCvDYZ2IJdpZ1o3oD5Vxi+zvoERuzJUMqfQAHCbCVANTH3a2aw
-	 qhUmElhabJsp9v0naWN90O9h8jwPMn1a9YE/M1NYe0aONPEFju5UyXiMfyLhs+t/Ow
-	 8ZhZLfYH6d3kldsSK32Opt7KfIX71E+yq9R2V6LmDPt7IariLkt/W6TwszVEwxYpqk
-	 abcz5/DdB9f7Q==
-Message-ID: <df637115-e0ce-45ae-a9b6-817ea7454bce@kernel.org>
-Date: Tue, 10 Jun 2025 15:44:44 +0200
+	s=arc-20240116; t=1749570277; c=relaxed/simple;
+	bh=ISxoCFCmRXsUpNSGczd1kVqHWNdpvNVaMxoms2JqTlg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=IBPZ9/Z894VeyxGNY2ntprPkAGk7uqRTBDwqVseHODfXVCDIRqm1LibhueiE8jxMfLli6n9Vr9LW3BlKjXKRPM42DurVjvz8NvbAaKqIbaCB/iNOQh7LYd1wYxinLkcxddI+INXKbhFlLCXusljaH4eSLDnp0GIgpoi/sCZcids=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=U4b8AvRQ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250610154432epoutp03792aefba4c8d0d4e36a8b1c333fd7caa~HuOSoJ81Q0751807518epoutp03E
+	for <linux-block@vger.kernel.org>; Tue, 10 Jun 2025 15:44:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250610154432epoutp03792aefba4c8d0d4e36a8b1c333fd7caa~HuOSoJ81Q0751807518epoutp03E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749570272;
+	bh=L8X4hXxhVSuvy6/B9Si9mWggFDjFgBGH46Jro7xLFFU=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=U4b8AvRQe7zQDBU71hXLLUFnMVFa6ZLAuJie2moBp1dyCpNjgBJ9Tj4hspm6cDA68
+	 V1Uzow3p/EO37U/LSxsr3zVQzfEibA+ToapxrSdTR2ZtQN7ShjtTxNMpqE09lzsLj6
+	 QDHJ3/pWPxYbgLXYzeFMf2+3mlyGXjoxMZrfrv+s=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250610154431epcas5p2596c3b632de6acbc0110e76d0504d142~HuORUvCx_2914229142epcas5p2G;
+	Tue, 10 Jun 2025 15:44:31 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bGtQ52TKyz2SSKZ; Tue, 10 Jun
+	2025 15:44:29 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250610132307epcas5p4c6c107e84642a1367600afe9167655b8~HsS0wYsQn0586605866epcas5p41;
+	Tue, 10 Jun 2025 13:23:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250610132305epsmtip2aec7057574fbe3e85375ba723ad10890~HsSy_dkGh0336803368epsmtip2T;
+	Tue, 10 Jun 2025 13:23:05 +0000 (GMT)
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: vincent.fu@samsung.com, jack@suse.cz, anuj1072538@gmail.com,
+	axboe@kernel.dk, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	hch@infradead.org, martin.petersen@oracle.com, ebiggers@kernel.org,
+	adilger@dilger.ca
+Cc: linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	joshi.k@samsung.com, Anuj Gupta <anuj20.g@samsung.com>
+Subject: [PATCH for-next v3 0/2] add ioctl to query metadata and protection
+ info capabilities
+Date: Tue, 10 Jun 2025 18:52:52 +0530
+Message-Id: <20250610132254.6152-1-anuj20.g@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] change blanket impls for `[Pin]Init` and add one for
- `Result<T, E>`
-To: Benno Lossin <lossin@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Jens Axboe <axboe@kernel.dk>, Fiona Behrens <me@kloenk.dev>,
- Christian Schrefl <chrisi.schrefl@gmail.com>, linux-block@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529081027.297648-1-lossin@kernel.org>
- <20250529081027.297648-2-lossin@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250529081027.297648-2-lossin@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250610132307epcas5p4c6c107e84642a1367600afe9167655b8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250610132307epcas5p4c6c107e84642a1367600afe9167655b8
+References: <CGME20250610132307epcas5p4c6c107e84642a1367600afe9167655b8@epcas5p4.samsung.com>
 
-On 5/29/25 10:10 AM, Benno Lossin wrote:
-> Remove the error from the blanket implementations `impl<T, E> Init<T, E>
-> for T` (and also for `PinInit`). Add implementations for `Result<T, E>`.
-> 
-> This allows one to easily construct (un)conditional failing
-> initializers. It also improves the compatibility with APIs that do not
-> use pin-init, because users can supply a `Result<T, E>` to a  function
-> taking an `impl PinInit<T, E>`.
-> 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/62/commits/58612514b256c6f4a4a0718be25298410e67387a
-> [ Also fix a compile error in block. - Benno ]
-> Signed-off-by: Benno Lossin <lossin@kernel.org>
-> ---
-> 
-> This patch is also needed by Danilo for initializing `Devres`
-> ergonomically.
+Hi all,
 
-For this purpose, can you please provide me with a signed tag for this one
-please? Otherwise I can also add the explicit `Infallible` generics in a few
-places until next cycle.
+This patch series adds a new ioctl to query metadata and integrity
+capability. Patch 1 adds a pi_size field in blk_integrity struct which
+is later used to export this value to the user as well.
+Patch 2 introduces a new ioctl to query integrity capability.
+
+v2->v3
+better naming for uapi struct fields (Martin)
+validate integrity fields in blk-settings.c (Christoph)
+
+v1 -> v2
+introduce metadata_size, storage_tag_size and ref_tag_size field in the
+uapi struct (Martin)
+uapi struct fields comment improvements (Martin)
+add csum_type definitions to the uapi file (Martin)
+add fpc_* prefix to uapi struct fields (Andreas)
+bump the size of rsvd and hence the uapi struct to 32 bytes (Andreas)
+use correct value for ioctl (Andreas)
+use clearer names for CRC (Eric)
+
+Anuj Gupta (2):
+  block: introduce pi_size field in blk_integrity
+  fs: add ioctl to query metadata and protection info capabilities
+
+ block/blk-integrity.c         | 53 +++++++++++++++++++++++++++++++++++
+ block/blk-settings.c          | 37 ++++++++++++++++++++++++
+ block/ioctl.c                 |  3 ++
+ drivers/nvme/host/core.c      |  1 +
+ drivers/scsi/sd_dif.c         |  1 +
+ include/linux/blk-integrity.h |  7 +++++
+ include/linux/blkdev.h        |  1 +
+ include/uapi/linux/fs.h       | 43 ++++++++++++++++++++++++++++
+ 8 files changed, 146 insertions(+)
+
+-- 
+2.25.1
+
 
