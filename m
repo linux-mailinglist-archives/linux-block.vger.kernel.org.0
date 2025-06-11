@@ -1,67 +1,57 @@
-Return-Path: <linux-block+bounces-22443-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22445-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95848AD47E6
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 03:34:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A30ADAD4951
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 05:27:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5492F3A2EB4
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 01:33:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE283189E144
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 03:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DA882899;
-	Wed, 11 Jun 2025 01:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B7813AA53;
+	Wed, 11 Jun 2025 03:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="es1dPOwf"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4xc6LqRw"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FC881ACA
-	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 01:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE72B18DB3D
+	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 03:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749605653; cv=none; b=LP1Gf3Q7HrDBpE7rBDKlBJSqL+QRFZsY0lqj2C4TV6tdArEm1QxVIz2OK+QgFLdwn9IJ5GLFlFHnunX22yjTts0zXaVFbL9qspC3hx1F+bb9++N4ztN89kss71EdNgNFSHAmQRdWkc9jXe5pnIflJgMgcbS5DcRAJcpkTeEhdc8=
+	t=1749612455; cv=none; b=DpGgXjkJMEBMSr0R1WXYRBJgddKfuOPHzlS1VYpqAHYNJD7cpksmBRqi4Wig8gi75k00214//KQRgIoIUHc9gTo7tldTV1icvkobg5FnlG/WdaAGVBuoGnil+gNeDYw3dt0OBUM0FxIWXGJFEbaO3zOm/mVt80aZNFec+kpKluA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749605653; c=relaxed/simple;
-	bh=bOYBWLABH0VsjKkB7selDvRvvXWY/JnnFCimAT0UQrA=;
+	s=arc-20240116; t=1749612455; c=relaxed/simple;
+	bh=YbfdiYVNj3CWAA62+jwJBgzDeqrrheox7G9ctMyMPYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3zIwurm9GI4zcO+9xUtmCDvKQf3d0o8gYHwSOl8BCb4a2+gidHkgtlExNeOqYSLE3u6mBa8KQ3jdtIhok7SyHv5rBVOvvTK6vrTDGrDRq3j4Ph770Z/Eqi4ILDV2MqnB++D78Q1WiuB8BraNRQ/3w6z10wEudhRkiR7XDRnnkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=es1dPOwf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F8EC4CEED;
-	Wed, 11 Jun 2025 01:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749605652;
-	bh=bOYBWLABH0VsjKkB7selDvRvvXWY/JnnFCimAT0UQrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=es1dPOwfvmaOPCqZwnuQstrJtLHkKtqpagGR7MqYuVXv63n54oPOMQkagEYJ+BOM8
-	 UnQPrVSDCtmnsMlhewLccfOgg1DqSAfODq/qBB7eRKyH58oY1eUAugU3metR7ShpL5
-	 sU3ChE/tI3DwdSn2StTX5/OiaPHUf5HduRlEmSyhwkes3zsbUPpJXN47EqIo+Sn47B
-	 RS5iOFrB8YZzfOHbaBqt3txMCIdgeRUO96xTWIDdt13b+nJQrpG0I0h0RnSyL8IpYC
-	 /Nkh5TPG25x5xU3RtM2hih67eqeDqyJYK76QQCMyWr5HnIrapUSnLoHTwYvDVJxBwZ
-	 hfweQatInR/qw==
-Date: Tue, 10 Jun 2025 19:34:09 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Yu Kuai <yukuai1@huaweicloud.com>, Ming Lei <ming.lei@redhat.com>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH 1/2] block: Make __submit_bio_noacct() preserve the bio
- submission order
-Message-ID: <aEjdEbPnBK_YuGqz@kbusch-mbp>
-References: <24b5163c-1fc2-47a6-9dc7-2ba85d1b1f97@acm.org>
- <b130e8f0-aaf1-47c4-b35d-a0e5c8e85474@kernel.org>
- <4c66936f-673a-4ee6-a6aa-84c29a5cd620@acm.org>
- <e782f4f7-0215-4a6a-a5b5-65198680d9e6@kernel.org>
- <907cf988-372c-4535-a4a8-f68011b277a3@acm.org>
- <20250526052434.GA11639@lst.de>
- <a8a714c7-de3d-4cc9-8c23-38b8dc06f5bb@acm.org>
- <20250609035515.GA26025@lst.de>
- <83e74dd7-55bb-4e39-b7c6-e2fb952db90b@acm.org>
- <aEi9KxqQr-pWNJHs@kbusch-mbp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tb7TceLULrFfcq6rSSnK6T9KreNhcbARy9JfcNiUHu1IobCCp2j4qfZIssRtZ7yosXnaziAZciipN1HFYA+lsU7qukFMyffjBPyusvYoCnKoGvjODcSVg37KJG9ozkuFLjzAoPymewN4G5xKeJciLaHcMjjY1NUyHbkvHugdDjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4xc6LqRw; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YbfdiYVNj3CWAA62+jwJBgzDeqrrheox7G9ctMyMPYA=; b=4xc6LqRwZmxKE4PiaoDgK2rX2j
+	60aughi/Yz3hWzk1NChv51se5PCZkBILYDu+IKfyj2IBzNfanO4AxUMLq+CsGqqc34bzUA+0I36TS
+	E3N8TcDs+trl842ssFarklwoBnrNdlzPSByN5+DvYXYZ0ke4hB1A99zeJig1Hbewf5THlUNlxFEvf
+	Df5lY42h+tDhmhC6FYl3waTs0wXli4U2r0AMHUCpfP+ctv55QLNKQV7dpWo+bOnQ2fh6DEH4Q5931
+	JIHi7lFJPynzF+kRhxqUXI9O0bnlXezX6U2QgZa04TQAy2RHw8aInHGWWJkt4r5giVFvNT7juEi2u
+	xWCm3hFQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPC7h-00000008jjY-1udp;
+	Wed, 11 Jun 2025 03:27:33 +0000
+Date: Tue, 10 Jun 2025 20:27:33 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH] block: Clear BIO_EMULATES_ZONE_APPEND flag on BIO
+ completion
+Message-ID: <aEj3pfzxUaIY_-jD@infradead.org>
+References: <20250611005915.89843-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -70,25 +60,18 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEi9KxqQr-pWNJHs@kbusch-mbp>
+In-Reply-To: <20250611005915.89843-1-dlemoal@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jun 10, 2025 at 05:18:03PM -0600, Keith Busch wrote:
-> @@ -124,9 +124,10 @@ static struct bio *bio_submit_split(struct bio *bio, int split_sectors)
->  		trace_block_split(split, bio->bi_iter.bi_sector);
->  		WARN_ON_ONCE(bio_zone_write_plugging(bio));
->  		submit_bio_noacct(bio);
-> -		return split;
-> +		bio = split;
->  	}
->  
-> +	blk_crypto_bio_prep(&bio);
+On Wed, Jun 11, 2025 at 09:59:15AM +0900, Damien Le Moal wrote:
+> When blk_zone_write_plug_bio_endio() is called for a regular write BIO
+> used to emulate a zone append operation, that is, a BIO flagged with
+> BIO_EMULATES_ZONE_APPEND, the BIO operation code is restored to the
+> original REQ_OP_ZONE_APPEND but the BIO_EMULATES_ZONE_APPEND flag is not
+> cleared. Clear it to fully return the BIO to its orginal definition.
 
-Eh, this part needs to handle the error condition:
+Looks good:
 
-+	if (!blk_crypto_bio_prep(&bio))
-+		return NULL;
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Happy to make a formal patch out of this if this approach is promising.
-I think it aligns with the spirit of what Christoph was suggesting, at
-least.
 
