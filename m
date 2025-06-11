@@ -1,116 +1,134 @@
-Return-Path: <linux-block+bounces-22481-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22483-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04310AD55D9
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 14:43:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E92AD5623
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 14:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA2F53A86FD
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 12:43:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C03B175CDE
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 12:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43EC5253F07;
-	Wed, 11 Jun 2025 12:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5DD2836A3;
+	Wed, 11 Jun 2025 12:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="17wG05gP"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3SNeEW8J"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB33528137F
-	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 12:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEB9283CBE
+	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 12:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645803; cv=none; b=RkfRH9qdKDxTAAhhYYk1saw7VUUnF0VNq6b/Gm1pbHEtpN4SUh2xrOuSZtiX11yQ4BLBVPLR3rzvUpm2jiAuB8x5Hq77hvvPaSEtJSy84K6tc39rrghf2Q+sq+F1bkzLJ7Poo6mNLb9MfzNEbmyVGZN81yy62SyqgzDDcMd/Oec=
+	t=1749646620; cv=none; b=f8oU8EvJol46vOfdtc6nFXNQiy/8ZIT7I9dbJH1cIfjyol0IYo13bV471cR06r768Z/f8z9qBcBbAfqcenAoxN0JYD8OWUB548nhn04prF+3gNmZdSdqTetpeZlEC6I8yq2tu6D2n1W2AXpuNJX0cW7Nrz8NuKCzB+y3ze2xqZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645803; c=relaxed/simple;
-	bh=o8xNFzC0DxRG1eAunhW0prT+24qgZ091n32hbtWX9Rw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qFUJqpXc4f2PE58sRgddEap1ip1IGJAmcOMcRx1pzKzDN8Pu0eBv4Om3eF7TUMbY+8OPuuYbti8GCeyaOEedPiXxlL/vBee4fKPkTgXKB5thIqvMXesYCo++DVceZ3fvcX6YSrndKB1fpv5wRdgbmHSh8gqy6AD7MzS/AKhy84Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=17wG05gP; arc=none smtp.client-ip=209.85.166.50
+	s=arc-20240116; t=1749646620; c=relaxed/simple;
+	bh=WFBUbKMMnKHZdjkqyPfepwRYRaY3PMbvKPZrZUg2BWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VE8LcOzFaaQISFiK0iM7IloNM4ncV2WY78cQd9kmWJQxjQayE/RkZHUceZi22XN+Mrow0VnICZUcd8iUiIN4p1eRiNpIb1hIVHosfSEgwHZSEW3VDOoaLtOjZuU4g1cSnq0JCMBv2ytS/N0uRnyvB8kbg9HYQp4WujnzEOAHi7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3SNeEW8J; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-861d7a09c88so190591339f.2
-        for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 05:43:21 -0700 (PDT)
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ddeaad6036so20371325ab.3
+        for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 05:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749645800; x=1750250600; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xgA0CIKoQ7HJrt8cATG9Wf1LVblq6WZfWDSVNDeZAyk=;
-        b=17wG05gPE6FuwyHA3pA/Kb4V80CQGfgNkQcQNID4M8PPz2KTjcih2eDXvCV2I1WkQn
-         mMCG3w5KCveqVPYO786faDESOfDauJVnPDEmSEtIHUa6WprzmK1npwdUZWnMh/iT3o5D
-         bPlFIOeGWMRMFudXccCWHRW71LCtr4ioJ09sWwJg7qls5tsd490nRLPWv19/Ftc5iyiJ
-         uNfYrpwK0nNRR+W1tU3We6u6nB/mAr4QrBwkW3nI4Og7F/WfX8lAB0CLpr54NLhyozPC
-         DhOTeDLkNdftdUpxQiap1Xl726e1jxRid6TjNTttlD2dnhY1mxtPr01HBfKX9XZ+RtTD
-         kUrA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749646617; x=1750251417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BPGWj6XVqoqMlOowKe5NeP45YX5gIMyOrC/TyjewJiI=;
+        b=3SNeEW8JE6h/oz8q6m6QF2ImTL+tlmycebGzUU801zIFrCEDkbol5VveffiMdaCcVr
+         DR4DtdLs0b+1vL/7V92uya5ywuKnyqGYVSg0ovhGxi0LJoY7dxjooMAxjnoIBEzQXMr+
+         qMeCgAww9N0HEgBHk0ug5O3IF+BFEyTe1ylZYv+Y826rZiB61Q2HaxeJnbGKLVKmd7gE
+         Aeg10w+4veLhgu4Nb+O8L6MkAU1TZQkC7AhlyIGuZtpexzE1kEY4l5aPG9Hz/W2teHnY
+         49kehI159q8ArkYpHFN9doyq3ao1juv/h8HlhUTH3p4/xVB/T2oRSBlwS1sUivjQy8Bs
+         7uQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749645800; x=1750250600;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xgA0CIKoQ7HJrt8cATG9Wf1LVblq6WZfWDSVNDeZAyk=;
-        b=RYnUv5HS3bxvj2kloKG8vTxsTBraloQu+V+XqO6pfgQzgXoil/BzQ7AxuA1AlLp1B8
-         e+xJe2DPlNxT/Ujm7AOeH4HmFAU4B3oICSO7UMpYF8qs+oXlYjTuwKy9es8y7pTYCG6D
-         3+3u3IvJvHmRV8w9cSWqDgGQctjNJw6gsOdrJfZjlq6XirNx3sfLWF2je0VzGrmrSxwb
-         PYAoGCsuN0n+3UfGG/NERAEjj57JxlwLvvn3Npq99J+IAFaFY0GgTgb1UPJ2HLAXqQRO
-         Xu/go4LMLBNUNeA4tVd+hxz9brpuFwDEQkJ3AsHQSIHkQVBVXJ7oNyGqxq5/sbOy4Pmh
-         ZErw==
-X-Gm-Message-State: AOJu0YzkW4E6remM7dfUAkXHgeQAuWb14Dq2sLKa4cZsR3LYs/eAJwRF
-	XndpWSlHCWv6oTRUz5QBmBO/31BTFDlSNy7Ggf2Kq2bRn5kY0jB52Tai0ePjPkjlhEmy3dSldKS
-	ZUwi6
-X-Gm-Gg: ASbGncs8BjVLUPPmW36EzvkJQ+YhTX4YKzzO+SomnOaIBBhdARlYuz0YXAY/T6hh6Y7
-	RxU3JFO7Y2KZzFxPyzGzfBdvmLhPkilLBr00Bz3kTddU+28tVSQOOvjXobhbEilgUvegW6svpFm
-	WVXmuztaV1xVdXlweks3cHfhpgwkYMM74He0xXToxnJyNsdrpxfvSFKrI0ExxZUtV9b+1S92A9/
-	I0Nf26ihSKMzB0/mbw2yPlkAZzXmIQEkmnxqQcqGj+R8/bel4KaGBjwV0M6+Z+tXG3BNwFTUxrE
-	IrTeG7WZIwY6EVw45gU9dND5ZetDZkiaLHhR9OelT6IUNqbVA0JyIQ==
-X-Google-Smtp-Source: AGHT+IHiOVYrFqWZcmvZkhB5s2rQX0dzB9+fwhDhtcJqM0ftdjLlLq1TrBmo35pADwKc/QtFp5DGNQ==
-X-Received: by 2002:a05:6602:3a15:b0:864:48ec:c312 with SMTP id ca18e2360f4ac-875bcc0a054mr364354139f.3.1749645800474;
-        Wed, 11 Jun 2025 05:43:20 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875bc585b5asm39495339f.9.2025.06.11.05.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 05:43:19 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250611044416.2351850-1-hch@lst.de>
-References: <20250611044416.2351850-1-hch@lst.de>
-Subject: Re: [PATCH] block: don't use submit_bio_noacct_nocheck in
- blk_zone_wplug_bio_work
-Message-Id: <174964579922.357731.17911835098022083800.b4-ty@kernel.dk>
-Date: Wed, 11 Jun 2025 06:43:19 -0600
+        d=1e100.net; s=20230601; t=1749646617; x=1750251417;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BPGWj6XVqoqMlOowKe5NeP45YX5gIMyOrC/TyjewJiI=;
+        b=MQzCM2hPtWnNdizNYLU98mPosTFXvEmhhJkdejPJkUUaAGO1ArtDndI4tGE0Qs4/o9
+         1rK20NuI4qBu3UGgIKwP5Q5W/924ibI9pRLHUOh1/g+V4UAzVCztUCIF+r8IqYNJy2Vy
+         XrkfdBleND/+fTl9mxNc9da75Nlqa1gbWjW+dY6iIR2ghQx/OgBItfZxEF6klYgon+9t
+         NJiKhZCR4hQxSuzWmlDkgtaPFJVr9ND6pWdS0lNEvLLs7tw7lZNXThWcDK/kpr2wQOTY
+         ncmUwbYdblkA3pfWxPbDdPbZ9hHkD33bPgqDQiP2/V7EYDjk0L6FTaCLHEdpxlI7qLlD
+         OHxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUscOl3abaQKqHwGmXtWyX3IbNgOEwsci1ehhvbzUTOUk08qxVE99YJtC4ErReWeRTDH+356cJdP0aSWw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGEXlZ5Tn51hUl3gmbJEz+XRSub0GjJGqqOxn7ICXlFrBTLH/C
+	QyY7inWVMQ3+x3EdR6ugln/O/6D4EFycB8enQerFvEkEDjSWbwFKu8OQIWqJ7MWG1/g=
+X-Gm-Gg: ASbGncs93rOcqsllu8p7mRcdZOQYLGjtG1cpNfpBKIrcTgDOIGDvNQkqJ0OSlmtDAz+
+	sWexf9kM2/yBqdXUmJwNAb9rqwUJMz+QwBXzG91lzznuy9ejZraTuLip6tES02GMSLUqxFkzVOP
+	CJbXc+RttwvQoy6LuOJJyJQw1dfAeaqIvhzEwMCsMl45hTGl7x8jMUM6AvNseqgFgxPBZS0LgS2
+	4yfM/Pop1tgCRzNH1BpoUT3aYVG8fBHqgb4oZwiYVWl3RtD6gNXD79/vp4hszE1SdQNBYnZmeKv
+	amy9c3xBtDfS+4twsD9orslns6WoHxf8mEGlcFhwCTJrIS+fwM5dPQV8HM6oEVuLcr9qQw==
+X-Google-Smtp-Source: AGHT+IERz9UEhN3gPoO6s9ZO+TGganlwoJirBS1zd34gle1XGHdmdK7NOLrIX/f0q//+H5iwkCSLYQ==
+X-Received: by 2002:a05:6e02:12e8:b0:3d9:668c:a702 with SMTP id e9e14a558f8ab-3ddf4d5d68emr25015895ab.9.1749646617386;
+        Wed, 11 Jun 2025 05:56:57 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ddf4768c0dsm3851505ab.55.2025.06.11.05.56.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 05:56:56 -0700 (PDT)
+Message-ID: <ed33ffb7-31bf-490c-b1ae-304a6e4b9a0f@kernel.dk>
+Date: Wed, 11 Jun 2025 06:56:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "block: don't reorder requests in
+ blk_add_rq_to_plug"
+To: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+Cc: stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
+ Hagar Hemdan <hagarhem@amazon.com>, Shaoying Xu <shaoyi@amazon.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-nvme@lists.infradead.org
+References: <20250611121626.7252-1-abuehaze@amazon.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250611121626.7252-1-abuehaze@amazon.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
 
-
-On Wed, 11 Jun 2025 06:44:16 +0200, Christoph Hellwig wrote:
-> Bios queued up in the zone write plug have already gone through all all
-> preparation in the submit_bio path, including the freeze protection.
+On 6/11/25 6:14 AM, Hazem Mohamed Abuelfotoh wrote:
+> This reverts commit e70c301faece15b618e54b613b1fd6ece3dd05b4.
 > 
-> Submitting them through submit_bio_noacct_nocheck duplicates the work
-> and can can cause deadlocks when freezing a queue with pending bio
-> write plugs.
-> 
-> [...]
+> Commit <e70c301faece> ("block: don't reorder requests in
+> blk_add_rq_to_plug") reversed how requests are stored in the blk_plug
+> list, this had significant impact on bio merging with requests exist on
+> the plug list. This impact has been reported in [1] and could easily be
+> reproducible using 4k randwrite fio benchmark on an NVME based SSD without
+> having any filesystem on the disk.
 
-Applied, thanks!
+Rather than revert this commit, why not just attempt a tail merge?
+Something ala this, totally untested.
 
-[1/1] block: don't use submit_bio_noacct_nocheck in blk_zone_wplug_bio_work
-      commit: cf625013d8741c01407bbb4a60c111b61b9fa69d
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 3af1d284add5..708ded67d52a 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -998,6 +998,10 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+ 	if (!plug || rq_list_empty(&plug->mq_list))
+ 		return false;
+ 
++	rq = plug->mq_list.tail;
++	if (rq->q == q)
++		return blk_attempt_bio_merge(q, rq, bio, nr_segs, false) == BIO_MERGE_OK;
++
+ 	rq_list_for_each(&plug->mq_list, rq) {
+ 		if (rq->q == q) {
+ 			if (blk_attempt_bio_merge(q, rq, bio, nr_segs, false) ==
 
-Best regards,
 -- 
 Jens Axboe
-
-
-
 
