@@ -1,86 +1,84 @@
-Return-Path: <linux-block+bounces-22480-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22482-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC4D4AD55D7
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 14:43:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E147AD55D8
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 14:43:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A161D1BC2C62
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 12:43:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76ECA1BC3485
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 12:43:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F5826B2C5;
-	Wed, 11 Jun 2025 12:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440F52820D7;
+	Wed, 11 Jun 2025 12:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vhA1rSs6"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="E1O7RAHC"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CE7253F07
-	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 12:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B57327C844
+	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 12:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645801; cv=none; b=CLL3ha1qQI3JotZX9Q8FnAcMprrqpm3gwYi8P3QegVK8SSUZ+cOmMUV7wafJQFaH7Qn9ZKr5kEV32o+2qPAqKA2X3l7Er5Rd4ocTEevySezH+oCc53BOvjkeAYJLogCbrH1BkxjvWyp80yZFR9kDgMnCJx/I3R8tD3MYXdZ4nAw=
+	t=1749645803; cv=none; b=lIfW0lGMjQeJ8qIKSLIl8fRLRjq1xZKjM/IJWq6UbIJK64khgg80hM47KfwiAhNsl67IsB14X38z1wvdc7zXq5Z9ZxI3RjgppY00cZ1MwNbjKM0i8WsydXKHCKSOf2W3xQQxaYtc3mbN2CMR6CgBiqBWkd1lEr6sExzAwJ4pCzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645801; c=relaxed/simple;
-	bh=Qb49olggyQSGwe+gfR2s9cZz3PYjlRj1zSFaElICUVU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rZxo7J62+/IkBbWzYdOMw9vyBILLnOESmOO3S4Fl2Nyi6sd7CdwPrjMnmB6D4BpSkuf9ntIh0ba6HWBz3+EtCA5oURlIOc83gdKh4uhm3//8wxGWJw0tedBEZ+axZIHotaMPBxzZ5NleCpaVmaD/Vi7TZDWax4xh8J+us/ATHSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vhA1rSs6; arc=none smtp.client-ip=209.85.166.46
+	s=arc-20240116; t=1749645803; c=relaxed/simple;
+	bh=HMWIo1UEXBaeGjWOALUSZJVehj7RFUAIWEhwQr/NAkY=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uZsV3hl3aIUgzxY+jtv5aXubyJcaC+y2YbdlpwqHZspTlNISQI1MkQFUKO3S2dWSau9GjqgaAC/Z3xH/ZWUn9d/ppJE61h6P/FYdsrzFPpw1TY2owGak10wrvuAGdEOwQVyBRQ3avX1flnVXek/Lmelkp7FmQw8FQzK6IHfIZgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=E1O7RAHC; arc=none smtp.client-ip=209.85.166.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-86a464849c2so32663539f.1
-        for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 05:43:18 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-86a55400913so197289739f.1
+        for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 05:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749645798; x=1750250598; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749645799; x=1750250599; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OKST6mGBSX61d2XIjdEN2F4ir22rk8694pIyQhw5jhY=;
-        b=vhA1rSs6WW5t1Q2pO1TExUApce15s08fGJl6lDS8ufbpCMthO3NbIJoOOV8Hkyk6fr
-         jsEfOpywpa8y9/UYoj5PSlUh7ir/Uct1ITiRMHNFeMXlC7xqyWCiVzlPFFPxo6usqi8g
-         1Y4gJV0i6xsv8wECfRE5Uq9X3MPTB3MUGqqwtyMtlLiO8LXqu6dZCweuWJXYTiBkwuwM
-         16hQR+LRAw6h8pnQJLAQkfm6tu9Y8IEfhkCqi8OFME7YiEXvX9BCUNVWqEA5nBnmLLDc
-         P0F+nkTn+O6VL6FAYB8zR47Qh/Ca7dHr1f+2s0iTsRva9Dq5VZrIZ2XCHnyIg7XMe0P4
-         L4HQ==
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3NM2FJzuzLwO+DRLM8d7gXDFxIqBQHSBWJJdeuI9cK0=;
+        b=E1O7RAHCac9hqUgGKw5vR2R9Lz251lPOUy/7+JFe8us2rUbVxbF92ocsNhQuj7WVZr
+         1dMyvBANtc3+vCTX2VAEqbBs59BVxsTvQ+AgVY+K1o5iXVGEXIk44KMUdmN3ul5Yco0f
+         dY5uTS92B9idpZMR8j7ANcLRte+QTSGuWotwZ4HDzaObaGNFbp0/9O6pCGAj+D3+W00t
+         hp5phyMmO/OIBC7+LQ/SgWzj6zT/FF0lEySXV1PHD8lrHEZXhLZmQGZTGVXLai/TYbqH
+         RpV90NPtp4AGeQCtwi+ReJfXtQIZiSFuTseHAcw8m28XZSiXS7mfS3Nd3YkUfbb8T6ce
+         QNFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749645798; x=1750250598;
+        d=1e100.net; s=20230601; t=1749645799; x=1750250599;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OKST6mGBSX61d2XIjdEN2F4ir22rk8694pIyQhw5jhY=;
-        b=FSDCqeegWi57uQ+EFldNpYqdxUDlaLmzFKm6hE950Cw2LTDk5VB7lsBCrPii52Ok32
-         cHHhxmxUO3GkwjaxLW8jbxkz0XP0eE5+w1s17yt4eqRSIyBrzAWUH4KJuyKEA8Dbxbhe
-         qRxnJGil2AsSdv8I+AmuTHXkcsXixAurTefJylwa2XYEK/ZNfrFRTKSYPh3kF6dPMN5t
-         nE2tucj9WdSS1nS7sgiKQ0MO2CfrN5pVoqtbhB4/AZfXTFRyBD9TxwTPkLfW8XlYEPaa
-         3fd4wKhBqbVmc/vGRwIojnJ0D8DN6jzSoZcbNWTSrAtLr1KRYJw17gWtH7BcB8tY6bv3
-         wRtQ==
-X-Gm-Message-State: AOJu0YzghOK4IggdZHnrEFvd8kJR2keDZZV1P951fhTx3TCJ139DjNrS
-	Zwu/A4DiL2XfZcAS+c67bHaYjRlU4hmKaQFk/Uqvxwoo7jRE3sqEWg58IjrN3brb2og=
-X-Gm-Gg: ASbGnctMpTeROrr85IvvmghRI/mStE5AHMQEBmx3EmPdRQEp7I08FTaSSOsWv6U7xbX
-	N893JmGM+GOed6lTOw0lhqReCmvZteF4TIs9Hk7ynGOBIMeeLaJxpaBzta/IconPSxT5rATlgxj
-	37YNAbv1QZC0pKfdysMUx2gpxuD1SBF1URgy1SSJ4AYCCei7e2zZvw5HsgoY9zqPIfTeFqRD43t
-	qRPk8gt9WCKQX5CvDdr4YiRAW/CXBphgZZACs53+6WkYLzrfzSAGrMBNwWCPpc1bSBIfWbNM/JY
-	7y0YTslUqZyb8zvWPB2+Yr49x0JTOYCKtmJY+EdSojd8WBrYvwVv9zZZWUFoKRrd
-X-Google-Smtp-Source: AGHT+IGEFFIZZB2SjW05LCL4UJbP4iW0o3uz/hn/jRd7eS7kJdbkZcCkbCKCmRXG0OWfRquLli+wgw==
-X-Received: by 2002:a05:6602:3e81:b0:867:16f4:5254 with SMTP id ca18e2360f4ac-875bc117836mr448738739f.6.1749645797858;
-        Wed, 11 Jun 2025 05:43:17 -0700 (PDT)
+        bh=3NM2FJzuzLwO+DRLM8d7gXDFxIqBQHSBWJJdeuI9cK0=;
+        b=Ov9TckfLjToVhL/kWSDPUdIUh5bZwbOsAAHJdmotELfNP+HOj/2aRM4IfymfXLZYA8
+         BHX5PFm9fsFdd9QY10YnMGH5begGRWLOkMS3zCMBhA4jRen50tS72B7AUAg+iviYbBaR
+         UKLPDt3XtnQXm1abq6guK4whN8NDZ+PxK6NDipoxv/e5tsRF4OZkAYTBLO+hgUJD1iQg
+         ew52ABcTkHbdDCtRd0vE+xJob1sUpfHxwwpwXdezuAi1NkFEEi6b99EyuaANZ+ZvH2lu
+         q1NSUEq7zAqsagRd/BM6sbj0ADRKYvK/6nsSTlsX8hMHM8cib9zJ+eTA/B4szDZTfCxv
+         +zJQ==
+X-Gm-Message-State: AOJu0YzpElj9EJ1vIC68sKBoppOg0MSvPn8vY3JmQLXXFbYgOyGzrUtl
+	Lkd1Ydo+xgSnwkEsqw17u2NZEFKsqGw9t4nkNuX0zJhK50JdpvYlVlU/otyYj659knI=
+X-Gm-Gg: ASbGncucyUPCqGt/asUfc8OE5z9BmKTjMzpkoyA5maB8lX1wx3xTO1YkgHdtAeZVe33
+	ctH70z9tD5BiHM2dtS8c8ncNindGFRv03YVVU/ovCG+juB7HqeskCNy0Dk1lwNK2zlsG+k30NEg
+	ejSbMsWbctEbT7fPRkjd7sP1jjcW++AE324on4dOWZ3rQ5wArDZN8gMQdmSiTc5BPuTGA1sbE9y
+	EgumlTXCCr1CdWgotkAoSO6ttMrxwmSlIQFgwx4VFZ9RvLrsePDnNjrZe5KtfCgOnpGlcT52A/o
+	dcfL8GOb4bIE0xToezhdI2C3ZVNI/Rxc9b9DewK4VIWWEj1CGMcf8w==
+X-Google-Smtp-Source: AGHT+IH0l0aqdELN4rvNCek1RNUKcGS00jNgO/4RI/iF4Fu2jJ0qPivYgDbcp+ZDeYHlpIi49jSigw==
+X-Received: by 2002:a05:6602:7217:b0:874:e108:8e3a with SMTP id ca18e2360f4ac-875bccd0389mr306985639f.12.1749645799120;
+        Wed, 11 Jun 2025 05:43:19 -0700 (PDT)
 Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875bc585b5asm39495339f.9.2025.06.11.05.43.16
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875bc585b5asm39495339f.9.2025.06.11.05.43.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 05:43:16 -0700 (PDT)
+        Wed, 11 Jun 2025 05:43:18 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-Cc: Uday Shankar <ushankar@purestorage.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-In-Reply-To: <20250611085632.109719-1-ming.lei@redhat.com>
-References: <20250611085632.109719-1-ming.lei@redhat.com>
-Subject: Re: [PATCH V2] ublk: document auto buffer
- registration(UBLK_F_AUTO_BUF_REG)
-Message-Id: <174964579654.357731.17455696249327428608.b4-ty@kernel.dk>
-Date: Wed, 11 Jun 2025 06:43:16 -0600
+To: linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
+In-Reply-To: <20250611005915.89843-1-dlemoal@kernel.org>
+References: <20250611005915.89843-1-dlemoal@kernel.org>
+Subject: Re: [PATCH] block: Clear BIO_EMULATES_ZONE_APPEND flag on BIO
+ completion
+Message-Id: <174964579798.357731.8612552058431184719.b4-ty@kernel.dk>
+Date: Wed, 11 Jun 2025 06:43:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -92,15 +90,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3-dev-7b9b9
 
 
-On Wed, 11 Jun 2025 16:56:32 +0800, Ming Lei wrote:
-> Document recently merged feature auto buffer registration(UBLK_F_AUTO_BUF_REG).
+On Wed, 11 Jun 2025 09:59:15 +0900, Damien Le Moal wrote:
+> When blk_zone_write_plug_bio_endio() is called for a regular write BIO
+> used to emulate a zone append operation, that is, a BIO flagged with
+> BIO_EMULATES_ZONE_APPEND, the BIO operation code is restored to the
+> original REQ_OP_ZONE_APPEND but the BIO_EMULATES_ZONE_APPEND flag is not
+> cleared. Clear it to fully return the BIO to its orginal definition.
 > 
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] ublk: document auto buffer registration(UBLK_F_AUTO_BUF_REG)
-      commit: ff20c516485efbeb5c32bcb6aa5a24f73774185b
+[1/1] block: Clear BIO_EMULATES_ZONE_APPEND flag on BIO completion
+      commit: f705d33c2f0353039d03e5d6f18f70467d86080e
 
 Best regards,
 -- 
