@@ -1,102 +1,101 @@
-Return-Path: <linux-block+bounces-22504-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22507-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B3DAD5C12
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 18:26:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E7F2AD5CC8
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 19:02:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D73A11E1DD9
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 16:26:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28A5F1BC28FF
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 17:02:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E6081EB5FE;
-	Wed, 11 Jun 2025 16:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2407080E;
+	Wed, 11 Jun 2025 17:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1tcDAkU"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="qA1yO38m"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0221E8358
-	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 16:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7B95D8F0
+	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 17:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659167; cv=none; b=JHYAm8SFNnxCXwG/vvg7s19cqurB9Qd/FS0c1bSrH/py1RT+NCMQ6iO1UOB3g7DlG1j4gHI66Jhzt+mdBa9dKo9zLxLynOZcwBpJiiiLvZVpQtoGlCuU/DrN49wItsmNNGHWJCXiQjHZx0IE8Wb8amJsG2MIOpzx+jedxhr+9Rw=
+	t=1749661316; cv=none; b=Rddj6Cxs9DQnd5UetdO1YLb3B5W210mYjOXc2mZFkD0UgtUvr0nZsOA6nV7bPdePVHjrIXenR5kVyo1EUwPlMaYqjJwvuPiWwYCMXOdD8lYJk+uz/pD+s0ymi6b3GKpiIENQnNUEjeuih0+V7/Bus4Z8yXE8AWQTHB6Zh61xEbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659167; c=relaxed/simple;
-	bh=fKCue/QRAGLJEvsZ48ApXivr3PElq2mFF2q18ziSqeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wsc6aXWqivHLp3u51yoATjfT/S/AndLL8vsn2vsIhW7FJJerYdRG1F14b58UYgtLV//n5d2a3svQ4Wy7Tb6+kH1cEzVxe35dJdaMZGRnme45ycOqocT5tRM4/ZA89Mzb4PvEmHRg7ZKVLWhSQzM0nrIvHG5idjWoMl86b8KCGrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1tcDAkU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F112C4CEE3;
-	Wed, 11 Jun 2025 16:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749659166;
-	bh=fKCue/QRAGLJEvsZ48ApXivr3PElq2mFF2q18ziSqeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C1tcDAkUdPJ8BLQiFMQqrOoJlInDmXRG40dxIRDrTuna8Wm1UOs9VNUZpdTo62mm7
-	 4P3xKc01nGq35CE11qepOwBQ8aKO/lTo2C/7NqmB2Ww+y0u/m7Eefp39KlxyqNAff9
-	 H/pE8vi6X5NliSRGC/GbaYZiB/CGFHnyIIW2L7VlAJVbwsnezI+hm3u/2eLeg2ekTq
-	 niJrrHie2h1T3B2kl17ZTHlYSXZG0IC6ko99lFj8FiLBbeNf9d3butB94yhsLi6C7x
-	 Qx9ihtcZbnXBFyCO+WRqUZytAZdw6AVAdWVEchGJz9rb4JkM9MfpWpj5AtifJ3XE//
-	 YVuR0+ywOsypw==
-Date: Wed, 11 Jun 2025 10:26:03 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Nitesh Shetty <nj.shetty@samsung.com>,
-	Logan Gunthorpe <logang@deltatee.com>, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 1/9] block: don't merge different kinds of P2P transfers
- in a single bio
-Message-ID: <aEmuG1dUDGuci7VW@kbusch-mbp>
-References: <20250610050713.2046316-1-hch@lst.de>
- <20250610050713.2046316-2-hch@lst.de>
- <aEhROl2D89kFX8C7@kbusch-mbp>
- <20250611034316.GA2869@lst.de>
+	s=arc-20240116; t=1749661316; c=relaxed/simple;
+	bh=EQVL6mtiNDFLqPuKIgSWuOnvbVGk5OJefxbsS+/tAkA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=KJ6Q5MWONRwZgmy0syVrqjn+8VaXPZdAWt4unzlc5rPPecrCMu4U9JPlGsbZEWc3/w9Un5T04/p+ytPxH420HpmSDuIGbhQKdRXb8Pe0Of1QyLNWGOEEdLq2BBno2b77mxnXg+Io+ON8RNv1nyQYS3GD6c/gs4Yq2rYnpQTBzCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=qA1yO38m; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=d6RRXHeZcPSRBj4idKDgkfQLTnwNHZAN9clsm2b0XBc=; b=qA1yO38mRxRbd4xGT6v0KcmgiE
+	yUggBfZsHYzsbbrfDTIdjp9i2563S6AdusD6x6Vz5zhROHeYvKa/oNs9yllM5JQxUUPSxZYfbc371
+	bdZKwShl1xQddBJSpC9203LiPiEmJ0or+PrBXAk+vVcZuFWemwkUR7tIwHtX9ANxeM13cYz5dNEpr
+	8xVokJx5EA906S9iTmmRqr5vEXLdcV/WIcUqleq7VpXT/NMQijqpI1Zp+HHYV18/DVRljQZWeCAnP
+	4VGOZWSFWWu3mZh8uNs/WMunTRBZNRqdHaJE5/nt27nxRgZBV3FNTsImgju1/C7ZCQ4eDuRYVZkGk
+	DjgQtyGg==;
+Received: from d172-219-145-75.abhsia.telus.net ([172.219.145.75] helo=[192.168.11.155])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1uPOUF-007hgw-2c;
+	Wed, 11 Jun 2025 10:39:38 -0600
+Message-ID: <5cddbda3-02bd-4dc1-9f7f-197279da6279@deltatee.com>
+Date: Wed, 11 Jun 2025 10:39:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611034316.GA2869@lst.de>
+User-Agent: Mozilla Thunderbird
+To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, Kanchan Joshi <joshi.k@samsung.com>,
+ Leon Romanovsky <leon@kernel.org>, Nitesh Shetty <nj.shetty@samsung.com>,
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+References: <20250610050713.2046316-1-hch@lst.de>
+ <20250610050713.2046316-2-hch@lst.de> <aEhROl2D89kFX8C7@kbusch-mbp>
+ <20250611034316.GA2869@lst.de> <aEmuG1dUDGuci7VW@kbusch-mbp>
+Content-Language: en-US
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <aEmuG1dUDGuci7VW@kbusch-mbp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.219.145.75
+X-SA-Exim-Rcpt-To: kbusch@kernel.org, hch@lst.de, axboe@kernel.dk, sagi@grimberg.me, kch@nvidia.com, joshi.k@samsung.com, leon@kernel.org, nj.shetty@samsung.com, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH 1/9] block: don't merge different kinds of P2P transfers
+ in a single bio
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Wed, Jun 11, 2025 at 05:43:16AM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 10, 2025 at 09:37:30AM -0600, Keith Busch wrote:
-> > I may be out of the loop here. Is this an optimization to make something
-> > easier for the DMA layer?
-> 
-> Yes.  P2P that is based on a bus address (i.e. using a switch) uses
-> a completely different way to DMA MAP than the normal IOMMU or
-> direct mapping.  So the optimization of collapsing all host physical
-> addresses into an iova can't work once it is present.
-> 
-> > I don't think there's any fundamental reason
-> > why devices like nvme couldn't handle a command that uses memory mixed
-> > among multiple devices and/or host memory, at least.
-> 
-> Sure, devices don't even see if an IOVA is P2P or not, this is all
-> host side.
 
-Sorry for my ignorant questions here, but I'm not sure how this setup
-(P2P transactions with switches and IOMMU enabled) actually works and
-would like to understand better.
 
-If I recall correctly, the PCIe ACS features will default redirect
-everything up to the root-complex when you have the IOMMU on. A device
-can set its memory request TLP's Address Type field to have the switch
-direct the transaction directly to a peer device instead, but how does
-the nvme device know how to set the it memory request's AT field?
-There's nothing that says a command's addresses are untranslated IOVAs
-vs translated peer addresses, right?  Lacking some mechanism to specify
-what kind of address the nvme controller is dealing with, wouldn't you
-be forced to map peer addresses with the IOMMU, having P2P transactions
-make a round trip through it only using mapped IOVAs?
+On 2025-06-11 10:26, Keith Busch wrote:
+> If I recall correctly, the PCIe ACS features will default redirect
+> everything up to the root-complex when you have the IOMMU on. A device
+> can set its memory request TLP's Address Type field to have the switch
+> direct the transaction directly to a peer device instead, but how does
+> the nvme device know how to set the it memory request's AT field?
+> There's nothing that says a command's addresses are untranslated IOVAs
+> vs translated peer addresses, right?  Lacking some mechanism to specify
+> what kind of address the nvme controller is dealing with, wouldn't you
+> be forced to map peer addresses with the IOMMU, having P2P transactions
+> make a round trip through it only using mapped IOVAs?
+
+That is all correct. In order to use P2P on a switch, with the IOMMU
+enabled, it is currently required to disable ACS for the devices in
+question. This is done with the command line parameter disable_acs_redir
+or config_acs.
+
+Logan
+
 
