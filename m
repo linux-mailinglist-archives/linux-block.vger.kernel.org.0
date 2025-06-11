@@ -1,101 +1,95 @@
-Return-Path: <linux-block+bounces-22507-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22505-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E7F2AD5CC8
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 19:02:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABBD4AD5C7E
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 18:41:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28A5F1BC28FF
-	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 17:02:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E699717442F
+	for <lists+linux-block@lfdr.de>; Wed, 11 Jun 2025 16:41:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2407080E;
-	Wed, 11 Jun 2025 17:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12277202F9A;
+	Wed, 11 Jun 2025 16:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="qA1yO38m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6ci2n/C"
 X-Original-To: linux-block@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7B95D8F0
-	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 17:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F62202981
+	for <linux-block@vger.kernel.org>; Wed, 11 Jun 2025 16:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749661316; cv=none; b=Rddj6Cxs9DQnd5UetdO1YLb3B5W210mYjOXc2mZFkD0UgtUvr0nZsOA6nV7bPdePVHjrIXenR5kVyo1EUwPlMaYqjJwvuPiWwYCMXOdD8lYJk+uz/pD+s0ymi6b3GKpiIENQnNUEjeuih0+V7/Bus4Z8yXE8AWQTHB6Zh61xEbo=
+	t=1749660068; cv=none; b=FHq8l6LrDPVGKFPxRdxluAkWQmJ6QV+USf0BAgMN/Lay5/OLsBz1FAhDgf15lhXNyE+WXOQzu/IjS0Irmo7XEDoiJIyfVx36hbl0btZMlrlNrU8i3iTwl3txkMkRmflzyDYDVG9mT0H5DVqUOB2hTT2s1x2TFv383YtxPkXvq28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749661316; c=relaxed/simple;
-	bh=EQVL6mtiNDFLqPuKIgSWuOnvbVGk5OJefxbsS+/tAkA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=KJ6Q5MWONRwZgmy0syVrqjn+8VaXPZdAWt4unzlc5rPPecrCMu4U9JPlGsbZEWc3/w9Un5T04/p+ytPxH420HpmSDuIGbhQKdRXb8Pe0Of1QyLNWGOEEdLq2BBno2b77mxnXg+Io+ON8RNv1nyQYS3GD6c/gs4Yq2rYnpQTBzCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=qA1yO38m; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=d6RRXHeZcPSRBj4idKDgkfQLTnwNHZAN9clsm2b0XBc=; b=qA1yO38mRxRbd4xGT6v0KcmgiE
-	yUggBfZsHYzsbbrfDTIdjp9i2563S6AdusD6x6Vz5zhROHeYvKa/oNs9yllM5JQxUUPSxZYfbc371
-	bdZKwShl1xQddBJSpC9203LiPiEmJ0or+PrBXAk+vVcZuFWemwkUR7tIwHtX9ANxeM13cYz5dNEpr
-	8xVokJx5EA906S9iTmmRqr5vEXLdcV/WIcUqleq7VpXT/NMQijqpI1Zp+HHYV18/DVRljQZWeCAnP
-	4VGOZWSFWWu3mZh8uNs/WMunTRBZNRqdHaJE5/nt27nxRgZBV3FNTsImgju1/C7ZCQ4eDuRYVZkGk
-	DjgQtyGg==;
-Received: from d172-219-145-75.abhsia.telus.net ([172.219.145.75] helo=[192.168.11.155])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1uPOUF-007hgw-2c;
-	Wed, 11 Jun 2025 10:39:38 -0600
-Message-ID: <5cddbda3-02bd-4dc1-9f7f-197279da6279@deltatee.com>
-Date: Wed, 11 Jun 2025 10:39:17 -0600
+	s=arc-20240116; t=1749660068; c=relaxed/simple;
+	bh=jt3O5IPQHNammy3/MrnhUEdQ/0Oy5mhawihvpVMuoyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqLwtJXmoFAUZMvw6ej41B7innPRHIYsFJ9V8hjKyiIFo2+jv55w+rrGVxOi1wz2wNMuumjCynA4Wf2PbYD360GLFhsY4nxHBlIV69RgERwj+5687eLF+3E8cwAHyuhry7mSL01X2bzF7jUA44Zxv17umbYi8J1bUOVLB4x+1w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6ci2n/C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A548BC4CEE3;
+	Wed, 11 Jun 2025 16:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749660066;
+	bh=jt3O5IPQHNammy3/MrnhUEdQ/0Oy5mhawihvpVMuoyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P6ci2n/CZ2HGKJ+ktuqs22I3wHoDuPwE4Uuv1oF86ldfKSPpkZIIN42DWBIqHUWZ3
+	 v4jm68qNpnLzq2fNKdcQvlQ/V4lARwMPAPXoqNVkY9TUNgSSYDmLSR1QM2zXsSc9Go
+	 ax/NNTTrqTny0QKqRYiijnpk8NO4v8SVlntffrzy7J6kiliclqL2H2vAYCzyXaL8pq
+	 Tw2hfaJb7yXml5ff2MK7n8887f+FzS8Nq7pFFg6NHrZS4qvbUzJy00EC1ZvmhnoLz1
+	 Nsr24m7oh1IJHfmGJoRmC83bZdtbMq4CVxwuEcSBfhKhWY0uHF3rROVyXXbKoKISxL
+	 b7iF2y8yMFkRw==
+Date: Wed, 11 Jun 2025 10:41:03 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Nitesh Shetty <nj.shetty@samsung.com>, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 1/9] block: don't merge different kinds of P2P transfers
+ in a single bio
+Message-ID: <aEmxn0K6m34HsZeN@kbusch-mbp>
+References: <20250610050713.2046316-1-hch@lst.de>
+ <20250610050713.2046316-2-hch@lst.de>
+ <aEhROl2D89kFX8C7@kbusch-mbp>
+ <20250611034316.GA2869@lst.de>
+ <aEmuG1dUDGuci7VW@kbusch-mbp>
+ <5cddbda3-02bd-4dc1-9f7f-197279da6279@deltatee.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>, Kanchan Joshi <joshi.k@samsung.com>,
- Leon Romanovsky <leon@kernel.org>, Nitesh Shetty <nj.shetty@samsung.com>,
- linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-References: <20250610050713.2046316-1-hch@lst.de>
- <20250610050713.2046316-2-hch@lst.de> <aEhROl2D89kFX8C7@kbusch-mbp>
- <20250611034316.GA2869@lst.de> <aEmuG1dUDGuci7VW@kbusch-mbp>
-Content-Language: en-US
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <aEmuG1dUDGuci7VW@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.219.145.75
-X-SA-Exim-Rcpt-To: kbusch@kernel.org, hch@lst.de, axboe@kernel.dk, sagi@grimberg.me, kch@nvidia.com, joshi.k@samsung.com, leon@kernel.org, nj.shetty@samsung.com, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 1/9] block: don't merge different kinds of P2P transfers
- in a single bio
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cddbda3-02bd-4dc1-9f7f-197279da6279@deltatee.com>
 
+On Wed, Jun 11, 2025 at 10:39:17AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2025-06-11 10:26, Keith Busch wrote:
+> > If I recall correctly, the PCIe ACS features will default redirect
+> > everything up to the root-complex when you have the IOMMU on. A device
+> > can set its memory request TLP's Address Type field to have the switch
+> > direct the transaction directly to a peer device instead, but how does
+> > the nvme device know how to set the it memory request's AT field?
+> > There's nothing that says a command's addresses are untranslated IOVAs
+> > vs translated peer addresses, right?  Lacking some mechanism to specify
+> > what kind of address the nvme controller is dealing with, wouldn't you
+> > be forced to map peer addresses with the IOMMU, having P2P transactions
+> > make a round trip through it only using mapped IOVAs?
+> 
+> That is all correct. In order to use P2P on a switch, with the IOMMU
+> enabled, it is currently required to disable ACS for the devices in
+> question. This is done with the command line parameter disable_acs_redir
+> or config_acs.
 
-
-On 2025-06-11 10:26, Keith Busch wrote:
-> If I recall correctly, the PCIe ACS features will default redirect
-> everything up to the root-complex when you have the IOMMU on. A device
-> can set its memory request TLP's Address Type field to have the switch
-> direct the transaction directly to a peer device instead, but how does
-> the nvme device know how to set the it memory request's AT field?
-> There's nothing that says a command's addresses are untranslated IOVAs
-> vs translated peer addresses, right?  Lacking some mechanism to specify
-> what kind of address the nvme controller is dealing with, wouldn't you
-> be forced to map peer addresses with the IOMMU, having P2P transactions
-> make a round trip through it only using mapped IOVAs?
-
-That is all correct. In order to use P2P on a switch, with the IOMMU
-enabled, it is currently required to disable ACS for the devices in
-question. This is done with the command line parameter disable_acs_redir
-or config_acs.
-
-Logan
-
+Is there some other mechansim that ensures a host memory mapped IOVA
+doesn't collide with a PCI bus address then?
 
