@@ -1,220 +1,163 @@
-Return-Path: <linux-block+bounces-22628-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22630-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F338AD9BCA
-	for <lists+linux-block@lfdr.de>; Sat, 14 Jun 2025 11:32:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE534AD9CB8
+	for <lists+linux-block@lfdr.de>; Sat, 14 Jun 2025 14:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44A3A189DB1D
-	for <lists+linux-block@lfdr.de>; Sat, 14 Jun 2025 09:32:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCED41896DEC
+	for <lists+linux-block@lfdr.de>; Sat, 14 Jun 2025 12:34:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F72F256C81;
-	Sat, 14 Jun 2025 09:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3BA247296;
+	Sat, 14 Jun 2025 12:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KrIhoaR2"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13C3155CBD;
-	Sat, 14 Jun 2025 09:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CEF22F774
+	for <linux-block@vger.kernel.org>; Sat, 14 Jun 2025 12:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749893509; cv=none; b=GTO9hPFcCoCQEE7Fwd2rpEiJw00yLQIaOobCdoYvvZ2Dk240C9roxiIdwZCNvKHjqLzdHFrn4tx/UrzvuFIhRujSSgySX+rAQu2EiEjhg7NBhtkM1u5o0Kk0/zyxflV6mbPN5Gu2a6p9b5qpr0yyQqHpU1HrW8v5G282sLLtVQs=
+	t=1749904480; cv=none; b=Z1hYpFBquBpTYr8KU1qFwnFldDFoIGtkUrd0wzY9R2ByFjlPFPX2Yl+11CxOC7XJ73et96p1gDGqweKtEvpk/DCxk4nU6udEG4yibfi7Rftd/2km/uO9Z1j/0VnBVzyXCJQUqXL+NkFSAo3zPn1rMsSidWoJdjxxrunVxmiBI7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749893509; c=relaxed/simple;
-	bh=m157EbdqaysdWSxG7epQ+w2dupFLoeJrQFDqv9WR4ww=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s8YK7mzduUhILdOnSr98HDEwSI/mVOozIbJ6IEM9o/ulp4VcHCmnCZbCKECczACbVL2y0WQg+tg5+DFx5dg0w3cVMWtwob9Td3MlkPj0d9c0MHCtqIKfoHL6RO39RQZC19MuDJa48+zAlm65kGsXBQfl5sJQrckwEUPQi6lwWCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bK9y95WlrzYQvP4;
-	Sat, 14 Jun 2025 17:31:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B95C51A17A7;
-	Sat, 14 Jun 2025 17:31:44 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAni19zQU1oHxfvPQ--.9099S9;
-	Sat, 14 Jun 2025 17:31:44 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: ming.lei@redhat.com,
-	yukuai3@huawei.com,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH RFC v2 5/5] blk-mq-sched: support request batch dispatching for sq elevator
-Date: Sat, 14 Jun 2025 17:25:28 +0800
-Message-Id: <20250614092528.2352680-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
-References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1749904480; c=relaxed/simple;
+	bh=VX+XtAT+jJ5S1upOUHmx7SZIs/72FUPcgQNwsRDMXuU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=aigj5nkicQ0WpDp4q73RTWjGq7z9rROVTLBh09vj0px5YwpOvUqApkpvsHqzKuo2paqa0Oi1jUNTgY+wYV9qmdYPlR72DAQDrpv5n9UeWGJagMrJrct1fssdkmAr57UKj6UDRubs6j1k/SCxVwT10dcr+WaJ6Uc0vHL38chwobU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KrIhoaR2; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ddd68aeb4fso26388425ab.2
+        for <linux-block@vger.kernel.org>; Sat, 14 Jun 2025 05:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749904476; x=1750509276; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6SywJsvbggTSjCIuisg1ArgoQy9nJ3XfLIWVK/3VWyM=;
+        b=KrIhoaR2i8fXct+2uisTb+ik5kwRya2u0magg0z3VSYogiVv29NWMnGleDp8fURPkn
+         u4E/B9lNcwVf4JzKHxW5DxJraoAMf1GGp8oPHz5CFE3Bsi2a/fCbaG83/DysAP9UIYtN
+         IVuCIGokymgsNULMKEVuCUoPub8uPzY81CLLuBkkTXtID4qGhtpLIaSiCPtKd3YxKpbz
+         7G5f+nQxsJTjXiY5GEQeFz7tEoJSjUia6mViGu+vN5kiXdJc2163P2XRQShtewXl7gh4
+         bnw8o1cApnzuWGIaTvt1ySpUguvRLTGBmdS58JEIRuKIdPDni7PNHr/oPlhFbMmOV24c
+         S4vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749904476; x=1750509276;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6SywJsvbggTSjCIuisg1ArgoQy9nJ3XfLIWVK/3VWyM=;
+        b=oxmw4yFhmkc9d5sNdice5ya9s6NQwyZb+RljnY+/+aRCtT00F4Q5lycrueFfs7HffK
+         jbLfOlq/Lq/JyIHAJPGnt5jY5Tr4K4+uXXlSUbeMM4NvzStwjgV+o1+p/+kik5+O8IMD
+         e/PtvEfQUNhbKx1JgAeIZGm0EbUNWimtzxSI1a/f0hPl5Pp2zAvNOqRZsVEcCSAPFYDK
+         WMg8tI7pCENsC9PDwb4rCJMKVZQG9AdMqp0P8wSV8dwEbyWUH0A+TckwKsOTIT+bGzw8
+         qvLb4s5y9306/iyoWLk2I9e5QkTQdo4He6i9WJBbR3UWBZ/f2X+gOXrOIkkRth5JXmUn
+         MpCw==
+X-Gm-Message-State: AOJu0YwLAmLHglMntCbUTLV3MdyqPhQ97fBNYGhebTy7iAgUxs9RQFZO
+	r8Cyz/qpaeaCLVSFlnwG+88FqL8BZVZEva1Oh6iTsUwfLKBH+ABrU2kvsy4gGMbNEXJPMBGvaP0
+	DzL2C
+X-Gm-Gg: ASbGncu6xPekba/TQXJe6A8KV81Z6MJJoXmUqkBqfA/cdHLKWzoeQJViAWAMTDw3Ict
+	iDbclYMjSFzAxSWUt+WYHMRS5eJtzLb6nUTZ9jLSgm3Sg2YDK9a6rV1GkT3ruJ63mnx0t+Dq/Sv
+	AKbJnzEtoyemAbdn1wsss+37bGrWmhiq6s0XZnZ7bX9pAvTzCMjyW2dngIAHaYL9zAC9+fJKPXN
+	1YggBj9cJHI0fl3Xn7qXGY+CSC+klHzcr+4G15pMoXNPfXXo8zDQwBN2HWezXPNH2f/J9uQreUs
+	n8IHx8IbDuzfnfl935uYAWp/LUd3Qn4xtkBgD+aIRQqXXDlSDj7amSS1w1E=
+X-Google-Smtp-Source: AGHT+IEaiPwwzPHzaWlx/J4m+J2n0HdLLTS4fB5QMCwhJAbpJP+NUrVySeiwZG7is45kNSLn4wY/ww==
+X-Received: by 2002:a05:6e02:154c:b0:3d9:6485:39f0 with SMTP id e9e14a558f8ab-3de07c539d9mr32242745ab.9.1749904475953;
+        Sat, 14 Jun 2025 05:34:35 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149b9e067sm778433173.53.2025.06.14.05.34.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Jun 2025 05:34:35 -0700 (PDT)
+Message-ID: <250c7955-0561-4bd1-9108-b3ff0ad236fe@kernel.dk>
+Date: Sat, 14 Jun 2025 06:34:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni19zQU1oHxfvPQ--.9099S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF45Cr43KrW3tFW3Zr1DJrb_yoW5ur45pF
-	4rGa1YkryqqFnFqFy3Aw47J3W5J3yI9r9rWrW3Kr43JFs7Xrsxt3WrJa4UJF4xJr4rCFsr
-	ur4DWFyDuF1Iva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjfUo73vUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 6.16-rc2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi Linus,
 
-Before this patch, each context will hold a global lock to dispatch one
-request at a time, which introduce intense lock competition:
+A set of fixes that should go into the 6.16-rc2 kernel release. This
+pull request contains:
 
-lock
-ops.dispatch_request
-unlock
+- Fix for a deadlock on queue freeze with zoned writes
 
-Hence support dispatch a batch of requests while holding the lock to
-reduce lock contention.
+- Fix for zoned append emulation
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-mq-sched.c | 55 ++++++++++++++++++++++++++++++++++++++++----
- block/blk-mq.h       | 21 +++++++++++++++++
- 2 files changed, 72 insertions(+), 4 deletions(-)
+- Two bio folio fixes, for sparsemem and for very large folios
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 990d0f19594a..d7cb88c8e8c7 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -101,6 +101,49 @@ static bool elevator_can_dispatch(struct sched_dispatch_ctx *ctx)
- 	return true;
- }
- 
-+static void elevator_dispatch_requests(struct sched_dispatch_ctx *ctx)
-+{
-+	struct request *rq;
-+	int budget_token[BUDGET_TOKEN_BATCH];
-+	int count;
-+	int i;
-+
-+	while (true) {
-+		if (!elevator_can_dispatch(ctx))
-+			return;
-+
-+		count = blk_mq_get_dispatch_budgets(ctx->q, budget_token);
-+		if (count <= 0)
-+			return;
-+
-+		elevator_lock(ctx->e);
-+		for (i = 0; i < count; ++i) {
-+			rq = ctx->e->type->ops.dispatch_request(ctx->hctx);
-+			if (!rq) {
-+				ctx->run_queue = true;
-+				goto err_free_budgets;
-+			}
-+
-+			blk_mq_set_rq_budget_token(rq, budget_token[i]);
-+			list_add_tail(&rq->queuelist, &ctx->rq_list);
-+			ctx->count++;
-+			if (rq->mq_hctx != ctx->hctx)
-+				ctx->multi_hctxs = true;
-+
-+			if (!blk_mq_get_driver_tag(rq)) {
-+				i++;
-+				goto err_free_budgets;
-+			}
-+		}
-+		elevator_unlock(ctx->e);
-+	}
-+
-+err_free_budgets:
-+	elevator_unlock(ctx->e);
-+	for (; i < count; ++i)
-+		blk_mq_put_dispatch_budget(ctx->q, budget_token[i]);
-+}
-+
- static bool elevator_dispatch_one_request(struct sched_dispatch_ctx *ctx)
- {
- 	struct request *rq;
-@@ -202,10 +245,14 @@ static int __blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 	else
- 		max_dispatch = hctx->queue->nr_requests;
- 
--	do {
--		if (!elevator_dispatch_one_request(&ctx))
--			break;
--	} while (ctx.count < max_dispatch);
-+	if (!hctx->dispatch_busy && blk_queue_sq_sched(ctx.q))
-+		elevator_dispatch_requests(&ctx);
-+	else {
-+		do {
-+			if (!elevator_dispatch_one_request(&ctx))
-+				break;
-+		} while (ctx.count < max_dispatch);
-+	}
- 
- 	return elevator_finish_dispatch(&ctx);
- }
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index affb2e14b56e..450c16a07841 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -37,6 +37,7 @@ enum {
- };
- 
- #define BLK_MQ_CPU_WORK_BATCH	(8)
-+#define BUDGET_TOKEN_BATCH	(8)
- 
- typedef unsigned int __bitwise blk_insert_t;
- #define BLK_MQ_INSERT_AT_HEAD		((__force blk_insert_t)0x01)
-@@ -262,6 +263,26 @@ static inline int blk_mq_get_dispatch_budget(struct request_queue *q)
- 	return 0;
- }
- 
-+static inline int blk_mq_get_dispatch_budgets(struct request_queue *q,
-+					      int *budget_token)
-+{
-+	int count = 0;
-+
-+	while (count < BUDGET_TOKEN_BATCH) {
-+		int token = 0;
-+
-+		if (q->mq_ops->get_budget)
-+			token = q->mq_ops->get_budget(q);
-+
-+		if (token < 0)
-+			return count;
-+
-+		budget_token[count++] = token;
-+	}
-+
-+	return count;
-+}
-+
- static inline void blk_mq_set_rq_budget_token(struct request *rq, int token)
- {
- 	if (token < 0)
+- Fix for a performance regression introduced in 6.13 when plug
+  insertion was changed
+
+- Fix for NVMe passthrough handling for polled IO
+
+- Document the ublk auto registration feature
+
+- loop lockdep warning fix
+
+Please pull!
+
+
+The following changes since commit 6f65947a1e684db28b9407ea51927ed5157caf41:
+
+  Merge tag 'nvme-6.16-2025-06-05' of git://git.infradead.org/nvme into block-6.16 (2025-06-05 07:40:38 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux.git tags/block-6.16-20250614
+
+for you to fetch changes up to 9ce6c9875f3e995be5fd720b65835291f8a609b1:
+
+  nvme: always punt polled uring_cmd end_io work to task_work (2025-06-13 15:18:34 -0600)
+
+----------------------------------------------------------------
+block-6.16-20250614
+
+----------------------------------------------------------------
+Bagas Sanjaya (1):
+      Documentation: ublk: Separate UBLK_F_AUTO_BUF_REG fallback behavior sublists
+
+Christoph Hellwig (1):
+      block: don't use submit_bio_noacct_nocheck in blk_zone_wplug_bio_work
+
+Damien Le Moal (1):
+      block: Clear BIO_EMULATES_ZONE_APPEND flag on BIO completion
+
+Jens Axboe (2):
+      block: use plug request list tail for one-shot backmerge attempt
+      nvme: always punt polled uring_cmd end_io work to task_work
+
+Matthew Wilcox (Oracle) (2):
+      bio: Fix bio_first_folio() for SPARSEMEM without VMEMMAP
+      block: Fix bvec_set_folio() for very large folios
+
+Ming Lei (2):
+      loop: move lo_set_size() out of queue freeze
+      ublk: document auto buffer registration(UBLK_F_AUTO_BUF_REG)
+
+ Documentation/block/ublk.rst | 77 ++++++++++++++++++++++++++++++++++++++++++++
+ block/blk-merge.c            | 26 +++++++--------
+ block/blk-zoned.c            |  8 +++--
+ drivers/block/loop.c         | 11 +++----
+ drivers/nvme/host/ioctl.c    | 21 ++++--------
+ include/linux/bio.h          |  2 +-
+ include/linux/bvec.h         |  7 ++--
+ 7 files changed, 114 insertions(+), 38 deletions(-)
+
 -- 
-2.39.2
+Jens Axboe
 
 
