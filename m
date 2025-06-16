@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-22691-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22689-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6AB0ADB1D4
-	for <lists+linux-block@lfdr.de>; Mon, 16 Jun 2025 15:28:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0053ADB1DE
+	for <lists+linux-block@lfdr.de>; Mon, 16 Jun 2025 15:29:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 221C57A1338
-	for <lists+linux-block@lfdr.de>; Mon, 16 Jun 2025 13:27:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 468543B7829
+	for <lists+linux-block@lfdr.de>; Mon, 16 Jun 2025 13:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7986C2F364A;
-	Mon, 16 Jun 2025 13:26:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4699B2ECEB4;
+	Mon, 16 Jun 2025 13:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtBvcjrN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPgCMLga"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5D32F363D;
-	Mon, 16 Jun 2025 13:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196982ECEAD;
+	Mon, 16 Jun 2025 13:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080384; cv=none; b=XALtYd1x49SEYHeAxny0qPq5FXglJozvkIOd68aTQvaKuVGBY6m5JvRoXuc2Ra18llKaMVW+45CjVgVucvojNccxVZgeoNh9E69FuXBzbDcZ+tynArb8seakyQjx2rpg2JxqLDo2zoX5d2Q4OtfmPE2rBvuhZ5rFraCAIk9keWs=
+	t=1750080378; cv=none; b=htocEjOMHkW2vlU/hp1Hj7qAbY2dWgRX432HMXFQkueu+wpZjqLhVIxPrVYawpDCiUX1TiyzdtqImoWwN+Z4yjrDpdJBIDhiuHYs4sZv6ta0CRjU3QxkHMASqQXTUBdIB+tbDGXQAgvZj8xDR24nkR+AT3iXTXDBYegBIAdp4J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080384; c=relaxed/simple;
-	bh=Xy4pDJyFz8OGfWuNES6lZszWTLpneVMuG7SL/mculR4=;
+	s=arc-20240116; t=1750080378; c=relaxed/simple;
+	bh=7kKEIeuBmyNvAHyL84OBtlsy59K5vqkobCWeseIJrWM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kr9kuAWfruVAAQZ8WhQizOYcLoZr7y+GLNlDehZr+5P9nXu6ctOzt0LX3fGzwo3dQNLLQH23vDGGTq5yUkB/10X8pXZbqFU8nOv2tCDNuWD0VOa+cP9feBXpoyWVnRLeh26nmU/lmrfC6Ng/9TrmcpmIzqAT4Uwi8/eKsIxyaZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtBvcjrN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8E2C4CEED;
-	Mon, 16 Jun 2025 13:26:21 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=lRvPixE9lzbUgnKIL3ZwWXSqGLNi7eu7Mw/ldaFZbmfU3hdIm2omJO5k2aOt9UU1t7lx0rCP1ljqbFVVZYEHudPxFq4acuI5KQPJQsRE0pnf0kXiBKAkUT6rVIT01Qq6WsYKIpS0hCeYVGdOwL7aau9by4NL8uT9eAvlwi5n4HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPgCMLga; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1070EC4CEED;
+	Mon, 16 Jun 2025 13:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750080383;
-	bh=Xy4pDJyFz8OGfWuNES6lZszWTLpneVMuG7SL/mculR4=;
+	s=k20201202; t=1750080377;
+	bh=7kKEIeuBmyNvAHyL84OBtlsy59K5vqkobCWeseIJrWM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VtBvcjrNBhyGSteNt40vjNLy/u3qSJpEeoBRQoSHYBkhNq5nbQ4CK9xSOPHZobf+D
-	 xCdzmBbcRgpeHEqVicOx0F6DI4DLXJLwG+xjzv6iP+0ayYpPEURck9XG3XItNPhC+7
-	 BHFfREfiwSFpP9XIteQ1OFHc6Jg2egXRZ8XTb/jemP7dOqHF2gQ+YazPh+qhh5d5+p
-	 8O5GEarGLiqOq4mkQ76KWkFLGkvgfOGkuqN/P0sb+Ju80yU0R5h5ttJ9GUJMqKEs+G
-	 LxbHzdkLJpiqams2ENXeGEoyaWF/p/HRZQKzRST8k7T8FFB2mKu14hVTpVYC4z9QQw
-	 JXz8gM4+uDCig==
+	b=jPgCMLgaC1cj6E4EQkkfulSy6mf13vILeDY5T4XNoZ6V9vKc7EhaQ4jeyExSAjWLc
+	 0MF4XIsQCSFSRERpBtDPImVYAVmd0CjoLoWsrSdRqPgqN+8GagD2+Dqr9H70VWNiRG
+	 9tOLjkyj9spKeYDaUdq3Y2IxB/EQT7osGEeq5PkmKNtvr1eCqIGzJA5vR6LN1CzunM
+	 aBm/RB4fWQ4sgZJXRRkAloAh6XzoXai/y5Ml1eqRrkVfC/td/MiTf36fzlm4j3emCi
+	 Fh8mpA+bXYbYLCiURhGCJ47EFSsIsa7FXPNwUFydggg0pA5ItQsekIGGiDXMv9Xv9r
+	 aJef3LkqNlJJA==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 16 Jun 2025 15:23:53 +0200
-Subject: [PATCH 3/9] rust: block,core: rename `RawWriter` to `BufferWriter`
+Date: Mon, 16 Jun 2025 15:23:54 +0200
+Subject: [PATCH 4/9] rnull: move driver to separate directory
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-rnull-up-v6-16-v1-3-a4168b8e76b2@kernel.org>
+Message-Id: <20250616-rnull-up-v6-16-v1-4-a4168b8e76b2@kernel.org>
 References: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org>
 In-Reply-To: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,150 +64,131 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4734; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=Xy4pDJyFz8OGfWuNES6lZszWTLpneVMuG7SL/mculR4=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoUBsMfSsfIU2x8vir85/W36Zd1c9jT2rWnH4/s
- 3CWw5F33KqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaFAbDAAKCRDhuBo+eShj
- d7EtD/9fnPiUMZOU1FZDKFyILpEcOaP7FCJ7kn1RrBH8mhYofXPV+7f2z71RnHB0h/bM26cNTZz
- g3U6tGu0o6MHuSDqGOHXcWyWl45svJqLep7VQ0zVvWYvjhZtvOjvNa243eBZB2BccOsN3AC5e1I
- qfrsFWbowH8c0lUMbg4ey/S8Hlg/sLbUHZoDVfrUZe6hl12jRRhZ+8hT8X+FXS1x15o8bE0ct/Q
- JR84tq/w9JaKf3jXseI25yGe+It95ZQQoBn+HzPPJQivjcQlUqM7k7Pw23bO8KM1HwKIZhg0FyI
- BN2/7WN1mrzwAvAFUoTQx1v87jSAf6hRAnUPp1fbBHF2n373gPOGpHvw8t3jUGGZ6Kv7NDbXitK
- vdPoJXjhaRdqlhSXN8MT0ORTm6Nf8HkaLxjkW50viGxFxVOLsN3MODxAvanREzNpzPn2T+pBJo8
- g1gNEfeYwvKxM6ON17gTwRJ2z22WZcpfn9QBYzQJlwqctSIUv1yuVXHg6E/XbOoPe9an/4tvfRk
- d24ZJya1C2Al0QGtexJsO6Sl55K0oojp2jowaRJnB8j2noU4kiDxlseEy57u9pMC4LI4ToAD2+h
- 6TmrM0Zj0A6wpm+95yAvIiR6pKLt+d4X2WMZzMvZSat1yJof2pbowMkyvfKFs+YNFMqEHYUIv4W
- xSEODMIUN0a2cCg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3672; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=7kKEIeuBmyNvAHyL84OBtlsy59K5vqkobCWeseIJrWM=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoUBsNuWVooiswOAiBS7iM03o7bREFopLpUcPYw
+ 0RkYsMOHeWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaFAbDQAKCRDhuBo+eShj
+ d+1mEACo74mjrLW2U1XkyKPDe2+32sTt7tbG6qKFDMPh0HCp6TgYQv3zCw6WYhyW00+wS77qoYZ
+ JijdGVyiwCzntQEPxY0bo+GMaE6f3FTenbI7CKPgtDcWhWKsBo7XmkSejEkOdpbCHD7xN+41HJO
+ /iteEgs1/Vxuy1q9EkKZSv+860wfr+X5LtmwqR/mQncbfP1Wls7yK8oyvcLk1bZhGAjJTHf+Ix9
+ dvlzBNOE80c/UdfBqGA+sjuBXfA3QP3nnKJxpKEWmNilfB6NqTQtUdipoNEaKBlaNXO1JMs0Eg9
+ v5nWwbpOueZGjL7HQCetRDBblc2Xi2Fg4Gl7ODgd/VV794KpBMTJfJyCYza4YGNXNOJVJmCaxHn
+ Glg2YSIjsL//y8hwZaPXyvbO09WzPJHl61MuuuuppBGkeBKU/6wM1SNrgRBi3UnX2nUOXsNMzoU
+ fazsjSPuZHkndM/E76t7s/J/3t5ZZOKLEGvC6BwQvHZi5q3rqRjrYsDIkKykfxqavYKLormW3uK
+ A5aw2eId196EaWWF6x2aHsD+IMfRpq+wZSQPUFzS+BBpjxda+N84Cc5vMMiPJ9BTvWZ0HvKTEgK
+ /5SDizKlkf13d11xnTnje4g5SurDCgvHt8AXEEhFT10Yzvn1rJuBTbC6LB7LtHNKSr+Rlr2MZJY
+ BFaShSqUwnfqSWA==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Rename the `RawWriter` to `BufferWriter`, wihich is a more suitable name.
-Also move the module from `block` to `str`.
-
-The ability to format a string to a byte buffer is something that is not
-specific to `block`, so there is no reason this code should live in
-`block`.
+The rust null block driver is about to gain some additional modules. Rather
+than pollute the current directory, move the driver to a subdirectory.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-
 ---
+ MAINTAINERS                        |  2 +-
+ drivers/block/Kconfig              | 10 +---------
+ drivers/block/Makefile             |  4 +---
+ drivers/block/rnull/Kconfig        | 13 +++++++++++++
+ drivers/block/rnull/Makefile       |  3 +++
+ drivers/block/{ => rnull}/rnull.rs |  0
+ 6 files changed, 19 insertions(+), 13 deletions(-)
 
-`BufferWriter` is used in `rnull` for interacting with `configfs`.
----
- rust/kernel/block/mq.rs                                 |  1 -
- rust/kernel/block/mq/gen_disk.rs                        |  9 +++++----
- rust/kernel/str.rs                                      |  3 +++
- .../{block/mq/raw_writer.rs => str/buffer_writer.rs}    | 17 +++++++++++------
- 4 files changed, 19 insertions(+), 11 deletions(-)
-
-diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
-index fb0f393c1cea..faa3ccb5a49a 100644
---- a/rust/kernel/block/mq.rs
-+++ b/rust/kernel/block/mq.rs
-@@ -89,7 +89,6 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c1d245bf7b8..29b14aec3559 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4246,7 +4246,7 @@ W:	https://rust-for-linux.com
+ B:	https://github.com/Rust-for-Linux/linux/issues
+ C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
+ T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
+-F:	drivers/block/rnull.rs
++F:	drivers/block/rnull/
+ F:	rust/kernel/block.rs
+ F:	rust/kernel/block/
  
- pub mod gen_disk;
- mod operations;
--mod raw_writer;
- mod request;
- mod tag_set;
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 0f70e2374e7f..6b50dbc0495b 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -17,6 +17,7 @@ menuconfig BLK_DEV
+ if BLK_DEV
  
-diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
-index cd54cd64ea88..a04b709514ac 100644
---- a/rust/kernel/block/mq/gen_disk.rs
-+++ b/rust/kernel/block/mq/gen_disk.rs
-@@ -5,10 +5,11 @@
- //! C header: [`include/linux/blkdev.h`](srctree/include/linux/blkdev.h)
- //! C header: [`include/linux/blk_mq.h`](srctree/include/linux/blk_mq.h)
+ source "drivers/block/null_blk/Kconfig"
++source "drivers/block/rnull/Kconfig"
  
--use crate::block::mq::{raw_writer::RawWriter, Operations, TagSet};
-+use crate::block::mq::{Operations, TagSet};
- use crate::{bindings, error::from_err_ptr, error::Result, sync::Arc};
- use crate::{error, static_lock_class};
- use core::fmt::{self, Write};
-+use kernel::str::BufferWriter;
+ config BLK_DEV_FD
+ 	tristate "Normal floppy disk support"
+@@ -354,15 +355,6 @@ config VIRTIO_BLK
+ 	  This is the virtual block driver for virtio.  It can be used with
+           QEMU based VMMs (like KVM or Xen).  Say Y or M.
  
- /// A builder for [`GenDisk`].
- ///
-@@ -139,14 +140,14 @@ pub fn build<T: Operations>(
-         // SAFETY: `gendisk` is a valid pointer as we initialized it above
-         unsafe { (*gendisk).fops = &TABLE };
+-config BLK_DEV_RUST_NULL
+-	tristate "Rust null block driver (Experimental)"
+-	depends on RUST
+-	help
+-	  This is the Rust implementation of the null block driver. For now it
+-	  is only a minimal stub.
+-
+-	  If unsure, say N.
+-
+ config BLK_DEV_RBD
+ 	tristate "Rados block device (RBD)"
+ 	depends on INET && BLOCK
+diff --git a/drivers/block/Makefile b/drivers/block/Makefile
+index 097707aca725..aba3e93d5014 100644
+--- a/drivers/block/Makefile
++++ b/drivers/block/Makefile
+@@ -9,9 +9,6 @@
+ # needed for trace events
+ ccflags-y				+= -I$(src)
  
--        let mut raw_writer = RawWriter::from_array(
-+        let mut writer = BufferWriter::from_array(
-             // SAFETY: `gendisk` points to a valid and initialized instance. We
-             // have exclusive access, since the disk is not added to the VFS
-             // yet.
-             unsafe { &mut (*gendisk).disk_name },
-         )?;
--        raw_writer.write_fmt(name)?;
--        raw_writer.write_char('\0')?;
-+        writer.write_fmt(name)?;
-+        writer.write_char('\0')?;
+-obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
+-rnull_mod-y := rnull.o
+-
+ obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
+ obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
+ obj-$(CONFIG_BLK_DEV_FD)	+= floppy.o
+@@ -39,6 +36,7 @@ obj-$(CONFIG_ZRAM) += zram/
+ obj-$(CONFIG_BLK_DEV_RNBD)	+= rnbd/
  
-         // SAFETY: `gendisk` points to a valid and initialized instance of
-         // `struct gendisk`. `set_capacity` takes a lock to synchronize this
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index a927db8e079c..050793fb7d3a 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -936,3 +936,6 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
- macro_rules! fmt {
-     ($($f:tt)*) => ( ::core::format_args!($($f)*) )
- }
+ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
++obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull/
+ 
+ obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
+ obj-$(CONFIG_BLK_DEV_ZONED_LOOP) += zloop.o
+diff --git a/drivers/block/rnull/Kconfig b/drivers/block/rnull/Kconfig
+new file mode 100644
+index 000000000000..6dc5aff96bf4
+--- /dev/null
++++ b/drivers/block/rnull/Kconfig
+@@ -0,0 +1,13 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Rust null block device driver configuration
 +
-+mod buffer_writer;
-+pub use buffer_writer::BufferWriter;
-diff --git a/rust/kernel/block/mq/raw_writer.rs b/rust/kernel/str/buffer_writer.rs
-similarity index 77%
-rename from rust/kernel/block/mq/raw_writer.rs
-rename to rust/kernel/str/buffer_writer.rs
-index 7e2159e4f6a6..364842a6cff8 100644
---- a/rust/kernel/block/mq/raw_writer.rs
-+++ b/rust/kernel/str/buffer_writer.rs
-@@ -10,14 +10,14 @@
- /// # Invariants
- ///
- /// `buffer` is always null terminated.
--pub(crate) struct RawWriter<'a> {
-+pub struct BufferWriter<'a> {
-     buffer: &'a mut [u8],
-     pos: usize,
- }
- 
--impl<'a> RawWriter<'a> {
--    /// Create a new `RawWriter` instance.
--    fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
-+impl<'a> BufferWriter<'a> {
-+    /// Create a new [`Self`] instance.
-+    pub fn new(buffer: &'a mut [u8]) -> Result<BufferWriter<'a>> {
-         *(buffer.last_mut().ok_or(EINVAL)?) = 0;
- 
-         // INVARIANT: We null terminated the buffer above.
-@@ -26,16 +26,21 @@ fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
- 
-     pub(crate) fn from_array<const N: usize>(
-         a: &'a mut [crate::ffi::c_char; N],
--    ) -> Result<RawWriter<'a>> {
-+    ) -> Result<BufferWriter<'a>> {
-         Self::new(
-             // SAFETY: the buffer of `a` is valid for read and write as `u8` for
-             // at least `N` bytes.
-             unsafe { core::slice::from_raw_parts_mut(a.as_mut_ptr().cast::<u8>(), N) },
-         )
-     }
++config BLK_DEV_RUST_NULL
++	tristate "Rust null block driver (Experimental)"
++	depends on RUST
++	help
++	  This is the Rust implementation of the null block driver. Like
++	  the C version, the driver allows the user to create virutal block
++	  devices that can be configured via various configuration options.
 +
-+    /// Return the position of the write pointer in the underlying buffer.
-+    pub fn pos(&self) -> usize {
-+        self.pos
-+    }
- }
- 
--impl Write for RawWriter<'_> {
-+impl Write for BufferWriter<'_> {
-     fn write_str(&mut self, s: &str) -> fmt::Result {
-         let bytes = s.as_bytes();
-         let len = bytes.len();
++	  If unsure, say N.
+diff --git a/drivers/block/rnull/Makefile b/drivers/block/rnull/Makefile
+new file mode 100644
+index 000000000000..11cfa5e615dc
+--- /dev/null
++++ b/drivers/block/rnull/Makefile
+@@ -0,0 +1,3 @@
++
++obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
++rnull_mod-y := rnull.o
+diff --git a/drivers/block/rnull.rs b/drivers/block/rnull/rnull.rs
+similarity index 100%
+rename from drivers/block/rnull.rs
+rename to drivers/block/rnull/rnull.rs
 
 -- 
 2.47.2
