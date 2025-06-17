@@ -1,86 +1,50 @@
-Return-Path: <linux-block+bounces-22793-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22795-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ACADADCAAF
-	for <lists+linux-block@lfdr.de>; Tue, 17 Jun 2025 14:12:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58A49ADCDB6
+	for <lists+linux-block@lfdr.de>; Tue, 17 Jun 2025 15:43:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E075D18868D8
-	for <lists+linux-block@lfdr.de>; Tue, 17 Jun 2025 12:12:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03D77164649
+	for <lists+linux-block@lfdr.de>; Tue, 17 Jun 2025 13:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492C62DF3C7;
-	Tue, 17 Jun 2025 12:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D0B2C08C5;
+	Tue, 17 Jun 2025 13:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="mGmT086r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2VMXZuy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FA32D130C
-	for <linux-block@vger.kernel.org>; Tue, 17 Jun 2025 12:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCAF2C08B8;
+	Tue, 17 Jun 2025 13:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750162328; cv=none; b=V/35vhwfaRav3IEPtDdyanyTG6l3ku/BsEaOQ+wWcV5sknKm0iryrTNP58oelHGyQwySeY84XtW+TzjT/FXu20wW+dU3lx/uIuEuKnNnRm+EPIe1LhlxViH8IdRuMZjV0GKcw/bHDV+EQZDIlFMKY/tBwEMJBHrnPobvPXjvdfc=
+	t=1750167810; cv=none; b=ZKHcMvTO7ZNyyakWgbjpERQY2GJGNpaTYuRAWsBQLOTslfNw/NnVkdPRfB3Ua+Bi/HH25UZ3eP6MeHPX8eBY/EgFxjzys6ntZlBGzcuEfx2X+OZDmLCe+0KDBnp/6YxqzPz/yS7r0o1m4HVfkMttM+ejTV5yKDrKyVOUqFCEfpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750162328; c=relaxed/simple;
-	bh=jtjGkx7PbcE2vHDnfHVl0N+SZYB2VE9WYKDSXkb4WjQ=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=e0KMuwIXJtRA4rLFDbFrH97+luIhHQPFMFn//B8iQ74vCnk05KUR93VXXzoY8yfQCh/ciwaR2rY+75s+cTzG4XKrxlgkcoYn7YyB3nx/SiyN2diZ+5LiBK6OUmyiNJiUwHoQme7gbr714tFuEIdbr7utjP1uQGpu+Yu24PGjr0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=mGmT086r; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-86d0c5981b3so193971939f.3
-        for <linux-block@vger.kernel.org>; Tue, 17 Jun 2025 05:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750162325; x=1750767125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f/qjREJUOIJxRz7QxQVVE+iucFdBwBB5lgjEmSZXzLo=;
-        b=mGmT086rDSv7DqoRsYsm4hr01t+EewawRqPgaSFQ7wJ8WbFVCNAgAXCiF8xgAAX3sc
-         pdQILmDjv45bpSIS+NgKuIoSZ/cNchEEr7GO8ILikEADqb4iXlk5LHssXe0/Eyt5lI7B
-         v3KOFuX+CJ0RC4pT3fOI53UICL/+eJOGvTZ/w3uCe0J5g7MbPF0QOwexLd1jyjNU9CzB
-         JQEcOrdfA0EPcaxWrOJqwdwpiavmBJ7yQeOLLxVi8UKhyrIeT8iVjSi7G4L95Qf9lQgu
-         XAtuvf7HLPdHAE0R/hkoeIEi2Bno+KqGPCG6nFerdz1P3INH3Xef3FZQdY1fDLYepG3A
-         IGPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750162325; x=1750767125;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f/qjREJUOIJxRz7QxQVVE+iucFdBwBB5lgjEmSZXzLo=;
-        b=VxYYMMC7tdVHLR3JLQrUWHvSB7RT8Zrkf7bqvb6/pZ7bVXOcMB2Nh/wnPozgHWvBQJ
-         aFisyshE58UoNM1ULeZmn3IIAB98fpBADrBeO3eekTrTuWwYpDtdWKq9R9wKTNv01rG7
-         mUNVWniTzoV6aOp9k+RRewdc4b3EpLlcZc7yDf7WNK+88s4lJy4Kn+FW7u02XNRPeojl
-         Bhl5krhJs9xjoX++zINYsXp/ab9IwZaFcQqH9IR/1IuTNLBEe6fYuFSVBRJKBmiu4hSW
-         674Lmp0NMmlOR55KNI9dEJ6ABQsOZAgZ0M8peMcI+rlJuU72kW0/wl+YvrhNLVWr8ln1
-         AECQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlaeqH2on900jeLcKranKY7jM1TWYlfrCE0iwkeUrrAdVKBiYJyMCOreFyhxlgKotzkTpS7zmHVNUG5A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLYFktLY32sY85pmY57pqGIGanP8eb+9cn4La/6RpeKjWHBqVB
-	ArjrprNp6WwyCsTJYDdvbpE5pbq2ztcaLNdFVN42aabvwx36uuUDVznkXFJfdvtrNJKIYTuCNEQ
-	u9xhS
-X-Gm-Gg: ASbGncsuspElWfY7woNcuCHySkB0BCigGSu4aapYe1tb4BYNJmYut7U8M7yDPKhtkrn
-	NwcNNhLhBRBVOf+lVS45SXYWU11WCUT0KaB7PT+IbCDBZmTQFKuYZrgn41UE8gjMorjRCi1O4pY
-	3Hw1YD+86vv5eZqC7MED1ctWNAKgwcRRw/mTbUSmL81ygXqTKSyQq8Nv14NreeCDwzZg7xJUb08
-	91Tw/goSNZl+dLddHkuK11lydxCcHSE15Q+v+22FlBQHiSMD4wm1yYCJHmY6AMCOP29nFur5THj
-	pCjNHjTo9jU5S/y+lgodDG5lll2i7uJBKvM1pVcvhBsK0rcHYdH+Lg==
-X-Google-Smtp-Source: AGHT+IG0w7oJnEhc9SyJVK6zFLHv3cqGyVrecWmvAPvfn0VzcgjB1pecE+hhN3zMhmzyPcnm5FRGeQ==
-X-Received: by 2002:a05:6e02:184a:b0:3db:7c22:303c with SMTP id e9e14a558f8ab-3de07cfe991mr128241535ab.8.1750162324822;
-        Tue, 17 Jun 2025 05:12:04 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de01a502b8sm24901745ab.66.2025.06.17.05.12.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:12:04 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: ed.cashin@acm.org, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Justin Sanders <jsanders.devel@gmail.com>
-In-Reply-To: <20250610170600.869-1-jsanders.devel@gmail.com>
-References: <20250610170600.869-1-jsanders.devel@gmail.com>
-Subject: Re: [PATCH 1/2] aoe: clean device rq_list in aoedev_downdev()
-Message-Id: <175016232389.1144398.4390914425439308132.b4-ty@kernel.dk>
-Date: Tue, 17 Jun 2025 06:12:03 -0600
+	s=arc-20240116; t=1750167810; c=relaxed/simple;
+	bh=Tq5rUOpjXriBkipN8jcjoOeGSv4ICYoTA0fxuVN9H94=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VSTv3D0YOrjjGVNYqblO3AMZxhvT25Q/pLiaZDpP6TpS/gYR2ODLeyvMamxDBhqlezpdHuYoYZ8tJzPBNhy45naX+LXCctdvoRCLHnGUc5Qqu5N0yW2POEpNcxcEkNjcYeQ4bqqw45DzwLPh4Ame0ntSG1SpBBi78h78Ld4+WvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2VMXZuy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4E8C4CEE3;
+	Tue, 17 Jun 2025 13:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750167809;
+	bh=Tq5rUOpjXriBkipN8jcjoOeGSv4ICYoTA0fxuVN9H94=;
+	h=From:Subject:Date:To:Cc:From;
+	b=H2VMXZuyU6kbuxsnxDZ0TmEkSbKr3URfhjt3ZDdyNXdL6ivkgmgNDPNrOX9KpE8un
+	 67xPRwP+Ax/wzJc2Ag4PN0uQU0cP705b5qy8C4qngTFaBEQa1rH+Kzsv8IM6Vn+LEz
+	 8CSQ9N0XBnKfvE5wmCJA7G0B8JA8f1RlR0EFVTmL5PUsJkpbPJXpnRcihFHL4WjTOf
+	 sh6EN8lf7ZZku7gd9SslC/G2sikDNq5IMhqoNJJBKGmx43LT1noz6/VO4ojstrL4Vc
+	 y/uoWybaf86e/LHNiEjgDrNXwLqD6NK2POmZIlEW+001ads1kk7oiwhiuB9jH9oZFZ
+	 SdYtNHiRhxS/Q==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH 0/5] blk: introduce block layer helpers to calculate num of
+ queues
+Date: Tue, 17 Jun 2025 15:43:22 +0200
+Message-Id: <20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -89,30 +53,72 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-d7477
+X-B4-Tracking: v=1; b=H4sIAPpwUWgC/x3MQQrCMBBG4auUWTuQxGpor1Jc1PirA5KkmUaE0
+ rs3uPwW722kKAKlsduo4CsqKTbYU0fhPccXWB7N5Iy7mKv1LJo+IVflpaKCQ6pxRVHu3X02gPf
+ nwVCrc8FTfv/zdNv3A/LaqlZpAAAA
+X-Change-ID: 20250617-isolcpus-queue-counters-42ba0ee77390
+To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, 
+ Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
+ Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+ storagedev@microchip.com, virtualization@lists.linux.dev, 
+ GR-QLogic-Storage-Upstream@marvell.com, Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
+I am still working on the change request for the "blk: honor isolcpus
+configuration" series [1]. Teaching group_cpus_evenly to use the
+housekeeping mask depending on the context is not a trivial change.
 
-On Tue, 10 Jun 2025 17:05:59 +0000, Justin Sanders wrote:
-> An aoe device's rq_list contains accepted block requests that are
-> waiting to be transmitted to the aoe target. This queue was added as
-> part of the conversion to blk_mq. However, the queue was not cleaned out
-> when an aoe device is downed which caused blk_mq_freeze_queue() to sleep
-> indefinitely waiting for those requests to complete, causing a hang. This
-> fix cleans out the queue before calling blk_mq_freeze_queue().
-> 
-> [...]
+The first part of the series has already been reviewed and doesn't
+contain any controversial changes, so let's get them processed
+independely.
 
-Applied, thanks!
+[1] https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
 
-[1/2] aoe: clean device rq_list in aoedev_downdev()
-      commit: a847c4a41630b38136e069aad82dd619c03e95b6
-[2/2] aoe: defer rexmit timer downdev work to workqueue
-      commit: 71437cf6208c63af6ba99cb42074d13d7b56b669
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in from https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
+- limit number of allocated masks to the max allocated number of masks
+- commit message improvements
+- typo fixes
+- formatting fixed
+- collected tags
+
+---
+Daniel Wagner (5):
+      lib/group_cpus: Let group_cpu_evenly() return the number of initialized masks
+      blk-mq: add number of queue calc helper
+      nvme-pci: use block layer helpers to calculate num of queues
+      scsi: use block layer helpers to calculate num of queues
+      virtio: blk/scsi: use block layer helpers to calculate num of queues
+
+ block/blk-mq-cpumap.c                     | 46 +++++++++++++++++++++++++++++--
+ drivers/block/virtio_blk.c                |  5 ++--
+ drivers/nvme/host/pci.c                   |  5 ++--
+ drivers/scsi/megaraid/megaraid_sas_base.c | 15 ++++++----
+ drivers/scsi/qla2xxx/qla_isr.c            | 10 +++----
+ drivers/scsi/smartpqi/smartpqi_init.c     |  5 ++--
+ drivers/scsi/virtio_scsi.c                |  1 +
+ drivers/virtio/virtio_vdpa.c              |  9 +++---
+ fs/fuse/virtio_fs.c                       |  6 ++--
+ include/linux/blk-mq.h                    |  2 ++
+ include/linux/group_cpus.h                |  2 +-
+ kernel/irq/affinity.c                     | 11 ++++----
+ lib/group_cpus.c                          | 16 +++++------
+ 13 files changed, 89 insertions(+), 44 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250617-isolcpus-queue-counters-42ba0ee77390
 
 Best regards,
 -- 
-Jens Axboe
-
-
+Daniel Wagner <wagi@kernel.org>
 
 
