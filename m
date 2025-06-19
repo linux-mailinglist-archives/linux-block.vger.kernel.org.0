@@ -1,197 +1,331 @@
-Return-Path: <linux-block+bounces-22903-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22908-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D0BAE0298
-	for <lists+linux-block@lfdr.de>; Thu, 19 Jun 2025 12:26:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33E61AE03A7
+	for <lists+linux-block@lfdr.de>; Thu, 19 Jun 2025 13:33:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1122E17FEC9
-	for <lists+linux-block@lfdr.de>; Thu, 19 Jun 2025 10:26:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEFD75A23B5
+	for <lists+linux-block@lfdr.de>; Thu, 19 Jun 2025 11:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB802222C5;
-	Thu, 19 Jun 2025 10:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KYvniBmc";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="DQDpMRyL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062AB23E35F;
+	Thu, 19 Jun 2025 11:31:57 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A934221F05
-	for <linux-block@vger.kernel.org>; Thu, 19 Jun 2025 10:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750328785; cv=fail; b=p6w0vO5bifHKV96HP7hb8yz34D0CUFYfOHF5kB1nwWGKhUaMeMbq90/pZrqL1f7HuWqcE8CTz2lIa7etidIO2z6Donp9uGYqjkeSqHGkgDMIsQHBrgIlyTNS/8TzeYM6J/j+O9POh5aZAqEUwc32hky7auOwxsPeE0zed/2Hsz8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750328785; c=relaxed/simple;
-	bh=mEo6PN24VNuIgJuEaOaw0A/Z0rgHGBc/rtbzF9ZTZnI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KzyFBVCH7t5J/fvx3F67wsVeYj7CWfUFuh7i1JJF9Hg0l8VguP4wZwh/9E+1xEcaBJYw8b9yPDsbrgbvy2yc3ce0Po1o4Z6wq9eq2KLoub1wtnT3O6ZDYpJrW+SPLA0TwoURKIt9nXZA3HZzeABjIITPSj65bcqEoUh0pflRrQs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=KYvniBmc; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=DQDpMRyL; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1750328783; x=1781864783;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=mEo6PN24VNuIgJuEaOaw0A/Z0rgHGBc/rtbzF9ZTZnI=;
-  b=KYvniBmcBjvb5yRSa7/yoiXjJnGT6+TO84iyqbqjIS0+lYMQimxKBMqy
-   6hU5NUq7dbuhgbDSnsZxMpOFfSIUZVR7TkxaSjLp3JZkWgtMBjQdGb5QU
-   7oi3QtY1uUR5evUSDKehAh3W9eN9f1LlUg8buO5atyHiRMAP1lGGBQnJl
-   dxtA4wbu38VkRL+V1l0RADyDv48MeDTYDKgpoRAkN25cR2Jsaa5ioH1Oy
-   5YVHpH8YKHlvVJSXzfG1e0fy8orQj7JN5djAI4nU7ToFAnaJ5NdEhQOkz
-   kfee1uy0FZSA1v0pZl2vSUiT/qPqvUIPHtJzG83V0LDtIPhRmHBpKWQ5H
-   w==;
-X-CSE-ConnectionGUID: SccJHYhtQ9iRrG3heeoGDA==
-X-CSE-MsgGUID: B5S9WFatSRybHC8i5MtNuw==
-X-IronPort-AV: E=Sophos;i="6.16,248,1744041600"; 
-   d="scan'208";a="90898675"
-Received: from mail-westcentralusazon11011058.outbound.protection.outlook.com (HELO CY4PR02CU008.outbound.protection.outlook.com) ([40.93.199.58])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jun 2025 18:26:22 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xFoPNwkzB3GThlJY/JzdXVD7xj3lGA3hSS3mU0PSsyd7wzpepoGQZz7ak49pmjTgA/0x0FWn5UcffsiO+n8vaPQk40Ft9ShgKlw4e6cKL4a99kOTtkvz1Ygt+oJAx8kqSIsgBSc07iF1eoY35OImNVItdxFTfXIXCnTtQPJV+xza3GogBNZcThQsAEIVUf0piyfSab0esznrshNUhL5PSR4HIK+rqlsFn9mWdElH4s94c2VUhJNYnegrHudp0SMfhN/7LmkbaI43oJ2jcywPzNMQBZnhGDDikdzYRC3nu89e9Cp1IpEwvQHqY8YQfJmNKIpcDeORHvnOKvfSV7KXDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mEo6PN24VNuIgJuEaOaw0A/Z0rgHGBc/rtbzF9ZTZnI=;
- b=heanZ1QFjXkir6r2G5EmkauRO4HtietD6XS9BxKlwn8IpLLIpHh8gi6RZBEMD4gVAlIp7UfBLlFQnZtb5wEDdqVs/6g5VBhZQ+X9k7LcMjeVsNMEHha5pUU48BcCQSwvvFt0xj3IOsEE+bLc/cSVmprhD7Yc+pxgMzAEuaW0Z7X1zhBFIndIOjJ2n/6yFEKd3v1E0JTow3QvYclgarTMDGt7/1oFEGW6FGukDWaUwRDMn9sPOswwtFSzuyBkxeynzB8ZilM4N/fKRYaSDExTh6CReJGlYiHyO/fIyiObriRe5mu+olTB3xibX02ns6OvpyZQ9Vm/G5ofJqGshdgo9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mEo6PN24VNuIgJuEaOaw0A/Z0rgHGBc/rtbzF9ZTZnI=;
- b=DQDpMRyLEaHrGJjxowg8VyolQZlpfEB++wjmRMaesTctmf8F06NwZ36nGYd0VZC291V3syMboA2PJp4q9Say+IF6UGgr8FrdQTLYJsrGH1+D51WncHKsNT2lKniyU+PmYTasnMq2Qaixxw/ftcZvtY5MhDh2NGx0rjtd932N0/4=
-Received: from SN7PR04MB8532.namprd04.prod.outlook.com (2603:10b6:806:350::6)
- by SA2PR04MB7659.namprd04.prod.outlook.com (2603:10b6:806:140::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.31; Thu, 19 Jun
- 2025 10:26:18 +0000
-Received: from SN7PR04MB8532.namprd04.prod.outlook.com
- ([fe80::4e14:94e7:a9b3:a4d4]) by SN7PR04MB8532.namprd04.prod.outlook.com
- ([fe80::4e14:94e7:a9b3:a4d4%5]) with mapi id 15.20.8857.021; Thu, 19 Jun 2025
- 10:26:17 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Zizhi Wo <wozizhi@huaweicloud.com>
-CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"ming.lei@redhat.com" <ming.lei@redhat.com>, "yukuai3@huawei.com"
-	<yukuai3@huawei.com>, "yangerkun@huawei.com" <yangerkun@huawei.com>
-Subject: Re: [PATCH V2] tests/throtl: add a new test 007
-Thread-Topic: [PATCH V2] tests/throtl: add a new test 007
-Thread-Index: AQHb3ycmL7IZbykp70OAk4z062E6CrQKSt2A
-Date: Thu, 19 Jun 2025 10:26:17 +0000
-Message-ID: <riagf22zp3eg2iipaajujfdnaid2zr5tu62xikf6kuadvz7uze@i6fftxqzrnjz>
-References: <20250617012159.3454463-1-wozizhi@huaweicloud.com>
-In-Reply-To: <20250617012159.3454463-1-wozizhi@huaweicloud.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR04MB8532:EE_|SA2PR04MB7659:EE_
-x-ms-office365-filtering-correlation-id: 9bc4c7cc-6c59-4ced-8f87-08ddaf1bb9da
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?kBOltnotgeaE5NTqzDetHeTA+TsJG/kwJpBpQ6x1KYp4Qi3Br7hYhpvjlj48?=
- =?us-ascii?Q?z6Jgj1IiWcxX0URd4VZwp3fBfhh7AxHcAoct6FzsXXsCzQvOMD779bazcIVh?=
- =?us-ascii?Q?8Wzj3WXwuyZKa+jnKsgMsnqRSTb7oXu0JdrCcuwKnG1Ff+AeQ25uW+tmThMe?=
- =?us-ascii?Q?FUzZZgVeUoC/+NOlCImu4Ss6u98EeBYlyayqD4nSF1OaWbK/bJifZzBzlEOI?=
- =?us-ascii?Q?3tTWSzbyU4uJJQWR0f8ThIAGc6W9hCmOGIdMPvwYd9Ou1Pk3xCYuiYi/CPYw?=
- =?us-ascii?Q?Qu1IkP3TlhyNB6RARXiFpeoefrSP+LHE5R/L9u8gvQ0H6bpasvxQThMeQcz/?=
- =?us-ascii?Q?3vN+m+aJJ49OVApusTOyE8qI+aoNdZA9uydnwxlpsR8d1Joo4mBckIOxk+La?=
- =?us-ascii?Q?50FSO/3d/TtPZbv7UCYWWaXKaEJasM/jnl5PGl41HoiMRySC4oct4McA+6MM?=
- =?us-ascii?Q?4kMKuvUtWtYCoqVbmSC/ZYRciAgPqQNI0T012we8Hvos4AMQvkKtROyIqf5z?=
- =?us-ascii?Q?YXyMphFLwXD5vXfut+anoj1C6vWnK3wVTT3x+1EfC0Vjn2uRnjVuYQn7AG7L?=
- =?us-ascii?Q?4Y0/pRwcfw6HjY2R3xhbpp11lvCwGi0W8vj6owI9EFmPh3aHIM2skniWdubS?=
- =?us-ascii?Q?jj9A3jHoyJI5sX01qQMhXaMNAwqdbL82LWIxIgEmYJ/1gzKn3UkVSlVUjGWk?=
- =?us-ascii?Q?EVIUvzEhbQ2+4XKJHftvyqkf70oHMGm92fSQTCnqa76KwSjWPkhyj9grQfOy?=
- =?us-ascii?Q?5GbhvQx7w27F1c6Mi2WLOoXbSDs7zroj7mOdmK2vbWhpESntszb01l92oCjG?=
- =?us-ascii?Q?rjdC2IcioSnJygNC2sXqwOzgRYE1yuxd+EDrzLkp+8g6Eqnq1z4U5tiGZP4D?=
- =?us-ascii?Q?slVTSVwqGPXh0E8pLMivX0weGrvAgTI1h4Ilp+bHJVl7yf2oqmjmG7jNaz0G?=
- =?us-ascii?Q?SmVYaPHdQmnJF2BaNvSkp7uVGMZXxtvST5/9JVknNONUTJXwcUloxiHQrk/1?=
- =?us-ascii?Q?zSLAIR4WxxZ/hqgmo2HM419R3vNwgVodoING/QBlyZHp4/rCbq0vDyqgaE0L?=
- =?us-ascii?Q?itlb7jjUnM8REKraBD2zM5hJnrP2lvUvqwZQv/ifkFu7b2rjbE+xKLe0qm4k?=
- =?us-ascii?Q?HjmImjk22JrsYff7FeloGeNqch/ETvSz5tnzSHJGwJFxU8gOIl2eUItNUqEz?=
- =?us-ascii?Q?4hjhc9POf3UYyfOtdQT1pN2HHj03Lv8dPlcde+a12jmzIelbDk1WYEcYUFzl?=
- =?us-ascii?Q?BItOu8kpGauudbnSteHIxIe0KT2Y44yRj/Q9h6/+dJtWhp5zY4Ur42wePcvy?=
- =?us-ascii?Q?IMb1NoGcxkkFDAzJFVx4bWJe9/YLmhgbs7XbboPxdPLzJAWRJSiYwrvA8f7u?=
- =?us-ascii?Q?qQ3uPwdRRmWWQ0c1EMgSsR+l56N7yDMT31uUaANjwUFlZShOeqT0zPNZUe6i?=
- =?us-ascii?Q?PkWMVH5OJbOO+IS1nifICQBbf2MmLAwkCrAu6SoeIBvJtZ+w0Y/5Hpb5czxb?=
- =?us-ascii?Q?3E4Nr37MEEdOxn4=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR04MB8532.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?EfuNwl6oEOgJ1zAwnkhayNXur1VOhwlOEa5Bwa260/FyqoxudLSBNHjeixja?=
- =?us-ascii?Q?BxPog6KtDteJELpfOYmS3RRLAkQ6Yds72V/tWJ6iZN0etNzbeZqKKaMYx5LF?=
- =?us-ascii?Q?hnD98NmO4qSttnk2GtbgrU4S7g05i5zYT+86YiZxnkcbJiguV3Z+ASRbYBqI?=
- =?us-ascii?Q?Xxq4CkKoRuiZE2/Xr+TW+MVFY1Dc4e1BIM8lAKuKVXFD1tH90CYqbg1B0MXB?=
- =?us-ascii?Q?tMztDLRTpC5dzK9se0pJMn2Ygx2R08uSxZ5ry5rz1OowvaNGozynN9rBYdCW?=
- =?us-ascii?Q?tAF7RiK6hZD4KA//tmeOExRm/mw9u0RtBwUro4VSSzp4HHsxbznF6uBAVgE0?=
- =?us-ascii?Q?IzOJAB7zICeesq6y68Ce2vtvwhYtCsLNkHl7uN3vi3FOPpcBpYVclCnLpGCp?=
- =?us-ascii?Q?JP/xfsWWuXtHAdH8u+xD6POp/02S4p4ZizH8r1LvImGisn9jdvcRDcXtTWWy?=
- =?us-ascii?Q?GmIOVxJy19yyaq27RLIB9i1R3Ak5izEN8tngeH92S/tlHnV7uNF9EcicQ1C9?=
- =?us-ascii?Q?A0KyIT2V0/goyVExNlyw3oYVW82iJyOJsrANJ8v1c7MDAjcerfFi+lksKx/n?=
- =?us-ascii?Q?telkAGcCfd+Nu+m4QLNFh+pJBCo7oFRhspdK7aKvrASYCnjU6bC7pJpZNIym?=
- =?us-ascii?Q?MWtLcOqDdZaDPAvMqf2XxL6/eg672oJ8h0FsI/+pASTAtVr3c/lRYwh96/jw?=
- =?us-ascii?Q?4ma0CYnI3r16MARjG4KzVlETCdsOvDzjQv6WXlRI+kk+DS0S2SVqvOEx55ey?=
- =?us-ascii?Q?xYtdVIJn2731CRfB17F3UQ01t+NKq5KotBb/53Z7rixBztYlkSxjO7HjLhcV?=
- =?us-ascii?Q?kV2UfjEBqL5vosXk2OToZiU6b4qatFtcT68Dx0+D072Pj7gxvu3KDlEVvOxP?=
- =?us-ascii?Q?QdS88osF6lytz+n5FkVBe49xD3NSgINiJElJM+OOD14rrBeE+ZDhYV4A5of/?=
- =?us-ascii?Q?5dtjdC4Zdtb5+Y/tAMU1/3nT0iM+PS89Lzjg+zVSZ0aOs9qwozqoAqfJt4dW?=
- =?us-ascii?Q?APD0ZIqY5M9xYUL0LXQZ+ISn1d64rfQaR7pa+/IJ78aBCMv2JVlwuUnaWyRK?=
- =?us-ascii?Q?KTS+qSMQ//h/11DIbpp2u9ateSUsI30vsmhOcDAlse2fLzd5XMwGfRr208Eu?=
- =?us-ascii?Q?YJNLSkNFd2rzpBmzdhaWgrFGeQPKSMv4wVR7NXgALqCcMeMhFjDMkQgOsUc1?=
- =?us-ascii?Q?LwKALt+R62wOlbwII7faV7lEaFR7RzWD3tv3PeFlhtQrK9RW2g3OmT7NMtr/?=
- =?us-ascii?Q?A05SkOHakfg3hxqh+UiU2PPYOFUhNKgqq62hB8f7ct08/Vk8+cWjKUPUk8hh?=
- =?us-ascii?Q?R7WGr/A2tI5pgLplHyfaghuXAnIQ0Ts2Mm6YJhjvdQATo4NOAA+5ixGN0qy/?=
- =?us-ascii?Q?dxG3qfkk+CfzSCFKM9M/77L2NGnOV2xg2uvpd65/15bMg1POTPHkutv/oJeP?=
- =?us-ascii?Q?eNL4R8Q9b5yf/kQoaAK+nOhbu6ANO/Gmt9ZXN01Y3Qr2By/IJ8cZYp+03Uoj?=
- =?us-ascii?Q?EzT2mTgLkBUzFYOzIq/p0Ow9ICh6G14RFPVH7L97TlbJt6LAGQW0srB+3dHG?=
- =?us-ascii?Q?7CtpHRakYx9/+4SsQTuguXumSVZkwv8kG8WNDS6y3lj7zyna3EDP+L9g0FiY?=
- =?us-ascii?Q?iQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6ADC11707DBE1543A174C8E7AAE7F434@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB0C230BF2;
+	Thu, 19 Jun 2025 11:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750332716; cv=none; b=kRgEFau4aLd0EY5ruy75fDYyVJUIDQqYwFZyuqjg4eCgRVC0psvRshWyQ+GaHL6UFrEPs/wFhcV+cJchG/wR3dt1c1qUC3SbxRHD+Cvvf+MDUkZgb4bI3FBMeRS3nVoLfz4NMHgTx4oC4186Kbo9hc5vbZMoNzTyOr2EKY2rWpc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750332716; c=relaxed/simple;
+	bh=dbuqoIesrqayIjFb9YxGxGETNeenCpHtgv5CO1iuZTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=En2qzQ5EUAHpmtBEBRFs59twvBIXGyvwVEkjeI6Sdln0vJxDOrlXWL2sDIDgRWek+4V01+GxlpMaXThdm2Y5NdFKC8eRoalqbGSrEMUF4Z5TTIAHMDEwUB8s8EZ9RJ4Ml4xHjlNrWe1drZ+my/0zwp49K6K6ZY+o5hIQxS4MtTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bNJNN1jpfzKHN2y;
+	Thu, 19 Jun 2025 19:31:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 8F3B81A058E;
+	Thu, 19 Jun 2025 19:31:46 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgCH618Y9VNoihn_Pw--.51230S4;
+	Thu, 19 Jun 2025 19:31:43 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hch@lst.de,
+	tytso@mit.edu,
+	djwong@kernel.org,
+	john.g.garry@oracle.com,
+	bmarzins@redhat.com,
+	chaitanyak@nvidia.com,
+	shinichiro.kawasaki@wdc.com,
+	brauner@kernel.org,
+	martin.petersen@oracle.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 0/9] fallocate: introduce FALLOC_FL_WRITE_ZEROES flag
+Date: Thu, 19 Jun 2025 19:17:57 +0800
+Message-ID: <20250619111806.3546162-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	j4ZhTjM3HYe2SL1AFkQ+XyBe9KTkMDGAXcKzo9oFmA9+n0vdDk4/VMuVObBwoNwVOHR6dvBBCQ2fylhFKwhkkiPPMgeVkJbH1RCOSJwtJXIEZGmE3jxrekYACrS54dQeZulzo1a3THDtfM0dMUA/SgVNdYJYa8NfGDaHarqNfbxxRmIChCgrT5q9jnGKYOIVzlgvJnc1gxuxSYSOS5HVhscP85xausVKspNJ5fCITnuG+Txv8C0IZs+k1Ndeqq8EKVJsZLCl43YyMapsyBtTqTTqgylaYW7q+KE1tM2Q5+iw4ii4+dxQr9NglsywXtgwTtUQV2QetapOHLt4abZf2ql7oL5RVz6mc7mBIN6ust7pN3BWuDfieYd+//K0jITJ790I+QpwjRUjufUaqHmrzNKQ8C7cTFYDZ/Ner9/QO7LIa0VBMWWtAghggjAZ0n1tOIevETIkbOUY9kHgkaSYkxz9byigkbwotHzYCsR6TO8ITYKdcT2etI5dzGI/ITc+EEneBHg07nGY2XHO0w+2waOYLKvb9QTgH4p7xnOK4njcTOMov12hLv2EFjT1nhIrE/N0XR3eFBwW9TeSrhZVszLQ5KCJCEXLiH4baSEBzZFWzBMNqavmrBKmeNp8v0l2
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR04MB8532.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bc4c7cc-6c59-4ced-8f87-08ddaf1bb9da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 10:26:17.3101
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DSrpKHzbx1kGIsxCR2+xvsCMTY0QpfBvkbspnKTSTPd4pGYatrCMpkVEx04ipKWrbn88osY2actImjv9Pnpu4i+Ms14uEBTdxu43oyWdNRg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR04MB7659
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCH618Y9VNoihn_Pw--.51230S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3tr4DAFWUWryDurW3uw1Utrb_yoWDtr4rpa
+	yUJF4Ykr1DKryxC3s3ua1IgryrZws5ArW3Gw4xK34UZFZ8XF1IgFs2ga4Yqa9rJFyfW3WD
+	XFsF9r9rua47A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjTRRBT5DUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Jun 17, 2025 / 09:21, Zizhi Wo wrote:
-> Test the combination of bps and iops limits under io splitting scenarios.
-> Regression test for commit d1ba22ab2bec ("blk-throttle: Prevents the bps
-> restricted io from entering the bps queue again").
->=20
-> Signed-off-by: Zizhi Wo <wozizhi@huaweicloud.com>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Thanks for the patch. It looks good to me. I ran the test case and observed
-that it confirms the kernel fix d1ba22ab2bec. I will wait a few more days
-before I apply this, just in case anyone has some more comments.=
+Changes since v1:
+ - Rebase codes on 6.16-rc2.
+ - Use max_{hw|user}_wzeroes_unmap_sectors queue limits instead of
+   BLK_FEAT_WRITE_ZEROES_UNMAP feature to represent the status of the
+   unmap write zeroes operation as Christoph and Darrick suggested. This
+   redoes the first 5 patches, so remove all the reviewed-by tags,
+   please review them again.
+ - Simplify the description of FALLOC_FL_WRITE_ZEROES in patch 06 as
+   Darrick suggested.
+ - Revise the check order of FALLOC_FL_WRITE_ZEROES in patch 08 as
+   Christoph suggested.
+Changes since RFC v4:
+ - Rebase codes on 6.16-rc1.
+ - Add a new queue_limit flag, and change the write_zeroes_unmap sysfs
+   interface to RW mode. User can disable the unmap write zeroes
+   operation by writing '0' to it when the operation is slow.
+ - Modify the documentation of write_zeroes_unmap sysfs interface as
+   Martin suggested.
+ - Remove the statx interface.
+ - Make the bdev and ext4 don't allow to submit FALLOC_FL_WRITE_ZEROES
+   if the block device does not enable the unmap write zeroes operation,
+   it should return -EOPNOTSUPP.
+Changes sicne RFC v3:
+ - Rebase codes on 6.15-rc2.
+ - Add a note in patch 1 to indicate that the unmap write zeros command
+   is not always guaranteed as Christoph suggested.
+ - Rename bdev_unmap_write_zeroes() helper and move it to patch 1 as
+   Christoph suggested.
+ - Introduce a new statx attribute flag STATX_ATTR_WRITE_ZEROES_UNMAP as
+   Christoph and Christian suggested.
+ - Exchange the order of the two patches that modified
+   blkdev_fallocate() as Christoph suggested.
+Changes since RFC v2:
+ - Rebase codes on next-20250314.
+ - Add support for nvme multipath.
+ - Add support for NVMeT with block device backing.
+ - Clear FALLOC_FL_WRITE_ZEROES if dm clear
+   limits->max_write_zeroes_sectors.
+ - Complement the counterpart userspace tools(util-linux and xfs_io)
+   and tests(blktests and xfstests), please see below for details.
+Changes since RFC v1:
+ - Switch to add a new write zeroes operation, FALLOC_FL_WRITE_ZEROES,
+   in fallocate, instead of just adding a supported flag to
+   FALLOC_FL_ZERO_RANGE.
+ - Introduce a new flag BLK_FEAT_WRITE_ZEROES_UNMAP to the block
+   device's queue limit features, and implement it on SCSI sd driver,
+   NVMe SSD driver and dm driver.
+ - Implement FALLOC_FL_WRITE_ZEROES on both the ext4 filesystem and
+   block device (bdev).
+
+v1:     https://lore.kernel.org/linux-fsdevel/20250604020850.1304633-1-yi.zhang@huaweicloud.com/
+RFC v4: https://lore.kernel.org/linux-fsdevel/20250421021509.2366003-1-yi.zhang@huaweicloud.com/
+RFC v3: https://lore.kernel.org/linux-fsdevel/20250318073545.3518707-1-yi.zhang@huaweicloud.com/
+RFC v2: https://lore.kernel.org/linux-fsdevel/20250115114637.2705887-1-yi.zhang@huaweicloud.com/
+RFC v1: https://lore.kernel.org/linux-fsdevel/20241228014522.2395187-1-yi.zhang@huaweicloud.com/
+
+The counterpart userspace tools changes and tests are here:
+ - util-linux: https://lore.kernel.org/linux-fsdevel/20250318073218.3513262-1-yi.zhang@huaweicloud.com/ 
+ - xfsprogs: https://lore.kernel.org/linux-fsdevel/20250318072318.3502037-1-yi.zhang@huaweicloud.com/
+ - xfstests: https://lore.kernel.org/linux-fsdevel/20250318072615.3505873-1-yi.zhang@huaweicloud.com/
+   (needs to be updated)
+ - blktests: https://lore.kernel.org/linux-fsdevel/20250318072835.3508696-1-yi.zhang@huaweicloud.com/
+   (needs to be updated)
+
+Original Description:
+
+Currently, we can use the fallocate command to quickly create a
+pre-allocated file. However, on most filesystems, such as ext4 and XFS,
+fallocate create pre-allocation blocks in an unwritten state, and the
+FALLOC_FL_ZERO_RANGE flag also behaves similarly. The extent state must
+be converted to a written state when the user writes data into this
+range later, which can trigger numerous metadata changes and consequent
+journal I/O. This may leads to significant write amplification and
+performance degradation in synchronous write mode. Therefore, we need a
+method to create a pre-allocated file with written extents that can be
+used for pure overwriting. At the monent, the only method available is
+to create an empty file and write zero data into it (for example, using
+'dd' with a large block size). However, this method is slow and consumes
+a considerable amount of disk bandwidth, we must pre-allocate files in
+advance but cannot add pre-allocated files while user business services
+are running.
+
+Fortunately, with the development and more and more widely used of
+flash-based storage devices, we can efficiently write zeros to SSDs
+using the unmap write zeroes command if the devices do not write
+physical zeroes to the media. For example, if SCSI SSDs support the
+UMMAP bit or NVMe SSDs support the DEAC bit[1], the write zeroes command
+does not write actual data to the device, instead, NVMe converts the
+zeroed range to a deallocated state, which works fast and consumes
+almost no disk write bandwidth. Consequently, this feature can provide
+us with a faster method for creating pre-allocated files with written
+extents and zeroed data. However, please note that this may be a
+best-effort optimization rather than a mandatory requirement, some
+devices may partially fall back to writing physical zeroes due to
+factors such as receiving unaligned commands. 
+
+This series aims to implement this by:
+1. Introduce a new feature BLK_FEAT_WRITE_ZEROES_UNMAP to the block
+   device queue limit features, which indicates whether the storage is
+   device explicitly supports the unmapped write zeroes command. This
+   flag should be set to 1 by the driver if the attached disk supports
+   this command.
+
+2. Introduce a queue limit flag, BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED,
+   along with a corresponding sysfs entry. Users can query the support
+   status of the unmap write zeroes operation and disable this operation
+   if the write zeroes operation is very slow.
+
+       /sys/block/<disk>/queue/write_zeroes_unmap
+
+3. Introduce a new flag, FALLOC_FL_WRITE_ZEROES, into the fallocate.
+   Filesystems that support this operation should allocate written
+   extents and issue zeroes to the specified range of the device. For
+   local block device filesystems, this operation should depend on the
+   write_zeroes_unmap operaion of the underlying block device. It should
+   return -EOPNOTSUPP if the device doesn't enable unmap write zeroes
+   operaion.
+
+This series implements the BLK_FEAT_WRITE_ZEROES_UNMAP feature and
+BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED flag for SCSI, NVMe and
+device-mapper drivers, and add the FALLOC_FL_WRITE_ZEROES and
+STATX_ATTR_WRITE_ZEROES_UNMAP support for ext4 and raw bdev devices.
+Any comments are welcome.
+
+I've tested performance with this series on ext4 filesystem on my
+machine with an Intel Xeon Gold 6248R CPU, a 7TB KCD61LUL7T68 NVMe SSD
+which supports unmap write zeroes command with the Deallocated state
+and the DEAC bit. Feel free to give it a try.
+
+0. Ensure the NVMe device supports WRITE_ZERO command.
+
+ $ cat /sys/block/nvme5n1/queue/write_zeroes_max_bytes
+   8388608
+ $ nvme id-ns -H /dev/nvme5n1 | grep -i -A 3 "dlfeat"
+   dlfeat  : 25
+   [4:4] : 0x1   Guard Field of Deallocated Logical Blocks is set to CRC
+                 of The Value Read
+   [3:3] : 0x1   Deallocate Bit in the Write Zeroes Command is Supported
+   [2:0] : 0x1   Bytes Read From a Deallocated Logical Block and its
+                 Metadata are 0x00
+
+1. Compare 'dd' and fallocate with unmap write zeroes, the later one is
+   significantly faster than 'dd'.
+
+   Create a 1GB and 10GB zeroed file.
+    $dd if=/dev/zero of=foo bs=2M count=$count oflag=direct
+    $time fallocate -w -l $size bar
+
+    #1G
+    dd:                     0.5s
+    FALLOC_FL_WRITE_ZEROES: 0.17s
+
+    #10G
+    dd:                     5.0s
+    FALLOC_FL_WRITE_ZEROES: 1.7s
+
+2. Run fio overwrite and fallocate with unmap write zeroes
+   simultaneously, fallocate has little impact on write bandwidth and
+   only slightly affects write latency.
+
+ a) Test bandwidth costs.
+  $ fio -directory=/test -direct=1 -iodepth=10 -fsync=0 -rw=write \
+        -numjobs=10 -bs=2M -ioengine=libaio -size=20G -runtime=20 \
+        -fallocate=none -overwrite=1 -group_reportin -name=bw_test
+
+   Without background zero range:
+    bw (MiB/s): min= 2068, max= 2280, per=100.00%, avg=2186.40
+
+   With background zero range:
+    bw (MiB/s): min= 2056, max= 2308, per=100.00%, avg=2186.20
+
+ b) Test write latency costs.
+  $ fio -filename=/test/foo -direct=1 -iodepth=1 -fsync=0 -rw=write \
+        -numjobs=1 -bs=4k -ioengine=psync -size=5G -runtime=20 \
+        -fallocate=none -overwrite=1 -group_reportin -name=lat_test
+
+   Without background zero range:
+   lat (nsec): min=9269, max=71635, avg=9840.65
+
+   With a background zero range:
+   lat (usec): min=9, max=982, avg=11.03
+
+3. Compare overwriting in a pre-allocated unwritten file and a written
+   file in O_DSYNC mode. Write to a file with written extents is much
+   faster.
+
+  # First mkfs and create a test file according to below three cases,
+  # and then run fio.
+
+  $ fio -filename=/test/foo -direct=1 -iodepth=1 -fdatasync=1 \
+        -rw=write -numjobs=1 -bs=4k -ioengine=psync -size=5G \
+        -runtime=20 -fallocate=none -group_reportin -name=test
+
+   unwritten file:                 IOPS=20.1k, BW=78.7MiB/s
+   unwritten file + fast_commit:   IOPS=42.9k, BW=167MiB/s
+   written file:                   IOPS=98.8k, BW=386MiB/s
+
+Thanks,
+Yi.
+
+---
+
+[1] https://nvmexpress.org/specifications/
+    NVM Command Set Specification, Figure 82 and Figure 114.
+
+Zhang Yi (9):
+  block: introduce max_{hw|user}_wzeroes_unmap_sectors to queue limits
+  nvme: set max_hw_wzeroes_unmap_sectors if device supports DEAC bit
+  nvmet: set WZDS and DRB if device enables unmap write zeroes operation
+  scsi: sd: set max_hw_wzeroes_unmap_sectors if device supports
+    SD_ZERO_*_UNMAP
+  dm: clear unmap write zeroes limits when disabling write zeroes
+  fs: introduce FALLOC_FL_WRITE_ZEROES to fallocate
+  block: factor out common part in blkdev_fallocate()
+  block: add FALLOC_FL_WRITE_ZEROES support
+  ext4: add FALLOC_FL_WRITE_ZEROES support
+
+ Documentation/ABI/stable/sysfs-block | 33 ++++++++++++++
+ block/blk-settings.c                 | 20 ++++++++-
+ block/blk-sysfs.c                    | 26 +++++++++++
+ block/fops.c                         | 44 +++++++++++--------
+ drivers/md/dm-table.c                |  4 +-
+ drivers/nvme/host/core.c             | 20 +++++----
+ drivers/nvme/target/io-cmd-bdev.c    |  4 ++
+ drivers/scsi/sd.c                    |  5 +++
+ fs/ext4/extents.c                    | 66 +++++++++++++++++++++++-----
+ fs/open.c                            |  1 +
+ include/linux/blkdev.h               | 10 +++++
+ include/linux/falloc.h               |  3 +-
+ include/trace/events/ext4.h          |  3 +-
+ include/uapi/linux/falloc.h          | 17 +++++++
+ 14 files changed, 212 insertions(+), 44 deletions(-)
+
+-- 
+2.46.1
+
 
