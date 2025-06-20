@@ -1,158 +1,153 @@
-Return-Path: <linux-block+bounces-22945-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22946-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19088AE1D98
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 16:39:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9676AE1E1C
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 17:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADF071C21089
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 14:39:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 911833AB907
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 15:09:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9340C28CF6D;
-	Fri, 20 Jun 2025 14:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD8082BDC10;
+	Fri, 20 Jun 2025 15:10:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WdG/NOX8"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ADzf1PLz"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f228.google.com (mail-qt1-f228.google.com [209.85.160.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1893F293B42
-	for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 14:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CBB229B1E
+	for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 15:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430356; cv=none; b=lkaoMThjXKgk3pIAvEre58T58/VNYGrtjBQ5BIHtL5aMXvZM1bOeTUWRGdQIsUPEcEuQUbk/vf9cYUgP4kAA2Nh56zqJX0VkBKGAr5LUp0BliBkzhA95VPJX71BDT0AH4XJL3CVicNavLsEWENZJ/GvacDizkqFuu7uIWXP8N3U=
+	t=1750432217; cv=none; b=jDjzVpH+YfBQfCh3WRQdZw5yBwDCc6CMXx6x6PriOh01kqkzJpw7rciQ/rig/E1cL31kI0W7bwTbUHOAvqSsswvId2Q9nqPO48H+5+TCouxdIRTRsxdzfGXGPy8S/W8cdggSdKLFbk/RiVzM0/QRN01cqTteLX3MfNB/AGeKj/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430356; c=relaxed/simple;
-	bh=H3kMZwujEA3C5/ERdd4iRZ4IVqhcNjpSajUNMLNdh10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QClTK02pNUFQVV4x7Qm3SelJKDsplisix22s627DCREYvUFg94HX+i1EM+R1IaAPCeaMguI82ulI49z6ctbS7SMmDz5R7uF97a4Fv/srzCTNl7tSZAbzNxuJhfbLPi1TeY2ET6HU7ZBwehVNySdjYT7oXhFPRTDxHA8xcnx6wpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WdG/NOX8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDmXIx004659;
-	Fri, 20 Jun 2025 14:39:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=MG+KGc
-	mHfqWHodR9js8pcJ270N5h2zpOUteSbVa9T6g=; b=WdG/NOX8xgi/3CDt5Iab+z
-	GOE5ETmXmojSvuHumSH7ykktLlatnVUdVMS8UTWJuYtYqCdvXq08zInLcESn9z13
-	hL8BixsXvDOTglkA8LEVbxMMJ/soWX+RIJu7bY0gYFDLv8r7t1ZdLJyDpdjVO8hj
-	yYJweAqh3CxObP1RkBL0VQT4dalJgBP3d5z/O0XUGkO+2zZxk0asKObe1ZvfUpg6
-	OIbzTPESiFSb7znk7kcaWk1ejSoWWyJ61g1FRoe0EgmUcuP/0ApRcH9AXrDfC4eJ
-	ga9ikxYApidIsC2zKU2mafdyvJnQK/djDQdkvEeVup1UFmdMowZzEnv9cCiOVfbw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47cy4jua40-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:39:08 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDCOlF027466;
-	Fri, 20 Jun 2025 14:39:07 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479kt0bqph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:39:07 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KEd6us59834784
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Jun 2025 14:39:06 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 010A158064;
-	Fri, 20 Jun 2025 14:39:06 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8501258055;
-	Fri, 20 Jun 2025 14:39:03 +0000 (GMT)
-Received: from [9.61.191.218] (unknown [9.61.191.218])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Jun 2025 14:39:03 +0000 (GMT)
-Message-ID: <a1644c15-2a9a-4fc1-a762-b153d167cd1f@linux.ibm.com>
-Date: Fri, 20 Jun 2025 20:09:01 +0530
+	s=arc-20240116; t=1750432217; c=relaxed/simple;
+	bh=/zB1r462+aGLd+XIbxxxUv7ScSA/NyRprvaCzE+ZCeA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rMoqPbOk+DMaONksF9t5l3vVa90svfqWmJp4TKjlD7nAEWcUxNOaqf21p9uKKcYzqrfNKHNQ6zeds8TWxKppQ0Oa4jPPsTvntiAvb0/231k+NZ0HYdhuZMdpn4TZsS8IqRAg9zUgHkSPThClEaS/xXcnJUHj1g+8IYReZIAAv98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ADzf1PLz; arc=none smtp.client-ip=209.85.160.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-qt1-f228.google.com with SMTP id d75a77b69052e-4a43f17c42bso3003671cf.2
+        for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 08:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1750432214; x=1751037014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mg7GpUyX0/c/4LyuoKu16z8Sljo1ya47O5ZdvClTMt8=;
+        b=ADzf1PLzIBbtKEaE+yaDeGKPEgcDPHmJPjJRwn4cYSM9ccRhvitvjOlsXT3ESpzMyt
+         fhwU/rmCP0QAuQXTGl4P6j+YIWbghKEwg9w4aw2+E1fDrVpxbCPdUBvsxyv8SO6L+e2G
+         gq79F9C9ITvby/2HcPbMm6wTgNWshv8TBt7t1bcI0LvE/5QaaIyt/hbdF/KUAhpNthRq
+         UnL3Ws1uM1AJzkbJwPNfgeAZt+ke4B+9cy1BJplNHzldu4Y+wxyHTve6Tck7BxapQBcJ
+         1hpNJF2WRbCI7ZDW0N8ZZ9/V8FvNC3ZE/bExfx2mEOOTaPtCFJ1iSbyQBloZWJu41vVc
+         VSNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750432214; x=1751037014;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mg7GpUyX0/c/4LyuoKu16z8Sljo1ya47O5ZdvClTMt8=;
+        b=U2396Elk5yITtqpDKavuPuwyBUhcbyJBNGmZ5f+QdWPJ3NlP4dWcQKA6dKX8vjJsIZ
+         yCfmO0rJIuH9hNg4hJqKkaaqPXPDZeLW9fbHIjH1oTEydq/2P1gxcPWYd3/u3VUK0tKV
+         RFmwq56kWa4wNedyJ1t0Xd3e7tKC2Y4aL0O1c4G6nNtXCTjs8pGmEfl6dt1q4AYIyuZk
+         pwjix4w6/FR7BuKilyNN2m1L+5hAao6jpSu+g7SOWEAFufUi9EExmWGTROffpzcmf0PX
+         nUL1UVk46UE5XWL641E48p6R50xGSwz4jIRaPMKKSGEgF6FRKRaDnt1vvXuWyNw4pnE8
+         VMjQ==
+X-Gm-Message-State: AOJu0YwkZwmF/BsZibafRGIqlTBGPWHcKv/o/kRc46p42kOYBM5zYpm+
+	tXfA8NqN+0rbF3npvb7YSVujMtiR7GMcHB/s1SW+37rQqvQPf4YFmNg+CIjywYHOpseSfxxkAb+
+	hSuIpj+bPQrUmSY5QXTgK4p2OcZVJABPyfGhhYLcXzy0jwxVUIk7m
+X-Gm-Gg: ASbGncsKC2B/vS6510QOkVWKVdrzAbf6YaS00jtdbO35bgTvenRdNZA67hnrReoXG2D
+	yWcscY6yHMUaKTEo/yzA3Bj3Ixe5Q+U8dkHdqyG10yfgIYkkD59fqrsByUxmEufhxkhOu07SPoS
+	/6nS+Sk7znspXYI7838XAq58+9wqdOQ8k+Zph5Rg4yYCuryU4SZvJQjPXUMFvtv+J2E81b430Du
+	EepdcUL9YRD1S69tvy89BLVmbPsz+3g/tTyy/boBK8qOlX4Maas3EQGA1vn56ji960Tg+/tGetQ
+	aJKvoc3nzkrDXP5vwV+eTyNwrvbU0bZ8B+I1HAWK
+X-Google-Smtp-Source: AGHT+IEucyTBvo6Wi22bNpouMFZBsftVJbftMnFwHgRjKPFrm92GaiblE8JG1z3hR1LB62GMPGJhtU/A0MnO
+X-Received: by 2002:ac8:7c45:0:b0:4a4:35f2:a02d with SMTP id d75a77b69052e-4a77a1e7146mr18736041cf.7.1750432214227;
+        Fri, 20 Jun 2025 08:10:14 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d75a77b69052e-4a779e6e4c3sm747001cf.6.2025.06.20.08.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:10:14 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 334AB34031F;
+	Fri, 20 Jun 2025 09:10:13 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 2EC4AE4548E; Fri, 20 Jun 2025 09:10:13 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v2 00/14] ublk: allow off-daemon zero-copy buffer registration
+Date: Fri, 20 Jun 2025 09:09:54 -0600
+Message-ID: <20250620151008.3976463-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 1/2] block: move elevator queue allocation logic into
- blk_mq_init_sched
-To: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org, hch@lst.de, axboe@kernel.dk,
-        sth@linux.ibm.com, gjoyce@ibm.com
-References: <20250616173233.3803824-1-nilay@linux.ibm.com>
- <20250616173233.3803824-2-nilay@linux.ibm.com> <aFGEzN5c0-b5VdcM@fedora>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <aFGEzN5c0-b5VdcM@fedora>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wllElTPpAt1NH6ibpd1r6bOkVZGaN3aQ
-X-Authority-Analysis: v=2.4 cv=a7ww9VSF c=1 sm=1 tr=0 ts=6855728c cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=aK0vNgL49R0hWWOO1ycA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwMiBTYWx0ZWRfX1j6EniGvmgOV EmS5RV4wT6Jpv0d7ne0IiMkKil2XZYO5ZU3CjWxif0IsrTlTSHG5pNzIVBhtgL3Asr4ZcjtnfBg j0EU9uuyXADM7VjChy2iz0d/SAaq+uFPoobvfcxQDqg/ZjIwShDvZzXDEJrbIAID3WBFBXzN193
- 7clJB5VFwEoQiMTiTMhZLyX3nvlsLZTyBpawFdrLR793GkHW3Ma7kH9bG+vy8l7l4Zb4cPkaphY CppzmQXBhMPB0otp79hNr3o0ZlSfCsV0HWlEYtsk5KnpSNY0yGpECu4lNtD7JJKGyueTfpvmY4M kOdoBACcvRmluVTWkbFfz56BELudqDi0rKXNLJ9Etca/5xhr579kNsXeOMoCTiR6MBdnGGYZjby
- eOMVP1mcX05E5a9oVjK+s0NyKb9uu1+vFbo+kqfHnjCMziTPQ+w9BZiFjIyMyA8gckBab7hA
-X-Proofpoint-ORIG-GUID: wllElTPpAt1NH6ibpd1r6bOkVZGaN3aQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200102
+Content-Transfer-Encoding: 8bit
 
+Currently ublk zero-copy requires ublk request buffers to be registered
+and unregistered by the ublk I/O's daemon task. However, as currently
+implemented, there is no reason for this restriction. Registration looks
+up the request via the ublk device's tagset rather than the daemon-local
+ublk_io structure and takes an atomic reference to prevent racing with
+dispatch or completion of the request. Ming has expressed interest in
+relaxing this restriction[1] so the ublk server can offload the I/O
+operation that uses the zero-copy buffer to another thread.
 
+Additionally, optimize the buffer registration for the common case where
+the buffer is registered and unregistered by the daemon task. Skip the
+expensive atomic reference count increment and decrement and the several
+pointer dereferences involved in looking up the request on the tagset.
+On our ublk server threads, this results in a 24% decrease in the CPU
+time spent in the ublk functions on a 4K zero-copy read workload, from
+8.75% to 6.68%.
 
-On 6/17/25 8:37 PM, Ming Lei wrote:
-> On Mon, Jun 16, 2025 at 11:02:25PM +0530, Nilay Shroff wrote:
->> In preparation for allocating sched_tags before freezing the request
->> queue and acquiring ->elevator_lock, move the elevator queue allocation
->> logic from the elevator ops ->init_sched callback into blk_mq_init_sched.
->>
->> This refactoring provides a centralized location for elevator queue
->> initialization, which makes it easier to store pre-allocated sched_tags
->> in the struct elevator_queue during later changes.
->>
->> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
->> ---
+Two preliminary fixes are included as well:
+- Move the ublk request reference count from ublk_rq_data (a tail
+  allocation of struct request) to ublk_io to prevent a use after free
+  if the struct request is freed concurrently with taking a reference.
+- Don't allocate physically contiguous memory for __queues, which can be
+  very large. Doubling the size of struct ublk_io caused ENOMEM errors
+  when adding a ublk device before this change.
 
-[...]
+[1]: https://lore.kernel.org/linux-block/aAmYJxaV1-yWEMRo@fedora/
 
->> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
->> index 55a0fd105147..d914eb9d61a6 100644
->> --- a/block/blk-mq-sched.c
->> +++ b/block/blk-mq-sched.c
->> @@ -475,6 +475,10 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
->>  	q->nr_requests = 2 * min_t(unsigned int, q->tag_set->queue_depth,
->>  				   BLKDEV_DEFAULT_RQ);
->>  
->> +	eq = elevator_alloc(q, e);
->> +	if (!eq)
->> +		return -ENOMEM;
->> +
->>  	if (blk_mq_is_shared_tags(flags)) {
->>  		ret = blk_mq_init_sched_shared_tags(q);
->>  		if (ret)
-> 
-> The above failure needs to be handled by kobject_put(&eq->kobj).
+v2:
+- Add 2 fix patches
+- Optimize buffer unregistration too
+- Cache-align ublk_io
+- Restore check for zero copy support in ublk_unregister_io_buf()
+- Check for registered buffer count overflow
 
-I think here the elevator_alloc() failure occurs before we initialize 
-eq->kobj. So we don't need to handle it with kobject_put(&eq->kobj)
-and instead simply returning -ENOMEM should be sufficient. Agree?
+Caleb Sander Mateos (14):
+  ublk: use vmalloc for ublk_device's __queues
+  ublk: remove struct ublk_rq_data
+  ublk: check cmd_op first
+  ublk: handle UBLK_IO_FETCH_REQ earlier
+  ublk: remove task variable from __ublk_ch_uring_cmd()
+  ublk: consolidate UBLK_IO_FLAG_{ACTIVE,OWNED_BY_SRV} checks
+  ublk: move ublk_prep_cancel() to case UBLK_IO_COMMIT_AND_FETCH_REQ
+  ublk: don't take ublk_queue in ublk_unregister_io_buf()
+  ublk: allow UBLK_IO_(UN)REGISTER_IO_BUF on any task
+  ublk: return early if blk_should_fake_timeout()
+  ublk: optimize UBLK_IO_REGISTER_IO_BUF on daemon task
+  ublk: optimize UBLK_IO_UNREGISTER_IO_BUF on daemon task
+  ublk: remove ubq checks from ublk_{get,put}_req_ref()
+  ublk: cache-align struct ublk_io
 
-> 
-> Otherwise, feel free to add:
-> 
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> 
+ drivers/block/ublk_drv.c      | 283 +++++++++++++++++++++-------------
+ include/uapi/linux/ublk_cmd.h |  10 ++
+ 2 files changed, 187 insertions(+), 106 deletions(-)
 
-Thanks,
---Nilay
-
+-- 
+2.45.2
 
 
