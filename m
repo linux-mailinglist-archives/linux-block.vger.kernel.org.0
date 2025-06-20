@@ -1,75 +1,75 @@
-Return-Path: <linux-block+bounces-22943-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22945-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44536AE1D6C
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 16:34:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19088AE1D98
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 16:39:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F9F718917C7
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 14:34:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADF071C21089
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 14:39:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F3E231824;
-	Fri, 20 Jun 2025 14:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9340C28CF6D;
+	Fri, 20 Jun 2025 14:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DeAhNqRY"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WdG/NOX8"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE02417BD3;
-	Fri, 20 Jun 2025 14:34:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1893F293B42
+	for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 14:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430053; cv=none; b=KzWSzVKkj3whgeEI5y+I80VM/hgmrOkt77w+E0LlANpcHjX3tIiyxqJHpDzqew5/ZUXSdCaRuCaT9zlc34Li7LG4PNr1w/gwZEDz5W2pxlnxMLy3h/c1Rbt7ySWyvV8MH/+vFOxC8bWuKle/X/LgCm5i1Wx9o0D4j7V1s37qVdY=
+	t=1750430356; cv=none; b=lkaoMThjXKgk3pIAvEre58T58/VNYGrtjBQ5BIHtL5aMXvZM1bOeTUWRGdQIsUPEcEuQUbk/vf9cYUgP4kAA2Nh56zqJX0VkBKGAr5LUp0BliBkzhA95VPJX71BDT0AH4XJL3CVicNavLsEWENZJ/GvacDizkqFuu7uIWXP8N3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430053; c=relaxed/simple;
-	bh=lzjskJuu7ksH1CFy3LasEcflxgPRL8gOIIZ6qJVcPoQ=;
+	s=arc-20240116; t=1750430356; c=relaxed/simple;
+	bh=H3kMZwujEA3C5/ERdd4iRZ4IVqhcNjpSajUNMLNdh10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tTVtjHV3JXq3l7HmV7x21NN42rlorRcBJLYTWYYN9x0E4LJ2GlVnFcKV07AklPwWtkNn/yYdstcOZ1Sgr4EQPD+Q1eWS8hB9WROeGLBET5Cuc2irT7AP5dc6qhasSQMj+/do71N1KwNNS7xDuCRdK/0ZHoK0ZKHRwtbKT9F15ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DeAhNqRY; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=QClTK02pNUFQVV4x7Qm3SelJKDsplisix22s627DCREYvUFg94HX+i1EM+R1IaAPCeaMguI82ulI49z6ctbS7SMmDz5R7uF97a4Fv/srzCTNl7tSZAbzNxuJhfbLPi1TeY2ET6HU7ZBwehVNySdjYT7oXhFPRTDxHA8xcnx6wpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WdG/NOX8; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K6iL2C002720;
-	Fri, 20 Jun 2025 14:33:58 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDmXIx004659;
+	Fri, 20 Jun 2025 14:39:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vfYteA
-	MXlJGzKlkEORfRB/OXSRRP+Xi2l+/4pMid+Qw=; b=DeAhNqRYVMJTPTfWVP+p1V
-	uuhyKynIzKPEPYvpa4yifolSeT9nMApH5RcoRavIY3eUSx8waMZrh0KThf3Qd3Vd
-	7byhPZL5qKZciX3bF2A9xqTZeDDqju10a33/gg2sX/EFRNdInJMqC/wWqzG3Byb8
-	hHZgUynuBvIj4irt/LBFU4aSD6QuW3iJZoh8Hrj9gXzOrMtSJAgO+SkDPaHtdHoh
-	BwvW3q8yVhHnU43y0gQK4zjRDzFNhElNOGX4txkix2vvQ3KNqY88g8vxamKxrNAS
-	E73k4bs3SYFWPNKKnLvxjhxLxe3TgbRrQAqlwJt8Qphpl/yi/bhWYg5tSJK2EDbQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=MG+KGc
+	mHfqWHodR9js8pcJ270N5h2zpOUteSbVa9T6g=; b=WdG/NOX8xgi/3CDt5Iab+z
+	GOE5ETmXmojSvuHumSH7ykktLlatnVUdVMS8UTWJuYtYqCdvXq08zInLcESn9z13
+	hL8BixsXvDOTglkA8LEVbxMMJ/soWX+RIJu7bY0gYFDLv8r7t1ZdLJyDpdjVO8hj
+	yYJweAqh3CxObP1RkBL0VQT4dalJgBP3d5z/O0XUGkO+2zZxk0asKObe1ZvfUpg6
+	OIbzTPESiFSb7znk7kcaWk1ejSoWWyJ61g1FRoe0EgmUcuP/0ApRcH9AXrDfC4eJ
+	ga9ikxYApidIsC2zKU2mafdyvJnQK/djDQdkvEeVup1UFmdMowZzEnv9cCiOVfbw
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47beet9uh4-1
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47cy4jua40-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:58 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KBROXr014275;
-	Fri, 20 Jun 2025 14:33:57 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 479p42u7qq-1
+	Fri, 20 Jun 2025 14:39:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDCOlF027466;
+	Fri, 20 Jun 2025 14:39:07 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479kt0bqph-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:57 +0000
+	Fri, 20 Jun 2025 14:39:07 +0000
 Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KEXu8d55771596
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KEd6us59834784
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Jun 2025 14:33:56 GMT
+	Fri, 20 Jun 2025 14:39:06 GMT
 Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9E9AB58055;
-	Fri, 20 Jun 2025 14:33:56 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 010A158064;
+	Fri, 20 Jun 2025 14:39:06 +0000 (GMT)
 Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A50975804E;
-	Fri, 20 Jun 2025 14:33:51 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8501258055;
+	Fri, 20 Jun 2025 14:39:03 +0000 (GMT)
 Received: from [9.61.191.218] (unknown [9.61.191.218])
 	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Jun 2025 14:33:51 +0000 (GMT)
-Message-ID: <ef5aceb9-a5ec-489c-88e3-f674d59299ad@linux.ibm.com>
-Date: Fri, 20 Jun 2025 20:03:50 +0530
+	Fri, 20 Jun 2025 14:39:03 +0000 (GMT)
+Message-ID: <a1644c15-2a9a-4fc1-a762-b153d167cd1f@linux.ibm.com>
+Date: Fri, 20 Jun 2025 20:09:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -77,65 +77,82 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] block: use chunk_sectors when evaluating stacked
- atomic write limits
-To: John Garry <john.g.garry@oracle.com>, agk@redhat.com, snitzer@kernel.org,
-        mpatocka@redhat.com, song@kernel.org, yukuai3@huawei.com, hch@lst.de,
-        axboe@kernel.dk
-Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        ojaswin@linux.ibm.com, martin.petersen@oracle.com
-References: <20250618083737.4084373-1-john.g.garry@oracle.com>
- <20250618083737.4084373-6-john.g.garry@oracle.com>
+Subject: Re: [PATCHv3 1/2] block: move elevator queue allocation logic into
+ blk_mq_init_sched
+To: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, hch@lst.de, axboe@kernel.dk,
+        sth@linux.ibm.com, gjoyce@ibm.com
+References: <20250616173233.3803824-1-nilay@linux.ibm.com>
+ <20250616173233.3803824-2-nilay@linux.ibm.com> <aFGEzN5c0-b5VdcM@fedora>
 Content-Language: en-US
 From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250618083737.4084373-6-john.g.garry@oracle.com>
+In-Reply-To: <aFGEzN5c0-b5VdcM@fedora>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XcNidTvOBNptHj57jYIgusGfoSy_ae7g
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA5OCBTYWx0ZWRfXwUA8Hpzlr1c4 4r4qpxnTQqI6C2HqvVrcBkxl2O8VW4+Htre7pSm5yXjlUxRm5Re671h++vl6Cz1VZ+eAHinNlm1 Q3xaao9GGxmtkNZuyB3+nd3FE3c0r+e7GMFKO4ksRna0s1Y3hZIitVWCgjwN3CJJNZa7uPW1Qf9
- uCag4T1mLFVWVxo1xs3OqdLBTP5ur2jlIG1ug6zVtSndKLJdHD/tU2GftGbOCXtMgP22xxuOUQ7 Wc33OIsA4plkJgHfxBdEy0VE1RpWOALjPgiNfpilvYmqHFwcja8jz+QPUS0O5pdPye7soNqA0Hp 0JfucHqVqiy4cn2/QwTzpZosPzUdWltR6EqY8f7UcwoHnzIrMcSWSBq63Jjd3JGFWRve0bnJQ9V
- nq8fr/T+IhqUbsCh/ARjeMxDs37M3qTNx9s2xGd8NHPn6FoSVPJnVw57EX3sPhvDijmyOw2a
-X-Authority-Analysis: v=2.4 cv=PrSTbxM3 c=1 sm=1 tr=0 ts=68557156 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=yPCof4ZbAAAA:8 a=fRhigxJsmYGPnd04RnMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: XcNidTvOBNptHj57jYIgusGfoSy_ae7g
+X-Proofpoint-GUID: wllElTPpAt1NH6ibpd1r6bOkVZGaN3aQ
+X-Authority-Analysis: v=2.4 cv=a7ww9VSF c=1 sm=1 tr=0 ts=6855728c cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=aK0vNgL49R0hWWOO1ycA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwMiBTYWx0ZWRfX1j6EniGvmgOV EmS5RV4wT6Jpv0d7ne0IiMkKil2XZYO5ZU3CjWxif0IsrTlTSHG5pNzIVBhtgL3Asr4ZcjtnfBg j0EU9uuyXADM7VjChy2iz0d/SAaq+uFPoobvfcxQDqg/ZjIwShDvZzXDEJrbIAID3WBFBXzN193
+ 7clJB5VFwEoQiMTiTMhZLyX3nvlsLZTyBpawFdrLR793GkHW3Ma7kH9bG+vy8l7l4Zb4cPkaphY CppzmQXBhMPB0otp79hNr3o0ZlSfCsV0HWlEYtsk5KnpSNY0yGpECu4lNtD7JJKGyueTfpvmY4M kOdoBACcvRmluVTWkbFfz56BELudqDi0rKXNLJ9Etca/5xhr579kNsXeOMoCTiR6MBdnGGYZjby
+ eOMVP1mcX05E5a9oVjK+s0NyKb9uu1+vFbo+kqfHnjCMziTPQ+w9BZiFjIyMyA8gckBab7hA
+X-Proofpoint-ORIG-GUID: wllElTPpAt1NH6ibpd1r6bOkVZGaN3aQ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
- phishscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200098
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200102
 
 
 
-On 6/18/25 2:07 PM, John Garry wrote:
-> The atomic write unit max value is limited by any stacked device stripe
-> size.
-> 
-> It is required that the atomic write unit is a power-of-2 factor of the
-> stripe size.
-> 
-> Currently we use io_min limit to hold the stripe size, and check for a
-> io_min <= SECTOR_SIZE when deciding if we have a striped stacked device.
-> 
-> Nilay reports that this causes a problem when the physical block size is
-> greater than SECTOR_SIZE [0].
-> 
-> Furthermore, io_min may be mutated when stacking devices, and this makes
-> it a poor candidate to hold the stripe size. Such an example (of when
-> io_min may change) would be when the io_min is less than the physical
-> block size.
-> 
-> Use chunk_sectors to hold the stripe size, which is more appropriate.
-> 
-> [0] https://lore.kernel.org/linux-block/888f3b1d-7817-4007-b3b3-1a2ea04df771@linux.ibm.com/T/#mecca17129f72811137d3c2f1e477634e77f06781
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+On 6/17/25 8:37 PM, Ming Lei wrote:
+> On Mon, Jun 16, 2025 at 11:02:25PM +0530, Nilay Shroff wrote:
+>> In preparation for allocating sched_tags before freezing the request
+>> queue and acquiring ->elevator_lock, move the elevator queue allocation
+>> logic from the elevator ops ->init_sched callback into blk_mq_init_sched.
+>>
+>> This refactoring provides a centralized location for elevator queue
+>> initialization, which makes it easier to store pre-allocated sched_tags
+>> in the struct elevator_queue during later changes.
+>>
+>> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+>> ---
 
-Looks good to me:
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+[...]
+
+>> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+>> index 55a0fd105147..d914eb9d61a6 100644
+>> --- a/block/blk-mq-sched.c
+>> +++ b/block/blk-mq-sched.c
+>> @@ -475,6 +475,10 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
+>>  	q->nr_requests = 2 * min_t(unsigned int, q->tag_set->queue_depth,
+>>  				   BLKDEV_DEFAULT_RQ);
+>>  
+>> +	eq = elevator_alloc(q, e);
+>> +	if (!eq)
+>> +		return -ENOMEM;
+>> +
+>>  	if (blk_mq_is_shared_tags(flags)) {
+>>  		ret = blk_mq_init_sched_shared_tags(q);
+>>  		if (ret)
+> 
+> The above failure needs to be handled by kobject_put(&eq->kobj).
+
+I think here the elevator_alloc() failure occurs before we initialize 
+eq->kobj. So we don't need to handle it with kobject_put(&eq->kobj)
+and instead simply returning -ENOMEM should be sufficient. Agree?
+
+> 
+> Otherwise, feel free to add:
+> 
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> 
+
+Thanks,
+--Nilay
+
+
 
