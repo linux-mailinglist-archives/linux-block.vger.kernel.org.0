@@ -1,91 +1,91 @@
-Return-Path: <linux-block+bounces-22949-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-22956-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4203CAE1E20
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 17:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8328EAE1E26
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 17:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 772594C0AB9
-	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 15:10:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92BB84C0ABE
+	for <lists+linux-block@lfdr.de>; Fri, 20 Jun 2025 15:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E732BDC26;
-	Fri, 20 Jun 2025 15:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81BCC2BDC17;
+	Fri, 20 Jun 2025 15:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="FGbuvqaY"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="F+ExqwGP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
+Received: from mail-qt1-f225.google.com (mail-qt1-f225.google.com [209.85.160.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD222BDC0C
-	for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 15:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B560A2BDC33
+	for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 15:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432218; cv=none; b=PWSW4X/+bfKADm+XtvIMk5fcKMoVmj5NdeiDdQb9IiNVMWBeLmKBkL5meft2d5UihIZuJKTdcwPAUo5qfIrwDz8wJnv+Ccnrp/1BjMv5Cl0TIRgP8opnHpo2AImrbnQxwGYS8jByYZc9U9YyFSH7WWNUBaLgO8GhvJkYNFPguMg=
+	t=1750432220; cv=none; b=oOlYTK+uOq/BnczU0sZ98BNk9mLzWcSe4z/my9YhkusNI5QWWZiU+mNEqxm/Mcz1aPCi3flKVH0y8Pg5nQenl/Z+Ouv8vq3yPQn+JdUI93UbSP6l4jsKn3oSiyvInXOdzY9Yrt0YdkZWVG2kBQwgOqhKbP24GfVGFhySZZOve2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432218; c=relaxed/simple;
-	bh=OlPwykWb3a2cpE6y+UWUJIWjijXEQ5gKNIek0BEO5Lg=;
+	s=arc-20240116; t=1750432220; c=relaxed/simple;
+	bh=pJ8BOYMsyiTChLJH658YyhvkLGVcbkAMXtlTgtSiOAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VI1gHZwtAHlQ+jAO9CnH7Y4ZYGp6eFMuubbABQSXjLGkZ+pfpSfm5mDsLOz0U1PfJ1u5kSwKHxBPcCd51pZjBuSJJt5mEEbYlr2VhpDZgXFSMh6uLaTJrxXGOxuPH6hXzDRSBJtgx5rw/9+YYKMHsrNjW1KQK+kcNkoFwwaTUCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=FGbuvqaY; arc=none smtp.client-ip=209.85.214.226
+	 MIME-Version; b=mV+Zn2VtM3HSQ5i8/6WkgZlcYsz0a40cwSBYGasmpC+j48z337TO3NiyRIU9Bp8YaH1z4K8YtFp1TGl+htk0YEticF5prR8Dp+x7KQPt2QfbOlQzyvy1D1UeH74lt12Gr1segBJotfoZDb1rI3rhCJmmBrHVsrAMqZro0l1uif0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=F+ExqwGP; arc=none smtp.client-ip=209.85.160.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-234d3103237so3003985ad.0
-        for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 08:10:16 -0700 (PDT)
+Received: by mail-qt1-f225.google.com with SMTP id d75a77b69052e-4a782768db4so115261cf.3
+        for <linux-block@vger.kernel.org>; Fri, 20 Jun 2025 08:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1750432216; x=1751037016; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1750432217; x=1751037017; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YT9QwCiEHA7j28o1QebG1GgNjVO67iJMOooTY2VHBdw=;
-        b=FGbuvqaYLR0jr+U0i6FggSLl32qgcbmcefDq+qkwY7IK8yxKMmeHFJd1b8FiO0fO4y
-         T9wWtNuJffAGk6G7DcDmPvl93rZ64yI2ygJvxFkYhEViQ13QUfZStw+ac+ZEeNARfEFu
-         C5U8mUWgVQMYQXv9TB/1AyCi9ysB+IgsLIRjNdUKYaj6yDdaiEwouKJqnqz1bz341zju
-         4Sm/enCawyO6yMtDiQT2TPUrhOnZY/kXnBI+jy3l65VzYZPNalb6aU4SVgU+NubEyn61
-         l2c1NffdAO6JVCj1jx27pWnp8W1OzAWiohmLFWHirLQzyhMSdg7QoUbGHj98innyFw95
-         m+OQ==
+        bh=CZdXD0IdCb5Mfaq9Fh0hDvYHAXSwZZ5gwiKFSUhG+q0=;
+        b=F+ExqwGPZPuzC5iw/x9YutqFBDiNb3Of6g3VghHdYseal3ZKsp9C8XQW98iynXjOKG
+         lnHqmtbvxN3bvO8ibQhFDLsMv3rhc5h5AOXk2rOelzaxTYkfxV3LfnAGBzZhogALbMnf
+         kiL5crGS0hGLYOvijU4Q9tRjQOs4nqSe3lnEl3DzS5iIt0AHabhTHPNYNO4pbuy8nM1F
+         OcuPkMKt9TFcnjMTzJlNv8fN8nW8gn0fBVqa7KQx/YTVESDWxK26SLjIQyZ2fTMo0w13
+         QnFrt4hHqOHBKsnOBaRQ7MDME8oDOClLoBTF+lmkgw4qryYMDp8dVCCw5D2HzbLpqS1I
+         1aFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750432216; x=1751037016;
+        d=1e100.net; s=20230601; t=1750432217; x=1751037017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YT9QwCiEHA7j28o1QebG1GgNjVO67iJMOooTY2VHBdw=;
-        b=m7WtfP5s++Q/aYPHtrKLUI9uQwRLA033MOsMcFBdwofwZDaNWpBl3mmFgpn44HfAhY
-         CXJimKhW5IShvg86XkgOQydw7OUB2VRLBgev93/6eas2I0xXhGJRZtZgtd2hTfBXrf+p
-         ZFz7UrRKKF3zKEu1c3uAM+4JQ4kHxCjs1ZdoFbceagM7Cetczcccmx2vD/J87IWdDT1r
-         RF7OG+ThBojj7CW24MOQCjz5j9mExThBJlLsoCQSbqgPn9YLvC39tcJZ5veBA8+ZFzO4
-         AQWq6gc7U2rZk20MVsJpEVtwTzzmjFhC6kgG2KeagWuNWFa6nkwRt25wnTYJNlI9etZY
-         aYgA==
-X-Gm-Message-State: AOJu0Yw+rkC7vrgPOkKfdJVHbov7QGMgUeDQ0XahOlb9/DVCrUjw1xC8
-	U+OiLhJG339NCHSY4bij/n+dM2AlljsrBPtFNbouoE5Q6ir8cn3syVD1CuBbjyxGiGkNfWweKov
-	Cq+sYrDR7a8yalzNHyIAMmIXWKjJZ1t6K8VvXjLwSiywbWiAkthzB
-X-Gm-Gg: ASbGncueRqTQSi5ROlZkwxVGO5m2vzTIl2eKgmbcVZBTypIHzbsDe80l+wwxfhH79I7
-	+jwmNvA8aqudugzTK37gbDSk6gOE+hLjllunimzBcCS67ynwi5ytb2ZFQ3+wWboCHsyQH7kV0Ju
-	0agMZLP6J8yQ6/ZNI80eTlNIeUN7Eo3XbHwtAxZnNF1MybEDDjl4rSyaHX5DmhhRy9adKpKEwxG
-	MG4xYrOTYuj7XnQVjNG4QCwhDH8zBV69PzA1qNOeuzu+sqsJEEuSO4eIYdPdEtwK5YcpEruJMwd
-	Orx28BGcKDFw4lzaxR9LRuL/w75b3sXSAS21PQuN
-X-Google-Smtp-Source: AGHT+IGiw58ZzHn31w5xCiabOWrRlwxXb+f6Z9nkxxL3A7V6oiXDbrNl2IwPYYSnYtT+dyTR/V5pxifrMod8
-X-Received: by 2002:a17:902:d4ce:b0:234:db06:acf with SMTP id d9443c01a7336-237d980c58amr17719205ad.2.1750432215946;
-        Fri, 20 Jun 2025 08:10:15 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-237d86251f4sm1175205ad.128.2025.06.20.08.10.15
+        bh=CZdXD0IdCb5Mfaq9Fh0hDvYHAXSwZZ5gwiKFSUhG+q0=;
+        b=H3tkahn9OaheN9j3a9/WOK00ZnMwdhKAtTBCEpCPp5YLEEUcryk/2cUy+XW3eSBbTq
+         ajP8H3VhwTvn/61IvLR7tA0cH4GK6nbET+zMblpqL13Mk6mYhv9p/+OIsJeJnZQ/Nr0d
+         TtCx8wtAGm1PTFqQu2uFX0z2NYMGMYhG0vuujjpUbzyBbYsPay9fCV9PTWdtkTefgYPl
+         v7Rgshj28VUZ6DwMpg6qkxKt9LyynMDaCKThBAFQ9T9lhh0tqmQCF+pATEkthBGMfNLL
+         SIViUqtZGNr2GMEHYa9cgOqnuHQwgdY7TfXRvIIDnfd/D5Quywk9lDESv1zOkeXnuK2k
+         5Klw==
+X-Gm-Message-State: AOJu0YzcHbmmN2sGahDz5NqoO76rfooaF4Q0g0D5i3S5yxUya0XmFU2n
+	ZxT+7kISEWL7WXOeq00JoFNaIDoj+iEETrMZjAnAJYfoeeYLauNtVQUb/JNIW91+cXzLWqjRZY2
+	jkSR+mzccxCHx/R885P2T6bqga2ztTFJL7VTZ
+X-Gm-Gg: ASbGncsR84aSmbYw+r22k7ucnLyDzBTvhd34iKOfecTsMOQoJFG5FVKoBxoInqftFUM
+	DokniiTOduN6rd3zxE0f8CvwllkRGiqixxf+lbFvi4gOTsP6f4D0WoCgfUm+mqkeQGiuCdEs7rT
+	Ydykt1FMeYJe7/ppvG6us04OUNJbs2lmIYXBefZ4POwrFQnzf/hgr1eTYGPxKLhMeNf2e16rzW0
+	IgEQ9URdnCgk2IFrBmJcgwz7ww+0xTzwQ5Ayu/dXxXUQ1U9BYdgdgz7ch6//oRJ7UV9etLYqSNi
+	c0FpdAjv2lREp+bNS/XNZiw1jsArOgrDFPEJskvcqq83ZDfqhif0bEc=
+X-Google-Smtp-Source: AGHT+IHqxLgDa17U4E2y9tUCTRqn/Vz/PP8bmW8+AiNJR0czoc7jFcSBVBgUgEhsuf4/wUSTBW7yaOucXRL2
+X-Received: by 2002:ac8:5756:0:b0:4a5:a4ad:c55b with SMTP id d75a77b69052e-4a77a27da81mr16873861cf.12.1750432216367;
+        Fri, 20 Jun 2025 08:10:16 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id d75a77b69052e-4a77a15778fsm694721cf.11.2025.06.20.08.10.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:10:15 -0700 (PDT)
+        Fri, 20 Jun 2025 08:10:16 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 69099340747;
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 994BA340D6A;
 	Fri, 20 Jun 2025 09:10:15 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 67BA1E4548E; Fri, 20 Jun 2025 09:10:15 -0600 (MDT)
+	id 9829EE4548E; Fri, 20 Jun 2025 09:10:15 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 06/14] ublk: consolidate UBLK_IO_FLAG_{ACTIVE,OWNED_BY_SRV} checks
-Date: Fri, 20 Jun 2025 09:10:00 -0600
-Message-ID: <20250620151008.3976463-7-csander@purestorage.com>
+Subject: [PATCH v2 07/14] ublk: move ublk_prep_cancel() to case UBLK_IO_COMMIT_AND_FETCH_REQ
+Date: Fri, 20 Jun 2025 09:10:01 -0600
+Message-ID: <20250620151008.3976463-8-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250620151008.3976463-1-csander@purestorage.com>
 References: <20250620151008.3976463-1-csander@purestorage.com>
@@ -97,40 +97,47 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-UBLK_IO_FLAG_ACTIVE and UBLK_IO_FLAG_OWNED_BY_SRV are mutually
-exclusive. So just check that UBLK_IO_FLAG_OWNED_BY_SRV is set in
-__ublk_ch_uring_cmd(); that implies UBLK_IO_FLAG_ACTIVE is unset.
+UBLK_IO_COMMIT_AND_FETCH_REQ is the only one of __ublk_ch_uring_cmd()'s
+switch cases that doesn't return or goto. Move the logic following the
+switch into this case so it also returns. Drop the now unneeded default
+case.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/block/ublk_drv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 7635105c1596..9bfccee3c2b7 100644
+index 9bfccee3c2b7..893519f74625 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -2210,18 +2210,15 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+@@ -2232,22 +2232,20 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 		return ublk_unregister_io_buf(cmd, ubq, ub_cmd->addr, issue_flags);
+ 	case UBLK_IO_COMMIT_AND_FETCH_REQ:
+ 		ret = ublk_commit_and_fetch(ubq, io, cmd, ub_cmd, issue_flags);
+ 		if (ret)
+ 			goto out;
+-		break;
++
++		ublk_prep_cancel(cmd, issue_flags, ubq, tag);
++		return -EIOCBQUEUED;
+ 	case UBLK_IO_NEED_GET_DATA:
+ 		io->addr = ub_cmd->addr;
+ 		if (!ublk_get_data(ubq, io))
+ 			return -EIOCBQUEUED;
  
- 	if (READ_ONCE(io->task) != current)
- 		goto out;
- 
- 	/* there is pending io cmd, something must be wrong */
--	if (io->flags & UBLK_IO_FLAG_ACTIVE) {
-+	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV)) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
- 
--	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
+ 		return UBLK_IO_RES_OK;
+-	default:
 -		goto out;
--
- 	/*
- 	 * ensure that the user issues UBLK_IO_NEED_GET_DATA
- 	 * iff the driver have set the UBLK_IO_FLAG_NEED_GET_DATA.
- 	 */
- 	if ((!!(io->flags & UBLK_IO_FLAG_NEED_GET_DATA))
+ 	}
+-	ublk_prep_cancel(cmd, issue_flags, ubq, tag);
+-	return -EIOCBQUEUED;
+ 
+  out:
+ 	pr_devel("%s: complete: cmd op %d, tag %d ret %x io_flags %x\n",
+ 			__func__, cmd_op, tag, ret, io->flags);
+ 	return ret;
 -- 
 2.45.2
 
