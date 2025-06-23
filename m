@@ -1,103 +1,115 @@
-Return-Path: <linux-block+bounces-23013-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23015-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D1A5AE3B0C
-	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 11:49:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D306AE3B1F
+	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 11:51:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F5F37A247D
-	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 09:48:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D5F73B4693
+	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 09:49:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2587E1531C1;
-	Mon, 23 Jun 2025 09:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F45D239E7E;
+	Mon, 23 Jun 2025 09:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YBYbXhwi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SDIOLCFH"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614EB218E9F
-	for <linux-block@vger.kernel.org>; Mon, 23 Jun 2025 09:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96966238177
+	for <linux-block@vger.kernel.org>; Mon, 23 Jun 2025 09:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672159; cv=none; b=Nw9C6tmcxkWcUxjMarrxlWr8HDI6G7ja2FqmtbIBaeU5WooQzO9dr6XsUNmFZCY91hM34xwbQL3WoUOHOaFAKDejT7QEhZKbwJs+Z09YaX0Na4Bwbv7Z6q4f5pRQJoTjbZuXN7HO/sbR+LmyNLrrpYsiOlAg4nwa2p28JoIZN44=
+	t=1750672195; cv=none; b=X48C0Sb90Z5KmGVc3k1eJ7PvNsAXsBiEC0AzUFmjuixjqPOp5UuTKheaFKLZ5+Baj/nbik8pehqPvWHuNoc8ApnMeAJN/6EOxCSLXO6Y0eYc0CLpVJ7vzg6UGrK8VkzYcNY7GQFdHfLCSWYVkEok3rAyWj/HiQVDN3yvh8XYNBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672159; c=relaxed/simple;
-	bh=g65jt0VSj3nwiTw8FU7cd0BAVjpoRt8/tIX5/8xOaQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AC1AK+ssT5FdYH977VPefqeKRgau1uLzD8n2HDeokVCM/14SZj7j3UBicM9QTwK8SivaUF3XKjXudp9n5OO+woM25+Fnsi/8/os6YXLeTO6n13a2Tt8Y4UwiNRo0LQSwiYyco1FqtqIedNXibsWDK8ISIB1BR7chwwaYMDrjlS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YBYbXhwi; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1750672195; c=relaxed/simple;
+	bh=tYYN68KIhKpUm94dvkFIqNu0JEd7ylMdObP13UaACv0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V4cKNh7FA/2QfvoZgu0S+/mh++vxvOP3cAdkj+pPHtqoXy6wUrOewXVCkPo13H22Y3Coe6XOrVyFzLMcweiojUqT8ClAIEc0fKGFdaUeKFFlArJITz0Esi7p/mQJX+HeVDhSuxNqRwcdgY5W6EMtFDEk03sZWdR5AL7FIO24SnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SDIOLCFH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750672156;
+	s=mimecast20190719; t=1750672192;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MQPIHXp0g+QvXAx6z5hZ1thxiI+yNBfpOMzFK/H9ugs=;
-	b=YBYbXhwiER20dlyX+2qIOqjVe8ynZTsrI8bydzBYzZ8gGQOEvWJGNE/7ZBh3yqUPxr5tWT
-	5RLW5JbpwTTEqIEEzrtoxMJoY1rcEsWGys9gTPBPVneUDuDfsBklWBaAFzvc7rPeizzt1B
-	c3PT/sMXI1HHqdQpQ+QsME3SqpWS9iU=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=I3UBDVi5sXjr+Xruv6MaOfSJ09qNph1kaTFIkhQo8sc=;
+	b=SDIOLCFHCE+JJe8wesnAfdnRWxftWtazuswW+KuMLn7bOLGxIybBaspTjRB2o/BI6EWi0A
+	UCUq91FlFsv/4AnFcohea+H1v+LD5xCtQNY5if5LRTv+FWfl+p4S2GiNLnwGDJlXB0EYQr
+	ztDT3jtlTPe8God1nH8Z0l2FSiETlGY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-flBr7n_aPUycaodvNzt0_g-1; Mon,
- 23 Jun 2025 05:49:12 -0400
-X-MC-Unique: flBr7n_aPUycaodvNzt0_g-1
-X-Mimecast-MFC-AGG-ID: flBr7n_aPUycaodvNzt0_g_1750672151
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-100-wPkyuED1OGSDkcQVVfsOFQ-1; Mon,
+ 23 Jun 2025 05:49:46 -0400
+X-MC-Unique: wPkyuED1OGSDkcQVVfsOFQ-1
+X-Mimecast-MFC-AGG-ID: wPkyuED1OGSDkcQVVfsOFQ_1750672184
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6330C1809C8B;
-	Mon, 23 Jun 2025 09:49:11 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.65])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA22F19560AB;
-	Mon, 23 Jun 2025 09:49:08 +0000 (UTC)
-Date: Mon, 23 Jun 2025 17:49:03 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH v2 13/14] ublk: remove ubq checks from
- ublk_{get,put}_req_ref()
-Message-ID: <aFkjDyu6aiSZrUNN@fedora>
-References: <20250620151008.3976463-1-csander@purestorage.com>
- <20250620151008.3976463-14-csander@purestorage.com>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E2D21955F06;
+	Mon, 23 Jun 2025 09:49:43 +0000 (UTC)
+Received: from [10.22.80.93] (unknown [10.22.80.93])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F36718046C7;
+	Mon, 23 Jun 2025 09:49:34 +0000 (UTC)
+Date: Mon, 23 Jun 2025 11:49:31 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: John Garry <john.g.garry@oracle.com>
+cc: agk@redhat.com, snitzer@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+    hch@lst.de, nilay@linux.ibm.com, axboe@kernel.dk, dm-devel@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+    linux-block@vger.kernel.org, ojaswin@linux.ibm.com, 
+    martin.petersen@oracle.com
+Subject: Re: [PATCH v2 4/5] dm-stripe: limit chunk_sectors to the stripe
+ size
+In-Reply-To: <20250618083737.4084373-5-john.g.garry@oracle.com>
+Message-ID: <0ba540a3-9434-c02a-f2ea-fa5ce13325e3@redhat.com>
+References: <20250618083737.4084373-1-john.g.garry@oracle.com> <20250618083737.4084373-5-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620151008.3976463-14-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Fri, Jun 20, 2025 at 09:10:07AM -0600, Caleb Sander Mateos wrote:
-> ublk_get_req_ref() and ublk_put_req_ref() currently call
-> ublk_need_req_ref(ubq) to check whether the ublk device features require
-> reference counting of its requests. However, all callers already know
-> that reference counting is required:
-> - __ublk_check_and_get_req() is only called from
->   ublk_check_and_get_req() if user copy is enabled, and from
->   ublk_register_io_buf() if zero copy is enabled
-> - ublk_io_release() is only called for requests registered by
->   ublk_register_io_buf(), which requires zero copy
-> - ublk_ch_read_iter() and ublk_ch_write_iter() only call
->   ublk_put_req_ref() if ublk_check_and_get_req() succeeded, which
->   requires user copy to be enabled
+
+
+On Wed, 18 Jun 2025, John Garry wrote:
+
+> Same as done for raid0, set chunk_sectors limit to appropriately set the
+> atomic write size limit.
 > 
-> So drop the ublk_need_req_ref() check and the ubq argument in
-> ublk_get_req_ref() and ublk_put_req_ref().
+> Setting chunk_sectors limit in this way overrides the stacked limit
+> already calculated based on the bottom device limits. This is ok, as
+> when any bios are sent to the bottom devices, the block layer will still
+> respect the bottom device chunk_sectors.
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  drivers/md/dm-stripe.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/md/dm-stripe.c b/drivers/md/dm-stripe.c
+> index a7dc04bd55e5..5bbbdf8fc1bd 100644
+> --- a/drivers/md/dm-stripe.c
+> +++ b/drivers/md/dm-stripe.c
+> @@ -458,6 +458,7 @@ static void stripe_io_hints(struct dm_target *ti,
+>  	struct stripe_c *sc = ti->private;
+>  	unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
+>  
+> +	limits->chunk_sectors = sc->chunk_size;
+>  	limits->io_min = chunk_size;
+>  	limits->io_opt = chunk_size * sc->stripes;
+>  }
+> -- 
+> 2.31.1
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-
-Thanks,
-Ming
+Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
 
 
