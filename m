@@ -1,69 +1,76 @@
-Return-Path: <linux-block+bounces-23014-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23016-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B14AE3B10
-	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 11:50:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9FFFAE3B1E
+	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 11:51:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACF0D188FAF1
-	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 09:50:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81EE816B780
+	for <lists+linux-block@lfdr.de>; Mon, 23 Jun 2025 09:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FADB23875D;
-	Mon, 23 Jun 2025 09:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4966238C1D;
+	Mon, 23 Jun 2025 09:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDC735s/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FeOHJ/gq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF7135971
-	for <linux-block@vger.kernel.org>; Mon, 23 Jun 2025 09:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453E6235368
+	for <linux-block@vger.kernel.org>; Mon, 23 Jun 2025 09:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672193; cv=none; b=ViM9fhNYe4GYNJOmm1X8xKzIPvVYKSJw1Ew8TostkJtqIH0knvu1Bz1pqo3rHwFI4C22/c+cp2JY2BOH3CQxTrgTn2lTzTRdNXRRaTO8JdkxA16WNTlyVwMPHT5Em4keDBUALYCkKPqGNWgkWeJIgGTPJGLniKvuZNspP2dTw6c=
+	t=1750672273; cv=none; b=iLFcL29XAcWxMmqrX9xVlUgWVVGbvgciLL0V1eIT58iV0vKew8xYyW0cECjK04nJ15cwJKpI+QturytXXhJPILTdjjfphJVfvoNOWHBoDMk+Mt/3vJ8vFXgQ/Y01YHd0qkC5xTs8ruvXQ2nhl2Fl0hJwqXY5l/qSIR/WeWVWSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672193; c=relaxed/simple;
-	bh=+H0dRhnp8Q64tlwjF7CJT9uEF1qylsO88zcPvwXYqtc=;
+	s=arc-20240116; t=1750672273; c=relaxed/simple;
+	bh=Rot3KbRbxTNHNEHqeFGYz9FZiaV8DjwC59KSip1uUA4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7cgnBhH+z77YGbU8HQ+DagrlKJ57OHrgqVcWAgvlTFYwFhPXDfJPh6KYrK2zcT9Z8C5zpgqIEDXPLsCgb+cOTpoQMRdP+/VOUSI5I9iZVh5848r9TfwafXkJCPFfaoFeW2LK0rdhCKpWA35TftMn0rde1PODGcuPqI/zJ1eqjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDC735s/; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=TU8S1Pwi4l4tHCH1ktVh7OndLl4cV4z8SRGagQm+AdV34dDMSG5HQp8nrqD9t26poQPtT4Gr9U85E4TL3Oi9HaKFyFS4IjRTAe3o4InDCUVniznebMrezdmikzWXN+bH9ydyRvgC7Ydd5sS6Z7pratsU/pu+4tDjNPimm5Ma140=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FeOHJ/gq; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750672190;
+	s=mimecast20190719; t=1750672271;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s6vOPDAaaJfJPHfTtcv9wcz82LhLntSeSCi44vr4yZ8=;
-	b=YDC735s/QMw98/eFerc6jpkfOrPlGBR6LTqfFJGcV+wQ0P6bmRCD8I546KUSp+/FinQuf0
-	Mmn4rlmXR8o6raq0P3yBPTWg1wWLhGjA3IOvAeGACZJncxSvvQtVT7pwxq9m0DPvTL7pHy
-	sgZ/FRukffuFnJu6jvqOOtdd/PkDcl8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=+dw2VEOv18UATXVau5i3FVFgwclvcj3uT4MGBkEcAkg=;
+	b=FeOHJ/gquWI84AZeRALhuoTY+5JDKSk5AmJIXWQ1le4oLJcBfbwZLwTUaGX7IZmyuPcy2w
+	4BwdUItwCcTHalodlu35KHOIqBul5584edDgMh3ltFF3hjFYrJv/MCgmRfSIhtkO7LcOZI
+	08VWHvwgvGnP3xsCg32N7xKjEdk7+1E=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-149-V8JXfqoCMTKUEl-PDUVI_g-1; Mon,
- 23 Jun 2025 05:49:43 -0400
-X-MC-Unique: V8JXfqoCMTKUEl-PDUVI_g-1
-X-Mimecast-MFC-AGG-ID: V8JXfqoCMTKUEl-PDUVI_g_1750672182
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-552-ig4664WMMa-ZThUNNl2h6A-1; Mon,
+ 23 Jun 2025 05:51:07 -0400
+X-MC-Unique: ig4664WMMa-ZThUNNl2h6A-1
+X-Mimecast-MFC-AGG-ID: ig4664WMMa-ZThUNNl2h6A_1750672265
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 335C81956048;
-	Mon, 23 Jun 2025 09:49:42 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B06581956095;
+	Mon, 23 Jun 2025 09:51:05 +0000 (UTC)
 Received: from fedora (unknown [10.72.116.65])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B9F0195608D;
-	Mon, 23 Jun 2025 09:49:39 +0000 (UTC)
-Date: Mon, 23 Jun 2025 17:49:34 +0800
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6181180035C;
+	Mon, 23 Jun 2025 09:50:59 +0000 (UTC)
+Date: Mon, 23 Jun 2025 17:50:54 +0800
 From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH v2 14/14] ublk: cache-align struct ublk_io
-Message-ID: <aFkjLuMmq6rxDcDU@fedora>
-References: <20250620151008.3976463-1-csander@purestorage.com>
- <20250620151008.3976463-15-csander@purestorage.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, "Ewan D. Milne" <emilne@redhat.com>,
+	Laurence Oberman <loberman@redhat.com>, linux-rdma@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/2] scsi: enforce unlimited max_segment_size when
+ virt_boundary_mask is set
+Message-ID: <aFkjfv67LK0EpAC3@fedora>
+References: <20250623080326.48714-1-hch@lst.de>
+ <20250623080326.48714-3-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -72,36 +79,37 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620151008.3976463-15-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250623080326.48714-3-hch@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Jun 20, 2025 at 09:10:08AM -0600, Caleb Sander Mateos wrote:
-> struct ublk_io is already 56 bytes on 64-bit architectures, so round it
-> up to a full cache line (typically 64 bytes). This ensures a single
-> ublk_io doesn't span multiple cache lines and prevents false sharing if
-> consecutive ublk_io's are accessed by different daemon tasks.
+On Mon, Jun 23, 2025 at 10:02:54AM +0200, Christoph Hellwig wrote:
+> The virt_boundary_mask limit requires an unlimited max_segment_size for
+> bio splitting to not corrupt data.  Historically, the block layer tried
+> to validate this, although the check was half-hearted until the addition
+> of the atomic queue limits API.  The full blown check than triggered
+> issues with stacked devices incorrectly inheriting limits such as the
+> virt boundary and got disabled in commit b561ea56a264 ("block: allow
+> device to have both virt_boundary_mask and max segment size") instead of
+> fixing the issue properly.
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> ---
->  drivers/block/ublk_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Ensure that the SCSI mid layer doesn't set the default low
+> max_segment_size limit for this case, and check for invalid
+> max_segment_size values in the host template, similar to the original
+> block layer check given that SCSI devices can't be stacked.
 > 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index ebc56681eb68..740141c63a93 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -186,11 +186,11 @@ struct ublk_io {
->  	unsigned task_registered_buffers;
->  
->  	/* auto-registered buffer, valid if UBLK_IO_FLAG_AUTO_BUF_REG is set */
->  	u16 buf_index;
->  	void *buf_ctx_handle;
-> -};
-> +} ____cacheline_aligned_in_smp;
+> This fixes reported data corruption on storvsc, although as far as I can
+> tell storvsc always failed to properly set the max_segment_size limit as
+> the SCSI APIs historically applied that when setting up the host, while
+> storvsc only set the virt_boundary_mask when configuring the scsi_device.
+> 
+> Fixes: 81988a0e6b03 ("storvsc: get rid of bounce buffer")
+> Fixes: b561ea56a264 ("block: allow device to have both virt_boundary_mask and max segment size")
+> Reported-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
 Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Thanks, 
+Thanks,
 Ming
 
 
