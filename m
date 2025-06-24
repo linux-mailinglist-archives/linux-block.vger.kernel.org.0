@@ -1,172 +1,294 @@
-Return-Path: <linux-block+bounces-23118-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23120-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE730AE6629
-	for <lists+linux-block@lfdr.de>; Tue, 24 Jun 2025 15:23:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88ADDAE661A
+	for <lists+linux-block@lfdr.de>; Tue, 24 Jun 2025 15:21:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1BFD170B86
-	for <lists+linux-block@lfdr.de>; Tue, 24 Jun 2025 13:17:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E048F1888289
+	for <lists+linux-block@lfdr.de>; Tue, 24 Jun 2025 13:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A4128E5F8;
-	Tue, 24 Jun 2025 13:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC6A72BE7CB;
+	Tue, 24 Jun 2025 13:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ks6eh98x"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SqXPJtc7"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0219328688D
-	for <linux-block@vger.kernel.org>; Tue, 24 Jun 2025 13:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A3128A410
+	for <linux-block@vger.kernel.org>; Tue, 24 Jun 2025 13:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771051; cv=none; b=Aw7zaDJtCDjVuEO3Bq6REMbScTq3QXmtT8Mj/wB9FDYTY5YF2i3Uxj5iFoY+fs+eX/RReE9RsobPqZadEJlBKhALoW25MzinO+w18q10awpdQiXJhNux41nzBwdqUrHkou5/TQv6a1ZbrjWAfggUXohSo+8WWEhV3P/OO+spshM=
+	t=1750771055; cv=none; b=WF8ORYfl8p//0xSIBLYeNmTlHQjMhw9bKES8PnWi7NwVp6DeFMl3hNUon10Iul5z5sf1kYeCNlFXH7D9xXDClxGZDpSYntQXqmn21eFC+pwf4nX7irrv+D5S7c/06DDSTVOWXGupyo6ekxtLoPrR2e7EyoAn6YrPHXD6KwBJelI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771051; c=relaxed/simple;
-	bh=Yz2wcVi8+oc1QTfFioy/8jf7hDpSrnOmTWEIEJbQmv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jHlTiYBYZzbhk9Rsi92PfkcNxbfRWHqk1zxv726+giJoc1Lv4C1JC5+ZsZYkUEpEYNJhjt9cFfwOHb/61un1vR3JeOaT9mwKAzwPboD/C8HQ3KNjVUfNUtPjhWvuCy8fp9ZDD3VD85szu5SL/8rFWUUrONI4DvO7cJ9E/Qpqt90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ks6eh98x; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1750771055; c=relaxed/simple;
+	bh=+r6jsumyIi3lEGrARa3WhXXev1qRuj/8zb5N69RMLVg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HpClszNupm990DmeVZ2W+bdRUGqnjcBX1QjVocbhVI9EYMwS5StlanfqUuO7HL2FAVHqxXmwllchhQ/c9lqmavCVBLfv7ZhDX4+xmi4LrcnUnjvgEhHNBkNBBroJem4InklAb/Yzco8oayYHQS7GaAfdTibng6dzJBwEFPo+c8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SqXPJtc7; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O7P8mw012616;
-	Tue, 24 Jun 2025 13:17:22 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OCkTIE030633;
+	Tue, 24 Jun 2025 13:17:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=5WAvkUaR4nmHoBfNNaofny5IFa5M
-	OqLMJnDVhsUK7M4=; b=ks6eh98xWAGsjzLUY9mhCje7I67KRBfQtzn90nl6zKBC
-	6cc1nt/hjhhOUWKwe86wxzlt33PjeymLRf8VkpBOrhnvBnaqPcm2cjegrlnfNt6P
-	S0dKo1aZ8/pw+G/+4odvBBaUnSVWooZIp0706mhBvLjcSzEVQ38q3prfNxbuYfcB
-	S+YPZ2bMeriEj7BcCJ9F38ar2w1/rkRoy+ea1jSnbk5Khz+wDoIOR+HJeza1w+ZC
-	Jo0jbx/upJbf1SldkeNeC49uCvKS8CPlvGHuNRxq/mrP5l0dgO94gmD5URZy9B7Z
-	77WQ+juITeSZ2CGvdTTQpCK0S0g41kQm+2t37MZd5g==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dme18san-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=Gt9tLP/hNZm+nvJ3r
+	+s1t1GIlbhjy59GWxJYO5dEG+g=; b=SqXPJtc7mYO9uUyrLWIon9MbyxHtUlQ5b
+	H5p8i1WR+4iLgrWP5/N/Ca8SJ1kpPwlDrf2Ay5KhOla2ekCmakdxaVlEzGx8bec9
+	kSjqGauFD0yf+hb4XcINEovD9Wh2JE4lGXqyDl+SOApuWx6RsuqQwPmtnpuAa2Di
+	3twOtCh1UAJT3PjaM+03T7N8BEZY7Yj35C9AGUMwWotvfUxJF4ciRSPKrOONc3e7
+	MZK6OVH9X9L+TT4/36JO/esgCFTuFySCCZLww5qVu1FE2NldoOOfWcQL1LrzkDSE
+	vPWLcH7XvkPvmQz+1x72IOGg5X9Y5wAus5I1SHWAZRwVBSNxS+DkA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmfe8vya-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 13:17:21 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55OAglAd002502;
-	Tue, 24 Jun 2025 13:17:20 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jm411y-1
+	Tue, 24 Jun 2025 13:17:26 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55OBSacZ014769;
+	Tue, 24 Jun 2025 13:17:22 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s2btbd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 13:17:20 +0000
+	Tue, 24 Jun 2025 13:17:22 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55ODHIJw56492418
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55ODHKJo46989792
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 13:17:18 GMT
+	Tue, 24 Jun 2025 13:17:20 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A52F72004B;
-	Tue, 24 Jun 2025 13:17:18 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7EC9D20040;
+	Tue, 24 Jun 2025 13:17:20 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3ACE820040;
-	Tue, 24 Jun 2025 13:17:17 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 079212004B;
+	Tue, 24 Jun 2025 13:17:19 +0000 (GMT)
 Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.in.ibm.com (unknown [9.109.198.209])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Jun 2025 13:17:17 +0000 (GMT)
+	Tue, 24 Jun 2025 13:17:18 +0000 (GMT)
 From: Nilay Shroff <nilay@linux.ibm.com>
 To: linux-block@vger.kernel.org
 Cc: hch@lst.de, ming.lei@redhat.com, axboe@kernel.dk, sth@linux.ibm.com,
         gjoyce@ibm.com
-Subject: [PATCHv4 0/3] block: move sched_tags allocation/de-allocation outside of locking context
-Date: Tue, 24 Jun 2025 18:47:02 +0530
-Message-ID: <20250624131716.630465-1-nilay@linux.ibm.com>
+Subject: [PATCHv4 1/3] block: move elevator queue allocation logic into blk_mq_init_sched
+Date: Tue, 24 Jun 2025 18:47:03 +0530
+Message-ID: <20250624131716.630465-2-nilay@linux.ibm.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250624131716.630465-1-nilay@linux.ibm.com>
+References: <20250624131716.630465-1-nilay@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Tc6WtQQh c=1 sm=1 tr=0 ts=685aa561 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=HH1qF7aN0NmPAd2FLvUA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 9D6QScFQO3lmzfk2_4ClS4OwScnAlNY2
-X-Proofpoint-ORIG-GUID: 9D6QScFQO3lmzfk2_4ClS4OwScnAlNY2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMiBTYWx0ZWRfX+v537+TdDoMN J89lI6A9wTgs5k7/IC4D4SK3T//eD/1FAj1GF59o1qOe3TMjCWYKyrutd2OXKpcZqNzOiv6V5BI CmWZO/jm9MjeNKopaPs/udnzxEqgPgLVJCsE+ZEQ7yO6PleOH+93+z/aN4eGTaJbirRjjYZtdE0
- eNllRl49O7d6gwJ74OllAXruzsQHKzukZ2TqxC3zapKDg/8B4Vd9K14J9OyXIFnbdkOo73ynM5+ TQTQxsdBfjMKmxGt6sqrARjiCj0VnMsdcZwPvlSHeBOPE7rObzafnbB6bSWY4VE1DckURN/OshA Qk9WDMsussUP8bozbkyDDYOQzzhLqljlr45vaEGssfeETR8cmANhQbz69KmcD0E3kMxXnGbP4OF
- R9zF3Qp8sSY4K7XVcwWbYfcgbJ4Rs0Ua/lKDbYvCP/e8iEoIyEgm5SbOul0nsdR5qpVOPvM2
+X-Proofpoint-ORIG-GUID: CFtVGYo3GYyBUBi1cPmNQODY0rzNuDIa
+X-Proofpoint-GUID: CFtVGYo3GYyBUBi1cPmNQODY0rzNuDIa
+X-Authority-Analysis: v=2.4 cv=BpqdwZX5 c=1 sm=1 tr=0 ts=685aa566 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=6IFa9wvqVegA:10 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=eVjI13sIsFB_z2tHqD4A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMiBTYWx0ZWRfXyVMyx0WxfA3M X7jx9xhNGpEw8b+Z0tNRRfVcwNWyGEdAoGHH7N9wvdCnN/u+Ct7dqP3fDh0e8XyHF+lpa2EbqQP A8FlZsqdi0YHXgcGMqB0krrtvGP68iVqfGUO4Ya6LIudm35TA903h93RPQA/CIl1KqBraIUBCDs
+ Jvtma0DyaN+9hZ9h6dKitR7e3VlWhP0QnH+cN4Ae0kyBe80EUUCXJWKB9NoySCvGRSPKzLezl8b R3IBTLr5Lm+NOQ52B9Zh1qNGD/bGUIu+nq1a/FW2lN3GFjKgmFDT0A+tZEsRAghJzYWly4VdzrJ jyz8EKNSBiY0IN30OoTPp/U7GZaiWPlhFpn7jk5+WdVxorh8VNYQ5NiO8ASgHoT7aKUFsFj/Bfd
+ 7tYvbsPsoBHMO5XJEPqHDHv/b/bzhK2NEk+3ILaZyq+Vn7PfLOC/0f+DhTHyTbvD3PqL2OK7
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
  definitions=main-2506240112
 
-Hi,
+In preparation for allocating sched_tags before freezing the request
+queue and acquiring ->elevator_lock, move the elevator queue allocation
+logic from the elevator ops ->init_sched callback into blk_mq_init_sched.
+As elevator_alloc is now only invoked from block layer core, we don't
+need to export it, so unexport elevator_alloc function.
 
-There have been a few reports[1] indicating potential lockdep warnings due
-to a lock dependency from the percpu allocator to the elevator lock. This
-patch series aims to eliminate that dependency.
+This refactoring provides a centralized location for elevator queue
+initialization, which makes it easier to store pre-allocated sched_tags
+in the struct elevator_queue during later changes.
 
-The series consists of three patches:
-The first patch is preparatory patch and just move elevator queue
-allocation logic from ->init_sched into blk_mq_init_sched.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+---
+ block/bfq-iosched.c   | 13 +++----------
+ block/blk-mq-sched.c  | 11 ++++++++---
+ block/elevator.c      |  1 -
+ block/elevator.h      |  2 +-
+ block/kyber-iosched.c | 11 ++---------
+ block/mq-deadline.c   | 14 ++------------
+ 6 files changed, 16 insertions(+), 36 deletions(-)
 
-The second patch in the series restructures sched_tags allocation and
-deallocation during elevator update/switch operations to ensure these
-actions are performed entirely outside the ->freeze_lock and ->elevator_
-lock. This eliminates the percpu allocator’s lock dependency on the
-elevator and freeze lock during scheduler transitions.
-
-The third patch introduces batch allocation and deallocation helpers for
-sched_tags. These helpers are used during __blk_mq_update_nr_hw_queues()
-to decouple sched_tags memory management from both the elevator and freeze
-locks, addressing the lockdep concerns in the nr_hw_queues update path.
-
-[1] https://lore.kernel.org/all/0659ea8d-a463-47c8-9180-43c719e106eb@linux.ibm.com/
-
-Changes since v3:
-    - Further split the patchset into three patch series so that we can
-      have a separate patch for sched_tags batch allocation/deallocation
-      (Ming Lei)
-    - Use Xarray to store and load the sched_tags (Ming Lei)
-    - Unexport elevator_alloc() as we no longer need to use it outside
-      of block layer core (hch)
-    - unwind the sched_tags allocation and free tags when we it fails in
-      the middle of allocation (hch)
-    - Move struct elevator_queue header from commin header to elevator.c
-      as there's no user of it outside elevator.c (Ming Lei, hch)
-Link to v3: https://lore.kernel.org/all/20250616173233.3803824-1-nilay@linux.ibm.com/
-
-Change since v2:
-    - Split the patch into a two patch series. The first patch updates
-      ->init_sched elevator API change and second patch handles the sched
-      tags allocation/de-allocation logic (Ming Lei)
-    - Address sched tags allocation/deallocation logic while running in the
-      context of nr_hw_queue update so that we can handle all possible
-      scenarios in a single patchest (Ming Lei)
-Link to v2: https://lore.kernel.org/all/20250528123638.1029700-1-nilay@linux.ibm.com/
-
-Changes since v1:
-    - As the lifetime of elevator queue and sched tags are same, allocate
-      and move sched tags under struct elevator_queue (Ming Lei)
-Link to v1: https://lore.kernel.org/all/20250520103425.1259712-1-nilay@linux.ibm.com/
-
-Nilay Shroff (3):
-  block: move elevator queue allocation logic into blk_mq_init_sched
-  block: fix lockdep warning caused by lock dependency in
-    elv_iosched_store
-  block: fix potential deadlock while running nr_hw_queue update
-
- block/bfq-iosched.c   |  13 +--
- block/blk-mq-sched.c  | 238 +++++++++++++++++++++++++++++-------------
- block/blk-mq-sched.h  |  19 +++-
- block/blk-mq.c        |  12 ++-
- block/blk.h           |   3 +-
- block/elevator.c      |  52 +++++++--
- block/elevator.h      |  21 +++-
- block/kyber-iosched.c |  11 +-
- block/mq-deadline.c   |  14 +--
- 9 files changed, 267 insertions(+), 116 deletions(-)
-
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 0cb1e9873aab..fd26dc1901b0 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -7232,22 +7232,16 @@ static void bfq_init_root_group(struct bfq_group *root_group,
+ 	root_group->sched_data.bfq_class_idle_last_service = jiffies;
+ }
+ 
+-static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
++static int bfq_init_queue(struct request_queue *q, struct elevator_queue *eq)
+ {
+ 	struct bfq_data *bfqd;
+-	struct elevator_queue *eq;
+ 	unsigned int i;
+ 	struct blk_independent_access_ranges *ia_ranges = q->disk->ia_ranges;
+ 
+-	eq = elevator_alloc(q, e);
+-	if (!eq)
+-		return -ENOMEM;
+-
+ 	bfqd = kzalloc_node(sizeof(*bfqd), GFP_KERNEL, q->node);
+-	if (!bfqd) {
+-		kobject_put(&eq->kobj);
++	if (!bfqd)
+ 		return -ENOMEM;
+-	}
++
+ 	eq->elevator_data = bfqd;
+ 
+ 	spin_lock_irq(&q->queue_lock);
+@@ -7405,7 +7399,6 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
+ 
+ out_free:
+ 	kfree(bfqd);
+-	kobject_put(&eq->kobj);
+ 	return -ENOMEM;
+ }
+ 
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 55a0fd105147..359e0704e09b 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -475,10 +475,14 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
+ 	q->nr_requests = 2 * min_t(unsigned int, q->tag_set->queue_depth,
+ 				   BLKDEV_DEFAULT_RQ);
+ 
++	eq = elevator_alloc(q, e);
++	if (!eq)
++		return -ENOMEM;
++
+ 	if (blk_mq_is_shared_tags(flags)) {
+ 		ret = blk_mq_init_sched_shared_tags(q);
+ 		if (ret)
+-			return ret;
++			goto err_put_elevator;
+ 	}
+ 
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+@@ -487,7 +491,7 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
+ 			goto err_free_map_and_rqs;
+ 	}
+ 
+-	ret = e->ops.init_sched(q, e);
++	ret = e->ops.init_sched(q, eq);
+ 	if (ret)
+ 		goto err_free_map_and_rqs;
+ 
+@@ -508,7 +512,8 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
+ err_free_map_and_rqs:
+ 	blk_mq_sched_free_rqs(q);
+ 	blk_mq_sched_tags_teardown(q, flags);
+-
++err_put_elevator:
++	kobject_put(&eq->kobj);
+ 	q->elevator = NULL;
+ 	return ret;
+ }
+diff --git a/block/elevator.c b/block/elevator.c
+index ab22542e6cf0..770874040f79 100644
+--- a/block/elevator.c
++++ b/block/elevator.c
+@@ -148,7 +148,6 @@ struct elevator_queue *elevator_alloc(struct request_queue *q,
+ 
+ 	return eq;
+ }
+-EXPORT_SYMBOL(elevator_alloc);
+ 
+ static void elevator_release(struct kobject *kobj)
+ {
+diff --git a/block/elevator.h b/block/elevator.h
+index a07ce773a38f..a4de5f9ad790 100644
+--- a/block/elevator.h
++++ b/block/elevator.h
+@@ -24,7 +24,7 @@ struct blk_mq_alloc_data;
+ struct blk_mq_hw_ctx;
+ 
+ struct elevator_mq_ops {
+-	int (*init_sched)(struct request_queue *, struct elevator_type *);
++	int (*init_sched)(struct request_queue *, struct elevator_queue *);
+ 	void (*exit_sched)(struct elevator_queue *);
+ 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+ 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 4dba8405bd01..7b6832cb3a8d 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -402,20 +402,13 @@ static struct kyber_queue_data *kyber_queue_data_alloc(struct request_queue *q)
+ 	return ERR_PTR(ret);
+ }
+ 
+-static int kyber_init_sched(struct request_queue *q, struct elevator_type *e)
++static int kyber_init_sched(struct request_queue *q, struct elevator_queue *eq)
+ {
+ 	struct kyber_queue_data *kqd;
+-	struct elevator_queue *eq;
+-
+-	eq = elevator_alloc(q, e);
+-	if (!eq)
+-		return -ENOMEM;
+ 
+ 	kqd = kyber_queue_data_alloc(q);
+-	if (IS_ERR(kqd)) {
+-		kobject_put(&eq->kobj);
++	if (IS_ERR(kqd))
+ 		return PTR_ERR(kqd);
+-	}
+ 
+ 	blk_stat_enable_accounting(q);
+ 
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index 2edf1cac06d5..7b6caf30e00a 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -568,20 +568,14 @@ static void dd_exit_sched(struct elevator_queue *e)
+ /*
+  * initialize elevator private data (deadline_data).
+  */
+-static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
++static int dd_init_sched(struct request_queue *q, struct elevator_queue *eq)
+ {
+ 	struct deadline_data *dd;
+-	struct elevator_queue *eq;
+ 	enum dd_prio prio;
+-	int ret = -ENOMEM;
+-
+-	eq = elevator_alloc(q, e);
+-	if (!eq)
+-		return ret;
+ 
+ 	dd = kzalloc_node(sizeof(*dd), GFP_KERNEL, q->node);
+ 	if (!dd)
+-		goto put_eq;
++		return -ENOMEM;
+ 
+ 	eq->elevator_data = dd;
+ 
+@@ -608,10 +602,6 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+ 
+ 	q->elevator = eq;
+ 	return 0;
+-
+-put_eq:
+-	kobject_put(&eq->kobj);
+-	return ret;
+ }
+ 
+ /*
 -- 
 2.49.0
 
