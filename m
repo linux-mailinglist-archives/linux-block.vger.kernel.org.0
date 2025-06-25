@@ -1,63 +1,74 @@
-Return-Path: <linux-block+bounces-23178-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23180-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA6AAE76DD
-	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 08:18:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21B52AE7796
+	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 08:56:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 470D616E159
-	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 06:18:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 262417AECC3
+	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 06:55:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B801DE8B2;
-	Wed, 25 Jun 2025 06:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D81C1F37D4;
+	Wed, 25 Jun 2025 06:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FicnKg+k"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CgIypNKh"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E394307498;
-	Wed, 25 Jun 2025 06:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CD01DE4D2;
+	Wed, 25 Jun 2025 06:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832294; cv=none; b=lPf+qrfJklRP0H4BSPENqYfUb9WGk0uTh3lJjoI32x66y26V3Spy0ILHx2MGgNuMAqQlkrn27gqUqVvXum5sSFWEFgh2HhmZ2EnUTn4SW0eXwvmTrdjB3okaStHVFNaVMSdwTcVnkBip9bGnZct3jmz/YiIwfaoSqx+9uZzpFvc=
+	t=1750834592; cv=none; b=qxdf7AW3Yy9CSMOpS5bkx179P3MGbkbWnNaF67mMDFPWYnBwnyPiLQmLk2J1X/v4qb5U7xFeYnSKOHu9mQ7qGM/feRPvT85Nj2eDEsOVVJxbC1bIiYL47p9/lsOj4GLaDL33k4c944CpwNQwHeyPrbcToDyfnqmpykD7wgb4hAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832294; c=relaxed/simple;
-	bh=mlWCt80N2mswh3zRw2yp8sxsDCPCNvuJ0E4ZXu352p4=;
+	s=arc-20240116; t=1750834592; c=relaxed/simple;
+	bh=Uh1WwnNvimTsWyoQ0hTnqc/W/jE8I7xFNWmTFet+yG8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aK31WgoUuB8GvLk8GbLNjzuKnJuP3tRS0qrzCNEyVBnnaYYr4HEwM1dpmYG+W4yH1P74SpR7LGYW4uXqR/jUJH1B7iWvIsK0SuskyMUUm9qzXKWMPd0xDllAxf2KXmd15WI+pqnMKdjW10wBpSGR36qsSfqyb0baQepKfTJNos8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FicnKg+k; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qz6lH2Mz0JT88inTB/aLTH33Y0bjN3D3ZdsMcrjvZplbDxecshBQx5QewMyUUvoW+rCK7s740W0R0PZK4KoGXJWzyKJ3MyvHK5Y9/mAmSa0eEKQK/qLgbLuxaM+kc0Ga5LgI06o2chs6AxYODBhBI9UKm9oc7zFbvg6UH9senwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CgIypNKh; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JoWhCOAVXdzr1ER6ZF50SXK4IRK+D9okETFOKLlE0Ac=; b=FicnKg+kuBt6VuPLcJzdJ8FMRR
-	N9oFOw5nNHBq9jJkAhP+fTt8f9L4TE26AXmOXQRsT7PsJi1S5LhSmMfRn1U8oul9rK3yKeKsZPSuY
-	zLYHnnCx7QS5WOySPZPzR9V6LSogxB/I1nCtqW8bswL0hj1JhieNF0RD5ojqyLSZR9TG5R1K1wUwA
-	Z7UOMv5yRZN8/W52z1BRaQeXqViQC8uu01I75OvlV6FC96uQ6DR6+Sqc2b1OUE0y9G/7mYCTU8jBL
-	fZkQol7pxX+aUi8ixZSKVy6oUpK5yT/wYKh9cX9+e4D/YUQN0zTvJ5dN7cweSQ7RXbqOsACihHpd7
-	H54tToGg==;
+	bh=Uh1WwnNvimTsWyoQ0hTnqc/W/jE8I7xFNWmTFet+yG8=; b=CgIypNKhmQ3029o1RKULsD2Xwj
+	vR4Dylx++/bDN9hEqSwPvw/3ZAfijYzkWi80sgOWXNcBE7uDwW/nADhc3mj691cB+/aauczS0ueB1
+	W1+4ny5XmQr4weZuy0cERCCzvlxXH7Ezo683DTg3ESOh87r42tGjM354mfQfI5d41GxF4fgoRQ4Pm
+	LyUNeB4Hq7HT2iCqF9DYpXYKF2aS9MwtV0XMecqbBn51oEpybU8HvkCxJ+dp4WtUnA8iYlsJySN+Q
+	YaRTV1EMoqBPLzBiT044IAGB6t7McuLAwZUq0PHXYqREJiEZmCJoBFR4uydwPbtL5TsQvkp98FRm9
+	Jjlg8naA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUJSW-00000007eEd-3pQE;
-	Wed, 25 Jun 2025 06:18:12 +0000
-Date: Tue, 24 Jun 2025 23:18:12 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>, dm-devel@lists.linux.dev,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v2 1/4] block: Introduce bio_needs_zone_write_plugging()
-Message-ID: <aFuUpLwmUWWwOmeB@infradead.org>
-References: <20250625055908.456235-1-dlemoal@kernel.org>
- <20250625055908.456235-2-dlemoal@kernel.org>
- <aFuTYxdeAzG1iSl9@infradead.org>
- <576bb6dd-18b1-4c78-b848-51577d99b124@kernel.org>
+	id 1uUK3X-00000007k2q-0N1j;
+	Wed, 25 Jun 2025 06:56:27 +0000
+Date: Tue, 24 Jun 2025 23:56:27 -0700
+From: "hch@infradead.org" <hch@infradead.org>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "tytso@mit.edu" <tytso@mit.edu>,
+	"hch@infradead.org" <hch@infradead.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"willy@infradead.org" <willy@infradead.org>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+	"tursulin@ursulin.net" <tursulin@ursulin.net>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chentao325@qq.com" <chentao325@qq.com>
+Subject: Re: [PATCH v2 0/5] fs: refactor write_begin/write_end and add ext4
+ IOCB_DONTCACHE support
+Message-ID: <aFudm1ndfN-kTSOx@infradead.org>
+References: <20250624121149.2927-1-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -66,23 +77,13 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <576bb6dd-18b1-4c78-b848-51577d99b124@kernel.org>
+In-Reply-To: <20250624121149.2927-1-chentaotao@didiglobal.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Jun 25, 2025 at 03:14:51PM +0900, Damien Le Moal wrote:
-> On 6/25/25 3:12 PM, Christoph Hellwig wrote:
-> > On Wed, Jun 25, 2025 at 02:59:05PM +0900, Damien Le Moal wrote:
-> >> +bool bio_needs_zone_write_plugging(struct bio *bio)
-> > 
-> > Can you use this in blk_zone_plug_bio instead of duplicating the logic?
-> 
-> I thought about doing that, but we would still need to again do the switch/case
-> on the bio op. But the checks before that could go into a common static helper.
-> 
-> > I also wonder if we should only it it, as despite looking quite complex
-> 
-> This does not parse...
+Thanks, I really like the i915 work to stop the shmem abuse.
 
-The "only it" above should be "inline", -ENOTENOUGHCOFFEE
+I still hate it that we just change the write_begin/end ops while still
+in the address_space ops vs passing explicit callbacks, because that
+means we'll some other version of that abuse back sooner or later :(
 
 
