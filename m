@@ -1,95 +1,72 @@
-Return-Path: <linux-block+bounces-23177-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23175-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00721AE76DB
-	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 08:17:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9184CAE76D6
+	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 08:16:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19E177A8E2B
-	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 06:16:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62A6E189E461
+	for <lists+linux-block@lfdr.de>; Wed, 25 Jun 2025 06:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FC01E1DEC;
-	Wed, 25 Jun 2025 06:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DAE1A3A8A;
+	Wed, 25 Jun 2025 06:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvwguelY"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tNiZDiXm"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0833307498;
-	Wed, 25 Jun 2025 06:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8109723AD;
+	Wed, 25 Jun 2025 06:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832264; cv=none; b=Ma7mt2sX7aCVWwqhn5yZaQXQILNXGxXh8QZ8nHB0ujkFgRLb0I56GKmZjq8Ti08VEgtel6rG4GJozeIwp1NyjSUYBGDFUOdr+YhSdcUfbwa7g+xKGsG5Qe5g41zvAEVu8fU44rFxA3YPLeutZTBrj03UZCsmwF0qTuQ9OVTi4bI=
+	t=1750832198; cv=none; b=nyXP1Ey01XmS/R6WMWnEMuIPLnhTqN38lckTGElYvmzk8kXGBrjtpv541KmXKAQW5+f/9ionixNzfTxyWcFnRYQTpgLh2p9QJ1hj+ga45BMBve82qtIPulJ2cMENiklEWShN5NmR9iwX8MoDgP6wR8qClLbH1Tcn6YTquxIN5h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832264; c=relaxed/simple;
-	bh=n7QaiHu9HqfZ6NlbIgVKBfzgepFUcUlELNtjXtJqMUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AV3oo1BZZ7lnd3HSes0/VELskdynVsGkbs4xnnx8PvIR+JfHf9+9DfU8i3E7mdzZu7gaXHwZ9qubDYyVUdKWo02iN2ZF90nzqt6eycY1Z+nIwxWdz0jmvmvCXwWxaVH8FP5ZdmMKxJMn6BbaeBW8BwYTW7/NCjyxqxUxm8aHww4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvwguelY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B54C4CEEA;
-	Wed, 25 Jun 2025 06:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750832264;
-	bh=n7QaiHu9HqfZ6NlbIgVKBfzgepFUcUlELNtjXtJqMUw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XvwguelYHfu+9XfpqPhpmY8bQxrrVI2XT1fjbgb132SGqVvqxG0KoFtOARf8IYyUT
-	 Yd2rFADdeJN3fw8cMBhItvCBlhDUgp7qjMiiNE0T96xideqlFkCUt8zdriH68pueOn
-	 PbrEk/2VY/c1sbFtE91IGFUTCwbZGuQKAj5g+3TfxFNLj06bC/KZT04AH5DU9pqX9q
-	 AQK+mAU89WgvtNxHDcqd6Vxxb7+9L5tbaLygLqDekYBXT54/NJFrDlRpzts0ommJ+g
-	 AZ/sQWPek+cLFcMNN5yOBCQxz2OcyfmqGyPjItZTKoj758PaFEhmE8+6542DepJeEP
-	 SICZ4ZDxg2vQQ==
-Message-ID: <0e94af0a-3a85-49ba-a7fa-bbbf9f29ec51@kernel.org>
-Date: Wed, 25 Jun 2025 15:15:39 +0900
+	s=arc-20240116; t=1750832198; c=relaxed/simple;
+	bh=7TRycBsPvUgHgY02m8aQShUfMB9Nfj334qF1+1Uk7q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TcDRhw1nqf1YOKvk0OqvH4i4MwBb3b7fJJqD8bTzCbfqCJfFIk4TObe0x4B/MtYAqgwp8IlJ55cl+1ukTr0xrvKpkBr/wdcDbYiUklLL8/sXmoMeOrVtu/E1QFuFeoKyq59mb2161t2eVjKKyMLtpyHarDuoLuMzspGaAkSXT3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tNiZDiXm; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7TRycBsPvUgHgY02m8aQShUfMB9Nfj334qF1+1Uk7q8=; b=tNiZDiXmKmt78ttIujWAICMznt
+	L8+g3dFldnhejKZEp82HpaDuLTYU+gt2JdlnsUWgtFtcDQd5jIW/AHV1IJGafs6pIi9SnZi5bYFJ8
+	EJCEI40MDajKcr2bYQNt98PgS7Rr+1ZpcUiLgzYzHHgypCTpoIYtOjmEhD0Ya0UZsvyRjuYyMl8TA
+	T6l/O3z2skh0kajIu+GB6Oq4XS0tJ98Dl3KbQvuHKdTrChJO/SGS1UI54dJpGxAOgI22u/jTiznT3
+	7KIdkSHdhrha7SSUSXYGpoSw/o/e47ERPnCrT3D70+5MnhhR9oDeAD2iSBDIn7ZTYLbJJMvr8rb6b
+	ooivpNBQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUJQz-00000007e4F-0UmQ;
+	Wed, 25 Jun 2025 06:16:37 +0000
+Date: Tue, 24 Jun 2025 23:16:37 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	dm-devel@lists.linux.dev, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v2 4/4] dm: Check for forbidden splitting of zone write
+ operations
+Message-ID: <aFuURUCOC_xfDc2U@infradead.org>
+References: <20250625055908.456235-1-dlemoal@kernel.org>
+ <20250625055908.456235-5-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] dm: Always split write BIOs to zoned device limits
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- dm-devel@lists.linux.dev, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, Bart Van Assche <bvanassche@acm.org>
-References: <20250625055908.456235-1-dlemoal@kernel.org>
- <20250625055908.456235-3-dlemoal@kernel.org> <aFuT_X8GdNwRU9AF@infradead.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <aFuT_X8GdNwRU9AF@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625055908.456235-5-dlemoal@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 6/25/25 3:15 PM, Christoph Hellwig wrote:
-> On Wed, Jun 25, 2025 at 02:59:06PM +0900, Damien Le Moal wrote:
->> Any zoned DM target that requires zone append emulation will use the
->> block layer zone write plugging. In such case, DM target drivers must
->> not split BIOs using dm_accept_partial_bio() as doing so can potentially
->> lead to deadlocks with queue freeze operations. Regular write operations
->> used to emulate zone append operations also cannot be split by the
->> target driver as that would result in an invalid writen sector value
->> return using the BIO sector.
->>
->> In order for zoned DM target drivers to avoid such incorrect BIO
->> splitting, we must ensure that large BIOs are split before being passed
->> to the map() function of the target, thus guaranteeing that the
->> limits for the mapped device are not exceeded.
->>
->> dm-crypt and dm-flakey are the only target drivers supporting zoned
->> devices and using dm_accept_partial_bio().
-> 
-> Is there any good way to catch usage dm_accept_partial_bio on zone
-> devices so that issues like this don't get reintroduced later?
+Ah, I guess that addressed my comment for patch 2..
 
-patch 4 does that. Though with the heavy BUG_ON() hammer. That can be cleaned
-up later though.
-
-
--- 
-Damien Le Moal
-Western Digital Research
 
