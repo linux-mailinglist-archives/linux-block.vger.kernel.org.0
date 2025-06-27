@@ -1,319 +1,274 @@
-Return-Path: <linux-block+bounces-23403-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23405-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6609AAEBEC0
-	for <lists+linux-block@lfdr.de>; Fri, 27 Jun 2025 19:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39316AEBF8B
+	for <lists+linux-block@lfdr.de>; Fri, 27 Jun 2025 21:15:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDCF0566980
-	for <lists+linux-block@lfdr.de>; Fri, 27 Jun 2025 17:58:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E506A56541F
+	for <lists+linux-block@lfdr.de>; Fri, 27 Jun 2025 19:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC722EBBA3;
-	Fri, 27 Jun 2025 17:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637BA205E3E;
+	Fri, 27 Jun 2025 19:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bZ99bama"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guZgM922"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375F22EBBAC
-	for <linux-block@vger.kernel.org>; Fri, 27 Jun 2025 17:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8668820409A
+	for <linux-block@vger.kernel.org>; Fri, 27 Jun 2025 19:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751046973; cv=none; b=UZ1YyKTAdIOVq4KOGFUQu+K5H75yNaBBmxcPlV/yeuC/Kg9VNWy0jv0yHqXBLC9Bd6inpegwDeaL6UP6L1ChSuP32T3rDlwMHnPIyMTXDkjBmGAK10GUNlbxVX+LrInUL/5KMcz81JI9LIkUPvFXPSPigrK5rncR1mjtafxt5OI=
+	t=1751051698; cv=none; b=BevfOq3ItAD+IAfbt7wgGN9edz7cUipYtt05Tvmb4FsVwLMR95bS2JZqJW0TMDYcC2RHK6Io9I4Edq/bibL63WBnN8YIbaSj4tuCkE0Mcbl0LkTsCbKbfMVWM6A8ZAUcQqTIlU32rqmJXBtxbk6TlNxgi7frrPc+KRBnhNXHb64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751046973; c=relaxed/simple;
-	bh=KkBNYTyQqFyeQhRX1kfX9lCu6fWDJSpDgZuK5robtEE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QQl0stOTYHI4m4mUaNqUdBQSp3GX+eTR3pzQyX4LH/xNOx8hOxDvZDYFKdc6uMQK1EZIwp4hv6atfwAwa/5MddShi0mrKYzIcPZzazX1mxIoV3wdxO7xu0ck5PzD0CbHyWFyqzwL0y96Z3Xm5rJBwidL5cG6KwLg+6bEcroRQno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bZ99bama; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBoFqt031218;
-	Fri, 27 Jun 2025 17:56:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=mBGl/zFlk1AUOUXuT
-	6jnYwvAAgp0tenIAAY6tpKhML4=; b=bZ99bamaZQvzar15Zv8Fw1W2hwJFVdOha
-	whwsdAVV05QrW3Tr55U+RLKZNL3WRWFYWekw2NPVJlf9WX+J1LNszYB8ohlKQNX1
-	WpJNxwpQ/wIqvL+50Tll4szf8gHzF7rO0izp3007ZizLVsQjYwvBb3B6tg3Dizs3
-	US+EgZTrBaQhsekaLOcrb9TMEeD7WudTAYmQUeftKH3gJf4T/KBLDiTC5MRAP4q2
-	mBuvomjvUTFUQ8dAS0odpH4Pe6AU7JlN5yadvor7bik2/HMITLV164W8xNQ+p1E+
-	D7HRADOPDUbIxIjxQIwAB+hjiVddBc0f2xR1aRaaEmL2cX1edp3HQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk64ekv3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 17:56:06 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55RHNp0L002471;
-	Fri, 27 Jun 2025 17:56:06 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jmn7eb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 17:56:05 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55RHu4kG53674242
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 17:56:04 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F3BD820043;
-	Fri, 27 Jun 2025 17:56:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 965EA20040;
-	Fri, 27 Jun 2025 17:56:00 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.61.18.63])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Jun 2025 17:56:00 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: linux-block@vger.kernel.org
-Cc: hch@lst.de, ming.lei@redhat.com, axboe@kernel.dk, sth@linux.ibm.com,
-        gjoyce@ibm.com
-Subject: [PATCHv5 3/3] block: fix potential deadlock while running nr_hw_queue update
-Date: Fri, 27 Jun 2025 23:25:21 +0530
-Message-ID: <20250627175544.1063910-4-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250627175544.1063910-1-nilay@linux.ibm.com>
-References: <20250627175544.1063910-1-nilay@linux.ibm.com>
+	s=arc-20240116; t=1751051698; c=relaxed/simple;
+	bh=rJBy5eogMaWK1Inha+r6cqvoOuomE1H2/3avaV6ZghA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWkEJ3NF4Lc+3scMVdmh3uwuUst5Gil7O677PQCqvmOvoqL0eq9mBbAMrQcgi+P2WId5ZjSmruzhd1ca/MsdOqPaxcvNAjoBOywAdFUrKwUcfS5dV+ETfZ9W7MrIibmkgf5CTLBcCYtL6ay8XNNP229Ev83Bcs/+VLM/AjnZrT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guZgM922; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751051695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xUYZjKekMRgOsttarHYMXC+RSYbEKSH+B8I++22Ehro=;
+	b=guZgM9228eQu/+02xE1Ys1+VuGN+/Pj9LRKjAOF8FJfXFVkePTtY6Am9AbR+YNFjSZU9Nv
+	0vKuSdbw4YU+BvfzeTwZWlubWFI+SuyeCe1/nRYtwg10fJ/jpc6KB2dSG3/MKTgweiW44g
+	E+DtHLYyodkkAIrI7kn0UgCDvbv0OVE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-207-bpnFFZK1OeSol0EdJXJIRQ-1; Fri,
+ 27 Jun 2025 15:14:51 -0400
+X-MC-Unique: bpnFFZK1OeSol0EdJXJIRQ-1
+X-Mimecast-MFC-AGG-ID: bpnFFZK1OeSol0EdJXJIRQ_1751051690
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E648319560A1;
+	Fri, 27 Jun 2025 19:14:49 +0000 (UTC)
+Received: from bfoster (unknown [10.22.64.142])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D77130001B1;
+	Fri, 27 Jun 2025 19:14:47 +0000 (UTC)
+Date: Fri, 27 Jun 2025 15:18:25 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Joanne Koong <joannelkoong@gmail.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-block@vger.kernel.org, gfs2@lists.linux.dev
+Subject: Re: [PATCH 10/12] iomap: replace iomap_folio_ops with iomap_write_ops
+Message-ID: <aF7ugUxtYQrjRl1D@bfoster>
+References: <20250627070328.975394-1-hch@lst.de>
+ <20250627070328.975394-11-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE0NCBTYWx0ZWRfXxU06VZa+BGzK Fl1J+e7nxuqVwG6FUxRl4V92b9rCzxVc8O/9kkBZh76vVQS0Ms0aossNZ9kLomrp2nryH1njZ5U ipM6iZHUeunkFEKpuiCvTVeZCOIegWULVNi/dYozVTGy+ez+h+k2JpRX+otsNS+i643n1PuQHx/
- K6XqSMttJDABjAFtsfDdqpzw9mMcAmKOhPW9y7fSiJO8hMOAtRV/85+spFaV2F+bLu5z9wqOZsu q8kRidsqjQh0zCP+PjkW4oetBBVt89saei/kMhhjyJ8dBXDxL6Cf1qcEVfvOGcNLyxy3Qf1QN1H SYLrh/L87Ql3JjAzdgFf9YeZDxl2DtLIVfC0oiVRSu2FMwVaLguq8SbA5TuTkmR/dJFayTyA+4s
- 9RySkwB/4egnM8nCZyLj16bpkTUQJJAJdz+3eZXJs0O7ebpqtQaK1yajJWXEWSextLHd9JhY
-X-Proofpoint-ORIG-GUID: NCX8Cmb_n3LXeoNWYqTZza2aLK210wXa
-X-Proofpoint-GUID: NCX8Cmb_n3LXeoNWYqTZza2aLK210wXa
-X-Authority-Analysis: v=2.4 cv=BfvY0qt2 c=1 sm=1 tr=0 ts=685edb36 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=D50k6dCgwcB5hzXsUiIA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 suspectscore=0 adultscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627070328.975394-11-hch@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Move scheduler tags (sched_tags) allocation and deallocation outside
-both the ->elevator_lock and ->freeze_lock when updating nr_hw_queues.
-This change breaks the dependency chain from the percpu allocator lock
-to the elevator lock, helping to prevent potential deadlocks, as
-observed in the reported lockdep splat[1].
+On Fri, Jun 27, 2025 at 09:02:43AM +0200, Christoph Hellwig wrote:
+> The iomap_folio_ops are only used for buffered writes, including
+> the zero and unshare variants.  Rename them to iomap_write_ops
+> to better describe the usage, and pass them through the callchain
+> like the other operation specific methods instead of through the
+> iomap.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  Documentation/filesystems/iomap/design.rst    |  3 -
+>  .../filesystems/iomap/operations.rst          |  8 +-
+>  block/fops.c                                  |  3 +-
+>  fs/gfs2/bmap.c                                | 21 ++---
+>  fs/gfs2/bmap.h                                |  1 +
+>  fs/gfs2/file.c                                |  3 +-
+>  fs/iomap/buffered-io.c                        | 79 +++++++++++--------
+>  fs/xfs/xfs_file.c                             |  6 +-
+>  fs/xfs/xfs_iomap.c                            | 12 ++-
+>  fs/xfs/xfs_iomap.h                            |  1 +
+>  fs/xfs/xfs_reflink.c                          |  3 +-
+>  fs/zonefs/file.c                              |  3 +-
+>  include/linux/iomap.h                         | 22 +++---
+>  13 files changed, 89 insertions(+), 76 deletions(-)
+> 
+...
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index ff05e6b1b0bb..2e94a9435002 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -79,6 +79,9 @@ xfs_iomap_valid(
+>  {
+>  	struct xfs_inode	*ip = XFS_I(inode);
+>  
+> +	if (iomap->type == IOMAP_HOLE)
+> +		return true;
+> +
 
-This commit introduces batch allocation and deallocation helpers for
-sched_tags, which are now used from within __blk_mq_update_nr_hw_queues
-routine while iterating through the tagset.
+Is this to handle the xfs_hole_to_iomap() case? I.e., no validity cookie
+and no folio_ops set..? If so, I think a small comment would be helpful.
+Otherwise LGTM:
 
-With this change, all sched_tags memory management is handled entirely
-outside the ->elevator_lock and the ->freeze_lock context, thereby
-eliminating the lock dependency that could otherwise manifest during
-nr_hw_queues updates.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-[1] https://lore.kernel.org/all/0659ea8d-a463-47c8-9180-43c719e106eb@linux.ibm.com/
-
-Reported-by: Stefan Haberland <sth@linux.ibm.com>
-Closes: https://lore.kernel.org/all/0659ea8d-a463-47c8-9180-43c719e106eb@linux.ibm.com/
-Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
----
- block/blk-mq-sched.c | 63 ++++++++++++++++++++++++++++++++++++++++++++
- block/blk-mq-sched.h |  4 +++
- block/blk-mq.c       | 11 +++++++-
- block/blk.h          |  2 +-
- block/elevator.c     |  4 +--
- 5 files changed, 80 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 7bc15b4cff89..dcc4036647b0 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -427,6 +427,30 @@ void blk_mq_free_sched_tags(struct elevator_tags *et,
- 	kfree(et);
- }
- 
-+void blk_mq_free_sched_tags_batch(struct xarray *et_table,
-+		struct blk_mq_tag_set *set)
-+{
-+	struct request_queue *q;
-+	struct elevator_tags *et;
-+
-+	lockdep_assert_held_write(&set->update_nr_hwq_lock);
-+
-+	list_for_each_entry(q, &set->tag_list, tag_set_list) {
-+		/*
-+		 * Accessing q->elevator without holding q->elevator_lock is
-+		 * safe because we're holding here set->update_nr_hwq_lock in
-+		 * the writer context. So, scheduler update/switch code (which
-+		 * acquires the same lock but in the reader context) can't run
-+		 * concurrently.
-+		 */
-+		if (q->elevator) {
-+			et = xa_load(et_table, q->id);
-+			if (et)
-+				blk_mq_free_sched_tags(et, set);
-+		}
-+	}
-+}
-+
- struct elevator_tags *blk_mq_alloc_sched_tags(struct blk_mq_tag_set *set,
- 		unsigned int nr_hw_queues)
- {
-@@ -476,6 +500,45 @@ struct elevator_tags *blk_mq_alloc_sched_tags(struct blk_mq_tag_set *set,
- 	return NULL;
- }
- 
-+int blk_mq_alloc_sched_tags_batch(struct xarray *et_table,
-+		struct blk_mq_tag_set *set, unsigned int nr_hw_queues)
-+{
-+	struct request_queue *q;
-+	struct elevator_tags *et;
-+	gfp_t gfp = GFP_NOIO | __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY;
-+
-+	lockdep_assert_held_write(&set->update_nr_hwq_lock);
-+
-+	list_for_each_entry(q, &set->tag_list, tag_set_list) {
-+		/*
-+		 * Accessing q->elevator without holding q->elevator_lock is
-+		 * safe because we're holding here set->update_nr_hwq_lock in
-+		 * the writer context. So, scheduler update/switch code (which
-+		 * acquires the same lock but in the reader context) can't run
-+		 * concurrently.
-+		 */
-+		if (q->elevator) {
-+			et = blk_mq_alloc_sched_tags(set, nr_hw_queues);
-+			if (!et)
-+				goto out_unwind;
-+			if (xa_insert(et_table, q->id, et, gfp))
-+				goto out_free_tags;
-+		}
-+	}
-+	return 0;
-+out_free_tags:
-+	blk_mq_free_sched_tags(et, set);
-+out_unwind:
-+	list_for_each_entry_continue_reverse(q, &set->tag_list, tag_set_list) {
-+		if (q->elevator) {
-+			et = xa_load(et_table, q->id);
-+			if (et)
-+				blk_mq_free_sched_tags(et, set);
-+		}
-+	}
-+	return -ENOMEM;
-+}
-+
- /* caller must have a reference to @e, will grab another one if successful */
- int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e,
- 		struct elevator_tags *et)
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 0cde00cd1c47..b554e1d55950 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -25,8 +25,12 @@ void blk_mq_sched_free_rqs(struct request_queue *q);
- 
- struct elevator_tags *blk_mq_alloc_sched_tags(struct blk_mq_tag_set *set,
- 		unsigned int nr_hw_queues);
-+int blk_mq_alloc_sched_tags_batch(struct xarray *et_table,
-+		struct blk_mq_tag_set *set, unsigned int nr_hw_queues);
- void blk_mq_free_sched_tags(struct elevator_tags *et,
- 		struct blk_mq_tag_set *set);
-+void blk_mq_free_sched_tags_batch(struct xarray *et_table,
-+		struct blk_mq_tag_set *set);
- 
- static inline void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
- {
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4806b867e37d..a68b658ce07b 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -4972,6 +4972,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 	struct request_queue *q;
- 	int prev_nr_hw_queues = set->nr_hw_queues;
- 	unsigned int memflags;
-+	struct xarray et_table;
- 	int i;
- 
- 	lockdep_assert_held(&set->tag_list_lock);
-@@ -4984,6 +4985,11 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 		return;
- 
- 	memflags = memalloc_noio_save();
-+
-+	xa_init(&et_table);
-+	if (blk_mq_alloc_sched_tags_batch(&et_table, set, nr_hw_queues) < 0)
-+		goto out_memalloc_restore;
-+
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
- 		blk_mq_debugfs_unregister_hctxs(q);
- 		blk_mq_sysfs_unregister_hctxs(q);
-@@ -4995,6 +5001,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 	if (blk_mq_realloc_tag_set_tags(set, nr_hw_queues) < 0) {
- 		list_for_each_entry(q, &set->tag_list, tag_set_list)
- 			blk_mq_unfreeze_queue_nomemrestore(q);
-+		blk_mq_free_sched_tags_batch(&et_table, set);
- 		goto reregister;
- 	}
- 
-@@ -5019,7 +5026,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 
- 	/* elv_update_nr_hw_queues() unfreeze queue for us */
- 	list_for_each_entry(q, &set->tag_list, tag_set_list)
--		elv_update_nr_hw_queues(q);
-+		elv_update_nr_hw_queues(q, &et_table);
- 
- reregister:
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
-@@ -5029,7 +5036,9 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 		blk_mq_remove_hw_queues_cpuhp(q);
- 		blk_mq_add_hw_queues_cpuhp(q);
- 	}
-+out_memalloc_restore:
- 	memalloc_noio_restore(memflags);
-+	xa_destroy(&et_table);
- 
- 	/* Free the excess tags when nr_hw_queues shrink. */
- 	for (i = set->nr_hw_queues; i < prev_nr_hw_queues; i++)
-diff --git a/block/blk.h b/block/blk.h
-index 37ec459fe656..c6d1d1458388 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -321,7 +321,7 @@ bool blk_bio_list_merge(struct request_queue *q, struct list_head *list,
- 
- bool blk_insert_flush(struct request *rq);
- 
--void elv_update_nr_hw_queues(struct request_queue *q);
-+void elv_update_nr_hw_queues(struct request_queue *q, struct xarray *et_table);
- void elevator_set_default(struct request_queue *q);
- void elevator_set_none(struct request_queue *q);
- 
-diff --git a/block/elevator.c b/block/elevator.c
-index 50f4b78efe66..8ba8b869d5a4 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -705,7 +705,7 @@ static int elevator_change(struct request_queue *q, struct elv_change_ctx *ctx)
-  * The I/O scheduler depends on the number of hardware queues, this forces a
-  * reattachment when nr_hw_queues changes.
-  */
--void elv_update_nr_hw_queues(struct request_queue *q)
-+void elv_update_nr_hw_queues(struct request_queue *q, struct xarray *et_table)
- {
- 	struct blk_mq_tag_set *set = q->tag_set;
- 	struct elv_change_ctx ctx = {};
-@@ -720,7 +720,7 @@ void elv_update_nr_hw_queues(struct request_queue *q)
- 	 * acquires same lock in the reader context) can't run concurrently.
- 	 */
- 	if (q->elevator) {
--		ctx.et = blk_mq_alloc_sched_tags(set, set->nr_hw_queues);
-+		ctx.et = xa_load(et_table, q->id);
- 		if (!ctx.et) {
- 			WARN_ON_ONCE(1);
- 			return;
--- 
-2.49.0
+>  	if (iomap->validity_cookie !=
+>  			xfs_iomap_inode_sequence(ip, iomap->flags)) {
+>  		trace_xfs_iomap_invalid(ip, iomap);
+> @@ -89,7 +92,7 @@ xfs_iomap_valid(
+>  	return true;
+>  }
+>  
+> -static const struct iomap_folio_ops xfs_iomap_folio_ops = {
+> +const struct iomap_write_ops xfs_iomap_write_ops = {
+>  	.iomap_valid		= xfs_iomap_valid,
+>  };
+>  
+> @@ -151,7 +154,6 @@ xfs_bmbt_to_iomap(
+>  		iomap->flags |= IOMAP_F_DIRTY;
+>  
+>  	iomap->validity_cookie = sequence_cookie;
+> -	iomap->folio_ops = &xfs_iomap_folio_ops;
+>  	return 0;
+>  }
+>  
+> @@ -2198,7 +2200,8 @@ xfs_zero_range(
+>  		return dax_zero_range(inode, pos, len, did_zero,
+>  				      &xfs_dax_write_iomap_ops);
+>  	return iomap_zero_range(inode, pos, len, did_zero,
+> -				&xfs_buffered_write_iomap_ops, ac);
+> +			&xfs_buffered_write_iomap_ops, &xfs_iomap_write_ops,
+> +			ac);
+>  }
+>  
+>  int
+> @@ -2214,5 +2217,6 @@ xfs_truncate_page(
+>  		return dax_truncate_page(inode, pos, did_zero,
+>  					&xfs_dax_write_iomap_ops);
+>  	return iomap_truncate_page(inode, pos, did_zero,
+> -				   &xfs_buffered_write_iomap_ops, ac);
+> +			&xfs_buffered_write_iomap_ops, &xfs_iomap_write_ops,
+> +			ac);
+>  }
+> diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
+> index 674f8ac1b9bd..ebcce7d49446 100644
+> --- a/fs/xfs/xfs_iomap.h
+> +++ b/fs/xfs/xfs_iomap.h
+> @@ -57,5 +57,6 @@ extern const struct iomap_ops xfs_seek_iomap_ops;
+>  extern const struct iomap_ops xfs_xattr_iomap_ops;
+>  extern const struct iomap_ops xfs_dax_write_iomap_ops;
+>  extern const struct iomap_ops xfs_atomic_write_cow_iomap_ops;
+> +extern const struct iomap_write_ops xfs_iomap_write_ops;
+>  
+>  #endif /* __XFS_IOMAP_H__*/
+> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> index ad3bcb76d805..3f177b4ec131 100644
+> --- a/fs/xfs/xfs_reflink.c
+> +++ b/fs/xfs/xfs_reflink.c
+> @@ -1881,7 +1881,8 @@ xfs_reflink_unshare(
+>  				&xfs_dax_write_iomap_ops);
+>  	else
+>  		error = iomap_file_unshare(inode, offset, len,
+> -				&xfs_buffered_write_iomap_ops);
+> +				&xfs_buffered_write_iomap_ops,
+> +				&xfs_iomap_write_ops);
+>  	if (error)
+>  		goto out;
+>  
+> diff --git a/fs/zonefs/file.c b/fs/zonefs/file.c
+> index a0ce6c97b9e5..88cb7df2709f 100644
+> --- a/fs/zonefs/file.c
+> +++ b/fs/zonefs/file.c
+> @@ -572,7 +572,8 @@ static ssize_t zonefs_file_buffered_write(struct kiocb *iocb,
+>  	if (ret <= 0)
+>  		goto inode_unlock;
+>  
+> -	ret = iomap_file_buffered_write(iocb, from, &zonefs_write_iomap_ops, NULL);
+> +	ret = iomap_file_buffered_write(iocb, from, &zonefs_write_iomap_ops,
+> +			NULL, NULL);
+>  	if (ret == -EIO)
+>  		zonefs_io_error(inode, true);
+>  
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 568a246f949b..482787013ff7 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -101,8 +101,6 @@ struct vm_fault;
+>   */
+>  #define IOMAP_NULL_ADDR -1ULL	/* addr is not valid */
+>  
+> -struct iomap_folio_ops;
+> -
+>  struct iomap {
+>  	u64			addr; /* disk offset of mapping, bytes */
+>  	loff_t			offset;	/* file offset of mapping, bytes */
+> @@ -113,7 +111,6 @@ struct iomap {
+>  	struct dax_device	*dax_dev; /* dax_dev for dax operations */
+>  	void			*inline_data;
+>  	void			*private; /* filesystem private */
+> -	const struct iomap_folio_ops *folio_ops;
+>  	u64			validity_cookie; /* used with .iomap_valid() */
+>  };
+>  
+> @@ -143,16 +140,11 @@ static inline bool iomap_inline_data_valid(const struct iomap *iomap)
+>  }
+>  
+>  /*
+> - * When a filesystem sets folio_ops in an iomap mapping it returns, get_folio
+> - * and put_folio will be called for each folio written to.  This only applies
+> - * to buffered writes as unbuffered writes will not typically have folios
+> - * associated with them.
+> - *
+>   * When get_folio succeeds, put_folio will always be called to do any
+>   * cleanup work necessary.  put_folio is responsible for unlocking and putting
+>   * @folio.
+>   */
+> -struct iomap_folio_ops {
+> +struct iomap_write_ops {
+>  	struct folio *(*get_folio)(struct iomap_iter *iter, loff_t pos,
+>  			unsigned len);
+>  	void (*put_folio)(struct inode *inode, loff_t pos, unsigned copied,
+> @@ -335,7 +327,8 @@ static inline bool iomap_want_unshare_iter(const struct iomap_iter *iter)
+>  }
+>  
+>  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
+> -		const struct iomap_ops *ops, void *private);
+> +		const struct iomap_ops *ops,
+> +		const struct iomap_write_ops *write_ops, void *private);
+>  int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops);
+>  void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
+>  bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
+> @@ -344,11 +337,14 @@ bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
+>  void iomap_invalidate_folio(struct folio *folio, size_t offset, size_t len);
+>  bool iomap_dirty_folio(struct address_space *mapping, struct folio *folio);
+>  int iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
+> -		const struct iomap_ops *ops);
+> +		const struct iomap_ops *ops,
+> +		const struct iomap_write_ops *write_ops);
+>  int iomap_zero_range(struct inode *inode, loff_t pos, loff_t len,
+> -		bool *did_zero, const struct iomap_ops *ops, void *private);
+> +		bool *did_zero, const struct iomap_ops *ops,
+> +		const struct iomap_write_ops *write_ops, void *private);
+>  int iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
+> -		const struct iomap_ops *ops, void *private);
+> +		const struct iomap_ops *ops,
+> +		const struct iomap_write_ops *write_ops, void *private);
+>  vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops,
+>  		void *private);
+>  typedef void (*iomap_punch_t)(struct inode *inode, loff_t offset, loff_t length,
+> -- 
+> 2.47.2
+> 
+> 
 
 
