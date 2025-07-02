@@ -1,253 +1,219 @@
-Return-Path: <linux-block+bounces-23586-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23577-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC71BAF5EC7
-	for <lists+linux-block@lfdr.de>; Wed,  2 Jul 2025 18:36:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04370AF5EA5
+	for <lists+linux-block@lfdr.de>; Wed,  2 Jul 2025 18:34:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D5204A69C6
-	for <lists+linux-block@lfdr.de>; Wed,  2 Jul 2025 16:35:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31DB34A3D4C
+	for <lists+linux-block@lfdr.de>; Wed,  2 Jul 2025 16:34:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE2E0301123;
-	Wed,  2 Jul 2025 16:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BAD2DCF6A;
+	Wed,  2 Jul 2025 16:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DOofKgq4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="axU4n6uZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJJPuSL+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A3E30E833
-	for <linux-block@vger.kernel.org>; Wed,  2 Jul 2025 16:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474067; cv=fail; b=ef9616ZTTQ4kr2jnVNEmCpDMo1gEIlJkIZ09YWbXFUj+ine5sicu6ltTWh40o6J+ZyLJvuk5yEvjU8TJdjRcmJGh9AYwf8OQkHdrVudWTw95fKoZk9yAW9PqsUFci5CFDp51sG/YpY24CtXv6PdMnj1HF2pJa2Onw+vrQPLkOrY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474067; c=relaxed/simple;
-	bh=Je3f93CQ4uAU0EQqFhWHloq3ital4v8sh9D09LDhd40=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mbAZLOOJ47fH/3D0pkX8kMBfNiIhwFsPudb6GY0oV1++/3y8RpAZ1PaeVmtWSZ3cwxqExyeslnFJhLtkkQ1gdzBR6cNc/ko6O+Oo5poGSOU78knwdUA8+4oCw2H9iGSaNmUD3wRbe3Vxkj3zFnfdsZDP/Nc7NZ4wAl3KJH59myk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DOofKgq4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=axU4n6uZ; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562GCD5v009521;
-	Wed, 2 Jul 2025 16:34:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=9n9Srt6wntBbWXMipS3ZFRmlFayseGWAIn5ly0NJvnM=; b=
-	DOofKgq4tOq1gqi9Ix2TFol61h48xOAT0hRcC5RfYeAqrdUY/TEu5d4xBC5aJRUq
-	fjHrpc2V3jcFOk2c1fjou4gnTP/WjGlgJWMNOhs2XL4Ah2Kf1Dqc/VE3IKq3WV+a
-	wbMYoLkdxJZnU/dQlKjkr+FMAQLCyiTw0LPDZTULTFpg0SCaQz6CPzSN0lLWMi8b
-	fVV7yywvBbxrbYybZFQOSL3LxPQVrGoV27Dq5626apUsqv9KamZbdgiSu9IBoTsA
-	npsSnZDSe3vJgha4VtjWaF2tUcbASHvdaJ393bp+ts9HYuVSyUc9Rdr0QbXPYgOS
-	8JNjuvNAY40yd6JXvNFBQA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j6tffadb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Jul 2025 16:34:14 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 562FQjD3030365;
-	Wed, 2 Jul 2025 16:34:14 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6ubganq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Jul 2025 16:34:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DOSpWM69J1FV5jyPHB4+ug6ktxjoFiWO5f2P6tacCwOYj2je6wwbbyLlwi2exfK6XWtpXnY7L7nbWzmUVJLWTAmxzUwaTvjwxDX1rM5M1osp+I0J7Em9JgT4NgT2d8AN9XTo79yXCzW+nvetlHY4N6hmb4X7XRYmysNuyXEeYO2dJeVaWxiwGhBVT7SRsVwYtaxp/vIBYy3H1Qr0LjCkPvO+rO5DzylkAeI8ia9tf85hZdD8o1lqrxLHkhzqQiN4Uy0WYdfbLUBfV2MOjErG/+FkQ0zv9lbh+q8DMJpEZ/t6YtFQTTldDnkXbPZIBKCEO3GnLXs8+3XWl0maDjJX5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9n9Srt6wntBbWXMipS3ZFRmlFayseGWAIn5ly0NJvnM=;
- b=Fv6KicSyLgMp2x+FHQLV+N7kjQYzPp/RNKmXrzK33FAIP0noBUr924CeB3l111i5hBbwW+ZfVgmgM4U574LmYHrUAknLGWcU+xBUnD3HfuhTTmw0zsGYY7dV2zJ4kdaWjMvJVfkI6G6ta7q/dc5Wytttzn44VHPW5lOXNCkPq1vfWvuK2nLolOFuyjHT/IXSjNeEBLGj53wQvYNafUGRE+Vb+JtAKbQllnMGOaZ8zDg3ZE5QoS5DQRI24Sl3ziPMAUlrcYksMgOIY5KGHQQkt/PCGwXSnO0Uwn9ZITA7TvPWQ78Iqh1DRK7Qs8Sa6JCfwTx7CNmB7LZ+fkLak5G02A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9n9Srt6wntBbWXMipS3ZFRmlFayseGWAIn5ly0NJvnM=;
- b=axU4n6uZsTvgQpKIO/1KQMtU8gc7rNbtxRsILeA9JcWnhR2zc5tQvr5QfIW7LEbuTCCwK3/D1wYJCRpWmmhoau11YH4Ifun6rwtV5H3OdndBGgv5fqV+B9e+6p2xb6Z2EF3szuwlkA+u+DpHOWii8cSQ6rYDbtwVPSSejHfWfqE=
-Received: from SJ0PR10MB5550.namprd10.prod.outlook.com (2603:10b6:a03:3d3::5)
- by PH7PR10MB6179.namprd10.prod.outlook.com (2603:10b6:510:1f1::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Wed, 2 Jul
- 2025 16:33:33 +0000
-Received: from SJ0PR10MB5550.namprd10.prod.outlook.com
- ([fe80::10a5:f5f4:a06d:ecdf]) by SJ0PR10MB5550.namprd10.prod.outlook.com
- ([fe80::10a5:f5f4:a06d:ecdf%5]) with mapi id 15.20.8857.036; Wed, 2 Jul 2025
- 16:33:33 +0000
-Message-ID: <6e74e9a8-2dbb-4ad4-a48b-9af40d6af711@oracle.com>
-Date: Wed, 2 Jul 2025 09:33:32 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] nvme4: inconsistent AWUPF, controller not added
- (0/7).
-To: Yi Zhang <yi.zhang@redhat.com>, linux-block
- <linux-block@vger.kernel.org>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>, John Garry <john.g.garry@oracle.com>
-References: <CAHj4cs_Ckhz4sL5k5ug_Dc5XfjSo9QDRSrHMfBj2XYGm_gb2+g@mail.gmail.com>
-Content-Language: en-US
-From: alan.adamson@oracle.com
-In-Reply-To: <CAHj4cs_Ckhz4sL5k5ug_Dc5XfjSo9QDRSrHMfBj2XYGm_gb2+g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR05CA0181.namprd05.prod.outlook.com
- (2603:10b6:a03:330::6) To SJ0PR10MB5550.namprd10.prod.outlook.com
- (2603:10b6:a03:3d3::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9212C9A;
+	Wed,  2 Jul 2025 16:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751474043; cv=none; b=bIEhQpxDI/onZerZesyGvmI3LfejfBHRC1FKnwrnj2ZGf2HDlzxJc6vroLLKrw3b84Pc5MNvHlGw8qqcMswLq8BTJ5Iuz2ctKhIffiZTCwcqeIHJjTAeOauHtewpFtFwrkPmVUjZTlDSOReZqvvwa6n9dtmJSjg4/YadujFMk0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751474043; c=relaxed/simple;
+	bh=d5wJzBqQtQx0cKIyFfj1W46Gw/qt1uYPa5jxo62LV1s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rSceQSHE1R8HK+IJ8o1fr0lKycgNdrYDa4zsVQyuqIp6RHlB4jWHcRQ6w4YApwe9n2hREJaraiBVrW4CFu1KbAp7u64P7lz4vbEYEXy46o/2uNSGez7fY8m69Q1EWcv6D5v63BqAqrbf1I8kHgjN7Ajf75ox7Ern50MF6oy5LR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJJPuSL+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B50C4CEE7;
+	Wed,  2 Jul 2025 16:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751474043;
+	bh=d5wJzBqQtQx0cKIyFfj1W46Gw/qt1uYPa5jxo62LV1s=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YJJPuSL+liifkek72z86Bw/Thf+Gn6uTlB7TSNSl9T7Z6bNz/pRf60X53CheWMd5p
+	 zWnwjIif5rcZjq7xRKV7rEp8s22XIeXhyBzW4lOu83YQdafOr8rBpoyTb6IHAQrmoL
+	 r7B+xsOTEuLqj+BwzvZ3Ak4WxG0PuzcFu4zRp5uzvVadDx1EHTkfaeD9pf31ZJke+z
+	 zHeILJkKQeRLTWih41LpOCj79ahXKVUU07rIV/4r2jIAVFcyJywTw2rZLqS15Hl8vr
+	 a6agAZgY83CVQWOIJH6sFieFeSVYTOXR/L+Vn9pJxlsjvzXk6pZo1wBOyn5Vtsl85Q
+	 d3dplvyhjNRcw==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH v7 00/10] blk: honor isolcpus configuration
+Date: Wed, 02 Jul 2025 18:33:50 +0200
+Message-Id: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5550:EE_|PH7PR10MB6179:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e8a70cf-2e36-401b-9e34-08ddb9862fc5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WC9jc1pucW9xN3lrZmJQN0haU0ppSVh6V1Vqd3I1RmpyZTNwODZYeXlwUW9p?=
- =?utf-8?B?VjYveitYZVU1MXpwZUQrTXpJL2lYUnUweGFCcFhrQXI4YlF0OFMwL0VCck5H?=
- =?utf-8?B?eU5lQUsvd0R6Z3hhbGtKVDZmWEgzT0dqRERza0dWSmppTDYveHZlQ043aGlJ?=
- =?utf-8?B?b0RPeHBMQTAwaWxERW9tQWtKY2JNbThtTUhIeHdtMzJQRXNUZTZlNGZoWmJO?=
- =?utf-8?B?ZHpIVWhPZUJ2YXl3YUpRc1NSTUR5dzI4dEV2VmdNeVNmNzhpdHZKemRiTWgy?=
- =?utf-8?B?Zi9nYURmcWVQL1lDRjFzeld6V0hlWFoyZkl2MHdnTjZOR1prM09RRWw5aUtC?=
- =?utf-8?B?QStJSWlJcXdXQ043REZyWEpYYUdKVUV3YzZtSTg5WHU1ZUJGc2NoQUtuNHV5?=
- =?utf-8?B?UjY0U1pRTWEyc3hQK0V4S0FuWHJKMGVRZHdwMElKa2Q4b3F6S3R1cmNGb0lN?=
- =?utf-8?B?OXY1MVA2U3RQN3FYdGNyYkdxd0dwOVhYSno0YW5wYnlFSEhLSmpmOEo2NGlR?=
- =?utf-8?B?THcySS80Y2p3UjJVZHdPa21vVVhOZlpIVXplRVNWSzBKQ3FGeGhUTklESU92?=
- =?utf-8?B?Nm4yTExsNmdJODVUY0JpR05QL0ZjQll4QVY1NjhBWXlDU1A4RFJCQTRPcGxB?=
- =?utf-8?B?UlhaK3JLMVRaNzFDUzBIOTlia0JXNC9CRzZhdi9PUWtucktZamI1Z2sxUm5C?=
- =?utf-8?B?SW91bXRJc0k1WGZySEdHay9HTXk0QzBoSFlLdDB0bEdCRGZmYnlTb3BwbGFt?=
- =?utf-8?B?cWZoMXhLYUc5MkFXT2JuN3JOb3JxVy91bGI3UW05eXUvUXVQaHBFTFoxMENF?=
- =?utf-8?B?c1ZjekM0bHExd2p6WTdmZ2RBa2xCOVg4OHYvM0hXdmxteEh0Z1lTVWZGQ1hT?=
- =?utf-8?B?aHdwUXd4b1VidkFZc3g0VVZTZWtDZm80L3B3dEpUZ3M5TUJVSnB1aWVoZTI5?=
- =?utf-8?B?Tit0M1d1NkRmU1ZNMWk3RDlOS0hJL3N4ZXdEcEN3eENKL0RSK2lKeFBaS2pN?=
- =?utf-8?B?VDV3aEJhZzRibVp0a2xyRXp2cWVmVTAycWxOc3RpRW5BcWpxOS8yOG9XSUpQ?=
- =?utf-8?B?SVZ5WFhYdmRqVVNXcDBTMzR1UmcyTmI0cWNzUE9SMEdLQzdjTVVXL1FaSUtG?=
- =?utf-8?B?UThxMjRBK2ROajNnQ1ZwaEo1NmEwWDNDdkY1SHY1b3RuTHlRK1RBYk5GMHN5?=
- =?utf-8?B?VDlTTGdaSUUwb2tVdlQ5MklIZ0h0SVFObDBzUHV3TDFKVXhmb1IyZHBYSzIr?=
- =?utf-8?B?M0RTNEozdS9oZlRCckNsMVl1QlYwY2RMQjhrdVNJRGlvcjVOV1RtZitBeGhh?=
- =?utf-8?B?RDh6ejBIbm1weEFCY1UrZEdqYUVkaWdkUkxibmd5bVVDRmZ1NXY2TEhENlJr?=
- =?utf-8?B?UWE1bEoxd2YvTWVyOXppVTYyN3VWOThNQ3lndm9vOGFxVDFOYUtkNFRLcVlX?=
- =?utf-8?B?MHBrRXAzNVlMZW10c3Q3SUNXRzRZWkZWanhyd1dVNTV0ZFg1M1gyNzZHWUxl?=
- =?utf-8?B?Q1lwbGNKVENJZzhZY2Q3QW9rcnk2cnhpcEZRZElHMU1weGZsTi90KzBNb2Jp?=
- =?utf-8?B?d2c3YUJjWUxGVmRWNlpUajZqc2RXZFQ1ZmhQNEZWZ29adWMzejlHVjEvcWZM?=
- =?utf-8?B?dG5rcHQ3RFdzMnI3cWIreVJZK2NidzBzUlZJNll0RnBqRmVqTzY5YitWekQw?=
- =?utf-8?B?NG41NkRUdjJwc0t0VDdjZmkwTlorZ1VydTVKS1RNaEdWeGNIVm9ZVUJNaVlx?=
- =?utf-8?B?VTdmNzB5M0FCWHFZRk5EUWlOeGE4Mlk5elhJZzNwTEt2T0FGMERPNG5hSEFJ?=
- =?utf-8?B?ZW9HbThpbTd6dmxUQ3dPUEhHOUxlSjgwU1ppZWUrNndKVExVdFp2SVcyOGtW?=
- =?utf-8?B?VU15dmNkSEpNUGQxMlVQZjhJc21BR2Iwa2lndmFtWnNxZVE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5550.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VVVvNlJ5SnpXRGtsZ3FqUjNWU1RIWU00bm5abTlWN3JVNUpPTHBCU3VTdWhO?=
- =?utf-8?B?a2xkbENVWityUFdVWDVra09Qc0N4M2YyNVFIUTh5TjFHYTZaT2F1UkxDdHBW?=
- =?utf-8?B?OU9mK05sbXBoeVQ0UStFRHRISUI2TVgwZVU3eW5qenFnVEFUNThnUTBMQ1Bp?=
- =?utf-8?B?TGNEbk5zMk1EbG5ZaHhSZEhBY290YmF6WWNkQjBTdjNiN2NrUHpKNzFzeFFm?=
- =?utf-8?B?RTVTTXFKMEx4VGxMSnM2bGtYVzk3Z3BVWkc1SnBwMWtOY1VDYkI3aVNKcXlu?=
- =?utf-8?B?WU1TOEQxcEJiNmFtVEViTTg4NlJEcEZhMlVTODNBdjlFL255djhZRk5OUXJW?=
- =?utf-8?B?aCtsYy9jZXBUMmFQanExQ0NvaGU2elJOM2JUZVh0eWszaUx3N2M3bEE1blB5?=
- =?utf-8?B?d0hDNzJua1RuZGViam8xNDJ6ZXJ0ZGxsQng5cGpaQ3ZGc21iYUlRSnZRbDhC?=
- =?utf-8?B?b1JLZHdjcGd6WGpLMUs4d0EzcUI1cnpqZHEvUjZoVXB0NVVyc3hpZCtnaXRp?=
- =?utf-8?B?QXlrRjdMcnhZQm45RG1aZGVtUHVoOXB4eUJucFBOMm9RRG9LZjlJbGpwWkZj?=
- =?utf-8?B?MXdhV2NMUCtFbnhCV3R4aktucm9ieitOYmRmQW1DeGNGVlJZVmxVL1p2aUMv?=
- =?utf-8?B?RDdycDJRbG9WZ2p6L2xtbEhKRkVGS3ZZK1BlZUhTbGFPbU5FM3NmejNmVDdq?=
- =?utf-8?B?R0U5OGRKWXlrWEtxeGtjK29MUXAzOHljWlVLMXFLTGlsNVdkclltRCtvcHMr?=
- =?utf-8?B?UVg4b0w2OVp4QU1RajRsUkgvZkxNVWtRbk9pNi90czNTTkRvRS95Z3VQVkpN?=
- =?utf-8?B?azhYencrUjMxMTdWcXBKdUdZdFpweGNYU3NrSDAya00zdzdmTHlEY3NsMnM4?=
- =?utf-8?B?a0dKZUpUUnRTYy9TUHJ4YWlZRTZCWlRwQksySHIvSm5sbHMwUzcrcCtuYXZR?=
- =?utf-8?B?KzdZMmltOVltUUhlNEV0RDQ2cWZnVTJNbTMyYitGWW1FTWVVU29MUlQwSlZC?=
- =?utf-8?B?VUtLTzZDRXVKRXdNV2RWZ2FCTE9vZ256M0tIaFpPdWhCNzlVZm9xOERnMHRs?=
- =?utf-8?B?RTVNbWpJYmhtQUFEU2YrUi9vaEdMMGp0YStFWHd3UDdxNU9kSmNhMlN6WkQ5?=
- =?utf-8?B?SjdNcGIvTHliQ2hJakNXUm15QW13NXFjWlVPQy9FclRqaUhGT0FSL1ZVRW8x?=
- =?utf-8?B?cXpVY0tXYUp1dHl1bS9GQ2l4SGNPWFFlNE41bTdLRmFUY0hZZmRNRUROUDQr?=
- =?utf-8?B?T1pMZ1JJTFhyZ0xjNWlKUDQ5NnJaTEpFSFJzd0xpR2V2WSsrSkNiYzR6TWpR?=
- =?utf-8?B?VDdSZGo4MTdPQ1I3L3FJc0J4MDVwbzdKaUFVZHlkU1RseUkyVUxXREdlcHlI?=
- =?utf-8?B?NlpTVUhTeEpoWG1nVTFKOVN4VXZ6ZnRJbngzZG10MGdPNEE4dTJUWkJ6VS9H?=
- =?utf-8?B?ZldMTS80ejNicmRyNUcvQjh3L3A4U0ZzVzB1OEp5MmROL29xTlFzQWk2bjJn?=
- =?utf-8?B?YnVzb0Y4Z01wRXdDQTRrS1gvSk5nQXVPdjRUL0FPTDFDeURaRG5ranlrYkpo?=
- =?utf-8?B?U1JOVXQzZEFKUEI5bEF4VHZEZ2ZUV2NaU3ZzTFNEcmpZVk9JSlRZbHQ2aGky?=
- =?utf-8?B?Mkw3SXRvNUxURmM1ekIzUm5zcFRudXNsTDk5MzR4UHI4dGpqbHJFbjhKZStI?=
- =?utf-8?B?aW1tWWpteWJGS2dsWUU3SDhwa0hKRitROWxUbmJHeEl3RENPTTFPSTVGNXl4?=
- =?utf-8?B?NWovVWFaeTBpNHEzTnFHQ0ZERnZQZEJHM3lsK1NBRVc0ZVlGMlRSdVcyditv?=
- =?utf-8?B?bnRwUTRDUk0zQURoR05BRTkwREYrd1V2dlFURGh5Wk5KdHRmdkp2ZGdUTXVi?=
- =?utf-8?B?T1hHWSt6bHpSWFNnd2xYa1Zvei90bFM0cklOdnNrZlpkYytDS3grU2k2WjE3?=
- =?utf-8?B?QzZXMm5DRmZnenhOTVhtK29GeGFRcG0yUTNzTHZDckdHajllcE1KeStHMVNU?=
- =?utf-8?B?R3kvQTF4eFV4bEg0dmdNY21mVmJTZGlaMDZKbStLUGhKMDhLVUJnaHptWStq?=
- =?utf-8?B?emFiRElua0xJZWRUeTFMbURId1FXRng2bTdIcTJXa1JRajZMOHJqL01CODEv?=
- =?utf-8?B?bjQ3RWgrSmZYeUhTdXdIVU5GRFpFZk50clkvUjNXREV4aDBCeDJUbmtaMGRR?=
- =?utf-8?B?WGc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	FSUmxauoyznJejEYvuQ13fCS5LMIwyeoDL/xfbBtpVvaPdt0pXfOAZVyPJyWAfq/uyXQ0oHC3imtFF0wqRixz4K4KoAmKpr5SR6vFgpBfqUGyjQeTo15t0bH7yHBQVLhXeZ9aSXvl4nc/nZuRyqQT2oO0YMC4kBXoRGPZaya5puE26xM/jjrfWcei1eAd7M+Qzgm9DYth1SIh/AhaereF9ciAvgKB//OBCtaNQ0B4tJH/g1DHSDkNIJrlzRaell++LE2j1X4FSgpRoK4OEQm719Rm1DJhAkXL9kPyjYhMBWWMNR09RVZsC62CQdbeqRJon011yu6fDgLy1iBO1bjYAJUrAw8y9SiX7MWZU14dTlG59oZrbAfVJDxWQpX2yvxDqRYAKOL6GED/Velk07nPARpfGwkIYx62FgNYqE7iqz5kdD/TtBXxyNosUbRANeCmTCrtcLT2ArGhd+0iRfN6E8f2p1a/rl6cp8gaIOAvhtQmsUm7XlEaYT0Y6GfiqRlTehraGW1ISmPfbRRHN1jWidVDAB3m0AGl1S2O7lidUzNZILYmYdfXvCi5qtopwQSKS2XF883KJbesQikHdaqsX2on21Wz1S+bpz2XHE12Tg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e8a70cf-2e36-401b-9e34-08ddb9862fc5
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5550.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 16:33:33.5900
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3FVUnKhs5w71t4HZOlW+UNPWwHlgZqCPyMIh+G8U2xp77e26Bv0a81tW+fxuFw4B0Rwdm/CzeE5SbmyOYRNdhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6179
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_02,2025-07-02_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2507020136
-X-Authority-Analysis: v=2.4 cv=CMMqXQrD c=1 sm=1 tr=0 ts=68655f86 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=e64cXYtMg1U04Dd1XDsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14723
-X-Proofpoint-GUID: MG0Z4G06nV4LMv8_3y2MElD38up70yp8
-X-Proofpoint-ORIG-GUID: MG0Z4G06nV4LMv8_3y2MElD38up70yp8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEzNiBTYWx0ZWRfX1LC3H+WJ5a4Q uqMFg7jcuY5fqGGHmF74ztzinNcxpWctGDx5pE1EFtczRTDgO5V4BF6m92WHZhR13ZNX13GuCMr YnoJmG/VFL8oFdFXouwVYKcymt55XObqeSw2NT9W5JOfnuXr0xzPQsNZOS7b9PaO5MYspTzPJ9C
- sP4rjJ4mZslMHczinqeEgIkgVy1c0+4WjqoGfWa4dYaYSRAOK7mN0szMP3tdvpaf/K6XMre5ywP LbftVztPdEOpnQPfQ67ax8qvWeDtkVd2uyOW2hly5YyNgvS3ltTJJFITaP0/bTH3L9zgkbvMLFa Gaf2hdHJJ9ORA6VbQEcDV2QlLOMzoeLzZgBLpwBVPB7tMHYH5RCLS46G7ca9aH4aUhBGMERjVEt
- RIq/suRd/McC6lVeBb9xulfa46P1a5uyEUCfK6kK9ERfA6vU1jks8BnocnPLDgg9JpW+f3b3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAG5fZWgC/23RTW7DIBAF4KtErEs0w59JV7lH1QXYQ4Ia2QnEV
+ qvIdy9JmqZWWb6R+Bh4F5YpRcrsdXVhiaaY49CX0LysWLt3/Y547EpmAoQCI4DHPBza45h5HPh
+ ppJEyR2ctedWEYD0rB4+JQvy8oW/vJe9jPg/p63bHhNfpg8MaNyEHbj2ajQ8KwcptHjOtO2JXb
+ BJ/gaYKiAII46Qg2arQ6CUgn4AFUwVkAToHRG0gV161BNQvgALrG6gC6E5qHbxHQrX9oNTTYT2
+ k3d3QD0MDYvVXJ10MIBUQrbHg4Z9hnoYSqmqYYmycls420DoMC2O+d5XoNJbezz+FzfM3TyCdU
+ hUCAAA=
+X-Change-ID: 20240620-isolcpus-io-queues-1a88eb47ff8b
+To: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Aaron Tomlin <atomlin@atomlin.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, 
+ Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
+ Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, 
+ linux-scsi@vger.kernel.org, storagedev@microchip.com, 
+ virtualization@lists.linux.dev, GR-QLogic-Storage-Upstream@marvell.com, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
+The first part from v6 is already in linux-next.
 
-On 7/2/25 4:13 AM, Yi Zhang wrote:
-> Hi Christoph
->
-> I found this failure on one Samsung NVMe disk[1] with the latest
-> linux-block/for-next. Here is the reproducer and dmesg log.
-> Please help check it and let me know if you need any info/test. Thanks.
->
-> [1]
-> SAMSUNG MZQL2960HCJR-00A07 (PM9A3)
-> [2]
-> + nvme format -l1 -f /dev/nvme4n1
-> Success formatting namespace:1
-> + nvme reset /dev/nvme4
-> Reset: Network dropped connection on reset
->
-> dmesg:
-> [  751.872864] nvme nvme4: rescanning namespaces.
-> [  752.177475] nvme nvme4: resetting controller
-> [  752.221030] nvme nvme4: inconsistent AWUPF, controller not added (0/7).
-> [  752.227653] nvme nvme4: Disabling device after reset failure: -22
->
-Looks like the device isn't reporting AWUPF after the format/reset.
+One of the changes requested in v6 was to only use group_mask_cpus_evenly
+when the caller explicitly asks for it, instead of applying it at a
+global level. To support this, I decided to add a cpumask to struct
+irq_affinity, which is used when creating CPU groups. During testing, I
+realized it was also necessary to provide two additional block layer
+helpers to return such masks: blk_mq_{possible|online}_queue_affinity.
+These match the existing blk_mq_{possible|online}_queues.
 
-Can you try:
+As a result, this version again includes bits and pieces that touch
+several subsystems. If the general approach of extending struct
+irq_affinity is acceptable but there are additional change requests,
+particularly in the isolcpus code, I’m happy to split the first part out
+and have it reviewed separately. Let's see how the review goes first,
+though. From what I understand, this is the part Aaron is interested in.
 
-nvme id-ctrl /dev/nvme4 | grep awupf
-nvme id-ns  /dev/nvme4n1 | grep nawupf
-nvme format -l1 -f /dev/nvme4n1
-nvme id-ctrl /dev/nvme4 | grep awupf
-nvme id-ns  /dev/nvme4n1 | grep nawupf
-nvme reset /dev/nvme4
-nvme id-ctrl /dev/nvme4 | grep awupf
+Ming requested adding HK_TYPE_MANAGED_IRQ to blk_mq_map_hk_queues, but
+it's not really needed. blk_mq_map_hk_queues is only used for
+HK_TYPE_IO_QUEUE, the managed irq wants to use the existing mapping code
+(don't change the existing behavior). This is why I haven’t added it.
 
+The mapping code is now capable of generating a valid configuration
+across various system setups, for example, when the number of online CPUs
+is less than the number of possible CPUs, or when the number of requested
+queues is fewer than the number of online CPUs. Nevertheless I've added
+validation code so the system doesn't hang on boot when it's not possible
+to create a valid configuration.
 
-Alan
+I've started testing the drivers, but I don’t have access to all of them.
+So far, nvme-pci, virtio, and qla2xxx are tested. The rest are on my TODO
+list. I’m sure not everything is working yet, but I think it’s time to
+post an update and collect feedback to see if this is heading in the
+right direction.
+
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in v7:
+- send out first part of the series:
+  https://lore.kernel.org/all/20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org/
+- added command line documentation
+- added validation code, so that resulting mapping is operational
+- rewrote mapping code for isolcpus so it takes into account active hctx
+- added blk_mq_map_hk_irq_queues which uses mask from irq_get_affinity
+- refactored blk_mq_map_hk_queues so caller tests for HK_TYPE_MANAGED_IRQ
+- Link to v6: https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
+
+Changes in v6:
+- added io_queue isolcpus type back
+- prevent offlining hk cpu if a isol cpu is still present isntead just warning
+- Link to v5: https://lore.kernel.org/r/20250110-isolcpus-io-queues-v5-0-0e4f118680b0@kernel.org
+
+Changes in v5:
+- rebased on latest for-6.14/block
+- udpated documetation on managed_irq
+- updated commit message "blk-mq: issue warning when offlining hctx with online isolcpus"
+- split input/output parameter in "lib/group_cpus: let group_cpu_evenly return number of groups"
+- dropped "sched/isolation: document HK_TYPE housekeeping option"
+- Link to v4: https://lore.kernel.org/r/20241217-isolcpus-io-queues-v4-0-5d355fbb1e14@kernel.org
+
+Changes in v4:
+- added "blk-mq: issue warning when offlining hctx with online isolcpus"
+- fixed check in cgroup_cpus_evenly, the if condition needs to use
+  housekeeping_enabled() and not cpusmask_weight(housekeeping_masks),
+  because the later will always return a valid mask.
+- dropped fixed tag from "lib/group_cpus.c: honor housekeeping config when
+  grouping CPUs"
+- fixed overlong line "scsi: use block layer helpers to calculate num
+  of queues"
+- dropped "sched/isolation: Add io_queue housekeeping option",
+  just document the housekeep enum hk_type
+- added "lib/group_cpus: let group_cpu_evenly return number of groups"
+- collected tags
+- splitted series into a preperation series:
+  https://lore.kernel.org/linux-nvme/20241202-refactor-blk-affinity-helpers-v6-0-27211e9c2cd5@kernel.org/
+- Link to v3: https://lore.kernel.org/r/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
+
+Changes in v3:
+- lifted a couple of patches from
+  https://lore.kernel.org/all/20210709081005.421340-1-ming.lei@redhat.com/
+  "virito: add APIs for retrieving vq affinity"
+  "blk-mq: introduce blk_mq_dev_map_queues"
+- replaces all users of blk_mq_[pci|virtio]_map_queues with
+  blk_mq_dev_map_queues
+- updated/extended number of queue calc helpers
+- add isolcpus=io_queue CPU-hctx mapping function
+- documented enum hk_type and isolcpus=io_queue
+- added "scsi: pm8001: do not overwrite PCI queue mapping"
+- Link to v2: https://lore.kernel.org/r/20240627-isolcpus-io-queues-v2-0-26a32e3c4f75@suse.de
+
+Changes in v2:
+- updated documentation
+- splitted blk/nvme-pci patch
+- dropped HK_TYPE_IO_QUEUE, use HK_TYPE_MANAGED_IRQ
+- Link to v1: https://lore.kernel.org/r/20240621-isolcpus-io-queues-v1-0-8b169bf41083@suse.de
+
+---
+Daniel Wagner (10):
+      lib/group_cpus: Add group_masks_cpus_evenly()
+      genirq/affinity: Add cpumask to struct irq_affinity
+      blk-mq: add blk_mq_{online|possible}_queue_affinity
+      nvme-pci: use block layer helpers to constrain queue affinity
+      scsi: Use block layer helpers to constrain queue affinity
+      virtio: blk/scsi: use block layer helpers to constrain queue affinity
+      isolation: Introduce io_queue isolcpus type
+      blk-mq: use hk cpus only when isolcpus=io_queue is enabled
+      blk-mq: prevent offlining hk CPUs with associated online isolated CPUs
+      docs: add io_queue flag to isolcpus
+
+ Documentation/admin-guide/kernel-parameters.txt |  19 ++-
+ block/blk-mq-cpumap.c                           | 218 +++++++++++++++++++++++-
+ block/blk-mq.c                                  |  42 +++++
+ drivers/block/virtio_blk.c                      |   4 +-
+ drivers/nvme/host/pci.c                         |   1 +
+ drivers/scsi/fnic/fnic_isr.c                    |   7 +-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c          |   1 +
+ drivers/scsi/megaraid/megaraid_sas_base.c       |   5 +-
+ drivers/scsi/mpi3mr/mpi3mr_fw.c                 |   6 +-
+ drivers/scsi/mpt3sas/mpt3sas_base.c             |   5 +-
+ drivers/scsi/pm8001/pm8001_init.c               |   1 +
+ drivers/scsi/qla2xxx/qla_isr.c                  |   1 +
+ drivers/scsi/smartpqi/smartpqi_init.c           |   7 +-
+ drivers/scsi/virtio_scsi.c                      |   5 +-
+ include/linux/blk-mq.h                          |   2 +
+ include/linux/group_cpus.h                      |   3 +
+ include/linux/interrupt.h                       |  16 +-
+ include/linux/sched/isolation.h                 |   1 +
+ kernel/irq/affinity.c                           |  12 +-
+ kernel/sched/isolation.c                        |   7 +
+ lib/group_cpus.c                                |  64 ++++++-
+ 21 files changed, 405 insertions(+), 22 deletions(-)
+---
+base-commit: 32f85e8468ce081d8e73ca3f0d588f1004013037
+change-id: 20240620-isolcpus-io-queues-1a88eb47ff8b
+
+Best regards,
+-- 
+Daniel Wagner <wagi@kernel.org>
 
 
