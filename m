@@ -1,166 +1,126 @@
-Return-Path: <linux-block+bounces-23712-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23714-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ACFBAF8D8A
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 11:06:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6ED1AF8EAB
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 11:32:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20D831CA66A4
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 09:06:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B759816F55C
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 09:31:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2742EA468;
-	Fri,  4 Jul 2025 09:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ojI/Zgdl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fV3mnSpf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ojI/Zgdl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fV3mnSpf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B827E20A5F5;
+	Fri,  4 Jul 2025 09:31:03 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1595E2E9742
-	for <linux-block@vger.kernel.org>; Fri,  4 Jul 2025 09:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA7136E;
+	Fri,  4 Jul 2025 09:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619660; cv=none; b=XfBEHD1e2EhWoFNFT9gW8ci6wpMtTeABH9DiN4mGW2n2UMLTQSEmWlWdp8TmWhdLIOFdMtOUxJPr+EwPNvsIDspymXxmBAQoaqThM3ygsgOddRTJwieYbHpajws0/lwJoUrzd2WyK3gUYejx1qm7KU74bqXici/6VhjHS4XlIG4=
+	t=1751621463; cv=none; b=EUnEcKsbssFDeUbpi+/h6SSvGBr4rFVm5xjAqH1iD1LQW1yirs6KK8oa9wA43ZWOsNrfcps1V6IDxJyAHNjrXaEWhlEgGKw/bubHDC2Tzc+pqng8F/gxJhtbjuydZSUWIqfI66znhWWuaeE5J8NKjv7AI19eZM0/L8FNoLqbr9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619660; c=relaxed/simple;
-	bh=MMnTcJHh2YsAwogfNwsy9ZiBRqSAqI/yxQAcExaX3RA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=obGQylxmr1R42yWhPVfkSo6Hbpj1Hi5I0Eq27USn9Du140B/0U/pUxxqM7OvR4duVoIJ9LGhXdoLPtHHdxTboObEgtQgDZ+iFiMrXmEJSK19Ler25nQZ/M5NKAkixM1GgIiHfs4Qa/EKGaevzQLdoPpVG4wTz3WEXmFedsjQBek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ojI/Zgdl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fV3mnSpf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ojI/Zgdl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fV3mnSpf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1751621463; c=relaxed/simple;
+	bh=DgJEirE2drDPGSXFXC0f/QIbKHo7uI3B5qoI9iYxmoc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gCiT0XbJb/YI3JA79BGM89JJrAcjrGuJBXT1WaeUKYj+E4MAnKTmIxICgL0dfT7cv6y7n6WG1o2k2prifEKL71A9KmaWxxZgjjAYzsyPVVknRcfNhcbI/W29uXJceVDpuK0n8IPu9wh1K3m78D9fdnI+CVKzs69cQXouXz2UED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4E30621194;
-	Fri,  4 Jul 2025 09:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751619657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=ojI/ZgdlMnbHGxydH02at11LU07EryvjEUTW7WVdoAjLRhMLAokRomxzvHEJXtOdQVawX6
-	VDIbitatw5Ywe1F4boG0x0rUykXpoytb4PwfTuEEgLmMAhHmSON49CSuq8TJIS1Z/tSIOf
-	RK+NY1xW4KHOrzYcLNqbNsg0mBFN5FE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751619657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=fV3mnSpfrnCpASP7NvSx894BJkuq1cbiSAOYFl4lMPqMSsRn+OyInOp1SEJEAK5kxGaTp4
-	1EQNt2jmjNN+LiBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751619657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=ojI/ZgdlMnbHGxydH02at11LU07EryvjEUTW7WVdoAjLRhMLAokRomxzvHEJXtOdQVawX6
-	VDIbitatw5Ywe1F4boG0x0rUykXpoytb4PwfTuEEgLmMAhHmSON49CSuq8TJIS1Z/tSIOf
-	RK+NY1xW4KHOrzYcLNqbNsg0mBFN5FE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751619657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8DGv5s4oBbf5Xmo9N6DSZCMc93Z976dlHWpEdg22kI=;
-	b=fV3mnSpfrnCpASP7NvSx894BJkuq1cbiSAOYFl4lMPqMSsRn+OyInOp1SEJEAK5kxGaTp4
-	1EQNt2jmjNN+LiBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 299B013757;
-	Fri,  4 Jul 2025 09:00:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id COEjCkmYZ2ibHQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 04 Jul 2025 09:00:57 +0000
-Date: Fri, 4 Jul 2025 11:00:56 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Aaron Tomlin <atomlin@atomlin.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v7 08/10] blk-mq: use hk cpus only when isolcpus=io_queue
- is enabled
-Message-ID: <75aafd33-0aff-4cf7-872f-f110ed896213@flourine.local>
-References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
- <20250702-isolcpus-io-queues-v7-8-557aa7eacce4@kernel.org>
- <20250703090158.GA4757@lst.de>
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bYSnK2YHbz9t29;
+	Fri,  4 Jul 2025 11:21:41 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Matthew Wilcox <willy@infradead.org>,
+	Hannes Reinecke <hare@suse.de>,
+	mcgrof@kernel.org,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Christian Brauner <brauner@kernel.org>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH] block: reject bs > ps block devices when THP is disabled
+Date: Fri,  4 Jul 2025 11:21:34 +0200
+Message-ID: <20250704092134.289491-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703090158.GA4757@lst.de>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL67935bhfdkbndpbo95z3ogoo)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 11:01:58AM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 02, 2025 at 06:33:58PM +0200, Daniel Wagner wrote:
-> >  const struct cpumask *blk_mq_possible_queue_affinity(void)
-> >  {
-> > +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE))
-> > +		return housekeeping_cpumask(HK_TYPE_IO_QUEUE);
-> > +
-> >  	return cpu_possible_mask;
-> >  }
-> 
-> I'm no expert on the housekeeping stuff, but why isn't the
-> housekeeping_enabled check done in housekeeping_cpumask directly so
-> that the drivers could use housekeeping_cpumask without a blk-mq
-> wrapper?
+If THP is disabled and when a block device with logical block size >
+page size is present, the following null ptr deref panic happens during
+boot:
 
-Yes, housekeeping_cpumask will return cpu_possible_mask when housekeping
-is disabled. Though some drivers want cpu_online_mask instead. If all
-drivers would agree on one version of the mask it should allow to drop
-to these helpers (maybe we the houskeeping API needs to be extended then
-though)
+[   [13.2 mK  AOSAN: null-ptr-deref in range [0x0000000000000000-0x0000000000K0 0 0[07]
+[   13.017749] RIP: 0010:create_empty_buffers+0x3b/0x380
+<snip>
+[   13.025448] Call Trace:
+[   13.025692]  <TASK>
+[   13.025895]  block_read_full_folio+0x610/0x780
+[   13.026379]  ? __pfx_blkdev_get_block+0x10/0x10
+[   13.027008]  ? __folio_batch_add_and_move+0x1fa/0x2b0
+[   13.027548]  ? __pfx_blkdev_read_folio+0x10/0x10
+[   13.028080]  filemap_read_folio+0x9b/0x200
+[   13.028526]  ? __pfx_filemap_read_folio+0x10/0x10
+[   13.029030]  ? __filemap_get_folio+0x43/0x620
+[   13.029497]  do_read_cache_folio+0x155/0x3b0
+[   13.029962]  ? __pfx_blkdev_read_folio+0x10/0x10
+[   13.030381]  read_part_sector+0xb7/0x2a0
+[   13.030805]  read_lba+0x174/0x2c0
+<snip>
+[   13.045348]  nvme_scan_ns+0x684/0x850 [nvme_core]
+[   13.045858]  ? __pfx_nvme_scan_ns+0x10/0x10 [nvme_core]
+[   13.046414]  ? _raw_spin_unlock+0x15/0x40
+[   13.046843]  ? __switch_to+0x523/0x10a0
+[   13.047253]  ? kvm_clock_get_cycles+0x14/0x30
+[   13.047742]  ? __pfx_nvme_scan_ns_async+0x10/0x10 [nvme_core]
+[   13.048353]  async_run_entry_fn+0x96/0x4f0
+[   13.048787]  process_one_work+0x667/0x10a0
+[   13.049219]  worker_thread+0x63c/0xf60
 
-This is also what Hannes brought up. If the number of supported hardware
-queues for a device is less than cpu_possible_mask, it really makes
-sense to distribute the hardware queues only between the online cpus. I
-think the only two drivers which are interested in the cpu_possible_mask
-are nvme-pci and virtio.
+As large folio support depends on THP, only allow bs > ps block devices
+if THP is enabled.
+
+Fixes: 47dd67532303 ("block/bdev: lift block size restrictions to 64k")
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+ include/linux/blkdev.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 82348fcc2455..724ddc40f35c 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -270,11 +270,16 @@ static inline dev_t disk_devt(struct gendisk *disk)
+ 	return MKDEV(disk->major, disk->first_minor);
+ }
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ /*
+  * We should strive for 1 << (PAGE_SHIFT + MAX_PAGECACHE_ORDER)
+  * however we constrain this to what we can validate and test.
+  */
+ #define BLK_MAX_BLOCK_SIZE      SZ_64K
++#else
++#define BLK_MAX_BLOCK_SIZE      PAGE_SIZE
++#endif
++
+ 
+ /* blk_validate_limits() validates bsize, so drivers don't usually need to */
+ static inline int blk_validate_block_size(unsigned long bsize)
+
+base-commit: 8d6c58332c7a8ba025fcfa76888b6c37dbce9633
+-- 
+2.49.0
+
 
