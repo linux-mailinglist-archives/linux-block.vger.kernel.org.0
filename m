@@ -1,149 +1,140 @@
-Return-Path: <linux-block+bounces-23703-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23705-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EF29AF857D
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 04:18:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 054DEAF8762
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 07:41:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F9194823EC
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 02:17:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 307843A4658
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jul 2025 05:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE4A33D76;
-	Fri,  4 Jul 2025 02:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6E8207A26;
+	Fri,  4 Jul 2025 05:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YmL1lOyc"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Igvla8t8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f98.google.com (mail-io1-f98.google.com [209.85.166.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D947928F4
-	for <linux-block@vger.kernel.org>; Fri,  4 Jul 2025 02:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8471C2080C0
+	for <linux-block@vger.kernel.org>; Fri,  4 Jul 2025 05:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751595478; cv=none; b=KW3h8E2SS3AIkxtxB9l2jBtoYpqilfSx4uVswHwAWaXTiqexed256DF0Ifx7aRMF7u1JnpBf7g5dYu/VSOw7vw6hzRMhiadg6zIGSbyPodg2VuYMNMrwonR1F2OniqI3uFn/d4/pVcKaS7GxnMKKjOeZYHRL5mzLfsf6Ce4W7Pg=
+	t=1751607678; cv=none; b=fJFJNflUtUh3yJmFD143jXe0xJzP3PwBKKxC3LASAtiR9tjKYXSr0vDic11yl968SwjRljRrDufq+y6L2znt66wCws8qaHp9wVLcYPTPNA3pjlBh/NseGYvvU12YkZuMQ4kEWsfPlOfNIEVZcrGIeZOU17yIZAB/2+kzRy7/Z9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751595478; c=relaxed/simple;
-	bh=/IIxLfZ3T743hpVN6Uh9l3DlI2QbpXHCdpPvm/WE84U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozNJONQaEGWXbpBVL6qt0V/g34avQkrfpiUiYwNpSpemOolB0moAT6vyjWTed8lv1cGtcTXWbM74asS8uz9ct2fBf8xu3VnGJWMUcsshxJwkYHVOPYoPk548QC2RCFOlwyoi3QH4WUNMS6haO5SStLy/W9n+R0qC0lEMmDa6ypg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YmL1lOyc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751595475;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FarKJlvmIvSzBW3L7HpMcZlXycBw+0IDuOFJCXeI2rw=;
-	b=YmL1lOycJsJAWbr1nQWKgmzoY/WJzjnHCJn2SAe8GIi7nqwT3g6bNfFmTj2Rj/3Mb0AVHE
-	8D1avTSuzU/xF0vepi6vzgT7f9we6H7uGwvtOkjHT1Y3BEJ1dwNBLNIGuN4v5mcQj2IZNp
-	cGXyYxY7yFdz61ZwcYkNGXhOsAG8KUM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-153-c3dXgwzkOUW8Je8pZzNKMA-1; Thu,
- 03 Jul 2025 22:17:52 -0400
-X-MC-Unique: c3dXgwzkOUW8Je8pZzNKMA-1
-X-Mimecast-MFC-AGG-ID: c3dXgwzkOUW8Je8pZzNKMA_1751595471
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4851219560BE;
-	Fri,  4 Jul 2025 02:17:50 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.40])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B37851956087;
-	Fri,  4 Jul 2025 02:17:44 +0000 (UTC)
-Date: Fri, 4 Jul 2025 10:17:38 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yi Zhang <yi.zhang@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, alan.adamson@oracle.com,
-	linux-block <linux-block@vger.kernel.org>,
-	"open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Maurizio Lombardi <mlombard@redhat.com>
-Subject: Re: [bug report] nvme4: inconsistent AWUPF, controller not added
- (0/7).
-Message-ID: <aGc5wlj0Vgk6Mf6d@fedora>
-References: <CAHj4cs_Ckhz4sL5k5ug_Dc5XfjSo9QDRSrHMfBj2XYGm_gb2+g@mail.gmail.com>
- <6e74e9a8-2dbb-4ad4-a48b-9af40d6af711@oracle.com>
- <20250703080359.GA365@lst.de>
- <CAHj4cs_pJDR-VH7-RzGwt9KmNCdTnQ38bejeB72280e9ke8ebg@mail.gmail.com>
+	s=arc-20240116; t=1751607678; c=relaxed/simple;
+	bh=ZpEbESBZW8O2O6g0jyprqru9JBixE7wWH9Tk+pSe9uc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K1IQqz9cJ4iNdCjIbrFrv9L9y0ZCY+eZgJFiEUoI/q/TpvwFIJmMXod3GHtSIYNXJ+AQaZBhIfryhamurRXhTdwT2hkmGggB8i5+J+045LBII95saJk48nJ74QQw6Fd3f1A21e2I456pBm3X9p/+paqxO6qsyo6UOAgMAqtQ3V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Igvla8t8; arc=none smtp.client-ip=209.85.166.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-io1-f98.google.com with SMTP id ca18e2360f4ac-86d00ae076dso58576839f.0
+        for <linux-block@vger.kernel.org>; Thu, 03 Jul 2025 22:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1751607675; x=1752212475; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6CSObR2E21Qmkv7k2/pRD0kdbXiykqAPJCSZl0967hU=;
+        b=Igvla8t8seNLMzFGBeOHNpfHcgV0XnwbZWi8+xEdIzDCf3Ty2iiRygp40cNVklSEp3
+         MPk4K8S2WVNuFuI874ER9XEcP8fV9lskZqHbBs9qUBJSV02itfadBMjc0D2riXhOSt2f
+         JukAgid3EVhjr0ciCtZbkSyhlhK357yFNi7IOJz1dTdOPJY3RzRniEa+8a0ebCUZERSf
+         9wdNusNcCdmJAmsfeG9WmSwI4+2eeCqh4nuKIdwIYI8Jc0XKvuvyzJSNvtMmuW+5Finq
+         CO6JpDEvPs1LZq4h5lMMv4fHmxKAGK1sMd2bD9h0yZS9OT2SH2khzYc7S2qHb+Euh9vr
+         cpTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751607675; x=1752212475;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6CSObR2E21Qmkv7k2/pRD0kdbXiykqAPJCSZl0967hU=;
+        b=VkeYAtco3Jbqo3NrCCk1AQI7gr2Ks5tton0rLZGO7luWgU7iQECHrDtuLHXayI0xxn
+         vKRTWStgYoO7cw+Q0yOGJUEo5J4BYxbOw1EkHxKsYFkA5sGAu/9Nv4DFdACPWC5as+h1
+         MOx5NL7tJFi1izcyW4lVnA3TCe58K4cd2He4xeLxMnTAioA3V6b9+vieG74oZFGFTzKW
+         THJ+tME1EJSwwTbw7wOJmvFqe1Zj3DxuRZgBlHqnK7yCWEsDObR7zWpYgW3FfLSc7x2q
+         Iv9llE6IJ/h8Mlu1JFlTbO5okLtP3LQplC/5nnjRBsMaaenxfeAO3SIVsYZcWrMc49AJ
+         6HgA==
+X-Gm-Message-State: AOJu0YwOMeZFm7iEjvm7oaQvCOBvT+6bKIP0ZRt0LIpfod6kNK1Bzuc4
+	xQqT2YfkmqoMOyrvDnz1e5yJ6r0CRDnZkPU6fkz26ymXeTL/Ao4rqwNzmtegUMYATIh1QT0cqVR
+	0lkN6YLWMUmI0dBrNeXskqRWJI2belCHCQuPzVOUJGVVhyVmHo1cx
+X-Gm-Gg: ASbGncuj0zQL9FyrDVAcDlglc+qXB9GEwpiKxEIDWMJCTsfif7N9Pyci5Oqg8Q6RatY
+	+FW9F0rrqyYpY0cZLjSlGFNPFiP26WzEWEx6DF1tI9SoJzDr/OsnIOpIqnMtIMf/wXRGMV9S95S
+	q1EzUkSS1WWbXnHlTZcb+EBBAjA2+x9u0WzpJk0tJaIVhmzxOSLlwHs1Xv+wUwfiyoHx3DG30tz
+	onJC806MFlxl+5hmnb+M+PardrXmTbrkPj9WmwlZm/etzBPCrZN2gcn3SZUJCoIvnWxlTdj+LDb
+	cgyw6DnhACMOFP0UNrYj2c6XLKGchpiO1cftvQ7Pcg==
+X-Google-Smtp-Source: AGHT+IHBR4027FaJ3flrlnIhAyFQVaOQYfC7kVdfOzhrPSSkaEnv+I+L6AW+RwMd8jbTTl6OaOITpm5JmUTi
+X-Received: by 2002:a05:6e02:460b:b0:3dd:a0fc:1990 with SMTP id e9e14a558f8ab-3e133be1ebemr18863035ab.3.1751607675543;
+        Thu, 03 Jul 2025 22:41:15 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3e0f9c295b4sm841125ab.39.2025.07.03.22.41.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 22:41:15 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id E5CAE340355;
+	Thu,  3 Jul 2025 23:41:13 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 7B599E41627; Thu,  3 Jul 2025 23:41:13 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH v2 0/2] ublk: speed up ublk server exit handling
+Date: Thu, 03 Jul 2025 23:41:06 -0600
+Message-Id: <20250703-ublk_too_many_quiesce-v2-0-3527b5339eeb@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHj4cs_pJDR-VH7-RzGwt9KmNCdTnQ38bejeB72280e9ke8ebg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHJpZ2gC/4WNQQ6DIBQFr2L+ujSKFWtXvUdjCMWPklawIKbGc
+ PeiF+hyXjLzNvDoNHq4ZRs4XLTX1iSgpwzkIEyPRHeJgea0yhmtSXi+X3y2lo/CrPwTkiyRNGX
+ dMVkyiRcGyZ0cKv09uo828aD9bN163CzFvv4rLgUpSFWharprLphQ9yk43Cuix7O0I7Qxxh9dO
+ mj5wAAAAA==
+X-Change-ID: 20250627-ublk_too_many_quiesce-937d6c36ce46
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-On Fri, Jul 04, 2025 at 01:47:50AM +0800, Yi Zhang wrote:
-> On Thu, Jul 3, 2025 at 4:04 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > On Wed, Jul 02, 2025 at 09:33:32AM -0700, alan.adamson@oracle.com wrote:
-> > > Looks like the device isn't reporting AWUPF after the format/reset.
-> >
-> > The other option would be that the format changed the value.
-> >
-> > The mess NVMe creasted with the totally un-thought out atomics is
-> > beyond belive :(
-> >
-> > I wonder if we should just back out the whole thing and wait for the
-> > working group to come up with something that can actually safely work.
-> >
-> 
-> Yeah, the format operation will change the awupf value.
-> Here is the reset operation pass[1] and fail[2] log
-> [1]
-> + nvme format -l0 -f /dev/nvme3n1
-> Success formatting namespace:1
-> + nvme id-ctrl /dev/nvme3
-> + grep awupf
-> awupf     : 7
-> + grep nawupf
-> + nvme id-ns /dev/nvme3n1
-> nawupf  : 7
-> + nvme format -l1 -f /dev/nvme3n1
-> Success formatting namespace:1
-> + nvme id-ctrl /dev/nvme3
-> + grep awupf
-> awupf     : 0
-> + nvme id-ns /dev/nvme3n1
-> + grep nawupf
-> nawupf  : 0
-> + nvme reset /dev/nvme3
-> + nvme id-ctrl /dev/nvme3
-> + grep awupf
-> awupf     : 0
-> 
-> [2]
-> + nvme format -l0 -f /dev/nvme5n1
-> Success formatting namespace:1
-> + nvme id-ctrl /dev/nvme5
-> + grep awupf
-> awupf     : 7
-> + nvme id-ns /dev/nvme5n1
-> + grep nawupf
-> nawupf  : 7
-> + nvme format -l1 -f /dev/nvme5n1
-> Success formatting namespace:1
-> + nvme id-ctrl /dev/nvme5
-> + grep awupf
-> awupf     : 0
+Recently, we've observed a few cases where a ublk server is able to
+complete restart more quickly than the driver can process the exit of
+the previous ublk server. The new ublk server comes up, attempts
+recovery of the preexisting ublk devices, and observes them still in
+state UBLK_S_DEV_LIVE. While this is possible due to the asynchronous
+nature of io_uring cleanup and should therefore be handled properly in
+the ublk server, it is still preferable to make ublk server exit
+handling faster if possible, as we should strive for it to not be a
+limiting factor in how fast a ublk server can restart and provide
+service again.
 
-Per NVMe spec, AWUPF unit is 'logical blocks', and logical block size is changed
-by 'nvme format', so AWUPF value retuned from `Identify command` can be changed
-because the controller implements fixed-length atomic write size(512*8, 4096 * 1)?
+The first patch contains the functional change that speeds up the exit
+handling, and the second factors out a repeating and error-prone pattern
+into a helper.
 
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Changes in v2:
+- Added back ublk_queue::canceling to minimize number of cache lines
+  accessed by hot path (Ming Lei)
+- Added a ublk_set_canceling helper
+- Link to v1: https://lore.kernel.org/r/20250627-ublk_too_many_quiesce-v1-1-55ef9d80a6af@purestorage.com
 
-Thanks,
-Ming
+---
+Uday Shankar (2):
+      ublk: speed up ublk server exit handling
+      ublk: introduce and use ublk_set_canceling helper
+
+ drivers/block/ublk_drv.c | 76 ++++++++++++++++++++++++++++++------------------
+ 1 file changed, 48 insertions(+), 28 deletions(-)
+---
+base-commit: e74a1c6a8e8af2422fce125c29b14f1d3fab5b5c
+change-id: 20250627-ublk_too_many_quiesce-937d6c36ce46
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
 
 
