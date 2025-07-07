@@ -1,155 +1,117 @@
-Return-Path: <linux-block+bounces-23761-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23763-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB9A4AFAB6B
-	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 08:06:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF25CAFABD7
+	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 08:25:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED1953A6972
-	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 06:05:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BD493ABB25
+	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 06:24:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F3625D535;
-	Mon,  7 Jul 2025 06:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A54227A10D;
+	Mon,  7 Jul 2025 06:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wtrkAoxW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d5YYig9t";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RGDrB4cG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="G1n/63r6"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hndAcuIb"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F5B33993
-	for <linux-block@vger.kernel.org>; Mon,  7 Jul 2025 06:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5092797BD
+	for <linux-block@vger.kernel.org>; Mon,  7 Jul 2025 06:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751868378; cv=none; b=jk89zBQRFPbv6tCBFuB2XwMts9HmIe3ciTNb9rDqvr3Ir+sIyDAge7oZZofTXZgJUcfeb8qnouzf2DC5fqPYnFWPWN2CeS2jZp4cH5o+vISK6LHsCjKdnIUCmYdfaBpSJoM6McMLt/6GCd1mqmQ9mTaqRhd+bIh38Wg89pV/mbc=
+	t=1751869500; cv=none; b=X5a9HqUWNaTCCImz3zicKW15noByQ9oUxitZhlG+L/rwInZxY5t/3R1ATpkOsRYZOyd7Vd9beX1ZZOQ8cxeN4pg7ZZVkJzB2Fic4OGcVzKJT3gxn/97USImgu/Uz2hQshLVfyMlo9cOoioCGieCToMkntnkYraVmLFP385owxp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751868378; c=relaxed/simple;
-	bh=JpvNM43L/EayG/41IE1/A/AQ4z/Gko47AN3imBJUM3c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R1YWNchGbkCrSKMh6j1SbhBv+NQw0t9XNHnvluZvOuKTcqX2bfr3EuH7ClloNxMEt6+f+oM30a8Q09hYGOhnPbxUlyuuMUrwA//ZwoqIlQTN7IdrlLcw2QP7TeSfdCAAbnksb6EwobN5T2T1kGEEDk3t1b1+u1xchU7G21QMNc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wtrkAoxW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d5YYig9t; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RGDrB4cG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=G1n/63r6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4BCA621168;
-	Mon,  7 Jul 2025 06:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751868374; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1751869500; c=relaxed/simple;
+	bh=EUFWpjjgob4OiYmbKUmmapgj93Caed5bakQMEntVN/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ts48XFv75HLXe3C+NgNG7/Qn/Pp3Y6qWBEaiUix1nTzhRFahWGyv5BJoeOhDyzkR/mECxSJvGNT2AczRqTekUGDjSO1GGhmgfnFfVIryGHk/swlleZB63xrF3S0U8dUcg/7ESLtpuAfXuN4PWprkfVrj5dBeMshUH1u11kADHTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hndAcuIb; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <09b2de99-8b59-4755-9296-a016d2670801@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751869486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9jQoZ3h34iT4lM0EDYPVkLNZ3ikUlsV4Mn6UQjoGTh8=;
-	b=wtrkAoxWj7YdFyvQbOXM/ZIHJwRSlQRGWyDr55o9XAS39DPk1OqIiSjDOMs7+FH3jEY02x
-	+NvaL2FQRS7Sq+8qH8k/taVxagZS/ZjVtJEFC9ZfTSJ1Ssi1I2Th35/0qGdR9XfhJmrcL0
-	5h7wc0MPc2juQE40+KThAlBVVpSeFUI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751868374;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9jQoZ3h34iT4lM0EDYPVkLNZ3ikUlsV4Mn6UQjoGTh8=;
-	b=d5YYig9t0ub4KVfQZ5g1gUPtqiXV9TIbjz+r6M1TWSytJBLHJxEL8MzL2ty1TBkQ9wXW76
-	Rc3JEDCJRt9LwgCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751868373; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9jQoZ3h34iT4lM0EDYPVkLNZ3ikUlsV4Mn6UQjoGTh8=;
-	b=RGDrB4cGCrsC9GstV+7pFct7Pn+bVWpkMeQhqDwurJxZ+cr1svhMe5C5L58GEkpdaA3MJ/
-	IQBSr0z1Pgja/A0fmBL/LgMKVAoGX5K97YC1GlJa0GbxHY2nzmz9mghUqikds81bS6xK3I
-	tHkMbVTMmKy3WXxPpAL00Z9vuundt7w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751868373;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9jQoZ3h34iT4lM0EDYPVkLNZ3ikUlsV4Mn6UQjoGTh8=;
-	b=G1n/63r6OkjIH2hVOhfeUQXQZCS7AjM84M/TGe8Q/l+o4wNRvIin6+08Fej9H4MaBzWORX
-	Ph5O25G9G+JGX3BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1040013797;
-	Mon,  7 Jul 2025 06:06:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id v954O9Rja2ihCQAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 07 Jul 2025 06:06:12 +0000
-Message-ID: <069d95d7-5a76-4255-a75a-22d1d68e6047@suse.de>
-Date: Mon, 7 Jul 2025 08:06:12 +0200
+	bh=E9dvlNAmk8KWeQmipSdqfopqJzuRBxJc8Xg/DGYpMYo=;
+	b=hndAcuIb30RPLT1NMvsqWnX44keJGJ2QejWt6O3zZIV9NEqrgAgTDpsKWsV+auqpaFBMNo
+	yUNQNOQocFRK833+6JrN84EcZHvlzs/YeBL3ATsgY8KnMn5GKP/Xl7nW6HeU3ABQGqtnCb
+	1reUbqC123XIXhY4TzKi5MI+Wxs62b4=
+Date: Mon, 7 Jul 2025 14:24:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: remove pktcdvd driver
-To: Jens Axboe <axboe@kernel.dk>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <dcc4836e-6da9-4208-ad27-bbd44b3a2063@kernel.dk>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <dcc4836e-6da9-4208-ad27-bbd44b3a2063@kernel.dk>
+Subject: Re: [PATCH v1 05/11] dm-pcache: add cache_segment
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: mpatocka@redhat.com, agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk,
+ hch@lst.de, dan.j.williams@intel.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+ <20250624073359.2041340-6-dongsheng.yang@linux.dev>
+ <20250701155928.0000160a@huawei.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <20250701155928.0000160a@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,kernel.dk:email,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
+X-Migadu-Flow: FLOW_OUT
 
-On 7/7/25 01:23, Jens Axboe wrote:
-> This driver has long outlived it's utility, and it's broken and unloved.
-> The main use case for this was direct mount with UDF of cd-rw drives
-> that required 32kb packets. It would collect writes into that size and
-> write them out in multiples of that. That's not a common use case
-> anymore, the world has moved on from those kinds of media. To make
-> matters worse, it's actively breaking setups where it's not even
-> required or useful.
-> 
-> Link: https://lore.kernel.org/linux-block/fxg6dksau4jsk3u5xldlyo2m7qgiux6vtdrz5rywseotsouqdv@urcrwz6qtd3r/
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
 
-Cheers,
+在 7/1/2025 10:59 PM, Jonathan Cameron 写道:
+> On Tue, 24 Jun 2025 07:33:52 +0000
+> Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
+>
+>> Introduce *cache_segment.c*, the in-memory/on-disk glue that lets a
+>> `struct pcache_cache` manage its array of data segments.
+>>
+>> * Metadata handling
+>>    - Loads the most-recent replica of both the segment-info block
+>>      (`struct pcache_segment_info`) and per-segment generation counter
+>>      (`struct pcache_cache_seg_gen`) using `pcache_meta_find_latest()`.
+>>    - Updates those structures atomically with CRC + sequence rollover,
+>>      writing alternately to the two metadata slots inside each segment.
+>>
+>> * Segment initialisation (`cache_seg_init`)
+>>    - Builds a `struct pcache_segment` pointing to the segment’s data
+>>      area, sets up locks, generation counters, and, when formatting a new
+>>      cache, zeroes the on-segment kset header.
+>>
+>>
+>> +
+>> +	cache = cache_seg->cache;
+>> +	cache_seg_gen_increase(cache_seg);
+>> +
+>> +	spin_lock(&cache->seg_map_lock);
+>> +	if (cache->cache_full)
+>> +		cache->cache_full = false;
+> Perhaps just write cache->cache_full = false unconditionally?
+> If there is a reason to not do the write, then add a comment here.
+Hi Jonathan,
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+When the cache->cache_full is already false, we don't need to write 
+cache->cache_full with false.
+
+
+Thanx
+
+Dongsheng
+
+
+>
+>> +	clear_bit(cache_seg->cache_seg_id, cache->seg_map);
+>> +	spin_unlock(&cache->seg_map_lock);
+>> +
+>> +	pcache_defer_reqs_kick(CACHE_TO_PCACHE(cache));
+>> +	/* clean_work will clean the bad key in key_tree*/
+>> +	queue_work(cache_get_wq(cache), &cache->clean_work);
+>> +}
 
