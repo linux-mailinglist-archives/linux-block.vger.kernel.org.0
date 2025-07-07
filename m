@@ -1,141 +1,114 @@
-Return-Path: <linux-block+bounces-23781-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23783-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35AF0AFACA2
-	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 09:05:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 918ACAFAD7C
+	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 09:45:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32F7C189EEF5
-	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 07:03:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD69317D39D
+	for <lists+linux-block@lfdr.de>; Mon,  7 Jul 2025 07:45:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 158502877CA;
-	Mon,  7 Jul 2025 07:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F981279DC4;
+	Mon,  7 Jul 2025 07:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="GqNI3vpl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDGijxWp"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 1C2F5286880;
-	Mon,  7 Jul 2025 07:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB927B4E8
+	for <linux-block@vger.kernel.org>; Mon,  7 Jul 2025 07:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751871664; cv=none; b=VWljvhlXnCDzp7Ua3G4+Upbay0kYltzEvLGiBxwdfbp+6oFdVeuQNru1reToWoRGKb9LSV0yqH3EZ82qvz/2f07W5N/QNMpYTmdIcLxuLzOoR/mxXVFED0rj7Jid8uStTVRLs/eA6DGC5YEX4CRNpOTrnBbJ7mVOURW0cEn/kYI=
+	t=1751874300; cv=none; b=ugcYtq0mKGE3/4jPcxmbpwv3dsEdnyYIc4Z0FVaEHhZdnv68QF58+I+MJfXQyGfuRK3aYycC//VPBYJaLIQ8073HeWg1BdKU06O6e2M+zKye36uMpBd5EGyjfZ02zCAwXz3ZzdkDa70feDke1WZvOgcCDlFcKSEIpb9CBGCoD2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751871664; c=relaxed/simple;
-	bh=7NwIqzCgC1RdJfhixz5bD3co5fgHiYbQk2Lmr3rknQE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version; b=XToypAMyACjeqjn1i2FuxjW43AzLT8Pt/2shnoKl5YUie2yD0gBx8nGu07nEJbEM8UGgkeLM6U2pORTZI9nzft42KNVu7RRz4rlDpvSY6y7dZjB/AJVnkKW2QBoMEt0wMiyOQuDGsopmZt77F9KWC6Tvm8EsIUHAP5g2r6oLhv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=GqNI3vpl; arc=none smtp.client-ip=111.202.70.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.20])
-	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id F34CA188C74229;
-	Mon,  7 Jul 2025 14:59:50 +0800 (CST)
-Received: from BJ03-ACTMBX-09.didichuxing.com (10.79.71.36) by
- BJ02-ACTMBX-02.didichuxing.com (10.79.65.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 7 Jul 2025 15:00:35 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ03-ACTMBX-09.didichuxing.com (10.79.71.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 7 Jul 2025 15:00:34 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e]) by
- BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e%7]) with mapi id
- 15.02.1748.010; Mon, 7 Jul 2025 15:00:34 +0800
-X-MD-Sfrom: chentaotao@didiglobal.com
-X-MD-SrcIP: 10.79.65.20
-From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
-	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
-	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
-	"frank.li@vivo.com" <frank.li@vivo.com>,
-	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Subject: [PATCH v4 5/5] ext4: support uncached buffered I/O
-Thread-Topic: [PATCH v4 5/5] ext4: support uncached buffered I/O
-Thread-Index: AQHb7wzVwHDyJpOeWECj7YO1Y+Mm6Q==
-Date: Mon, 7 Jul 2025 07:00:34 +0000
-Message-ID: <20250707070023.206725-6-chentaotao@didiglobal.com>
-In-Reply-To: <20250707070023.206725-1-chentaotao@didiglobal.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1751874300; c=relaxed/simple;
+	bh=yK4aIwKsyQJ35dvSsCmxtiNLfyzf0Pq1Pic5u+EzrNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArZDpjhNKo32pffogD3NHmxavoPWxkrY0uX6PhrVjyJOZECpjbM5oLetWSlG2AyI4J88GhNafMJ/pMz+1H9yNA3zf2NB44iVoAEh0PoT4NfO4J6722kcESI4L6CKULsUjlHNGwhCj/KYW3zsnG7R1lTajuIZCS3ufTM5iOXSPWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dDGijxWp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751874297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OalrTZVgCTcY8CfgCXR2MxPAgz7dMXIrKso6Jipbb5U=;
+	b=dDGijxWpHbNYb+VT5IavBhEi1c0N3tNKzlu+6rJkMc+zhqq22cbndKl+dBZXaFAEPIsuZm
+	hjkwfXv+uzcubfBUXq/lieC8YQhK74MvkGOeFyqAvsOySGEd54xd0M2gr2/qUQ5I5UTTDM
+	+HT2dvLD9oBDRbqR0uxoXV3KOi9OSB0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-ZccoFHbxPKqYGcrylrjfjg-1; Mon,
+ 07 Jul 2025 03:44:54 -0400
+X-MC-Unique: ZccoFHbxPKqYGcrylrjfjg-1
+X-Mimecast-MFC-AGG-ID: ZccoFHbxPKqYGcrylrjfjg_1751874292
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60B6F1801211;
+	Mon,  7 Jul 2025 07:44:50 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.160])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0525F1956087;
+	Mon,  7 Jul 2025 07:44:35 +0000 (UTC)
+Date: Mon, 7 Jul 2025 15:44:30 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <llong@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org, storagedev@microchip.com,
+	virtualization@lists.linux.dev,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v7 09/10] blk-mq: prevent offlining hk CPUs with
+ associated online isolated CPUs
+Message-ID: <aGt63lJr2JY8VAqc@fedora>
+References: <20250702-isolcpus-io-queues-v7-0-557aa7eacce4@kernel.org>
+ <20250702-isolcpus-io-queues-v7-9-557aa7eacce4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
-	s=2025; t=1751871613;
-	bh=7NwIqzCgC1RdJfhixz5bD3co5fgHiYbQk2Lmr3rknQE=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=GqNI3vpldugsvZfWl52mz/qjKRMeDae+SorQJkIbBjy8E5gGrjYe+qlSd9Q3yuWmZ
-	 MjMVxlYW7HIy/iqpSQW4n7lpWzjMpr+KYHMBuyGh9uG0W2Z1wW0JTnrrnQ8/CmpoD5
-	 Tl0aOs/To2S0asmzu6yUcY01uUy8g8KbCiU3a4M8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-isolcpus-io-queues-v7-9-557aa7eacce4@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClNldCBGT1Bf
-RE9OVENBQ0hFIGluIGV4dDRfZmlsZV9vcGVyYXRpb25zIHRvIGRlY2xhcmUgc3VwcG9ydCBmb3IN
-CnVuY2FjaGVkIGJ1ZmZlcmVkIEkvTy4NCg0KVG8gaGFuZGxlIHRoaXMgZmxhZywgdXBkYXRlIGV4
-dDRfd3JpdGVfYmVnaW4oKSBhbmQgZXh0NF9kYV93cml0ZV9iZWdpbigpDQp0byB1c2Ugd3JpdGVf
-YmVnaW5fZ2V0X2ZvbGlvKCksIHdoaWNoIGVuY2Fwc3VsYXRlcyBGR1BfRE9OVENBQ0hFIGxvZ2lj
-DQpiYXNlZCBvbiBpb2NiLT5raV9mbGFncy4NCg0KUGFydCBvZiBhIHNlcmllcyByZWZhY3Rvcmlu
-ZyBhZGRyZXNzX3NwYWNlX29wZXJhdGlvbnMgd3JpdGVfYmVnaW4gYW5kDQp3cml0ZV9lbmQgY2Fs
-bGJhY2tzIHRvIHVzZSBzdHJ1Y3Qga2lvY2IgZm9yIHBhc3Npbmcgd3JpdGUgY29udGV4dCBhbmQN
-CmZsYWdzLg0KDQpTaWduZWQtb2ZmLWJ5OiBUYW90YW8gQ2hlbiA8Y2hlbnRhb3Rhb0BkaWRpZ2xv
-YmFsLmNvbT4NCi0tLQ0KIGZzL2V4dDQvZmlsZS5jICB8ICAzICsrLQ0KIGZzL2V4dDQvaW5vZGUu
-YyB8IDEyICsrKy0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAx
-MCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2ZzL2V4dDQvZmlsZS5jIGIvZnMvZXh0NC9m
-aWxlLmMNCmluZGV4IDIxZGY4MTM0NzE0Ny4uMjc0YjQxYTQ3NmM4IDEwMDY0NA0KLS0tIGEvZnMv
-ZXh0NC9maWxlLmMNCisrKyBiL2ZzL2V4dDQvZmlsZS5jDQpAQCAtOTc3LDcgKzk3Nyw4IEBAIGNv
-bnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMgZXh0NF9maWxlX29wZXJhdGlvbnMgPSB7DQogCS5z
-cGxpY2Vfd3JpdGUJPSBpdGVyX2ZpbGVfc3BsaWNlX3dyaXRlLA0KIAkuZmFsbG9jYXRlCT0gZXh0
-NF9mYWxsb2NhdGUsDQogCS5mb3BfZmxhZ3MJPSBGT1BfTU1BUF9TWU5DIHwgRk9QX0JVRkZFUl9S
-QVNZTkMgfA0KLQkJCSAgRk9QX0RJT19QQVJBTExFTF9XUklURSwNCisJCQkgIEZPUF9ESU9fUEFS
-QUxMRUxfV1JJVEUgfA0KKwkJCSAgRk9QX0RPTlRDQUNIRSwNCiB9Ow0KIA0KIGNvbnN0IHN0cnVj
-dCBpbm9kZV9vcGVyYXRpb25zIGV4dDRfZmlsZV9pbm9kZV9vcGVyYXRpb25zID0gew0KZGlmZiAt
-LWdpdCBhL2ZzL2V4dDQvaW5vZGUuYyBiL2ZzL2V4dDQvaW5vZGUuYw0KaW5kZXggOWExNmVmZDA3
-MmJiLi41YzcwMjQwNTFmMWUgMTAwNjQ0DQotLS0gYS9mcy9leHQ0L2lub2RlLmMNCisrKyBiL2Zz
-L2V4dDQvaW5vZGUuYw0KQEAgLTEyNjQsNyArMTI2NCw2IEBAIHN0YXRpYyBpbnQgZXh0NF93cml0
-ZV9iZWdpbihjb25zdCBzdHJ1Y3Qga2lvY2IgKmlvY2IsDQogCXN0cnVjdCBmb2xpbyAqZm9saW87
-DQogCXBnb2ZmX3QgaW5kZXg7DQogCXVuc2lnbmVkIGZyb20sIHRvOw0KLQlmZ2ZfdCBmZ3AgPSBG
-R1BfV1JJVEVCRUdJTjsNCiANCiAJcmV0ID0gZXh0NF9lbWVyZ2VuY3lfc3RhdGUoaW5vZGUtPmlf
-c2IpOw0KIAlpZiAodW5saWtlbHkocmV0KSkNCkBAIC0xMjg4LDE2ICsxMjg3LDE0IEBAIHN0YXRp
-YyBpbnQgZXh0NF93cml0ZV9iZWdpbihjb25zdCBzdHJ1Y3Qga2lvY2IgKmlvY2IsDQogCX0NCiAN
-CiAJLyoNCi0JICogX19maWxlbWFwX2dldF9mb2xpbygpIGNhbiB0YWtlIGEgbG9uZyB0aW1lIGlm
-IHRoZQ0KKwkgKiB3cml0ZV9iZWdpbl9nZXRfZm9saW8oKSBjYW4gdGFrZSBhIGxvbmcgdGltZSBp
-ZiB0aGUNCiAJICogc3lzdGVtIGlzIHRocmFzaGluZyBkdWUgdG8gbWVtb3J5IHByZXNzdXJlLCBv
-ciBpZiB0aGUgZm9saW8NCiAJICogaXMgYmVpbmcgd3JpdHRlbiBiYWNrLiAgU28gZ3JhYiBpdCBm
-aXJzdCBiZWZvcmUgd2Ugc3RhcnQNCiAJICogdGhlIHRyYW5zYWN0aW9uIGhhbmRsZS4gIFRoaXMg
-YWxzbyBhbGxvd3MgdXMgdG8gYWxsb2NhdGUNCiAJICogdGhlIGZvbGlvIChpZiBuZWVkZWQpIHdp
-dGhvdXQgdXNpbmcgR0ZQX05PRlMuDQogCSAqLw0KIHJldHJ5X2dyYWI6DQotCWZncCB8PSBmZ2Zf
-c2V0X29yZGVyKGxlbik7DQotCWZvbGlvID0gX19maWxlbWFwX2dldF9mb2xpbyhtYXBwaW5nLCBp
-bmRleCwgZmdwLA0KLQkJCQkgICAgbWFwcGluZ19nZnBfbWFzayhtYXBwaW5nKSk7DQorCWZvbGlv
-ID0gd3JpdGVfYmVnaW5fZ2V0X2ZvbGlvKGlvY2IsIG1hcHBpbmcsIGluZGV4LCBsZW4pOw0KIAlp
-ZiAoSVNfRVJSKGZvbGlvKSkNCiAJCXJldHVybiBQVFJfRVJSKGZvbGlvKTsNCiANCkBAIC0zMDQ2
-LDcgKzMwNDMsNiBAQCBzdGF0aWMgaW50IGV4dDRfZGFfd3JpdGVfYmVnaW4oY29uc3Qgc3RydWN0
-IGtpb2NiICppb2NiLA0KIAlzdHJ1Y3QgZm9saW8gKmZvbGlvOw0KIAlwZ29mZl90IGluZGV4Ow0K
-IAlzdHJ1Y3QgaW5vZGUgKmlub2RlID0gbWFwcGluZy0+aG9zdDsNCi0JZmdmX3QgZmdwID0gRkdQ
-X1dSSVRFQkVHSU47DQogDQogCXJldCA9IGV4dDRfZW1lcmdlbmN5X3N0YXRlKGlub2RlLT5pX3Ni
-KTsNCiAJaWYgKHVubGlrZWx5KHJldCkpDQpAQCAtMzA3Miw5ICszMDY4LDcgQEAgc3RhdGljIGlu
-dCBleHQ0X2RhX3dyaXRlX2JlZ2luKGNvbnN0IHN0cnVjdCBraW9jYiAqaW9jYiwNCiAJfQ0KIA0K
-IHJldHJ5Og0KLQlmZ3AgfD0gZmdmX3NldF9vcmRlcihsZW4pOw0KLQlmb2xpbyA9IF9fZmlsZW1h
-cF9nZXRfZm9saW8obWFwcGluZywgaW5kZXgsIGZncCwNCi0JCQkJICAgIG1hcHBpbmdfZ2ZwX21h
-c2sobWFwcGluZykpOw0KKwlmb2xpbyA9IHdyaXRlX2JlZ2luX2dldF9mb2xpbyhpb2NiLCBtYXBw
-aW5nLCBpbmRleCwgbGVuKTsNCiAJaWYgKElTX0VSUihmb2xpbykpDQogCQlyZXR1cm4gUFRSX0VS
-Uihmb2xpbyk7DQogDQotLSANCjIuMzQuMQ0K
+On Wed, Jul 02, 2025 at 06:33:59PM +0200, Daniel Wagner wrote:
+> When isolcpus=io_queue is enabled, and the last housekeeping CPU for a
+> given hctx goes offline, there would be no CPU left to handle I/O. To
+> prevent I/O stalls, prevent offlining housekeeping CPUs that are still
+> serving isolated CPUs.
+> 
+> When isolcpus=io_queue is enabled and the last housekeeping CPU
+> for a given hctx goes offline, no CPU would be left to handle I/O.
+> To prevent I/O stalls, disallow offlining housekeeping CPUs that are
+> still serving isolated CPUs.
+
+If you do so, cpu offline is failed, and this change is user visible, please
+document the cpu offline failure limit on Documentation/admin-guide/kernel-parameters.txt.
+in the next patch.
+
+Thanks,
+Ming
+
 
