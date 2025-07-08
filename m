@@ -1,50 +1,49 @@
-Return-Path: <linux-block+bounces-23932-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23923-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2BCAFD78C
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA324AFD778
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34E1A4E4102
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:49:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67BD6425B12
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56C325A2AA;
-	Tue,  8 Jul 2025 19:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93248248872;
+	Tue,  8 Jul 2025 19:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bg/vqnTd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTmIp99g"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B79B21CC68;
-	Tue,  8 Jul 2025 19:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D9248871;
+	Tue,  8 Jul 2025 19:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752003989; cv=none; b=KoXUh0/JLrC3kVVF4vKA9WtVQ+6Iys6rG8fcdomgjy1CRT63ZpLsPrX+54KAU3C9KyzRaxYpXMMnKGx6YGvQgWjgPS9xTrQAw172vcF/JGsy4XutrtUzbkZkDIJwOxkvs26PZYkQ+peo4xJD1hQkwi0f6hc5MPC30pC3LNQcfI4=
+	t=1752003954; cv=none; b=oTpb7Mh5Sq24Oh5bCIHYhcPHICV9NJIoqhzxGAT8CU4HcIO+h3UUcKTgTqvxmHj/KFmrkU2FackjTKkvno898oHJTmqOgA3cMda8Q17mmRoOJgWGj+ECEiQyPmIjNO4DDFOUeGDThksDph8ChL35JcWA3/XAiewRewbOIHONAOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752003989; c=relaxed/simple;
-	bh=Xmgym1IZWOog8WJ4qolzgPA+pX4lELKlYs3ixE38TJM=;
+	s=arc-20240116; t=1752003954; c=relaxed/simple;
+	bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gz+m+zZIJ1tdsPNYk93SSYqHqh9WHPpTxltQg9o1EYH1z+wdzImeTSl/RIh/JvJtfHgWgcSJXiXItHOUQWiyWIJp84B+pQRXAk8kH3PnoFhZSAVyt2XtmeTJRX6LobOxgik1DdRwqPQktoDy5EFp1UOfxwhic9m4ZObxtpbGF/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bg/vqnTd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3342AC4CEED;
-	Tue,  8 Jul 2025 19:46:26 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=bHU1fvGPbvTgm2MNSR3oqo/44iQgBqip/r5ZLLjEbnrU9EXJw4fl1m0P7te5s2QqaurwQbb2yscopjAz76r1TjzCKJvL6DqSrPukEIxhYDtl2JQz+LSjJXvJsG0KrljJFfSN5GfDZrUe9UXTFvm/fPqxF9uBgdeGTKN5f7SsbKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTmIp99g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56682C4CEF0;
+	Tue,  8 Jul 2025 19:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752003989;
-	bh=Xmgym1IZWOog8WJ4qolzgPA+pX4lELKlYs3ixE38TJM=;
+	s=k20201202; t=1752003954;
+	bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bg/vqnTdy7Y+LvC6NrfVYROnqPRhRir35pgC2D3IjF81lAISsldNepcmMm55E2oLl
-	 PK8MJxXCK/baABMkK+Pd5vzgtuGNKIzEknmgpN8uGIP8Yi6ABc/o6KresNd+rgSMb3
-	 ykIS/9u8/1wQvxZgUnIqFph8dpxpSgmeqQtXzP1diRhUKtLUrO1WETsQRSKD6Y6sd8
-	 cqoWmgIU/WAGCh0OarrI4hedEbWDRhAh4xixZn8puzGbPF1B4bu7I31h+3/mGNgtyZ
-	 KvbIg7p2qNquUjbIdkxKsJd17w1Zioaan0wqEjyxNhEXjgk2sxuZpsUCLyfstwDgZA
-	 5h2C2I7ozjiNg==
+	b=DTmIp99gTpVr5Jmw3A0m1aU4I6v3Pdo7AOA1XhgzGwkd+3fmMH6Buf70sun8PovGd
+	 7Vay58Nra6QDFkzv7nuLj0WcO8okpLBYP7BuG5pnGXu2QRupWpc7NvX5J6rxwea0oW
+	 f15C1+2bA9S1fYf1026410nNYAZaLXrMfshxDSb5A+hpaer6PHVOF/i27jOXT+zy2y
+	 y2h4XIHOcoNgVnR2KpazGnEhbIEEz1rrmLCPBkzrDfoZ9TcNbu6UVROAwRF+SUgPzZ
+	 6mDr2qZRBe0C5Fih2zBrKvZ3COXo9rPC5WnyM0qR1wABWTBiERH1B0kV+o4F679Vd2
+	 qNeK0GRSJbF4w==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 08 Jul 2025 21:45:02 +0200
-Subject: [PATCH v2 07/14] rust: block: remove trait bound from
- `mq::Request` definition
+Date: Tue, 08 Jul 2025 21:45:03 +0200
+Subject: [PATCH v2 08/14] rust: block: add block related constants
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250708-rnull-up-v6-16-v2-7-ab93c0ff429b@kernel.org>
+Message-Id: <20250708-rnull-up-v6-16-v2-8-ab93c0ff429b@kernel.org>
 References: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 In-Reply-To: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -65,44 +64,51 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=857; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=Xmgym1IZWOog8WJ4qolzgPA+pX4lELKlYs3ixE38TJM=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVGIkHZZw1DgQOridEB2hltFA/XOcDJt/ghj
- jdW29w0eUCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11RgAKCRDhuBo+eShj
- d36iEACMzi+0C6NInqA+7u2yu194iA5hbVsPygIWn09xlGjVOihjFKdfaA7ugxVNP+BWyRgn9xV
- uEtKUg8fAmHyQYHgnK0t4dJVv27NipgOplLQfzeb397VhLnWSTbJDReFjXs+rRE/uml34DWEry8
- QJOLPJiK/bIpJRZkFKWdezb96UDx+LAoMo8hpydlS4aKavl1C2vinpEZDIycTKG4qDsv1Ia+zu6
- 67iXBce8oeGualOMgGgHhj+McojSwc1JpJ/lFfgmQBHAbJIsxtQocjifnDamN8mFEUizpfUVZqd
- b92CpbBWCVYoH9vK9/iUajpw8r3eKDND4Pk0RhzVTNqalxxULJiko850yuc6T3SzZCFJnSrAw4+
- H4Pv6RtPZaZQjCVAqaV2UlheqvBWmZb/uvjg2XWg12ueP9eZzwDrejLbu8LYhtODuOZOVzKy1ly
- uBm/U/gqmyxf7zw96FUGBHpkKV2B8oy/I6LFUC9e8NfTdQtNGjJowJp0eX2BERvWuF4t1ZtEWMx
- B/OCCnHV5+kTUOn5IIp0VQTt5GL8JpgIap9WsZOYfI249nfJ/oXcVrAw3nPlcPFT3PPXQEPAdNY
- qquCs7fdI+jeZyWbfe8GBblH0wseXpRDI60QFXed+N36Eh0yZLVM954OUpIdzDjllbATYhv+ztI
- DuVpeYX1/ZZY/Vw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=963; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVH+GZmiXeE7Y47innOMVFwgcZO1TcQ4uQ6Y
+ NkEoJ3KD2aJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11RwAKCRDhuBo+eShj
+ d4eGEACunnqesWrxZ0yRDuKSHCfSG7jn9oz45l2C2TjKpg+R9osmock0kBfUwAXlmFRu9eg/tF1
+ lZHv95o6PEouK/Yp8FaohtxnrM1r4uNsHcLbBo3tQ87ItTCT/vPmFbMwiK11Yr1Gw6YYsKLEYe3
+ YKPilfB7jHN4gRfVqphThGPVJU+TQnnQQA0zHKlxFyXdlWDnVhqdW9e7rY7rFhYU7mmLuUPJ7xJ
+ FhJuKXhAyMTqVW3NjbUeXeqgqwQH29AHAjQvfFTSbIut7hiR81J6cVGZR7xmUCmV3WKoExSKBoI
+ lKsHog4QNUesnMe/PNaek/wnsurTEdfVWu+1DRys6mT0dBPBfPXDUiO6nre0nFIj3tMhz2yprTK
+ LB3Pq6kk/+zb7RtOTufb9bW6p0yrtdbYREsJWXFSyQDH9+pNM8BpZMKoEI/znQTd+6rvKzoIikR
+ O3LvpElBlnSNCPbGMLNEY5vGKpAhXZOexgWe1oNB7iNsKi4gHs51LSq3tKnlpuIFoiDfUCWSWvw
+ uOABhPHgLYcTNm9liUbQP1nTpqBEoXDfKFGAhZtTVVNnF9d8MyGV734hXmqTIravYAgm8S8b5Ij
+ 9J2mfSKiLS5UmMBF1CJLQFTPYxcUViEKelabjdQhI2xQuPd9SvtoIw6W+dS+0XVTbeLSskdi+Nf
+ JZv7rwkCJjYQBWA==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Remove the trait bound `T:Operations` from `mq::Request`. The bound is not
-required, so remove it to reduce complexity.
+Add a few block subsystem constants to the rust `kernel::block` name space.
+This makes it easier to access the constants from rust code.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/block/mq/request.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/kernel/block.rs | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
-index 4a5b7ec914efa..2d14a6261a313 100644
---- a/rust/kernel/block/mq/request.rs
-+++ b/rust/kernel/block/mq/request.rs
-@@ -53,7 +53,7 @@
- /// [`struct request`]: srctree/include/linux/blk-mq.h
- ///
- #[repr(transparent)]
--pub struct Request<T: Operations>(Opaque<bindings::request>, PhantomData<T>);
-+pub struct Request<T>(Opaque<bindings::request>, PhantomData<T>);
+diff --git a/rust/kernel/block.rs b/rust/kernel/block.rs
+index 150f710efe5b4..7461adf4d7e06 100644
+--- a/rust/kernel/block.rs
++++ b/rust/kernel/block.rs
+@@ -3,3 +3,15 @@
+ //! Types for working with the block layer.
  
- impl<T: Operations> Request<T> {
-     /// Create an [`ARef<Request>`] from a [`struct request`] pointer.
+ pub mod mq;
++
++/// Bit mask for masking out [`SECTOR_SIZE`]
++pub const SECTOR_MASK: u32 = bindings::SECTOR_MASK;
++
++/// Sectors are size `1 << SECTOR_SHIFT`.
++pub const SECTOR_SHIFT: u32 = bindings::SECTOR_SHIFT;
++
++/// Size of a sector.
++pub const SECTOR_SIZE: u32 = bindings::SECTOR_SIZE;
++
++/// Power of two difference in size of a page and size of a sector.
++pub const PAGE_SECTORS_SHIFT: u32 = bindings::PAGE_SECTORS_SHIFT;
 
 -- 
 2.47.2
