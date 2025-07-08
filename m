@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-23923-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23917-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA324AFD778
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:48:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 729CAAFD761
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:45:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67BD6425B12
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:47:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9A8417188E
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:45:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93248248872;
-	Tue,  8 Jul 2025 19:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEA0238D54;
+	Tue,  8 Jul 2025 19:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTmIp99g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uR0kh2cr"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D9248871;
-	Tue,  8 Jul 2025 19:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BCC2192F9;
+	Tue,  8 Jul 2025 19:45:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752003954; cv=none; b=oTpb7Mh5Sq24Oh5bCIHYhcPHICV9NJIoqhzxGAT8CU4HcIO+h3UUcKTgTqvxmHj/KFmrkU2FackjTKkvno898oHJTmqOgA3cMda8Q17mmRoOJgWGj+ECEiQyPmIjNO4DDFOUeGDThksDph8ChL35JcWA3/XAiewRewbOIHONAOE=
+	t=1752003939; cv=none; b=VIwoFOUsLYBUiTX+pn4OlVjkgpva1lEItjI9D1IrmI4IeVolTEWgVCpLmuvOvqxN0xIEx26W9KzXw7wZ2tyl9EYCXimD8aPUuu/TRWxHPgergQwbZxHXk3WNxCqbyya22p0yy/gEcs2U7TEAY86H0641YSFmjIEzAc3BoLZxQ2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752003954; c=relaxed/simple;
-	bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
+	s=arc-20240116; t=1752003939; c=relaxed/simple;
+	bh=CTNIjJksV39rh1vFRofP0gEi36ZUmiBHOsMajM2KEl0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bHU1fvGPbvTgm2MNSR3oqo/44iQgBqip/r5ZLLjEbnrU9EXJw4fl1m0P7te5s2QqaurwQbb2yscopjAz76r1TjzCKJvL6DqSrPukEIxhYDtl2JQz+LSjJXvJsG0KrljJFfSN5GfDZrUe9UXTFvm/fPqxF9uBgdeGTKN5f7SsbKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTmIp99g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56682C4CEF0;
-	Tue,  8 Jul 2025 19:45:51 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=De4lmhlKLvdPFPJaaoQ6CcQeGg/wWUvaKrRjiN50mdFIvEUXCV3kVANfGQp4yAbyA0FfYRA9KQrD4Lh9ef7WKnsq/mQN/fqEp0C8MW8Ioe+MuMTsJneb4w/fWYOnzzUWZ8zTlCIk/mAq9MoW9moyHvYJgWo9G0n5hNWSayv+bJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uR0kh2cr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D22C4CEED;
+	Tue,  8 Jul 2025 19:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752003954;
-	bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
+	s=k20201202; t=1752003936;
+	bh=CTNIjJksV39rh1vFRofP0gEi36ZUmiBHOsMajM2KEl0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DTmIp99gTpVr5Jmw3A0m1aU4I6v3Pdo7AOA1XhgzGwkd+3fmMH6Buf70sun8PovGd
-	 7Vay58Nra6QDFkzv7nuLj0WcO8okpLBYP7BuG5pnGXu2QRupWpc7NvX5J6rxwea0oW
-	 f15C1+2bA9S1fYf1026410nNYAZaLXrMfshxDSb5A+hpaer6PHVOF/i27jOXT+zy2y
-	 y2h4XIHOcoNgVnR2KpazGnEhbIEEz1rrmLCPBkzrDfoZ9TcNbu6UVROAwRF+SUgPzZ
-	 6mDr2qZRBe0C5Fih2zBrKvZ3COXo9rPC5WnyM0qR1wABWTBiERH1B0kV+o4F679Vd2
-	 qNeK0GRSJbF4w==
+	b=uR0kh2crNrboAt87xB96IzHU+EicAu2vZIpdaro6u/wXy56susc+EOCfLvgOKAP3y
+	 tE4df7XUEpvmSGjZeWN3ubj6kPL1zW/vHtPTec0faxAcvC4WBMaB63ZBPORuvvRSTN
+	 38ctoc/ICnR0GVkXErQ3RGhO6Z5qZypnklztmaGawOOa33dRzLW7E72Wd5VNzwREtq
+	 /LkE9ZZpFNUqRpLFeApAm6492nmRPEQwZB0k/zkC6Sz8RNzABiXLdiupmlJTx3wx0e
+	 Jkx7nSADRJhW4hTJR/tUbhYWGhpRLLoZ6FC1go1kIQxjbb1aiG6YUJ9y8Dru619AFz
+	 aot+C7hxcV51A==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 08 Jul 2025 21:45:03 +0200
-Subject: [PATCH v2 08/14] rust: block: add block related constants
+Date: Tue, 08 Jul 2025 21:45:04 +0200
+Subject: [PATCH v2 09/14] rnull: move driver to separate directory
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250708-rnull-up-v6-16-v2-8-ab93c0ff429b@kernel.org>
+Message-Id: <20250708-rnull-up-v6-16-v2-9-ab93c0ff429b@kernel.org>
 References: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 In-Reply-To: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,51 +64,131 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=963; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=RO+tyqWrHCbnzP2crbU2WSIANTt1IoquzI2eUdQ4Jgs=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVH+GZmiXeE7Y47innOMVFwgcZO1TcQ4uQ6Y
- NkEoJ3KD2aJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11RwAKCRDhuBo+eShj
- d4eGEACunnqesWrxZ0yRDuKSHCfSG7jn9oz45l2C2TjKpg+R9osmock0kBfUwAXlmFRu9eg/tF1
- lZHv95o6PEouK/Yp8FaohtxnrM1r4uNsHcLbBo3tQ87ItTCT/vPmFbMwiK11Yr1Gw6YYsKLEYe3
- YKPilfB7jHN4gRfVqphThGPVJU+TQnnQQA0zHKlxFyXdlWDnVhqdW9e7rY7rFhYU7mmLuUPJ7xJ
- FhJuKXhAyMTqVW3NjbUeXeqgqwQH29AHAjQvfFTSbIut7hiR81J6cVGZR7xmUCmV3WKoExSKBoI
- lKsHog4QNUesnMe/PNaek/wnsurTEdfVWu+1DRys6mT0dBPBfPXDUiO6nre0nFIj3tMhz2yprTK
- LB3Pq6kk/+zb7RtOTufb9bW6p0yrtdbYREsJWXFSyQDH9+pNM8BpZMKoEI/znQTd+6rvKzoIikR
- O3LvpElBlnSNCPbGMLNEY5vGKpAhXZOexgWe1oNB7iNsKi4gHs51LSq3tKnlpuIFoiDfUCWSWvw
- uOABhPHgLYcTNm9liUbQP1nTpqBEoXDfKFGAhZtTVVNnF9d8MyGV734hXmqTIravYAgm8S8b5Ij
- 9J2mfSKiLS5UmMBF1CJLQFTPYxcUViEKelabjdQhI2xQuPd9SvtoIw6W+dS+0XVTbeLSskdi+Nf
- JZv7rwkCJjYQBWA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3682; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=CTNIjJksV39rh1vFRofP0gEi36ZUmiBHOsMajM2KEl0=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVIHFJxLawG6BbjGd2qf1DI9BWdswMqTl91c
+ VwaqS1iL12JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11SAAKCRDhuBo+eShj
+ dxDtD/wKS34qv+11LdMaa9Lkxb2/fdmDkQcNx7CBaTf0JLBxSwmYuom1Vz6ozCbTioAgh8t03mc
+ SKAin0ySXlz/dRuG46NzFumnQEnwpkPr7fwAwp5VrqAEz0bBfUHQd9tE8L0pDeOhuh5+d1oeOWn
+ CVOLacjT6Qds2vSbIngsgHFKr16M9Tx2Wy0DRwcBm/1Uy5HuCV6aUoUARisIPZr+rk6rXtZ3kS9
+ GpadYe8bpRAJSofdh5DKsTsz+6y95y2H95y0C37j0YMska+7w5Fb/kZ7d0hnyJD2FGTJ7BjWl+q
+ I5C5vfDq/rcKAHW70W+cAbb7PMommxqToEwbsyf9P3I8/d5LOepTPWfszwWqtgFT+JV3bfvuTGe
+ dqEYJNgHFeXWHBWYrKHxbbccxlOYPxqGpFJknHJQ+k67NE4lzKiJ/7FXi8W8C29EnJHWzNWwdI4
+ 8ZVeP218YHwcSIDSUsJ8ldCqHJeF79ERoK8Hn+HFzt7TIT5yw509FH77zULcyaKK+RG0HkHYxY8
+ GqC3oK8vvgRRXiyaakMIukJZDqLLS3SnmXSelojyhhPFxszoQ6HltQFRAzWXBXEtcHIxvUz0opk
+ OWu8EyfLtvc8jkQVbqDWdNV6AkOZwkRsQNx6rc2yHwfaY8vcWwJZeZdMJl7O7+l7oF00kqMdRo2
+ Mc+o1v+5Q243dWg==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add a few block subsystem constants to the rust `kernel::block` name space.
-This makes it easier to access the constants from rust code.
+The rust null block driver is about to gain some additional modules. Rather
+than pollute the current directory, move the driver to a subdirectory.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/block.rs | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ MAINTAINERS                        |  2 +-
+ drivers/block/Kconfig              | 10 +---------
+ drivers/block/Makefile             |  4 +---
+ drivers/block/rnull/Kconfig        | 13 +++++++++++++
+ drivers/block/rnull/Makefile       |  3 +++
+ drivers/block/{ => rnull}/rnull.rs |  0
+ 6 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/rust/kernel/block.rs b/rust/kernel/block.rs
-index 150f710efe5b4..7461adf4d7e06 100644
---- a/rust/kernel/block.rs
-+++ b/rust/kernel/block.rs
-@@ -3,3 +3,15 @@
- //! Types for working with the block layer.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c1d245bf7b84..29b14aec3559f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4246,7 +4246,7 @@ W:	https://rust-for-linux.com
+ B:	https://github.com/Rust-for-Linux/linux/issues
+ C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
+ T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
+-F:	drivers/block/rnull.rs
++F:	drivers/block/rnull/
+ F:	rust/kernel/block.rs
+ F:	rust/kernel/block/
  
- pub mod mq;
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 0f70e2374e7fa..6b50dbc0495ba 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -17,6 +17,7 @@ menuconfig BLK_DEV
+ if BLK_DEV
+ 
+ source "drivers/block/null_blk/Kconfig"
++source "drivers/block/rnull/Kconfig"
+ 
+ config BLK_DEV_FD
+ 	tristate "Normal floppy disk support"
+@@ -354,15 +355,6 @@ config VIRTIO_BLK
+ 	  This is the virtual block driver for virtio.  It can be used with
+           QEMU based VMMs (like KVM or Xen).  Say Y or M.
+ 
+-config BLK_DEV_RUST_NULL
+-	tristate "Rust null block driver (Experimental)"
+-	depends on RUST
+-	help
+-	  This is the Rust implementation of the null block driver. For now it
+-	  is only a minimal stub.
+-
+-	  If unsure, say N.
+-
+ config BLK_DEV_RBD
+ 	tristate "Rados block device (RBD)"
+ 	depends on INET && BLOCK
+diff --git a/drivers/block/Makefile b/drivers/block/Makefile
+index 097707aca7255..aba3e93d5014b 100644
+--- a/drivers/block/Makefile
++++ b/drivers/block/Makefile
+@@ -9,9 +9,6 @@
+ # needed for trace events
+ ccflags-y				+= -I$(src)
+ 
+-obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
+-rnull_mod-y := rnull.o
+-
+ obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
+ obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
+ obj-$(CONFIG_BLK_DEV_FD)	+= floppy.o
+@@ -39,6 +36,7 @@ obj-$(CONFIG_ZRAM) += zram/
+ obj-$(CONFIG_BLK_DEV_RNBD)	+= rnbd/
+ 
+ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
++obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull/
+ 
+ obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
+ obj-$(CONFIG_BLK_DEV_ZONED_LOOP) += zloop.o
+diff --git a/drivers/block/rnull/Kconfig b/drivers/block/rnull/Kconfig
+new file mode 100644
+index 0000000000000..6dc5aff96bf4e
+--- /dev/null
++++ b/drivers/block/rnull/Kconfig
+@@ -0,0 +1,13 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Rust null block device driver configuration
 +
-+/// Bit mask for masking out [`SECTOR_SIZE`]
-+pub const SECTOR_MASK: u32 = bindings::SECTOR_MASK;
++config BLK_DEV_RUST_NULL
++	tristate "Rust null block driver (Experimental)"
++	depends on RUST
++	help
++	  This is the Rust implementation of the null block driver. Like
++	  the C version, the driver allows the user to create virutal block
++	  devices that can be configured via various configuration options.
 +
-+/// Sectors are size `1 << SECTOR_SHIFT`.
-+pub const SECTOR_SHIFT: u32 = bindings::SECTOR_SHIFT;
++	  If unsure, say N.
+diff --git a/drivers/block/rnull/Makefile b/drivers/block/rnull/Makefile
+new file mode 100644
+index 0000000000000..11cfa5e615dcf
+--- /dev/null
++++ b/drivers/block/rnull/Makefile
+@@ -0,0 +1,3 @@
 +
-+/// Size of a sector.
-+pub const SECTOR_SIZE: u32 = bindings::SECTOR_SIZE;
-+
-+/// Power of two difference in size of a page and size of a sector.
-+pub const PAGE_SECTORS_SHIFT: u32 = bindings::PAGE_SECTORS_SHIFT;
++obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
++rnull_mod-y := rnull.o
+diff --git a/drivers/block/rnull.rs b/drivers/block/rnull/rnull.rs
+similarity index 100%
+rename from drivers/block/rnull.rs
+rename to drivers/block/rnull/rnull.rs
 
 -- 
 2.47.2
