@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-23929-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23926-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E63C6AFD77E
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:49:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE088AFD779
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:48:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA33C18949F5
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:49:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C81E1756E2
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:48:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E442D256C91;
-	Tue,  8 Jul 2025 19:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700C0251799;
+	Tue,  8 Jul 2025 19:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IINgpaq2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SE0ws8Cs"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A7123ED69;
-	Tue,  8 Jul 2025 19:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464032512D7;
+	Tue,  8 Jul 2025 19:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752003976; cv=none; b=IWB2jFnPYFn2tOQlQK5p9fAs6aJGj6az7XEXhB6uOugjmIaVhhHbXbbBpjiM8LN9Ywwb570Mz7n7Io7ndD8TBqHuXuSKPOh2FwsQYSYTJ1ABZ3VILdrMeP1CTjr3Bhv5qA4zHHd8bIbuWlupjYJiYSEbcqqmlnsdWa9BXaJWcu8=
+	t=1752003965; cv=none; b=l/xY2BOTisiv0mRSpfKNev29uivDBbcBl2npELMDK5hSJW4rkw/W+ooNC7Km6EiMx8kQZ6QtVixPWN4dUzzQhIcNCi/j/5QTcRLsYYwZgaGPdizn7KsxlP0irvX+Gid9nmImaKSOczDQ1aOqy+cial4x8hAhADTPgH+cGAbdeeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752003976; c=relaxed/simple;
-	bh=L2wr4k193kbQ+EZ3WJsPLRyFUtGJsDx6XOUn90oep28=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bJMAdQ/AM/MZnMsvksL720fiarsrdgrOZ9PHCdWM8jLOkuItR24kTzUHGmnZulNLvBEtd8tFpRayYSF6r7+xxsIkzBMg1DwWO7q0Zdp9BixGdVBdXgmT7CaRqPbNwF2eCt6Ra821EcsGzchg14s+8Ud/wZVlNRexQB5139qvBsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IINgpaq2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76A5C4CEF0;
-	Tue,  8 Jul 2025 19:46:12 +0000 (UTC)
+	s=arc-20240116; t=1752003965; c=relaxed/simple;
+	bh=KtHw1QmkuL/sm+PVBCjjLX5l+yiMnLEt2qOzqap7pmU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HZwU1wzptQuMNOL3cI3k2WJtS+pfqydp0hsYmNUcyoHfWKn/1SmQjPqEqpzYL9rv59c0JLFwP+PtF80kLglT57y+e73fzBwn0q0ABIsyzxjiwgNVojWJocV1dXsVhIuo3EovxCUSjAuUwvAiY/lG++yI1PUigyTIEmnJuj4H6UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SE0ws8Cs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41137C4CEF0;
+	Tue,  8 Jul 2025 19:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752003976;
-	bh=L2wr4k193kbQ+EZ3WJsPLRyFUtGJsDx6XOUn90oep28=;
-	h=From:Subject:Date:To:Cc:From;
-	b=IINgpaq2NU0WgBcGKQh3AeTqaD2sgzbEkLKkHJhQliL5//fomYZ2fu1Tl5Crt1CRq
-	 OBo/pRHVe3SSiYPUzEC9g2NOJ/ooFYs89NmcpE1vNTvaXM3zIAXoJsGPpk+35rf4+N
-	 7jhM5dkr905KnY9ENKPVuFKlpX+cGebM4bK6c3aEs1nOfk8c7dQ9F8Tj5b02t4EW3d
-	 0N7+PREs6kKUD1hmFoq11wuiy2zLTX8+gi9mm1lE+XfHu9JeB7RhU7cWhHEIf/xvFb
-	 CyvLVhBo/1zehIRvFKHLzW31PLc/7hJHgKvXh4VAJUhjLl0AwRYWIYEqHagdYe+I66
-	 Urqmah4x2Q9yQ==
+	s=k20201202; t=1752003965;
+	bh=KtHw1QmkuL/sm+PVBCjjLX5l+yiMnLEt2qOzqap7pmU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SE0ws8CsgBA9mG/XWsHoNwyX+xEidTQ9JhrD5Ti0BqqobZmowadq1wVGrgrQCWWz0
+	 7MtbyBsSMK3p8v7n5dX3dB5uhhHBlmaNRBWyDVRfbi4T1eGaolertrJltv2oStl4Hk
+	 734BQ6+TsL2xKqBsPFs9FeoR1UPpYaIqwXzb336AHHRcgXaQgPb6oDvMaiF44Ne55G
+	 1pYSyFmJ4j9v5c4zNqqzfv1/B3teZaQgxjyhEp8Q5hEnt/oYgemU3o5ArtgBd1WIMR
+	 sB7kEGwvwR/3qlD9suXnqQMZqkYVshUdSd9wR41mWYBY5tUp6efl5oTQXqMriYRn58
+	 F3PRtz8lPw6ng==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Subject: [PATCH v2 00/14] rnull: add configfs, remote completion to rnull
-Date: Tue, 08 Jul 2025 21:44:55 +0200
-Message-Id: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
+Date: Tue, 08 Jul 2025 21:44:56 +0200
+Subject: [PATCH v2 01/14] rust: str: normalize imports in `str.rs`
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,10 +52,9 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADd1bWgC/3XMQQ7CIBCF4as0s3YMkJYSV97DdFF02hIJNIMlm
- oa7i927/F7y/h0SsaMEl2YHpuySi6FCnRq4L2OYCd2jGpRQndBSI4fNe9xWzBorbdv1kpSZiAj
- qaWWa3PsI3obqxaVX5M/Rz/K3/k1liQLHVmpjDfXaquuTOJA/R55hKKV8AdKcQuutAAAA
-X-Change-ID: 20250616-rnull-up-v6-16-b4571e28feee
+Message-Id: <20250708-rnull-up-v6-16-v2-1-ab93c0ff429b@kernel.org>
+References: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
+In-Reply-To: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
  Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
  =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
@@ -65,84 +64,53 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2701; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=L2wr4k193kbQ+EZ3WJsPLRyFUtGJsDx6XOUn90oep28=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXU86luDbFJMpkovjftupsWMSVtlFMMO0pq1j
- wl0F1ddBH6JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11PAAKCRDhuBo+eShj
- d+KVD/4rrYsswPHTUb+mf+9/hZqJ9kGBFjLiyTUSmJwGh0VGDadEQiuX6LEk/I2WFLvKHGhpHDD
- PwAFRnL7knX+lM0exs5WC7gl3W1qTGbswzWyN76xO4Xgt+DkduDE7k/SpkvqBiH1h/ceR5mzXvo
- gOFMUQEGKpgRXtke9nMPpEkdoj+I1U9scuItlsPGyICXntH9Z0+bLSUgCyXEJvrMe+loCdd/maV
- lznt0p/HFCMk2bVkQQZsmk00yyq5BfuFi6dHXAUPMaMoRrowrPxNRNcBWYx5Ddjt31WTJ8Yknm8
- OtOcEOHPLWNxLcFymigc62Kr8ibyVs/e7vDsnz1cS5nj1eBZ+X19Nl5tRaeDO/38niw0A1xfToL
- wSeQngMDL54p+K/OlgPn4PBmWHHbiBYH2qFfVsOUUiBRZPnA1J4x8vEB3LUR+y2ogp8gxL9VsZj
- 6chermwh1JmwV4RhfQcewP9W9X8gCZsLmR6H3PQztX52PGkivnNwTZAud078t5+x0T6eZSF3dYX
- /1u9CZz+hOTWfh6Y62SsDngtNFiQsiFTrBsoqFU6vYF72sQsdgjHqdZ4TxQ1xczbr7sg+CUKrqK
- O90OcQmpCvK16ne5o0v5aAwuj1ukLb7YKeQDOJ8mpaiCN0nPjvzu8No4B9yGOwBAkfTMhQLXoE7
- a4K09vkmmvgy1OA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=775; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=KtHw1QmkuL/sm+PVBCjjLX5l+yiMnLEt2qOzqap7pmU=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVBOv4u+LhBKYblj3Sy/TSNHHB9B2MPUVN7k
+ Ri70aUpKcuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11QQAKCRDhuBo+eShj
+ d6NxD/0bOh9Pbw5gaGMfYn3GdzY6iFiaSXPUGHnM4MQQ+m7+Kf9umk5i1mimS3403cA1j5uRm04
+ ONhjQLZ92B3nVnoGUHpYXRALurFjQY9hE5WPiMD4CX6YF5LBHT1HUQPyBMCqAJiQAcLzyn7lGmI
+ mc7HgibggI1otko7n0Vr+yrK0Ti2BQYqWMYIgb0p3druoflBgCVRNoPjEShxmrG5usbO3oPawm4
+ NZkrNe1QqYRQuDSlkqNEt8YD/ddPxDgpbrMEC7xxQQksFf3nqwm/hpZDcUJzzYwh8Qj1ZibvOvp
+ +huESt9lOXQvVFTPxmHFPS4PLgMT73/HLcW4b/hr96TUBtRWENJgPAuqva3Nts8gqk8XKcvlHrQ
+ qAX9SvdOr4lLtyyXgrXdQOXs212N9O1FW9U87RVjLLurmsWDTr89dyM3Jlh4RXCUYUGdydXskqf
+ kgMZjEPQqIGPlzuZ/3e8e2wOWhyNTEMb8KbFHG8ptC+shtrTWz2/jKvOnDq6NJaqqeGNvDD6Cy8
+ NqMB+Mb5WvnwF9vy36qDVAcHA8ZHq2gMZtMpY0Awoh+B2Se347JBOPv+L5uwP18RBax9F8zbmAs
+ GR8r1n7xqfV4eXm8vYvj30lY+TLDLIKUTD+4zZpyhoXhQytN4DkrAA8nrGvoFq78R6lTTH29v8o
+ WIucYeMjSlxRkTQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-This series adds configuration via configfs and remote completion to
-the rnull driver. The series also includes a set of changes to the
-rust block device driver API: a few cleanup patches, and a few features
-supporting the rnull changes.
-
-The series moves the raw buffer formatting logic from `kernel::block`
-to `kernel::string` and also improves that logic a bit.
-
-This series is a smaller subset of the patches available in the
-downstream rnull tree. I hope to minimize the delta between upstream
-and downstream over the next few kernel releases.
+Clean up imports in `str.rs`. This makes future code manipulation more
+manageable.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
-Changes in v2:
-- Rework formatter logic. Add two new formatters that write to slices,
-  one of which adds a trailing null byte.
-- Reorder and split patches so that changes are more clear.
-- Fix a typo in soft-irq patch summary.
-- Link to v1: https://lore.kernel.org/r/20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org
+ rust/kernel/str.rs | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
----
-Andreas Hindborg (14):
-      rust: str: normalize imports in `str.rs`
-      rust: str: introduce `BorrowFormatter`
-      rust: str: introduce `NullBorrowFormatter`
-      rust: block: normalize imports for `gen_disk.rs`
-      rust: block: use `NullBorrowFormatter`
-      rust: block: remove `RawWriter`
-      rust: block: remove trait bound from `mq::Request` definition
-      rust: block: add block related constants
-      rnull: move driver to separate directory
-      rnull: enable configuration via `configfs`
-      rust: block: add `GenDisk` private data support
-      rust: block: mq: fix spelling in a safety comment
-      rust: block: add remote completion to `Request`
-      rnull: add soft-irq completion support
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index a927db8e079c3..488b0e97004ee 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -3,10 +3,11 @@
+ //! String representations.
+ 
+ use crate::alloc::{flags::*, AllocError, KVec};
+-use core::fmt::{self, Write};
+-use core::ops::{self, Deref, DerefMut, Index};
+-
+ use crate::prelude::*;
++use core::{
++    fmt::{self, Write},
++    ops::{self, Deref, DerefMut, Index},
++};
+ 
+ /// Byte string without UTF-8 validity guarantee.
+ #[repr(transparent)]
 
- MAINTAINERS                        |   2 +-
- drivers/block/Kconfig              |  10 +-
- drivers/block/Makefile             |   4 +-
- drivers/block/rnull.rs             |  80 -----------
- drivers/block/rnull/Kconfig        |  13 ++
- drivers/block/rnull/Makefile       |   3 +
- drivers/block/rnull/configfs.rs    | 277 +++++++++++++++++++++++++++++++++++++
- drivers/block/rnull/rnull.rs       | 105 ++++++++++++++
- rust/kernel/block.rs               |  12 ++
- rust/kernel/block/mq.rs            |  14 +-
- rust/kernel/block/mq/gen_disk.rs   |  50 +++++--
- rust/kernel/block/mq/operations.rs |  65 +++++++--
- rust/kernel/block/mq/raw_writer.rs |  55 --------
- rust/kernel/block/mq/request.rs    |  21 ++-
- rust/kernel/str.rs                 |  95 ++++++++++++-
- 15 files changed, 622 insertions(+), 184 deletions(-)
----
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-change-id: 20250616-rnull-up-v6-16-b4571e28feee
-
-Best regards,
 -- 
-Andreas Hindborg <a.hindborg@kernel.org>
+2.47.2
 
 
 
