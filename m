@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-23922-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23930-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A513AFD772
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:47:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A273BAFD781
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:49:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F8FD7B75E2
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:45:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB80C4A3F15
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04170246771;
-	Tue,  8 Jul 2025 19:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CD3257AF3;
+	Tue,  8 Jul 2025 19:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hT3ajMZw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFiH8R4n"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC87246768;
-	Tue,  8 Jul 2025 19:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98902405E8;
+	Tue,  8 Jul 2025 19:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752003950; cv=none; b=nh7s+oz3VjtKiPvDMCRp3Af4S100v7qzwBCSY5C/u9zSOcX5rN2eMvtLyn4Vh6S+yDR4dcQPKLzqZG+TjOLAc8FZFSECx2cyyjXpOOEPc0qU5XBgmJMX2Km8bs/ZwavEMfKH/IhMuhuj605i42mk/eir0wUSS4Ifx/L2U1NgB+I=
+	t=1752003982; cv=none; b=JKO3qILIjWV5XM9lsxmswuO/gabG8vl0+5/HJRY891kMCur66dqiybf6N9x0n9IwNGnvw6xQ36yB2UwlTjrU6dIzg+f7y4A7I99XupYZ8vW8EX6Gn9mnuIQg9rdm2emGo0Anu+Dy4jjYU5If6GBx/GrT5wKLY3XVBegbknJu3tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752003950; c=relaxed/simple;
-	bh=ZZpCWZQcgpSLHSvgu+5Wu9OlonmFvYaDz/ku4DcnLIs=;
+	s=arc-20240116; t=1752003982; c=relaxed/simple;
+	bh=rI3PMBuRoxQk4V0KGavukqegyFDWNHFNecQhnnrOVMI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZfBMtTbMiWWZMmX2kHgrzRad4k8zccQy60JKVoAs1uybfziwvWQplJaSy2nmtjyNTTp8bBpxEAO3zj90VxHXX/MsB8Aj8hDJa8yap28dmaE3/So5deVdzm5/8JMVbV+2XGpGVPv2xrQi7Dx9HD/hO/bOPkxd/Olcfxw7nllqN3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hT3ajMZw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACF9C4AF09;
-	Tue,  8 Jul 2025 19:45:47 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=q4eq3EF0Pln2zWlusckkSxsujR6dDGQAx+mKvttVSYvwkyY+J9KmNAAXfyHUiFy4Ef1p4LAg94NXWv4np8/Y9w1QK/q5TwWoROPQ67u33LCnlmXJXCycf1uWqUBYU7PA9rFNkHF4QxZEjt5cnUAd/6EwhzbJunuMEDpZjRKiigk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PFiH8R4n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94773C4CEED;
+	Tue,  8 Jul 2025 19:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752003950;
-	bh=ZZpCWZQcgpSLHSvgu+5Wu9OlonmFvYaDz/ku4DcnLIs=;
+	s=k20201202; t=1752003981;
+	bh=rI3PMBuRoxQk4V0KGavukqegyFDWNHFNecQhnnrOVMI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hT3ajMZwAownDJoxQ1lGe2O9YsyPK05j/08PDdhAtYoJ2mGZZhWW+dZQzDhRIlddM
-	 jKBu/iXsMmYHLOWtDKo5AUfWK+ANTII8nyd9SMi61+drs0HJv+1lO2ZwEm1iriTRdP
-	 ZwmCvquFzIBpU5P69TK5C/uPvhIhbtsGHdi6gctkj3hqpuS9hiwOViHnSRP7dpk7CR
-	 FFnqHzn0N5BARPTpCjsXYyuCkfeK6ldn8xatx9LwTE0rr6hmDrIpGsgEZ1gii33CWh
-	 N1i0z4PMt7Qwo9aZeJ3E87wNl1VWhzM8pf15xTLt72oj24AE99xej+zglmL/9zMw5C
-	 BzuCAbK9pykIg==
+	b=PFiH8R4nnhGB68C/FqbYxA5++Esk9oIVZpkEpqIdFEMYMgw4nyFCheJmXXaKk1ILM
+	 Hpe4rLts9To3oH8Gd0TK8H4oqg4WZ3mNtSEzJvcpGrsetsRZHSe+kollITl5nWMINF
+	 bUaUDtApZlfP0CjWRf4PRGBa5Z1s12ljtasFUoK40u9dGwZpkYe6LS22PKK1kWGr9n
+	 42DOF24rX5KngonVpvwBaWkUtdHCl9hLbbTqYuL6SWE0FVKQiWznGgjeYP4ricsHDg
+	 m0ykS1/SFl2uvs4NC2zxKFymJLheIf0W2oK+rK5e/SewcpXC+5hn1Fnxx2I7FhINzM
+	 5LozSIsssxHEg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 08 Jul 2025 21:44:59 +0200
-Subject: [PATCH v2 04/14] rust: block: normalize imports for `gen_disk.rs`
+Date: Tue, 08 Jul 2025 21:45:00 +0200
+Subject: [PATCH v2 05/14] rust: block: use `NullBorrowFormatter`
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250708-rnull-up-v6-16-v2-4-ab93c0ff429b@kernel.org>
+Message-Id: <20250708-rnull-up-v6-16-v2-5-ab93c0ff429b@kernel.org>
 References: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 In-Reply-To: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,52 +64,105 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1078; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=ZZpCWZQcgpSLHSvgu+5Wu9OlonmFvYaDz/ku4DcnLIs=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVDJULtl9kfhBJCutDHkF65seZyQbiU5sTID
- TiALKWxtTmJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11QwAKCRDhuBo+eShj
- d5xyD/940AMT2NjuhS51jei3L0Ac4BF7H1bujtnPBTt/f0WKJRVa8EjY9dN6tq8X8j+0lwBbyTy
- UY2Y2d7AZrKyfq2dyrUKlkdPJ1e0bIbEhTjvobY2EpFkF3d/9o9CfWtz5W4cmSRp21G1jnb8cRb
- aaoR3tUD6lkQRjG1rhDiTDa2WCU7veA62rZdjCDZqU0JzKrwWc0mSyHG0S4j5Fgfk99cxVoMtj/
- +G0sbRufyjfCNl0pYZeiYZTpeGdGXBUvkdSy6+m8JjABIf5mA/nzwnhsOgpdbp479q+akkBfLpG
- A5yrq3l835sV5TYkbHyL8VxeSw9acjJLJ/hBKKFc2E8g/d2pb4bZDolEvXdyam9S9F+dRBEX5hF
- 6A5AkiSNcDsB0RA17AGLT3AJWFyEyBUpiOlvlVIxN8mi1A5Lb42vim6zMGhLqls8YHXlQmYR7wX
- pBW1TjLkZhJAf4wrqN4l4VbFPKxNPizn36nJVQZgwNNNT8GV9FZABgA1W89fBuXX2tia59ZvoGq
- pKnBqAIYZ7zY3Z9VNM58mGMFwymhJ2P4k4u10DXqSRwJlJM95xGjCi2WLl11wq0IA0QZGqxPw9f
- 8QUVOB6xdqYI8fPjxEGCIR0EkGtd2B6IQZ1/mlsIJPFMWrRxCcJUn0Y3Fy8cOjm4vCtoAHsLhe+
- em3bvXdBG0eTuFQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3200; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=rI3PMBuRoxQk4V0KGavukqegyFDWNHFNecQhnnrOVMI=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBobXVEwXx/A97m/Qc65sLZ0qY5/J1wRThTKRGFo
+ kVCyU9sm5KJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaG11RAAKCRDhuBo+eShj
+ dxvQEAC+gnO0EHTbKeHnj9f2L9pEzdhwkcR5/OUeySZcSzi3O+xyQzUBte0OUCZqqT+GZI8bUxN
+ 16klAl9nvGweu4J1pK9lSOnB88ArwbsU6VlyBFXTu4MIhiVrNzrRXHcgSk1hmyIiXxiONR6pYh+
+ +2Xpw/m3i31EngidyC0+Bq+4DvPh0KZQpJgn2qZqRXlHZ7LnTHKrZpqbLuOBfuJ2dia/Oo1d7A/
+ 9+18ugpOko+IpX0p1nRQWHtIs34IX0vIugMzV51SzbHZmelh5WFxUbeUcY5yaXbPtV46o2BpDos
+ G1Iv9UoebD4N9QiuEoQKfXlrRxNFiWzrGw10OAKKXAdbnU4NpIin33kxeTGh9KFsu9bEVDppoW1
+ +abDoW7e0Rqzoa5XSZNYC4hx5wPTylC7jiqC+zEL8Gjj6+fOK5/J57L5efzsgWNiBr72jzYcz/b
+ +YByiC9uR281XeEOJrPLPwjBt2B52/7oG6UQn2Hdh1RCFjFfQ/Omyn51obUyT4aKCDZI8hrEQVZ
+ ieS7iX6Eq93nwN05LBkC5QcDPqH/wfU8ePVIYN2yEetZn8D2GaY7jkCCw90SL0DsmIYMk1ihynD
+ GeFIYV1+zFpH3nmH/kRUEnwSX7MX7QbsU3UF+L3lbTxfnRDsB6sQZpDb0qiW478BYDsto6zKsYf
+ Up7ROsVQTYG80Fg==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Clean up the import statements in `gen_disk.rs` to make the code easier to
-maintain.
+Use the new `NullBorrowFormatter` to write the name of a `GenDisk` to the
+name buffer. This new formatter automatically adds a trailing null marker
+after the written characters, so we don't need to append that at the call
+site any longer.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/block/mq/gen_disk.rs | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ rust/kernel/block/mq/gen_disk.rs   | 8 ++++----
+ rust/kernel/block/mq/raw_writer.rs | 1 +
+ rust/kernel/str.rs                 | 7 -------
+ 3 files changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
-index cd54cd64ea887..679ee1bb21950 100644
+index 679ee1bb21950..e0e42f7028276 100644
 --- a/rust/kernel/block/mq/gen_disk.rs
 +++ b/rust/kernel/block/mq/gen_disk.rs
-@@ -5,9 +5,13 @@
- //! C header: [`include/linux/blkdev.h`](srctree/include/linux/blkdev.h)
- //! C header: [`include/linux/blk_mq.h`](srctree/include/linux/blk_mq.h)
+@@ -7,9 +7,10 @@
  
--use crate::block::mq::{raw_writer::RawWriter, Operations, TagSet};
--use crate::{bindings, error::from_err_ptr, error::Result, sync::Arc};
--use crate::{error, static_lock_class};
-+use crate::{
-+    bindings,
-+    block::mq::{raw_writer::RawWriter, Operations, TagSet},
-+    error::{self, from_err_ptr, Result},
-+    static_lock_class,
-+    sync::Arc,
-+};
+ use crate::{
+     bindings,
+-    block::mq::{raw_writer::RawWriter, Operations, TagSet},
++    block::mq::{Operations, TagSet},
+     error::{self, from_err_ptr, Result},
+     static_lock_class,
++    str::NullBorrowFormatter,
+     sync::Arc,
+ };
  use core::fmt::{self, Write};
+@@ -143,14 +144,13 @@ pub fn build<T: Operations>(
+         // SAFETY: `gendisk` is a valid pointer as we initialized it above
+         unsafe { (*gendisk).fops = &TABLE };
  
- /// A builder for [`GenDisk`].
+-        let mut raw_writer = RawWriter::from_array(
++        let mut writer = NullBorrowFormatter::from_array(
+             // SAFETY: `gendisk` points to a valid and initialized instance. We
+             // have exclusive access, since the disk is not added to the VFS
+             // yet.
+             unsafe { &mut (*gendisk).disk_name },
+         )?;
+-        raw_writer.write_fmt(name)?;
+-        raw_writer.write_char('\0')?;
++        writer.write_fmt(name)?;
+ 
+         // SAFETY: `gendisk` points to a valid and initialized instance of
+         // `struct gendisk`. `set_capacity` takes a lock to synchronize this
+diff --git a/rust/kernel/block/mq/raw_writer.rs b/rust/kernel/block/mq/raw_writer.rs
+index 7e2159e4f6a6f..0aef55703e71d 100644
+--- a/rust/kernel/block/mq/raw_writer.rs
++++ b/rust/kernel/block/mq/raw_writer.rs
+@@ -24,6 +24,7 @@ fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
+         Ok(Self { buffer, pos: 0 })
+     }
+ 
++    #[expect(dead_code)]
+     pub(crate) fn from_array<const N: usize>(
+         a: &'a mut [crate::ffi::c_char; N],
+     ) -> Result<RawWriter<'a>> {
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 05d79cf40c201..4140b4af64e50 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -881,7 +881,6 @@ pub(crate) fn new(buffer: &'a mut [u8]) -> Result<NullBorrowFormatter<'a>> {
+         Ok(Self { buffer, pos: 0 })
+     }
+ 
+-    #[expect(dead_code)]
+     pub(crate) fn from_array<const N: usize>(
+         a: &'a mut [crate::ffi::c_char; N],
+     ) -> Result<NullBorrowFormatter<'a>> {
+@@ -891,12 +890,6 @@ pub(crate) fn from_array<const N: usize>(
+             unsafe { core::slice::from_raw_parts_mut(a.as_mut_ptr().cast::<u8>(), N) },
+         )
+     }
+-
+-    /// Return the position of the write pointer in the underlying buffer.
+-    #[expect(dead_code)]
+-    pub(crate) fn pos(&self) -> usize {
+-        self.pos
+-    }
+ }
+ 
+ impl Write for NullBorrowFormatter<'_> {
 
 -- 
 2.47.2
