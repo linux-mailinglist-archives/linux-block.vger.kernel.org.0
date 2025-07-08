@@ -1,76 +1,105 @@
-Return-Path: <linux-block+bounces-23919-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-23933-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C867AFD769
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:46:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B09AFD94E
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 23:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1F7D7B4ED5
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 19:45:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E7577AF871
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jul 2025 21:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824EB241664;
-	Tue,  8 Jul 2025 19:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7705E242D62;
+	Tue,  8 Jul 2025 21:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRIL5sdr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yp0ZdoUe"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5653923C507;
-	Tue,  8 Jul 2025 19:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CBF242D68;
+	Tue,  8 Jul 2025 21:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752003944; cv=none; b=XR3WSiUwv0u/sQuF2scx6gf94TpFpwp1K1//Vn/PdTA/UdLfPKAzwxmjoXzP4b30gvhqaFOTpw3aCKCp1koTuAitYSAK/xlEjOwJCCW7Ehcvpqsx1Bslzs8f8Wp2NHMx4jSnQOS40MpPaUqyZehN+i2rNH9/slw+xUTv6nbS0Cs=
+	t=1752008979; cv=none; b=XuhUlPn661N1cvjZRa6llgmJN6ikWSAcmRVG/Npdm/BMXggHKrFnj0Tlc+xyjXCcOsbwVcpHKYB3XXFOERboi9jEfiML+mJCZvjcy2lq2j1aKQuvDApb+ycA8dcWki/IyV66xxz6n/DP1sB0Rqn5mspwsjxnMiYimmpLSDWEnaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752003944; c=relaxed/simple;
-	bh=/8NzYs9A6jTvYl+W2Y15ETEaIfiQ2pFc4/Y+QOFtzwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+YJ+/Om0WLWpVC59+3LE3coSepx6VyvAisAF5UgedHbezyaKgE0NoPtq5JmZPwhVp9hq40BYHJB1UUuJpr5K/7OC/6/TBT8ArlTVSqxYNkm+PvJ8G84GCdOSEEXXattPaqzjBIKyeErw2nwPcEoqkATjNDk7Y4xYTi0wiw6omU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRIL5sdr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1947C4CEED;
-	Tue,  8 Jul 2025 19:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752003943;
-	bh=/8NzYs9A6jTvYl+W2Y15ETEaIfiQ2pFc4/Y+QOFtzwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KRIL5sdrTuZ3xR/HnQB+yrlbcM6dbmX40jxMdm/cb2jGN7adWe4jDZE6V764vNfpY
-	 FeMMxb6gk4i6XO+AMqmu79cxCvEo41d8bPowi7vR9WSe5Lj+hDeS6lefSvUBXJX4BK
-	 +A7NXZCOeaXxZSHfshMRqlLmkL9l9qcb30jg+Oh35v1KeKbMBiXOlZusOuKF2YoVxL
-	 miZQRw+2/eMsrP3GBRx6qSFWgHNlwKvTWBCR92saZl15XL9uRcaGlntyWx47ALqmeE
-	 nySw/IT4YNxg9ZwsG6DfdPTRoY/nVKTHuwV7etlq+5OxoKEjrJgqsWK+m6/CcMcXea
-	 vPy5nQjPnqLvg==
-Date: Tue, 8 Jul 2025 12:45:43 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Joanne Koong <joannelkoong@gmail.com>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-block@vger.kernel.org, gfs2@lists.linux.dev
-Subject: Re: [PATCH 01/14] iomap: header diet
-Message-ID: <20250708194543.GF2672049@frogsfrogsfrogs>
-References: <20250708135132.3347932-1-hch@lst.de>
- <20250708135132.3347932-2-hch@lst.de>
+	s=arc-20240116; t=1752008979; c=relaxed/simple;
+	bh=QWLNdLsfHgBYTPLJ8dN7bOMak5I+rhzE/h8J7IQXbqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcEgLG2jKeM7npwYhOHUPPvBRFuaF37TnyXxA2CXbs9k25pJ4rW2hjH8YgG5QmG4QX9rPwhwcRxv+Afn+xUHNolYR3jVAStAKdMbYzZYwMzt+QZ6mwiuFGFPwiMljVhT0o7+QSmGsGT3W6swq0gnRaKa1pg1+yEK+O6YInXTWiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yp0ZdoUe; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a9bf46adedso26468431cf.2;
+        Tue, 08 Jul 2025 14:09:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752008977; x=1752613777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ialp/oquiA+rEtbsg9r8WrpxV/qZnDtRKdb/P4jXX50=;
+        b=Yp0ZdoUe3GcecY4nfds151s7Mm6DCVhfM/Hb67itB9iLL8ti1Z0hkYzhZLKEzjd1Jh
+         EjfClPy/2n4YpTeoMkNQlHyw0PXtEgR+tRrs++0a9UBdlZHmcUJmvWTx4ufdcasKDXRF
+         8YQVqeLdPJXmyQvI4Lf7JwIP5mH5nJNwnWDC+5NB9BBijbZxLVF6DeN8hUbdchG1Iod6
+         Fd6WfwR+FH1xhpM0Q3SoMioV/rKiSpD3qjgyv1Ee+ElJS8y1MgL+MeoCyst5Lcyd7fhI
+         BtYoUEH/rAD1Gbfcn/DFQRFCzPCFqnyRp+cmzOWgSE6rm9LCY3onx+SzNIgVUfV03nA0
+         106w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752008977; x=1752613777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ialp/oquiA+rEtbsg9r8WrpxV/qZnDtRKdb/P4jXX50=;
+        b=bZCIRZOBxvc9QaCTHdWvq68/eM6ELu2TzIL3VdY+pQE/8a8XIa48SO4cD1GGUxTlQH
+         OaNc2tV4CLZcJA0Ek2vuvm1OIijMA5rd/kcQ6UECmaT/pzpEP/dtZPQOJOnkzxRRQfZf
+         ck5/Yq5kWC4wAU9+n/nQHcbRHjBAiIowIulSumPHFGxuwq0ADegvlR0tykAp0jD1V3Vd
+         dniT53AEsJcy7QbpEg6Jx+YtMTsk5y0TYPwALcAYQiHwsZzMoGBwez0wqds/nR1IoCHg
+         qDCX9k5ZuYwrmy3gAEBjkDMByWVt4/Yt5Y0I3cbrGGYsFAub/+sUYCOpbTNESZGDqmIT
+         r0zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuTNEBpKLnMfVuX2+OP1qO33/92WxkBz7jaeCAXYrLbMr7rWX1/z/BjAFmYwQAkUfacNA43fpEG1x8@vger.kernel.org, AJvYcCVr2QYbSodOCQ0RMstqHm/yrzDEb41sCrSRkFwhzGr0CXdjl3aZv4vTn45gRjUOYRhf2TP6e8wbT3nk@vger.kernel.org, AJvYcCVviw72kxcfV6ezsVusnOaRpya3XZI2SajmCiNirsJUnYffb2v1fvyLxfTCdl+Awl0ayLZmX+bvZaSKKA==@vger.kernel.org, AJvYcCXVeggF/tLIRcEYzrUhEoyEXU5sufdty0q6qX/lf0MZCidqtCK2/FoMdcivaoZ5ww3+ebrHd4TAPwmd7HPUaw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaK49e+Fc8ce4L4jwAAwpgrMbEIjW8FXnufOWVBfyb2obPLVJf
+	dCoWe3ASm39hCKjNQw0hPEkHXYBoqKsuxUlQ4MikjcwRGFSOg71l6ngglivqHX4DZgLq+vrnCkq
+	iK+vgWEJa0yjdsyvhVR8lFaeRGXUtyv/zqNReDy0=
+X-Gm-Gg: ASbGncu4zA5aSCZjMZULMqGlRFKDq0w4DPr2/iF4vrzSZ5DZ32zq6jIe91kaZWl734B
+	Egp84VVaIxMXHVraG71Zxbr+gLl7IP16Ez3xBGv5M4JCPRC4pD8PD3k0IFcy/nD78uuzHq7B04U
+	qjL0t2LQdx09MW4QC2Cb8MK4M5FwxbjTIEhgXJfoGxZfg=
+X-Google-Smtp-Source: AGHT+IG8Jxilvarnzqavf3sYJxobHNvcI4fkp9fkNWwp0crZArdntUIdq+T6S/aPKzK8d0h4ceDCQNVW0Iz2g0YtdpM=
+X-Received: by 2002:a05:622a:1143:b0:4a7:9b9b:aad7 with SMTP id
+ d75a77b69052e-4a99885b516mr321562271cf.49.1752008976611; Tue, 08 Jul 2025
+ 14:09:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250708135132.3347932-1-hch@lst.de> <20250708135132.3347932-2-hch@lst.de>
 In-Reply-To: <20250708135132.3347932-2-hch@lst.de>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Tue, 8 Jul 2025 14:09:26 -0700
+X-Gm-Features: Ac12FXwl0brNflKWwfGY6FaTYwWdG-adXu8EY6-C3m2Ipq4pCXjGyAu9EGigUko
+Message-ID: <CAJnrk1bmQzsUeWTRaVfQNNO4C3eQ3Pw2jdk9v-r2VEa4tr1xxA@mail.gmail.com>
+Subject: Re: [PATCH 01/14] iomap: header diet
+To: Christoph Hellwig <hch@lst.de>
+Cc: Christian Brauner <brauner@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-block@vger.kernel.org, gfs2@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 08, 2025 at 03:51:07PM +0200, Christoph Hellwig wrote:
+On Tue, Jul 8, 2025 at 6:51=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrote=
+:
+>
 > Drop various unused #include statements.
-> 
+>
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Assuming the build bots don't hate this,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
 
---D
+LGTM. btw in the 7th patch when the ioend handling logic gets moved to
+ioend.c, #include "internal.h" in buffered-io.c can be dropped then
+too, but that's a very minor triviality.
 
 > ---
 >  fs/iomap/buffered-io.c | 10 ----------
@@ -81,120 +110,5 @@ Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 >  fs/iomap/swapfile.c    |  3 ---
 >  fs/iomap/trace.c       |  1 -
 >  7 files changed, 27 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 3729391a18f3..addf6ed13061 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -3,18 +3,8 @@
->   * Copyright (C) 2010 Red Hat, Inc.
->   * Copyright (C) 2016-2023 Christoph Hellwig.
->   */
-> -#include <linux/module.h>
-> -#include <linux/compiler.h>
-> -#include <linux/fs.h>
->  #include <linux/iomap.h>
-> -#include <linux/pagemap.h>
-> -#include <linux/uio.h>
->  #include <linux/buffer_head.h>
-> -#include <linux/dax.h>
-> -#include <linux/writeback.h>
-> -#include <linux/swap.h>
-> -#include <linux/bio.h>
-> -#include <linux/sched/signal.h>
->  #include <linux/migrate.h>
->  #include "internal.h"
->  #include "trace.h"
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index 844261a31156..6f25d4cfea9f 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -3,14 +3,9 @@
->   * Copyright (C) 2010 Red Hat, Inc.
->   * Copyright (c) 2016-2025 Christoph Hellwig.
->   */
-> -#include <linux/module.h>
-> -#include <linux/compiler.h>
-> -#include <linux/fs.h>
->  #include <linux/fscrypt.h>
->  #include <linux/pagemap.h>
->  #include <linux/iomap.h>
-> -#include <linux/backing-dev.h>
-> -#include <linux/uio.h>
->  #include <linux/task_io_accounting_ops.h>
->  #include "internal.h"
->  #include "trace.h"
-> diff --git a/fs/iomap/fiemap.c b/fs/iomap/fiemap.c
-> index 80675c42e94e..d11dadff8286 100644
-> --- a/fs/iomap/fiemap.c
-> +++ b/fs/iomap/fiemap.c
-> @@ -2,9 +2,6 @@
->  /*
->   * Copyright (c) 2016-2021 Christoph Hellwig.
->   */
-> -#include <linux/module.h>
-> -#include <linux/compiler.h>
-> -#include <linux/fs.h>
->  #include <linux/iomap.h>
->  #include <linux/fiemap.h>
->  #include <linux/pagemap.h>
-> diff --git a/fs/iomap/iter.c b/fs/iomap/iter.c
-> index 6ffc6a7b9ba5..cef77ca0c20b 100644
-> --- a/fs/iomap/iter.c
-> +++ b/fs/iomap/iter.c
-> @@ -3,7 +3,6 @@
->   * Copyright (C) 2010 Red Hat, Inc.
->   * Copyright (c) 2016-2021 Christoph Hellwig.
->   */
-> -#include <linux/fs.h>
->  #include <linux/iomap.h>
->  #include "trace.h"
->  
-> diff --git a/fs/iomap/seek.c b/fs/iomap/seek.c
-> index 04d7919636c1..56db2dd4b10d 100644
-> --- a/fs/iomap/seek.c
-> +++ b/fs/iomap/seek.c
-> @@ -3,12 +3,8 @@
->   * Copyright (C) 2017 Red Hat, Inc.
->   * Copyright (c) 2018-2021 Christoph Hellwig.
->   */
-> -#include <linux/module.h>
-> -#include <linux/compiler.h>
-> -#include <linux/fs.h>
->  #include <linux/iomap.h>
->  #include <linux/pagemap.h>
-> -#include <linux/pagevec.h>
->  
->  static int iomap_seek_hole_iter(struct iomap_iter *iter,
->  		loff_t *hole_pos)
-> diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
-> index c1a762c10ce4..0db77c449467 100644
-> --- a/fs/iomap/swapfile.c
-> +++ b/fs/iomap/swapfile.c
-> @@ -3,9 +3,6 @@
->   * Copyright (C) 2018 Oracle.  All Rights Reserved.
->   * Author: Darrick J. Wong <darrick.wong@oracle.com>
->   */
-> -#include <linux/module.h>
-> -#include <linux/compiler.h>
-> -#include <linux/fs.h>
->  #include <linux/iomap.h>
->  #include <linux/swap.h>
->  
-> diff --git a/fs/iomap/trace.c b/fs/iomap/trace.c
-> index 728d5443daf5..da217246b1a9 100644
-> --- a/fs/iomap/trace.c
-> +++ b/fs/iomap/trace.c
-> @@ -3,7 +3,6 @@
->   * Copyright (c) 2019 Christoph Hellwig
->   */
->  #include <linux/iomap.h>
-> -#include <linux/uio.h>
->  
->  /*
->   * We include this last to have the helpers above available for the trace
-> -- 
-> 2.47.2
-> 
-> 
+>
 
