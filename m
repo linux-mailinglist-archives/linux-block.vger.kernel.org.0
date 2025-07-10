@@ -1,128 +1,130 @@
-Return-Path: <linux-block+bounces-24058-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24060-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAA07AFFFE5
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 12:59:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01E4BAFFFFF
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 13:02:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84A5D1C85469
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 11:00:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E38F1C874B2
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 11:02:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703DF2E0934;
-	Thu, 10 Jul 2025 10:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C832E11A5;
+	Thu, 10 Jul 2025 11:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F31DW1Wa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LePMbE8Q"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7CE2E11B3;
-	Thu, 10 Jul 2025 10:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC052E0934;
+	Thu, 10 Jul 2025 11:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752145190; cv=none; b=ghjzX7wnmNK6mTk2shJRbz9eZUkZfvR8J07Iv2qf/zNtldmxE62ndc/Zhte131VPyXgvZpLacao9u+dbZxSVXmRnSFH7txdqUzsBLVpER2V13VG3F4b+ne/aa3n+evDBUyDBbbrAPQZOSyxgX7GiW+8jxmAJtM+1sJWpk5mEjRI=
+	t=1752145299; cv=none; b=T5wIwkPYXyib+EQxI243AeCV8PHB2qRhV6LfzW9d6NdV8+rsz9czQG2gyZrMoKPLz0y/q1inzi7TFtbYR0AfhlsTn30hpHO32Lmy2ktkN9HUT+TPkrK4/DNYr+YJjvIRjN0unv7Z4EXXtWZKY8xOUWYD1M/qamR+dK5wwEvd5yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752145190; c=relaxed/simple;
-	bh=YddTB88+2/kA7OwDamO75o6X4XVq0EuQfkSw74+nQxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iL/8/mMMZCfOuTojWLWI2jkX4rNq2pe0n6j4AXfNK+upFRVdZ3tw6Y0dPdoru04+eTej6fMjrIBbY3yIUeyJUU11mO+mmnEXQWOrii+nWAcLcN0tgQa1/ZqX/J37DHo69bxxDsRawVv6fgHoCEBRWqSPTyIUSlXj2VmczrwzzuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F31DW1Wa; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WvqIPEfWD9uD4rQga0dMwrnfQPe1vBwSUrMxLgce8Pk=; b=F31DW1Wa5Nx5SLpLnoAlmgXvTt
-	wF+bfPNY37kl4oiz+KPTroEs3Fzg0GaJYS1pxWOkc4wQ7D0DDxiDm6vKrh7M+nSlrbof4Vcp/azDN
-	bIkeFcgl3G7/C+LN9W2mzy6vupqXsn2VnU37yqV+JaqTbRwAfZBZVJdevQI/KBx2G4PI4pL8ONeOw
-	VgPcDKTEQo3zVNTRihed1GniZOlEh7K+2UlD9y4SgIIsFGgW/UwYu7GQiXaEnHYiGLimKRcs1P9Wi
-	cwsNw+G46LRmrdpXjSLtjP7jHXd1cma1CDTFyJCDiGL+xw/RlMwFCbxekawE6JdHt7P2BhClCn34B
-	boPWe5aw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZp0F-0000000BYbt-1Zv1;
-	Thu, 10 Jul 2025 10:59:47 +0000
-Date: Thu, 10 Jul 2025 03:59:47 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org, Anuj Gupta <anuj20.g@samsung.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Kanchan Joshi <joshi.k@samsung.com>, LTP List <ltp@lists.linux.it>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Benjamin Copeland <benjamin.copeland@linaro.org>, rbm@suse.com,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Eric Biggers <ebiggers@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: fix FS_IOC_GETLBMD_CAP parsing in
- blkdev_common_ioctl()
-Message-ID: <aG-dI2wJDl-HfzFG@infradead.org>
-References: <20250709181030.236190-1-arnd@kernel.org>
- <20250710-passen-petersilie-32f6f1e9a1fc@brauner>
- <aG92abpCeyML01E1@infradead.org>
- <14865b4a-dfad-4336-9113-b70d65c9ad52@app.fastmail.com>
+	s=arc-20240116; t=1752145299; c=relaxed/simple;
+	bh=X71JMXi59Za+IKf0pTlfsK0EprH85uHIYSj1WhXz/OM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=njYmNeCMgEPQg5Wyr4pc533WA6xyKqng1MAoRr0WVidXes5V1zyNx70O4moDZIOOOKltp0xqLu/Ycg1cHQAlRp0E4rgTPSTGZ7WLai0B9xcbql2GYTPbVuqLiiPrXxZKkmuQSyJ8Sg2ri1ilElDt0JqcHqfJYfWboIE55klcNr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LePMbE8Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64753C4CEF5;
+	Thu, 10 Jul 2025 11:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752145295;
+	bh=X71JMXi59Za+IKf0pTlfsK0EprH85uHIYSj1WhXz/OM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LePMbE8Q4VnqzJJQd40yodb7dF/PTBBhs9eEMSvxIjQrm4trIcfk4sAWOdLaMB7RA
+	 Yiwzb3tZAGvZD9ILyO/NhNc4ePVGcJdk4Y+2aNDJj6JTypCauGULJ161xwZW7gx8EN
+	 TG1tN+2IXYq+JperkhtY6KPpWwGWYlCKJfgMQRPOSw8yJMc498ilc0eo73Lf4zNhjC
+	 as5/Giku0Wh8CWNs5D9rLIqhfTeSXarjg3codZcvMvQe+m1ZRwrOSO1eoL3a13K8uM
+	 Ihty9yfOsiHNG0WQ+bdMTBIeWAbh5HJsbS16gXQVU4LtFAoZb30jIinUnoEdR/zkfc
+	 TkfpEKl8D4lQw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>,  "Miguel Ojeda" <ojeda@kernel.org>,
+  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin"
+ <lossin@kernel.org>,  "Trevor Gross" <tmgross@umich.edu>,  "Danilo
+ Krummrich" <dakr@kernel.org>,  "Jens Axboe" <axboe@kernel.dk>,
+  <linux-block@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/14] rust: str: introduce `NullBorrowFormatter`
+In-Reply-To: <aG9-MAwbNbjuoR0i@google.com> (Alice Ryhl's message of "Thu, 10
+	Jul 2025 08:47:44 +0000")
+References: <20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org>
+	<20250708-rnull-up-v6-16-v2-3-ab93c0ff429b@kernel.org>
+	<kpVk60lBMPJ_b4glgS0w-BfbIjN1cMCDSKDoM0RAB4p1Bg1BNfIdA4YRuOu70BbSZjlserkd8EJDwy0vVmR7yQ==@protonmail.internalid>
+	<aG5tObucycBg9dP1@google.com> <87qzypjrdm.fsf@kernel.org>
+	<RQVk_m5qeMyxOBjTkh4S3_hAqUB-GPrIS_zYnBx8fEWS8FDk95TR9IiWfmJA5hZxswqj4h-cYUqEIjlHf6srEg==@protonmail.internalid>
+	<aG9-MAwbNbjuoR0i@google.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 10 Jul 2025 13:01:24 +0200
+Message-ID: <877c0gjomz.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14865b4a-dfad-4336-9113-b70d65c9ad52@app.fastmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 
-On Thu, Jul 10, 2025 at 12:50:44PM +0200, Arnd Bergmann wrote:
-> There are multiple methods we've used to do this in the past,
-> but I don't think any of them are great, including the version
-> that Christian is trying to push now:
-> 
-> The most common variant is to leave extra room at the end of
-> a structure and use that as in your 1fd8159e7ca4 ("xfs: export zoned
-> geometry via XFS_FSOP_GEOM") and many other examples.
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-That's using the space.  I had that discussion before in context of
-this API, and I still think that reserving a small amount of space
-that can be used for extensions is usually good practice.  Often
-we get some of that for free by 64-bit aligning anyway, and adding
-a bit more tends to also be useful.
+> On Wed, Jul 09, 2025 at 05:49:57PM +0200, Andreas Hindborg wrote:
+>> "Alice Ryhl" <aliceryhl@google.com> writes:
+>>
+>> > On Tue, Jul 08, 2025 at 09:44:58PM +0200, Andreas Hindborg wrote:
+>> >> Add `NullBorrowFormatter`, a formatter that writes a null terminated string
+>> >> to an array or slice buffer. Because this type needs to manage the trailing
+>> >> null marker, the existing formatters cannot be used to implement this type.
+>> >>
+>> >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>> >> ---
+>> >>  rust/kernel/str.rs | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> >>  1 file changed, 59 insertions(+)
+>> >>
+>> >> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+>> >> index 78b2f95eb3171..05d79cf40c201 100644
+>> >> --- a/rust/kernel/str.rs
+>> >> +++ b/rust/kernel/str.rs
+>> >> @@ -860,6 +860,65 @@ fn deref_mut(&mut self) -> &mut Self::Target {
+>> >>      }
+>> >>  }
+>> >>
+>> >> +/// A mutable reference to a byte buffer where a string can be written into.
+>> >> +///
+>> >> +/// The buffer will be automatically null terminated after the last written character.
+>> >> +///
+>> >> +/// # Invariants
+>> >> +///
+>> >> +/// `buffer` is always null terminated.
+>> >> +pub(crate) struct NullBorrowFormatter<'a> {
+>> >> +    buffer: &'a mut [u8],
+>> >> +    pos: usize,
+>> >> +}
+>> >
+>> > Do you need `pos`? Often I see this kind of code subslice `buffer`
+>> > instead.
+>>
+>> How would that work? Can I move the start index of `buffer` in some way
+>> without an unsafe block?
+>
+> Yes. I think this will work:
+>
+> let buffer = mem::take(&mut self.buffer);
+> self.buffer = &mut buffer[pos..];
+>
+> Temporarily storing an empty slice avoids lifetime issues.
 
-> This is probably the easiest and it only fails once you run out of
-> spare room and have to pick a new command number. A common mistake
-> here is to forget checking the padding in the input data against
-> zero, so old kernels just ignore whatever new userspace tried
-> to pass.
-> 
-> I think the variant from commit 1b6d968de22b ("xfs: bump
-> XFS_IOC_FSGEOMETRY to v5 structures") where the old structure
-> gets renamed and the existing macro refers to a different
-> command code is more problematic. We used to always require
-> userspace to be built against the oldest kernel headers it could run
-> on. This worked fine in the past but it appears that userspace
-> (in particular glibc) has increasingly expected to also work
-> on older kernels when building against new headers.
+Ah, that is neat.
 
-This is what I meant.  Note that the userspace in this case also keeps a
-case trying the old structure, but that does indeed require keeping the
-userspace somewhat in lockstep if you do the renaming as in this example.
-The better example would be one using a new new for the extended
-structure, or requiring a feature macro to get the larger structure.
 
-> Christian's version using the copy_struct_{from,to}_user()
-> aims to avoid most of the problems. The main downside I see
-> here is the extra complexity in the kernel. As far as I can
-> tell, this has mainly led to extra kernel bugs but has not
-> actually resulted in any structure getting seamlessly
-> extended.
+Best regards,
+Andreas Hindborg
 
-That is my (non-scientific) impression as well.
+
 
 
