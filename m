@@ -1,186 +1,169 @@
-Return-Path: <linux-block+bounces-24057-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24059-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2010AFFFBE
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 12:52:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE74AAFFFEE
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 13:00:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85EC21C45E2F
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 10:53:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFCA3760F60
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 11:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2822E041E;
-	Thu, 10 Jul 2025 10:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBBCA2E4244;
+	Thu, 10 Jul 2025 11:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="DgfJaqBE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EnmjG3mz"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JTkO1R1x"
 X-Original-To: linux-block@vger.kernel.org
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE8F2D8768;
-	Thu, 10 Jul 2025 10:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A462E0937;
+	Thu, 10 Jul 2025 11:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752144758; cv=none; b=LsfntI6LkBhk3SZzZ7NZqbFKmY2DvfS0Eg0heuXwVqYqq6+XMsLEB6oMyzloTgWWXLkEu2PoUveWeBKwP4FYOzcQzycL3qT6qhm5EMlmd59Yorsj3Qa44hT+IvKCJZgyiSt34suIQ4WAd/QytTSeY2xkYKEoFt6BgvexMsBxKBg=
+	t=1752145205; cv=none; b=l9W6mRpNVXGNht1pQymO6/vO3JYSy2E7UFPcxLF8OXMPlr5mOSISS7j0jP81G7JNYLfwcZykPK0EHQJpEFrUsKGlsRjveJ77zvBGjcL4PE1T9OjStxgK/twRQRiJkzjgMY29cNZON7O0JaBG4ex9Vu8o1SfN+b0G0gVfbScxxx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752144758; c=relaxed/simple;
-	bh=KvdGXFpbSMeTAvNejdLx45i4cdmZM1wVv1dWAgu3PIk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FiOHTz9rCPvtoeM5X1v7Fqniq9lhxjfp7rtT2t4BkF7DxmJ3pCI+4+IAg8kTvTgWnlc1FdSi9VB+xY7r6Q1ivQaW1nF7ac5KRG0SY8XEKH+TydPyOpiLuoXd+E3vq2rkFicGMYr35wkoOsLFkExCHv6iOUdGgfQ+UL36CieG4R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=DgfJaqBE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EnmjG3mz; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 163291D0022C;
-	Thu, 10 Jul 2025 06:52:34 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Jul 2025 06:52:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1752144753;
-	 x=1752231153; bh=0gfneUvxMhMOudwcTkveb+Z5iH50FPbib15VirueTyI=; b=
-	DgfJaqBEjtIWo2qVEqkhwea8XYJMPKrVGxlbUAi9PIu03TiZf7gJl3Zut9N7BKQ6
-	qtZGybcI0toS7/KR5vVAjR7KbmO/MvBHGKdcndbniM5NgWipl6bX226HPiEsXUe+
-	pXTa23UkM+VtnRuW7Ws5hJyVCKpN7RVb5KyOf/Ak0s48xr3SOIo92E6BbTwcPWCx
-	Ta0KPigiRSTDtj1UIT+yjKBbUY7VhGHTlrv6GqRH+2AwlWDv/OqEX8SVuMEGlS3e
-	5iFZO2oZJtSKndxmAOR5jhz2wi+BJVU1PgC97r8M/afkcR6dyf7t95+JtTTo0Zew
-	Uehu2qceNyMAqAIat9n5cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752144753; x=
-	1752231153; bh=0gfneUvxMhMOudwcTkveb+Z5iH50FPbib15VirueTyI=; b=E
-	nmjG3mzp5sEJUZnbnQkz+hdKdkkioCFPR6lKGFY5qWNfnFMCsaZSHHsYeu9j17Kw
-	FKhL0UCBDQRBLWSIOUFK1BpX4iB4NQJ856cXHbH+Kp9VHDFsGUEYxseeKJRE1ozf
-	3yJuHUcaLnXi009fu34OUcyuKUNs/2ClWaanfE/GffphxmP07A2d/djGxiJ/2B2A
-	RDRlYHWje9y9Z6IvSWikW66m7qc/VPiXT9vo/19F9BcmskS0Zr3MVBAtpyARG5Bm
-	oW9XkC0tF9O2HhyMkY4xPchv5Gw0Z7CPKBdegZ8R3uhDXKnU/OTHNRlZwn8ze4JB
-	L5oqs+zU+wQHN5YrwwIxg==
-X-ME-Sender: <xms:cJtvaP005eWpEdmFaymEdxcaAJGkzaz37r65MTMJAr4lHADwgcBiHw>
-    <xme:cJtvaOH5ZFfTGN5VZVK0i0mo_CvhVMsaInJ-0G8uzwtLfP1HfULVAqITYYNxp8mGS
-    CbOqv4SDcVab_RwToY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegtddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtoheprgguohgsrhhihigrnhesghhmrghilhdrtghomhdprhgtphhtthhope
-    grshhmlhdrshhilhgvnhgtvgesghhmrghilhdrtghomhdprhgtphhtthhopegvsghighhg
-    vghrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrughkpdhrtghpthhtohep
-    rghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegujhifohhngheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheprghnuggvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhg
-X-ME-Proxy: <xmx:cJtvaAuqYlQlUJeKbet9nZFqgeMjEc0kOTwx088LF1qDjgKX5pD10Q>
-    <xmx:cJtvaLIBWFqS9N-t8QW8M71CJ0Lo1iRci2SSJSr348iIK8fB5SfBSA>
-    <xmx:cJtvaGM7cjVb2gvoebFnm7vkAvq5-ugmuPKDngwpOg5yN7A7dKafaw>
-    <xmx:cJtvaLZcDAY_5q9FQvnhQByEAPz7-_IdJ_KFU4S1su_9Dql8BgBnTA>
-    <xmx:cZtvaJS1pwPhZ921JckyTbzO7XnBE8E9IQ6WPHQMs8CCnqftNbveDcwy>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BE797700069; Thu, 10 Jul 2025 06:52:32 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1752145205; c=relaxed/simple;
+	bh=4DFOJCCsvI24QKbrJDm/aFnyarYSoJI2WT5J2wb9AVM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Ku/c9axVObPaQeMXuW0X3pf13khOeMBq+kdpUSRZ4Qt/WRYUjYSR8exyE1fAF7C9UU/5Dbp0stTfWCAt6tYt2rP3VoMcpqL5bqvVR8iVslJ3UR1sHFcKXTAsVuqUnt+Y1l/BtM0dMCv3sfysrnQjq0yhsR8JECzJvHLH5rbWpZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JTkO1R1x; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <41d1245c-8a7f-4c5a-ba84-8e7e33b896b2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1752145191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtJpoUInX8ucjkyFAiUJkj/ubfAu8PdaUF9qEnnOSvU=;
+	b=JTkO1R1xjDfTuBgYIJDFm3myKaXQxfj7KA99JQhTwFwRfJfdlMfVqNb/32AJd5hVEQc+/y
+	ikDzG1CMPk+cf8GKLXp/oLnpGKCdp7YDNo5FxvVniKBGn3a8Zm+sh5S0I4Llam3Gk8JIy6
+	rXWG6A9C3kEzH2Wcxqp1WgkQkckbLIs=
+Date: Thu, 10 Jul 2025 18:59:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tfdac8457399410f6
-Date: Thu, 10 Jul 2025 12:50:44 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christoph Hellwig" <hch@infradead.org>,
- "Christian Brauner" <brauner@kernel.org>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-block@vger.kernel.org, "Anuj Gupta" <anuj20.g@samsung.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "Kanchan Joshi" <joshi.k@samsung.com>, "LTP List" <ltp@lists.linux.it>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>, rbm@suse.com,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>, "Jens Axboe" <axboe@kernel.dk>,
- "Pavel Begunkov" <asml.silence@gmail.com>,
- "Alexey Dobriyan" <adobriyan@gmail.com>,
- "Darrick J. Wong" <djwong@kernel.org>, "Eric Biggers" <ebiggers@google.com>,
- linux-kernel@vger.kernel.org
-Message-Id: <14865b4a-dfad-4336-9113-b70d65c9ad52@app.fastmail.com>
-In-Reply-To: <aG92abpCeyML01E1@infradead.org>
-References: <20250709181030.236190-1-arnd@kernel.org>
- <20250710-passen-petersilie-32f6f1e9a1fc@brauner>
- <aG92abpCeyML01E1@infradead.org>
-Subject: Re: [PATCH] block: fix FS_IOC_GETLBMD_CAP parsing in blkdev_common_ioctl()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_00/11=5D_dm-pcache_=E2=80=93_persistent?=
+ =?UTF-8?Q?-memory_cache_for_block_devices?=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+ <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com>
+ <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+In-Reply-To: <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jul 10, 2025, at 10:14, Christoph Hellwig wrote:
-> On Thu, Jul 10, 2025 at 10:00:48AM +0200, Christian Brauner wrote:
->> +       switch (_IOC_NR(cmd)) {
->> +       case _IOC_NR(FS_IOC_GETLBMD_CAP):
->> +               if (_IOC_DIR(cmd) != _IOC_DIR(FS_IOC_GETLBMD_CAP))
->> +                       break;
->> +               if (_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_GETLBMD_CAP))
->> +                       break;
->> +               if (_IOC_NR(cmd) != _IOC_NR(FS_IOC_GETLBMD_CAP))
->> +                       break;
->> +               if (_IOC_SIZE(cmd) < LBMD_SIZE_VER0)
->> +                       break;
->> +               if (_IOC_SIZE(cmd) > PAGE_SIZE)
->> +                       break;
->> +               return blk_get_meta_cap(bdev, cmd, argp);
->> +       }
+
+在 7/9/2025 5:45 PM, Dongsheng Yang 写道:
 >
-> Yikes.  I really don't get why we're trying change the way how ioctls
-> worked forever.  We can and usually do use the size based macro already.
-> And when we introduce a new size (which should happen rarely), we add a
-> new entry to the switch using the normal _IO* macros, and either
-> rename the struct, or use offsetofend in the _IO* entry for the old one.
+> 在 7/8/2025 4:16 AM, Mikulas Patocka 写道:
+>>
+>> On Mon, 7 Jul 2025, Dongsheng Yang wrote:
+>>
+>>> Hi Mikulas,
+>>>     This is V2 for dm-pcache, please take a look.
+>>>
+>>> Code:
+>>>      https://github.com/DataTravelGuide/linux tags/pcache_v2
+>>>
+>>> Changelogs
+>>>
+>>> V2 from V1:
+>>>     - introduce req_alloc() and req_init() in backing_dev.c, then we
+>>>       can do req_alloc() before holding spinlock and do req_init()
+>>>       in subtree_walk().
+>>>     - introduce pre_alloc_key and pre_alloc_req in walk_ctx, that
+>>>       means we can pre-allocate cache_key or backing_dev_request
+>>>       before subtree walking.
+>>>     - use mempool_alloc() with NOIO for the allocation of cache_key
+>>>       and backing_dev_req.
+>>>     - some coding style changes from comments of Jonathan.
+>> Hi
+>>
+>> mempool_alloc with GFP_NOIO never fails - so you don't have to check the
+>> returned value for NULL and propagate the error upwards.
 >
-> Just in XFS which I remember in detail we've done that to extend
-> structures in backwards compatible ways multiple times.
+>
+> Hi Mikulas:
+>
+>    I noticed that the implementation of mempool_alloc—it waits for 5 
+> seconds and retries when allocation fails.
+>
+> With this in mind, I propose that we handle -ENOMEM inside defer_req() 
+> using a similar mechanism. something like this commit:
+>
+>
+> https://github.com/DataTravelGuide/linux/commit/e6fc2e5012b1fe2312ed7dd02d6fbc2d038962c0 
+>
+>
+>
+> Here are two key reasons why:
+>
+> (1) If we manage -ENOMEM in defer_req(), we don’t need to modify every 
+> lower-level allocation to use mempool to avoid failures—for example,
+>
+> cache_key, backing_req, and the kmem.bvecs you mentioned. More 
+> importantly, there’s no easy way to prevent allocation failure in some 
+> places—for instance, bio_init_clone() could still return -ENOMEM.
+>
+> (2) If we use a mempool, it will block and wait indefinitely when 
+> memory is unavailable, preventing the process from exiting.
+>
+> But with defer_req(), the user can still manually stop the pcache 
+> device using dmsetup remove, releasing some memory if user want.
+>
+>
+> What do you think?
 
-There are multiple methods we've used to do this in the past,
-but I don't think any of them are great, including the version
-that Christian is trying to push now:
 
-The most common variant is to leave extra room at the end of
-a structure and use that as in your 1fd8159e7ca4 ("xfs: export zoned
-geometry via XFS_FSOP_GEOM") and many other examples.
-This is probably the easiest and it only fails once you run out of
-spare room and have to pick a new command number. A common mistake
-here is to forget checking the padding in the input data against
-zero, so old kernels just ignore whatever new userspace tried
-to pass.
+BTW, I added a test case for NOMEM scenario by using failslab:
 
-I think the variant from commit 1b6d968de22b ("xfs: bump
-XFS_IOC_FSGEOMETRY to v5 structures") where the old structure
-gets renamed and the existing macro refers to a different
-command code is more problematic. We used to always require
-userspace to be built against the oldest kernel headers it could run
-on. This worked fine in the past but it appears that userspace
-(in particular glibc) has increasingly expected to also work
-on older kernels when building against new headers.
 
-Adding a new command code along with the new structure as in
-cc68a8a5a433 ("btrfs: new ioctl TREE_SEARCH_V2") is probably
-better here: While this does require userspace to have code
-for calling either version, building an old program against
-the new header still does the right thing and works on both
-old and new kernels.
+https://github.com/DataTravelGuide/dtg-tests/blob/main/pcache.py.data/pcache_failslab.sh
 
-Christian's version using the copy_struct_{from,to}_user()
-aims to avoid most of the problems. The main downside I see
-here is the extra complexity in the kernel. As far as I can
-tell, this has mainly led to extra kernel bugs but has not
-actually resulted in any structure getting seamlessly
-extended.
-
-      Arnd
+>
+> Thanx
+>
+> Dongsheng
+>
+>>
+>> "backing_req->kmem.bvecs = kmalloc_array(n_vecs, sizeof(struct bio_vec),
+>> GFP_NOIO)" - this call may fail and you should handle the error 
+>> gracefully
+>> (i.e. don't end the bio with an error). Would it be possible to trim the
+>> request to BACKING_DEV_REQ_INLINE_BVECS vectors and retry it?
+>> Alternativelly, you can create a mempool for the largest possible n_vecs
+>> and allocate from this mempool if kmalloc_array fails.
+>>
+>> I'm sending two patches for dm-pcache - the first patch adds the include
+>> file linux/bitfield.h - it is needed in my config. The second patch 
+>> makes
+>> slab caches per-module rather than per-device, if you have them
+>> per-device, there are warnings about duplicate cache names.
+>>
+>>
+>> BTW. What kind of persistent memory do you use? (afaik Intel killed the
+>> Optane products and I don't know of any replacement)
+>>
+>> Some times ago I created a filesystem for persistent memory - see
+>> git://leontynka.twibright.com/nvfs.git - I'd be interested if you can 
+>> test
+>> it on your persistent memory implementation.
+>>
+>> Mikulas
+>>
+>
 
