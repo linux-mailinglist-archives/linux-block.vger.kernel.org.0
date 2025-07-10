@@ -1,141 +1,149 @@
-Return-Path: <linux-block+bounces-24051-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24055-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96067AFFEF4
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 12:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 66CE9AFFF60
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 12:35:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E8193BB353
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 10:14:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CCB23BB543
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jul 2025 10:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CF22DAFBB;
-	Thu, 10 Jul 2025 10:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4F628F92F;
+	Thu, 10 Jul 2025 10:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="pUO++xb0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMOLwsmt"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E80122D8378;
-	Thu, 10 Jul 2025 10:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7ADA920;
+	Thu, 10 Jul 2025 10:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752142466; cv=none; b=KNKmGVMYzdgrir8Mnv1KD8AEzv3rlSPiYHgQ5oPxmSB+wXG6HViMP0XqWIixm9IqTq1atop4RJkE4ssYMAsK203NeOneN803j73d6CmiLHxWO/BSGEXlQ2F+6KLz/pRhWDIfNj1HsdXJay6kVNaQ4jN0/wlPdnXiTJoCcdLmSoE=
+	t=1752143709; cv=none; b=lwIlg3NXmH3dmRaxH3zLliPvUHeFQRC5kBhGlzfI+tOwXnqi8Mhpc0EZDarPKM5yLmid1JWoQwqZf5zF0Oj08UqibBHX5ryCu23wFXlNDOSgin0Q07nrf1BQyM5DfxwAdBfgD0f0b/nxRdF0qhSJaHr8xN7PilZ/7w3/4y41m7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752142466; c=relaxed/simple;
-	bh=7NwIqzCgC1RdJfhixz5bD3co5fgHiYbQk2Lmr3rknQE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version; b=trplseVP+4c2XgJlZQJ4wEgJ1uayZ9ckB8A3BPAAHb7bvStB+bo3CM4Ubs8kE8jzeLPe4ZoExPPkUfQZfA/A+/+oQPVGwAzR5W8602pOapEEk0ZE6B+4/p0Xz+cJrL8LKhZmbHeT9XfFZWMyoGsr+lR3LLphjL7qLYER52uUrYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=pUO++xb0; arc=none smtp.client-ip=111.202.70.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.20])
-	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 91DAD181988061;
-	Thu, 10 Jul 2025 18:14:10 +0800 (CST)
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ02-ACTMBX-02.didichuxing.com (10.79.65.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 10 Jul 2025 18:14:14 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 10 Jul 2025 18:14:13 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e]) by
- BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e%7]) with mapi id
- 15.02.1748.010; Thu, 10 Jul 2025 18:14:13 +0800
-X-MD-Sfrom: chentaotao@didiglobal.com
-X-MD-SrcIP: 10.79.65.20
-From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
-	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
-	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
-	"frank.li@vivo.com" <frank.li@vivo.com>,
-	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Subject: [PATCH v5 5/5] ext4: support uncached buffered I/O
-Thread-Topic: [PATCH v5 5/5] ext4: support uncached buffered I/O
-Thread-Index: AQHb8YNidCjBjxjXN0upWQdveJF71w==
-Date: Thu, 10 Jul 2025 10:14:13 +0000
-Message-ID: <20250710101404.362146-6-chentaotao@didiglobal.com>
-In-Reply-To: <20250710101404.362146-1-chentaotao@didiglobal.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1752143709; c=relaxed/simple;
+	bh=opRqITO1nE780uyZ5wsnKM1ZtcFtMsOipmHlDsOxMOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=STB+2DnYfoIKGPxPexUWHQsEH8RdYg58Q0ETKCf/rc193lZX5W0INgx/Wh74MEDyTqYwN6zbnq1bnrL/+EA7cJzdf6ak+2vAc1EnI2CDRcnShmoE0e1y4ktK2GQ/P0iXvPkgWY0Ol8ifdLSDGxAopEkSnTg+C31Z5dX9XZujG4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMOLwsmt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C36E8C4CEE3;
+	Thu, 10 Jul 2025 10:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752143709;
+	bh=opRqITO1nE780uyZ5wsnKM1ZtcFtMsOipmHlDsOxMOo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HMOLwsmt7/ocnuYpLPulO1YEuV7KUtnOSv4K/3GxxHvwUKixHDhydQXA+22gw55Hl
+	 B5nj/yv06xYsWVyX6t1SjDWxXxQ0WYRrogKAb/34AkydIMV9ER8/U1hs0vBZPfghd4
+	 aesn3XXG1Y+tuwI5BpwDgSWAt6lVKXAHNUM20zBF9kmDhwkDj54mr+gvHn6eJoPS4E
+	 N2UPKId1FjDdtgScBoN5kL3EhpYTPYoIgsvN4p6ChuywRp/xuz1KHtl5NqLI5VXk/9
+	 nIj8vq3t3U4jY6iAgKsvE8HuqNJSrlFX7FlH9Q7eG1bnFzkDTSYd4u5sCbgbCnG59m
+	 7veUaqt+SxE7g==
+Message-ID: <9e85be51-a44e-42a4-bc48-74d6375c70fd@kernel.org>
+Date: Thu, 10 Jul 2025 19:32:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
-	s=2025; t=1752142451;
-	bh=7NwIqzCgC1RdJfhixz5bD3co5fgHiYbQk2Lmr3rknQE=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=pUO++xb079uJeMYeGE+v0JZeksYTppApb64G7oWIMCNd4WAin9dCgJa67poFEuvXH
-	 jNGaueB8IKTYZa6cCoO/9grensZNyjvYFeZHqt6z0wHjB66bHK2K8javVpACzqDmKe
-	 l3ZaFPY0UWUmbq8VfqXMmkYvLrKD3VzvNYAwScIQ=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 08/19] scsi: detect support for command duration limits
+To: Friedrich Weber <f.weber@proxmox.com>,
+ Mira Limbeck <m.limbeck@proxmox.com>, Niklas Cassel <nks@flawful.org>,
+ Jens Axboe <axboe@kernel.dk>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+ Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+ megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com
+Cc: Bart Van Assche <bvanassche@acm.org>, Christoph Hellwig <hch@lst.de>,
+ Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
+ Niklas Cassel <niklas.cassel@wdc.com>
+References: <20230511011356.227789-1-nks@flawful.org>
+ <20230511011356.227789-9-nks@flawful.org>
+ <3dee186c-285e-4c1c-b879-6445eb2f3edf@proxmox.com>
+ <6fb8499a-b5bc-4d41-bf37-32ebdea43e9a@kernel.org>
+ <2e7d6a7e-4a82-4da5-ab39-267a7400ca49@proxmox.com>
+ <b1d9e928-a7f3-4555-9c0a-5b83ba87a698@kernel.org>
+ <a927b51b-1b34-4d4f-9447-d8c559127707@proxmox.com>
+ <54e0a717-e9fc-4534-bc27-8bc1ee745048@kernel.org>
+ <72bf0fd7-f646-46f7-a2aa-ef815dbfa4e2@proxmox.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <72bf0fd7-f646-46f7-a2aa-ef815dbfa4e2@proxmox.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClNldCBGT1Bf
-RE9OVENBQ0hFIGluIGV4dDRfZmlsZV9vcGVyYXRpb25zIHRvIGRlY2xhcmUgc3VwcG9ydCBmb3IN
-CnVuY2FjaGVkIGJ1ZmZlcmVkIEkvTy4NCg0KVG8gaGFuZGxlIHRoaXMgZmxhZywgdXBkYXRlIGV4
-dDRfd3JpdGVfYmVnaW4oKSBhbmQgZXh0NF9kYV93cml0ZV9iZWdpbigpDQp0byB1c2Ugd3JpdGVf
-YmVnaW5fZ2V0X2ZvbGlvKCksIHdoaWNoIGVuY2Fwc3VsYXRlcyBGR1BfRE9OVENBQ0hFIGxvZ2lj
-DQpiYXNlZCBvbiBpb2NiLT5raV9mbGFncy4NCg0KUGFydCBvZiBhIHNlcmllcyByZWZhY3Rvcmlu
-ZyBhZGRyZXNzX3NwYWNlX29wZXJhdGlvbnMgd3JpdGVfYmVnaW4gYW5kDQp3cml0ZV9lbmQgY2Fs
-bGJhY2tzIHRvIHVzZSBzdHJ1Y3Qga2lvY2IgZm9yIHBhc3Npbmcgd3JpdGUgY29udGV4dCBhbmQN
-CmZsYWdzLg0KDQpTaWduZWQtb2ZmLWJ5OiBUYW90YW8gQ2hlbiA8Y2hlbnRhb3Rhb0BkaWRpZ2xv
-YmFsLmNvbT4NCi0tLQ0KIGZzL2V4dDQvZmlsZS5jICB8ICAzICsrLQ0KIGZzL2V4dDQvaW5vZGUu
-YyB8IDEyICsrKy0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAx
-MCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2ZzL2V4dDQvZmlsZS5jIGIvZnMvZXh0NC9m
-aWxlLmMNCmluZGV4IDIxZGY4MTM0NzE0Ny4uMjc0YjQxYTQ3NmM4IDEwMDY0NA0KLS0tIGEvZnMv
-ZXh0NC9maWxlLmMNCisrKyBiL2ZzL2V4dDQvZmlsZS5jDQpAQCAtOTc3LDcgKzk3Nyw4IEBAIGNv
-bnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMgZXh0NF9maWxlX29wZXJhdGlvbnMgPSB7DQogCS5z
-cGxpY2Vfd3JpdGUJPSBpdGVyX2ZpbGVfc3BsaWNlX3dyaXRlLA0KIAkuZmFsbG9jYXRlCT0gZXh0
-NF9mYWxsb2NhdGUsDQogCS5mb3BfZmxhZ3MJPSBGT1BfTU1BUF9TWU5DIHwgRk9QX0JVRkZFUl9S
-QVNZTkMgfA0KLQkJCSAgRk9QX0RJT19QQVJBTExFTF9XUklURSwNCisJCQkgIEZPUF9ESU9fUEFS
-QUxMRUxfV1JJVEUgfA0KKwkJCSAgRk9QX0RPTlRDQUNIRSwNCiB9Ow0KIA0KIGNvbnN0IHN0cnVj
-dCBpbm9kZV9vcGVyYXRpb25zIGV4dDRfZmlsZV9pbm9kZV9vcGVyYXRpb25zID0gew0KZGlmZiAt
-LWdpdCBhL2ZzL2V4dDQvaW5vZGUuYyBiL2ZzL2V4dDQvaW5vZGUuYw0KaW5kZXggOWExNmVmZDA3
-MmJiLi41YzcwMjQwNTFmMWUgMTAwNjQ0DQotLS0gYS9mcy9leHQ0L2lub2RlLmMNCisrKyBiL2Zz
-L2V4dDQvaW5vZGUuYw0KQEAgLTEyNjQsNyArMTI2NCw2IEBAIHN0YXRpYyBpbnQgZXh0NF93cml0
-ZV9iZWdpbihjb25zdCBzdHJ1Y3Qga2lvY2IgKmlvY2IsDQogCXN0cnVjdCBmb2xpbyAqZm9saW87
-DQogCXBnb2ZmX3QgaW5kZXg7DQogCXVuc2lnbmVkIGZyb20sIHRvOw0KLQlmZ2ZfdCBmZ3AgPSBG
-R1BfV1JJVEVCRUdJTjsNCiANCiAJcmV0ID0gZXh0NF9lbWVyZ2VuY3lfc3RhdGUoaW5vZGUtPmlf
-c2IpOw0KIAlpZiAodW5saWtlbHkocmV0KSkNCkBAIC0xMjg4LDE2ICsxMjg3LDE0IEBAIHN0YXRp
-YyBpbnQgZXh0NF93cml0ZV9iZWdpbihjb25zdCBzdHJ1Y3Qga2lvY2IgKmlvY2IsDQogCX0NCiAN
-CiAJLyoNCi0JICogX19maWxlbWFwX2dldF9mb2xpbygpIGNhbiB0YWtlIGEgbG9uZyB0aW1lIGlm
-IHRoZQ0KKwkgKiB3cml0ZV9iZWdpbl9nZXRfZm9saW8oKSBjYW4gdGFrZSBhIGxvbmcgdGltZSBp
-ZiB0aGUNCiAJICogc3lzdGVtIGlzIHRocmFzaGluZyBkdWUgdG8gbWVtb3J5IHByZXNzdXJlLCBv
-ciBpZiB0aGUgZm9saW8NCiAJICogaXMgYmVpbmcgd3JpdHRlbiBiYWNrLiAgU28gZ3JhYiBpdCBm
-aXJzdCBiZWZvcmUgd2Ugc3RhcnQNCiAJICogdGhlIHRyYW5zYWN0aW9uIGhhbmRsZS4gIFRoaXMg
-YWxzbyBhbGxvd3MgdXMgdG8gYWxsb2NhdGUNCiAJICogdGhlIGZvbGlvIChpZiBuZWVkZWQpIHdp
-dGhvdXQgdXNpbmcgR0ZQX05PRlMuDQogCSAqLw0KIHJldHJ5X2dyYWI6DQotCWZncCB8PSBmZ2Zf
-c2V0X29yZGVyKGxlbik7DQotCWZvbGlvID0gX19maWxlbWFwX2dldF9mb2xpbyhtYXBwaW5nLCBp
-bmRleCwgZmdwLA0KLQkJCQkgICAgbWFwcGluZ19nZnBfbWFzayhtYXBwaW5nKSk7DQorCWZvbGlv
-ID0gd3JpdGVfYmVnaW5fZ2V0X2ZvbGlvKGlvY2IsIG1hcHBpbmcsIGluZGV4LCBsZW4pOw0KIAlp
-ZiAoSVNfRVJSKGZvbGlvKSkNCiAJCXJldHVybiBQVFJfRVJSKGZvbGlvKTsNCiANCkBAIC0zMDQ2
-LDcgKzMwNDMsNiBAQCBzdGF0aWMgaW50IGV4dDRfZGFfd3JpdGVfYmVnaW4oY29uc3Qgc3RydWN0
-IGtpb2NiICppb2NiLA0KIAlzdHJ1Y3QgZm9saW8gKmZvbGlvOw0KIAlwZ29mZl90IGluZGV4Ow0K
-IAlzdHJ1Y3QgaW5vZGUgKmlub2RlID0gbWFwcGluZy0+aG9zdDsNCi0JZmdmX3QgZmdwID0gRkdQ
-X1dSSVRFQkVHSU47DQogDQogCXJldCA9IGV4dDRfZW1lcmdlbmN5X3N0YXRlKGlub2RlLT5pX3Ni
-KTsNCiAJaWYgKHVubGlrZWx5KHJldCkpDQpAQCAtMzA3Miw5ICszMDY4LDcgQEAgc3RhdGljIGlu
-dCBleHQ0X2RhX3dyaXRlX2JlZ2luKGNvbnN0IHN0cnVjdCBraW9jYiAqaW9jYiwNCiAJfQ0KIA0K
-IHJldHJ5Og0KLQlmZ3AgfD0gZmdmX3NldF9vcmRlcihsZW4pOw0KLQlmb2xpbyA9IF9fZmlsZW1h
-cF9nZXRfZm9saW8obWFwcGluZywgaW5kZXgsIGZncCwNCi0JCQkJICAgIG1hcHBpbmdfZ2ZwX21h
-c2sobWFwcGluZykpOw0KKwlmb2xpbyA9IHdyaXRlX2JlZ2luX2dldF9mb2xpbyhpb2NiLCBtYXBw
-aW5nLCBpbmRleCwgbGVuKTsNCiAJaWYgKElTX0VSUihmb2xpbykpDQogCQlyZXR1cm4gUFRSX0VS
-Uihmb2xpbyk7DQogDQotLSANCjIuMzQuMQ0K
+On 7/10/25 5:41 PM, Friedrich Weber wrote:
+> Hi Damien,
+> 
+> On 09/06/2025 14:24, Damien Le Moal wrote:
+>> On 6/3/25 20:28, Friedrich Weber wrote:
+>>>>> They provided controller information via `sas3ircu` and `storcli`:
+>>>>>
+>>>>> sas3ircu:
+>>>>>
+>>>>>   Controller type                         : SAS3008
+>>>>>   BIOS version                            : 8.37.00.00
+>>>>>   Firmware version                        : 16.00.16.00
+>>>>
+>>>> Is this the latest available FW for this HBA ? (see below)
+>>>
+>>> It seems 16.00.16.00 is even newer than the latest version available on
+>>> the Broadcom website, which is a bit strange -- I only found [1] there
+>>> which has an older 16.00.14.00 (3008_FW_PH16.00.14.00.rar).
+>>
+>> So this is an old/now EOL 9300 series HBA, right ? Or is this a 3008 controller
+>> chip as part of the server motherboard (e.g. a supermicro HBA ?)
+>> Looking at the Broadcom support page for legacy products, the latest FW version
+>> seems to be 16.00.10.00.
+> 
+> According to the user it is not part of a server motherboard but a
+> "proper" PCIe Broadcom SAS 9300-8i HBA.
+
+This is an old HBA EOL HBA that has no FW update. So we will need to quirk it
+to avoid the CDL probing with MAINTENANCE IN command as that seems to be the issue.
+
+> Yeah, I agree checking the latest firmware makes sense for these,
+> unfortunately they are currently in use so the user cannot test with them.
+> 
+> But we might be able to run some tests with a Supermicro
+> AOC-S3816L-L16iT (so Broadcom SAS3816?) soon where the hotplug issue
+> apparently also happens. We'll make sure to update to the latest
+> firmware and I'll do my best to collect relevant logs. If you can think
+> of anything specific we should collect, feel free to let me know.
+
+See above. With such old HBA, there is no FW update.
+
+I think we can safely ignore CDL support for the mpt3sas driver since the HBAs
+controlled with this driver (9300, 9400 and 9500) do not support CDL at all.
+
+Will try to cook something.
+
+> Thanks for looking into this, it is definitely a strange problem.
+> 
+> Considering these drives don't support CDL anyway: Do you think it would
+> be possible to provide an "escape hatch" to disable only the CDL checks
+> (a module parameter?) so hotplug can work for the user again for their
+> device? If I see correctly, disabling just the CDL checks is not
+> possible (without recompiling the kernel) -- scsi_mod.dev_flags can be
+> used to disable RSOC, but I guess that has other unintended consequences
+> too, so a more "targeted" escape hatch would be nice.
+
+No need to quirk the drives since the HBAs themselves do not support CDL at
+all. Let me see how to do it. Basically, we need to prevent the call to
+scsi_cdl_check() if the scsi host is from mpt3sas...
+
+
+-- 
+Damien Le Moal
+Western Digital Research
 
