@@ -1,103 +1,162 @@
-Return-Path: <linux-block+bounces-24149-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24152-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADA77B01A79
-	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 13:23:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61E54B01AFB
+	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 13:46:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B23F21C4792A
-	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 11:23:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E554E5664D8
+	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 11:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F7A5288C3D;
-	Fri, 11 Jul 2025 11:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4161A2D9797;
+	Fri, 11 Jul 2025 11:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dPPDtMlS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uz/lqMRr"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BCC19AD8C
-	for <linux-block@vger.kernel.org>; Fri, 11 Jul 2025 11:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BD02D46A6;
+	Fri, 11 Jul 2025 11:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752232980; cv=none; b=Ts2a83aOMIbMIraZEWmGV+cRWHi9UH+iXMfj4wD7JE7qKL8uJNUgEW3waSQoydkl6Zck9+rQ1za4w1By3evj+iY/RxsmzfeH6FgUiLpqlj07SAjUCgWY9OiTMH0P2EgZQMhGxvB4PByNaOyBfS/0MXFOk5qhiHvCzF2XHH4qWy8=
+	t=1752234218; cv=none; b=ciD0VoW1pxXjAGPp+4k9hB5VLLSAFcJwDRUhN1ulkSw25fBYAqWnMQvgCYxckAe2zcv6akjFfQI/FLjPYXfsIc2OdDIdEVH7B0pycqfkROxd3Rq677UEyp6hKR4i682GqP+92Lbhx1VBQW05noZN8fje/pwSl12XsRdXko23Xa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752232980; c=relaxed/simple;
-	bh=pmXhEueMNzAmHMwK12n9FqH3biM5NMxUPCzFTJngV/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mb4WjwrxxGrmgZZOj0T5VC3synQQnmrMv46lsvRWLSHZEQ15qXlSgE1iNnVTZHwdcov0Zsy6FL+OtAwa8cI7YiaV+I/HYfXGkwMsDYIJAh7+5VgjXLhP9KBY1jL9mEx1ncy+fM08KBIKbmCAZARmvOsKkx4zGxVUvAtmZUYqGoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dPPDtMlS; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=kMw2Cuaxlh63EApH3U8Zzz8V0/T8t6iiXh5U9SCMTV8=; b=dPPDtMlSh5EqVajpXacOLoNTjV
-	I7tSbj6jbKVE4jcKv9BK2qHvuyX4cn3MbdIfbA6QrGtpr1W749P4iWc+3VXIQOBz/fJX9rv1Ve5N4
-	JoaF2SedFuiIMlJW1dzHAgMNO5YGOJPwMvKqd0NMklDXNlGFyZREGbZPX81xugyI/QZOhlYkKWfls
-	I1gKVVijHJxQesPG/MARoLNhpR7gupNZtW2EK0cv5itXDZY0S40jLTz05Vi4jVACLFgFIV7qeYO6R
-	Go8qL12Cn5fRs/SSmktNh/5gCU7TiblPWuH459zjgecLd+v7QqXJ1rUY4su/oHWMKrdLC67AthFgM
-	REvLHUsw==;
-Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uaBqA-0000000Eao9-431W;
-	Fri, 11 Jul 2025 11:22:55 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: axboe@kernel.dk
-Cc: kbusch@kernel.org,
-	sagi@grimberg.me,
-	linux-nvme@lists.infradead.org,
-	linux-block@vger.kernel.org,
-	Klara Modin <klarasmodin@gmail.com>
-Subject: [PATCH] nvme-pci: don't allocate dma_vec for IOVA mappings
-Date: Fri, 11 Jul 2025 13:22:50 +0200
-Message-ID: <20250711112250.633269-1-hch@lst.de>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1752234218; c=relaxed/simple;
+	bh=AYWYuPxO7KkBuuMRitEmKq+GxfKULamC7whXKRkZjjs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UENt1FXvqN2aaTw8S9AdBmDlZxGAaZlVrjTAM58BtLhn/HU+w9aixSucJl7BREzEq2qSRSGDko+Nz6ns23avK2a10wR0POKYYrQK7FN5vBlcCowRxWKnjvByurUbV9FriqX+AK6N3WiYdNd1jmrEpTR0MBszMYhVCVUWLIRKvGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uz/lqMRr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF33C4CEF4;
+	Fri, 11 Jul 2025 11:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752234217;
+	bh=AYWYuPxO7KkBuuMRitEmKq+GxfKULamC7whXKRkZjjs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Uz/lqMRr0tE2mwFqBzOkD9mc0jQEu0rxpvKyiONs0QyE2s0lBLvgno0d/lVTezMD3
+	 1v8W5VRdSudX7qW58yn/L/iG36/Zo/HaSAbz1Z0FH1jChR1A92lHp/6F28AnyLgt7e
+	 PCDWlcMSf06mKkIiMDBszdUUcOtdHeiPyIYTJ1cFv1RaxjVO9Ygv3S98ez4gK05uEG
+	 52QBYz8f2AmJT2T+NDENE/dUHQ/e39ti2DzuW1e77YVDwsIO6uqJkVSahEEbEldLwZ
+	 oMNSU9V4ylqrp0sGrq1TZ0EYyZnduUeH0HTTKS+63gATIhElE+077sZqJZLDYdxOko
+	 pcf3cvxunVrBg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Subject: [PATCH v3 00/16] rnull: add configfs, remote completion to rnull
+Date: Fri, 11 Jul 2025 13:43:01 +0200
+Message-Id: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMX4cGgC/3WMQQ6CMBAAv0J6dk1boBRP/sN4oLiFRlLIVhoN4
+ e8WLsYYjzPJzMICksPATtnCCKMLbvQJ8kPG2r7xHYK7JWaSy5IroYD8PAwwTxAVJDRFWQmU2iI
+ iS9FEaN1zH16uiXsXHiO99n8Um/27igI4NIVQ2mislJHnO5LH4ThSx7ZXlJ++4vqnl1tv6rzl1
+ hayNl/9uq5voQLIYe0AAAA=
+X-Change-ID: 20250616-rnull-up-v6-16-b4571e28feee
+To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3443; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=AYWYuPxO7KkBuuMRitEmKq+GxfKULamC7whXKRkZjjs=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBocPjHP5ZnY61f3XZXqAPVIRxWptdUKlYpsvJoi
+ SWyQtqAhbCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaHD4xwAKCRDhuBo+eShj
+ d1CWD/4j4glz2Sc6XkUenGPfXgQjlHIrjFLYiRzcTHRYvmrZcx1CP7FA77GlJTW/dIsaZY0OVCg
+ JQ4MA6ODg39orRN+W2NZ1cuAn1nbmfyxKTFcyRKnz4JD5ZL+z2xmxaLGkao/4TXRLLFHl1HnR/A
+ PZdSZEJ0BTLuHSaLXmaSGw5ImjHzFWGNcuYIKrq+Ty8HAO1DJkHHy8ZO0455ofM1ZIF0jzoY2Yq
+ Ruyb6O7YVN0hlhQMOg92I48oBDJHgsCwLEbuMPdCnVp0YZurjbUr4FJOLFs5EXPHU/oYPlPd0mP
+ DhhqfVH49N8aZ0nL3fIem1H1naImXPgWXPlspVAQ5SrLvJjqfCvHR9WVZCb4rT44zfssOg62J0j
+ yINp7inr6Vzh7fzAFof650DLiYR7I8chacMwWJDsi4zJZk3l1gcfJq9WwqqiAbSLf3qCt4v9Ldr
+ Uab/IxZqv/SsPW6365cEbYUwsA/qcbR9Rx6+yQsrYwp8TJrhE1VA0yokoDNo9PEQMw1KiSYqNzO
+ N+8cz7E9bEs0xbC9Wy8R5GA5tKfSAMEG10xjoky0ux1Dipr4HwxmJ4eZB07F7/zg/KMnLn3dS3O
+ C2MLoJm7X4BiT2RtIjavKR0oTmtHla5GB9CRtMS5tnERCtoJMJX6t45QgyHP9AEYbsfSMTyEfx5
+ 4sG0TG6Az07nO4w==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Not only do IOVA mappings no need the separate dma_vec tracking, it
-also won't free it and thus leak the allocations.
+This series adds configuration via configfs and remote completion to
+the rnull driver. The series also includes a set of changes to the
+rust block device driver API: a few cleanup patches, and a few features
+supporting the rnull changes.
 
-Fixes: 10f50d4127e2 ("nvme-pci: fix dma unmapping when using PRPs and not using the IOVA mapping")
-Reported-by: Klara Modin <klarasmodin@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Klara Modin <klarasmodin@gmail.com>
+The series removes the raw buffer formatting logic from `kernel::block`
+and improves the logic available in `kernel::string` to support the same
+use as the removed logic.
+
+This series is a smaller subset of the patches available in the
+downstream rnull tree. I hope to minimize the delta between upstream
+and downstream over the next few kernel releases.
+
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- drivers/nvme/host/pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v3:
+- Rename `NullBorrowFormatter` as `NullTerminatedFormatter`.
+- Remove `pos` from `NullBorrowFormatter`.
+- Call into `Self::new` in `NullBorrowFormatter::from_array`.
+- Use `Option` return type in `NullBorrowFormatter::from_array`
+- Use `Option` return type in `NullBorrowFormatter::new`.
+- Remove `BorrowFormatter` and update `Formatter` with a generic lifetime.
+- Split visibility change of `str::Formatter` into separate patch.
+- Link to v2: https://lore.kernel.org/r/20250708-rnull-up-v6-16-v2-0-ab93c0ff429b@kernel.org
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 6af184f2b73b..3290fd922efb 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -745,7 +745,7 @@ static bool nvme_pci_prp_iter_next(struct request *req, struct device *dma_dev,
- 		return true;
- 	if (!blk_rq_dma_map_iter_next(req, dma_dev, &iod->dma_state, iter))
- 		return false;
--	if (dma_need_unmap(dma_dev)) {
-+	if (!dma_use_iova(&iod->dma_state) && dma_need_unmap(dma_dev)) {
- 		iod->dma_vecs[iod->nr_dma_vecs].addr = iter->addr;
- 		iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
- 		iod->nr_dma_vecs++;
-@@ -763,7 +763,7 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 	unsigned int prp_len, i;
- 	__le64 *prp_list;
- 
--	if (dma_need_unmap(nvmeq->dev->dev)) {
-+	if (!dma_use_iova(&iod->dma_state) && dma_need_unmap(nvmeq->dev->dev)) {
- 		iod->dma_vecs = mempool_alloc(nvmeq->dev->dmavec_mempool,
- 				GFP_ATOMIC);
- 		if (!iod->dma_vecs)
+Changes in v2:
+- Rework formatter logic. Add two new formatters that write to slices,
+  one of which adds a trailing null byte.
+- Reorder and split patches so that changes are more clear.
+- Fix a typo in soft-irq patch summary.
+- Link to v1: https://lore.kernel.org/r/20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org
+
+---
+Andreas Hindborg (16):
+      rust: str: normalize imports in `str.rs`
+      rust: str: allow `str::Formatter` to format into `&mut [u8]`.
+      rust: str: expose `str::Formatter::new` publicly.
+      rust: str: make `RawFormatter::bytes_written` public.
+      rust: str: introduce `NullTerminatedFormatter`
+      rust: block: normalize imports for `gen_disk.rs`
+      rust: block: use `NullTerminatedFormatter`
+      rust: block: remove `RawWriter`
+      rust: block: remove trait bound from `mq::Request` definition
+      rust: block: add block related constants
+      rnull: move driver to separate directory
+      rnull: enable configuration via `configfs`
+      rust: block: add `GenDisk` private data support
+      rust: block: mq: fix spelling in a safety comment
+      rust: block: add remote completion to `Request`
+      rnull: add soft-irq completion support
+
+ MAINTAINERS                        |   2 +-
+ drivers/block/Kconfig              |  10 +-
+ drivers/block/Makefile             |   4 +-
+ drivers/block/rnull.rs             |  80 -----------
+ drivers/block/rnull/Kconfig        |  13 ++
+ drivers/block/rnull/Makefile       |   3 +
+ drivers/block/rnull/configfs.rs    | 277 +++++++++++++++++++++++++++++++++++++
+ drivers/block/rnull/rnull.rs       | 105 ++++++++++++++
+ rust/kernel/block.rs               |  12 ++
+ rust/kernel/block/mq.rs            |  14 +-
+ rust/kernel/block/mq/gen_disk.rs   |  53 +++++--
+ rust/kernel/block/mq/operations.rs |  65 +++++++--
+ rust/kernel/block/mq/raw_writer.rs |  55 --------
+ rust/kernel/block/mq/request.rs    |  21 ++-
+ rust/kernel/str.rs                 |  78 +++++++++--
+ 15 files changed, 603 insertions(+), 189 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250616-rnull-up-v6-16-b4571e28feee
+
+Best regards,
 -- 
-2.47.2
+Andreas Hindborg <a.hindborg@kernel.org>
+
 
 
