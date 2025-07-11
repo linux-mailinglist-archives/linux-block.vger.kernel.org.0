@@ -1,49 +1,50 @@
-Return-Path: <linux-block+bounces-24162-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24157-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E0D4B01B15
-	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 13:49:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B017B01B02
+	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 13:47:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7F87640D09
-	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 11:48:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA6BD7B9B50
+	for <lists+linux-block@lfdr.de>; Fri, 11 Jul 2025 11:46:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 229C72BE046;
-	Fri, 11 Jul 2025 11:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F9FC28C2D2;
+	Fri, 11 Jul 2025 11:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sccE1Bt2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPx1VSrL"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97E5291142;
-	Fri, 11 Jul 2025 11:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F4328C035;
+	Fri, 11 Jul 2025 11:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752234255; cv=none; b=EJ/4uLZY0lyjUUEjDy4E29nGpUgyE7mpYsaXSZL+BboKR6Fv/eymjbmTgQB9ByqrPm79mSPjE5WU4MIOCjp66FCVuA1k797UT33bEhchB9Cq5LGOH+FHwx+XPkZPgCkSCRWzIZbl/6Nwh/z00IY4J01vytAizc2CRGKl/WEFx7o=
+	t=1752234237; cv=none; b=DGyqijRAuYc1fICBBXLaN1tqrZJZsZlIUU4BNcTsF+76OVts96kuwLBTHmO1QO4OxczWUMc6d1NJqi+rEdFeLNBf4UaeuvoVGZA24LgAKcxuhioDGVOKBTPbMvETTShB0tJo2/0ZvKqaQ7/v2Pwnmz0QN5Byowt2lWb09DAAOQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752234255; c=relaxed/simple;
-	bh=1AU4xJI0E5Q+J1Ud3T+hTZQungA0edH5V6tp+Lkf0Fs=;
+	s=arc-20240116; t=1752234237; c=relaxed/simple;
+	bh=0EQMqwW4o3TiIuFA9NjfmF2wt3+kw0d4Rv4MVtzTMgM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FYj35rkJnsG6x48uyJemIFjoKmbLuuvCGum6gXBAMHu7d0wHbAg3CqRh0S45Qv2p0wng+cEhRS8arYYvTGVFAx5ILjCeTr666gdYJBPcB1egOeOZq9lObkJUy32jHOn97KP3kkK7J/yC8dLsi84arQirrnUn0LXUJDkdSnLvSRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sccE1Bt2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E2FC4CEED;
-	Fri, 11 Jul 2025 11:44:11 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Kvau66TlCfOwYDQQUoBKM5gGpnAm36Y+JMMvyeZ8fBC4anpVlDMMaz3n/qFq3Ezo6VR/cdjeJCgPwBuw/DpKaMadF0hE7hmlbuLNPtHlMa7s/Xl0fMwc9o7p6WNzJZ0uejTzwwdn35HDVrkASM9MeUw9a/rUkZksEvra+VMySpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPx1VSrL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A94C4CEED;
+	Fri, 11 Jul 2025 11:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752234254;
-	bh=1AU4xJI0E5Q+J1Ud3T+hTZQungA0edH5V6tp+Lkf0Fs=;
+	s=k20201202; t=1752234236;
+	bh=0EQMqwW4o3TiIuFA9NjfmF2wt3+kw0d4Rv4MVtzTMgM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=sccE1Bt2EMVQb0TBPpUYIMCtxCz4Tikua/en4ARh3pSK0mqIDbiXp9pqdxgncVGZE
-	 SEiHiBd113HukeacYBUj67yz2RQgsvDeV/VH8Zc/329m4PBhd/cdHPqbv79H09zXbF
-	 g6P8NMAkUZB/O0JNI1Td34PEkNYM2NYV1RazGHvnc7OX5rH1vUbD5xKbiUZISEbaP2
-	 Cf5q/lgXLrRxh/0vhoLedC1VgoJy2kRipocxAijJ//P62TE4LCIBoBMk7oP4TDUsgP
-	 A+2UC7t2xZ1V7r4ul3g2WbBrY2Au5jUQb1I9daKYHrDRVaf+VJ+Fm2As8QbbbJernV
-	 ob4GpVK6RMuFA==
+	b=uPx1VSrL1qUSMH2yx4i7iPhRQwN1dNmOKWFBkiOBiZWerIakMcdnhE+SI51tj5V4W
+	 vcyq6W0jjrqC9/zDjhGmm2Uwxe2SQacFzPkPMA798y4jsbbdvj0nDB+WpfEk9m0b9M
+	 MRtGpfcVHh1W+VxnhJd8RkOeAqgF8CFLs2/q0QzdYW+sjpZvtZgEbg//NOr2T9NWND
+	 k3NP2ksNqk5tRGLsnOCjhG6Q542JRbj0WHCS5w3Be1wLa7RgXbSFdVIUxyP5Ww9bH1
+	 dB/NgMbtwIiEYhfA9ea2mV75pVbYxADbOFynH9Mdp1RbXaFoPzsZEqlGytT3G/o7CS
+	 JsOPd9dwdbUDQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 11 Jul 2025 13:43:09 +0200
-Subject: [PATCH v3 08/16] rust: block: remove `RawWriter`
+Date: Fri, 11 Jul 2025 13:43:10 +0200
+Subject: [PATCH v3 09/16] rust: block: remove trait bound from
+ `mq::Request` definition
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250711-rnull-up-v6-16-v3-8-3a262b4e2921@kernel.org>
+Message-Id: <20250711-rnull-up-v6-16-v3-9-3a262b4e2921@kernel.org>
 References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
 In-Reply-To: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,105 +65,45 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2399; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=1AU4xJI0E5Q+J1Ud3T+hTZQungA0edH5V6tp+Lkf0Fs=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBocPjRreHfGsCeoO20oQo5iIL6Q25Uy0r7oK7PS
- v/GWIRDww6JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaHD40QAKCRDhuBo+eShj
- d9BxEADGYPRAd2cccXOYG4GjLum++ufegiZ9XCBIEdyYdDdNlbx6LKC1cR17scivwnsgK4+cfqW
- rprNg3WwCJz6YaVmuClCnc9gdYL+EC9/bmhmer4m4FbV28Q7v+r1W1UPI0g/U0YXOhE49bZN+YW
- 2hguD9fnyW0WefmVMXKjQDfO0EppjV+IHcWTtbMisiAqJpm3xDs5i7qwI4r4UyU7eSgc/jdgOoR
- 7OeA+jZ9amrJLqdpoLqUYG28gbfGSEJZ3QLlStwm/htqvW1MacjDg/lnbxdad+V9HCRo6PIyX5Z
- bBR50ZP11AHAt9SlXAoa9S1xxl07m1ry8b45AyoC7ZnWnZfANPlpsoF5i8y0k8q8s3pRfkcqgdo
- lbDIIRUeLggHhIaeneS0izbesVoOcWmN1o39j/UGOJOOCc1aFobQj1HdyyD2eECPzhuk3V2EO8G
- 8o2gvGSR6fJgA9MQy36G1JmjWJjpV8COenrI04kc0upJrS8Ocy2Rx5iLwYsDd68HazaEITspufR
- 9Y5zGnQCo1mA6uDRihyL528gtIjivSewICLG0YEAiOsgbm6um49hr6xZMNwAF+mg/HUBUFAnk/6
- Areih00Vb+N9GAZ9/IiWNnaqYOvnBWE4zIrw9orDGj9HnlV0ZHI+ulQyup/ORGe6sDhrvnabQYP
- ipCPe9s9mMDXzxQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=903; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=0EQMqwW4o3TiIuFA9NjfmF2wt3+kw0d4Rv4MVtzTMgM=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBocPjSkIuSjcnlZY9GDxYXn2lSIO/Xb/XtfY6ig
+ WyxQC2KJ22JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaHD40gAKCRDhuBo+eShj
+ dyxRD/0Rjacli0N+bgNxxLgMjy2/7QOV6TIx+3QHQJ8hBtihGeZDtGxUmoo5Lad8rK04RPTE2Pb
+ DlQru3haN/a4zWB7VAbr8xtr2e/vdEtcUPqqmziul1AWUF7eS4+DgUNttzdwi/sZoq4Sd+A3geM
+ HhquptK+5o4x5AK8ImD8Ins8PKbjfneKLIDX4SU8ypdByk8D5bcK6IJx0Xef9pPUBwnHGJOYSs/
+ rSl/qshZlJIxz9RWfYN9xaIKQK+PMJEKUUyrvSTQXCOXEGvUO04x2/WPobSbCD6sRjcSn9cPQLp
+ 4Uk+KT36C0lewZ/JWKJ1kN/YqE5TT2b+yE7pxlFyyck0q4gH+lLmzpqBkZmSYdH/BK8gW7XdxTN
+ rTL/sB+CpE9tv21xRHUruQymO31JJia01UjyJjwOq1SpDsYfCLurHkLPng/SBzImX1QoeNkcTD8
+ Vso/y/OiHNCReQ+j9yKx54hO7u0yeFw7C18QogQQDMZPnq0nEt57sTS7svJoTWkRaLw2TQ3o3HI
+ 8dhFtQwJKCtjdcUluF+DNEZZzI5UIOOmLhzmzRuYDXLWDOpP9rrzkbnPwz7aysfwaCL6AuJFVoj
+ fK/+ZLZau2lRphmTkqizq7VHpBsSXUO3gIKKZ4YNr2YxlxWDZcCLrvFM/EmJdxMLFwDHMfa/M6A
+ X4Sxy0IZpIr1bwQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-`RawWriter` is now dead code, so remove it.
+Remove the trait bound `T:Operations` from `mq::Request`. The bound is not
+required, so remove it to reduce complexity.
 
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/block/mq.rs            |  1 -
- rust/kernel/block/mq/raw_writer.rs | 56 --------------------------------------
- 2 files changed, 57 deletions(-)
+ rust/kernel/block/mq/request.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
-index fb0f393c1cea..faa3ccb5a49a 100644
---- a/rust/kernel/block/mq.rs
-+++ b/rust/kernel/block/mq.rs
-@@ -89,7 +89,6 @@
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+index 4a5b7ec914ef..2d14a6261a31 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -53,7 +53,7 @@
+ /// [`struct request`]: srctree/include/linux/blk-mq.h
+ ///
+ #[repr(transparent)]
+-pub struct Request<T: Operations>(Opaque<bindings::request>, PhantomData<T>);
++pub struct Request<T>(Opaque<bindings::request>, PhantomData<T>);
  
- pub mod gen_disk;
- mod operations;
--mod raw_writer;
- mod request;
- mod tag_set;
- 
-diff --git a/rust/kernel/block/mq/raw_writer.rs b/rust/kernel/block/mq/raw_writer.rs
-deleted file mode 100644
-index 0aef55703e71..000000000000
---- a/rust/kernel/block/mq/raw_writer.rs
-+++ /dev/null
-@@ -1,56 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--use core::fmt::{self, Write};
--
--use crate::error::Result;
--use crate::prelude::EINVAL;
--
--/// A mutable reference to a byte buffer where a string can be written into.
--///
--/// # Invariants
--///
--/// `buffer` is always null terminated.
--pub(crate) struct RawWriter<'a> {
--    buffer: &'a mut [u8],
--    pos: usize,
--}
--
--impl<'a> RawWriter<'a> {
--    /// Create a new `RawWriter` instance.
--    fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
--        *(buffer.last_mut().ok_or(EINVAL)?) = 0;
--
--        // INVARIANT: We null terminated the buffer above.
--        Ok(Self { buffer, pos: 0 })
--    }
--
--    #[expect(dead_code)]
--    pub(crate) fn from_array<const N: usize>(
--        a: &'a mut [crate::ffi::c_char; N],
--    ) -> Result<RawWriter<'a>> {
--        Self::new(
--            // SAFETY: the buffer of `a` is valid for read and write as `u8` for
--            // at least `N` bytes.
--            unsafe { core::slice::from_raw_parts_mut(a.as_mut_ptr().cast::<u8>(), N) },
--        )
--    }
--}
--
--impl Write for RawWriter<'_> {
--    fn write_str(&mut self, s: &str) -> fmt::Result {
--        let bytes = s.as_bytes();
--        let len = bytes.len();
--
--        // We do not want to overwrite our null terminator
--        if self.pos + len > self.buffer.len() - 1 {
--            return Err(fmt::Error);
--        }
--
--        // INVARIANT: We are not overwriting the last byte
--        self.buffer[self.pos..self.pos + len].copy_from_slice(bytes);
--
--        self.pos += len;
--
--        Ok(())
--    }
--}
+ impl<T: Operations> Request<T> {
+     /// Create an [`ARef<Request>`] from a [`struct request`] pointer.
 
 -- 
 2.47.2
