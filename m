@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-24254-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24256-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C0C2B041F2
-	for <lists+linux-block@lfdr.de>; Mon, 14 Jul 2025 16:39:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46786B041F3
+	for <lists+linux-block@lfdr.de>; Mon, 14 Jul 2025 16:39:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA7961A63F91
-	for <lists+linux-block@lfdr.de>; Mon, 14 Jul 2025 14:39:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFBA94A7FA0
+	for <lists+linux-block@lfdr.de>; Mon, 14 Jul 2025 14:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ADA9254841;
-	Mon, 14 Jul 2025 14:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDFA257435;
+	Mon, 14 Jul 2025 14:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YISaJ0G7"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jAImdRne"
 X-Original-To: linux-block@vger.kernel.org
 Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FC323FC42
-	for <linux-block@vger.kernel.org>; Mon, 14 Jul 2025 14:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3D42571B3
+	for <linux-block@vger.kernel.org>; Mon, 14 Jul 2025 14:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752503918; cv=none; b=fPHQV5z3zBa0PKCSTe0AXQYcpnqyf1d2NSM9ngAY5SlfGLXN6VpbzJe4c4cKLc886ZVvkwENZlGIV6q0KmDeJZ+iAZs1eOzdH6iwro2TBEn6ckiqoFSV0ozlOuYd/rY0OWU0GIJ/PgQBz5nVUt0GgZ5FO1C6Wph4jmTKSAPm+Fk=
+	t=1752503920; cv=none; b=tUiWR5coOTte0KeIjPc4InTMWDYMSLckQvJNj87IcRIEVhR612ojX1te113ykJCQG+zik3eLot1FtCrGS/GBL4jtHsE/1zmZPzYAWlHCvmRomCfVF3V2WDLXF/+HLFMaPV4YW/EXxrsfnJn6EnFBlv856JqrOwD4HwFftrJgxOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752503918; c=relaxed/simple;
-	bh=fhDkuG1yIE1LQ3pKVS/RWsEChi2G/eQGi73JJYRF2K4=;
+	s=arc-20240116; t=1752503920; c=relaxed/simple;
+	bh=muwY08qb4qJDdH+pi9WeSldxoC+wFo2mFwZhWQwmgbs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BSjm1k2OFiqOrXv+BjYsQoVjTurY9sCHK136OYNYezr/M9N193QaNRBClp+U/zuS3SFCJNqMP+wDB1iZm/xVG2bwZGNEgOJVmoZkS+/ujQwyz5cPQABLzKdxn7qSdTzeI5Eo/Oz0My7O5Br5OsX/opOppdKpQN2rGJHciEWkqEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=YISaJ0G7; arc=none smtp.client-ip=68.232.141.245
+	 MIME-Version; b=DXloUDYeacDo5os5eV4gC48fQMH/14LihUQgSplY86p2RbEeU8iN1rZzr75yb1EeRwbf/vzGFQRKAi1aZtj8nnjSuVUlvO5XefJ9feo8q86hueUb/tl2cLdnESjwQhloKWrCFx3eVHZsHvf6wzChrn1Vwc1f1X92uqtOfxDawYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=jAImdRne; arc=none smtp.client-ip=68.232.141.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1752503916; x=1784039916;
+  t=1752503918; x=1784039918;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fhDkuG1yIE1LQ3pKVS/RWsEChi2G/eQGi73JJYRF2K4=;
-  b=YISaJ0G7vYjqWMtCm5mKFrhjufyTfWFxmIt9Tcbltqw0I7+LcxpYVd88
-   ZKw9DtE8YrI6XUhsloFltZc7jajGxcpj2kOCC4eyk7J6pT+LzxRUSoxd0
-   CEfxs9UpaJN8TxDKYpWlnbSpBwTxBY399isqxMzHdqd8unXoxHg1cEbFm
-   45iHPXPEJSvXhO580rAbkEcAslbbTMyUUVQxkB1IjyO4Ks3rn+SBm9ToG
-   aLWKOaGTXitd0/fKkQXeZAbf6jvXDW/YYBFN1yb+t9Wiv/lmueMlDFSJg
-   I91jlk9yNIF5L7RQk+VO3FByAFOcmC5HEhfz9GSHYhQP4LRRrKV5bvHTj
+  bh=muwY08qb4qJDdH+pi9WeSldxoC+wFo2mFwZhWQwmgbs=;
+  b=jAImdRneMLtYIOl8blZi5Onf+rlgw2evalZy6MyyuSg2ruqR/2zDiq+C
+   fARQk0fzm0sMB35N5WxiENl+BkxCTKVztleMsW9uY3qUvh2qqEeI4+ppl
+   ClxO5lLKPG0BgfO0ULEGImFwSGTjR+IZ1geT4icm2uLjp5vGNpnvuvbSF
+   t1q6noyEcA9DvTF2Y0sMVap6h3wE5Aj+7KSZamVFZSIzf0pNQgTRUQbPE
+   Re+tEEKHGKayy+7WYJZgPyXcCsyLGMTrHLYQiqQ08Q4d9P9fdOPUcquF7
+   Lg1IByzNI/HDEhm/rTDNvkrGLgSOl4YZst1DPimKNeaceGEUAYSGNBLhZ
    g==;
-X-CSE-ConnectionGUID: fyz94YuzTVqbCk0Tl5P6QA==
-X-CSE-MsgGUID: hUHRIzulS5O0NAk/smADmQ==
+X-CSE-ConnectionGUID: csuRktM+TvmTkVvJ8IPflw==
+X-CSE-MsgGUID: 7WLaTx8HTg6l0NQ3v4xWrQ==
 X-IronPort-AV: E=Sophos;i="6.16,311,1744041600"; 
-   d="scan'208";a="86591348"
+   d="scan'208";a="86591351"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Jul 2025 22:38:32 +0800
-IronPort-SDR: 687507c9_/nQfGWSE9pv0NGQ9EZHmWzMmZMR0R/SxOmPUGwE20qn6QWe
- 4BqaxvvYRPqpjThVF5RnV52Ba1KABfXY6F15hZg==
+  by ob1.hgst.iphmx.com with ESMTP; 14 Jul 2025 22:38:34 +0800
+IronPort-SDR: 687507cb_mLRGY0WQ1JknQFBRjNhRAY6rSWH7WzZxp4JYeyUQqdfJ7EX
+ tqPo96pUTYGl584gtQ5ZYMJuqH974yZi8c3Mlqg==
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jul 2025 06:36:09 -0700
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jul 2025 06:36:11 -0700
 WDCIronportException: Internal
 Received: from c02g55f6ml85.ad.shared (HELO C02G55F6ML85.wdc.com) ([10.224.183.46])
-  by uls-op-cesaip02.wdc.com with ESMTP; 14 Jul 2025 07:38:30 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 14 Jul 2025 07:38:32 -0700
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Bart Van Assche <bvanassche@acm.org>,
 	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v2 1/5] blktrace: add zoned block commands to blk_fill_rwbs
-Date: Mon, 14 Jul 2025 16:38:21 +0200
-Message-Id: <20250714143825.3575-2-johannes.thumshirn@wdc.com>
+Subject: [PATCH v2 2/5] block: split blk_zone_update_request_bio into two functions
+Date: Mon, 14 Jul 2025 16:38:22 +0200
+Message-Id: <20250714143825.3575-3-johannes.thumshirn@wdc.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250714143825.3575-1-johannes.thumshirn@wdc.com>
 References: <20250714143825.3575-1-johannes.thumshirn@wdc.com>
@@ -78,76 +78,131 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add zoned block commands to blk_fill_rwbs:
+blk_zone_update_request_bio() does two things. First it checks if the
+request to be completed was written via ZONE APPEND and if yes it then
+updates the sector to the one that the data was written to.
 
-- ZONE APPEND will be decoded as 'ZA'
-- ZONE RESET and ZONE RESET ALL will be decoded as 'ZR'
-- ZONE FINISH will be decoded as 'ZF'
-- ZONE OPEN will be decoded as 'ZO'
-- ZONE CLOSE will be decoded as 'ZC'
+This is small enough to be an inline function. But upcoming changes adding
+a tracepoint don't work if the function is inlined.
 
+Split the function into two, the first is blk_req_bio_is_zone_append()
+checking if the sector needs to be updated. This can still be an inline
+function. The second is blk_zone_append_update_request_bio() doing the
+sector update.
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- include/trace/events/block.h |  2 +-
- kernel/trace/blktrace.c      | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+ block/blk-mq.c    |  6 ++++--
+ block/blk-zoned.c | 13 +++++++++++++
+ block/blk.h       | 31 ++++++++++++++-----------------
+ 3 files changed, 31 insertions(+), 19 deletions(-)
 
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 14a924c0e303..d88669b3ce02 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -11,7 +11,7 @@
- #include <linux/tracepoint.h>
- #include <uapi/linux/ioprio.h>
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 4806b867e37d..755ea0335831 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -883,7 +883,8 @@ static void blk_complete_request(struct request *req)
+ 		/* Completion has already been traced */
+ 		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
  
--#define RWBS_LEN	9
-+#define RWBS_LEN	10
+-		blk_zone_update_request_bio(req, bio);
++		if (blk_req_bio_is_zone_append(req, bio))
++			blk_zone_append_update_request_bio(req, bio);
  
- #define IOPRIO_CLASS_STRINGS \
- 	{ IOPRIO_CLASS_NONE,	"none" }, \
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 3f6a7bdc6edf..e0fdefe374b4 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1875,6 +1875,29 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
- 	case REQ_OP_READ:
- 		rwbs[i++] = 'R';
- 		break;
-+	case REQ_OP_ZONE_APPEND:
-+		rwbs[i++] = 'Z';
-+		rwbs[i++] = 'A';
-+		break;
-+	case REQ_OP_ZONE_RESET:
-+	case REQ_OP_ZONE_RESET_ALL:
-+		rwbs[i++] = 'Z';
-+		rwbs[i++] = 'R';
-+		if ((opf & REQ_OP_MASK) == REQ_OP_ZONE_RESET_ALL)
-+			 rwbs[i++] = 'A';
-+		break;
-+	case REQ_OP_ZONE_FINISH:
-+		rwbs[i++] = 'Z';
-+		rwbs[i++] = 'F';
-+		break;
-+	case REQ_OP_ZONE_OPEN:
-+		rwbs[i++] = 'Z';
-+		rwbs[i++] = 'O';
-+		break;
-+	case REQ_OP_ZONE_CLOSE:
-+		rwbs[i++] = 'Z';
-+		rwbs[i++] = 'C';
-+		break;
- 	default:
- 		rwbs[i++] = 'N';
- 	}
-@@ -1890,6 +1913,8 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
- 	if (opf & REQ_ATOMIC)
- 		rwbs[i++] = 'U';
+ 		if (!is_flush)
+ 			bio_endio(bio);
+@@ -982,7 +983,8 @@ bool blk_update_request(struct request *req, blk_status_t error,
  
-+	WARN_ON_ONCE(i >= RWBS_LEN);
-+
- 	rwbs[i] = '\0';
+ 		/* Don't actually finish bio if it's part of flush sequence */
+ 		if (!bio->bi_iter.bi_size) {
+-			blk_zone_update_request_bio(req, bio);
++			if (blk_req_bio_is_zone_append(req, bio))
++				blk_zone_append_update_request_bio(req, bio);
+ 			if (!is_flush)
+ 				bio_endio(bio);
+ 		}
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 351d659280e1..e79e0357d1f1 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -1205,6 +1205,19 @@ static void disk_zone_wplug_unplug_bio(struct gendisk *disk,
+ 	spin_unlock_irqrestore(&zwplug->lock, flags);
  }
- EXPORT_SYMBOL_GPL(blk_fill_rwbs);
+ 
++void blk_zone_append_update_request_bio(struct request *rq, struct bio *bio)
++{
++	/*
++	 * For zone append requests, the request sector indicates the location
++	 * at which the BIO data was written. Return this value to the BIO
++	 * issuer through the BIO iter sector.
++	 * For plugged zone writes, which include emulated zone append, we need
++	 * the original BIO sector so that blk_zone_write_plug_bio_endio() can
++	 * lookup the zone write plug.
++	 */
++	bio->bi_iter.bi_sector = rq->__sector;
++}
++
+ void blk_zone_write_plug_bio_endio(struct bio *bio)
+ {
+ 	struct gendisk *disk = bio->bi_bdev->bd_disk;
+diff --git a/block/blk.h b/block/blk.h
+index 37ec459fe656..b4c01774df98 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -467,23 +467,15 @@ static inline bool bio_zone_write_plugging(struct bio *bio)
+ {
+ 	return bio_flagged(bio, BIO_ZONE_WRITE_PLUGGING);
+ }
+-void blk_zone_write_plug_bio_merged(struct bio *bio);
+-void blk_zone_write_plug_init_request(struct request *rq);
+-static inline void blk_zone_update_request_bio(struct request *rq,
+-					       struct bio *bio)
++static inline bool blk_req_bio_is_zone_append(struct request *rq,
++					      struct bio *bio)
+ {
+-	/*
+-	 * For zone append requests, the request sector indicates the location
+-	 * at which the BIO data was written. Return this value to the BIO
+-	 * issuer through the BIO iter sector.
+-	 * For plugged zone writes, which include emulated zone append, we need
+-	 * the original BIO sector so that blk_zone_write_plug_bio_endio() can
+-	 * lookup the zone write plug.
+-	 */
+-	if (req_op(rq) == REQ_OP_ZONE_APPEND ||
+-	    bio_flagged(bio, BIO_EMULATES_ZONE_APPEND))
+-		bio->bi_iter.bi_sector = rq->__sector;
++	return req_op(rq) == REQ_OP_ZONE_APPEND ||
++	       bio_flagged(bio, BIO_EMULATES_ZONE_APPEND);
+ }
++void blk_zone_write_plug_bio_merged(struct bio *bio);
++void blk_zone_write_plug_init_request(struct request *rq);
++void blk_zone_append_update_request_bio(struct request *rq, struct bio *bio);
+ void blk_zone_write_plug_bio_endio(struct bio *bio);
+ static inline void blk_zone_bio_endio(struct bio *bio)
+ {
+@@ -516,14 +508,19 @@ static inline bool bio_zone_write_plugging(struct bio *bio)
+ {
+ 	return false;
+ }
++static inline bool blk_req_bio_is_zone_append(struct request *req,
++					      struct bio *bio)
++{
++	return false;
++}
+ static inline void blk_zone_write_plug_bio_merged(struct bio *bio)
+ {
+ }
+ static inline void blk_zone_write_plug_init_request(struct request *rq)
+ {
+ }
+-static inline void blk_zone_update_request_bio(struct request *rq,
+-					       struct bio *bio)
++static inline void blk_zone_append_update_request_bio(struct request *rq,
++						      struct bio *bio)
+ {
+ }
+ static inline void blk_zone_bio_endio(struct bio *bio)
 -- 
 2.50.0
 
