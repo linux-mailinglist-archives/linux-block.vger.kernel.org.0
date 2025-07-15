@@ -1,141 +1,137 @@
-Return-Path: <linux-block+bounces-24344-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24347-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA622B062CA
-	for <lists+linux-block@lfdr.de>; Tue, 15 Jul 2025 17:23:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13C61B06302
+	for <lists+linux-block@lfdr.de>; Tue, 15 Jul 2025 17:33:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD3223B1692
-	for <lists+linux-block@lfdr.de>; Tue, 15 Jul 2025 15:22:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7A06560175
+	for <lists+linux-block@lfdr.de>; Tue, 15 Jul 2025 15:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25081D90DD;
-	Tue, 15 Jul 2025 15:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A988C248881;
+	Tue, 15 Jul 2025 15:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Juig9s8n"
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="1UWeokjT"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D59421B9E2
-	for <linux-block@vger.kernel.org>; Tue, 15 Jul 2025 15:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDE1247298;
+	Tue, 15 Jul 2025 15:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592950; cv=none; b=BhqoNn1E+h0YKV3HhmgzTr0OgpMibYKE7E70PQX90tOIgvNBigCAEyO3uQ02+J/Bl6Z/ZfyW6Wi7AVj5Qk2IlaoBkQAffDYi/kRcIhDGXTaFVbFyBohF2wGQNxUeIiwx0f9deCa7UulbdtHxn0mXT9Z3tKmILCiFMPM2UKJp+u8=
+	t=1752593575; cv=none; b=ONlde4K18KQRXCCnpsPtkDJscHjWnv88aEui2GyAdGOosWyvIVUAvahYaRFeMAz6Ochmg/kSfCEO0NqXZWxOK/3Ajxra1lvoP7y7Q301spHgQ4biXYe+UZ4LrLMCMcQRu7tDHNG8N2U31+LQUbn0yp5+GrotFhVgb4O4cxWNkto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592950; c=relaxed/simple;
-	bh=D6iAu8L1VO7kA4h6FHt0EEgtjr72dxb9b/Pv8UYH5l8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DN/fIO07PaXnWma8dvLo1+TUDtEkm4wOdgJhb1lwaUYQxFwe9MBmCl7AlxIA7mYBjzUxIVhNvKhKjAf5MPKyLgyWwRELNhEjZHghu2QZd7m+f9BYhiJ1NPMkE/AAFPX+A/VI3ciIGiiC5gKTYKGJRoCPAUCZqA9BCle8qhJy/Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Juig9s8n; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34abba1e9dso161686a12.3
-        for <linux-block@vger.kernel.org>; Tue, 15 Jul 2025 08:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1752592948; x=1753197748; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IESJUyDnVp+QVOw+cllX3D8uJpQcmQddZzYwpHDOf9c=;
-        b=Juig9s8nb0v1po0pacHlf9CN0Y6TFmwn+XzqVRWjmEcW5Zol4yx7DUWR1KMrnSYmm/
-         Jz0cA5dmw6O+spXaIbzf6BfLz2NV0uRhT1qbwfoN0LhWuCzuEE8FwnM5x9NX3SIH4xul
-         t6ODQM5UCgkFh6gqOca9vO/tdieAX5kn4l5NLcZwGRysmxXX5oMDt6h1ZzCl1yTAZWxL
-         S0ekWptEF7vHQAgVKnO1a7z/lML+6Op9VggRNWtLScwIeooNGICK+XUNPnpv3tWfBX5M
-         lxxnlkeuF8PRuT7SFWgxDjrTZXCT4M96uyWxiIZFqf+wuqMnMIpvqJStcwfvGQNCGeRh
-         SBxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752592948; x=1753197748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IESJUyDnVp+QVOw+cllX3D8uJpQcmQddZzYwpHDOf9c=;
-        b=Cxd+xn8cxCd68g5zE+Cd4RCt7DZX7rdajlRyeH9IQ26k5xSAgVgj6Y1SEP4/gkVlS4
-         KAvldsYPHVhyWi15d2s0z49ee1em4cQ12LHkn9NKXXgVMi0P1/F8Nvg1onqMdo+Ys+0y
-         GDuqTDRu0nj35timsYbI8WK/1kgAkKrhxgVPzsrS3zWUStvc1nRG0GQqWr7QA/qtIq/5
-         hgNNcDt2TJmRq+ptwl8zvE9hkL4t9Ss4Pt2PWmZMYKonGdzXHYNV7XpQ6AsdGf2alkHx
-         5RcZZ7WvO7FS4PfavChG7VmuyX7poyDwJMsLDJ0mcC52I7szdHbxWDyJokqW86vuB31a
-         Aoyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJYYCgaHB5SS4cKwRAxYecLOHL7TCV7OdUVbcYIvm2CIYje/BfPAM7g24e00kAv2b7xQc/kNTImco81w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8i87NZNmXtS/ogEJ9MtLBFCzKiG0YePIgd6upGAuUHFZyK7MQ
-	+/EqYjuHSF7LikjLhvIhGZyAWVRWza79R2jsIs4dlRORTEnZjMHON1Y8jfFxN2vEkftn/S3GwKm
-	jjjbIApIQzB1ayG7uSONWALZKdskxrMD60tXWY3TbsQ==
-X-Gm-Gg: ASbGncsiAmEeTayljNtZc/EWYaNth+x1CexPEzyuYlapWZNZ+mLLzld8rd1YGt96u3S
-	i/YtbFxMcNGllCFnPowIWgAO8hxdiJlXbNnVXCKNC/XBx/1wQ50Vjacavz2Kk809g780tL3WHXB
-	GhzZiR82m/sHi/nsMm+A6iz48zAww8k8HQ37mza9opqWLEI8PKc/tnyQccmSOGiOp5ZvmmVOv24
-	4ckyuU3xdTytF3N
-X-Google-Smtp-Source: AGHT+IEOBub69eMd2SCcCaBB4MeGXPvujR11IrTfvaPWzK+EBLRoWon26g+68F1BlZNe5Y7r7XReC8Cwszkaa2NAbJo=
-X-Received: by 2002:a17:90a:da8d:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-31c94d270a0mr1277482a91.3.1752592948343; Tue, 15 Jul 2025
- 08:22:28 -0700 (PDT)
+	s=arc-20240116; t=1752593575; c=relaxed/simple;
+	bh=iqvttP6jIPTW1p1gklV7sBMld/X2QkcZqdqQ6Fveqec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q01tz8/217BKnXzHN8583kTCfq46oI1JG06zb6yJTTSfTox1v8vzc9tWysWeZadz3qlxzS9/YDQighmvuhyKUL+Bu5UBYNetbMsGFHQ8ZJs964H7aAl57ab2vZdxSzpmj0lXm0OEGAxsH9qZPwctDCSzh5AjZAjyD9xOdyVxnRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=1UWeokjT; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bhNLJ4VQHz9tSw;
+	Tue, 15 Jul 2025 17:25:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1752593144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SlG4eFKE51I8Q2pDUIOuf68MZDRUyEWzcus631AbRg8=;
+	b=1UWeokjTAAWkY7Vgo1D5IZLcQVj+c0tkriQM+avtk5iC1C5x3Q7O0NNFp/9ISFj3SiY2Ea
+	sE0c1214SEwH/iS7lOD+ycunHCqpzYxAT+Jdma7GLtR/16pyiczLXpkqNrs4tar1eCLojL
+	FvKdi6GTqOek9OzGe1duoKtrb8FQqoGV0XF4GNYYhjA/CJWG1QQwl9CxNytwXJ+3qxgNdd
+	byO1NlbI+8gXDSniu9kFoPPJFPGwHK27PAGlIsonEqIQdqFXlRhKwH6zgce6TuneWMrqta
+	rvEA4SObEvTL93xvsBmXwZAY5ehT/7srZNquOUTs2hEER8LX98/u2ND870livQ==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=pass (outgoing_mbo_mout: domain of kernel@pankajraghav.com designates 2001:67c:2050:b231:465::102 as permitted sender) smtp.mailfrom=kernel@pankajraghav.com
+Date: Tue, 15 Jul 2025 17:25:29 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Michal Hocko <mhocko@suse.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
+	willy@infradead.org, linux-mm@kvack.org, x86@kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de, Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v2 0/5] add static PMD zero page support
+Message-ID: <bdlp7psevt6qqtssknhp55b65sfmbrnz373hudn3i4hqkoxa7u@oabcqpvc3z5k>
+References: <20250707142319.319642-1-kernel@pankajraghav.com>
+ <F8FE3338-F0E9-4C1B-96A3-393624A6E904@nvidia.com>
+ <ad876991-5736-4d4c-9f19-6076832d0c69@pankajraghav.com>
+ <be182451-0fdf-4fc8-9465-319684cd38f4@lucifer.local>
+ <c3aa4e27-5b00-4511-8130-29c8b8a5b6d9@redhat.com>
+ <dca5912a-cdf4-4f7e-a79a-796da8475826@lucifer.local>
+ <d7fa2e67-1960-4b1f-a8b7-147371e37010@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250713143415.2857561-1-ming.lei@redhat.com> <20250713143415.2857561-5-ming.lei@redhat.com>
-In-Reply-To: <20250713143415.2857561-5-ming.lei@redhat.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Tue, 15 Jul 2025 11:22:16 -0400
-X-Gm-Features: Ac12FXwvl6uEo-s5cleUzAWQfpBfAApkUbowqDE5Qi3BPAaAi2SRJpOrzjOFcMQ
-Message-ID: <CADUfDZoY_ezThviDK4nNWgBx8XePq06UhJO+M1em83o2ebMkjw@mail.gmail.com>
-Subject: Re: [PATCH V3 04/17] ublk: let ublk_fill_io_cmd() cover more things
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	Uday Shankar <ushankar@purestorage.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7fa2e67-1960-4b1f-a8b7-147371e37010@redhat.com>
+X-Rspamd-Queue-Id: 4bhNLJ4VQHz9tSw
 
-On Sun, Jul 13, 2025 at 10:34=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wro=
-te:
->
-> Let ublk_fill_io_cmd() clear UBLK_IO_FLAG_OWNED_BY_SRV too.
->
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+On Tue, Jul 15, 2025 at 04:16:44PM +0200, David Hildenbrand wrote:
+> On 15.07.25 16:12, Lorenzo Stoakes wrote:
+> > On Tue, Jul 15, 2025 at 04:06:29PM +0200, David Hildenbrand wrote:
+> > > I think at some point we discussed "when does the PMD-sized zeropage make
+> > > *any* sense on these weird arch configs" (512MiB on arm64 64bit)
+> > > 
+> > > No idea who wants to waste half a gig on that at runtime either.
+> > 
+> > Yeah this is a problem we _really_ need to solve. But obviously somewhat out of
+> > scope here.
+> > 
+> > > 
+> > > But yeah, we should let the arch code opt in whether it wants it or not (in
+> > > particular, maybe only on arm64 with CONFIG_PAGE_SIZE_4K)
+> > 
+> > I don't think this should be an ARCH_HAS_xxx.
+> > 
+> > Because that's saying 'this architecture has X', this isn't architecture
+> > scope.
+> > 
+> > I suppose PMDs may vary in terms of how huge they are regardless of page
+> > table size actually.
+> > 
+> > So maybe the best solution is a semantic one - just rename this to
+> > ARCH_WANT_STATIC_PMD_ZERO_PAGE
+> > 
+> > And then put the page size selector in the arch code.
+> > 
+> > For example in arm64 we have:
+> > 
+> > 	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+> > 
+> > So doing something similar here like:
+> > 
+> > 	select ARCH_WANT_STATIC_PMD_ZERO_PAGE if ARM64_4K_PAGES
+> > 
+> > Would do thie job and sort everything out.
+> 
+> Yes.
 
-Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+Actually I had something similar in one of my earlier versions[1] where we
+can opt in from arch specific Kconfig with *WANT* instead *HAS*.
 
-> ---
->  drivers/block/ublk_drv.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 73c6c8d3b117..f251517baea3 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -2014,6 +2014,8 @@ static inline void ublk_fill_io_cmd(struct ublk_io =
-*io,
->  {
->         io->cmd =3D cmd;
->         io->flags |=3D UBLK_IO_FLAG_ACTIVE;
-> +       /* now this cmd slot is owned by ublk driver */
-> +       io->flags &=3D ~UBLK_IO_FLAG_OWNED_BY_SRV;
->         io->addr =3D buf_addr;
->  }
->
-> @@ -2229,9 +2231,6 @@ static int ublk_commit_and_fetch(const struct ublk_=
-queue *ubq,
->         }
->
->         ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
-> -
-> -       /* now this cmd slot is owned by ublk driver */
-> -       io->flags &=3D ~UBLK_IO_FLAG_OWNED_BY_SRV;
->         io->res =3D ub_cmd->result;
->
->         if (req_op(req) =3D=3D REQ_OP_ZONE_APPEND)
-> @@ -2353,7 +2352,6 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd =
-*cmd,
->                  */
->                 req =3D io->req;
->                 ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
-> -               io->flags &=3D ~UBLK_IO_FLAG_OWNED_BY_SRV;
->                 if (likely(ublk_get_data(ubq, io, req))) {
->                         __ublk_prep_compl_io_cmd(io, req);
->                         return UBLK_IO_RES_OK;
-> --
-> 2.47.0
->
+For starters, I will enable this only from x86. We can probably extend
+this once we get the base patches up.
+
+[1] https://lore.kernel.org/linux-mm/20250522090243.758943-2-p.raghav@samsung.com/
+--
+Pankaj
 
