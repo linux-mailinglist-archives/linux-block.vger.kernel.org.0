@@ -1,74 +1,85 @@
-Return-Path: <linux-block+bounces-24396-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24398-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AC9FB06FEB
-	for <lists+linux-block@lfdr.de>; Wed, 16 Jul 2025 10:09:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27D37B070BE
+	for <lists+linux-block@lfdr.de>; Wed, 16 Jul 2025 10:38:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8261C3AA68D
-	for <lists+linux-block@lfdr.de>; Wed, 16 Jul 2025 08:08:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D9401887082
+	for <lists+linux-block@lfdr.de>; Wed, 16 Jul 2025 08:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF9D29292F;
-	Wed, 16 Jul 2025 08:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C5C82EE97A;
+	Wed, 16 Jul 2025 08:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="NHIs7dgb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWhKKHjB"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F3628FFEC;
-	Wed, 16 Jul 2025 08:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D806E289E1C
+	for <linux-block@vger.kernel.org>; Wed, 16 Jul 2025 08:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752653322; cv=none; b=fc1AjStn8r6GCYy4YANs/m4nvhXkjwNJZvcCTxp7nWqWZnw2s38l3QJR2wnXWsBToBrVFQ2uQVJQPWPyGg2vtIA1yTIqtMx37Er6/BLnC1uhOVQa1ab1EEjg2DXi/NsQ7IfYP6iKFlTmGcYL/HuefdzebtHxBcg+S8srpy2Ks0I=
+	t=1752655114; cv=none; b=iUKeVKBaMcdpZ9bhlm0msqyS/GF5smAmbi94RnZscfhKqe43Gu8R8AeYXfvzIuGANngQu7ult6kTRLkfLxEGfN6RrM5cphNXnTwZNgqK74cSkLKDCIi+EwouPvt0kQcfPXzP5p48CttQiPDB4TBaPHftxKjjRVp3ef/m6MXYd+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752653322; c=relaxed/simple;
-	bh=P9oBWoRAWelRRZX9/zMep3aOIbMkGManyEi921DBvwY=;
+	s=arc-20240116; t=1752655114; c=relaxed/simple;
+	bh=izAb8FBqphT5f3PHM4yD/k9xGN60OY9mnwfC3ZgMZbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OeX/OJLak/81kJlf5r5trfxWnyrysrJFVbq8C2cfMRL8r0pWmwr/wWulq+nO1PebNXtrJFUnfzAhVNI9iz44AU8A6InCxEZ53D8SajwU2jMeJmh3fZxfRR7lkS9aE9kRA8u0Wlbs9OCdKXoRWinISc4QXdCPKk6OHP0B4A/AsHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=NHIs7dgb; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bhpbS5fkcz9t8n;
-	Wed, 16 Jul 2025 10:08:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1752653316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJKrk5r5ltCYBv5q1GLXxMUk75em/r0DRcmzMvc6rA8=;
-	b=NHIs7dgbznvY0/lprePNJMdwzzZwGFnU5cgXO+T38Yssn9hlxixhCbYALK8gBqwE9buqww
-	Z8LGFbi4vAoYzVDIB2IbHsmdtjC8mw8fDjJiNZRadeji3rKqh0z1ve2la5RatQSLKAWSD5
-	ZynK4VF2Ra4NA/GB3Mr63RRaJesjeH7cLysNljrFBA3UFef0dZL/SAfSwJvkyoit+R6Uyy
-	7qPNOssHTMa0KH9wJhAAP7UMZ+/e3LiA/EpRviljZYEBXexEBGbej8MV20GtB7lB+gy2mf
-	YmvLl2lXLSMwkfrdJpq6hQu2dokRq/ZLpwRzrQ3Cvnt6LRUoX9YhztTMu9ZiDQ==
-Date: Wed, 16 Jul 2025 10:08:28 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Suren Baghdasaryan <surenb@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Mike Rapoport <rppt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Michal Hocko <mhocko@suse.com>, David Hildenbrand <david@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
-	willy@infradead.org, linux-mm@kvack.org, x86@kernel.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
-	gost.dev@samsung.com, hch@lst.de, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v2 2/5] huge_memory: add
- huge_zero_page_shrinker_(init|exit) function
-Message-ID: <2ir5ul6baqj7dk6uw5opwnsxuxfmobtoehyfxglnsadlrcurjs@7akcf3auqink>
-References: <20250707142319.319642-1-kernel@pankajraghav.com>
- <20250707142319.319642-3-kernel@pankajraghav.com>
- <762c0b08-f5a5-4e76-8203-70514de6b5c8@lucifer.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kG8uozqN0P3vH/OeRqpK2He7+QfKVYyRxeEGjpNg3GhF7IyHa9S/6Ld1TBZUjqBwTuACUoQHPwX49giKu3aP/vLswkWbp8NHGQHfxyknTbeFUhcUpfT6TUTx09PJoiALYGQnKl776UM5/nilJ7ulduCDOYV1Ds7zX5SSdNIHtbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fWhKKHjB; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234c5b57557so64224415ad.3
+        for <linux-block@vger.kernel.org>; Wed, 16 Jul 2025 01:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1752655112; x=1753259912; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lLh2sm8WqaPVFHFHlj7r6lDUy4RVlkLyvSGa8jle5v4=;
+        b=fWhKKHjB7A+IMjx7pSLDgcEwCW/Mp6uY8rSTkzJwwasgpsloWeDX7CupVGvON/AB+r
+         Mio9GsDW9gXBywvagZJDT7Cvd8phouPp2XvIMxyd6R12Knt41+bdyajdpZ0y1XbEACJm
+         F5ycg6/2zylWyt7v62+JwaShyc54pGSfi2nR4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752655112; x=1753259912;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lLh2sm8WqaPVFHFHlj7r6lDUy4RVlkLyvSGa8jle5v4=;
+        b=ct7sdCte2W9qkBJIjqEUwAMhl/1Lna7CX+0TWT2GvUc6XUrbtCu0GRV2j0ND/wzc1v
+         WhxwY+mt6a0TSoKd/Lcfp9CAplK2O1aa3IduUUAdglmrhoxvx7bRWy0yz8BSqD0rxSLW
+         +je3UNSI/3NzbPNTHcHGRhlCig0eSzzLYupfdaFS5oKBHiCW/UmWL4YCqt5qdoIseJAu
+         +wSs7954ln7iS9+cM88oc/+QTOw7Imbopp9ad5kjZAYYSRF/kf2X/xACMdY9wicgxbK1
+         QKc55nexJ9KUbxG3qzAuYZpSib/djTJUqVSoCF7U7YkIJwmsZYb7MhnlJXDSG6jEsX9Q
+         FRkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXQCC0+aBlCAViKczMwDXl4/gb/Wh4uIGlw+Nk0sTghp1dVMc2g+6GhyM50JeJSWkLIYvOQeP65qXSSA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsR9BFZg+h74+Ff6YxOtCwmq5IYbr9Ipm+O2ArwBdpXyR/Sk5U
+	kB7CIzyVXOKWsxijgNtt//tZ0YCSj2gV+RFBy1QyCZ1rp9Z/05LlLkJFUJjMdsOvWMJ5Gu6r5B9
+	k6BA=
+X-Gm-Gg: ASbGncvysXMVzYbOa5Y32xGWhKICStHMfkifWiB+ABPY6psis8X/hiSfu+5zdabCw7H
+	Ty6rn7kmngZxDp8vXFFtl2SGEO/Hp6KBcHbiuWndCq4YeUAHr1WLl+ZsXthVvN5VIJjDYgvSHp7
+	Tewh0gCSGPSCF/5OrYZOWlReGcDdkaPdu7bvgIlnKlixoDgT3sOXwKkBG7FLFi+Om78tfQ8uR8I
+	Zw3/FEQQ6acF6smzPYQ/ncRRrXvNe7XTSzeQYUGqrFDp3ba/WTwyjzxS/m8qwhgkPrVAKAN3Xk5
+	kEHSbjCeWlggMW8JbeC41Aw89HDSCc0a28TyEEGqQy73F7EixcZ4ml4Rj4MEIxfJ0H5glEUHVd2
+	cTmEj3ePCEGeAX63Q5N2Qsp7G5w==
+X-Google-Smtp-Source: AGHT+IG3S6Rcx6GMavXOlUdkf9wUf4NC0zv2qrJv8Iv5AETpdbF5yoAKLe/cibG5UK2VUQFwtBG2Ng==
+X-Received: by 2002:a17:902:e850:b0:234:c549:da0e with SMTP id d9443c01a7336-23e2578f49fmr22953325ad.47.1752655112070;
+        Wed, 16 Jul 2025 01:38:32 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:9ab6:c2f9:ca7e:e672])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de43415b0sm120511365ad.188.2025.07.16.01.38.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jul 2025 01:38:31 -0700 (PDT)
+Date: Wed, 16 Jul 2025 17:38:27 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 16/17] zram: fix synchronous reads
+Message-ID: <rjq6lrsq2mflcry4vtks7wth63cgpjzngcbjxy65z7ucupin3q@owvyk5befvpt>
+References: <20230411171459.567614-1-hch@lst.de>
+ <20230411171459.567614-17-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -77,90 +88,50 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <762c0b08-f5a5-4e76-8203-70514de6b5c8@lucifer.local>
+In-Reply-To: <20230411171459.567614-17-hch@lst.de>
 
-On Tue, Jul 15, 2025 at 03:29:08PM +0100, Lorenzo Stoakes wrote:
-> Nit on subject, function -> functions.
+On (23/04/11 19:14), Christoph Hellwig wrote:
+> Currently nothing waits for the synchronous reads before accessing
+> the data.  Switch them to an on-stack bio and submit_bio_wait to
+> make sure the I/O has actually completed when the work item has been
+> flushed.  This also removes the call to page_endio that would unlock
+> a page that has never been locked.
 > 
-> On Mon, Jul 07, 2025 at 04:23:16PM +0200, Pankaj Raghav (Samsung) wrote:
-> > From: Pankaj Raghav <p.raghav@samsung.com>
-> >
-> > Add huge_zero_page_shrinker_init() and huge_zero_page_shrinker_exit().
-> > As shrinker will not be needed when static PMD zero page is enabled,
-> > these two functions can be a no-op.
-> >
-> > This is a preparation patch for static PMD zero page. No functional
-> > changes.
-> 
-> This is nitty stuff, but I think this is a little unclear, maybe something
-> like:
-> 
-> 	We will soon be determining whether to use a shrinker depending on
-> 	whether a static PMD zero page is available, therefore abstract out
-> 	shrink initialisation and teardown such that we can more easily
-> 	handle both the shrinker and static PMD zero page cases.
-> 
-This looks good. I will use add this to the commit message.
+> Drop the partial_io/sync flag, as chaining only makes sense for the
+> asynchronous reads of the entire page.
 
-> >
-> > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> Other than nits, this LGTM, so with those addressed:
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+[..]
 
-Thanks.
+Hi Christoph,
 
-> >  #ifdef CONFIG_SYSFS
-> >  static ssize_t enabled_show(struct kobject *kobj,
-> > @@ -850,33 +868,31 @@ static inline void hugepage_exit_sysfs(struct kobject *hugepage_kobj)
-> >
-> >  static int __init thp_shrinker_init(void)
-> >  {
-> > -	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
-> > -	if (!huge_zero_page_shrinker)
-> > -		return -ENOMEM;
-> > +	int ret = 0;
-> 
-> Kinda no point in initialising to zero, unless...
-> 
-> >
-> >  	deferred_split_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE |
-> >  						 SHRINKER_MEMCG_AWARE |
-> >  						 SHRINKER_NONSLAB,
-> >  						 "thp-deferred_split");
-> > -	if (!deferred_split_shrinker) {
-> > -		shrinker_free(huge_zero_page_shrinker);
-> > +	if (!deferred_split_shrinker)
-> >  		return -ENOMEM;
-> > -	}
-> > -
-> > -	huge_zero_page_shrinker->count_objects = shrink_huge_zero_page_count;
-> > -	huge_zero_page_shrinker->scan_objects = shrink_huge_zero_page_scan;
-> > -	shrinker_register(huge_zero_page_shrinker);
-> >
-> >  	deferred_split_shrinker->count_objects = deferred_split_count;
-> >  	deferred_split_shrinker->scan_objects = deferred_split_scan;
-> >  	shrinker_register(deferred_split_shrinker);
-> >
-> > +	ret = huge_zero_page_shrinker_init();
-> > +	if (ret) {
-> > +		shrinker_free(deferred_split_shrinker);
-> > +		return ret;
-> > +	}
-> 
-> ... you change this to:
-> 
-> 	if (ret)
-> 		shrinker_free(deferred_split_shrinker);
-> 
-> 	return ret;
-> 
-> But it's not a big deal. Maybe I'd rename ret -> err if you keep things as
-> they are (but don't init to 0).
+>  static int read_from_bdev(struct zram *zram, struct page *page,
+> -			unsigned long entry, struct bio *parent, bool sync)
+> +			unsigned long entry, struct bio *parent)
+>  {
+>  	atomic64_inc(&zram->stats.bd_reads);
+> -	if (sync) {
+> +	if (!parent) {
+>  		if (WARN_ON_ONCE(!IS_ENABLED(ZRAM_PARTIAL_IO)))
+>  			return -EIO;
+> -		return read_from_bdev_sync(zram, page, entry, parent);
+> +		return read_from_bdev_sync(zram, page, entry);
+>  	}
+>  	read_from_bdev_async(zram, page, entry, parent);
+>  	return 1;
 
-Sounds good.
+I was looking at zram's bdev (read from a backing device) today
+and got a bit puzzled by that !parent check in read_from_bdev():
 
---
-Pankaj
+zram_bio_read(zram, bio)
+  zram_bvec_read(bio)
+    zram_read_page(bio)
+      read_from_bdev(bio) {
+         if (!parent)
+           return read_from_bdev_sync()
+      }
+
+The thing is, that "parent" is basically "bio" which is passed to
+zram_bio_read(), and it cannot be NULL (zram_bio_read() dereferences
+it multiple times before passing it down the call chain.)  Is sync
+read basically a dead code now?  Am I missing something?
 
