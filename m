@@ -1,114 +1,147 @@
-Return-Path: <linux-block+bounces-24567-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24569-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 858D8B0C58A
-	for <lists+linux-block@lfdr.de>; Mon, 21 Jul 2025 15:52:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CD10B0C5CA
+	for <lists+linux-block@lfdr.de>; Mon, 21 Jul 2025 16:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 506A81AA2E47
-	for <lists+linux-block@lfdr.de>; Mon, 21 Jul 2025 13:52:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F9B13AD427
+	for <lists+linux-block@lfdr.de>; Mon, 21 Jul 2025 14:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2330299957;
-	Mon, 21 Jul 2025 13:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27062BE04A;
+	Mon, 21 Jul 2025 14:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="HB3uhHUS"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FmEcRe3n"
 X-Original-To: linux-block@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0182D8383
-	for <linux-block@vger.kernel.org>; Mon, 21 Jul 2025 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46777286D64
+	for <linux-block@vger.kernel.org>; Mon, 21 Jul 2025 14:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753105916; cv=none; b=VlIxxP4Zq0p8W6QLtjGTZe6Jihh6kFYwHLWVeEiiOEAg85CnOqLPjp8Q2XVID5nQr5clPvhWD26y4QAdIvZp8A5oRlqvNcEfQr0/QvULf45JKrmxxA5aPacGVuNvCAWS+Rl943MfuQr2BptRqhjg9Fq3TzHLL0pTkfP9lvAlkhs=
+	t=1753106726; cv=none; b=pYsd/8Cr0OMysH9neLY/s88RbAI7K9ildqZijNeJyG0GqUzplZZ70AqI/6un+NuNgbhmAijyFJL6IAUH9Wsa0uusg0NXGhaD2C7ezCOrhuVCD3Qy+jPNjJC9+EpKPJndSTT6iEV3CQqt96kM4/IZFGzVHDtncS0hWfhWxHLZXzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753105916; c=relaxed/simple;
-	bh=/+3b8bgh1vPULVzDfotk0Tuh85QMpR17zv57e9lavHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DvUuYTeVZiE8TKiE6jggXJqZHGmegA2hOuJHSx2+2h8tL4BjSyR4ALdzYyaC7SJS3JIHGpdkb0n1VfiAnqkyxQTNPxONRLrhe2NBPaZV9llnh9rShmxTPa6Q/DQmuzHY1kqNmvsxhO8RI1xkzOXZBAPCTM8+QAr2cGf7kZyTEI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=HB3uhHUS; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-122-135.bstnma.fios.verizon.net [173.48.122.135])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 56LDphi7017498
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Jul 2025 09:51:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1753105905; bh=eS3N/MSmfHPbMFf2Twvw9BHa3nbuJfzcSdiNYA0uTPw=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=HB3uhHUS7cxnPKQYqoi2e1awOK1zpZgNN38eW4gY1WpKdyZJUd0XgZ1cJO2UNt989
-	 3FuhywpqwUr/rjL7Dc2zCdm7KDvcat0Nwrji+nEpptMqB9pLOdr+uxa+Z15KgzFCp2
-	 q9Cz09RVX3CAPO+EFLwumakT3KJBG3+2P6CLxAa4oFB91BJhn3AxO8zJcxKUW8QqAv
-	 sEB89Dm7Luh3Rb487XCTl13FFT5x7h9pYeTvel9y9QiGae0T8MAYcqN+E50yO7BczD
-	 RP2XB5jCFqkjmjwnskv2aoeZi14j/1iq8nPg7p9GsPmbvsDuFMVspqvcLuqazEM1zt
-	 QYBpgZZ44jWuA==
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id DAE332E00D5; Mon, 21 Jul 2025 09:51:42 -0400 (EDT)
-Date: Mon, 21 Jul 2025 09:51:42 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Jan Kara <jack@suse.cz>
-Cc: Moon Hee Lee <moonhee.lee.ca@gmail.com>,
-        syzbot+544248a761451c0df72f@syzkaller.appspotmail.com,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH] ext4: do not BUG when INLINE_DATA_FL lacks system.data
- xattr
-Message-ID: <20250721135142.GA1415603@mit.edu>
-References: <CAF3JpA7a0ExYEJ8_c7v7evKsV83s+_p7qUoH9uiYZLPxT_Md6g@mail.gmail.com>
- <20250717145911.GB112967@mit.edu>
- <CAF3JpA6RwyzQMdG4y3P_8jkaS8qUFPerE5MJ8Xecs+VkbPEmpg@mail.gmail.com>
- <20250718010521.GC112967@mit.edu>
- <t6yl3jtspvfby4c6nlqbwjucfkx2evpuebaqvwolgjzcdst3sx@y4yuq7xegul6>
+	s=arc-20240116; t=1753106726; c=relaxed/simple;
+	bh=IxjE5ckZRtljtpjrDWCoDn4urUGhBRQrg0gTd4zL9ig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ir8T+rIqKGc1elHmmZ+4CVc4CilJzRVOZiGl9sJ2ekdK97s4C1z+B1ACD08tg6eDchtU0Eqsw6SuXaF2GWipFS57zk/+gfiSn7+XL/katqVrb9o4AORuDSC7/NQLsSAM6YpPVvQrtSOnJBJB+S2tKrXMjc0lCP0128AD682CEPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FmEcRe3n; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56LD0IoA031219;
+	Mon, 21 Jul 2025 14:05:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=+uCcFhe7e4ItSL08OnZOrJ3xKy6v
+	PrTSpVzP/uSl/L4=; b=FmEcRe3n3X8vVYoz8ohJwMD7pJyRkBY6x2mRpuJjZwpR
+	XXlkoV6p0DmlaN08tgV21WDDHIFITNoVlXxb8gsdIPN0HpJraQlsaIbPP3/7Jvi5
+	o3j0GvusTUHKBwDwjTnnYviOwpcTXS7SEjZeZCzrSwRMSVbBq7z3M467Q+hwv/TV
+	zHqenSQ6BL2PtLGwhyieQvduvCkLXpN/NeGYNesobzPuch7Uipax6WNjTNwWHAOH
+	tSNsK9wzBWIJqLlS5uJttWcmW4HSSKVgH/3kpQ24mI9TZlFX2F5xYAQIlTZdT1ns
+	AwkF922TPJ2GWjxLC/lwibJOQIXXXrX/TIZS5rVFCQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4805uqryr8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Jul 2025 14:05:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56LCL3j1005478;
+	Mon, 21 Jul 2025 14:05:06 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 480tvqnp57-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Jul 2025 14:05:06 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56LE541359441660
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Jul 2025 14:05:05 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D44F02004F;
+	Mon, 21 Jul 2025 14:05:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9AD0C20040;
+	Mon, 21 Jul 2025 14:04:51 +0000 (GMT)
+Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.43.127.174])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Jul 2025 14:04:51 +0000 (GMT)
+From: Nilay Shroff <nilay@linux.ibm.com>
+To: linux-block@vger.kernel.org
+Cc: hch@lst.de, dlemoal@kernel.org, hare@suse.de, ming.lei@redhat.com,
+        axboe@kernel.dk, johannes.thumshirn@wdc.com, gjoyce@ibm.com
+Subject: [PATCHv2 0/2] fix sbitmap initialization and null_blk tagset setup 
+Date: Mon, 21 Jul 2025 19:34:40 +0530
+Message-ID: <20250721140450.1030511-1-nilay@linux.ibm.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <t6yl3jtspvfby4c6nlqbwjucfkx2evpuebaqvwolgjzcdst3sx@y4yuq7xegul6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zLqtPxAuUJ2UFgk_SlNd1cD5FRhyJec8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIxMDEyMSBTYWx0ZWRfX0qTJ+F6EXfq4
+ kr7F2o63hJQvsCfWAQiQdQrK8pq5DJCQadhg6YbBXH9pLlXhcpPbjqXX8u9BqROexWjlGGOM5mH
+ HD7QoFAAWXeiTpuXOXB7ZXI+/JqJ3GmhlCz2W9X19H496K+ATtz0p0GwH7DXTpXuDskBkX3GPpE
+ 3vUu31/btbbLu2SLAdROOQ76O16kYQKbH1FEMZBgXenlRKUm41vZkFN6tqfBJ7QFp4vYF1S4x1l
+ J+9K25w3hP3L9GyjAGS+KV/DmTSMsXZ+Bv5ndFwhFtgceohKkhNNQ7hxstyoJXCObI/j/amJE3W
+ GsDtYtKI0hAJb5sAORFCtYYwktwEOWAs2hFLv0IhDZW6MjlvwOnUFjd8V6P/edOektf+clqy9oh
+ fhvALFjpyohtLPngUG2b+Bfqeh4VpmnQPiC++SBMycMU4oxgbCZAub6RpRgAFs7i4KtOXoDf
+X-Authority-Analysis: v=2.4 cv=dpnbC0g4 c=1 sm=1 tr=0 ts=687e4913 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=MMnfdg8G3pu6OI0W2nEA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: zLqtPxAuUJ2UFgk_SlNd1cD5FRhyJec8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-21_04,2025-07-21_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=93 priorityscore=1501 bulkscore=93 mlxscore=0 malwarescore=0
+ mlxlogscore=486 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507210121
 
-On Mon, Jul 21, 2025 at 02:49:57PM +0200, Jan Kara wrote:
-> > We need to do something similar for LOOP_CLR_FD, LOOP_SET_STATUS,
-> > LOOP_SET_STATUS64, LOOP_CHANGE_FD, and LOOP_SET_CAPACITY ioctls.
-> 
-> Well, careful here. Changing loop device underneath mounted filesystem is a
-> valid usecase in active use (similarly as changing DM device underneath a
-> filesystem). So don't think we can play similar tricks as with
-> LOOP_SET_BLOCK_SIZE where changing block device block size just doesn't
-> make sense while the device is in use. Similarly LOOP_CLR_FD is an
-> equivalent of device going away. LOOP_CHANGE_FD is a legacy of the past but
-> it was *designed* to be used to swap backing file under a life filesystem
-> (old days of Wild West :)) during boot. We may get away with dropping that
-> these days but so far I'm not convinced it's worth the risk. So in this case
-> I don't see anything here that couldn't happen with say DM device and thus
-> I wouldn't really restrict the loop device functionality...
+Hi,
 
-Sure, and LOOP_SET_CAPACITY might be used to grow a file system image
-which the file system could then grow into.  Fair.
+This patchset fixes two subtle issues discovered while unit testing
+nr_hw_queue update code using null_blk driver.
 
-This is related to BLK_DEV_WRITE_MOUNTED=n which the syzkaller folks
-have agreed to use to prevent noisy syzkaller reports.  We're seeing a
-bunch of syzkaller reports now that syzkaller has been taught how to
-use these loop ioctls and so we're seeing loop device hijinks.  Which
-is fine; I can just start filtering any syzkaller report that uses
-loop device ioctls as false positive noise and call it a day.
-Unfortunately, that won't help deal with researchers that are taking
-the syzkaller code and then sending reports without any dashboards or
-reproducers.  :-(
+The first patch in the series, fixes an issue in the sbitmap initialization
+code, where sb->alloc_hint is not explicitly set to NULL when the sbitmap
+depth is zero. This can lead to a kernel crash in sbitmap_free(), which
+unconditionally calls free_percpu() on sb->alloc_hint — even if it was
+never allocated. The crash is caused by dereferencing an invalid pointer
+or stale garbage value.
 
-However, I do think that if the file system has advertised that they
-don't support random underlying block device hijinks, such as XFS for
-example, we should honor this and disallow those "wild west" loop
-device operations.  And perhaps we should similarly disallow them if
-BLK_DEV_WRITE_MOUNTED=n.
+The second patch in the series fixes a bug in the null_blk driver where
+the driver_data field of the tagset is not properly initialized when
+setting up shared tagsets. This omission causes null_map_queues() to fail
+during nr_hw_queues update, leading to no software queues (ctx) being
+mapped to new hardware queues (hctx). As a result, the affected hctx
+remains unused for any IO. Interestingly, this bug exposed the first
+issue with sbitmap freeing.
 
-						- Ted
+As usual, review and feedback are most welcome!
+
+Changes from v1:
+    - The set->driver_data field should be initialized separately for the
+      shared tagset to ensure it is correctly set for both shared and
+      non-shared tagset cases. (Damien Le Moal)
+
+Nilay Shroff (2):
+  lib/sbitmap: fix kernel crash observed when sbitmap depth is zero
+  null_blk: fix set->driver_data while setting up tagset
+
+ drivers/block/null_blk/main.c | 1 +
+ lib/sbitmap.c                 | 1 +
+ 2 files changed, 2 insertions(+)
+
+-- 
+2.50.1
 
 
