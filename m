@@ -1,138 +1,110 @@
-Return-Path: <linux-block+bounces-24632-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24629-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 566C1B0DA56
-	for <lists+linux-block@lfdr.de>; Tue, 22 Jul 2025 14:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19101B0D91D
+	for <lists+linux-block@lfdr.de>; Tue, 22 Jul 2025 14:14:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C49416692C
-	for <lists+linux-block@lfdr.de>; Tue, 22 Jul 2025 12:59:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4662A16FA05
+	for <lists+linux-block@lfdr.de>; Tue, 22 Jul 2025 12:14:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC342E9EAE;
-	Tue, 22 Jul 2025 12:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40922E8E10;
+	Tue, 22 Jul 2025 12:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eSociMXI"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KlyEiMC2"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C991F09AC
-	for <linux-block@vger.kernel.org>; Tue, 22 Jul 2025 12:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF7D2E3AE4
+	for <linux-block@vger.kernel.org>; Tue, 22 Jul 2025 12:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753189171; cv=none; b=Y1GktfoG32FtNchavWM+SYYTraCO7R1r1/VyouMjJMlrMq9PkXjuCEXCfrA1S9ipnoTYrTD1pRZYtXr0qyhbPF/bHqPcHTaz3Tu0Cd6Ivr4LRXY/0p6sWJlIImmdAYziNsjfZ7ERGMshjaC/LBtdJIx+M35q1JbEMnjoJVE1XiQ=
+	t=1753186462; cv=none; b=CladPWphHkloIy0Vp0xkGYYJYiGBLhW41buZU26Swn+9IZxbQdXtrRF8RJuWVgfYwbV25fHOLCVIGzKh1Kl67wFMSRFOFnI3Qum5Htm2fWeTlmls+z7FxL+N6NG3VoWPraUJ1wV4hk4uIRCSTUdJK0fQ037698zNIWc8i4vaCZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753189171; c=relaxed/simple;
-	bh=dNboiCYnvOQ/i/dAAniiFz8Cxzdg0xu2uLo3rxvmf0A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=bP67lkN+6gH3Invlq+6lwJk/XyY+UzaL73EE0uKZSc3HfVxZBEM90aXvyrnKXhNg/s6XtNqrY3QiJKLO0nRlytzgAaqOWHis3/I4GBYQvcGrZXmnq+ova1IznUPW58mt2uI3LFIbWqv1/M6gz1Pe3Z/FB6p6qMubQGlQRvURi+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eSociMXI; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250722125926epoutp03e2acb3d53e69d78ac9d738a75c7aa12c~UlEIMP7K_1883718837epoutp03h
-	for <linux-block@vger.kernel.org>; Tue, 22 Jul 2025 12:59:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250722125926epoutp03e2acb3d53e69d78ac9d738a75c7aa12c~UlEIMP7K_1883718837epoutp03h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1753189166;
-	bh=t2N2RdsmomzGRnLA5OCrx1H5380TMeiOrBLlyLmumAI=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=eSociMXI/r3TMoFBO2he9W2Zp5hX0PXsB+s1y49jAxDfu/QX3AyOvcYsjFf8fOb2l
-	 VcVv96O891LAbiKJkAtc6C2pHnD6TkmaaAvFfsEpA+gMI++/kZsajEQM3dZhL8ceh/
-	 StlGvY9FsxTcdheQ47s9mXa/P0XINVc7Meq08aiE=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250722125925epcas5p4448e922074292bb7621d1ccae707c08d~UlEHv-pu70936109361epcas5p4a;
-	Tue, 22 Jul 2025 12:59:25 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.95]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bmcmD6hQrz6B9m6; Tue, 22 Jul
-	2025 12:59:24 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250722120822epcas5p100667bdb8c199361a66dcef2ae09fdd1~UkXivYGzL0066500665epcas5p12;
-	Tue, 22 Jul 2025 12:08:22 +0000 (GMT)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250722120820epsmtip2b3cbbcaab6ae301751f037453e0a26ee~UkXhFrVyo0221102211epsmtip2j;
-	Tue, 22 Jul 2025 12:08:20 +0000 (GMT)
-From: Anuj Gupta <anuj20.g@samsung.com>
-To: vincent.fu@samsung.com, anuj1072538@gmail.com, axboe@kernel.dk,
-	hch@infradead.org, martin.petersen@oracle.com, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	joshi.k@samsung.com, Anuj Gupta <anuj20.g@samsung.com>, Christoph Hellwig
-	<hch@lst.de>
-Subject: [PATCH v3] block: fix lbmd_guard_tag_type assignment in
- FS_IOC_GETLBMD_CAP
-Date: Tue, 22 Jul 2025 17:37:55 +0530
-Message-Id: <20250722120755.87501-1-anuj20.g@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1753186462; c=relaxed/simple;
+	bh=sf1+T0JcwOlPtAmaW12tuPWOakYQlJPwEqSiEGG12QU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nMMGdkEHDNilERmPHoD5CYk3Zb/HUzYEuAr6UHTCNzgjxi/HrA+Sp5eZerV0x7K+qWikfxSMT9n2eQwtdmXkYC3F5otLsSzR0oR+WPniSMYy7AILGdmlxYCnkyk97IUChfOqa5ZkE0iSEJb4KxaeSX0mikM/5hv8pDRoyn2X8II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KlyEiMC2; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3dc9e7d10bdso21205515ab.2
+        for <linux-block@vger.kernel.org>; Tue, 22 Jul 2025 05:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1753186460; x=1753791260; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aPVTwTdFTsc751gaYm/Hhn67W96rQTewFcoGBTIznqI=;
+        b=KlyEiMC2gZlyfQCsKckCWISWqfpY6xjbr9ICQsO3Uu5Qc2CyuxQHQ3aVy4MeLvsI8Z
+         8BJWLzKFlDVgZGoMON1k7utu/g0SkpkkWKjLrVNr7zG02u3m8vGBgrOFkOVeyLFIVaU7
+         cKc47QIreCbAKCtz1ep84VnpebxO2TpkzzGsSv3C3Pz28YMBKU4QPVI4Ds58KIj/tHli
+         xTwqymMSicoASwZuev2rEPNiesNHr3Mama25tHBz/JpuryZQWz8rikAU0vMcEwjz+6td
+         5stsPl74bYY1QoeCbTwLDz8g5xk4IkQpsgYdm6/IlRyplfruuDDdG+S8Rxz+4zoPnCJv
+         A0UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753186460; x=1753791260;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aPVTwTdFTsc751gaYm/Hhn67W96rQTewFcoGBTIznqI=;
+        b=PV25a1vqxUykVe+cNvI8PixSYV2N4PIwEWB6USCAPFm0DiXTRwtNKrWeEcATO4PqZ9
+         OKVEx74FrxVxHl4NV3bazKbiCsFpF/lWVVfq9kHqPvD4Qhr1TgHSACYRwdx8m4i4A241
+         CQOt0S9f8pTIq8R5WZe+5soaxVy5ULnRYyZS76x+HJ7kUqxs5m9TYAp6QYiglRNYK1sN
+         8HqoNFq8xAYtQtscpKg+oGD48HVn1zrg4uYtdDzy72PZAeaQUIckFwZUKEYhrXOszlce
+         hfcRlIRes0t9xs62RR9Ua+JbX4+NFtbAoggXqQDvCNHsC7SSvsw7JQtW250bFwyOfjfs
+         1r/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXu32kDJjVVpvBeb4VwFGf2zgk8mgBzNcCBaZ6y2kYbk0/T0shc2ML3CNtx2ALgXZXXFRZ0cUZ9O04uPA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPhw5/qhDBKNM2ipfqg77lxMUi/5GDfyBLbuWSEGTiC993f68U
+	BTaRS4mto49hRlvWAzXJvRj50vW1H/xEQXDEtebrhVZZ0Hi0v/zlWbufUXu+BV/eaiDPEW+fXHY
+	cEaVC
+X-Gm-Gg: ASbGncsMbTjmXct8PD5jH0guQk3zqZq/cy46bYXPDOZCkErxj7Q9NbHTLKBmi0z5Jfr
+	1MtwIvKHxjE+n3kO5wmUc48w/fV6rLoj7zHLMioinN0yrV4oc6FvDWHA2P1Kv3YLBKlNqAeRKU9
+	Lts06j5Y4vXdOtGjRCveoqJAeaGBCc9s8eIxTNX4nLoE2Y8OQXX0+G4WQCsZzKSHaJeTyV8MzG6
+	ceBIeYurUKL8jpx6tLNJUTBywNrM6MenZqqLACg77lm1Q7xLFR8zpJuwyhl54xeCSybNKZLbWBB
+	4Ws94jYeP4Je/oOuPnioFE0xgs3jUb/cXt5yEXmlsNlgO45BBod8QVdcMnkEEpOftacmV9PDQ4z
+	qwoNBsHkeAcGLrWl0jc0=
+X-Google-Smtp-Source: AGHT+IGWtOls1B66eWDWTPlotWRsVDE8PPR3Zo1JfCpc3xDLAOtrzQLxt3z8FA6rIVPpDcscI4nFOA==
+X-Received: by 2002:a05:6e02:3c87:b0:3df:5333:c2ab with SMTP id e9e14a558f8ab-3e282e64ee3mr277030295ab.17.1753186459712;
+        Tue, 22 Jul 2025 05:14:19 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5084c787e63sm2495145173.9.2025.07.22.05.14.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Jul 2025 05:14:19 -0700 (PDT)
+Message-ID: <8acbc346-98f8-44fc-9675-0c3a7da87d21@kernel.dk>
+Date: Tue, 22 Jul 2025 06:14:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250722120822epcas5p100667bdb8c199361a66dcef2ae09fdd1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250722120822epcas5p100667bdb8c199361a66dcef2ae09fdd1
-References: <CGME20250722120822epcas5p100667bdb8c199361a66dcef2ae09fdd1@epcas5p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.15/regression/bisected - lockdep warning: circular locking
+ dependency detected when plugging USB stick after ffa1e7ada456
+To: Hillf Danton <hdanton@sina.com>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: thomas.hellstrom@linux.intel.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+ regressions@lists.linux.dev
+References: <20250722005125.2765-1-hdanton@sina.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250722005125.2765-1-hdanton@sina.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The blk_get_meta_cap() implementation directly assigns bi->csum_type to
-the UAPI field lbmd_guard_tag_type. This is not right as the kernel enum
-blk_integrity_checksum values are not guaranteed to match the UAPI
-defined values.
+On 7/21/25 6:51 PM, Hillf Danton wrote:
+> Try the diff that serializes elevator_change() with q->elevator_lock if
+> reproducer is available.
 
-Fix this by explicitly mapping internal checksum types to UAPI-defined
-constants to ensure compatibility and correctness, especially for the
-devices using CRC64 PI.
+Hillf, these seemingly random and not tested or thought through patches
+flung out in response to reports is not useful. It just wastes peoples
+time and resources.
 
-Fixes: 9eb22f7fedfc ("fs: add ioctl to query metadata and protection info capabilities")
-Reported-by: Vincent Fu <vincent.fu@samsung.com>
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
----
- block/blk-integrity.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-integrity.c b/block/blk-integrity.c
-index 61a79e19c78f..056b8948369d 100644
---- a/block/blk-integrity.c
-+++ b/block/blk-integrity.c
-@@ -83,7 +83,21 @@ int blk_get_meta_cap(struct block_device *bdev, unsigned int cmd,
- 	if (meta_cap.lbmd_opaque_size && !bi->pi_offset)
- 		meta_cap.lbmd_opaque_offset = bi->pi_tuple_size;
- 
--	meta_cap.lbmd_guard_tag_type = bi->csum_type;
-+	switch (bi->csum_type) {
-+	case BLK_INTEGRITY_CSUM_NONE:
-+		meta_cap.lbmd_guard_tag_type = LBMD_PI_CSUM_NONE;
-+		break;
-+	case BLK_INTEGRITY_CSUM_IP:
-+		meta_cap.lbmd_guard_tag_type = LBMD_PI_CSUM_IP;
-+		break;
-+	case BLK_INTEGRITY_CSUM_CRC:
-+		meta_cap.lbmd_guard_tag_type = LBMD_PI_CSUM_CRC16_T10DIF;
-+		break;
-+	case BLK_INTEGRITY_CSUM_CRC64:
-+		meta_cap.lbmd_guard_tag_type = LBMD_PI_CSUM_CRC64_NVME;
-+		break;
-+	}
-+
- 	if (bi->csum_type != BLK_INTEGRITY_CSUM_NONE)
- 		meta_cap.lbmd_app_tag_size = 2;
- 
 -- 
-2.25.1
-
+Jens Axboe
 
