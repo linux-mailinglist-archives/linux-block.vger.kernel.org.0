@@ -1,92 +1,128 @@
-Return-Path: <linux-block+bounces-24695-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24697-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E03C1B0FDC8
-	for <lists+linux-block@lfdr.de>; Thu, 24 Jul 2025 01:53:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D03D7B0FE57
+	for <lists+linux-block@lfdr.de>; Thu, 24 Jul 2025 03:20:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24A9D166BA1
-	for <lists+linux-block@lfdr.de>; Wed, 23 Jul 2025 23:53:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B75091CE0028
+	for <lists+linux-block@lfdr.de>; Thu, 24 Jul 2025 01:20:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5D2823505E;
-	Wed, 23 Jul 2025 23:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0B761E868;
+	Thu, 24 Jul 2025 01:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVfpkPb+"
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="xFNRCseF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r3-18.sinamail.sina.com.cn (r3-18.sinamail.sina.com.cn [202.108.3.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B267D220F5D
-	for <linux-block@vger.kernel.org>; Wed, 23 Jul 2025 23:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1246878F54
+	for <linux-block@vger.kernel.org>; Thu, 24 Jul 2025 01:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753314812; cv=none; b=KUjWqB/N8xnQaryO6JvoCc+VIHk79lhqdrqWvVzRxROv+OG9PK0DAVdKOdoBRkv0tDHDVFj6zfSQD+OpOMvWAyVM8MPRZrykT3xFZdS0dqztJmnrLTNfawZOzUwPQ/D6hUT+hWUhMDXJFlSg/gzUGF/rnl9jZ/b0teY5rpy8Ys4=
+	t=1753320016; cv=none; b=bicdHDwRHdKNIawEihRIZgagLmblNZ4OCaHppKa/tkoZ59w8VWU5u0ejLj0C6nIbaV9McWfv3wPswgUZZrN2sGr1KebO4va+scxQbhFS42Iqq64JrQ4S+Yz1a6pO3/YzbMiIgHRYykbwJdrAOaapiWKpR5YyohFI1m6V25hKw1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753314812; c=relaxed/simple;
-	bh=Qyv8wtZsdddDC1tA/U6PoM6WbPlvRO20sUbpH5X3kPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGYJTD+5TzAg8aKHqVkqBDQtwv1MaHpbF8T46d8cSqMK0ju6y9xfR9r1m14ChmhDDeJf4I4e1jwt1fNpCCgXQINzyoYg77a1FlSh5SXWOhSWj0ER10CFZ77Yb7Tws3mJ0svWFSo8eTUn5+n9FR4ndz6yVMuONVnnr15BPoddjLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVfpkPb+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23523C4CEE7;
-	Wed, 23 Jul 2025 23:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753314812;
-	bh=Qyv8wtZsdddDC1tA/U6PoM6WbPlvRO20sUbpH5X3kPg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XVfpkPb+3JucCXx0Mom7C0hnGZTmF0Ctdt9hPO/zriSbBtfBVZn1m83gXtKa3DpIk
-	 T0JrDN8sV8KcAx4IHauGWUHguD1Yar+uQLreWbtaca0/JqadQwJQ2cPhA0vrj9IO5V
-	 UKZtiRRQ2KJ5yDbF2JhC54Cc8o/Y/2NJg/qrmPFTYtuAR0jrY6mZ6lQ1Moykycr6m8
-	 Mu961LELSpu6SCGQcT2LtfEeSMRhEVBWE0WrgBcFH//CC4CklzG3cPQtGchgSbN+Q0
-	 MA1AYUmwtwy0EMbDTkDxmyf6JyER5etnjsLJBcJ3zWifpKEYt+mGV4Ek+CsaSzEkUs
-	 WpocqEJ6ev96g==
-Message-ID: <5e56095c-bcf4-472c-941a-9580b0818c6c@kernel.org>
-Date: Thu, 24 Jul 2025 08:53:30 +0900
+	s=arc-20240116; t=1753320016; c=relaxed/simple;
+	bh=mDD70Q0yeAlFwV7OKohDiy4mFKvI3jVQz1CMtmTBuJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G/WRtTVE3eGYbpbBa0NiFhRjzr3YzXZ8QJnZ8Jvb/x1H+if2u6FxhcixnGguohnLafUEkymYNckPWKPEvF3/FZI8hHQJGb7pSHeIFK92gYhIpi2BVKF50ou3ow6Kk4Jj9jWxeHf2ictbbvHEJURGtGMGQEWEC50GvHea2t8ojtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=xFNRCseF; arc=none smtp.client-ip=202.108.3.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1753320011;
+	bh=HxOg07j8XSOPOmST+Z7BvpNeAdBjsjbaa+rEGh4idSc=;
+	h=From:Subject:Date:Message-ID;
+	b=xFNRCseFpw/9eRHR8I19U3ENkIE1TQAf26VG4lQPuDyHkD8CW4YdzParAlTgt/Nbo
+	 P4nRSi565tRGNjxEfzQSP3wwesX1Z7sRBNCSHtr+ND7hs3HkUbPw/KbxceehJO0zea
+	 dWVEYWS9djIJ0BssFjb/h7TnclE2PRikRupJxKho=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 68818A41000067DB; Thu, 24 Jul 2025 09:20:02 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 6893174456743
+X-SMAIL-UIID: 40610C3A39A743CCBCBE9913FDAE4EA7-20250724-092002-1
+From: Hillf Danton <hdanton@sina.com>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: thomas.hellstrom@linux.intel.com,
+	axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ming Lei <ming.lei@redhat.com>,
+	regressions@lists.linux.dev
+Subject: Re: 6.15/regression/bisected - lockdep warning: circular locking dependency detected when plugging USB stick after ffa1e7ada456
+Date: Thu, 24 Jul 2025 09:19:49 +0800
+Message-ID: <20250724011950.2836-1-hdanton@sina.com>
+In-Reply-To: <CABXGCsOwAQuisqpfUvW+1BWtOV+O1GypcQ6mb4SSUgN3YkAZUQ@mail.gmail.com>
+References: <CABXGCsPgCBahYRtEZUZiAZtkX51gDE_XZQqK=apuhZ_fOK=Dkg@mail.gmail.com> <20250722005125.2765-1-hdanton@sina.com> <CABXGCsO5mFu9fOq8oKwByZaAjJrCB_V0hKgOsLLJJ4x3PmHr1g@mail.gmail.com> <20250723010336.2793-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 2/2] null_blk: prevent submit and poll queues update for
- shared tagset
-To: Nilay Shroff <nilay@linux.ibm.com>, linux-block@vger.kernel.org
-Cc: hch@lst.de, yukuai1@huaweicloud.com, hare@suse.de, ming.lei@redhat.com,
- axboe@kernel.dk, johannes.thumshirn@wdc.com, gjoyce@ibm.com
-References: <20250723134442.1283664-1-nilay@linux.ibm.com>
- <20250723134442.1283664-3-nilay@linux.ibm.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20250723134442.1283664-3-nilay@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/23/25 22:43, Nilay Shroff wrote:
-> When a user updates the number of submit or poll queues on a null_blk
-> device, the block layer creates new hardware queues (hctxs). However, if
-> the device is using a shared tagset, null_blk does not map any software
-> queues (ctx) to the newly created hctx (via null_map_queues()), resulting
-> in those hardware queues being left unused for I/O. This behavior is
-> misleading, as the user may expect the new queues to be functional, even
-> though they are effectively ignored. To avoid this confusion and potential
-> misconfiguration:
-> - Reject runtime updates to submit_queues or poll_queues via sysfs when
->   the device uses a shared tagset by returning -EINVAL.
-> - During configuration validation (prior to powering on the device), reset
->   submit_queues and poll_queues to the module parameters (g_submit_queues
->   and g_poll_queues) if the shared tagset is enabled.
+On Thu, 24 Jul 2025 01:36:37 +0500 Mikhail Gavrilov wrote:
+> On Wed, Jul 23, 2025 at 6:03 AM Hillf Danton <hdanton@sina.com> wrote:
+> >
+> > In order to cure the deadlock, queue is thawed before switching elevator,
+> > so lets see what comes out with that warning ignored.
+> >
+> > --- x/block/elevator.c
+> > +++ y/block/elevator.c
+> > @@ -575,7 +575,6 @@ static int elevator_switch(struct reques
+> >         struct elevator_type *new_e = NULL;
+> >         int ret = 0;
+> >
+> > -       WARN_ON_ONCE(q->mq_freeze_depth == 0);
+> >         lockdep_assert_held(&q->elevator_lock);
+> >
+> >         if (strncmp(ctx->name, "none", 4)) {
+> > @@ -661,6 +660,7 @@ static int elevator_change(struct reques
+> >         unsigned int memflags;
+> >         int ret = 0;
+> >
+> > +       /* updaters should be serialized */
+> >         lockdep_assert_held(&q->tag_set->update_nr_hwq_lock);
+> >
+> >         memflags = blk_mq_freeze_queue(q);
+> > @@ -674,11 +674,11 @@ static int elevator_change(struct reques
+> >          * Disk isn't added yet, so verifying queue lock only manually.
+> >          */
+> >         blk_mq_cancel_work_sync(q);
+> > +       blk_mq_unfreeze_queue(q, memflags);
+> >         mutex_lock(&q->elevator_lock);
+> >         if (!(q->elevator && elevator_match(q->elevator->type, ctx->name)))
+> >                 ret = elevator_switch(q, ctx);
+> >         mutex_unlock(&q->elevator_lock);
+> > -       blk_mq_unfreeze_queue(q, memflags);
+> >         if (!ret)
+> >                 ret = elevator_change_done(q, ctx);
+> >
+> > --
 > 
-> This ensures consistent behavior and avoids creating unused hardware queues
-> (hctxs) due to ineffective runtime queue updates.
+> Hi Hillf,
 > 
-> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+> Thanks for the patch.
+> 
+> With this patch applied, I haven't seen either the lockdep warning or
+> a soft lockup within 13 hours of runtime. Not sure if that's
+> sufficient yet for a final verdict, but it's definitely promising.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Thank you for testing it.
 
--- 
-Damien Le Moal
-Western Digital Research
+It works for you so far, but given the "correct" locking order enforced
+in ffa1e7ada456, I know the chance for reversing that order is not zero
+yet either in Jens or upstream tree. Nor simple to fix every single case.
+
+Hillf Danton
 
