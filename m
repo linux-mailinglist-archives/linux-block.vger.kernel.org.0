@@ -1,144 +1,146 @@
-Return-Path: <linux-block+bounces-24783-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24785-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE201B1223B
-	for <lists+linux-block@lfdr.de>; Fri, 25 Jul 2025 18:44:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B511CB12324
+	for <lists+linux-block@lfdr.de>; Fri, 25 Jul 2025 19:46:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 029275669B3
-	for <lists+linux-block@lfdr.de>; Fri, 25 Jul 2025 16:44:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03A1EAC8596
+	for <lists+linux-block@lfdr.de>; Fri, 25 Jul 2025 17:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2AA3155C97;
-	Fri, 25 Jul 2025 16:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828512F0031;
+	Fri, 25 Jul 2025 17:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpDQEuvn"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aT5Oy0Op";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HmfMytkj"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F592EF289;
-	Fri, 25 Jul 2025 16:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05602F002B;
+	Fri, 25 Jul 2025 17:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753461858; cv=none; b=qrMFaDqB510QuRRuYOft5B9MziGnea3NQVGEtrpuE47mOQSDeJWdYMUqZheHZG8dIeDcQbbfBBujs8tB0mExyL5WOxuwg1gJgpid3JyPfRY+oUEio4pqnPpxSAodVY7lsZheA3FK0WyXqY26zxfdVZLrARYlqkAm3cd2WXHigqc=
+	t=1753465550; cv=none; b=BHRoB0RIkNoLfZkRehZ2Pvr932rxL8KeBFw/uOlTqJytr8J67kRC/zJoDfSyUhi12qZDLA3qmE69/XFxE0DDRzdq0lwGRNHHCQKrxvgNe8LCzWwGaTyRvkQrRIjAzM1XVLsv7hKvkugI3v3Rvto8KDllIcf+9nlt66G4SC3QfAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753461858; c=relaxed/simple;
-	bh=h78yE1DkQ3fTjlceS0tehFkgWYsLhUQn3uH2GMwQ9s4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f30i0CAg2LOMlKlAK2Z8K94xjBWmecBvdkJ37nHBuQIM5BYlP0mmHH3g0RaURnV966vliGbbI1Kc9+ONAooLCfpkgfwGFZInvcGMAtR5pPG9yHaCUO67h/MvloIGuAC6cSz1RTb5ILP6ii1PiTBRzVS5xTZnyFHWG6Tc5Mb9UmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cpDQEuvn; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32cd0dfbdb8so22597411fa.0;
-        Fri, 25 Jul 2025 09:44:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753461855; x=1754066655; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2jkkxxr1tvEIQXkKkETdG3gEvMrEI02eI/QjeRb314U=;
-        b=cpDQEuvn3aP5NKHwLpPp7WEmSjy2HOd3f3gYBnFU9YkdTgXqPe3D9BV8bbVz5Q+lw9
-         Ph8s5u+VCoKlcwAW9cESgUyLxpZWiu9F/RbQyM42aKHNmiCL6xfqtGoCJFn53DwVh+K1
-         zGhHY9aZ+T/Uvy8xVqrT/6UE0NRx+55fBd1zkkdCs/bIjwB1HZyjZ7mTypr+IqzOSJNU
-         aDl5PAQHjbfoKuMqnmmZSeL8xsUwn/gT5ioLfV9aIO6lt74hS24OInIK98hYvdgqYAR/
-         O61pm9RFE94uWK5LdHaZm4fte5M48jqI+QfUjFS8cZXBpSRoLSpkgTl6NzgnzKYWaRLE
-         cnRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753461855; x=1754066655;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2jkkxxr1tvEIQXkKkETdG3gEvMrEI02eI/QjeRb314U=;
-        b=ukoxS7AqoMeV/9Enx4qw4RuqdyNiIbhc16g1v95eNUMBvPAd8RlJZMXk955zaIsGal
-         fwpPVXdwW2SX8kTGwjSKKJN6qrsbkQ4HWxTgrENokEHvK8hL1/nrJ61TW7sIKcT6bpzx
-         Nugqg7NIoaLnlH2cFYjO8YViJ9PEGdHpXrawswKwnfFfFjAEqPSn25zGHOcwzWrSF3SM
-         +ju9Sle3TZnRM+nP5UR0KjoFVhw5WU08q2OkISmdxvo50/SJgu/kZ8XPRFJZfDzJlEXo
-         L/Nw0cIjU7Ynv2r+j69TobHS/cmErtmJRjPw61sxUMkABJOSytsAXtF9rPK/AD7cXyeB
-         ZROw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBzTSwJFlE038Gqm5Z/qCiR7KVPqwuH1SOqjsGLe1yifffMnXrewlrPqd/EjCyn7P7jbkcWyOrLQbe/+3E@vger.kernel.org, AJvYcCXrLOxE2gWqfD1QyT8PLzqSdDTaLX4I3OiJs1xxR2AJ/Epy3Q8cCFgaL6IInGFUPNgoVa7ojl+toYP4Aw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJQwCoUHiDkzs4yENRegK58VVZcfGoxJN2sbVXCbVvWi7/6HWO
-	/TBS8evKKiN39Z8IUSQAUQXwFxiwyTgaqJxjTrA/sz37k3EAj+7SMltS
-X-Gm-Gg: ASbGncsYyxHb47/LWOGqZtksSj7OzUB1+xnfsQh26gFJG749hbRmdMItTizJdzNps89
-	bZ2gJWh7E+SEbTecsGm9n6Vsm1F9YkOHaeXdhCQ1U87yHLzoFoSitnFtLlZ95V4CfJiG8846ub/
-	3VkW6cL3nE3fTrD/ObOdd13mVlgZ8VTyXJV2wyvWQH69aao3z8My9EGZg8zgyA4G8njW2nT75aT
-	xQoHXM1EnL9oJt96PfqMSNVxK3QIbWqIMOpCGYsw1tBEQihM84y3eLmSmpgysUfpSij0/0zdI5Z
-	ybFFfl+Xau/kHyFwOCq0SdBrNKoqpGD9XmpjNLavA7NbTRj23ZNd/BieuZx3BPDKbsOl82frHbE
-	jXi+6SiEKLPSAR/YPgMQEz7BfisvEB73Kz1Tm+nA2E4lnX3Y=
-X-Google-Smtp-Source: AGHT+IE8hXJ25wF8ru+MlHrYUzqY59qEsX0o5q6j4nN8guTvq6nc+6mXIb/PIJqdE5luSZTran9WEg==
-X-Received: by 2002:a05:651c:31c3:b0:330:4f46:9467 with SMTP id 38308e7fff4ca-331ee819570mr9244521fa.27.1753461854815;
-        Fri, 25 Jul 2025 09:44:14 -0700 (PDT)
-Received: from soda.int.kasm.eu (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-331f407b023sm705931fa.6.2025.07.25.09.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jul 2025 09:44:14 -0700 (PDT)
-From: Klara Modin <klarasmodin@gmail.com>
-To: brauner@kernel.org,
-	anuj20.g@samsung.com,
-	arnd@kernel.org
-Cc: martin.petersen@oracle.com,
-	joshi.k@samsung.com,
-	hch@infradead.org,
-	arnd@arndb.de,
-	naresh.kamboju@linaro.org,
-	anders.roxell@linaro.org,
-	axboe@kernel.dk,
-	kbusch@kernel.org,
-	csander@purestorage.com,
-	asml.silence@gmail.com,
-	adobriyan@gmail.com,
-	djwong@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Klara Modin <klarasmodin@gmail.com>
-Subject: [PATCH] block: change blk_get_meta_cap() stub return -ENOIOCTLCMD
-Date: Fri, 25 Jul 2025 18:43:34 +0200
-Message-ID: <20250725164334.9606-1-klarasmodin@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1753465550; c=relaxed/simple;
+	bh=kqjOsYV1dwZtbVp4YcwJK3dkFL2NQdW6Brs3S160ElI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=jzXITuMFgbNRJV8zpAGZNwv+DHMnT/OHUKs/1siLCJmmVTz9OEczOa+ATWGMDxKPTOV68coravmBAETuFDLhwFSvMzjCNSwJtCnVr7LL1M+lzMPi84fUR0u81rbEo1t1loGVTEg+1DWVOz20smwjfo2hY6MkPTwx6BpyTICJyBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aT5Oy0Op; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HmfMytkj; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 930767A0BDC;
+	Fri, 25 Jul 2025 13:45:46 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 25 Jul 2025 13:45:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1753465546;
+	 x=1753551946; bh=nEOiVj+k4RG5cBWauFfY00x2LUoWxbAG5Bjsu+VXqts=; b=
+	aT5Oy0Op2iV6vGDI5TFCTrslSwWXAarVR5n45punqAqk5ai+2z7ks6tOBejazU17
+	/nOE4TzqBCEMNKnhO8uTUeADlNER2ZOWCJm+cfnUAmjehrXlT7ZYZR4oXyL+nICe
+	OdRLt7G6LEw2L5yiX5J+xZAab4CO+gbtjqYZhf5K/79bBE+JQ6bCptV8N+9CidfX
+	UZ30X9Z9Z6DU3clKjgL/zaMjy0TrAGShSVb9wyyh3GY697pBVZ9gSyA2EaT9PZCf
+	ckPZQlMAzEeiV4cW8+fBPqceUxvLmeBbryzJGfCcZrSQflk6JQ/T+cmKwH2Z+9/M
+	Fa9pqxANGye90qbTd/RLjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1753465546; x=
+	1753551946; bh=nEOiVj+k4RG5cBWauFfY00x2LUoWxbAG5Bjsu+VXqts=; b=H
+	mfMytkj8JPHGMbn3PTAoEFJr/Kd/Gs4FP8sCvAcmSScORYMl7kOhpBPxttFtjihm
+	i7bPF+9rjgaNJwaU72zq2T7LZojwQ/OlgOC2ywUn9DnT3BJ9XCpFMu1dlLFQQTp7
+	ZQhk0oyeh9TZnpirot6Hp+TPIwbPDkzAiTxgnSLIoWGzaR9X0A63k8Cxj3t3Todi
+	sXXPFO8yBlkEBlgKoQCQ8Gpe8Pyek9g5VZNKjo9gOPXlHAA6vTy9mAKDIPR+KRq6
+	G+zoKsW/dpYSiO70EJ2J/1jh/ggNnmUmhhpJFySfNwA3eCeyVJrxjUHorIlHMO5c
+	qT0jSVfOj2uN557/7zBgw==
+X-ME-Sender: <xms:ycKDaGMHZcWNPre-Jye-LV8iC-axMi_4b4ReiiU73v00NoIb4WhYjw>
+    <xme:ycKDaE8z4cFOs8i4ahIvx26KlrOB42ZXRe9oFvNH_dWRVeGWxHHI2UikaESj7AtyI
+    fkfklyptDVNCokQUO0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdekgedujecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpeefhfehteffuddvgfeigefhjeetvdekteekjeefkeekleffjeetvedvgefhhfeihfen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghp
+    thhtohepudejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrughosghrihihrg
+    hnsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghsmhhlrdhsihhlvghntggvsehgmhgr
+    ihhlrdgtohhmpdhrtghpthhtohepkhhlrghrrghsmhhoughinhesghhmrghilhdrtghomh
+    dprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprgig
+    sghovgeskhgvrhhnvghlrdgukhdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    ughjfihonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehksghushgthheskhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:ycKDaB9jOEnq7KjcDjOznLIOJh4sO_lf2E4QrDoT6Y0qfPCDH4hIVQ>
+    <xmx:ycKDaAYUUff0OrDluAE_he0UYE4pz4q3lZiLtaPXeiWi7HeCI9R8Uw>
+    <xmx:ycKDaHu0jHwawMz1NYVB0Y2puPJkpodOG2YCss9HM7OopkrLVloYxg>
+    <xmx:ycKDaMn8aDd1JcJ0_qoA0PoXKNn24K6h8d1w_FvRPVeYOHnrZaXaNw>
+    <xmx:ysKDaHmdL2GEK3QxAWojKE_6PGZSxVQJAaHqCYB0G91JxGifjKxVvrql>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7B2BF700069; Fri, 25 Jul 2025 13:45:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Tbe00407d24766a89
+Date: Fri, 25 Jul 2025 19:45:25 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Klara Modin" <klarasmodin@gmail.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Anuj Gupta" <anuj20.g@samsung.com>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "Kanchan Joshi" <joshi.k@samsung.com>,
+ "Christoph Hellwig" <hch@infradead.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>, "Jens Axboe" <axboe@kernel.dk>,
+ "Keith Busch" <kbusch@kernel.org>,
+ "Caleb Sander Mateos" <csander@purestorage.com>,
+ "Pavel Begunkov" <asml.silence@gmail.com>,
+ "Alexey Dobriyan" <adobriyan@gmail.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <2b0865be-c198-434c-bc06-e11a53e7a0cc@app.fastmail.com>
+In-Reply-To: <20250725164334.9606-1-klarasmodin@gmail.com>
+References: <20250725164334.9606-1-klarasmodin@gmail.com>
+Subject: Re: [PATCH] block: change blk_get_meta_cap() stub return -ENOIOCTLCMD
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-When introduced in commit 9eb22f7fedfc ("fs: add ioctl to query metadata
-and protection info capabilities") the stub of blk_get_meta_cap() for
-!BLK_DEV_INTEGRITY always returns -EOPNOTSUPP. The motivation was that
-while the command was unsupported in that configuration it was still
-recognized.
+On Fri, Jul 25, 2025, at 18:43, Klara Modin wrote:
+> When introduced in commit 9eb22f7fedfc ("fs: add ioctl to query metadata
+> and protection info capabilities") the stub of blk_get_meta_cap() for
+> !BLK_DEV_INTEGRITY always returns -EOPNOTSUPP. The motivation was that
+> while the command was unsupported in that configuration it was still
+> recognized.
+>
+> A later change instead assumed -ENOIOCTLCMD as is required for unknown
+> ioctl commands per Documentation/driver-api/ioctl.rst. The result being
+> that on !BLK_DEV_INTEGRITY configs, any ioctl which reaches
+> blkdev_common_ioctl() will return -EOPNOTSUPP.
+>
+> Change the stub to return -ENOIOCTLCMD, fixing the issue and better
+> matching with expectations.
+>
+> Link: 
+> https://lore.kernel.org/lkml/CACzX3AsRd__fXb9=CJPTTJC494SDnYAtYrN2=+bZgMCvM6UQDg@mail.gmail.com
+> Fixes: 42b0ef01e6b5 ("block: fix FS_IOC_GETLBMD_CAP parsing in 
+> blkdev_common_ioctl()")
+> Signed-off-by: Klara Modin <klarasmodin@gmail.com>
 
-A later change instead assumed -ENOIOCTLCMD as is required for unknown
-ioctl commands per Documentation/driver-api/ioctl.rst. The result being
-that on !BLK_DEV_INTEGRITY configs, any ioctl which reaches
-blkdev_common_ioctl() will return -EOPNOTSUPP.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Change the stub to return -ENOIOCTLCMD, fixing the issue and better
-matching with expectations.
-
-Link: https://lore.kernel.org/lkml/CACzX3AsRd__fXb9=CJPTTJC494SDnYAtYrN2=+bZgMCvM6UQDg@mail.gmail.com
-Fixes: 42b0ef01e6b5 ("block: fix FS_IOC_GETLBMD_CAP parsing in blkdev_common_ioctl()")
-Signed-off-by: Klara Modin <klarasmodin@gmail.com>
----
- include/linux/blk-integrity.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/blk-integrity.h b/include/linux/blk-integrity.h
-index e04c6e5bf1c6..e67a2b6e8f11 100644
---- a/include/linux/blk-integrity.h
-+++ b/include/linux/blk-integrity.h
-@@ -97,7 +97,7 @@ static inline struct bio_vec rq_integrity_vec(struct request *rq)
- static inline int blk_get_meta_cap(struct block_device *bdev, unsigned int cmd,
- 				   struct logical_block_metadata_cap __user *argp)
- {
--	return -EOPNOTSUPP;
-+	return -ENOIOCTLCMD;
- }
- static inline int blk_rq_count_integrity_sg(struct request_queue *q,
- 					    struct bio *b)
-
-base-commit: bc5b0c8febccbeabfefc9b59083b223ec7c7b53a
--- 
-2.50.1
-
+Thanks for the fix!
 
