@@ -1,66 +1,66 @@
-Return-Path: <linux-block+bounces-24887-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24891-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18B42B14F52
-	for <lists+linux-block@lfdr.de>; Tue, 29 Jul 2025 16:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5D2DB14F55
+	for <lists+linux-block@lfdr.de>; Tue, 29 Jul 2025 16:35:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87AAA3B246D
-	for <lists+linux-block@lfdr.de>; Tue, 29 Jul 2025 14:34:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C609B3BA266
+	for <lists+linux-block@lfdr.de>; Tue, 29 Jul 2025 14:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08F01B0F0A;
-	Tue, 29 Jul 2025 14:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075231B0F0A;
+	Tue, 29 Jul 2025 14:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Qy6DsuJx"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="NmaLLx2j"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7DE1474B8
-	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 14:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7366D156C6A
+	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 14:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753799705; cv=none; b=Dgm50UgM8vBshFasBFE+725Rpku4uwyCtF+JiqAQ18l+VvsjWo4fPRLpcNJGMOuyV+Hv05ky13LSpOJOQzL2Qrr/LFFwcKfBZlDogBw+vR+aeROk/4VPz7VDVN4uiU0LlTJ8+ejwkergkoDKShDR3wQZdQtWh8+ocH2I5vhmGxU=
+	t=1753799710; cv=none; b=TMoQGSJqT6UvY+7Ku/N19MoLCrMrjW50Rp21yYtIj+Zdks+bn/pP+PoXGJK5eEd0T0AKUJMEIjpt9BqqEPETP4uG5RcpvtD5yptSXuIRG8CAzUH5CBH9YZfxIp4/pduTl5E07QOsVGnnGKhw72NTL3g6B/l1oUP4SayAlpnKvkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753799705; c=relaxed/simple;
-	bh=LO/Qih6NTK/sIRxryMEcovRm+RP5xOlOOjjiJIeFVJc=;
+	s=arc-20240116; t=1753799710; c=relaxed/simple;
+	bh=2upsgqeZeycpG4h4M1ABycMwqk0cbDxFxy0dtzZ1Niw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O6B3oe5S2Ij53Fd5e+h/svuFMatlmR1uzjhxpv+2nMthclPigtayMKTzYU6Z5F8Rum4a5CfwYFudIo/6Eh0w6JYnNdeByrnzBtMjbOCljCiBgrGLJcOy8ufdj+dNfsAqthHzxaCzaWl6y4XzwOjXC/8ZEAwglsqNpsivHyjs600=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Qy6DsuJx; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=jvxtHqI6E0R1w0ihGlnSKVFdSr3F+cseIw1lIy8t9jLls/NeiB92UKCv0lkjqeNxH//979olUiUvLp6OCIR4YvloJFWVvl1DG6YTHrHPtt0LdHQsnWJ+A4mogzznReaACqOLBWN65i4lI4rWkVj9YAPjNOt7T+Efe/+a1zc4RxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=NmaLLx2j; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 56T7QjNc020371
-	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 07:35:01 -0700
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56T6Xp3V028948
+	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 07:35:07 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=D7T1MRjrWaBnmmS+NioKcUuOcWxLurcFJkmlOf3tSpU=; b=Qy6DsuJxmeud
-	tOES9mClzWBFDj1aO/Hi+KTWx112KxvxD63H/kD50bUjMP5pgU2DqCCEmfZ4yTfn
-	sW9cZzExKMMVM/FxfdYzl8v+tgLGOrql1e/ksZjypgPIPZI1XPWVVq9L2XqjYo/e
-	x8auSoBPCIPUL0CKDAcboTJhlcHYiVxXtRololZO0jOUkPFd25iyqYyIixFrBPh7
-	3hgXrxpFg6wT0ZLL7bMgejpNLyVImqriK8BkpsfSMaPOcEppb+rTstMkNOshgl0b
-	5rSBG6V+LDKx/tvm5zZKCsTlGRvLpPgrLH1HVPAG4HFO733qI0IyAgdJq8ZQQTbD
-	pcMvQg/m9g==
+	 bh=tsocgB3H48ZHsbMAlkfUJaUCy9ES4+4B2Ib30xUZmbY=; b=NmaLLx2jXpSc
+	ls7iyMahSUxBrPvwPRwvvuonugMAjbfwrllIBSXbgBtmR3FYaybNkd4glJZvPjHR
+	c/yh6tnuF1GhsJ1fxY4xjRmkUSiVHMmjIrRTO4vYPlQcTMiXXi10h9wa5EeqIQPH
+	7IPyvJE8toT5XC8rkV8J+Ux8UgxRCVRF89sgs/S3twZF9uWCcf4703iV4IJX6fAO
+	nG6WuSYAegy2+v50dxCDQGbQQaTUceaGs3OO3zmIFg3FoVc+qpREoRK2t/S4HgYU
+	UZguYIj+dINU1YHMy8IWQfEWIMKnUT/A5psAWj8UDGs0IbwnaglfzmWIgN7ifIqN
+	+BzCFrdESg==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 486sw62a11-11
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 486kevm484-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 07:35:00 -0700 (PDT)
-Received: from twshared57752.46.prn1.facebook.com (2620:10d:c0a8:1b::2d) by
+	for <linux-block@vger.kernel.org>; Tue, 29 Jul 2025 07:35:07 -0700 (PDT)
+Received: from twshared4564.15.prn3.facebook.com (2620:10d:c0a8:1b::30) by
  mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Tue, 29 Jul 2025 14:34:56 +0000
+ 15.2.2562.17; Tue, 29 Jul 2025 14:34:57 +0000
 Received: by devbig1708.prn1.facebook.com (Postfix, from userid 544533)
-	id 8CC961CC420C; Tue, 29 Jul 2025 07:34:46 -0700 (PDT)
+	id F406A1CC4212; Tue, 29 Jul 2025 07:34:46 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
         <hch@lst.de>
 CC: <axboe@kernel.dk>, <leonro@nvidia.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv3 6/7] blk-mq-dma: add support for mapping integrity metadata
-Date: Tue, 29 Jul 2025 07:34:41 -0700
-Message-ID: <20250729143442.2586575-7-kbusch@meta.com>
+Subject: [PATCHv3 7/7] nvme: convert metadata mapping to dma iter
+Date: Tue, 29 Jul 2025 07:34:42 -0700
+Message-ID: <20250729143442.2586575-8-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250729143442.2586575-1-kbusch@meta.com>
 References: <20250729143442.2586575-1-kbusch@meta.com>
@@ -73,181 +73,338 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: 0nvv0D-iiFcqucJIQ7oBl7-OQLNDFY7f
-X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=6888dc14 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=Hk6iwB6CFOrwtQdECcAA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDExMiBTYWx0ZWRfX5aZUXnqJ4Ucw 6xRRnYOkc54H9DyFTyyw2HUlKoP4T1N+i1TTrRd8hsnnzFDITvcwPLWxgWQLru2eWU0L+p43dzE ai+0p62goNeuxlZ7kK/tigeTj4GSAvvUOJFTAfyPennPorg0vnnXM4m1kTSSa6PVfKtGu/W7wmx
- g5+msrF/yTVq82fn1jh8vm6Gl+/ffRw6dNyGnCbunkxmY7wbFvtnQYjkx7XJJgRsGoKiq92wP/M WIaOLNjjYv32yNAQ3Vd3waxBRzFiI2zJdSSve1XzLZqAOLf1ORDYKNvMxJnUdgSWV4uP+VJvKh+ MAvJDtCQO8bxwvcPCy1fqBMeh3N6mmqbXFw/6lpK9szxx1uQehDec4BwjURh1shc0xVEBq27+r+
- dtmC2oqtq72w83FOY8shshNRM28NpyeeQFatLSPKYZgN1KI+SnwdzfIHy0NHBwojhHq9rRrb
-X-Proofpoint-ORIG-GUID: 0nvv0D-iiFcqucJIQ7oBl7-OQLNDFY7f
+X-Proofpoint-ORIG-GUID: 2YfJsWsYTZRU974he_ZdPniT4CJrBjdH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDExMiBTYWx0ZWRfX845j51ohTDF0 i6Tv7EN8IYEhat7EKoClNgAcOoG2Qbr9VZ1TB4kUM4h74bPYWBObqd2WhNkvMv7D1Tt63baSuO0 y6bQhyn1dx7jdj8z7PxxY9UPRG2oznKEs4ifhjUHlNXXvxPbMOpLI/ourhtR0YWdBQFAwB7pQxb
+ vEoDNo56te+NaGgLfmo6kkwjKViqYNUpZ1q+70N7Z3sD22tVy3l6ABDXJqQphx38U1SiEFfuq/B RCK42B/rPqa/1AkCuuJc1Wz//ikXexXCzgWc7y78fnGhWVk/RP0/vPk1anVLxPaWajpTOttb71q 2qBAJJoC9qP8ih7oSg3OFkbjBy6Hr1x++5Kik+RESIwcvYQq3jwVPqoYG932CLwZiA01+3LIIsX
+ ARBzSiNx0wV6082Cvs3VGdSSsqYs1At5bkzRxhjaeTeD/KaF81aTCe4xEqOqu4GslG/Bln3H
+X-Authority-Analysis: v=2.4 cv=YN+fyQGx c=1 sm=1 tr=0 ts=6888dc1b cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=BRFPTy0GvKBLt4V1GPoA:9
+X-Proofpoint-GUID: 2YfJsWsYTZRU974he_ZdPniT4CJrBjdH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-29_03,2025-07-28_01,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-Provide integrity metadata helpers equivalent to the data payload
-helpers for iterating a request for dma setup.
+Aligns data and metadata to the similar dma mapping scheme and removes
+one more user of the scatter-gather dma mapping.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-mq-dma.c            | 54 +++++++++++++++++++++++++++++++----
- include/linux/blk-integrity.h | 17 +++++++++++
- include/linux/blk-mq-dma.h    |  1 +
- 3 files changed, 67 insertions(+), 5 deletions(-)
+ drivers/nvme/host/pci.c | 174 +++++++++++++++++++---------------------
+ 1 file changed, 81 insertions(+), 93 deletions(-)
 
-diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index 646caa00a0485..708fb6f51efc7 100644
---- a/block/blk-mq-dma.c
-+++ b/block/blk-mq-dma.c
-@@ -2,9 +2,28 @@
- /*
-  * Copyright (C) 2025 Christoph Hellwig
-  */
-+#include <linux/blk-integrity.h>
- #include <linux/blk-mq-dma.h>
- #include "blk.h"
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 6cefa8344f670..6fdc0023c4abb 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -172,9 +172,7 @@ struct nvme_dev {
+ 	u32 last_ps;
+ 	bool hmb;
+ 	struct sg_table *hmb_sgt;
+-
+ 	mempool_t *dmavec_mempool;
+-	mempool_t *iod_meta_mempool;
 =20
-+static bool __blk_map_iter_next(struct blk_map_iter *iter)
-+{
-+	if (iter->iter.bi_size)
-+		return true;
-+	if (!iter->bio->bi_next)
-+		return false;
+ 	/* shadow doorbell buffer support: */
+ 	__le32 *dbbuf_dbs;
+@@ -264,6 +262,12 @@ enum nvme_iod_flags {
+=20
+ 	/* DMA mapped with PCI_P2PDMA_MAP_BUS_ADDR */
+ 	IOD_P2P_BUS_ADDR	=3D 1U << 3,
 +
-+	iter->bio =3D iter->bio->bi_next;
-+	if (iter->is_integrity) {
-+		iter->iter =3D iter->bio->bi_integrity->bip_iter;
-+		iter->bvec =3D iter->bio->bi_integrity->bip_vec;
-+	} else {
-+		iter->iter =3D iter->bio->bi_iter;
-+		iter->bvec =3D iter->bio->bi_io_vec;
-+	}
-+	return true;
-+}
++	/* Metadata DMA mapped with PCI_P2PDMA_MAP_BUS_ADDR */
++	IOD_META_P2P_BUS_ADDR	=3D 1U << 4,
 +
- static bool blk_map_iter_next(struct request *req, struct blk_map_iter *=
-iter)
- {
- 	unsigned int max_size;
-@@ -31,11 +50,8 @@ static bool blk_map_iter_next(struct request *req, str=
-uct blk_map_iter *iter)
- 	       (!iter->iter.bi_bvec_done && iter->bio->bi_next)) {
- 		struct bio_vec next;
-=20
--		if (!iter->iter.bi_size) {
--			iter->bio =3D iter->bio->bi_next;
--			iter->iter =3D iter->bio->bi_iter;
--			iter->bvec =3D iter->bio->bi_io_vec;
--		}
-+		if (!__blk_map_iter_next(iter))
-+			break;
-=20
- 		next =3D mp_bvec_iter_bvec(iter->bvec, iter->iter);
- 		if (bv.bv_len + next.bv_len > max_size ||
-@@ -178,6 +194,7 @@ bool blk_rq_dma_map_iter_start(struct request *req, s=
-truct device *dma_dev,
- 		struct dma_iova_state *state, struct blk_dma_iter *iter)
- {
- 	iter->iter.iter =3D req->bio->bi_iter;
-+	iter->iter.is_integrity =3D false;
- 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD)
- 		iter->iter.bvec =3D &req->special_vec;
- 	else
-@@ -218,6 +235,33 @@ bool blk_rq_dma_map_iter_next(struct request *req, s=
-truct device *dma_dev,
- }
- EXPORT_SYMBOL_GPL(blk_rq_dma_map_iter_next);
-=20
-+#ifdef CONFIG_BLK_DEV_INTEGRITY
-+bool blk_rq_integrity_dma_map_iter_start(struct request *req,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter)
-+{
-+	unsigned len =3D bio_integrity_bytes(&req->q->limits.integrity,
-+					   blk_rq_sectors(req));
-+	iter->iter.iter =3D req->bio->bi_integrity->bip_iter;
-+	iter->iter.bvec =3D req->bio->bi_integrity->bip_vec;
-+	iter->iter.is_integrity =3D true;
-+	return blk_dma_map_iter_start(req, dma_dev, state, iter, len);
-+}
-+EXPORT_SYMBOL_GPL(blk_rq_integrity_dma_map_iter_start);
-+
-+bool blk_rq_integrity_dma_map_iter_next(struct request *req,
-+               struct device *dma_dev, struct blk_dma_iter *iter)
-+{
-+	if (!blk_map_iter_next(req, &iter->iter))
-+		return false;
-+
-+	if (iter->p2pdma.map =3D=3D PCI_P2PDMA_MAP_BUS_ADDR)
-+		return blk_dma_map_bus(iter);
-+	return blk_dma_map_direct(req, dma_dev, iter);
-+}
-+EXPORT_SYMBOL_GPL(blk_rq_integrity_dma_map_iter_next);
-+#endif
-+
- static inline struct scatterlist *
- blk_next_sg(struct scatterlist **sg, struct scatterlist *sglist)
- {
-diff --git a/include/linux/blk-integrity.h b/include/linux/blk-integrity.=
-h
-index c7eae0bfb013f..1ef0c373297b3 100644
---- a/include/linux/blk-integrity.h
-+++ b/include/linux/blk-integrity.h
-@@ -4,6 +4,7 @@
-=20
- #include <linux/blk-mq.h>
- #include <linux/bio-integrity.h>
-+#include <linux/blk-mq-dma.h>
-=20
- struct request;
-=20
-@@ -29,6 +30,11 @@ int blk_rq_map_integrity_sg(struct request *, struct s=
-catterlist *);
- int blk_rq_count_integrity_sg(struct request_queue *, struct bio *);
- int blk_rq_integrity_map_user(struct request *rq, void __user *ubuf,
- 			      ssize_t bytes);
-+bool blk_rq_integrity_dma_map_iter_start(struct request *req,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter);
-+bool blk_rq_integrity_dma_map_iter_next(struct request *req,
-+		struct device *dma_dev, struct blk_dma_iter *iter);
-=20
- static inline bool
- blk_integrity_queue_supports_integrity(struct request_queue *q)
-@@ -108,6 +114,17 @@ static inline int blk_rq_integrity_map_user(struct r=
-equest *rq,
- {
- 	return -EINVAL;
- }
-+static inline bool blk_rq_integrity_dma_map_iter_start(struct request *r=
-eq,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter)
-+{
-+	return false;
-+}
-+static inline bool blk_rq_integrity_dma_map_iter_next(struct request *re=
-q,
-+		struct device *dma_dev, struct blk_dma_iter *iter)
-+{
-+	return false;
-+}
- static inline struct blk_integrity *bdev_get_integrity(struct block_devi=
-ce *b)
- {
- 	return NULL;
-diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-index aef8d784952ff..4b7b85f9e23e6 100644
---- a/include/linux/blk-mq-dma.h
-+++ b/include/linux/blk-mq-dma.h
-@@ -11,6 +11,7 @@ struct blk_map_iter {
- 	struct bio_vec                  *bvec;
- 	struct bvec_iter		iter;
- 	struct bio			*bio;
-+	bool				is_integrity;
++	/* Metadata DMA mapped as a single SGL data segment */
++	IOD_META_SINGLE_SEG	=3D 1U << 5,
  };
 =20
- struct blk_dma_iter {
+ struct nvme_dma_vec {
+@@ -281,13 +285,14 @@ struct nvme_iod {
+ 	u8 nr_descriptors;
+=20
+ 	unsigned int total_len;
++	unsigned int meta_total_len;
+ 	struct dma_iova_state dma_state;
++	struct dma_iova_state meta_dma_state;
+ 	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
+ 	struct nvme_dma_vec *dma_vecs;
+ 	unsigned int nr_dma_vecs;
+=20
+ 	dma_addr_t meta_dma;
+-	struct sg_table meta_sgt;
+ 	struct nvme_sgl_desc *meta_descriptor;
+ };
+=20
+@@ -604,8 +609,7 @@ static inline bool nvme_pci_metadata_use_sgls(struct =
+request *req)
+=20
+ 	if (!nvme_ctrl_meta_sgl_supported(&dev->ctrl))
+ 		return false;
+-	return req->nr_integrity_segments > 1 ||
+-		nvme_req(req)->flags & NVME_REQ_USERCMD;
++	return nvme_req(req)->flags & NVME_REQ_USERCMD;
+ }
+=20
+ static inline enum nvme_use_sgl nvme_pci_use_sgls(struct nvme_dev *dev,
+@@ -644,6 +648,11 @@ static inline struct dma_pool *nvme_dma_pool(struct =
+nvme_queue *nvmeq,
+ 	return nvmeq->descriptor_pools.large;
+ }
+=20
++static inline bool nvme_pci_cmd_use_meta_sgl(struct nvme_command *cmd)
++{
++	return (cmd->common.flags & NVME_CMD_SGL_ALL) =3D=3D NVME_CMD_SGL_METAS=
+EG;
++}
++
+ static inline bool nvme_pci_cmd_use_sgl(struct nvme_command *cmd)
+ {
+ 	return cmd->common.flags &
+@@ -1014,93 +1023,65 @@ static blk_status_t nvme_map_data(struct request =
+*req)
+ 	return nvme_pci_setup_data_prp(req, &iter);
+ }
+=20
+-static void nvme_pci_sgl_set_data_sg(struct nvme_sgl_desc *sge,
+-		struct scatterlist *sg)
+-{
+-	sge->addr =3D cpu_to_le64(sg_dma_address(sg));
+-	sge->length =3D cpu_to_le32(sg_dma_len(sg));
+-	sge->type =3D NVME_SGL_FMT_DATA_DESC << 4;
+-}
+-
+-static blk_status_t nvme_pci_setup_meta_sgls(struct request *req)
++static blk_status_t nvme_map_metadata(struct request *req)
+ {
+ 	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+-	struct nvme_dev *dev =3D nvmeq->dev;
++	unsigned int entries =3D req->nr_integrity_segments;
+ 	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
++	struct nvme_dev *dev =3D nvmeq->dev;
+ 	struct nvme_sgl_desc *sg_list;
+-	struct scatterlist *sgl, *sg;
+-	unsigned int entries;
++	struct blk_dma_iter iter;
+ 	dma_addr_t sgl_dma;
+-	int rc, i;
+-
+-	iod->meta_sgt.sgl =3D mempool_alloc(dev->iod_meta_mempool, GFP_ATOMIC);
+-	if (!iod->meta_sgt.sgl)
+-		return BLK_STS_RESOURCE;
++	int i;
+=20
+-	sg_init_table(iod->meta_sgt.sgl, req->nr_integrity_segments);
+-	iod->meta_sgt.orig_nents =3D blk_rq_map_integrity_sg(req,
+-							   iod->meta_sgt.sgl);
+-	if (!iod->meta_sgt.orig_nents)
+-		goto out_free_sg;
++	if (!blk_rq_integrity_dma_map_iter_start(req, dev->dev,
++						&iod->meta_dma_state, &iter))
++		return iter.status;
+=20
+-	rc =3D dma_map_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req),
+-			     DMA_ATTR_NO_WARN);
+-	if (rc)
+-		goto out_free_sg;
++	if (iter.p2pdma.map =3D=3D PCI_P2PDMA_MAP_BUS_ADDR)
++		iod->flags |=3D IOD_META_P2P_BUS_ADDR;
++	else if (blk_rq_dma_map_coalesce(&iod->meta_dma_state))
++		entries =3D 1;
++
++	if (WARN_ON_ONCE(!nvme_ctrl_meta_sgl_supported(&dev->ctrl) &&
++			 entries > 1))
++		return BLK_STS_NOTSUPP;
++
++	if (entries =3D=3D 1 && !nvme_pci_metadata_use_sgls(req)) {
++		iod->cmd.common.metadata =3D cpu_to_le64(iter.addr);
++		iod->meta_total_len =3D iter.len;
++		iod->meta_dma =3D iter.addr;
++		iod->meta_descriptor =3D NULL;
++		return BLK_STS_OK;
++	}
+=20
+ 	sg_list =3D dma_pool_alloc(nvmeq->descriptor_pools.small, GFP_ATOMIC,
+ 			&sgl_dma);
+ 	if (!sg_list)
+-		goto out_unmap_sg;
++		return BLK_STS_RESOURCE;
+=20
+-	entries =3D iod->meta_sgt.nents;
+ 	iod->meta_descriptor =3D sg_list;
+ 	iod->meta_dma =3D sgl_dma;
+=20
+ 	iod->cmd.common.flags =3D NVME_CMD_SGL_METASEG;
+ 	iod->cmd.common.metadata =3D cpu_to_le64(sgl_dma);
+=20
+-	sgl =3D iod->meta_sgt.sgl;
+ 	if (entries =3D=3D 1) {
+-		nvme_pci_sgl_set_data_sg(sg_list, sgl);
++		iod->flags |=3D IOD_META_SINGLE_SEG;
++		iod->meta_total_len =3D iter.len;
++		nvme_pci_sgl_set_data(sg_list, &iter);
+ 		return BLK_STS_OK;
+ 	}
+=20
+ 	sgl_dma +=3D sizeof(*sg_list);
+-	nvme_pci_sgl_set_seg(sg_list, sgl_dma, entries);
+-	for_each_sg(sgl, sg, entries, i)
+-		nvme_pci_sgl_set_data_sg(&sg_list[i + 1], sg);
+-
+-	return BLK_STS_OK;
+-
+-out_unmap_sg:
+-	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
+-out_free_sg:
+-	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
+-	return BLK_STS_RESOURCE;
+-}
+-
+-static blk_status_t nvme_pci_setup_meta_mptr(struct request *req)
+-{
+-	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
+-	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+-	struct bio_vec bv =3D rq_integrity_vec(req);
+-
+-	iod->meta_dma =3D dma_map_bvec(nvmeq->dev->dev, &bv, rq_dma_dir(req), 0=
+);
+-	if (dma_mapping_error(nvmeq->dev->dev, iod->meta_dma))
+-		return BLK_STS_IOERR;
+-	iod->cmd.common.metadata =3D cpu_to_le64(iod->meta_dma);
+-	return BLK_STS_OK;
+-}
+-
+-static blk_status_t nvme_map_metadata(struct request *req)
+-{
+-	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
++	i =3D 0;
++	do {
++		nvme_pci_sgl_set_data(&sg_list[++i], &iter);
++		iod->meta_total_len +=3D iter.len;
++	} while (blk_rq_integrity_dma_map_iter_next(req, dev->dev, &iter));
+=20
+-	if ((iod->cmd.common.flags & NVME_CMD_SGL_METABUF) &&
+-	    nvme_pci_metadata_use_sgls(req))
+-		return nvme_pci_setup_meta_sgls(req);
+-	return nvme_pci_setup_meta_mptr(req);
++	nvme_pci_sgl_set_seg(sg_list, sgl_dma, i);
++	return iter.status;
+ }
+=20
+ static blk_status_t nvme_prep_rq(struct request *req)
+@@ -1111,7 +1092,6 @@ static blk_status_t nvme_prep_rq(struct request *re=
+q)
+ 	iod->flags =3D 0;
+ 	iod->nr_descriptors =3D 0;
+ 	iod->total_len =3D 0;
+-	iod->meta_sgt.nents =3D 0;
+=20
+ 	ret =3D nvme_setup_cmd(req->q->queuedata, req);
+ 	if (ret)
+@@ -1222,23 +1202,44 @@ static void nvme_queue_rqs(struct rq_list *rqlist=
+)
+ 	*rqlist =3D requeue_list;
+ }
+=20
++static void nvme_free_meta_sgls(struct nvme_iod *iod, struct device *dma=
+_dev,
++				enum dma_data_direction dir)
++{
++	struct nvme_sgl_desc *sg_list =3D iod->meta_descriptor;
++	int i, nr_entries;
++
++	if (iod->flags & IOD_META_SINGLE_SEG) {
++		dma_unmap_page(dma_dev, le64_to_cpu(sg_list->addr),
++				le32_to_cpu(sg_list->length), dir);
++		return;
++	}
++
++	nr_entries =3D le32_to_cpu(sg_list->length);
++	for (i =3D 1; i <=3D nr_entries; i++)
++		dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
++				le32_to_cpu(sg_list[i].length), dir);
++}
++
+ static __always_inline void nvme_unmap_metadata(struct request *req)
+ {
+-	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
+ 	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+-	struct nvme_dev *dev =3D nvmeq->dev;
++	enum dma_data_direction dir =3D rq_dma_dir(req);
++	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
++	struct device *dma_dev =3D nvmeq->dev->dev;
+=20
+-	if (!iod->meta_sgt.nents) {
+-		dma_unmap_page(dev->dev, iod->meta_dma,
+-			       rq_integrity_vec(req).bv_len,
+-			       rq_dma_dir(req));
+-		return;
++	if (!blk_rq_dma_unmap(req, dma_dev, &iod->meta_dma_state,
++				iod->meta_total_len,
++				iod->flags & IOD_META_P2P_BUS_ADDR)) {
++		if (nvme_pci_cmd_use_meta_sgl(&iod->cmd))
++			nvme_free_meta_sgls(iod, dma_dev, dir);
++		else
++			dma_unmap_page(dma_dev, iod->meta_dma,
++				       iod->meta_total_len, dir);
+ 	}
+=20
+-	dma_pool_free(nvmeq->descriptor_pools.small, iod->meta_descriptor,
+-			iod->meta_dma);
+-	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
+-	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
++	if (iod->meta_descriptor)
++		dma_pool_free(nvmeq->descriptor_pools.small,
++			      iod->meta_descriptor, iod->meta_dma);
+ }
+=20
+ static __always_inline void nvme_pci_unmap_rq(struct request *req)
+@@ -3046,7 +3047,6 @@ static int nvme_disable_prepare_reset(struct nvme_d=
+ev *dev, bool shutdown)
+=20
+ static int nvme_pci_alloc_iod_mempool(struct nvme_dev *dev)
+ {
+-	size_t meta_size =3D sizeof(struct scatterlist) * (NVME_MAX_META_SEGS +=
+ 1);
+ 	size_t alloc_size =3D sizeof(struct nvme_dma_vec) * NVME_MAX_SEGS;
+=20
+ 	dev->dmavec_mempool =3D mempool_create_node(1,
+@@ -3055,17 +3055,7 @@ static int nvme_pci_alloc_iod_mempool(struct nvme_=
+dev *dev)
+ 			dev_to_node(dev->dev));
+ 	if (!dev->dmavec_mempool)
+ 		return -ENOMEM;
+-
+-	dev->iod_meta_mempool =3D mempool_create_node(1,
+-			mempool_kmalloc, mempool_kfree,
+-			(void *)meta_size, GFP_KERNEL,
+-			dev_to_node(dev->dev));
+-	if (!dev->iod_meta_mempool)
+-		goto free;
+ 	return 0;
+-free:
+-	mempool_destroy(dev->dmavec_mempool);
+-	return -ENOMEM;
+ }
+=20
+ static void nvme_free_tagset(struct nvme_dev *dev)
+@@ -3515,7 +3505,6 @@ static int nvme_probe(struct pci_dev *pdev, const s=
+truct pci_device_id *id)
+ 	nvme_free_queues(dev, 0);
+ out_release_iod_mempool:
+ 	mempool_destroy(dev->dmavec_mempool);
+-	mempool_destroy(dev->iod_meta_mempool);
+ out_dev_unmap:
+ 	nvme_dev_unmap(dev);
+ out_uninit_ctrl:
+@@ -3579,7 +3568,6 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_dbbuf_dma_free(dev);
+ 	nvme_free_queues(dev, 0);
+ 	mempool_destroy(dev->dmavec_mempool);
+-	mempool_destroy(dev->iod_meta_mempool);
+ 	nvme_release_descriptor_pools(dev);
+ 	nvme_dev_unmap(dev);
+ 	nvme_uninit_ctrl(&dev->ctrl);
 --=20
 2.47.3
 
