@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-24994-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25001-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E6EBB173AF
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DCA0B173B6
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40D783A7EB4
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:04:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C493B16E96E
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:05:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 425511A5B99;
-	Thu, 31 Jul 2025 15:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A701DB154;
+	Thu, 31 Jul 2025 15:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="F5aCkAL9"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="uBI3Xuqy"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FC781E
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7701ADFE4
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753974323; cv=none; b=nfxSmxQgXSq6shDry7h+rmpKtZkCgFgDIMHqk6xF8rLRRCKx7InUiMIjcEus9AX6HLNFZYLmlk9c8OOuAlVyqojXBMjea0H+17r7eaJMCgHiyUHYC0RqhRCzJUXoDBZzkFmYPwfUlIEfoRdMsSzjmFwAOVqzvG6gYLnSgTmoHXw=
+	t=1753974330; cv=none; b=pDr0/KSztAz6nADK5zn034VJXy/NFpjmOjWPhXo6VvIk2sPUf1l0e5Cs8scZ5FL0S3tpFIDGQoyUe4w71bQqEaBEwG51I7P7qnxs812eqfdrcEVcpubg1RTQF7pj9Z8Jb27OmS+sM6L9G/BlEPEnDQCg8r7lqdYmmD9FrP/pwa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753974323; c=relaxed/simple;
-	bh=SulBtO2WLEB8yiWxu8UJufeMcebtOml0MbwG57EqkZE=;
+	s=arc-20240116; t=1753974330; c=relaxed/simple;
+	bh=66sm/xY+OOG5QiA1esM8ySyvWOImHGB/gVA5AZrvrNM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h0POBedUxdeIzECM9R0P+0VQY9E+aEU7Al1dfB29S5oqx2+5FIiAdU0BtyUn1pXiFuNaR90gsjacd2ycTii2qw0B9g+RXT3lQpM13sbOGS9XQL7Ec+CbRyyx98PFXNu9P5zI8NuYLiP9NYQ1UhVRfigQ/Lh+1T6gb8LVn+0rYd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=F5aCkAL9; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=AMFM+afJy5nSowhRLkYmiTR4dC0VaNbQE7EXRQqzAa+tkrMxsoaUWP4hW5czloEhM7xJV4Z7gDtqyaQ+/l3OPjzfr1aJtq534IdFG3g/4STrPdS13RKKrVggiPV6vRqMV2z36RMI1DNvyKJnRcVYycQGe/2QwX7EMVhu3wyE+I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=uBI3Xuqy; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE75KM029919
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:19 -0700
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE76r4030010
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:28 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=ut48uWJtSD/GPhmg0N8X2KhVkgcEnwTLCf0dr8KqeYs=; b=F5aCkAL9D/5o
-	jwa0c1BJg3mcCiFfIJ4rYualp1lVHBnu/LVZpyJpKHIW2rVMiekhrtC96l9zr8Fc
-	oKPQZDI1E76iH+M4vZd3tB68vKwH//GX0xJGHjoCdwH/szIAJCh3w0eYpN+OXD9k
-	OcKNoyqen/neh5ntzXKgZWcn0UUTzo9KuB10RIVkyqshoWw1fe+dDgYg31Z5sk/G
-	6+GdF4Ie7lWiQ/7bJWOZXT/VetARje1mOD36yh6p3u57wqOZXTRYCXktMViYzsMJ
-	oB/mFyNvgnxbw3I2ovBfoJebyaN+cpZD7cG5DY15a3y35J8CrwaIKMWgiQxP5PfS
-	lksKAOWxog==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883m52mb3-18
+	 bh=Jm44b8T/0NNg/2olfz7iQ8K24NiGj2yLF9LeoHs0Rls=; b=uBI3XuqyJMPp
+	YsUn0tKVVfOggakaugVoXp22qvUsl9qk1VUkUNTqcJ2FGpUIlxUd1IJdbK7kmjW7
+	dSoOGbY/WtiMACzMc9DHs23e9Zx2akYYX79VnECI/HCnKt26wRGAtq1ZHHp0D69H
+	DxIfBlfkbtt8jt/QPL7veSCAxoRs7j6JHZTNtFW7ZOjQGkcX9drnVIyBUjjQDSc0
+	cFI8diV+xaBfMdmeJ5cmrxbU+yDrnL5jHfv239so2wv7Yt6CQp2MpTT0rVOdrGQx
+	aSWXNkWjnnEJ+LMvoQpDCDOqSVAkUULYh7z6UGOFpUnJRhxiJrWBpBwqJHMPOjoL
+	ww5zX97jdw==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883m52me4-12
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:19 -0700 (PDT)
-Received: from twshared21625.15.frc2.facebook.com (2620:10d:c0a8:1b::8e35) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:27 -0700 (PDT)
+Received: from twshared60001.02.ash8.facebook.com (2620:10d:c085:108::150d) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Thu, 31 Jul 2025 15:05:18 +0000
+ 15.2.2562.17; Thu, 31 Jul 2025 15:05:26 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id 2C638231DB3; Thu, 31 Jul 2025 08:05:14 -0700 (PDT)
+	id 2E994231DB5; Thu, 31 Jul 2025 08:05:14 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
 CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv4 7/8] nvme-pci: create common sgl unmapping helper
-Date: Thu, 31 Jul 2025 08:05:12 -0700
-Message-ID: <20250731150513.220395-8-kbusch@meta.com>
+Subject: [PATCHv4 8/8] nvme-pci: convert metadata mapping to dma iter
+Date: Thu, 31 Jul 2025 08:05:13 -0700
+Message-ID: <20250731150513.220395-9-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250731150513.220395-1-kbusch@meta.com>
 References: <20250731150513.220395-1-kbusch@meta.com>
@@ -74,78 +74,310 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: GFjjlWlg59KAsmGT080cWsk0gvB_xdqN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX49+OJjMbqrXb 5gQ76h5WCMrqZJQbzD8dDJZP3LiICmsgM3oJ+Vs2Wz1E3SX0t4h/RBflw9VX4JfM3wm6zF1wodT HNx8qifFapARORyPfQKMKjzV09EKhrrW2X1bTDBiqh3cRUWGv8AF61fjYm9xIoBEmnynB+e9bvE
- 4yR0nLy/coo2cpeMW5AXocjbtO4DtfQmdDiS81qCxWBNNZVLKgBW38EyTQhuNsrPeq08Op1BkSg gywNbAqfmFUO/XN/L9cFpf9xA4fNT98azGSVgg8dzrGFgpRHM0pXgGskQ3JfHCIlLmYJIBzXhDT uPbEpXV8A9V716cdUS7/Bjazh7uQJIHuAEgiG35pdvwqjU2MRGYeeVAn4wMVqVNALTyWzVWlonS
- w5Paz+P1Jxt/COShe2/7MOGGRVRjdSQL9ebmJgT+Ts1DYunOKGQYAS7KgExkJpPUTzfJPIRM
-X-Authority-Analysis: v=2.4 cv=FNwbx/os c=1 sm=1 tr=0 ts=688b862f cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=Duz19Zw78js5DzQJfkIA:9
-X-Proofpoint-ORIG-GUID: GFjjlWlg59KAsmGT080cWsk0gvB_xdqN
+X-Proofpoint-GUID: CtGnO2rX2lusddSYJar4LRRHsgrEbI_f
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfXxu9IboDnJXpP Ea+sQO5PH99uuhlbbjMkJ3wYzA36Abr53Fhx5YutOc4SOHhYOxlcT2kDV4uMFlu0Vj+PycgcEPy fzyRDYfh5Y9usy5hBd1nZNJYYNU2P4OB3Yuz1DEnmSavhfG3iXRW51H45ZzVKfh4FqLqZZOuJ9e
+ UaaokBHmiW/nMykXZr/XG3a9AqR6aqPq8xAdQ++D/7nWdUNzmfd1SJK1r2hapdgPksc+kAbcpfY TY3BJ1khoTLidHM8pnyzOFXaEd99efoT3HWS+oS6AGo4yGANFCixFPunZUxje964NjszcuAkBik VlAvHs9vDRLD9Wlx/WD/WCBuNi90MTDJZ5X9kYpjeWYjJbwlnaJ+pj9sT2HifxS4qu2qmVCTp1j
+ QmX5rCiB5e13FxB3d5gza6d7AbSilmdlu/weCdAN9hlZ3ih3cAIdAZFPebIXayj24waGRVD8
+X-Authority-Analysis: v=2.4 cv=FNwbx/os c=1 sm=1 tr=0 ts=688b8637 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=wnoHOGPUN8WvbBk364wA:9
+X-Proofpoint-ORIG-GUID: CtGnO2rX2lusddSYJar4LRRHsgrEbI_f
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-31_02,2025-07-31_02,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-This can be reused by metadata sgls once that starts using the blk-mq
-dma api.
+Aligns data and metadata to the similar dma mapping scheme and removes
+one more user of the scatter-gather dma mapping.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/nvme/host/pci.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/nvme/host/pci.c | 152 +++++++++++++++++++++-------------------
+ 1 file changed, 78 insertions(+), 74 deletions(-)
 
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 111b6bc6c93eb..decb3ad1508a7 100644
+index decb3ad1508a7..42322c3985d98 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -693,25 +693,34 @@ static void nvme_free_prps(struct request *req)
- 	mempool_free(iod->dma_vecs, nvmeq->dev->dmavec_mempool);
+@@ -172,9 +172,7 @@ struct nvme_dev {
+ 	u32 last_ps;
+ 	bool hmb;
+ 	struct sg_table *hmb_sgt;
+-
+ 	mempool_t *dmavec_mempool;
+-	mempool_t *iod_meta_mempool;
+=20
+ 	/* shadow doorbell buffer support: */
+ 	__le32 *dbbuf_dbs;
+@@ -264,6 +262,12 @@ enum nvme_iod_flags {
+=20
+ 	/* DMA mapped with PCI_P2PDMA_MAP_BUS_ADDR */
+ 	IOD_P2P_BUS_ADDR	=3D 1U << 3,
++
++	/* Metadata DMA mapped with PCI_P2PDMA_MAP_BUS_ADDR */
++	IOD_META_P2P_BUS_ADDR	=3D 1U << 4,
++
++	/* Metadata using non-coalesced MPTR */
++	IOD_META_MPTR		=3D 1U << 5,
+ };
+=20
+ struct nvme_dma_vec {
+@@ -281,13 +285,14 @@ struct nvme_iod {
+ 	u8 nr_descriptors;
+=20
+ 	unsigned int total_len;
++	unsigned int meta_total_len;
+ 	struct dma_iova_state dma_state;
++	struct dma_iova_state meta_dma_state;
+ 	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
+ 	struct nvme_dma_vec *dma_vecs;
+ 	unsigned int nr_dma_vecs;
+=20
+ 	dma_addr_t meta_dma;
+-	struct sg_table meta_sgt;
+ 	struct nvme_sgl_desc *meta_descriptor;
+ };
+=20
+@@ -644,6 +649,11 @@ static inline struct dma_pool *nvme_dma_pool(struct =
+nvme_queue *nvmeq,
+ 	return nvmeq->descriptor_pools.large;
  }
 =20
-+
-+static void __nvme_free_sgls(struct device *dma_dev, struct nvme_sgl_des=
-c *sge,
-+		struct nvme_sgl_desc *sg_list, enum dma_data_direction dir)
++static inline bool nvme_pci_cmd_use_meta_sgl(struct nvme_command *cmd)
 +{
-+	unsigned int len =3D le32_to_cpu(sge->length);
-+	unsigned int i, nr_entries;
++	return (cmd->common.flags & NVME_CMD_SGL_ALL) =3D=3D NVME_CMD_SGL_METAS=
+EG;
++}
 +
-+	if (sge->type =3D=3D (NVME_SGL_FMT_DATA_DESC << 4)) {
-+		dma_unmap_page(dma_dev, le64_to_cpu(sge->addr), len, dir);
+ static inline bool nvme_pci_cmd_use_sgl(struct nvme_command *cmd)
+ {
+ 	return cmd->common.flags &
+@@ -1023,70 +1033,96 @@ static blk_status_t nvme_map_data(struct request =
+*req)
+ 	return nvme_pci_setup_data_prp(req, &iter);
+ }
+=20
+-static void nvme_pci_sgl_set_data_sg(struct nvme_sgl_desc *sge,
+-		struct scatterlist *sg)
++static void nvme_free_meta_sgls(struct nvme_iod *iod, struct device *dma=
+_dev,
++				enum dma_data_direction dir)
+ {
+-	sge->addr =3D cpu_to_le64(sg_dma_address(sg));
+-	sge->length =3D cpu_to_le32(sg_dma_len(sg));
+-	sge->type =3D NVME_SGL_FMT_DATA_DESC << 4;
++	struct nvme_sgl_desc *sge =3D iod->meta_descriptor;
++
++	__nvme_free_sgls(dma_dev, sge, &sge[1], dir);
++}
++
++static void nvme_unmap_metadata(struct request *req)
++{
++	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
++	enum dma_data_direction dir =3D rq_dma_dir(req);
++	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
++	struct device *dma_dev =3D nvmeq->dev->dev;
++
++	if (iod->flags & IOD_META_MPTR) {
++		dma_unmap_page(dma_dev, iod->meta_dma,
++			       rq_integrity_vec(req).bv_len,
++			       rq_dma_dir(req));
 +		return;
 +	}
 +
-+	nr_entries =3D len / sizeof(*sg_list);
-+	for (i =3D 0; i < nr_entries; i++)
-+		dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
-+			le32_to_cpu(sg_list[i].length), dir);
-+}
++	if (!blk_rq_dma_unmap(req, dma_dev, &iod->meta_dma_state,
++				iod->meta_total_len,
++				iod->flags & IOD_META_P2P_BUS_ADDR)) {
++		if (nvme_pci_cmd_use_meta_sgl(&iod->cmd))
++			nvme_free_meta_sgls(iod, dma_dev, dir);
++		else
++			dma_unmap_page(dma_dev, iod->meta_dma,
++				       iod->meta_total_len, dir);
++	}
 +
- static void nvme_free_sgls(struct request *req)
- {
- 	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
- 	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
- 	struct device *dma_dev =3D nvmeq->dev->dev;
--	dma_addr_t sqe_dma_addr =3D le64_to_cpu(iod->cmd.common.dptr.sgl.addr);
--	unsigned int sqe_dma_len =3D le32_to_cpu(iod->cmd.common.dptr.sgl.lengt=
-h);
- 	struct nvme_sgl_desc *sg_list =3D iod->descriptors[0];
-+	struct nvme_sgl_desc *sge =3D &iod->cmd.common.dptr.sgl;
- 	enum dma_data_direction dir =3D rq_dma_dir(req);
-=20
--	if (iod->nr_descriptors) {
--		unsigned int nr_entries =3D sqe_dma_len / sizeof(*sg_list), i;
--
--		for (i =3D 0; i < nr_entries; i++)
--			dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
--				le32_to_cpu(sg_list[i].length), dir);
--	} else {
--		dma_unmap_page(dma_dev, sqe_dma_addr, sqe_dma_len, dir);
--	}
-+	__nvme_free_sgls(dma_dev, sge, sg_list, dir);
++	if (iod->meta_descriptor)
++		dma_pool_free(nvmeq->descriptor_pools.small,
++			      iod->meta_descriptor, iod->meta_dma);
  }
 =20
- static void nvme_unmap_data(struct request *req)
+ static blk_status_t nvme_pci_setup_meta_sgls(struct request *req)
+ {
+ 	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+-	struct nvme_dev *dev =3D nvmeq->dev;
++	unsigned int entries =3D req->nr_integrity_segments;
+ 	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
++	struct nvme_dev *dev =3D nvmeq->dev;
+ 	struct nvme_sgl_desc *sg_list;
+-	struct scatterlist *sgl, *sg;
+-	unsigned int entries;
++	struct blk_dma_iter iter;
+ 	dma_addr_t sgl_dma;
+-	int rc, i;
+-
+-	iod->meta_sgt.sgl =3D mempool_alloc(dev->iod_meta_mempool, GFP_ATOMIC);
+-	if (!iod->meta_sgt.sgl)
+-		return BLK_STS_RESOURCE;
++	int i =3D 0;
+=20
+-	sg_init_table(iod->meta_sgt.sgl, req->nr_integrity_segments);
+-	iod->meta_sgt.orig_nents =3D blk_rq_map_integrity_sg(req,
+-							   iod->meta_sgt.sgl);
+-	if (!iod->meta_sgt.orig_nents)
+-		goto out_free_sg;
++	if (!blk_rq_integrity_dma_map_iter_start(req, dev->dev,
++						&iod->meta_dma_state, &iter))
++		return iter.status;
+=20
+-	rc =3D dma_map_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req),
+-			     DMA_ATTR_NO_WARN);
+-	if (rc)
+-		goto out_free_sg;
++	if (iter.p2pdma.map =3D=3D PCI_P2PDMA_MAP_BUS_ADDR)
++		iod->flags |=3D IOD_META_P2P_BUS_ADDR;
++	else if (blk_rq_dma_map_coalesce(&iod->meta_dma_state))
++		entries =3D 1;
++
++	if (entries =3D=3D 1 && !(nvme_req(req)->flags & NVME_REQ_USERCMD)) {
++		iod->cmd.common.metadata =3D cpu_to_le64(iter.addr);
++		iod->meta_total_len =3D iter.len;
++		iod->meta_dma =3D iter.addr;
++		iod->meta_descriptor =3D NULL;
++		return BLK_STS_OK;
++	}
+=20
+ 	sg_list =3D dma_pool_alloc(nvmeq->descriptor_pools.small, GFP_ATOMIC,
+ 			&sgl_dma);
+ 	if (!sg_list)
+-		goto out_unmap_sg;
++		return BLK_STS_RESOURCE;
+=20
+-	entries =3D iod->meta_sgt.nents;
+ 	iod->meta_descriptor =3D sg_list;
+ 	iod->meta_dma =3D sgl_dma;
+-
+ 	iod->cmd.common.flags =3D NVME_CMD_SGL_METASEG;
+ 	iod->cmd.common.metadata =3D cpu_to_le64(sgl_dma);
+-
+-	sgl =3D iod->meta_sgt.sgl;
+ 	if (entries =3D=3D 1) {
+-		nvme_pci_sgl_set_data_sg(sg_list, sgl);
++		iod->meta_total_len =3D iter.len;
++		nvme_pci_sgl_set_data(sg_list, &iter);
+ 		return BLK_STS_OK;
+ 	}
+=20
+ 	sgl_dma +=3D sizeof(*sg_list);
+-	nvme_pci_sgl_set_seg(sg_list, sgl_dma, entries);
+-	for_each_sg(sgl, sg, entries, i)
+-		nvme_pci_sgl_set_data_sg(&sg_list[i + 1], sg);
+-
+-	return BLK_STS_OK;
++	do {
++		nvme_pci_sgl_set_data(&sg_list[++i], &iter);
++		iod->meta_total_len +=3D iter.len;
++	} while (blk_rq_integrity_dma_map_iter_next(req, dev->dev, &iter));
+=20
+-out_unmap_sg:
+-	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
+-out_free_sg:
+-	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
+-	return BLK_STS_RESOURCE;
++	nvme_pci_sgl_set_seg(sg_list, sgl_dma, i);
++	if (unlikely(iter.status))
++		nvme_unmap_metadata(req);
++	return iter.status;
+ }
+=20
+ static blk_status_t nvme_pci_setup_meta_mptr(struct request *req)
+@@ -1099,6 +1135,7 @@ static blk_status_t nvme_pci_setup_meta_mptr(struct=
+ request *req)
+ 	if (dma_mapping_error(nvmeq->dev->dev, iod->meta_dma))
+ 		return BLK_STS_IOERR;
+ 	iod->cmd.common.metadata =3D cpu_to_le64(iod->meta_dma);
++	iod->flags |=3D IOD_META_MPTR;
+ 	return BLK_STS_OK;
+ }
+=20
+@@ -1120,7 +1157,6 @@ static blk_status_t nvme_prep_rq(struct request *re=
+q)
+ 	iod->flags =3D 0;
+ 	iod->nr_descriptors =3D 0;
+ 	iod->total_len =3D 0;
+-	iod->meta_sgt.nents =3D 0;
+=20
+ 	ret =3D nvme_setup_cmd(req->q->queuedata, req);
+ 	if (ret)
+@@ -1231,25 +1267,6 @@ static void nvme_queue_rqs(struct rq_list *rqlist)
+ 	*rqlist =3D requeue_list;
+ }
+=20
+-static __always_inline void nvme_unmap_metadata(struct request *req)
+-{
+-	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
+-	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+-	struct nvme_dev *dev =3D nvmeq->dev;
+-
+-	if (!iod->meta_sgt.nents) {
+-		dma_unmap_page(dev->dev, iod->meta_dma,
+-			       rq_integrity_vec(req).bv_len,
+-			       rq_dma_dir(req));
+-		return;
+-	}
+-
+-	dma_pool_free(nvmeq->descriptor_pools.small, iod->meta_descriptor,
+-			iod->meta_dma);
+-	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
+-	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
+-}
+-
+ static __always_inline void nvme_pci_unmap_rq(struct request *req)
+ {
+ 	if (blk_integrity_rq(req))
+@@ -3055,7 +3072,6 @@ static int nvme_disable_prepare_reset(struct nvme_d=
+ev *dev, bool shutdown)
+=20
+ static int nvme_pci_alloc_iod_mempool(struct nvme_dev *dev)
+ {
+-	size_t meta_size =3D sizeof(struct scatterlist) * (NVME_MAX_META_SEGS +=
+ 1);
+ 	size_t alloc_size =3D sizeof(struct nvme_dma_vec) * NVME_MAX_SEGS;
+=20
+ 	dev->dmavec_mempool =3D mempool_create_node(1,
+@@ -3064,17 +3080,7 @@ static int nvme_pci_alloc_iod_mempool(struct nvme_=
+dev *dev)
+ 			dev_to_node(dev->dev));
+ 	if (!dev->dmavec_mempool)
+ 		return -ENOMEM;
+-
+-	dev->iod_meta_mempool =3D mempool_create_node(1,
+-			mempool_kmalloc, mempool_kfree,
+-			(void *)meta_size, GFP_KERNEL,
+-			dev_to_node(dev->dev));
+-	if (!dev->iod_meta_mempool)
+-		goto free;
+ 	return 0;
+-free:
+-	mempool_destroy(dev->dmavec_mempool);
+-	return -ENOMEM;
+ }
+=20
+ static void nvme_free_tagset(struct nvme_dev *dev)
+@@ -3524,7 +3530,6 @@ static int nvme_probe(struct pci_dev *pdev, const s=
+truct pci_device_id *id)
+ 	nvme_free_queues(dev, 0);
+ out_release_iod_mempool:
+ 	mempool_destroy(dev->dmavec_mempool);
+-	mempool_destroy(dev->iod_meta_mempool);
+ out_dev_unmap:
+ 	nvme_dev_unmap(dev);
+ out_uninit_ctrl:
+@@ -3588,7 +3593,6 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_dbbuf_dma_free(dev);
+ 	nvme_free_queues(dev, 0);
+ 	mempool_destroy(dev->dmavec_mempool);
+-	mempool_destroy(dev->iod_meta_mempool);
+ 	nvme_release_descriptor_pools(dev);
+ 	nvme_dev_unmap(dev);
+ 	nvme_uninit_ctrl(&dev->ctrl);
 --=20
 2.47.3
 
