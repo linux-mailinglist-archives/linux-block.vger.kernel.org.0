@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-24999-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24996-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64C9EB173B4
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 227B6B173B1
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 442143A90EB
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:05:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E83463A4225
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:05:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819241A7AE3;
-	Thu, 31 Jul 2025 15:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27151BE238;
+	Thu, 31 Jul 2025 15:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="wDdM6sZ2"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="GzTEliWZ"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF661A5B99
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FAF1ACED9
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753974329; cv=none; b=O62tOf9NHW9PtrZr4r0sC0kicGpbiLYEYPvHKLIPPLyK8JoMDD2o2BWlSQSYb+tU0toJdl6yEuz71YYxnpA97laGARW3qk4VQAus91ZnGL8SXEuhTn3pfqxCyzWO8Cl8fSEIBcbcDn+CZhUgVBXpFEh2lTzi0OuA7lEMZGqXagc=
+	t=1753974326; cv=none; b=ik1TuZJy25q3WIbpaXIQ4d8dgGHNLSqHJ9uyPoN8DwxQvkBM+jQuwLV105H2Cp7/xR+ga0h+Zdd4bPaAEpI0OBBEZnUbJKYEVB9YeMWqu9wh4L95bha5uqzCxiZKQ7TlDAqp3oEJw9ZiyJt+R+1AG3GWJpsBg1NpikBD++dWCh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753974329; c=relaxed/simple;
-	bh=50Bpk3z8FTM0rsQZJBadF/Vb1F4zTedXyHvRMzJvauA=;
+	s=arc-20240116; t=1753974326; c=relaxed/simple;
+	bh=HEj6BwAq4nlRgokN+6MJWX/wwGN5e9uZO1s9jQ9xVTM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lIqZgxCZbQoCbF+Go1bqj1Co+h9ReLIMaFcL4FFT/8z9bifhqcStBBhX9qMWHBoEm0wjgn6L+sOfZ+0mCIqp3Z+grG+9vO3g/R2S6IKDhyBohPw75UOZfw3uA1dNOu03arVwd6FybxRwLXYuaHaf7EoS7nolmollo1rhdXSkmSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=wDdM6sZ2; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=BFG6H27BFUk39BWZX5cR4NmnYfyBLG5by/W6fBgYxCSJyfsPdmkGFPjPszcXuQxDtVtXXD7C4jKAF+uyi9yVx6wH5km7FW8m9Z7fYVfhFpMkLtjB2waytM8Hz3VAXD/TccoQkFZYFwv/vmLD0l031QD0opki5aUsAfxVaJgkoY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=GzTEliWZ; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE7VPt012595
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:26 -0700
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE7REH012264
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:24 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=dsr5x8qJZFXEH7GdyeAHRaxjQOPGX3vWdY3mJjxt6+4=; b=wDdM6sZ2bbGC
-	mO+nffW8Ckonlb5pxwcNnslCec6twGwwEjZ2B64tHnDJj4HiKHTduFiG9ifVegM6
-	8npXw+JKssE3Zf2juSy9+PguYG6CLB2t37VMFLYWon8LrG4sZndHsS6fPcRLNlbE
-	9PsLRWcpC4I0juOwS/4yjhSiscrabrhk9xoS/SkmOEc5K/u8P07CxRugdbeBwsuQ
-	I7FpS6xkrY3Ckt0gvW8aJHFmAOJrkwHQuFoHDYcJe+ddLDAxxEVQ1tXPMDto8+TD
-	qEWeG6zHZ6F4TTnVptViww1zBdf8LRZRlh3g+Pze4DG6yp4SQsN9LFQ/Oj5AXt7U
-	w70CbNaSpA==
+	 bh=xb4+qZoBZTJSN3n5c0wo7/+q+Nd7lvZO56RURKkf+ww=; b=GzTEliWZjpy3
+	h5Mhxis4MQFPw+iQVO+iO+DKwBQzofl2PVIl8zrQOCFbgTmvvDwuL/dbp5WPRqZ6
+	ieXQytYHB/oJ3jOPK7areLjcGRWA1/r6R9tJvy8M4j68EnJBDO98HUF3P4g53GPd
+	A3WXYcJOXogLrUmcxgkZa9DYyeKAZRScU+TqNDJpx9zeHObG7iejEHazq//riTFy
+	cmvJ3DQSdtHdVOPNbQrN2eBKp2Z7ge84GvRTLkd+US9NCNv/nltPU49nfyjLxo6l
+	b2/ujdBRv4U6L4e+TEiy5+ZUkdpDlzT/0Thj8X8vVa2r92cvUTW1Ou3kGIDuXLrq
+	baeOK4RItQ==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883mj2k9b-1
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883mj2k83-11
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:25 -0700 (PDT)
-Received: from twshared7571.34.frc3.facebook.com (2620:10d:c085:208::7cb7) by
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:23 -0700 (PDT)
+Received: from twshared52133.15.frc2.facebook.com (2620:10d:c085:208::7cb7) by
  mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Thu, 31 Jul 2025 15:05:23 +0000
+ 15.2.2562.17; Thu, 31 Jul 2025 15:05:22 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id F2E62231DAB; Thu, 31 Jul 2025 08:05:13 -0700 (PDT)
+	id 09E67231DAE; Thu, 31 Jul 2025 08:05:13 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
 CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv4 3/8] blk-mq-dma: require unmap caller provide p2p map type
-Date: Thu, 31 Jul 2025 08:05:08 -0700
-Message-ID: <20250731150513.220395-4-kbusch@meta.com>
+Subject: [PATCHv4 4/8] blk-mq: remove REQ_P2PDMA flag
+Date: Thu, 31 Jul 2025 08:05:09 -0700
+Message-ID: <20250731150513.220395-5-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250731150513.220395-1-kbusch@meta.com>
 References: <20250731150513.220395-1-kbusch@meta.com>
@@ -74,87 +74,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=K/giHzWI c=1 sm=1 tr=0 ts=688b8635 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=lg-0pX42I_tHtCv8E8UA:9
-X-Proofpoint-ORIG-GUID: dkzQjo6toR41kzNZI3waJo5A18P2wIsZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX/+rK0RL0tvRv 5cWbhOF/53yN7sqO/GGeDXjGYVmgFo3JMDOLFseKK+YsXDa/5+xg01mNr6nq0tq2mdS3Hn0nkT+ aq05d4SBGunQdQVo8Nant9lBzn6dUCKIdwjo9nCt9PMohjgadxUg6mKxy0wFK7WTSZDLe8qVYCt
- OdCPp3a4Z2HtrCMnVO9laRk7k0/a8rLfG7LsRsatgLFM5EacPqfSVY9W5hY5F08vHKbLNBBgGsB QYoq3VXBPQH4pItZXVNI3A6uJE+Y/78p6tcqVnErMMCr/VRYXG+Cjn9tsU4t84pEjU9a0iFjnT9 2F7OTpitcVvwv5Kbk9/h9MamwVxJSxRAR93Bgi81RiwISAZDa2+Jz2B/93uCxBqhiWfDDDUfONA
- nwaCHnZ3bWUDAHgHA7WsMiZ0P9q1NyU55Iuwngnre/e7OUSHFywJ0pY5wCsXf8r25f6icY7R
-X-Proofpoint-GUID: dkzQjo6toR41kzNZI3waJo5A18P2wIsZ
+X-Authority-Analysis: v=2.4 cv=K/giHzWI c=1 sm=1 tr=0 ts=688b8633 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=gTB_xsApw5YEP2-mlJsA:9
+X-Proofpoint-ORIG-GUID: MAgr1PVCpTzxM4Xv1hrVSAJQwbC0PaPj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX1xGw/AawVnNx 3lrbS0ApLIbrDmd7/pklQa0msINfNXAp+TCcOhtvkorfRWAK1dIm/9MUEXT+4RMOono0FSYBd3a 8MVhc479jQmecJjnAgZPMuSYMjI2Wbd2HL2vi3XCdEuUhLK+/9sfcI7tvKHh5SliZgMVN4vzIwc
+ H4xEMTQ+JRrLMSXb2w0GcTny0rHb4AfqdEAgoRDCw9BerLmiK6apEkclxT78EIdf+v9a5NcUTj7 xuWDtBY67luGHeESb9KRK24kbpCnAXX2x9GccpeRPV57FFKbScwdmdq8mG8/bvBgGeX9qMAALFG BmVryYL5Z4tcCCQW6CdZYELb7dvBxqQYD5ovzsg19wYTVlkewldPed8Kdblg6iPmU2U+6T3uFhs
+ FNqDF/lqdUHOwGdqp+B5m1uzKymfqmjkIXYTNqOlZDMqVFMsqnv/vo0LM67T72cEYzl6UXrs
+X-Proofpoint-GUID: MAgr1PVCpTzxM4Xv1hrVSAJQwbC0PaPj
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-31_02,2025-07-31_02,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-In preparing for integrity dma mappings, we can't rely on the request
-flag because data and metadata may have different mapping types.
+It's not serving any particular purpose. pci_p2pdma_state() already has
+all the appropriate checks, so the config and flag checks are not
+guarding anything.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/nvme/host/pci.c    | 9 ++++++++-
- include/linux/blk-mq-dma.h | 5 +++--
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ block/bio.c               |  2 +-
+ block/blk-mq-dma.c        | 30 ++++++++++++++----------------
+ include/linux/blk_types.h |  1 -
+ 3 files changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 2c6d9506b1725..111b6bc6c93eb 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -261,6 +261,9 @@ enum nvme_iod_flags {
+diff --git a/block/bio.c b/block/bio.c
+index 92c512e876c8d..f56d285e6958e 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -981,7 +981,7 @@ void __bio_add_page(struct bio *bio, struct page *pag=
+e,
+ 	WARN_ON_ONCE(bio_full(bio, len));
 =20
- 	/* single segment dma mapping */
- 	IOD_SINGLE_SEGMENT	=3D 1U << 2,
-+
-+	/* DMA mapped with PCI_P2PDMA_MAP_BUS_ADDR */
-+	IOD_P2P_BUS_ADDR	=3D 1U << 3,
- };
+ 	if (is_pci_p2pdma_page(page))
+-		bio->bi_opf |=3D REQ_P2PDMA | REQ_NOMERGE;
++		bio->bi_opf |=3D REQ_NOMERGE;
 =20
- struct nvme_dma_vec {
-@@ -725,7 +728,8 @@ static void nvme_unmap_data(struct request *req)
- 		return;
+ 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, off);
+ 	bio->bi_iter.bi_size +=3D len;
+diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
+index 4a013703bcba5..988c27667df67 100644
+--- a/block/blk-mq-dma.c
++++ b/block/blk-mq-dma.c
+@@ -173,22 +173,20 @@ bool blk_rq_dma_map_iter_start(struct request *req,=
+ struct device *dma_dev,
+ 	if (!blk_map_iter_next(req, &iter->iter))
+ 		return false;
+=20
+-	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && (req->cmd_flags & REQ_P2PDMA)) {
+-		switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
+-					 phys_to_page(iter->iter.paddr))) {
+-		case PCI_P2PDMA_MAP_BUS_ADDR:
+-			return blk_dma_map_bus(iter);
+-		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+-			/*
+-			 * P2P transfers through the host bridge are treated the
+-			 * same as non-P2P transfers below and during unmap.
+-			 */
+-			req->cmd_flags &=3D ~REQ_P2PDMA;
+-			break;
+-		default:
+-			iter->status =3D BLK_STS_INVAL;
+-			return false;
+-		}
++	switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
++				 phys_to_page(iter->iter.paddr))) {
++	case PCI_P2PDMA_MAP_BUS_ADDR:
++		return blk_dma_map_bus(iter);
++	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++		/*
++		 * P2P transfers through the host bridge are treated the
++		 * same as non-P2P transfers below and during unmap.
++		 */
++	case PCI_P2PDMA_MAP_NONE:
++		break;
++	default:
++		iter->status =3D BLK_STS_INVAL;
++		return false;
  	}
 =20
--	if (!blk_rq_dma_unmap(req, dma_dev, &iod->dma_state, iod->total_len)) {
-+	if (!blk_rq_dma_unmap(req, dma_dev, &iod->dma_state, iod->total_len,
-+				iod->flags & IOD_P2P_BUS_ADDR)) {
- 		if (nvme_pci_cmd_use_sgl(&iod->cmd))
- 			nvme_free_sgls(req);
- 		else
-@@ -1000,6 +1004,9 @@ static blk_status_t nvme_map_data(struct request *r=
-eq)
- 	if (!blk_rq_dma_map_iter_start(req, dev->dev, &iod->dma_state, &iter))
- 		return iter.status;
+ 	if (blk_can_dma_map_iova(req, dma_dev) &&
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 09b99d52fd365..0a29b20939d17 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -419,7 +419,6 @@ enum req_flag_bits {
+ #define REQ_DRV		(__force blk_opf_t)(1ULL << __REQ_DRV)
+ #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
+ #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
+-#define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
 =20
-+	if (iter.p2pdma.map =3D=3D PCI_P2PDMA_MAP_BUS_ADDR)
-+		iod->flags |=3D IOD_P2P_BUS_ADDR;
-+
- 	if (use_sgl =3D=3D SGL_FORCED ||
- 	    (use_sgl =3D=3D SGL_SUPPORTED &&
- 	     (sgl_threshold && nvme_pci_avg_seg_size(req) >=3D sgl_threshold)))
-diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-index c82f880dee914..aef8d784952ff 100644
---- a/include/linux/blk-mq-dma.h
-+++ b/include/linux/blk-mq-dma.h
-@@ -49,14 +49,15 @@ static inline bool blk_rq_dma_map_coalesce(struct dma=
-_iova_state *state)
-  * @dma_dev:	device to unmap from
-  * @state:	DMA IOVA state
-  * @mapped_len: number of bytes to unmap
-+ * @is_p2p:	true if mapped with PCI_P2PDMA_MAP_BUS_ADDR
-  *
-  * Returns %false if the callers need to manually unmap every DMA segmen=
-t
-  * mapped using @iter or %true if no work is left to be done.
-  */
- static inline bool blk_rq_dma_unmap(struct request *req, struct device *=
-dma_dev,
--		struct dma_iova_state *state, size_t mapped_len)
-+		struct dma_iova_state *state, size_t mapped_len, bool is_p2p)
- {
--	if (req->cmd_flags & REQ_P2PDMA)
-+	if (is_p2p)
- 		return true;
+ #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
 =20
- 	if (dma_use_iova(state)) {
 --=20
 2.47.3
 
