@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-24997-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-24994-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03295B173B2
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E6EBB173AF
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD83E3A952E
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:05:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40D783A7EB4
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D78190477;
-	Thu, 31 Jul 2025 15:05:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 425511A5B99;
+	Thu, 31 Jul 2025 15:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="r4LI9BkP"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="F5aCkAL9"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216D6EAC6
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FC781E
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753974327; cv=none; b=Km4Bvrdqfjr6AlHDj/J3apcGKcZ4+snqu9BlsUNUkc732mft1x+95MvR6gExNwpCnXfDRZQb9TkJDG1zdIwbfBbsednF+gP4pwJtLF6GprGusI7U5Mywb+9OGOo00xUEuB4yU9zNBGa64bC39qH8u+FeSrr222B9Au2Xm12qrZM=
+	t=1753974323; cv=none; b=nfxSmxQgXSq6shDry7h+rmpKtZkCgFgDIMHqk6xF8rLRRCKx7InUiMIjcEus9AX6HLNFZYLmlk9c8OOuAlVyqojXBMjea0H+17r7eaJMCgHiyUHYC0RqhRCzJUXoDBZzkFmYPwfUlIEfoRdMsSzjmFwAOVqzvG6gYLnSgTmoHXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753974327; c=relaxed/simple;
-	bh=C/8ooFv7LigDgfrkCvNR5mfU1I95wfpwfH4u1p/12dI=;
+	s=arc-20240116; t=1753974323; c=relaxed/simple;
+	bh=SulBtO2WLEB8yiWxu8UJufeMcebtOml0MbwG57EqkZE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VTheVwkkCuUKrG+jPuW1vJZy0gdolm60qqRwfIoQ/8zz1Qvfsoom0blBxDFTWCpEPsOTk+TUHv0FWXOTmVruPyslVtpfsGajdOLl5Ky5R60VQfeaRF/V4cx9A8eZFv32emTZ7bqPakYNzNHESy/19f+X4MZ06eocHEaTAwSQDe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=r4LI9BkP; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=h0POBedUxdeIzECM9R0P+0VQY9E+aEU7Al1dfB29S5oqx2+5FIiAdU0BtyUn1pXiFuNaR90gsjacd2ycTii2qw0B9g+RXT3lQpM13sbOGS9XQL7Ec+CbRyyx98PFXNu9P5zI8NuYLiP9NYQ1UhVRfigQ/Lh+1T6gb8LVn+0rYd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=F5aCkAL9; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-	by m0001303.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 56VE76gi018443
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:25 -0700
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE75KM029919
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:19 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=3lXUThCK9TruXupsMznihYaGe0l1jI570tUcjQ/bbi0=; b=r4LI9BkPS/p8
-	8sNp7lhTADCIIjrJ2prFRLXcpTLglKVmKZI/UcdXUxPj8S84vM+o+EgBpeqcv0TW
-	fhe0wFfoRJ3xwUDK72xed7szfjq/8rb++Ya7XwTaqgL1J13PvYFcl6Wz8eOBj/07
-	jmebP7EQLO7cv4MYGFAsl4emCsYUPo86PvPNEqQV0KVpmEDrPxbbRAh+UyFK811q
-	9+NW6rBApuWXDsGkAQzhuo61ZAUwRMJC0HOPfrBHuad0cPiu1hRGIO6I4eDPLuJI
-	ePYas1P+R97VnyAX6AD7cAOzENBN1yR11MTpBtUo0oa9b/OoUIL41ZA25I2kAAXU
-	R/ONWzGUFQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by m0001303.ppops.net (PPS) with ESMTPS id 4883m32my9-4
+	 bh=ut48uWJtSD/GPhmg0N8X2KhVkgcEnwTLCf0dr8KqeYs=; b=F5aCkAL9D/5o
+	jwa0c1BJg3mcCiFfIJ4rYualp1lVHBnu/LVZpyJpKHIW2rVMiekhrtC96l9zr8Fc
+	oKPQZDI1E76iH+M4vZd3tB68vKwH//GX0xJGHjoCdwH/szIAJCh3w0eYpN+OXD9k
+	OcKNoyqen/neh5ntzXKgZWcn0UUTzo9KuB10RIVkyqshoWw1fe+dDgYg31Z5sk/G
+	6+GdF4Ie7lWiQ/7bJWOZXT/VetARje1mOD36yh6p3u57wqOZXTRYCXktMViYzsMJ
+	oB/mFyNvgnxbw3I2ovBfoJebyaN+cpZD7cG5DY15a3y35J8CrwaIKMWgiQxP5PfS
+	lksKAOWxog==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883m52mb3-18
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:24 -0700 (PDT)
-Received: from twshared52133.15.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:19 -0700 (PDT)
+Received: from twshared21625.15.frc2.facebook.com (2620:10d:c0a8:1b::8e35) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Thu, 31 Jul 2025 15:05:22 +0000
+ 15.2.2562.17; Thu, 31 Jul 2025 15:05:18 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id 25A1E231DB2; Thu, 31 Jul 2025 08:05:14 -0700 (PDT)
+	id 2C638231DB3; Thu, 31 Jul 2025 08:05:14 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
 CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv4 6/8] blk-mq-dma: add support for mapping integrity metadata
-Date: Thu, 31 Jul 2025 08:05:11 -0700
-Message-ID: <20250731150513.220395-7-kbusch@meta.com>
+Subject: [PATCHv4 7/8] nvme-pci: create common sgl unmapping helper
+Date: Thu, 31 Jul 2025 08:05:12 -0700
+Message-ID: <20250731150513.220395-8-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250731150513.220395-1-kbusch@meta.com>
 References: <20250731150513.220395-1-kbusch@meta.com>
@@ -74,179 +74,78 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: dgSzNFi5vTA8GJkJxBN1F2dXTFnKKI_t
-X-Authority-Analysis: v=2.4 cv=WqwrMcfv c=1 sm=1 tr=0 ts=688b8635 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=i2dgJ8ZlISNNJfdBrEcA:9
-X-Proofpoint-GUID: dgSzNFi5vTA8GJkJxBN1F2dXTFnKKI_t
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX4C+jQr8yX5Pj stkOsde3w5jw8vgaeta2+PxCE0waNhhAr4diATbJUUcmlxo/+AS2nEwUZZF18XeWjAQ4AT0hfid onONvcMzwoQYCXyrFPYOkr9MrVzC10cHqzblKZew8qQZas+A1sN02/hxqUC8lA3JZSHehOJl11h
- L7dljdeaQoqAFNf0bXrXD7nkGC6SV6YBteJm4f7GoosoZPNkcz9LNQPzBEYv7Ag3TrzI4URdvWm TQYQDCykaeoHSoxY39eqpSxwvMNGNzW/lTA/uEZfkpD6t6qw0O50qVxu/8KPQCWNzD2/HMoqaUF G1fx4rygLcJDO1LxDKSsdIecFoHhbZtDFHE4eu+fhl8ipALd263h0ZPH5tNwChqxaJzVu6HmwoD
- VjyevWI+5QOloT0Tus6QuKC7feBXcL5RUErhz2pEwwg9+LX8ck0tws8F2mSfq8n8f8hThg6G
+X-Proofpoint-GUID: GFjjlWlg59KAsmGT080cWsk0gvB_xdqN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX49+OJjMbqrXb 5gQ76h5WCMrqZJQbzD8dDJZP3LiICmsgM3oJ+Vs2Wz1E3SX0t4h/RBflw9VX4JfM3wm6zF1wodT HNx8qifFapARORyPfQKMKjzV09EKhrrW2X1bTDBiqh3cRUWGv8AF61fjYm9xIoBEmnynB+e9bvE
+ 4yR0nLy/coo2cpeMW5AXocjbtO4DtfQmdDiS81qCxWBNNZVLKgBW38EyTQhuNsrPeq08Op1BkSg gywNbAqfmFUO/XN/L9cFpf9xA4fNT98azGSVgg8dzrGFgpRHM0pXgGskQ3JfHCIlLmYJIBzXhDT uPbEpXV8A9V716cdUS7/Bjazh7uQJIHuAEgiG35pdvwqjU2MRGYeeVAn4wMVqVNALTyWzVWlonS
+ w5Paz+P1Jxt/COShe2/7MOGGRVRjdSQL9ebmJgT+Ts1DYunOKGQYAS7KgExkJpPUTzfJPIRM
+X-Authority-Analysis: v=2.4 cv=FNwbx/os c=1 sm=1 tr=0 ts=688b862f cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=Duz19Zw78js5DzQJfkIA:9
+X-Proofpoint-ORIG-GUID: GFjjlWlg59KAsmGT080cWsk0gvB_xdqN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-31_02,2025-07-31_02,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-Provide integrity metadata helpers equivalent to the data payload
-helpers for iterating a request for dma setup.
+This can be reused by metadata sgls once that starts using the blk-mq
+dma api.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-mq-dma.c            | 60 +++++++++++++++++++++++++++++++----
- include/linux/blk-integrity.h | 17 ++++++++++
- include/linux/blk-mq-dma.h    |  1 +
- 3 files changed, 71 insertions(+), 7 deletions(-)
+ drivers/nvme/host/pci.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index bc694fecb39dc..faa36ff6465ee 100644
---- a/block/blk-mq-dma.c
-+++ b/block/blk-mq-dma.c
-@@ -2,9 +2,28 @@
- /*
-  * Copyright (C) 2025 Christoph Hellwig
-  */
-+#include <linux/blk-integrity.h>
- #include <linux/blk-mq-dma.h>
- #include "blk.h"
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 111b6bc6c93eb..decb3ad1508a7 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -693,25 +693,34 @@ static void nvme_free_prps(struct request *req)
+ 	mempool_free(iod->dma_vecs, nvmeq->dev->dmavec_mempool);
+ }
 =20
-+static bool __blk_map_iter_next(struct blk_map_iter *iter)
-+{
-+	if (iter->iter.bi_size)
-+		return true;
-+	if (!iter->bio || !iter->bio->bi_next)
-+		return false;
 +
-+	iter->bio =3D iter->bio->bi_next;
-+	if (iter->is_integrity) {
-+		iter->iter =3D iter->bio->bi_integrity->bip_iter;
-+		iter->bvec =3D iter->bio->bi_integrity->bip_vec;
-+	} else {
-+		iter->iter =3D iter->bio->bi_iter;
-+		iter->bvec =3D iter->bio->bi_io_vec;
++static void __nvme_free_sgls(struct device *dma_dev, struct nvme_sgl_des=
+c *sge,
++		struct nvme_sgl_desc *sg_list, enum dma_data_direction dir)
++{
++	unsigned int len =3D le32_to_cpu(sge->length);
++	unsigned int i, nr_entries;
++
++	if (sge->type =3D=3D (NVME_SGL_FMT_DATA_DESC << 4)) {
++		dma_unmap_page(dma_dev, le64_to_cpu(sge->addr), len, dir);
++		return;
 +	}
-+	return true;
++
++	nr_entries =3D len / sizeof(*sg_list);
++	for (i =3D 0; i < nr_entries; i++)
++		dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
++			le32_to_cpu(sg_list[i].length), dir);
 +}
 +
- static bool blk_map_iter_next(struct request *req, struct blk_map_iter *=
-iter)
+ static void nvme_free_sgls(struct request *req)
  {
- 	unsigned int max_size;
-@@ -27,13 +46,8 @@ static bool blk_map_iter_next(struct request *req, str=
-uct blk_map_iter *iter)
- 	while (!iter->iter.bi_size || !iter->iter.bi_bvec_done) {
- 		struct bio_vec next;
+ 	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
+ 	struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+ 	struct device *dma_dev =3D nvmeq->dev->dev;
+-	dma_addr_t sqe_dma_addr =3D le64_to_cpu(iod->cmd.common.dptr.sgl.addr);
+-	unsigned int sqe_dma_len =3D le32_to_cpu(iod->cmd.common.dptr.sgl.lengt=
+h);
+ 	struct nvme_sgl_desc *sg_list =3D iod->descriptors[0];
++	struct nvme_sgl_desc *sge =3D &iod->cmd.common.dptr.sgl;
+ 	enum dma_data_direction dir =3D rq_dma_dir(req);
 =20
--		if (!iter->iter.bi_size) {
--			if (!iter->bio || !iter->bio->bi_next)
--				break;
--			iter->bio =3D iter->bio->bi_next;
--			iter->iter =3D iter->bio->bi_iter;
--			iter->bvec =3D iter->bio->bi_io_vec;
--		}
-+		if (!__blk_map_iter_next(iter))
-+			break;
-=20
- 		next =3D mp_bvec_iter_bvec(iter->bvec, iter->iter);
- 		if (bv.bv_len + next.bv_len > max_size ||
-@@ -232,6 +246,38 @@ bool blk_rq_dma_map_iter_next(struct request *req, s=
-truct device *dma_dev,
+-	if (iod->nr_descriptors) {
+-		unsigned int nr_entries =3D sqe_dma_len / sizeof(*sg_list), i;
+-
+-		for (i =3D 0; i < nr_entries; i++)
+-			dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
+-				le32_to_cpu(sg_list[i].length), dir);
+-	} else {
+-		dma_unmap_page(dma_dev, sqe_dma_addr, sqe_dma_len, dir);
+-	}
++	__nvme_free_sgls(dma_dev, sge, sg_list, dir);
  }
- EXPORT_SYMBOL_GPL(blk_rq_dma_map_iter_next);
 =20
-+#ifdef CONFIG_BLK_DEV_INTEGRITY
-+bool blk_rq_integrity_dma_map_iter_start(struct request *req,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter)
-+{
-+	unsigned len =3D bio_integrity_bytes(&req->q->limits.integrity,
-+					   blk_rq_sectors(req));
-+	struct bio *bio =3D req->bio;
-+
-+	iter->iter =3D (struct blk_map_iter) {
-+		.bio =3D bio,
-+		.iter =3D bio->bi_integrity->bip_iter,
-+		.bvec =3D bio->bi_integrity->bip_vec,
-+		.is_integrity =3D true,
-+	};
-+	return blk_dma_map_iter_start(req, dma_dev, state, iter, len);
-+}
-+EXPORT_SYMBOL_GPL(blk_rq_integrity_dma_map_iter_start);
-+
-+bool blk_rq_integrity_dma_map_iter_next(struct request *req,
-+               struct device *dma_dev, struct blk_dma_iter *iter)
-+{
-+	if (!blk_map_iter_next(req, &iter->iter))
-+		return false;
-+
-+	if (iter->p2pdma.map =3D=3D PCI_P2PDMA_MAP_BUS_ADDR)
-+		return blk_dma_map_bus(iter);
-+	return blk_dma_map_direct(req, dma_dev, iter);
-+}
-+EXPORT_SYMBOL_GPL(blk_rq_integrity_dma_map_iter_next);
-+#endif
-+
- static inline struct scatterlist *
- blk_next_sg(struct scatterlist **sg, struct scatterlist *sglist)
- {
-diff --git a/include/linux/blk-integrity.h b/include/linux/blk-integrity.=
-h
-index e67a2b6e8f111..78fe2459e6612 100644
---- a/include/linux/blk-integrity.h
-+++ b/include/linux/blk-integrity.h
-@@ -4,6 +4,7 @@
-=20
- #include <linux/blk-mq.h>
- #include <linux/bio-integrity.h>
-+#include <linux/blk-mq-dma.h>
-=20
- struct request;
-=20
-@@ -31,6 +32,11 @@ int blk_rq_integrity_map_user(struct request *rq, void=
- __user *ubuf,
- 			      ssize_t bytes);
- int blk_get_meta_cap(struct block_device *bdev, unsigned int cmd,
- 		     struct logical_block_metadata_cap __user *argp);
-+bool blk_rq_integrity_dma_map_iter_start(struct request *req,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter);
-+bool blk_rq_integrity_dma_map_iter_next(struct request *req,
-+		struct device *dma_dev, struct blk_dma_iter *iter);
-=20
- static inline bool
- blk_integrity_queue_supports_integrity(struct request_queue *q)
-@@ -115,6 +121,17 @@ static inline int blk_rq_integrity_map_user(struct r=
-equest *rq,
- {
- 	return -EINVAL;
- }
-+static inline bool blk_rq_integrity_dma_map_iter_start(struct request *r=
-eq,
-+		struct device *dma_dev,  struct dma_iova_state *state,
-+		struct blk_dma_iter *iter)
-+{
-+	return false;
-+}
-+static inline bool blk_rq_integrity_dma_map_iter_next(struct request *re=
-q,
-+		struct device *dma_dev, struct blk_dma_iter *iter)
-+{
-+	return false;
-+}
- static inline struct blk_integrity *bdev_get_integrity(struct block_devi=
-ce *b)
- {
- 	return NULL;
-diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-index aef8d784952ff..4b7b85f9e23e6 100644
---- a/include/linux/blk-mq-dma.h
-+++ b/include/linux/blk-mq-dma.h
-@@ -11,6 +11,7 @@ struct blk_map_iter {
- 	struct bio_vec                  *bvec;
- 	struct bvec_iter		iter;
- 	struct bio			*bio;
-+	bool				is_integrity;
- };
-=20
- struct blk_dma_iter {
+ static void nvme_unmap_data(struct request *req)
 --=20
 2.47.3
 
