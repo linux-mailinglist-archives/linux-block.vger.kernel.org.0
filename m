@@ -1,120 +1,126 @@
-Return-Path: <linux-block+bounces-24992-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25000-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02291B172D7
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 16:08:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72E47B173B5
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EEDA188417D
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 14:08:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B09B62007E
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 15:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E506237164;
-	Thu, 31 Jul 2025 14:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826531DA60D;
+	Thu, 31 Jul 2025 15:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j3by1ajH"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Lpic8GQO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED1E2C1592
-	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 14:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07441D6193
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 15:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753970904; cv=none; b=svFLMEMZIiCfiD+nO7iz/evsNMqz2m1TAZGsb+Khi21pe5hnl1TnkCZYPPA+jB1+CgKwTLFvSvrMHetGAjQjql50YKLMZmX/Iw879k4IbRF9eQQiZVeMDbCVzRDzW5Kzf07cnbyuHqpLxrXhOGoim3hPNlcF/hxpZoUB9vhEzts=
+	t=1753974330; cv=none; b=TLctnTliYt1REnaZS4AvPu00d6K5R253iQDVJ66NgrPeqi0QyGjEWV9ouYnlU0YQuV9T4oosZpf8N70Q4wsvkhfK5lGOrqh6HENgTcuvw3WbLD9HMKps4aMm69UCWJCfABU5TLULbK7ZAkrvvIBgrHD5pnMt37fwfwQjQgrPx2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753970904; c=relaxed/simple;
-	bh=OEHPPjiGEsMqahSRNCAHmuvR2pPqEEkPwx0k2Ct/cuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ddsIv2+j6XUArHeDVLaeJ+fGJcb0+5+9Gdt5GUqWAwbUEGGuTKVBNs8ITM0xBqxvxqmGy7b8tSWgI13go47gmY8RbROwOiaetxak5Vcjcve08bCRcY8g4EKRFTZKFkiQeWicbIjSoNsdfcNivoPT4dgc2ZfV/LEb8dHy1H2c/8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j3by1ajH; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=1idUh1jegaXThllqHigBe7SBw8P3SMuWB+tbTiKiD84=; b=j3by1ajHehonVMDKAutOkqiNlW
-	8WLkCTD0r77qat4pVCXggk62fufeKLUC2QLKASETtLYYB9O7P6yz8JOgGz1SRW1hIHx7sJgIIYRSb
-	PSZyrjkZ+M0ksYALAagtc6dwsuv0JpqMTM/EesPyYmyncrHl4R90NCN9Y46lb1PW4fY7d1QA/J+qw
-	oM1BOl3paIAhuZQjAdWePAanaSDGGPSgvrtoR2qYsh2V9J6jaSMIFfE4nNLvoCk3lQdabYvHW95AZ
-	U3B1yogoZC71sl8fW0AYVcyPRGck2u4rlsXAxPdjfZ2P2Ex93QI+UJ7GbjKxHeWyofNyVFxDE6hRp
-	aSHb/EUA==;
-Received: from c-76-102-242-2.hsd1.ca.comcast.net ([76.102.242.2] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uhTxD-00000003mgg-1oiG;
-	Thu, 31 Jul 2025 14:08:19 +0000
-Date: Thu, 31 Jul 2025 07:08:18 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org
-Subject: [GIT PULL] nvme updates for Linux 6.17
-Message-ID: <aIt40gBo9MuyC9Y2@infradead.org>
+	s=arc-20240116; t=1753974330; c=relaxed/simple;
+	bh=n8SAv9CEDTj5Os+IYGHRPA9UJN15Ip/2lStdIIj2GOg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pVw+HaGZU97dlzqTBAJp/mqhpxpl/etDEae3r7JTGIWXbLmXLyDhoauiPuq/7vtx/xf/PfNK1qfjjywebFP/YCuaXhuLvRLRD/O+9KAnzEWaNdFbCudoq9mORdxD3+odbVSarAgDWOfFPyoKSPtt5JiDdBgr7kS0APBq89gmmiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Lpic8GQO; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VE7REM012264
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=dHyeKnG3m5lYgQY6OD
+	04dVFvOoVjGKnoxFkIYe4DwGU=; b=Lpic8GQOR4zVD6swRTSyk5gGUMFaRtWxvY
+	Y4ZaEb2YWz0TrVb6RUAhn0OAnF0SCPvTtriiWoICOzN0bnfsfDd6svWSubd6XGP6
+	qBiGmdwQ41f6gwy6xCgXpItNKfs3Ri/tkobAa5FKRuGvEBPWz8hm4plB28TsUXFe
+	2o7QgSuQLfzzI7T0arN9bYIGtJsAFzePA02MHKUcjpCTyl0LErBOAWbGCqurD3OY
+	AZYHRjyk/G13lDaAJKH54rMepl7QlcJ9xuOShprmSLKCbCUrUTsUS3HF0L68Dmc6
+	OzRZsT6Pc3JzXVwYtOxTUpHtcAFohwVZ7tzwJTISTCw8Du7dgUUg==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4883mj2k83-16
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 08:05:26 -0700 (PDT)
+Received: from twshared0973.10.ash9.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Thu, 31 Jul 2025 15:05:24 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id E4D0B231DA6; Thu, 31 Jul 2025 08:05:13 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv4 0/8] blk-mq: introduce blk_map_iter
+Date: Thu, 31 Jul 2025 08:05:05 -0700
+Message-ID: <20250731150513.220395-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=K/giHzWI c=1 sm=1 tr=0 ts=688b8636 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=0iyWCkrW18D_fWTiA50A:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-ORIG-GUID: ZZoBqQM7Am5YaFjH1tRfUtD_msSX_WkK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDEwMiBTYWx0ZWRfX4v99dp+iZ8/f KrE7vy25XAwYac4nLUGtvtCJFmOLQe7cIJFozi5wIAL/7Lj6Jmo2JJgcv9A7DwoIIQw3wo5AzVq eVNxGN9oAQ4VwOpXeFgKyC2OS1Qwt8YbbfonMmwhQWLGUnp8dWqOTKFJmMUL65FPsntVSTl9vwp
+ 2/A5FBmFjHCUtcAz66NNNy5L6rz42gJUKi6pgye7q/5udR8IPvu7tURus5JF+7/7Lh50wGh9Nnh aFgzk3bSvp1FSF0W9mRR3tvM7rBOqhhLK6/Fg+BZjOH9mQLW8EX6F8QP5iCxxz2bOaP50Uh3rHW rhbc+hk04/qDvEp6y869m7OLKdg4yz3MRKTwPqnieVKBurXlfo9f7uTRbV9Z4U1DIXLCGERH+/o
+ VIvn6uzpT2XTjDFkChkfw5Xih4M4eUMJ7Cb/BJQG6ATz2aZxDVGIhPH8mmAftVQWd3mA7r6Y
+X-Proofpoint-GUID: ZZoBqQM7Am5YaFjH1tRfUtD_msSX_WkK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-31_02,2025-07-31_02,2025-03-28_01
 
-The following changes since commit 5421681bc3ef13476bd9443379cd69381e8760fa:
+From: Keith Busch <kbusch@kernel.org>
 
-  blk-ioc: don't hold queue_lock for ioc_lookup_icq() (2025-07-29 06:26:34 -0600)
+Previous version:
 
-are available in the Git repository at:
+  https://lore.kernel.org/linux-nvme/20250729143442.2586575-1-kbusch@meta=
+.com/
 
-  git://git.infradead.org/nvme.git tags/nvme-6.17-2025-07-31
+Changes since v3:
 
-for you to fetch changes up to 367c240b0a99c7ada700a44345dd3144a02b6164:
+ - Fixed special vec handling
 
-  nvme: fix various comment typos (2025-07-31 06:35:58 -0700)
+ - Fixed address check for dma_mapping_error
 
-----------------------------------------------------------------
-nvme updates for Linux 6.17
+ - Fixed nvme leaks on dma iteration errror
 
- - add support for getting the FDP featuee in fabrics passthru path
-   (Nitesh Shetty)
- - add capability to connect to an administrative controller
-   (Kamaljit Singh)
- - fix a leak on sgl setup error (Keith Busch)
- - initialize discovery subsys after debugfs is initialized
-   (Mohamed Khalfella)
- - fix various comment typos (Bjorn Helgaas)
- - remove unneeded semicolons (Jiapeng Chong)
+ - Added an nvme prep patch to reduce code duplication when unmaping
+   sgl's
 
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      nvme: fix various comment typos
+ - On the last patch, I retained the previous MPTR setup for when a
+   single integrity segment exists for non-user requests. A code comment
+   in the data path claims that is more efficient than the DMA iterator.
 
-Jiapeng Chong (1):
-      nvme-auth: remove unneeded semicolon
+Keith Busch (8):
+  blk-mq-dma: introduce blk_map_iter
+  blk-mq-dma: provide the bio_vec list being iterated
+  blk-mq-dma: require unmap caller provide p2p map type
+  blk-mq: remove REQ_P2PDMA flag
+  blk-mq-dma: move common dma start code to a helper
+  blk-mq-dma: add support for mapping integrity metadata
+  nvme-pci: create common sgl unmapping helper
+  nvme-pci: convert metadata mapping to dma iter
 
-Kamaljit Singh (1):
-      nvme: add capability to connect to an administrative controller
+ block/bio.c                   |   2 +-
+ block/blk-mq-dma.c            | 237 ++++++++++++++++++++--------------
+ drivers/nvme/host/pci.c       | 190 +++++++++++++++------------
+ include/linux/blk-integrity.h |  17 +++
+ include/linux/blk-mq-dma.h    |  16 ++-
+ include/linux/blk_types.h     |   1 -
+ 6 files changed, 279 insertions(+), 184 deletions(-)
 
-Keith Busch (1):
-      nvme-pci: fix leak on sgl setup error
+--=20
+2.47.3
 
-Mohamed Khalfella (1):
-      nvmet: initialize discovery subsys after debugfs is initialized
-
-Nitesh Shetty (1):
-      nvmet: add support for FDP in fabrics passthru path
-
- drivers/nvme/host/auth.c       |  4 ++--
- drivers/nvme/host/core.c       | 16 ++++++++++++++++
- drivers/nvme/host/fc.c         |  4 ++--
- drivers/nvme/host/pci.c        |  2 +-
- drivers/nvme/host/tcp.c        |  2 +-
- drivers/nvme/target/core.c     | 12 ++++++------
- drivers/nvme/target/fc.c       |  6 +++---
- drivers/nvme/target/passthru.c |  2 ++
- drivers/nvme/target/rdma.c     |  6 +++---
- 9 files changed, 36 insertions(+), 18 deletions(-)
 
