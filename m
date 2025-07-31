@@ -1,186 +1,121 @@
-Return-Path: <linux-block+bounces-25009-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25012-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F777B17579
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 19:13:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 126E3B17797
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 23:02:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A66701893E38
-	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 17:13:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FC20540CD5
+	for <lists+linux-block@lfdr.de>; Thu, 31 Jul 2025 21:02:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5A523E33D;
-	Thu, 31 Jul 2025 17:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54080246BD7;
+	Thu, 31 Jul 2025 21:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kj5JV3tO"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="PqY8nbQH"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6204225784;
-	Thu, 31 Jul 2025 17:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E50221FA0
+	for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 21:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753981979; cv=none; b=UHfpCbjDlUmhapzZIfGUdqaC+Vd76w8oJCZrd9jP1WVFTmkSm1InTwr0OliMe0QEK29HE+EAQJhzG+PHsVFCHnlQcc66XEZZ7c+TVIOwUEPfSyrVZEQVsW0mdl56f8SZBDY3KZJdVvdpLUUrPpmB4xOIP5f9mWV5UBPykJ0TOKs=
+	t=1753995761; cv=none; b=K+YjgTzvTS6MApcLZYFQVBu+gspjJMLSO5li8L5ZC838DvzgwTEfQT8yOpP+DI8fnSksnB5H7P6SQVazqhsw3oSu86SchkJNt3XdCOzibhvATPfslhplAEZOpkUTzudvduVPfWc6Gl1sq1MDoiNpjiQbzdYT9Zu51sY31K6VERM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753981979; c=relaxed/simple;
-	bh=749QrL7J0/QGXNnQBMQXrAxmTfG1i6S/8klvDMbN0Zk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NcJ4pPzvCzWkLFcONWI40rYp06pBPMARC0qAFEjXvdEIcc7170foVQwg+4Q4JV+dcPWkmBkJL9gcbzHf4EaCqFnZzgw3fUniKtD7XAPeIwRVkve7GdbV8B9vxvcM3Y2UTEwcT1Oep4VQAR3E1qEq1/aM84tGyMxmpQ4CEJEbVjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kj5JV3tO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA434C4CEEF;
-	Thu, 31 Jul 2025 17:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753981979;
-	bh=749QrL7J0/QGXNnQBMQXrAxmTfG1i6S/8klvDMbN0Zk=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kj5JV3tOEOJziKA5GcWydOQLVXuuxUDhzo9hx04OjNFlbGyFVdEkNEXiEBglYUOFe
-	 w3UhNalj62focn6MClwC3yB/MJpPvVC1NskaaVyX6V+yymHVY5QdigQSugDkn6q48a
-	 P55+BzlRK41SUDOHMzn5OYagSncHkdOwaeMM6aRrXo+Oi5tx3mMfosRU4bqVr0pZRh
-	 K7gFBnpVaIH81SnKxhQknFTZMtkmae5WnjeJEZpamKBdFUQINSWRdV1vlQ+EltrqFH
-	 tpjgJRSSGa7R46LoRuN6ZWkOX4YS3a/MtLCZmG1XHy3irrUz4KRFWIR1PfT/PyZ6ZC
-	 9HmClJewkmwTw==
-Message-ID: <2ca5109a-341c-497a-9da7-422d56620348@kernel.org>
-Date: Fri, 1 Aug 2025 01:12:55 +0800
+	s=arc-20240116; t=1753995761; c=relaxed/simple;
+	bh=VvDcIIZYbR5ABGWrRAC8KtwDhSXJ5ShvR7mMB076vxw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eYoAWVdYcFGHAGpeca5gUN59d9TrFz7jdkWkoeg3hky+6KqqgKvqbQnmXLcYPpseICljhcM7AONgm00pgwjPFo2k5ob+Mb5QvFD4sAjKpmR3/ieLmnuy2D8kgWHUd80OadpFQKwRHK7aH53O/XQp7g0PjWoN1va5z8NU3l/8YlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=PqY8nbQH; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-875acfc133dso33538039f.1
+        for <linux-block@vger.kernel.org>; Thu, 31 Jul 2025 14:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1753995755; x=1754600555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3XsfntcqQ6csvTwNyJAnEEKzN96J5OJofevbNS9mkqg=;
+        b=PqY8nbQH9d5A9Bk8kW/YOiUWMTnTsKjKT/PG/cQM7oBiSHLCN0rSr87F+nhNugDo5x
+         tKHHT9J4zkFbwELX5X+AYJ6XCIZuodq9zR33gTElKMODPcskWEOB5rH1abX+grf3gV3f
+         yVPGN1p1ijFRYdEGdesUTVkCUBt1dxy8e9Cm2qq8jSzezEv1QGsO75B4BY2NRFatzrsC
+         7FH+RvWOHs9ixNfQs/tgbPDTTUc4wwmCetAckkj+mYaV4fXq0l/atoULPtqCT6uU0nBT
+         l3rgaY/QRioSnILaDKU89I6RJkGGW6fV+fa/J697KSHOlsSCbrKdpUlzP2aesHpdZpBI
+         u4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753995755; x=1754600555;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3XsfntcqQ6csvTwNyJAnEEKzN96J5OJofevbNS9mkqg=;
+        b=sdpW02aeIdWrWXJHLdXcnRcVOaP0EDV0hESRbx6cBueaZ/c20OCH5jAHDidrQftZ/i
+         +YcEyKG1sQ2SaNbF6YWgPvjixrJ299tzb53XPX8mVgrulN08SlQzmrwCzMSQ3iXsfd8t
+         GiyyZhbsGkaNUhZQ1c0o4J2Q9Vz8IOukvMw+UKdjDqIQeKZw0THmkE9vFRunQcea2Uf5
+         JvmAp/ABBLsoa+fNGaeqGKOlwPRk0jgm/saUfHn3tajBXJQy1zx2a9oSetAESW8jI96w
+         y7Suaa13guF/lf62zkNe1yHocDn35vfL/+Zh3q+rQhsOUY5azzTBr3NEptlJTbCDJeST
+         T/fg==
+X-Gm-Message-State: AOJu0YxrRHEhEliRfVQKniWMJoFnS8xojA4dAa593ARTxRDjm+YDtqek
+	xgB7sjx8fxFf951ub0qKs+b4lhM/SJO5hA5htgzTTRmpmT3zlkgHgYtH6EiuslYPTwc=
+X-Gm-Gg: ASbGncvoWDSSw03JdhvMDbEZaiYc6u9yNFUsMGoghjQZ1zA8G2Mh4fqRztsImdP8eWz
+	Rz5tisEQc3iGkW0apxVVoUMR39kPI22ICX2Cts+lYPO8RRwKWFsZz35kh6xLMmrSPYhLYKXEl/8
+	eOMoV7vwH+mKw5606uUip+8qtU/8qDj8OID76PzoyVb4uzQFLP/f1/057GGGtF67iea2gnOnqjY
+	2CbugEC0enjNrW1EkcCCQvjrgBDZo8Zna/2sack5RQMcMpuV/Mwro6JRY2tAud1bazy+tamxHpz
+	QrkIvmkr5zxbJcEPQcDp3G8iPA1Z/ft5K51BJdUnHM+NQNgf/n4Ui+pMFJqD9X5i3P2JF0Rl+J7
+	iba75cfvh4I5L
+X-Google-Smtp-Source: AGHT+IGKT0RgUTn9YYs1F89WnC3a/jmyDkGPckfY2oxUk+gEldlRw4qKJY41tJacKy7ZUvj8P6mzKw==
+X-Received: by 2002:a05:6e02:178d:b0:3e3:fd04:5768 with SMTP id e9e14a558f8ab-3e40d65443cmr5688725ab.5.1753995755256;
+        Thu, 31 Jul 2025 14:02:35 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50a55df201bsm752208173.109.2025.07.31.14.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Jul 2025 14:02:34 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250731044953.1852690-1-linux@roeck-us.net>
+References: <20250731044953.1852690-1-linux@roeck-us.net>
+Subject: Re: [PATCH] block: Fix default IO priority if there is no IO
+ context
+Message-Id: <175399575406.610680.10505836643407350567.b4-ty@kernel.dk>
+Date: Thu, 31 Jul 2025 15:02:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: yukuai@kernel.org
-Subject: Re: [PATCH] blk-wbt: Fix io starvation in wbt_rqw_done()
-To: Yizhou Tang <tangyeechou@gmail.com>, Julian Sun <sunjunchao2870@gmail.com>
-Cc: linux-block@vger.kernel.org, axboe@kernel.dk, stable@vger.kernel.org,
- Julian Sun <sunjunchao@bytedance.com>
-References: <20250731123319.1271527-1-sunjunchao@bytedance.com>
- <CAOB9oOZV5ObqvgNxr9m0ztm7ruM9N9RMi8QHmiG5WL4sNbLxuw@mail.gmail.com>
-Content-Language: en-US
-From: Yu Kuai <yukuai@kernel.org>
-In-Reply-To: <CAOB9oOZV5ObqvgNxr9m0ztm7ruM9N9RMi8QHmiG5WL4sNbLxuw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-2ce6c
 
-Hi,
 
-在 2025/7/31 23:40, Yizhou Tang 写道:
-> Hi Julian,
->
-> On Thu, Jul 31, 2025 at 8:33 PM Julian Sun <sunjunchao2870@gmail.com> wrote:
->> Recently, we encountered the following hungtask:
->>
->> INFO: task kworker/11:2:2981147 blocked for more than 6266 seconds
->> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> kworker/11:2    D    0 2981147      2 0x80004000
->> Workqueue: cgroup_destroy css_free_rwork_fn
->> Call Trace:
->>   __schedule+0x934/0xe10
->>   schedule+0x40/0xb0
->>   wb_wait_for_completion+0x52/0x80
-> I don’t see __wbt_wait() or rq_qos_wait() here, so I suspect this call
-> stack is not directly related to wbt.
->
->
->>   ? finish_wait+0x80/0x80
->>   mem_cgroup_css_free+0x3a/0x1b0
->>   css_free_rwork_fn+0x42/0x380
->>   process_one_work+0x1a2/0x360
->>   worker_thread+0x30/0x390
->>   ? create_worker+0x1a0/0x1a0
->>   kthread+0x110/0x130
->>   ? __kthread_cancel_work+0x40/0x40
->>   ret_from_fork+0x1f/0x30
-This is writeback cgroup is waiting for writeback to be done, if you 
-figured out
-they are throttled by wbt, you need to explain clearly, and it's very 
-important to
-provide evidence to support your analysis. However, the following 
-analysis is
-a mess :(
->>
->> This is because the writeback thread has been continuously and repeatedly
->> throttled by wbt, but at the same time, the writes of another thread
->> proceed quite smoothly.
->> After debugging, I believe it is caused by the following reasons.
->>
->> When thread A is blocked by wbt, the I/O issued by thread B will
->> use a deeper queue depth(rwb->rq_depth.max_depth) because it
->> meets the conditions of wb_recent_wait(), thus allowing thread B's
->> I/O to be issued smoothly and resulting in the inflight I/O of wbt
->> remaining relatively high.
->>
->> However, when I/O completes, due to the high inflight I/O of wbt,
->> the condition "limit - inflight >= rwb->wb_background / 2"
->> in wbt_rqw_done() cannot be satisfied, causing thread A's I/O
->> to remain unable to be woken up.
->  From your description above, it seems you're suggesting that if A is
-> throttled by wbt, then a writer B on the same device could
-> continuously starve A.
-> This situation is not possible — please refer to rq_qos_wait(): if A
-> is already sleeping, then when B calls wq_has_sleeper(), it will
-> detect A’s presence, meaning B will also be throttled.
-Yes, there are three rq_wait in wbt, and each one is FIFO. It will be 
-possible
-if  A is backgroup, and B is swap.
->
-> Thanks,
-> Yi
->
->> Some on-site information:
->>
->>>>> rwb.rq_depth.max_depth
->> (unsigned int)48
->>>>> rqw.inflight.counter.value_()
->> 44
->>>>> rqw.inflight.counter.value_()
->> 35
->>>>> prog['jiffies'] - rwb.rqos.q.backing_dev_info.last_bdp_sleep
->> (unsigned long)3
->>>>> prog['jiffies'] - rwb.rqos.q.backing_dev_info.last_bdp_sleep
->> (unsigned long)2
->>>>> prog['jiffies'] - rwb.rqos.q.backing_dev_info.last_bdp_sleep
->> (unsigned long)20
->>>>> prog['jiffies'] - rwb.rqos.q.backing_dev_info.last_bdp_sleep
->> (unsigned long)12
->>
->> cat wb_normal
->> 24
->> cat wb_background
->> 12
->>
->> To fix this issue, we can use max_depth in wbt_rqw_done(), so that
->> the handling of wb_recent_wait by wbt_rqw_done() and get_limit()
->> will also be consistent, which is more reasonable.
-Are you able to reproduce this problem, and give this patch a test before
-you send it?
+On Wed, 30 Jul 2025 21:49:53 -0700, Guenter Roeck wrote:
+> Upstream commit 53889bcaf536 ("block: make __get_task_ioprio() easier to
+> read") changes the IO priority returned to the caller if no IO context
+> is defined for the task. Prior to this commit, the returned IO priority
+> was determined by task_nice_ioclass() and task_nice_ioprio(). Now it is
+> always IOPRIO_DEFAULT, which translates to IOPRIO_CLASS_NONE with priority
+> 0. However, task_nice_ioclass() returns IOPRIO_CLASS_IDLE, IOPRIO_CLASS_RT,
+> or IOPRIO_CLASS_BE depending on the task scheduling policy, and
+> task_nice_ioprio() returns a value determined by task_nice(). This causes
+> regressions in test code checking the IO priority and class of IO
+> operations on tasks with no IO context.
+> 
+> [...]
 
-Thanks,
-Kuai
->>
->> Signed-off-by: Julian Sun <sunjunchao@bytedance.com>
->> Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism")
->> ---
->>   block/blk-wbt.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
->> index a50d4cd55f41..d6a2782d442f 100644
->> --- a/block/blk-wbt.c
->> +++ b/block/blk-wbt.c
->> @@ -210,6 +210,8 @@ static void wbt_rqw_done(struct rq_wb *rwb, struct rq_wait *rqw,
->>          else if (blk_queue_write_cache(rwb->rqos.disk->queue) &&
->>                   !wb_recent_wait(rwb))
->>                  limit = 0;
->> +       else if (wb_recent_wait(rwb))
->> +               limit = rwb->rq_depth.max_depth;
->>          else
->>                  limit = rwb->wb_normal;
->>
->> --
->> 2.20.1
->>
->>
+Applied, thanks!
+
+[1/1] block: Fix default IO priority if there is no IO context
+      commit: e2ba58ccc9099514380c3300cbc0750b5055fc1c
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
 
