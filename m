@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-25040-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25038-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27AA3B189A1
-	for <lists+linux-block@lfdr.de>; Sat,  2 Aug 2025 01:49:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82974B1899B
+	for <lists+linux-block@lfdr.de>; Sat,  2 Aug 2025 01:48:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BB505A245D
-	for <lists+linux-block@lfdr.de>; Fri,  1 Aug 2025 23:49:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 165261C2816F
+	for <lists+linux-block@lfdr.de>; Fri,  1 Aug 2025 23:48:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014CF2900AF;
-	Fri,  1 Aug 2025 23:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCCB528D857;
+	Fri,  1 Aug 2025 23:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="M6zi21Id"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="dl1NAjHo"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D47228F51D
-	for <linux-block@vger.kernel.org>; Fri,  1 Aug 2025 23:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5892923D293
+	for <linux-block@vger.kernel.org>; Fri,  1 Aug 2025 23:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754092079; cv=none; b=T7ZLAvD0dspZGCL4yr6bhwXDVhMFmBDHPj0o69NrzvtU9a4fBP6tyR8N9J2UdLicoZeI5vEPeX1Mt6z8Lq2NK+KdTldMTnAwKKWv6p4hdGby62xjniUuyGyjLOzUSa4vBPOVPR0ZUL2OQefVE6ADC4Hrgy+OvyY5hGQ3b3lqDKg=
+	t=1754092076; cv=none; b=XDhZCKqlt/RJXVmOanjUSOD5MS3MaIM34/1CGZYtn8JyYKFHw8Mx8kLpe3nbgjrrFdIaVhTaduIRLHQwroHuKirkSRxnH51/km45+DZDJ2UXxXDAeakDJFrif4GymLPTDUg2FgKlT8I0PsXbPKbw4/OS6D0VvdexcR9UYVJp1PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754092079; c=relaxed/simple;
-	bh=jzlRcqxemBScBaRTLQp2jW6SAY6QfbaJO5r5WJ+UUAQ=;
+	s=arc-20240116; t=1754092076; c=relaxed/simple;
+	bh=gdIVjT3vlKOt+2mbfWTWwWZ2gPoA7XxoHfplCpsaon8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uEvIpAawNXDYWp27wbr7XWqLWZ8ei5OnIMuYHkqKv4VWo/S6rXuz+gKuuRnJou1/mPHulbkPvSNUAu3IspVlLQ1uWao7E7VnwIGp2owsiEqzjfBDXzYGNuiu9HtYGbtDyhb9Gdx6gs798X6KrEumU3dLukHifw9TcUe2o7qgewE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=M6zi21Id; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=a1hXpg+sEwFYMO0XNXlzfyLXk87AWYZsAiBhcoq60K56Umr+DXyLgNEh58u7RGDd3Zz8mbCe+BetgbUeoMsy3Ig4Ihm+fAjcwWJDoBkhsS7SsAHUcMPBp2q6VPefMmDL8y2Mfi5kjSvqJHzhlaA86RLrzRpd9ylpSKkhoiPhgZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=dl1NAjHo; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 571Mms2k016719
-	for <linux-block@vger.kernel.org>; Fri, 1 Aug 2025 16:47:57 -0700
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 571MqFEI027978
+	for <linux-block@vger.kernel.org>; Fri, 1 Aug 2025 16:47:54 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=XtBdupgbjKwCohMaMZDsYVHKfLDcKQSvu9287xyburU=; b=M6zi21IdQ41s
-	DY5P2QZg/ySFDsISkZzN8UxvKhnxrYAKUhE2elhH2O1FRMR1EMPZm2y1X+I/+TS4
-	AzWuUOKHX8K+QnVE085dX07IvuOD0J2hhsnCB9q7Jgduva+V2wU3Hr1eNMqV9P3w
-	q3GeVCwQ3nXUqno2k418XU07mFEXYyo2Jjv+LeEvoCoVIMmTQjHvbgRccxBCaPBN
-	UJIVP2VNgbSSqVFfDKPrUrVAOMUEbOhd78GHl7l3Lbh26P8D54axSUsztF79nML+
-	TLkqdS96WukXc9+DBZ5emRTI6k58wb+eKRM1TzmwB94QlYBqcGgo61LzozU0Kpqg
-	qkCd1YhxVQ==
+	 bh=1SMXkSebdaxUaoNdomo0qGyDMDQR8jUQzMvUjgNXeBc=; b=dl1NAjHoKtdf
+	40azB8cH8aKrpu4U3nB5u/zuNbF0DRTB8fjdNMKIwt1sD9/ZeCMQdBAP4GcG5Ym+
+	x/9j7HeJROiIgrlrGoEyeqLQTcJN+g/S+Yd0S518B8oKpx4uxfMxAoIhY71F4jvx
+	5hbH220NfU28MPv8DuCuEmRnOZOWM+ZueLSTdESDWlH8u1I0dcFU4ItUKAJAGhT5
+	vCbHMj9VZvn6pZ9R4I3+Pj+Eajbkc9/9bELORqhwDRn4hOxJagchN/iVX0DIDNQI
+	z0b/tI4dP7rTs2d6YCdGfQVRnhjHtYNd5854I1HhNYrOKnmPOQTioiEpvV/b8rX6
+	n9yiGf6ycg==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 488rn2nkme-12
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 489286t1ts-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Fri, 01 Aug 2025 16:47:56 -0700 (PDT)
-Received: from twshared31684.07.ash9.facebook.com (2620:10d:c0a8:1b::2d) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Fri, 01 Aug 2025 16:47:54 -0700 (PDT)
+Received: from twshared31684.07.ash9.facebook.com (2620:10d:c0a8:fe::f072) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.2.2562.17; Fri, 1 Aug 2025 23:47:50 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id AC5823105EB; Fri,  1 Aug 2025 16:47:36 -0700 (PDT)
+	id B2F063105EF; Fri,  1 Aug 2025 16:47:36 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <snitzer@kernel.org>, <axboe@kernel.dk>, <dw@davidwei.uk>,
         <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 2/7] block: align the bio after building it
-Date: Fri, 1 Aug 2025 16:47:31 -0700
-Message-ID: <20250801234736.1913170-3-kbusch@meta.com>
+Subject: [PATCH 3/7] block: simplify direct io validity check
+Date: Fri, 1 Aug 2025 16:47:32 -0700
+Message-ID: <20250801234736.1913170-4-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250801234736.1913170-1-kbusch@meta.com>
 References: <20250801234736.1913170-1-kbusch@meta.com>
@@ -74,123 +74,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: HG9DI-gMJfagX8w9zG4z0LNB072_W_EI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODAxMDE5MyBTYWx0ZWRfX5+cqBqWh55gr TkoLIag4CNMXyKv8c40tngjWsFziwY+3wtrm10XorEHV1zixPDxcmMV2E1dlfV3iR2W9//3GDx+ IBFGavE0bQ19fWcn8/eXJY0g0JbATKuDBQiP3wHxeitaMEcsVk/Go6fxEILbd14d4lmTG26MWGE
- HwOiDoToBTMNC560xsAZxurYzpzregJUnPRL1cq58/9WUD5ErsbHTgjx90EtpjQCSlP68Yh6uMr /iluCJGOcfYuj5MVb/PrQa3kAiyvQWh5toO3BG67knuKVPE9bnfOiJLkoAlbnUdoQU5FkuO1BJE 3zCnq5KNC6nf5V0l6caeGIYlOYFBe4gKgyNKX5GQfvRU40K8rR1LqSm8LSAXWIpARPyadYd1ToK
- rCtKuKecpgQtxJvSJfENUQLqZiCMBuu//pV+GTBI5KObcIN97CI4Kck+isIpN10x1/0R6w89
-X-Authority-Analysis: v=2.4 cv=HOnDFptv c=1 sm=1 tr=0 ts=688d522c cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=vjHh1zdRauUgFv1HwnwA:9
-X-Proofpoint-GUID: HG9DI-gMJfagX8w9zG4z0LNB072_W_EI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODAxMDE5MyBTYWx0ZWRfX4Ko/JZ9nU5N5 fUd6tHZ2D88WP+IHdMvbUeVg3JZxLJ5FrhfghBOPoQFY/Z1spdB4ncHULqFPQYpV61820A/AzUX x+k+tSxxGIunznzxKmhuWvq8HdYIAEA+sVixYc24rCM+eEo1Pmg2RK+IPcBxrPE+aj/CjLzPv4W
+ tdyPxrWmJvFhfx7S183qCGe1oRjul4Lor7OWXXhMIIxobS4MQZzuipkZTiQnRjMzhFYmVycl7SC MeIhLXFTqiRayLeCcYiLmoavI3egGBqODbRJUHmS9DFGEG8s3pNanWkA/9P5ySBAfUXXEPLqtsk TO/YEcLBws1IlcilDSr59Tz6DgbmmAXY93Qs3+HJ+9oMMfPkAx/UQMuRM+X1tkCTw2muaWEZrFu
+ 1dYwR3Zayu/2H6TyBksry8IGXlV84pT4PEj4A4z3IXMvx4Jb6gkOBzjvgtRRR4g+i0rD0Y5R
+X-Authority-Analysis: v=2.4 cv=ANL1oDcN c=1 sm=1 tr=0 ts=688d522a cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=IZBY3vBkjIs1pqmLj1YA:9
+X-Proofpoint-GUID: i3abIif9oOotqglJctZEKUoWQTqmkSWm
+X-Proofpoint-ORIG-GUID: i3abIif9oOotqglJctZEKUoWQTqmkSWm
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-01_08,2025-08-01_01,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-Ensure the entire size is aligned after it's built instead of ensuring
-each vector is block size aligned while constructing it. This makes it
-more flexible to accepting device valid vectors that would otherwise get
-rejected by overzealous alignment checks.
+The block layer checks all the segments for validity later, so no need
+for an early check. Just reduce it to a simple position and total length
+and defer the segment checks to the block layer.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/bio.c | 58 +++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 39 insertions(+), 19 deletions(-)
+ block/fops.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 92c512e876c8d..c050903e1be0c 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1227,13 +1227,6 @@ static int __bio_iov_iter_get_pages(struct bio *bi=
-o, struct iov_iter *iter)
- 	if (bio->bi_bdev && blk_queue_pci_p2pdma(bio->bi_bdev->bd_disk->queue))
- 		extraction_flags |=3D ITER_ALLOW_P2PDMA;
-=20
--	/*
--	 * Each segment in the iov is required to be a block size multiple.
--	 * However, we may not be able to get the entire segment if it spans
--	 * more pages than bi_max_vecs allows, so we have to ALIGN_DOWN the
--	 * result to ensure the bio's total size is correct. The remainder of
--	 * the iov data will be picked up in the next bio iteration.
--	 */
- 	size =3D iov_iter_extract_pages(iter, &pages,
- 				      UINT_MAX - bio->bi_iter.bi_size,
- 				      nr_pages, extraction_flags, &offset);
-@@ -1241,18 +1234,6 @@ static int __bio_iov_iter_get_pages(struct bio *bi=
-o, struct iov_iter *iter)
- 		return size ? size : -EFAULT;
-=20
- 	nr_pages =3D DIV_ROUND_UP(offset + size, PAGE_SIZE);
--
--	if (bio->bi_bdev) {
--		size_t trim =3D size & (bdev_logical_block_size(bio->bi_bdev) - 1);
--		iov_iter_revert(iter, trim);
--		size -=3D trim;
--	}
--
--	if (unlikely(!size)) {
--		ret =3D -EFAULT;
--		goto out;
--	}
--
- 	for (left =3D size, i =3D 0; left > 0; left -=3D len, i +=3D num_pages)=
+diff --git a/block/fops.c b/block/fops.c
+index 82451ac8ff25d..820902cf10730 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -38,8 +38,8 @@ static blk_opf_t dio_bio_write_op(struct kiocb *iocb)
+ static bool blkdev_dio_invalid(struct block_device *bdev, struct kiocb *=
+iocb,
+ 				struct iov_iter *iter)
  {
- 		struct page *page =3D pages[i];
- 		struct folio *folio =3D page_folio(page);
-@@ -1297,6 +1278,44 @@ static int __bio_iov_iter_get_pages(struct bio *bi=
-o, struct iov_iter *iter)
- 	return ret;
+-	return iocb->ki_pos & (bdev_logical_block_size(bdev) - 1) ||
+-		!bdev_iter_is_aligned(bdev, iter);
++	return (iocb->ki_pos | iov_iter_count(iter)) &
++			(bdev_logical_block_size(bdev) - 1);
  }
 =20
-+static inline void bio_revert(struct bio *bio, unsigned int nbytes)
-+{
-+	bio->bi_iter.bi_size -=3D nbytes;
-+
-+	while (nbytes) {
-+		struct bio_vec *bv =3D &bio->bi_io_vec[bio->bi_vcnt - 1];
-+
-+		if (nbytes < bv->bv_len) {
-+			bv->bv_len -=3D nbytes;
-+			return;
-+		}
-+
-+		bio_release_page(bio, bv->bv_page);
-+		bio->bi_vcnt--;
-+		nbytes -=3D bv->bv_len;
-+       }
-+}
-+
-+static int bio_align_to_lbs(struct bio *bio, struct iov_iter *iter)
-+{
-+	struct block_device *bdev =3D bio->bi_bdev;
-+	size_t nbytes;
-+
-+	if (!bdev)
-+		return 0;
-+
-+	nbytes =3D bio->bi_iter.bi_size & (bdev_logical_block_size(bdev) - 1);
-+	if (!nbytes)
-+		return 0;
-+
-+	bio_revert(bio, nbytes);
-+	iov_iter_revert(iter, nbytes);
-+	if (!bio->bi_iter.bi_size)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- /**
-  * bio_iov_iter_get_pages - add user or kernel pages to a bio
-  * @bio: bio to add pages to
-@@ -1336,6 +1355,7 @@ int bio_iov_iter_get_pages(struct bio *bio, struct =
-iov_iter *iter)
- 		ret =3D __bio_iov_iter_get_pages(bio, iter);
- 	} while (!ret && iov_iter_count(iter) && !bio_full(bio, 0));
-=20
-+	ret =3D bio_align_to_lbs(bio, iter);
- 	return bio->bi_vcnt ? 0 : ret;
- }
- EXPORT_SYMBOL_GPL(bio_iov_iter_get_pages);
+ #define DIO_INLINE_BIO_VECS 4
 --=20
 2.47.3
 
