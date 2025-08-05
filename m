@@ -1,228 +1,158 @@
-Return-Path: <linux-block+bounces-25181-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25185-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54CC1B1B624
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 16:16:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ADD79B1B6CC
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 16:44:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F46A188F483
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 14:13:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51BEE188D027
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 14:44:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD29279DAD;
-	Tue,  5 Aug 2025 14:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0348C279324;
+	Tue,  5 Aug 2025 14:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="vR4z1u3E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOUyu0sI"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E822279795
-	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 14:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B94C278779;
+	Tue,  5 Aug 2025 14:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754403099; cv=none; b=IReRUV7inJ5WbJvHv0LQzZ54WIFB31U4seO4gw9LNDjxWgjHd6ZcYmuunU5w+sPeYqOtrxhQWf8kUlBTcaWXfdtMKaGD1zDGAMtIM0792hvh5RsQj1680OoEqHC2muOG6AG64vtISGhmHHdxgnytC9NYq4WBadomlP7Cc4QnMOo=
+	t=1754405050; cv=none; b=nLl19H3vIIpWUWRYUPGViHCXQSe+8HrTprf0X2Agi9L7PLdJRqRY9F9eh0IxBT5APf68WktHDtqX66H1JZmJGoY8W5k8CVEJVfEHqZBfyyL0K6nUzCxx4tof5kUNOb1/X5n/AL5kdcJ4LlqtlCfCu/+1YTBfiOAbEFAcexgL0Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754403099; c=relaxed/simple;
-	bh=UVyMyNSWmKVpdo2b8zlviQrB93mojZdGTaqeAGXZkZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q3yOX+TVP2QeNq1r3SqD5bTB+THsOUE60Xsa2foKGzEsevzJMPmZkexeeyOJb/BOxu10eUjYtsN+ZGDzGMclKGpX499dHKvF9gL6/PXR1jPGdMqAGse/n36E+Xz6rPwVxhOwFJ+jVrfvb6ilqY0PdfrXfVu+1MXsSAQQH1tfYjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=vR4z1u3E; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 575CYQMh015353
-	for <linux-block@vger.kernel.org>; Tue, 5 Aug 2025 07:11:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=q9rfR/CPErdS7PfZ2eWN7JXXGJ1kaWhdntYdyMqVQE0=; b=vR4z1u3E4IGd
-	cvf9AjEaKuc7OIhjv4AsUrX/xXOWuXH85irR+j9HGampukqIwqcpl5jBcWYf6O6A
-	FV23TZPoMIko8cyNDuCHbe2Uqc6stltlfgZfCoi8rKU6I1amt26q5MGvqYG/wW+a
-	BR7glaVT09yW5h7UZg0fr0yWsDOzz2LuWJ36gDSykO3/DlrfNHQksVKDp/2aRRvI
-	WJWrLNh5XgBMyEZBhHvMaXzO5jND42+HFhEct1aKsT74bZA7cFiCph+d20R7aSsU
-	8Jq/CjlW1+YWu46EYIuZx/HVydb+FjvlrshKVf4f7q30V/ziS1mTExPtG/3smSOi
-	VpTEQKQpsA==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48bdg9aay0-17
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Tue, 05 Aug 2025 07:11:36 -0700 (PDT)
-Received: from twshared0973.10.ash9.facebook.com (2620:10d:c0a8:fe::f072) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Tue, 5 Aug 2025 14:11:27 +0000
-Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id 05F1D4FDD56; Tue,  5 Aug 2025 07:11:24 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <snitzer@kernel.org>, <axboe@kernel.dk>, <dw@davidwei.uk>,
-        <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 7/7] iov_iter: remove iov_iter_is_aligned
-Date: Tue, 5 Aug 2025 07:11:23 -0700
-Message-ID: <20250805141123.332298-8-kbusch@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20250805141123.332298-1-kbusch@meta.com>
-References: <20250805141123.332298-1-kbusch@meta.com>
+	s=arc-20240116; t=1754405050; c=relaxed/simple;
+	bh=3RCrq3Y4kwStmaBt0vPdSor2V1wAA1qG9IHltv+940U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fT6NfosXosR+Ui8jv48f2vrw2EmyQjgZxSZMZQfMdrNtoheXYKkdCl/HM2zW4czszlrT2Ntyz/qVLQJ97t1xvDg83IspGc7tq+ttu0IWIC3bmsPjpssvhNIdG5PBCUqyDnEjBFdLkUckO1xWV85CdFmh0ubKQcAMO3J3QU6LhiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VOUyu0sI; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e278d8345aso460607785a.0;
+        Tue, 05 Aug 2025 07:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754405048; x=1755009848; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EC8FmgDuAlbX3oC0spWweNiEFLh02XkzDeaF4Z04SHU=;
+        b=VOUyu0sIsDpLsvE2rZouEPxJs+29nbGXRjxQsh1dVWevbrXAACpcsNaERiB0ukmckp
+         11uFZw9kD9yBYSWf04wCSTzSo1+aro3NwIPTVgiLFVtrY2AvFk+71AfEse9lyx3axEzt
+         yT5qWgS7hL3VVP2J1RXkwQKKXaHhSYcILef1/ICIRhQ/HAbn6wJMhyYO5AJVqnP/338I
+         NS7NrtxL69FnQ5yNgIATJvYjhRkyV2qkJkj8cRZHaDojpAluz0E9DGzwPROG/6yI0+7k
+         Dcqfv5q6/13pZet/0rzc3dMAQAQfO5lFqXB4ynSJT12VnOH2SGQawui++JTgGg3tjq2m
+         CcDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754405048; x=1755009848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EC8FmgDuAlbX3oC0spWweNiEFLh02XkzDeaF4Z04SHU=;
+        b=b0GAQJVGvTJBPHGImlbKrPtz0xOOFKYrEFKjZm5sHC5gLlXBugv5KvwObc0sGhKsUm
+         gL8uey1X0qXQFjyLQjGT7Z7NVsZRpMX0k9bDvqYXwtQpThe25JpDiJc13VcWX+yI4cIw
+         xu34twus+GImRFyeOghrq46rgF4wQP8vgqfc8PNz12TJ9qjmE1VcuKjEPVRe3/ac2uP7
+         XvGhNRIL8NaOLUh7pCH6GkOBt+IyJr7sqfUAYel60mFakrgiBh+XHkPK9o/cBMTj6U3x
+         t3yg1HTNuQkq/K+rnN8m+8slJglJ7/6Wb4mvpdnTWXIOKOMyGgDS4+To4LqaUzl9bO9O
+         SFEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx3xOsd6v1a+vh1kMwDXNimH1rKKC+Z5mvbapkIr2x6kVtBLWvt4rgdBUbpV5npA+i22rv8QbpauXhsMbK@vger.kernel.org, AJvYcCX8KV0muweyR96PAbeCMniWk172wu2PxXzy27MPo/9x/O77IUvkBtO9GfNH2II2GxqvGy4KeSml6cKc2Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj4se0lDi1nagx8vDoZ4P9YW+g+M3kA6rOeyaCIk1gZFkD8Un8
+	YUera5tCcbt39Nk81iG2eczNtDI13l3gqEuXam38xkJMdVdyLUot6AEP
+X-Gm-Gg: ASbGnctwilz/DSjXcArvkGiKqFS94w2x+LNn2DeDL0Pk83FBV8PSXcZtwSzIGgSOj4A
+	Fg5tjHjWKKPCpnzC65t1EOYTAtcAs9NAa/uKLcBZ6bHIFq5m0tl/ocBFypkqdDDQrIb/oJPK+ji
+	+fgMWv30IodSNulN+Hk9LSc/wUbmWp1CsVHEb3d0DUxernCQbOR0I4ExolDKnFJ4BfNi7EAgGv2
+	5ZfbEpEV6YDuvMki8XqC71w9xrR74n1a5f7ttqY7Jgxu3qN9sLUIJiVRZZOx9hqwwCpvBkQU+5l
+	syCIu+CroEHJlA110AQgh/GYesnkHFmgQSFmU8deeuSvgtD4zwdENCdNSZCB5M+7mSUnBazAr5w
+	8ubsUN+3WX2MIhPyGAQ==
+X-Google-Smtp-Source: AGHT+IFwmlbuQDVchtVefbBplOAKLwEtdkx9EJTnqYGtfQCgHXCgzzlYEM8hrigmvqRVm4hUzJlRwQ==
+X-Received: by 2002:a05:620a:19a0:b0:7e7:fc71:74c5 with SMTP id af79cd13be357-7e7fc717a8fmr1348883585a.61.1754405048067;
+        Tue, 05 Aug 2025 07:44:08 -0700 (PDT)
+Received: from localhost ([142.186.9.88])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7e8091a0dc9sm155392985a.19.2025.08.05.07.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Aug 2025 07:44:07 -0700 (PDT)
+Date: Tue, 5 Aug 2025 10:43:50 -0400
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: minchan@kernel.org, axboe@kernel.dk, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, syzbot+1a281a451fd8c0945d07@syzkaller.appspotmail.com
+Subject: Re: [PATCH] zram: fix NULL pointer dereference in
+ zcomp_available_show()
+Message-ID: <edvzxvoparhuqppuic5amgz5smfar54zmli73nhyojnj63nom4@kmqnjdl2af7u>
+References: <20250803062519.35712-1-ImanDevel@gmail.com>
+ <d7gutildolj5jtx53l2tfkymxdctga3adabgn2cfqu3makx4le@3lfmk67haipn>
+ <6hs2ou3giemh2j7lvaldr7akpmrwt56gdh3gjs7i5ouexljggp@2fpes7wzdu6l>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=dLymmPZb c=1 sm=1 tr=0 ts=68921118 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=S-mNSWGAXQVMvOK0xjcA:9
-X-Proofpoint-ORIG-GUID: 5yoyu9uVUg4DcFmcHfk1Eldn39a1im3a
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDEwNCBTYWx0ZWRfX76tNuSXda84n BcLl4vf21xyyeRV0TZxoVE5us03VzVuJ6FxSL92a3C3jdSRgxkUTbQZ5FRSN175Ob1nbRjRMVYR 6/crvTURYgtkJRRng9etSG7gq95N4n7+vYNMtO/7dGViJaMS36dc4QXbGRpRBO4tjgO+yizhn/1
- BujXMLhuqRxcvXtQo51HobBbXrMHK2cjDTcCHdkRxPUuRX2RJW6OUH1zVCVjfkVJkezA0jB/RHe ZfeIzbMpHnuoizOgrxYt39rOIGtHQyanBCmIxlP6sDZFlT9hept+grO1GyM4zGWJHZUWsWAUhkh QhAHberBYD33ZXQwR0o20Nphm2mJZ5m0uP5i3Pz1PH2mlhifE/vYmMEnq3qVR6QztRi0zEgfTfn
- uf3Yx7xgU6cUgRML8Fp+0Dshpg8bKZfVJ5pqWi2jmLUSUpVHcGq5nvgOwIWfmtWWwFVElIaF
-X-Proofpoint-GUID: 5yoyu9uVUg4DcFmcHfk1Eldn39a1im3a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-05_04,2025-08-04_01,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6hs2ou3giemh2j7lvaldr7akpmrwt56gdh3gjs7i5ouexljggp@2fpes7wzdu6l>
 
-From: Keith Busch <kbusch@kernel.org>
+On 25/08/05 09:38AM, Seyediman Seyedarab wrote:
+> On 25/08/05 07:22PM, Sergey Senozhatsky wrote:
+> > On (25/08/03 02:25), Seyediman Seyedarab wrote:
+> > > Temporarily add a NULL check in zcomp_available_show() to prevent the
+> > > crash. The use-after-free issue requires a more comprehensive fix using
+> > > proper reference counting to ensure the zram structure isn't freed while
+> > > still in use.
+> > 
+> > Not without a reproducer, sorry.  Per my limited experience, attempts
+> > to fix syzkaller reports w/o reproducers often lead to regressions or
+> > just more problems.
+> 
+> It can be reproduced with the following code:
+> #include <stdlib.h>
+> #include <stdio.h>
+> #include <fcntl.h>
+> #include <unistd.h>
+> 
+> int main()
+> {
+>     int hot_remove_fd, comp_alg_fd, disksize_fd;
+>     char buf[256];
+>     
+>     system("modprobe -r zram");
+>     system("modprobe zram");
+>     
+>     disksize_fd = open("/sys/block/zram0/disksize", O_WRONLY);
+>     if (disksize_fd >= 0) {
+>         write(disksize_fd, "1073741824", 10);
+>         close(disksize_fd);
+>     }
+> 
+>     hot_remove_fd = open("/sys/class/zram-control/hot_remove", O_WRONLY);
+>     comp_alg_fd = open("/sys/block/zram0/comp_algorithm", O_RDONLY);
+>     
+>     write(hot_remove_fd, "0", 1);
+>     
+>     for (int i = 0; i < 1000000; i++) {
+>         lseek(comp_alg_fd, 0, SEEK_SET);
+>         read(comp_alg_fd, buf, sizeof(buf));
+>         printf("comp_algorithm: %s", buf);
+>     }
+> }
+> 
+> Which produces corrupted output sometimes. (it's a race condition, so it
+> doesn't happen all the time...)
 
-No more callers.
+To clarify: the reproducer I provided shows only the use-after-free 
+issue where zram structure is freed while sysfs reads are ongoing.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
----
- include/linux/uio.h |  2 -
- lib/iov_iter.c      | 95 ---------------------------------------------
- 2 files changed, 97 deletions(-)
+The NULL dereference (which syzbot reported) has a much tighter race 
+window: it requires catching the brief moment during zram_reset_device() 
+where comp_algs[prio] is NULL between zram_destroy_comps() and 
+comp_algorithm_set(). This 'can' be triggered by racing concurrent:
+- writes to /sys/block/zram0/reset 
+- reads from /sys/block/zram0/comp_algorithm
+The window is only a few instructions wide under write lock, so it is 
+significantly harder to reproduce than the use-after-free.
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 2e86c653186c6..5b127043a1519 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -286,8 +286,6 @@ size_t _copy_mc_to_iter(const void *addr, size_t byte=
-s, struct iov_iter *i);
- #endif
-=20
- size_t iov_iter_zero(size_t bytes, struct iov_iter *);
--bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
--			unsigned len_mask);
- unsigned long iov_iter_alignment(const struct iov_iter *i);
- unsigned long iov_iter_gap_alignment(const struct iov_iter *i);
- void iov_iter_init(struct iov_iter *i, unsigned int direction, const str=
-uct iovec *iov,
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index f9193f952f499..2fe66a6b8789e 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -784,101 +784,6 @@ void iov_iter_discard(struct iov_iter *i, unsigned =
-int direction, size_t count)
- }
- EXPORT_SYMBOL(iov_iter_discard);
-=20
--static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned ad=
-dr_mask,
--				   unsigned len_mask)
--{
--	const struct iovec *iov =3D iter_iov(i);
--	size_t size =3D i->count;
--	size_t skip =3D i->iov_offset;
--
--	do {
--		size_t len =3D iov->iov_len - skip;
--
--		if (len > size)
--			len =3D size;
--		if (len & len_mask)
--			return false;
--		if ((unsigned long)(iov->iov_base + skip) & addr_mask)
--			return false;
--
--		iov++;
--		size -=3D len;
--		skip =3D 0;
--	} while (size);
--
--	return true;
--}
--
--static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned add=
-r_mask,
--				  unsigned len_mask)
--{
--	const struct bio_vec *bvec =3D i->bvec;
--	unsigned skip =3D i->iov_offset;
--	size_t size =3D i->count;
--
--	do {
--		size_t len =3D bvec->bv_len - skip;
--
--		if (len > size)
--			len =3D size;
--		if (len & len_mask)
--			return false;
--		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
--			return false;
--
--		bvec++;
--		size -=3D len;
--		skip =3D 0;
--	} while (size);
--
--	return true;
--}
--
--/**
-- * iov_iter_is_aligned() - Check if the addresses and lengths of each se=
-gments
-- * 	are aligned to the parameters.
-- *
-- * @i: &struct iov_iter to restore
-- * @addr_mask: bit mask to check against the iov element's addresses
-- * @len_mask: bit mask to check against the iov element's lengths
-- *
-- * Return: false if any addresses or lengths intersect with the provided=
- masks
-- */
--bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
--			 unsigned len_mask)
--{
--	if (likely(iter_is_ubuf(i))) {
--		if (i->count & len_mask)
--			return false;
--		if ((unsigned long)(i->ubuf + i->iov_offset) & addr_mask)
--			return false;
--		return true;
--	}
--
--	if (likely(iter_is_iovec(i) || iov_iter_is_kvec(i)))
--		return iov_iter_aligned_iovec(i, addr_mask, len_mask);
--
--	if (iov_iter_is_bvec(i))
--		return iov_iter_aligned_bvec(i, addr_mask, len_mask);
--
--	/* With both xarray and folioq types, we're dealing with whole folios. =
-*/
--	if (iov_iter_is_xarray(i)) {
--		if (i->count & len_mask)
--			return false;
--		if ((i->xarray_start + i->iov_offset) & addr_mask)
--			return false;
--	}
--	if (iov_iter_is_folioq(i)) {
--		if (i->count & len_mask)
--			return false;
--		if (i->iov_offset & addr_mask)
--			return false;
--	}
--
--	return true;
--}
--EXPORT_SYMBOL_GPL(iov_iter_is_aligned);
--
- static unsigned long iov_iter_alignment_iovec(const struct iov_iter *i)
- {
- 	const struct iovec *iov =3D iter_iov(i);
---=20
-2.47.3
+Your patch [1] should fixes the NULL deref, but the use-after-free remains.
 
+[1] https://lore.kernel.org/r/20250805101946.1774112-1-senozhatsky@chromium.org
 
