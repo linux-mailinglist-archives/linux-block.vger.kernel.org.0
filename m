@@ -1,69 +1,67 @@
-Return-Path: <linux-block+bounces-25178-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25181-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F4CB1B61E
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 16:15:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54CC1B1B624
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 16:16:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0DC51889EF6
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 14:12:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F46A188F483
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 14:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF71276049;
-	Tue,  5 Aug 2025 14:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD29279DAD;
+	Tue,  5 Aug 2025 14:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="hkR2yLPu"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="vR4z1u3E"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D9924168D
-	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 14:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E822279795
+	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 14:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754403093; cv=none; b=OWdIVF0FfWo4u7ATzp3v4r+oIVh/wsQJwvfnCN3dyIW0LqjwogrkeNUXGXbNqneurivl+CVI+7q1xff4pzG99lhsueH409YfZR/rsm4hRq6TH1HvPraKjMpBJP/+4EYVOq0XjWOSCBWdh2xrHc4IfRzmqmAZ9ZO2dJtSUHBUtNU=
+	t=1754403099; cv=none; b=IReRUV7inJ5WbJvHv0LQzZ54WIFB31U4seO4gw9LNDjxWgjHd6ZcYmuunU5w+sPeYqOtrxhQWf8kUlBTcaWXfdtMKaGD1zDGAMtIM0792hvh5RsQj1680OoEqHC2muOG6AG64vtISGhmHHdxgnytC9NYq4WBadomlP7Cc4QnMOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754403093; c=relaxed/simple;
-	bh=X4TiQRCAyimCy235Rs2X/10FtaUcKM3owhi+6iQOMAE=;
+	s=arc-20240116; t=1754403099; c=relaxed/simple;
+	bh=UVyMyNSWmKVpdo2b8zlviQrB93mojZdGTaqeAGXZkZ8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zuxuu1EYyy+bScneP52nxSvZ4Oj5K6O5h7nirGo+5yC157TeLDE+ruqO9tnEd6f1qHlIRs+43TL+jNNGB5obPb5dlDI+Kt8MltxPat+a0bTeXmwZo6BapctzEkWWgPn4hwYAI/YKLKQFqve7Gx1V0eQsQw/yUEL0c9z26G8sEug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=hkR2yLPu; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=Q3yOX+TVP2QeNq1r3SqD5bTB+THsOUE60Xsa2foKGzEsevzJMPmZkexeeyOJb/BOxu10eUjYtsN+ZGDzGMclKGpX499dHKvF9gL6/PXR1jPGdMqAGse/n36E+Xz6rPwVxhOwFJ+jVrfvb6ilqY0PdfrXfVu+1MXsSAQQH1tfYjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=vR4z1u3E; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 575CYPkw027939
-	for <linux-block@vger.kernel.org>; Tue, 5 Aug 2025 07:11:31 -0700
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 575CYQMh015353
+	for <linux-block@vger.kernel.org>; Tue, 5 Aug 2025 07:11:36 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=47Zm63PeojXkiJDTke1e+5K+CoKyN+QOtXjqL/eR4fI=; b=hkR2yLPuXL3c
-	T4OJWpbtm0y6QaoX8srv/czAM5dXwaTUXGqfSfq7O4ijp3RhwkLuJ1FlAMibpsn1
-	9twetMALR3ujiphrmmIkLNJZmGsJqJLzS/dybmEgxfvopSWHoirWgMSZljGBm5Lw
-	t/mDsVZvg6XBtS3YWppCeIvrxGeG+rDaLDyxneZ8iok5fhxYu5WmqqA/o3jB7tGs
-	DhGAl4kDQRwe+6FDpCFkAR3EBhSwtLijL2DgcfCNAMjUBKawOBdmq2x9xvOu9at4
-	pi7NT8w+8pyovgjLlXyjgJ0mkXl2/GvCbl2HxRnQY1SNM2XaV3vMon5dDZ9mUBEB
-	JjOFq9T2KA==
+	 bh=q9rfR/CPErdS7PfZ2eWN7JXXGJ1kaWhdntYdyMqVQE0=; b=vR4z1u3E4IGd
+	cvf9AjEaKuc7OIhjv4AsUrX/xXOWuXH85irR+j9HGampukqIwqcpl5jBcWYf6O6A
+	FV23TZPoMIko8cyNDuCHbe2Uqc6stltlfgZfCoi8rKU6I1amt26q5MGvqYG/wW+a
+	BR7glaVT09yW5h7UZg0fr0yWsDOzz2LuWJ36gDSykO3/DlrfNHQksVKDp/2aRRvI
+	WJWrLNh5XgBMyEZBhHvMaXzO5jND42+HFhEct1aKsT74bZA7cFiCph+d20R7aSsU
+	8Jq/CjlW1+YWu46EYIuZx/HVydb+FjvlrshKVf4f7q30V/ziS1mTExPtG/3smSOi
+	VpTEQKQpsA==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48b9033jak-1
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48bdg9aay0-17
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Tue, 05 Aug 2025 07:11:30 -0700 (PDT)
-Received: from twshared42488.16.frc2.facebook.com (2620:10d:c0a8:1c::11) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Tue, 05 Aug 2025 07:11:36 -0700 (PDT)
+Received: from twshared0973.10.ash9.facebook.com (2620:10d:c0a8:fe::f072) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.2.2562.17; Tue, 5 Aug 2025 14:11:27 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id 041A14FDD55; Tue,  5 Aug 2025 07:11:23 -0700 (PDT)
+	id 05F1D4FDD56; Tue,  5 Aug 2025 07:11:24 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <snitzer@kernel.org>, <axboe@kernel.dk>, <dw@davidwei.uk>,
-        <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke
-	<hare@suse.de>
-Subject: [PATCHv2 6/7] blk-integrity: use simpler alignment check
-Date: Tue, 5 Aug 2025 07:11:22 -0700
-Message-ID: <20250805141123.332298-7-kbusch@meta.com>
+        <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2 7/7] iov_iter: remove iov_iter_is_aligned
+Date: Tue, 5 Aug 2025 07:11:23 -0700
+Message-ID: <20250805141123.332298-8-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250805141123.332298-1-kbusch@meta.com>
 References: <20250805141123.332298-1-kbusch@meta.com>
@@ -76,52 +74,154 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=H5Pbw/Yi c=1 sm=1 tr=0 ts=68921112 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=yetF5jY7WHH6jeiS1L0A:9
-X-Proofpoint-GUID: gOYrL1DWcPmjlxrj3t9hB4m1TLmqSEz4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDEwNCBTYWx0ZWRfX4OKY8WXPCLCt pu9k15pgLln142wmkWSwv9fOrfvApTIZnORP0Z3Dx/X8thL56M2qCHM5UPBiJwK5lH8Sn+wTfUh 3U3sC3CgNdMH9yWw8LI5B2aocwy5XUSKqXlPIpH/twnpsYnveMXQlJ5UfDeLgT/lspZA4Lx/oOO
- SWHNnKVrjjO9R4XLmRwRZYfuE9ykDfm3YaZrP7pz1ra92K4GoMq9qoTPzBhKTa8wr/W+fXtsMoL YHYxIxTI61c/QO9M+Gl5Uejg5BmNByP6MbZLwqUUv2QE3vf13PX24riI0OhEVSxOqYDM++brHvg QI0G2gF4tRWTlLHCkSDyuFykhOHyaAGGeskZ/fCDA+SJNqKlHU+B1VphPuRTosygrABrjNTSZAQ
- i5i0CrEq5QdiDLDCo+78bmWYAQU5HrqJSyaFbaYx+W8IwHEHgtlXuGe85UVhx9vyTxdd8st+
-X-Proofpoint-ORIG-GUID: gOYrL1DWcPmjlxrj3t9hB4m1TLmqSEz4
+X-Authority-Analysis: v=2.4 cv=dLymmPZb c=1 sm=1 tr=0 ts=68921118 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=S-mNSWGAXQVMvOK0xjcA:9
+X-Proofpoint-ORIG-GUID: 5yoyu9uVUg4DcFmcHfk1Eldn39a1im3a
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDEwNCBTYWx0ZWRfX76tNuSXda84n BcLl4vf21xyyeRV0TZxoVE5us03VzVuJ6FxSL92a3C3jdSRgxkUTbQZ5FRSN175Ob1nbRjRMVYR 6/crvTURYgtkJRRng9etSG7gq95N4n7+vYNMtO/7dGViJaMS36dc4QXbGRpRBO4tjgO+yizhn/1
+ BujXMLhuqRxcvXtQo51HobBbXrMHK2cjDTcCHdkRxPUuRX2RJW6OUH1zVCVjfkVJkezA0jB/RHe ZfeIzbMpHnuoizOgrxYt39rOIGtHQyanBCmIxlP6sDZFlT9hept+grO1GyM4zGWJHZUWsWAUhkh QhAHberBYD33ZXQwR0o20Nphm2mJZ5m0uP5i3Pz1PH2mlhifE/vYmMEnq3qVR6QztRi0zEgfTfn
+ uf3Yx7xgU6cUgRML8Fp+0Dshpg8bKZfVJ5pqWi2jmLUSUpVHcGq5nvgOwIWfmtWWwFVElIaF
+X-Proofpoint-GUID: 5yoyu9uVUg4DcFmcHfk1Eldn39a1im3a
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-05_04,2025-08-04_01,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-We're checking length and addresses against the same alignment value, so
-use the more simple iterator check.
+No more callers.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Mike Snitzer <snitzer@kernel.org>
 ---
- block/bio-integrity.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/uio.h |  2 -
+ lib/iov_iter.c      | 95 ---------------------------------------------
+ 2 files changed, 97 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 6b077ca937f6b..6d069a49b4aad 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -262,7 +262,6 @@ static unsigned int bvec_from_pages(struct bio_vec *b=
-vec, struct page **pages,
- int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
- {
- 	struct request_queue *q =3D bdev_get_queue(bio->bi_bdev);
--	unsigned int align =3D blk_lim_dma_alignment_and_pad(&q->limits);
- 	struct page *stack_pages[UIO_FASTIOV], **pages =3D stack_pages;
- 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec =3D stack_vec;
- 	size_t offset, bytes =3D iter->count;
-@@ -285,7 +284,8 @@ int bio_integrity_map_user(struct bio *bio, struct io=
-v_iter *iter)
- 		pages =3D NULL;
- 	}
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 2e86c653186c6..5b127043a1519 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -286,8 +286,6 @@ size_t _copy_mc_to_iter(const void *addr, size_t byte=
+s, struct iov_iter *i);
+ #endif
 =20
--	copy =3D !iov_iter_is_aligned(iter, align, align);
-+	copy =3D iov_iter_alignment(iter) &
-+			blk_lim_dma_alignment_and_pad(&q->limits);
- 	ret =3D iov_iter_extract_pages(iter, &pages, bytes, nr_vecs, 0, &offset=
-);
- 	if (unlikely(ret < 0))
- 		goto free_bvec;
+ size_t iov_iter_zero(size_t bytes, struct iov_iter *);
+-bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
+-			unsigned len_mask);
+ unsigned long iov_iter_alignment(const struct iov_iter *i);
+ unsigned long iov_iter_gap_alignment(const struct iov_iter *i);
+ void iov_iter_init(struct iov_iter *i, unsigned int direction, const str=
+uct iovec *iov,
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index f9193f952f499..2fe66a6b8789e 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -784,101 +784,6 @@ void iov_iter_discard(struct iov_iter *i, unsigned =
+int direction, size_t count)
+ }
+ EXPORT_SYMBOL(iov_iter_discard);
+=20
+-static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned ad=
+dr_mask,
+-				   unsigned len_mask)
+-{
+-	const struct iovec *iov =3D iter_iov(i);
+-	size_t size =3D i->count;
+-	size_t skip =3D i->iov_offset;
+-
+-	do {
+-		size_t len =3D iov->iov_len - skip;
+-
+-		if (len > size)
+-			len =3D size;
+-		if (len & len_mask)
+-			return false;
+-		if ((unsigned long)(iov->iov_base + skip) & addr_mask)
+-			return false;
+-
+-		iov++;
+-		size -=3D len;
+-		skip =3D 0;
+-	} while (size);
+-
+-	return true;
+-}
+-
+-static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned add=
+r_mask,
+-				  unsigned len_mask)
+-{
+-	const struct bio_vec *bvec =3D i->bvec;
+-	unsigned skip =3D i->iov_offset;
+-	size_t size =3D i->count;
+-
+-	do {
+-		size_t len =3D bvec->bv_len - skip;
+-
+-		if (len > size)
+-			len =3D size;
+-		if (len & len_mask)
+-			return false;
+-		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
+-			return false;
+-
+-		bvec++;
+-		size -=3D len;
+-		skip =3D 0;
+-	} while (size);
+-
+-	return true;
+-}
+-
+-/**
+- * iov_iter_is_aligned() - Check if the addresses and lengths of each se=
+gments
+- * 	are aligned to the parameters.
+- *
+- * @i: &struct iov_iter to restore
+- * @addr_mask: bit mask to check against the iov element's addresses
+- * @len_mask: bit mask to check against the iov element's lengths
+- *
+- * Return: false if any addresses or lengths intersect with the provided=
+ masks
+- */
+-bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
+-			 unsigned len_mask)
+-{
+-	if (likely(iter_is_ubuf(i))) {
+-		if (i->count & len_mask)
+-			return false;
+-		if ((unsigned long)(i->ubuf + i->iov_offset) & addr_mask)
+-			return false;
+-		return true;
+-	}
+-
+-	if (likely(iter_is_iovec(i) || iov_iter_is_kvec(i)))
+-		return iov_iter_aligned_iovec(i, addr_mask, len_mask);
+-
+-	if (iov_iter_is_bvec(i))
+-		return iov_iter_aligned_bvec(i, addr_mask, len_mask);
+-
+-	/* With both xarray and folioq types, we're dealing with whole folios. =
+*/
+-	if (iov_iter_is_xarray(i)) {
+-		if (i->count & len_mask)
+-			return false;
+-		if ((i->xarray_start + i->iov_offset) & addr_mask)
+-			return false;
+-	}
+-	if (iov_iter_is_folioq(i)) {
+-		if (i->count & len_mask)
+-			return false;
+-		if (i->iov_offset & addr_mask)
+-			return false;
+-	}
+-
+-	return true;
+-}
+-EXPORT_SYMBOL_GPL(iov_iter_is_aligned);
+-
+ static unsigned long iov_iter_alignment_iovec(const struct iov_iter *i)
+ {
+ 	const struct iovec *iov =3D iter_iov(i);
 --=20
 2.47.3
 
