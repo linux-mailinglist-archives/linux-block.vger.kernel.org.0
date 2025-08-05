@@ -1,86 +1,69 @@
-Return-Path: <linux-block+bounces-25199-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25201-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20638B1BC54
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 00:03:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 323A8B1BCD5
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 00:52:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1698E7AFF2F
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 22:02:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D431184DC4
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 22:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA38D242D7B;
-	Tue,  5 Aug 2025 22:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728B7291C0C;
+	Tue,  5 Aug 2025 22:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DHP/X8YB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDMOMMcF"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2A62248B0;
-	Tue,  5 Aug 2025 22:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC9435959
+	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 22:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754431405; cv=none; b=bJ1HuGOeorUoD62TIVWNvECNqHbwoeRBsEDWEkPaDIlFfZfq6WnOsJCcbEwHbXwkQumF8zyaB+3MtqGDU9mSJ92YmCd7IXKLLonE+Z0/EN2Q7BlHEuhxAzpg/WqTax2aLeN/QB4b+aED1GnPURc99S2rPGDmVNkEW6wxRAEEyYQ=
+	t=1754434334; cv=none; b=oh3J7ZLqaRg2KHw2W2Q+wLhhn7vfjbCdMou+Ct2Qsro2EoAnRzZvuGOzxfR36gPcqr/Y2xYoveBcViLoDup6S/1P/t2KsPNdkP0E4Ws0e6A9aKpvXDIrNEq93YDCApBY45wiNN0ERr0L6PKoXg7W8B1jVTLKUf81gryrGBRszJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754431405; c=relaxed/simple;
-	bh=yBM2AB2FLCmQ2F8GkMMvqGFnvCukcNMZSzX4iOqkSmA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RnBIUlK2Q6NjTP9VmHfGcjUVSh5W9HD6DA08F64rxt7F0o1G1aktZE4VYyQDAv+s0NVgcx7i/S5RG34DBzgF/qrZs9sThC77DFszE7+1cFjaLu/JBv5EAcIZ2Q6vSVNnvkhzNx1bXMOODZvftb7EgVDCQcTqYdetL6NVBvjbh7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DHP/X8YB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF097C4CEF0;
-	Tue,  5 Aug 2025 22:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1754431403;
-	bh=yBM2AB2FLCmQ2F8GkMMvqGFnvCukcNMZSzX4iOqkSmA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DHP/X8YBD9Ic6PfRME78TfYo7hzQdJkZDUaPZ24lFIwd0nKELpsZ/9W5G3joIyzSk
-	 5245bOUQfN64JvPbdS1kj6GesfW5lc3RTxXzvRIdlxxgvjmWh8i1BbhC8KFZ/PFQa/
-	 /KjRAI3sqdSOKsAxqw/cd8myd67X8YVJk5s3PYAY=
-Date: Tue, 5 Aug 2025 15:03:23 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Minchan Kim <minchan@kernel.org>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, Seyediman
- Seyedarab <imandevel@gmail.com>
-Subject: Re: [PATCH] zram: protect recomp_algorithm_show() with ->init_lock
-Message-Id: <20250805150323.0f5615ec97de2cc5d50b0b6f@linux-foundation.org>
-In-Reply-To: <20250805101946.1774112-1-senozhatsky@chromium.org>
-References: <20250805101946.1774112-1-senozhatsky@chromium.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1754434334; c=relaxed/simple;
+	bh=UXadAyFtTvjoHFaZZBoRwpIr7lKqKdukrW5AUWOJmYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R+OyLPjqjAO99if6gyfAk0Xpm2Nh7VIo49/SzF7moJcWP2naSdFZApzMc8wspiCX26CMSY+an60eT2umz6dyifeFn7y6hf2Io+9FRMjAcmTd7gGxfS7COXpPeGhiXEz9yq2jkLq/ZXUOMiMoBm3aNe1WL/Aze4b7oNCkZsAispE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDMOMMcF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBECC4CEF0;
+	Tue,  5 Aug 2025 22:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754434333;
+	bh=UXadAyFtTvjoHFaZZBoRwpIr7lKqKdukrW5AUWOJmYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDMOMMcFK5OQFTfpUzpGSgJFxyqXibd6wd+xQUTanSx2nwFFvc5A+utDElfDPcAhl
+	 nFkakD4urWVsFe7uTQpHXSMQgvUOPV0iFigM7gnwQEKDw2YOvn+IdilqbC+4v/U1PE
+	 BSLKuf4b4UE/eKNJixGWMia5UY+60IVg1cIfxZ0mpnq2IJEZaITO9t5hwkszgv1SBG
+	 ooLuX833aP+T9pVMEoo7FvXbAt7T3Ymhbl2TG2O0SeefsBTo6h8aQQXbvtSGZPh994
+	 UVmAg7XNCLtRDys+ho1hguKxWNw0WWoaj1xl9c0V+S1m1Px7y7ZLgK0u6TGxHdSJ+y
+	 pDgLOgdYLRB2Q==
+Date: Tue, 5 Aug 2025 16:52:11 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
+	axboe@kernel.dk
+Subject: Re: [PATCH 1/2] block: accumulate segment page gaps per bio
+Message-ID: <aJKLGy9UkVjJTIIQ@kbusch-mbp>
+References: <20250805195608.2379107-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250805195608.2379107-1-kbusch@meta.com>
 
-On Tue,  5 Aug 2025 19:19:29 +0900 Sergey Senozhatsky <senozhatsky@chromium.org> wrote:
+On Tue, Aug 05, 2025 at 12:56:07PM -0700, Keith Busch wrote:
+> +	bv = next->bio->bi_io_vec[0];
+> +	bvprv = req->biotail->bi_io_vec[req->biotail->bi_vcnt - 1];
 
-> sysfs handlers should be called under ->init_lock and are not
-> supposed to unlock it until return, otherwise e.g. a concurrent
-> reset() can occur.  There is one handler that breaks that rule:
-> recomp_algorithm_show().
-> 
-> Move ->init_lock handling outside of __comp_algorithm_show()
-> (also drop it and call zcomp_available_show() directly) so that
-> the entire recomp_algorithm_show() loop is protected by the
-> lock, as opposed to protecting individual iterations.
-
-As always, I'm wondering "does -stable need this".  But without knowing
-the runtime effects of the bug, I cannot know.
-
-Providing this info in the changelog would answer this for everyone, please.
-
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Reported-by: Seyediman Seyedarab <imandevel@gmail.com>
-
-And including a Closes: for Seyediman's report (if it's publicly
-linkable) would be great too, thanks.
-
-I'm guessing that a Fixes: isn't appropriate here because the
-bug has been there since day 1.
+Hm, commit 7bcd79ac50d9d8 suggests I missed something obvious about not
+being allowed to use 'bi_vcnt - 1' for the tail bvec of the previous
+bio. I guess it's some stacking thing.
 
