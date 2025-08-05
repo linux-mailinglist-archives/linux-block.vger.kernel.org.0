@@ -1,141 +1,331 @@
-Return-Path: <linux-block+bounces-25194-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25196-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CF19B1B927
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 19:18:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2B3AB1BB38
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 21:59:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0C418455A
-	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 17:18:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49C5518A8033
+	for <lists+linux-block@lfdr.de>; Tue,  5 Aug 2025 19:59:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8621628980A;
-	Tue,  5 Aug 2025 17:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFF0224B1B;
+	Tue,  5 Aug 2025 19:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k4Ot37xt"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="EHSK0aCt"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126CB295DBE
-	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 17:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1A122B5AC
+	for <linux-block@vger.kernel.org>; Tue,  5 Aug 2025 19:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754414300; cv=none; b=GEIHqQU8AwcpYDimmT+sbDdBAtAAjrssEaBh6Q8fhhF4XyWztJbSITr+TEm5WwPHd1qtRG4ygbG6vnPfePavKgOazyibkR0HEpUSZ3uud2c94KXBFxVzU0Ps/q5PAOmnXf3wooisi4CnP/mMnpcozJE9nrn5CqZLXrdAv9UQ9DA=
+	t=1754423938; cv=none; b=WwT47YkY0MKUTsGvnmGo5JGWfXaM3SGmRPM6YYp84Rx1fKYhgK9P/1Ky0E+Ohnuau7gK7ULckVihBs2l3r7wreEaJv4SSMRyfK27NOfSCa+uYWfMDx4qfkuU8rOuZiSOFdmQUcCLICzzmtPQsdg9rIxMeNySB2EqYh66Baug7eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754414300; c=relaxed/simple;
-	bh=dONyzp7vO9CcsBjoHJ0PYTOUNUYjyjdwUhUPkGq3pbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HP8Rq/K/l3QP2VlqPp8443gknmYNCtPkysApECmILbvt0yGcVSB2HMrNxYEerT59O1MUKHWmR4j32HhResb6CUqo0YXM29C/p2bU6TyAMg2Og6p68CfG+TEaSfrfguYneoh/H8bXyQ/6lngw7UrRrlrtJoyvzqJnA26t7MF+E3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k4Ot37xt; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5758gZHM005150;
-	Tue, 5 Aug 2025 17:18:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=CF5dkEA420dSjpqtU
-	9G7AGtYx8H32GBKnkJDS99Fcx0=; b=k4Ot37xtfJkiS0+QZ05szquvXy4pcChGt
-	649vUBW0ufSIpSjDOTAM5XSIlkAzyYFyNkJ4EpJoKW1XaBvJT6gQEw4ImoJxO67z
-	TA3bbRf89WvF+1/PGk+WSATVDU6ijhSqaXnAIKslh/T1yfSGE+jicuYKo+Np98K9
-	v+cbpA53MiveZCiJ4X8vPwfQ/ltlhaE8gVAOZXYRLAEAzK9IpAUP0lCjs5RQTnLB
-	fucpIwyVwjl6RzqZqDBVWnmBbd6PG3CfAPLGD7A8Iwrh05V4FeXnK75LXeD2OV0n
-	3kwAERoH2BYPzGnoAe3KIPEChtCL1d5wXROAgqu6a5vHxcjeYAGJw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 489ac0yvf3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Aug 2025 17:18:03 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 575DnsYs006827;
-	Tue, 5 Aug 2025 17:18:02 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 489xgmkbu0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Aug 2025 17:18:02 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 575HI0dS57999748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Aug 2025 17:18:00 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6055E20043;
-	Tue,  5 Aug 2025 17:18:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A54B820040;
-	Tue,  5 Aug 2025 17:17:57 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.43.35.190])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Aug 2025 17:17:57 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: linux-block@vger.kernel.org
-Cc: ming.lei@redhat.com, yukuai1@huaweicloud.com, axboe@kernel.dk, hch@lst.de,
-        kch@nvidia.com, shinichiro.kawasaki@wdc.com, gjoyce@ibm.com
-Subject: [PATCHv2 2/2] block: clear QUEUE_FLAG_QOS_ENABLED in rq_qos_del()
-Date: Tue,  5 Aug 2025 22:47:41 +0530
-Message-ID: <20250805171749.3448694-3-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250805171749.3448694-1-nilay@linux.ibm.com>
-References: <20250805171749.3448694-1-nilay@linux.ibm.com>
+	s=arc-20240116; t=1754423938; c=relaxed/simple;
+	bh=wx7nzLLxwNRfC/O6YU8uUHWxrJ0TWT4Y+89is9YdEF0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k1xHlkCZ+s1fa1BplMcMOvlSm0VHVly0jVgTIWo4d4KLRuf82GilHIXSvUZILh3wYfKSae/gEAAdtDgXXas+gcFOvwqQFDY0kaxFDjrAG44GfOnr4pKJqg5Vrquarkfc/y4EupiOj0yS1RR2c3eEXwkA77XjppX7HqCbjQ3myFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=EHSK0aCt; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 575JnIe8031579
+	for <linux-block@vger.kernel.org>; Tue, 5 Aug 2025 12:58:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=e/bMPKidFHHUrC/ur2
+	XiGlaO5yNs6SFOOTrzgvenL+o=; b=EHSK0aCtEPAc++D5+35Lu+EPm8ouOQTv1C
+	O3ZCQ9a2EUg0NmN42MtZuCjlHv7kAL+8G3aT2mMa26fWzTVxNRxEwv5+ETiCK4m5
+	APy3ySkifIP6dvScm1al3RPdwHIKD2KB8FSOKs7Yia+9biqt55vhbOCnqZbAAwgN
+	agBtn/ZR9GH+eYeVwYNnNw5DjNuagmA1+HHQ4PDj3FVb4Txny6OXjhouKATwsGP2
+	YCD/KM8wtMavjvOiGWt0oKD/QDwprK9HKTrP9/dlSv4gz9eGJJhMpnbeo3OIRuGE
+	E/thvBFtfpzJEy+vZYEyBubCMz7w5iRmCWWMpn5b2HA5BJlz1Kkw==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48bpwh96b5-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 05 Aug 2025 12:58:56 -0700 (PDT)
+Received: from twshared24438.15.frc2.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Tue, 5 Aug 2025 19:58:54 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 25E5D5312FF; Tue,  5 Aug 2025 12:56:09 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 1/2] block: accumulate segment page gaps per bio
+Date: Tue, 5 Aug 2025 12:56:07 -0700
+Message-ID: <20250805195608.2379107-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JVOzQmfwbb0DIKP3zNnjeashXHH2Cb3i
-X-Proofpoint-ORIG-GUID: JVOzQmfwbb0DIKP3zNnjeashXHH2Cb3i
-X-Authority-Analysis: v=2.4 cv=GNoIEvNK c=1 sm=1 tr=0 ts=68923ccb cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=UJK3Dzy7yT7oL-vBR3kA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDExOCBTYWx0ZWRfX5KXhLznwAQ7n
- +ml0m0veKwNnFIf5VEQVO4NNciL/rmB6H8n0mX9BLSvPjZnzn3y6XUT90SwE3NiPsCthhfQAoD3
- /MtgKgad4BsqLWoy89h+gqIo3FI7IH9iDTRaKu8VUrwPBMbXzF3QpO3xF9W6PhP2pqcZ7KVLwzf
- SJQjO5AiBR5V7cTnc0eLG1pgrE22jq5UYCpIaC3RJAjD5UCgTtWlNXgZRYfR/nBAZ/AQlxriNeW
- F5oHPhH3Fteo96mXd03tlsaR6x8YZFDmVYt6V4m9DG6i8VlzeHHwghXIerpSuB0NUzEU1wlOavu
- QrP8PIqcH59LyV/4NTCmkoFQqwUuaMHfPS8hovN9l8fURDdURhT3Eb8JWWff2wyqcpVmU/0xkq0
- h5zfkg7yvXKt8Qf5aiRufJe6FhzMWRQxCWa1ZxXKpRSrYPgYxMnyElkqHlfnIXM2F3Cahl02
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: zmujAPVUWYTnI4YO_5SepmyxOdglJDir
+X-Proofpoint-ORIG-GUID: zmujAPVUWYTnI4YO_5SepmyxOdglJDir
+X-Authority-Analysis: v=2.4 cv=bLUWIO+Z c=1 sm=1 tr=0 ts=68926280 cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=d3ekKTwFLshZohFUiHYA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDE0MSBTYWx0ZWRfX32GOf8iNhegp 1CRbXcObyhbMzGfYY051P/lvm1YBKv5Zclc+JjDTIA59jq7Qeka67/TETIzxh4kJZbrrxskwI/e o5Z+VhRweQh+vloTsoVzxvTNvz3N3D3i51kqMrxDp5iY9xBLuKmMBJTt8SLkJm5/t6mq+u0wRWo
+ IbLbSA5xhOLH23tb/ArKeS6N5GT6QqCylZDbSRB8yy0T77APOnZ+xkHy+3zAw44o91qsgqApqbq HC75nqN1SUuBCr2yt6qIbym0T7ELTk8Rqobp/WUjYXGlzD7NLEakW8OU7+gmhd5LF9n1PZ5qudi B82R5wXcdaiy6cF8QRjjH2t5JnBcAvYqyG+rBYrcTUUwvI08U44OwC5y0+blPQayOQpcXh2XUaz
+ ys+pT90rnWUBwFDLorqS/0EfRDgLrjLvKcjwxdl9LdbUNorzBycCLOBaq5kIKlbK/Pqe2AUB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-05_04,2025-08-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 adultscore=0 spamscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=866 impostorscore=0 priorityscore=1501 suspectscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2508050118
 
-When a QoS function is removed via rq_qos_del(), and it happens to be the
-last QoS function on the request queue, q->rq_qos becomes NULL. In this
-case, the QUEUE_FLAG_QOS_ENABLED bit should also be cleared to reflect
-that no QoS hooks remain active.
+From: Keith Busch <kbusch@kernel.org>
 
-This patch ensures that the QUEUE_FLAG_QOS_ENABLED flag is cleared if the
-queue no longer has any associated rq_qos policies. Failing to do so
-could cause unnecessary dereferences of a now-null q->rq_qos pointer in
-the I/O path.
+The blk-mq dma iteration has an optimization for requests that align to
+the device's iommu merge boundary. This boundary may be larger than the
+device's virtual boundary, but the code had been depending on that queue
+limit to know ahead of time if the request aligns to the optimization.
 
-Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+Rather than rely on that queue limit, which many devices may not even
+have, store the virtual boundary gaps of each segment into the bio as a
+mask while checking the segments and merging. We can then quickly check
+per io if the request can use the optimization or not.
+
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-rq-qos.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/blk-merge.c         | 30 +++++++++++++++++++++++++++---
+ block/blk-mq-dma.c        |  3 +--
+ block/blk-mq.c            |  5 +++++
+ include/linux/blk-mq.h    |  6 ++++++
+ include/linux/blk_types.h |  2 ++
+ 5 files changed, 41 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 460c04715321..654478dfbc20 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -375,6 +375,8 @@ void rq_qos_del(struct rq_qos *rqos)
- 			break;
- 		}
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 81bdad915699a..d63389c063006 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -278,6 +278,9 @@ static unsigned int bio_split_alignment(struct bio *b=
+io,
+ 	return lim->logical_block_size;
+ }
+=20
++#define bv_seg_gap(bv, bvprv) \
++	bv.bv_offset | ((bvprv.bv_offset + bvprv.bv_len) & (PAGE_SIZE - 1));
++
+ /**
+  * bio_split_rw_at - check if and where to split a read/write bio
+  * @bio:  [in] bio to be split
+@@ -293,9 +296,9 @@ static unsigned int bio_split_alignment(struct bio *b=
+io,
+ int bio_split_rw_at(struct bio *bio, const struct queue_limits *lim,
+ 		unsigned *segs, unsigned max_bytes)
+ {
++	unsigned nsegs =3D 0, bytes =3D 0, page_gaps =3D 0;
+ 	struct bio_vec bv, bvprv, *bvprvp =3D NULL;
+ 	struct bvec_iter iter;
+-	unsigned nsegs =3D 0, bytes =3D 0;
+=20
+ 	bio_for_each_bvec(bv, bio, iter) {
+ 		if (bv.bv_offset & lim->dma_alignment)
+@@ -305,8 +308,11 @@ int bio_split_rw_at(struct bio *bio, const struct qu=
+eue_limits *lim,
+ 		 * If the queue doesn't support SG gaps and adding this
+ 		 * offset would create a gap, disallow it.
+ 		 */
+-		if (bvprvp && bvec_gap_to_prev(lim, bvprvp, bv.bv_offset))
+-			goto split;
++		if (bvprvp) {
++			if (bvec_gap_to_prev(lim, bvprvp, bv.bv_offset))
++				goto split;
++			page_gaps |=3D bv_seg_gap(bv, bvprv);
++		}
+=20
+ 		if (nsegs < lim->max_segments &&
+ 		    bytes + bv.bv_len <=3D max_bytes &&
+@@ -324,6 +330,7 @@ int bio_split_rw_at(struct bio *bio, const struct que=
+ue_limits *lim,
  	}
-+	if (!q->rq_qos)
-+		blk_queue_flag_clear(QUEUE_FLAG_QOS_ENABLED, q);
- 	blk_mq_unfreeze_queue(q, memflags);
- 
- 	mutex_lock(&q->debugfs_mutex);
--- 
-2.50.1
+=20
+ 	*segs =3D nsegs;
++	bio->page_gaps =3D page_gaps;
+ 	return 0;
+ split:
+ 	if (bio->bi_opf & REQ_ATOMIC)
+@@ -353,6 +360,7 @@ int bio_split_rw_at(struct bio *bio, const struct que=
+ue_limits *lim,
+ 	 * big IO can be trival, disable iopoll when split needed.
+ 	 */
+ 	bio_clear_polled(bio);
++	bio->page_gaps =3D page_gaps;
+ 	return bytes >> SECTOR_SHIFT;
+ }
+ EXPORT_SYMBOL_GPL(bio_split_rw_at);
+@@ -696,6 +704,8 @@ static bool blk_atomic_write_mergeable_rqs(struct req=
+uest *rq,
+ static struct request *attempt_merge(struct request_queue *q,
+ 				     struct request *req, struct request *next)
+ {
++	struct bio_vec bv, bvprv;
++
+ 	if (!rq_mergeable(req) || !rq_mergeable(next))
+ 		return NULL;
+=20
+@@ -753,6 +763,10 @@ static struct request *attempt_merge(struct request_=
+queue *q,
+ 	if (next->start_time_ns < req->start_time_ns)
+ 		req->start_time_ns =3D next->start_time_ns;
+=20
++	bv =3D next->bio->bi_io_vec[0];
++	bvprv =3D req->biotail->bi_io_vec[req->biotail->bi_vcnt - 1];
++	req->__page_gaps |=3D blk_rq_page_gaps(next) | bv_seg_gap(bv, bvprv);
++
+ 	req->biotail->bi_next =3D next->bio;
+ 	req->biotail =3D next->biotail;
+=20
+@@ -861,6 +875,7 @@ enum bio_merge_status bio_attempt_back_merge(struct r=
+equest *req,
+ 		struct bio *bio, unsigned int nr_segs)
+ {
+ 	const blk_opf_t ff =3D bio_failfast(bio);
++	struct bio_vec bv, bvprv;
+=20
+ 	if (!ll_back_merge_fn(req, bio, nr_segs))
+ 		return BIO_MERGE_FAILED;
+@@ -876,6 +891,10 @@ enum bio_merge_status bio_attempt_back_merge(struct =
+request *req,
+ 	if (req->rq_flags & RQF_ZONE_WRITE_PLUGGING)
+ 		blk_zone_write_plug_bio_merged(bio);
+=20
++	bv =3D bio->bi_io_vec[0];
++	bvprv =3D req->biotail->bi_io_vec[req->biotail->bi_vcnt - 1];
++	req->__page_gaps |=3D bio->page_gaps | bv_seg_gap(bv, bvprv);
++
+ 	req->biotail->bi_next =3D bio;
+ 	req->biotail =3D bio;
+ 	req->__data_len +=3D bio->bi_iter.bi_size;
+@@ -890,6 +909,7 @@ static enum bio_merge_status bio_attempt_front_merge(=
+struct request *req,
+ 		struct bio *bio, unsigned int nr_segs)
+ {
+ 	const blk_opf_t ff =3D bio_failfast(bio);
++	struct bio_vec bv, bvprv;
+=20
+ 	/*
+ 	 * A front merge for writes to sequential zones of a zoned block device
+@@ -910,6 +930,10 @@ static enum bio_merge_status bio_attempt_front_merge=
+(struct request *req,
+=20
+ 	blk_update_mixed_merge(req, bio, true);
+=20
++	bv =3D req->bio->bi_io_vec[0];
++	bvprv =3D bio->bi_io_vec[bio->bi_vcnt - 1];
++	req->__page_gaps |=3D bio->page_gaps | bv_seg_gap(bv, bvprv);
++
+ 	bio->bi_next =3D req->bio;
+ 	req->bio =3D bio;
+=20
+diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
+index faa36ff6465ee..a03067c4a268f 100644
+--- a/block/blk-mq-dma.c
++++ b/block/blk-mq-dma.c
+@@ -73,8 +73,7 @@ static bool blk_map_iter_next(struct request *req, stru=
+ct blk_map_iter *iter)
+ static inline bool blk_can_dma_map_iova(struct request *req,
+ 		struct device *dma_dev)
+ {
+-	return !((queue_virt_boundary(req->q) + 1) &
+-		dma_get_merge_boundary(dma_dev));
++	return !(blk_rq_page_gaps(req) & dma_get_merge_boundary(dma_dev));
+ }
+=20
+ static bool blk_dma_map_bus(struct blk_dma_iter *iter)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b67d6c02ecebd..09134a66c5666 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -376,6 +376,7 @@ void blk_rq_init(struct request_queue *q, struct requ=
+est *rq)
+ 	INIT_LIST_HEAD(&rq->queuelist);
+ 	rq->q =3D q;
+ 	rq->__sector =3D (sector_t) -1;
++	rq->__page_gaps =3D 0;
+ 	INIT_HLIST_NODE(&rq->hash);
+ 	RB_CLEAR_NODE(&rq->rb_node);
+ 	rq->tag =3D BLK_MQ_NO_TAG;
+@@ -659,6 +660,7 @@ struct request *blk_mq_alloc_request(struct request_q=
+ueue *q, blk_opf_t opf,
+ 			goto out_queue_exit;
+ 	}
+ 	rq->__data_len =3D 0;
++	rq->__page_gaps =3D 0;
+ 	rq->__sector =3D (sector_t) -1;
+ 	rq->bio =3D rq->biotail =3D NULL;
+ 	return rq;
+@@ -739,6 +741,7 @@ struct request *blk_mq_alloc_request_hctx(struct requ=
+est_queue *q,
+ 	rq =3D blk_mq_rq_ctx_init(&data, blk_mq_tags_from_data(&data), tag);
+ 	blk_mq_rq_time_init(rq, alloc_time_ns);
+ 	rq->__data_len =3D 0;
++	rq->__page_gaps =3D 0;
+ 	rq->__sector =3D (sector_t) -1;
+ 	rq->bio =3D rq->biotail =3D NULL;
+ 	return rq;
+@@ -2665,6 +2668,7 @@ static void blk_mq_bio_to_request(struct request *r=
+q, struct bio *bio,
+ 	rq->bio =3D rq->biotail =3D bio;
+ 	rq->__sector =3D bio->bi_iter.bi_sector;
+ 	rq->__data_len =3D bio->bi_iter.bi_size;
++	rq->__page_gaps =3D bio->page_gaps;
+ 	rq->nr_phys_segments =3D nr_segs;
+ 	if (bio_integrity(bio))
+ 		rq->nr_integrity_segments =3D blk_rq_count_integrity_sg(rq->q,
+@@ -3363,6 +3367,7 @@ int blk_rq_prep_clone(struct request *rq, struct re=
+quest *rq_src,
+=20
+ 	/* Copy attributes of the original request to the clone request. */
+ 	rq->__sector =3D blk_rq_pos(rq_src);
++	rq->__page_gaps =3D blk_rq_page_gaps(rq_src);
+ 	rq->__data_len =3D blk_rq_bytes(rq_src);
+ 	if (rq_src->rq_flags & RQF_SPECIAL_PAYLOAD) {
+ 		rq->rq_flags |=3D RQF_SPECIAL_PAYLOAD;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 2a5a828f19a0b..d8f491867adc0 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -115,6 +115,7 @@ struct request {
+=20
+ 	/* the following two fields are internal, NEVER access directly */
+ 	unsigned int __data_len;	/* total data len */
++	unsigned int __page_gaps;	/* a mask of all the segment page gaps */
+ 	sector_t __sector;		/* sector cursor */
+=20
+ 	struct bio *bio;
+@@ -1080,6 +1081,11 @@ static inline sector_t blk_rq_pos(const struct req=
+uest *rq)
+ 	return rq->__sector;
+ }
+=20
++static inline unsigned int blk_rq_page_gaps(const struct request *rq)
++{
++	return rq->__page_gaps;
++}
++
+ static inline unsigned int blk_rq_bytes(const struct request *rq)
+ {
+ 	return rq->__data_len;
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 0a29b20939d17..d0ed28d40fe02 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -264,6 +264,8 @@ struct bio {
+=20
+ 	unsigned short		bi_max_vecs;	/* max bvl_vecs we can hold */
+=20
++	unsigned int		page_gaps;	/* a mask of all the vector gaps */
++
+ 	atomic_t		__bi_cnt;	/* pin count */
+=20
+ 	struct bio_vec		*bi_io_vec;	/* the actual vec list */
+--=20
+2.47.3
 
 
