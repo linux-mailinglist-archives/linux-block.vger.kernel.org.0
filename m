@@ -1,135 +1,141 @@
-Return-Path: <linux-block+bounces-25264-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25274-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8672B1C6D3
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 15:29:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDCECB1C816
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 17:02:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44D363ABC0F
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 13:29:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC90F723020
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 15:01:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D93023B605;
-	Wed,  6 Aug 2025 13:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE16F2918C8;
+	Wed,  6 Aug 2025 15:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JjjPkIwX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PX7fS+/t"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696CF38FB9
-	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 13:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C189E291891;
+	Wed,  6 Aug 2025 15:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754486959; cv=none; b=Za5bzcA5RWgeeVMPfOoqwVQ6YGDEjG39Mzy0sI68+4JocwQtJfv9zCQmOMHRrlAiUrco9P+xAij0QA9p1KGihh1xI2gkGmh78kGxJp0+64V4sPKHu+BJ70xqi+odTDFfSOoi2ka+VHdYQSZOPhUGHBOZ+K5oHtx9aq7rE3vYXDM=
+	t=1754492472; cv=none; b=ic3mny06y/ia0/tuUBlbkMG2PVVQd3s3R6aOttabVA/cwghiyuKnAAHukXpXg4bUkI4jCz73jBi/Fkrz+NDmsfNisxgw0lSHkh4/Us6iWHbCtoVCmzD7sK53XeLCM4VaG5ifUOpM4HP39yKffZbYotR+YAPIFQ+rygzEd/M1k3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754486959; c=relaxed/simple;
-	bh=izgjM9nVwRqZoAfp3GuLDtbbPs/P0xvLQWzM+uPiSuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lBucSesioCF/s5ZyYAqhsxGZtIWOAgFdNEaYJ4MxYlSJWEBX5xMoZbkly3As2HC99OQjJ9FQdfLz3CX+JYW1pF8D6f0bjNMztXw/CHC+kH1GYCJDAdMRO5MQxYWun3RMS06UcB2ysHmqbvI/HF/bqWFW60IxHytI0VkKAaB4+gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JjjPkIwX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754486956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gR+qI/Ob38VIe7wgkbk8/TXE1kJroPqMw/pbEOZbtVU=;
-	b=JjjPkIwXbjKr2A+hDmELbsqCgXedfD6u/N9PrasAJihftYdbq8VqI17QWwojL9a5pqCtAJ
-	9VeK1E57Darf7hIc2M3a7piRmBgEV3oiN2fVaRquV+82Pwf40xXRKI4+NaB9WtMuSjue67
-	xhZxVxjR2lIvDD4CcJ1MNfH0asQbjxk=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-Gj6Oyni_MDGmmQBNWum8WA-1; Wed,
- 06 Aug 2025 09:29:13 -0400
-X-MC-Unique: Gj6Oyni_MDGmmQBNWum8WA-1
-X-Mimecast-MFC-AGG-ID: Gj6Oyni_MDGmmQBNWum8WA_1754486951
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F15F319560A6;
-	Wed,  6 Aug 2025 13:29:10 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.35])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4112E180035C;
-	Wed,  6 Aug 2025 13:29:05 +0000 (UTC)
-Date: Wed, 6 Aug 2025 21:28:58 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	John Garry <john.garry@huawei.com>,
-	Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH 5/5] blk-mq: Replace tags->lock with SRCU for tag
- iterators
-Message-ID: <aJNYmjoJsarvObBy@fedora>
-References: <20250801114440.722286-1-ming.lei@redhat.com>
- <20250801114440.722286-6-ming.lei@redhat.com>
- <c86b6974-fcd6-0a96-a69a-1831f6c6d8d8@huaweicloud.com>
+	s=arc-20240116; t=1754492472; c=relaxed/simple;
+	bh=mnWYMh0PdBIo9wnkX/skX4J305rjw8krePIvdGdb3So=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q3H/y7xvJSad0oL2ga2RJH+WD7GPaciVOHbvkewq7Cutu1rt3+/vn/uf6/lqLbcXar+DBgmBICzn4NqaLpU3cWDBns6E48G8quQUO4M7vMf48F+VP9SDF12deFU0OeYwu80eXgHNzGYUD87+1r+nZsEXDoDm+9yA0zZhLB4BYa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PX7fS+/t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C0AC4CEED;
+	Wed,  6 Aug 2025 15:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754492472;
+	bh=mnWYMh0PdBIo9wnkX/skX4J305rjw8krePIvdGdb3So=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PX7fS+/t+d9ZNyU490Wss0uC80/8LydurEUkKhVRWz/B9zcypuBWOKGyAZOfLViRW
+	 z4Eix/VQFJvBn9fnlP8MA40TnxvVXaD53L0BHiMEDUJ+oAZKProy3he15nlpYZn0y/
+	 CgX5FcQri5dC/Ju94MHGsR9UlziTFGh9yvFTKS58qWlIBZkxZ34lj92C9debGUW139
+	 hU1djZqq59nhr5BH56Jj4nBXP7JgKv8S2bzNWrezxDCpjfwjbyinS084O5aVMeHDRz
+	 4sb7ayLyqo+n9juPGkVSico6J0iW8C1dxf5cU3OWQBdtv+M7akYtXfbZ3eNgPIfqiF
+	 rnnxls7xfatGQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/16] rust: str: allow `str::Formatter` to format
+ into `&mut [u8]`.
+In-Reply-To: <37C6B308-202A-48A3-9DD2-5997E0EE73C1@collabora.com>
+References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
+ <20250711-rnull-up-v6-16-v3-2-3a262b4e2921@kernel.org>
+ <WW8rvpPmL4xHgDorFAQ5UrdGMUWXYOH_h1c3uzXhne_7E-l_Sbe8npJDfwE6fAcLWShbTjn5Oxn-dqxC4ZLW4Q==@protonmail.internalid>
+ <37C6B308-202A-48A3-9DD2-5997E0EE73C1@collabora.com>
+Date: Wed, 06 Aug 2025 16:32:49 +0200
+Message-ID: <87cy988qr2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c86b6974-fcd6-0a96-a69a-1831f6c6d8d8@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain
 
-On Wed, Aug 06, 2025 at 05:21:32PM +0800, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2025/08/01 19:44, Ming Lei 写道:
-> > Replace the spinlock in blk_mq_find_and_get_req() with an SRCU read lock
-> > around the tag iterators.
-> > 
-> > This is done by:
-> > 
-> > - Holding the SRCU read lock in blk_mq_queue_tag_busy_iter(),
-> > blk_mq_tagset_busy_iter(), and blk_mq_hctx_has_requests().
-> > 
-> > - Removing the now-redundant tags->lock from blk_mq_find_and_get_req().
-> > 
-> > This change improves performance by replacing a spinlock with a more
-> > scalable SRCU lock, and fixes lockup issue in scsi_host_busy() in case of
-> > shost->host_blocked.
-> > 
-> > Meantime it becomes possible to use blk_mq_in_driver_rw() for io
-> > accounting.
-> > 
-> > Signed-off-by: Ming Lei<ming.lei@redhat.com>
-> > ---
-> >   block/blk-mq-tag.c | 12 ++++++++----
-> >   block/blk-mq.c     | 24 ++++--------------------
-> >   2 files changed, 12 insertions(+), 24 deletions(-)
-> 
-> I think it's not good to use blk_mq_in_driver_rw() for io accounting, we
-> start io accounting from blk_account_io_start(), where such io is not in
-> driver yet.
+"Daniel Almeida" <daniel.almeida@collabora.com> writes:
 
-In blk_account_io_start(), the current IO is _not_ taken into account in
-update_io_ticks() yet.
+> Hi Andreas,
+>
+>> On 11 Jul 2025, at 08:43, Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>
+>> Improve `Formatter` so that it can write to an array or slice buffer.
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>> ---
+>> rust/kernel/str.rs | 19 ++++++++++++++-----
+>> 1 file changed, 14 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+>> index 488b0e97004e..41af456a46c8 100644
+>> --- a/rust/kernel/str.rs
+>> +++ b/rust/kernel/str.rs
+>> @@ -6,6 +6,7 @@
+>> use crate::prelude::*;
+>> use core::{
+>>     fmt::{self, Write},
+>> +    marker::PhantomData,
+>>     ops::{self, Deref, DerefMut, Index},
+>> };
+>>
+>> @@ -794,9 +795,9 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
+>> /// Allows formatting of [`fmt::Arguments`] into a raw buffer.
+>> ///
+>> /// Fails if callers attempt to write more than will fit in the buffer.
+>> -pub(crate) struct Formatter(RawFormatter);
+>> +pub(crate) struct Formatter<'a>(RawFormatter, PhantomData<&'a mut ()>);
+>>
+>> -impl Formatter {
+>> +impl Formatter<'_> {
+>>     /// Creates a new instance of [`Formatter`] with the given buffer.
+>>     ///
+>>     /// # Safety
+>> @@ -805,11 +806,19 @@ impl Formatter {
+>>     /// for the lifetime of the returned [`Formatter`].
+>>     pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
+>>         // SAFETY: The safety requirements of this function satisfy those of the callee.
+>> -        Self(unsafe { RawFormatter::from_buffer(buf, len) })
+>> +        Self(unsafe { RawFormatter::from_buffer(buf, len) }, PhantomData)
+>> +    }
+>> +
+>> +    /// Create a new [`Self`] instance.
+>> +    #[expect(dead_code)]
+>> +    pub(crate) fn new<'a>(buffer: &'a mut [u8]) -> Formatter<'a> {
+>
+> nit: the function above this one returns Self, and this one returns Formatter.
+> Perhaps this one should also return Self for consistency?
 
-Also please look at 'man iostat':
+Thanks. Not sure about the explicit lifetime either, I'll
+reformat:
 
-    %util  Percentage  of  elapsed time during which I/O requests were issued to the device (bandwidth utilization for the device). Device
-           saturation occurs when this value is close to 100% for devices serving requests serially.  But for devices serving requests  in
-           parallel, such as RAID arrays and modern SSDs, this number does not reflect their performance limits.
+@@ -844,7 +844,7 @@ pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
+ 
+     /// Create a new [`Self`] instance.
+     #[expect(dead_code)]
+-    pub(crate) fn new<'a>(buffer: &'a mut [u8]) -> Formatter<'a> {
++    pub(crate) fn new(buffer: &mut [u8]) -> Self {
+         // SAFETY: `buffer` is valid for writes for the entire length for
+         // the lifetime of `Self`.
+         unsafe { Formatter::from_buffer(buffer.as_mut_ptr(), buffer.len()) }
 
-which shows %util in device level, not from queuing IO to complete io from device.
 
-That said the current approach for counting inflight IO via percpu counter
-from blk_account_io_start() is not correct from %util viewpoint from
-request based driver.
+Best regards,
+Andreas Hindborg
 
-
-Thanks, 
-Ming
 
 
