@@ -1,60 +1,54 @@
-Return-Path: <linux-block+bounces-25203-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25206-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD5F7B1BE24
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 03:06:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19636B1BE5D
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 03:36:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4843F625EEE
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 01:06:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36D2916812C
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 01:36:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC5011898F8;
-	Wed,  6 Aug 2025 01:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70827130A73;
+	Wed,  6 Aug 2025 01:35:58 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D523FBB3
-	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 01:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A85E72622
+	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 01:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754442395; cv=none; b=eYtWP0qiDosDVQzNszG00vq+gvlSmczaUEQtNVuK0PHasmfEBrvxxB5Z0urkW3BA/JEvZKs4uEpFnvA3IsS1uQJ6TAjKm5gbv+a3WkDzH74o7zz7O1JBubADGPfeP6D+ZHOizeNoMZGBVQJNZ0sX7UIq6azXnruZITp2j1KAdn8=
+	t=1754444158; cv=none; b=nvDeTHKn+x41KPyXSAoj9mz/h9kshEV2an8x+zejfG+dYeE0MpAYF1ymoV11AdIqCiPoesH8CYvB4vVSy45XaymRE0AzBoxVVO+gAKaZ7iFwLIg5DPcj4IsvKEIY1d2pSCJDdvxuZ3FIMmc6IK7wWUmmZh3td1UoFcNhq975Zps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754442395; c=relaxed/simple;
-	bh=IEy4EPfevkNwu4Aym1LgEwZsHCFKNhFdT2FziC9f+n0=;
+	s=arc-20240116; t=1754444158; c=relaxed/simple;
+	bh=y5mHdXQPv6xTsq/yQ2L3PL1fNpaVaLldJOoQXM9wIa4=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XAGSrlCbL/29IbYMxTUb7MmFgKnmW05HWn2jx1dI//xVn/r+rQsLVJs9+QxCARVWsTOr48UAMH3hz3KuClDm6TgRHbygajp5JszwnEH8Exr7jIloIHzZAweCZdhIfrm7Fq2adc0JUm3MaZ0FCsPnR4WONCZCU1PTR1dUujZl9Uo=
+	 In-Reply-To:Content-Type; b=nYZ/rD98sncpsaMGN2NeSZxsGV71Dxzrqfv9mZ/wMhEVLVs+vgbCMmsrgHJYPQyZc7N4QX5s8pMieXpslGKTIbeJCaZXFR2vIbKKdyq6BxWEy7DB74dAevdAKF+EQGDZucN7R5az4giSzh5Caemzdi2Parbt9FbVJihhoNXRmEE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bxXDl5RrbzYQtsZ
-	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 09:06:31 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bxXW41rPvzYQtyw
+	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 09:18:56 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6AF0E1A07BB
-	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 09:06:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id DF52B1A07BB
+	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 09:18:54 +0800 (CST)
 Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXUxSUqpJoGR3dCg--.49111S3;
-	Wed, 06 Aug 2025 09:06:30 +0800 (CST)
-Subject: Re: [PATCH 5/5] blk-mq: Replace tags->lock with SRCU for tag
- iterators
-To: Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- John Garry <john.garry@huawei.com>,
- Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+	by APP4 (Coremail) with SMTP id gCh0CgBHwhJ7rZJotxzeCg--.6374S3;
+	Wed, 06 Aug 2025 09:18:53 +0800 (CST)
+Subject: Re: [PATCHv2 1/2] block: avoid cpu_hotplug_lock depedency on
+ freeze_lock
+To: Nilay Shroff <nilay@linux.ibm.com>, linux-block@vger.kernel.org
+Cc: ming.lei@redhat.com, yukuai1@huaweicloud.com, axboe@kernel.dk,
+ hch@lst.de, kch@nvidia.com, shinichiro.kawasaki@wdc.com, gjoyce@ibm.com,
  "yukuai (C)" <yukuai3@huawei.com>
-References: <20250801114440.722286-1-ming.lei@redhat.com>
- <20250801114440.722286-6-ming.lei@redhat.com>
- <b86b9098-fb76-bdfe-bdf0-1344386d067a@huaweicloud.com>
- <aJCaWLgfB_oMMdrC@fedora>
- <88ad7326-b55f-7e33-fa81-0317843fc15b@huaweicloud.com>
- <700bd14f-74da-9c10-9917-d5d56ecd2921@huaweicloud.com>
- <aJHFVdqDs5KKKuM8@fedora>
+References: <20250805171749.3448694-1-nilay@linux.ibm.com>
+ <20250805171749.3448694-2-nilay@linux.ibm.com>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <383cb150-9a46-8377-79df-66e8eafc7eb5@huaweicloud.com>
-Date: Wed, 6 Aug 2025 09:06:28 +0800
+Message-ID: <5820a0d3-3035-6d4e-8c96-45154d8a1cd5@huaweicloud.com>
+Date: Wed, 6 Aug 2025 09:18:51 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 Precedence: bulk
@@ -63,184 +57,243 @@ List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aJHFVdqDs5KKKuM8@fedora>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20250805171749.3448694-2-nilay@linux.ibm.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXUxSUqpJoGR3dCg--.49111S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxKFWkCF47ZrW7JFyfZFyxKrg_yoW7CF13pr
-	WkJa15KrWrXr10qr4xt3yUJryktw1DK3W8Wrn5XFyfZr1qkrnIqr18Xr1q9r18trs7Ar48
-	XF1UtFyfZF17JrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgBHwhJ7rZJotxzeCg--.6374S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw17JFW5Gr4kWr1xuw4fGrg_yoW3tr45pa
+	yvgF4xCayUGF4kWaykGw4ku3y3GrnYkry7Ar13K34fAFn8Ar12vF10yFy0yrZ7ZrZ7Ar40
+	qr4UtrsxJ34Yg37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
 	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
 	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
 	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUG0PhUUUUU=
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 Hi,
 
-在 2025/08/05 16:48, Ming Lei 写道:
-> On Tue, Aug 05, 2025 at 04:38:56PM +0800, Yu Kuai wrote:
->> Hi,
->>
->> 在 2025/08/05 16:33, Yu Kuai 写道:
->>> Hi,
->>>
->>> 在 2025/08/04 19:32, Ming Lei 写道:
->>>> On Mon, Aug 04, 2025 at 02:30:43PM +0800, Yu Kuai wrote:
->>>>> Hi,
->>>>>
->>>>> 在 2025/08/01 19:44, Ming Lei 写道:
->>>>>> Replace the spinlock in blk_mq_find_and_get_req() with an
->>>>>> SRCU read lock
->>>>>> around the tag iterators.
->>>>>>
->>>>>> This is done by:
->>>>>>
->>>>>> - Holding the SRCU read lock in blk_mq_queue_tag_busy_iter(),
->>>>>> blk_mq_tagset_busy_iter(), and blk_mq_hctx_has_requests().
->>>>>>
->>>>>> - Removing the now-redundant tags->lock from blk_mq_find_and_get_req().
->>>>>>
->>>>>> This change improves performance by replacing a spinlock with a more
->>>>>> scalable SRCU lock, and fixes lockup issue in
->>>>>> scsi_host_busy() in case of
->>>>>> shost->host_blocked.
->>>>>>
->>>>>> Meantime it becomes possible to use blk_mq_in_driver_rw() for io
->>>>>> accounting.
->>>>>>
->>>>>> Signed-off-by: Ming Lei <ming.lei@redhat.com>
->>>>>> ---
->>>>>>     block/blk-mq-tag.c | 12 ++++++++----
->>>>>>     block/blk-mq.c     | 24 ++++--------------------
->>>>>>     2 files changed, 12 insertions(+), 24 deletions(-)
->>>>>>
->>>>>> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
->>>>>> index 6c2f5881e0de..7ae431077a32 100644
->>>>>> --- a/block/blk-mq-tag.c
->>>>>> +++ b/block/blk-mq-tag.c
->>>>>> @@ -256,13 +256,10 @@ static struct request
->>>>>> *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
->>>>>>             unsigned int bitnr)
->>>>>>     {
->>>>>>         struct request *rq;
->>>>>> -    unsigned long flags;
->>>>>> -    spin_lock_irqsave(&tags->lock, flags);
->>>>>>         rq = tags->rqs[bitnr];
->>>>>>         if (!rq || rq->tag != bitnr || !req_ref_inc_not_zero(rq))
->>>>>>             rq = NULL;
->>>>>> -    spin_unlock_irqrestore(&tags->lock, flags);
->>>>>>         return rq;
->>>>>>     }
->>>>>>
->>>>> Just wonder, does the lockup problem due to the tags->lock contention by
->>>>> concurrent scsi_host_busy?
->>>>
->>>> Yes.
->>>>
->>>>>
->>>>>> @@ -440,7 +437,9 @@ void blk_mq_tagset_busy_iter(struct
->>>>>> blk_mq_tag_set *tagset,
->>>>>>             busy_tag_iter_fn *fn, void *priv)
->>>>>>     {
->>>>>>         unsigned int flags = tagset->flags;
->>>>>> -    int i, nr_tags;
->>>>>> +    int i, nr_tags, srcu_idx;
->>>>>> +
->>>>>> +    srcu_idx = srcu_read_lock(&tagset->tags_srcu);
->>>>>>         nr_tags = blk_mq_is_shared_tags(flags) ? 1 :
->>>>>> tagset->nr_hw_queues;
->>>>>> @@ -449,6 +448,7 @@ void blk_mq_tagset_busy_iter(struct
->>>>>> blk_mq_tag_set *tagset,
->>>>>>                 __blk_mq_all_tag_iter(tagset->tags[i], fn, priv,
->>>>>>                               BT_TAG_ITER_STARTED);
->>>>>>         }
->>>>>> +    srcu_read_unlock(&tagset->tags_srcu, srcu_idx);
->>>>>
->>>>> And should we add cond_resched() after finish interating one tags, even
->>>>> with the srcu change, looks like it's still possible to lockup with
->>>>> big cpu cores & deep queue depth.
->>>>
->>>> The main trouble is from the big tags->lock.
->>>>
->>>> IMO it isn't needed, because max queue depth is just 10K, which is much
->>>> bigger than actual queue depth. We can add it when someone shows it is
->>>> really needed.
->>>
->>> If we don't want this, why not using srcu here? Looks like just use
->>> rcu_read_lock and rcu_read_unlock to protect blk_mq_find_and_get_req()
->>> will be enough.
->>
->> Like following patch:
->>
->> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
->> index d880c50629d6..e2381ee9747d 100644
->> --- a/block/blk-mq-tag.c
->> +++ b/block/blk-mq-tag.c
->> @@ -255,11 +255,11 @@ static struct request *blk_mq_find_and_get_req(struct
->> blk_mq_tags *tags,
->>          struct request *rq;
->>          unsigned long flags;
->>
->> -       spin_lock_irqsave(&tags->lock, flags);
->> +       rcu_read_lock();
->>          rq = tags->rqs[bitnr];
->>          if (!rq || rq->tag != bitnr || !req_ref_inc_not_zero(rq))
->>                  rq = NULL;
->> -       spin_unlock_irqrestore(&tags->lock, flags);
->> +       rcu_read_unlock();
->>          return rq;
->>   }
+�� 2025/08/06 1:17, Nilay Shroff д��:
+> A recent lockdep[1] splat observed while running blktest block/005
+> reveals a potential deadlock caused by the cpu_hotplug_lock dependency
+> on ->freeze_lock. This dependency was introduced by commit 033b667a823e
+> ("block: blk-rq-qos: guard rq-qos helpers by static key").
 > 
-> srcu read lock has to be grabbed when request reference is being accessed,
-> so the above change is wrong, otherwise plain rcu is enough.
+> That change added a static key to avoid fetching q->rq_qos when neither
+> blk-wbt nor blk-iolatency is configured. The static key dynamically
+> patches kernel text to a NOP when disabled, eliminating overhead of
+> fetching q->rq_qos in the I/O hot path. However, enabling a static key
+> at runtime requires acquiring both cpu_hotplug_lock and jump_label_mutex.
+> When this happens after the queue has already been frozen (i.e., while
+> holding ->freeze_lock), it creates a locking dependency from cpu_hotplug_
+> lock to ->freeze_lock, which leads to a potential deadlock reported by
+> lockdep [1].
 > 
-I don't quite understand, I think it's enough to protect grabbing req
-reference, because IO issue path grab q_usage_counter before setting
-req reference to 1, and IO complete path decrease req reference to 0
-before dropping q_usage_counter.
+> To resolve this, replace the static key mechanism with q->queue_flags:
+> QUEUE_FLAG_QOS_ENABLED. This flag is evaluated in the fast path before
+> accessing q->rq_qos. If the flag is set, we proceed to fetch q->rq_qos;
+> otherwise, the access is skipped.
+> 
+> Since q->queue_flags is commonly accessed in IO hotpath and resides in
+> the first cacheline of struct request_queue, checking it imposes minimal
+> overhead while eliminating the deadlock risk.
+> 
+> This change avoids the lockdep splat without introducing performance
+> regressions.
+> 
+> [1] https://lore.kernel.org/linux-block/4fdm37so3o4xricdgfosgmohn63aa7wj3ua4e5vpihoamwg3ui@fq42f5q5t5ic/
+> 
+> Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Closes: https://lore.kernel.org/linux-block/4fdm37so3o4xricdgfosgmohn63aa7wj3ua4e5vpihoamwg3ui@fq42f5q5t5ic/
+> Fixes: 033b667a823e ("block: blk-rq-qos: guard rq-qos helpers by static key")
+> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+> ---
+>   block/blk-mq-debugfs.c |  1 +
+>   block/blk-rq-qos.c     |  6 ++----
+>   block/blk-rq-qos.h     | 43 +++++++++++++++++++++++++-----------------
+>   include/linux/blkdev.h |  1 +
+>   4 files changed, 30 insertions(+), 21 deletions(-)
+> 
+This patch LGTM, just one nit below.
 
->>
->> diff --git a/block/blk-mq.c b/block/blk-mq.c
->> index b1d81839679f..a70959cad692 100644
->> --- a/block/blk-mq.c
->> +++ b/block/blk-mq.c
->> @@ -3442,12 +3442,8 @@ static void blk_mq_clear_rq_mapping(struct
->> blk_mq_tags *drv_tags,
->>
->>          /*
->>           * Wait until all pending iteration is done.
->> -        *
->> -        * Request reference is cleared and it is guaranteed to be observed
->> -        * after the ->lock is released.
->>           */
->> -       spin_lock_irqsave(&drv_tags->lock, flags);
->> -       spin_unlock_irqrestore(&drv_tags->lock, flags);
->> +       synchronize_rcu();
-> 
-> We do want to avoid big delay in this code path, so call_srcu() is much
-> better.
+> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> index 7ed3e71f2fc0..32c65efdda46 100644
+> --- a/block/blk-mq-debugfs.c
+> +++ b/block/blk-mq-debugfs.c
+> @@ -95,6 +95,7 @@ static const char *const blk_queue_flag_name[] = {
+>   	QUEUE_FLAG_NAME(SQ_SCHED),
+>   	QUEUE_FLAG_NAME(DISABLE_WBT_DEF),
+>   	QUEUE_FLAG_NAME(NO_ELV_SWITCH),
+> +	QUEUE_FLAG_NAME(QOS_ENABLED),
+>   };
+>   #undef QUEUE_FLAG_NAME
+>   
+> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
+> index 848591fb3c57..460c04715321 100644
+> --- a/block/blk-rq-qos.c
+> +++ b/block/blk-rq-qos.c
+> @@ -2,8 +2,6 @@
+>   
+>   #include "blk-rq-qos.h"
+>   
+> -__read_mostly DEFINE_STATIC_KEY_FALSE(block_rq_qos);
+> -
+>   /*
+>    * Increment 'v', if 'v' is below 'below'. Returns true if we succeeded,
+>    * false if 'v' + 1 would be bigger than 'below'.
+> @@ -319,8 +317,8 @@ void rq_qos_exit(struct request_queue *q)
+>   		struct rq_qos *rqos = q->rq_qos;
+>   		q->rq_qos = rqos->next;
+>   		rqos->ops->exit(rqos);
+> -		static_branch_dec(&block_rq_qos);
+>   	}
+> +	blk_queue_flag_clear(QUEUE_FLAG_QOS_ENABLED, q);
+>   	mutex_unlock(&q->rq_qos_mutex);
+>   }
+>   
+> @@ -346,7 +344,7 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
+>   		goto ebusy;
+>   	rqos->next = q->rq_qos;
+>   	q->rq_qos = rqos;
+> -	static_branch_inc(&block_rq_qos);
+> +	blk_queue_flag_set(QUEUE_FLAG_QOS_ENABLED, q);
+>   
+>   	blk_mq_unfreeze_queue(q, memflags);
+>   
+> diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
+> index 39749f4066fb..c4242508fa5e 100644
+> --- a/block/blk-rq-qos.h
+> +++ b/block/blk-rq-qos.h
+> @@ -12,7 +12,6 @@
+>   #include "blk-mq-debugfs.h"
+>   
+>   struct blk_mq_debugfs_attr;
+> -extern struct static_key_false block_rq_qos;
+>   
+>   enum rq_qos_id {
+>   	RQ_QOS_WBT,
+> @@ -113,43 +112,50 @@ void __rq_qos_queue_depth_changed(struct rq_qos *rqos);
+>   
+>   static inline void rq_qos_cleanup(struct request_queue *q, struct bio *bio)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+>   		__rq_qos_cleanup(q->rq_qos, bio);
+>   }
+>   
+>   static inline void rq_qos_done(struct request_queue *q, struct request *rq)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos &&
+> -	    !blk_rq_is_passthrough(rq))
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos && !blk_rq_is_passthrough(rq))
+>   		__rq_qos_done(q->rq_qos, rq);
+>   }
+>   
+>   static inline void rq_qos_issue(struct request_queue *q, struct request *rq)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+>   		__rq_qos_issue(q->rq_qos, rq);
+>   }
+>   
+>   static inline void rq_qos_requeue(struct request_queue *q, struct request *rq)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+>   		__rq_qos_requeue(q->rq_qos, rq);
+>   }
+>   
+>   static inline void rq_qos_done_bio(struct bio *bio)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) &&
+> -	    bio->bi_bdev && (bio_flagged(bio, BIO_QOS_THROTTLED) ||
+> -			     bio_flagged(bio, BIO_QOS_MERGED))) {
+> -		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+> -		if (q->rq_qos)
+> -			__rq_qos_done_bio(q->rq_qos, bio);
+> -	}
+> +	struct request_queue *q;
+> +
+> +	if (!bio->bi_bdev || (!bio_flagged(bio, BIO_QOS_THROTTLED) &&
+> +			     !bio_flagged(bio, BIO_QOS_MERGED)))
+> +		return;
+> +
+> +	q = bdev_get_queue(bio->bi_bdev);
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+This unlinkey doesn't make sense, BIO_QOS_THROTTLED or BIO_QOS_MERGED
+already indicates rq_qos is enabled while issuing IO, and rq_qos should
+still be valid until this IO is done.
 
-Agreed, however, there is rcu verion helper as well, call_rcu().
+Perhaps a prep cleanup patch to remove this checking?
 
 Thanks,
 Kuai
 
-> 
-> Thanks,
-> Ming
-> 
-> 
-> .
+> +		__rq_qos_done_bio(q->rq_qos, bio);
+>   }
+>   
+>   static inline void rq_qos_throttle(struct request_queue *q, struct bio *bio)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos) {
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos) {
+>   		bio_set_flag(bio, BIO_QOS_THROTTLED);
+>   		__rq_qos_throttle(q->rq_qos, bio);
+>   	}
+> @@ -158,14 +164,16 @@ static inline void rq_qos_throttle(struct request_queue *q, struct bio *bio)
+>   static inline void rq_qos_track(struct request_queue *q, struct request *rq,
+>   				struct bio *bio)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+>   		__rq_qos_track(q->rq_qos, rq, bio);
+>   }
+>   
+>   static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
+>   				struct bio *bio)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos) {
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos) {
+>   		bio_set_flag(bio, BIO_QOS_MERGED);
+>   		__rq_qos_merge(q->rq_qos, rq, bio);
+>   	}
+> @@ -173,7 +181,8 @@ static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
+>   
+>   static inline void rq_qos_queue_depth_changed(struct request_queue *q)
+>   {
+> -	if (static_branch_unlikely(&block_rq_qos) && q->rq_qos)
+> +	if (unlikely(test_bit(QUEUE_FLAG_QOS_ENABLED, &q->queue_flags)) &&
+> +			q->rq_qos)
+>   		__rq_qos_queue_depth_changed(q->rq_qos);
+>   }
+>   
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 95886b404b16..fe1797bbec42 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -656,6 +656,7 @@ enum {
+>   	QUEUE_FLAG_SQ_SCHED,		/* single queue style io dispatch */
+>   	QUEUE_FLAG_DISABLE_WBT_DEF,	/* for sched to disable/enable wbt */
+>   	QUEUE_FLAG_NO_ELV_SWITCH,	/* can't switch elevator any more */
+> +	QUEUE_FLAG_QOS_ENABLED,		/* qos is enabled */
+>   	QUEUE_FLAG_MAX
+>   };
+>   
 > 
 
 
