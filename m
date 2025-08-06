@@ -1,184 +1,109 @@
-Return-Path: <linux-block+bounces-25272-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25266-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F510B1C812
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 17:01:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A214B1C7EF
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 16:52:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E57417AE58F
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 14:59:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 234CE3A9334
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 14:51:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DA8128C2BB;
-	Wed,  6 Aug 2025 15:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83043192B96;
+	Wed,  6 Aug 2025 14:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGLtct4l"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="p/rbOyY8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5199219E992;
-	Wed,  6 Aug 2025 15:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023311D88D0
+	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 14:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754492468; cv=none; b=OutgPYXNiXV1HNp+Y5JR2qmG4ZAiQNQ6G3Ghen11/yltm44qP4xY4CP7hcK3OusnDEbfetZXKAAwFFyrVgqjxwOBwvUfp+ua7yC+ylllB/+c41/BvWTWrDfBN1gkH7hcixoM7z10d3megx8A6B/s30q5ogpjt87Nq9bVvrbeU/Y=
+	t=1754491909; cv=none; b=VlkZ+R/Q4ySZ2ZG2Hg1zX0NqQ+7pwRyG/U+OPrMhJrhKmXxvzLQ0oGmsbWzuuaIifnEYBtadzK0chpxOEmrltSDWLagufU56a/xcHQQbK4s0lBNFtL/6FYNi4Mowzlzjw0IgDhLHASzGRc687A/l8Xvhv0NHK+ZVrcYrxKm1Ank=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754492468; c=relaxed/simple;
-	bh=3x0pztg71wW5Mr4XvTcNhb8qStOVBIxyYbdDxuoOqdA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AdcFlly45RZ6DJYU1tHXQqDc2HzLOhmf7tK1fE2kIFsGflyQMLPz5I3FwpjHiKUSj4AKiNNON9DaX7AyUMNAPoIhLvJEN8AbDhVmbPx2Y4/FyLencMm7BH6JoRxUGegIhpNeO8OeAtUczo6ekrVqnraBFSvY4t9pERgUURSoGCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGLtct4l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D93C4CEE7;
-	Wed,  6 Aug 2025 15:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754492465;
-	bh=3x0pztg71wW5Mr4XvTcNhb8qStOVBIxyYbdDxuoOqdA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CGLtct4lBBnUfvqSGuKmUT8uwlZj4rZu5XQSIYTLZRA+F5wYWgcylm6T8RoQrgyjK
-	 usMzmbMgl2Hf41kAFRjPe2inkaBqBKJZ9wO3uH5O19vr/Wwc9Xma+ngfrEbqAfCcOZ
-	 bXJQUXNGc2kgRUSRcsRhd5lR73seKt9PzCmkFgnKwUYd4F9oL7MdiF92jbYVDjyPun
-	 1VCXGM/sEf6//Kfx/2UBaa6XymVS31Ky7J5mUNyknM+N9iSRutULL2WxycR9rAMpqu
-	 /R7y3f/v2CPn+NRd5zmcAxWI2zLqeQoUhWpEBkX0sPc3HyAIgqfdJ0F4cZtXRlXJWx
-	 4c8L22IumBcrQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
- Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/16] rust: str: introduce `NullTerminatedFormatter`
-In-Reply-To: <D9A4DD7C-D9C2-4D91-B6C3-684BA1C100C0@collabora.com>
-References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
- <20250711-rnull-up-v6-16-v3-5-3a262b4e2921@kernel.org>
- <VdhW0gqIRZ7RLuzmrs6QN5FS-l4_hHLuKA1jb2U9YJT7z4GUb8ZxtGoBirJGZdUeD8Qdxz9nP3NobQ1EZU-MEw==@protonmail.internalid>
- <D9A4DD7C-D9C2-4D91-B6C3-684BA1C100C0@collabora.com>
-Date: Wed, 06 Aug 2025 16:47:42 +0200
-Message-ID: <87a54c8q29.fsf@kernel.org>
+	s=arc-20240116; t=1754491909; c=relaxed/simple;
+	bh=PPzdRj4u1f14grobBcNT7IoX3CfNg7VjIILIXMpmcfo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UkuVVEHxMUjNArXRzkwTO6j5D5QjFaYPqIisv8nDiVyXmZXeO5WZie8WC3eL5fivjlC2huqxZ8N4tN8yPf5L/AMLrPohh8NrbEvU2JW95WRuXgecPKmRUxFBVHOTadSMNoT9X+brwnx71eNOkFBMeLaBEHOo57UVJ+sotDBpL3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=p/rbOyY8; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 576ETj7I019709
+	for <linux-block@vger.kernel.org>; Wed, 6 Aug 2025 07:51:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=bwM44L2rmZ/Bx0r6Mu
+	hs0y83imXKIEPNsSBmomJX38Y=; b=p/rbOyY8QnMl6Yzn7pNdSJy1BRcleSfD6M
+	5XjCZlM5tevCB1RIAGE22X+/bk6uZk0xPaKp6oBh52fkPoCWtfzpFMNVji001BzC
+	QzCnx9O1C0TCW7aP6S0j4pe4XMtWrA4w2IfMkQuOBEZbTRZhCitOeAPOPxhtIDL2
+	yTCnhTn/gltdisn+NDpgPM1gqP4e3A7yhRwCozanFRX5Poxlzu0m/GmM06n1e2YK
+	cSVr1jFnxmVdRlTMRIgEzG+k3KChWP3VYQkcDYl3gO5MJZe/UvaXJndfik2oG9bp
+	DOKIjPcGR5A7hli2M0N/Lp0shjpl2cFd7T/RLZ90XzlfUzw+PjiA==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48bpweywf4-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Wed, 06 Aug 2025 07:51:47 -0700 (PDT)
+Received: from twshared10560.01.ash9.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Wed, 6 Aug 2025 14:51:45 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id D6E9059F45B; Wed,  6 Aug 2025 07:51:37 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2 0/2] block: replace reliance on virt boundary
+Date: Wed, 6 Aug 2025 07:51:34 -0700
+Message-ID: <20250806145136.3573196-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=BsqdwZX5 c=1 sm=1 tr=0 ts=68936c03 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=6zhmPM5ITRsy1UUQ_BkA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-GUID: 3o4EHTioFz0JBK8EEsaoG1xWSrg0a--N
+X-Proofpoint-ORIG-GUID: 3o4EHTioFz0JBK8EEsaoG1xWSrg0a--N
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA2MDA5MiBTYWx0ZWRfX2bmDf0xgrmtw /6QcyM/wAOXBvrkxUkTGDat8xJd5tQs7b/lFmtwZeVP3ihojTLmwUS4iZeQlw4qG8vDTYgdQfze x7jySgTlvX/kQUxWXtzJAIGCiJ2kZ6XOJxeWBFp9Gv/LzV+SsNX69NdfaO6feteZ8zEmtpa0TC0
+ aFJYq8B9C1OtfW2HFROgz9blz5++g+oaFm8gKdlr+QIuyPxBxYr3EYejy57dByeGsQfke4RDwYh 6cE0ZfxquGLYz2WyXU5fYj80VWnalFlLG8EH4TbCeWCJcykk45b9yFzMXSrKtcqsozwZ0jaw7Dr B+A62OD2Jkg8nWNLoHOdCoJL4YCnWsefketvVc4D2HOofrZbUn5H7VEO2aZAlVdEhh1bw5xoP3Z
+ B/WUVYEJ6XgvXJph3qwF9XggHT5zcwZJ4CPlsjnt5/WJZJyxNz7btMWGP4hmf31bMdi4LuuY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-06_04,2025-08-06_01,2025-03-28_01
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+From: Keith Busch <kbusch@kernel.org>
 
->> On 11 Jul 2025, at 08:43, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->> Add `NullTerminatedFormatter`, a formatter that writes a null terminated
->> string to an array or slice buffer. Because this type needs to manage the
->> trailing null marker, the existing formatters cannot be used to implement
->> this type.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->> rust/kernel/str.rs | 50 ++++++++++++++++++++++++++++++++++++++++++++++++=
-++
->> 1 file changed, 50 insertions(+)
->>
->> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
->> index b1bc584803b0..c58925438c6e 100644
->> --- a/rust/kernel/str.rs
->> +++ b/rust/kernel/str.rs
->> @@ -838,6 +838,56 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
->>     }
->> }
->>
->> +/// A mutable reference to a byte buffer where a string can be written =
-into.
->> +///
->> +/// The buffer will be automatically null terminated after the last wri=
-tten character.
->
-> Hmm, I suppose you want this to be the only null? See below.
+Changes from v1:
 
-This code went through some iteration. In the original code, I kept a
-pointer to the beginning of the buffer and an offset. It made sense to
-require the buffer to be null terminated.
+ - Replaced macro with inline function (Caleb)
 
-In this iteration, I let go of the pointer to the beginning of the
-buffer and point to the next writable byte. If this byte is zero, the
-original buffer is null terminated. Alice suggested rephrase, and I put
-this for the next spin:
+ - Replaced unsafe tail bio vec access with safe access
 
+ - For nvme, always set the max_segment_size limit rather than depend on
+   it being set through the virt_boundary_mask usage.
 
-  /// # Invariants
-  ///
-  /// * The first byte of `buffer` is always zero.
+Keith Busch (2):
+  block: accumulate segment page gaps per bio
+  nvme: remove virtual boundary for sgl capable devices
 
-At any rate, the final string is allowed to have multiple null
-characters in it.
+ block/bio.c               |  1 +
+ block/blk-merge.c         | 32 +++++++++++++++++++++++++++++---
+ block/blk-mq-dma.c        |  3 +--
+ block/blk-mq.c            |  5 +++++
+ drivers/nvme/host/core.c  | 15 ++++++++++-----
+ drivers/nvme/host/pci.c   |  6 +++---
+ include/linux/blk-mq.h    |  6 ++++++
+ include/linux/blk_types.h |  2 ++
+ 8 files changed, 57 insertions(+), 13 deletions(-)
 
->
->> +///
->> +/// # Invariants
->> +///
->> +/// `buffer` is always null terminated.
->> +pub(crate) struct NullTerminatedFormatter<'a> {
->> +    buffer: &'a mut [u8],
->> +}
->> +
->> +impl<'a> NullTerminatedFormatter<'a> {
->> +    /// Create a new [`Self`] instance.
->> +    pub(crate) fn new(buffer: &'a mut [u8]) -> Option<NullTerminatedFor=
-matter<'a>> {
->> +        *(buffer.first_mut()?) =3D 0;
->> +
->> +        // INVARIANT: We null terminated the buffer above.
->> +        Some(Self { buffer })
->> +    }
->> +
->> +    #[expect(dead_code)]
->> +    pub(crate) fn from_array<const N: usize>(
->> +        buffer: &'a mut [crate::ffi::c_char; N],
->> +    ) -> Option<NullTerminatedFormatter<'a>> {
->> +        Self::new(buffer)
->> +    }
->> +}
->> +
->> +impl Write for NullTerminatedFormatter<'_> {
->> +    fn write_str(&mut self, s: &str) -> fmt::Result {
->> +        let bytes =3D s.as_bytes();
->> +        let len =3D bytes.len();
->> +
->> +        // We want space for a null terminator. Buffer length is always=
- at least 1, so no overflow.
->
-> Perhaps this should be a type invariant? I know this is a logical conclus=
-ion
-> from saying =E2=80=9Cbuffer is always NULL terminated=E2=80=9D, but it=E2=
-=80=99s always
-> nice to be even more explicit.
-
-I can add a minimum size 1 byte requirement =F0=9F=91=8D
-
->
->> +        if len > self.buffer.len() - 1 {
->> +            return Err(fmt::Error);
->> +        }
->> +
->> +        let buffer =3D core::mem::take(&mut self.buffer);
->> +        // We break the null termination invariant for a short while.
->> +        buffer[..len].copy_from_slice(bytes);
->> +        self.buffer =3D &mut buffer[len..];
->
-> As I said in my first comment, if you want this to be the only null, I
-> don=E2=80=99t think the copy above enforces it?
-
-It does not need to be the only one, as long as there is a null at the
-end of the final string, we are good.
-
-
-Best regards,
-Andreas Hindborg
-
-
+--=20
+2.47.3
 
 
