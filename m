@@ -1,44 +1,56 @@
-Return-Path: <linux-block+bounces-25271-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25276-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E738B1C804
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 16:56:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1175FB1C831
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 17:05:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7125B1891236
-	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 14:56:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D57B1882304
+	for <lists+linux-block@lfdr.de>; Wed,  6 Aug 2025 15:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 605591A23A0;
-	Wed,  6 Aug 2025 14:56:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A50F28D857;
+	Wed,  6 Aug 2025 15:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iph8x/TO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82FC3AC1C
-	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 14:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46142944F
+	for <linux-block@vger.kernel.org>; Wed,  6 Aug 2025 15:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754492188; cv=none; b=GBmW0JSRu21CLIpOf4W9SckXkozWbYAJvLblBqXD/4EH7ba4l3F/tnY07sUn7rKUHA7007iDTa+5MDKD8do0I0+6OV7O2pJmcJnPi+A0T2iMH810XbEEOKUZ/ODhr7XxVX60rVuTvAbW3cQpZ3MdXthHO8iI3JkO4DpWwzostUM=
+	t=1754492683; cv=none; b=CyIHiEeFkCirBWLfjmR2YSZmMp7T0IVdt7rbeDUZemAP3bm9NxmIEiunLu8GAdIi2rD9riv3D9isDONbZqTwQqjRPoIeOuqH1QkohVrIH3qLXfBYUemli4a56ZLHas/hQtcIeISIUhgru9Vr7JNxxue1LGCnBCGmCTGrOrSxqvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754492188; c=relaxed/simple;
-	bh=0DCoDTj5yN/pX53IMgkyi2j9h2NmphPMoE9XsfbDMVw=;
+	s=arc-20240116; t=1754492683; c=relaxed/simple;
+	bh=UYqCNGyT3EmjFK3mZkAylSZ+X76TSycu9O7yKJ+mh1Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7bbhY8IOtDxU91S0Q7QSaG0Vr6yNvIrAEn6GfCrcH+7CTsXkp/poAnbRwFG25Vo40AInY+wNfCOoaaN5k64FNHFdZ82eJpg66YKCORk2dmcJJwbavOEl3r8wviRChmPfY7QzyXEvSna/Q/BALE2U2PK2pkeK5wU6eKPVEfwvQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id F14C8227A8E; Wed,  6 Aug 2025 16:56:21 +0200 (CEST)
-Date: Wed, 6 Aug 2025 16:56:21 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
-	axboe@kernel.dk, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH 1/2] block: accumulate segment page gaps per bio
-Message-ID: <20250806145621.GC20102@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eU0LhAkdMKVylX0n0SHZVbIN2hFJ9L9A15+OsXuvCtNfTotB6ztYlByNM5t6jQTXsxegcVH4u0R3/G3b6PCoJCuyneER9MSLZqB00afbI5QbH5cke+5UaTUOR9orngscgSybLH1ku2ZWPsaIZiIJ4gLe2jlX7IwVa5n0CLeNwCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iph8x/TO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F8FC4CEE7;
+	Wed,  6 Aug 2025 15:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754492682;
+	bh=UYqCNGyT3EmjFK3mZkAylSZ+X76TSycu9O7yKJ+mh1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Iph8x/TOWRyaus5Uiz2WYsGsEI/z2wj2GYEEkcKdS7FmhUa06ENCuHrYm8EKOAmGR
+	 UY5mcKrLIZ0gjz3+wex3oapU0/VAdHY1bnohB9Z5VUbehAP6MTj/IBLQws9veijsG2
+	 /G+qZKzVx/NDN9cc6d7TYLjN9fovgDG0AFDYvfsF7gZecxUPwgUg/WhlqrNBHAS4Ud
+	 UXdJ+/3aExPbrFv++2LYJxW09iTxoizP0M5B6H7Is6QMiROW/BFlWpHPV84SWWstEb
+	 DcJAucdFZ5+Dg6aLoUqvzRY7yYWCmxyP0ewb2kYr1/NpeLGmegDyKriw3f8YmeOJTL
+	 9oY9SLVgfuMOg==
+Date: Wed, 6 Aug 2025 09:04:40 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, axboe@kernel.dk
+Subject: Re: [PATCH 2/2] nvme: remove virtual boundary for sgl capable devices
+Message-ID: <aJNvCOZeiah3jeMR@kbusch-mbp>
 References: <20250805195608.2379107-1-kbusch@meta.com>
+ <20250805195608.2379107-2-kbusch@meta.com>
+ <20250806145514.GB20102@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -47,19 +59,33 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250805195608.2379107-1-kbusch@meta.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250806145514.GB20102@lst.de>
 
-> index 0a29b20939d17..d0ed28d40fe02 100644
-> --- a/include/linux/blk_types.h
-> +++ b/include/linux/blk_types.h
-> @@ -264,6 +264,8 @@ struct bio {
->  
->  	unsigned short		bi_max_vecs;	/* max bvl_vecs we can hold */
->  
-> +	unsigned int		page_gaps;	/* a mask of all the vector gaps */
+On Wed, Aug 06, 2025 at 04:55:14PM +0200, Christoph Hellwig wrote:
+> On Tue, Aug 05, 2025 at 12:56:08PM -0700, Keith Busch wrote:
+> > From: Keith Busch <kbusch@kernel.org>
+> > 
+> > The nvme virtual boundary is only for the PRP format. Devices that can
+> > use the SGL format don't need it for IO queues. Drop reporting it for
+> > such PCIe devices; fabrics target will continue to use the limit.
+> 
+> That's not quite true any more as of 6.17.  We now also rely it for
+> efficiently mapping multiple segments into a single IOMMU mapping.
+> So by not enforcing it for IOMMU mode.  In many cases we're better
+> off splitting I/O rather forcing a non-optimized IOMMU mapping.
 
-Bloating the bio for the gaps, especially as the bio is otherwise not
-built to hardware limits at all seems like an odd tradeoff.
+Patch 1 removes the reliance on the virt boundary for the IOMMU. This
+makes it possible for NVMe to use this optimization on ARM64 SMMU, which
+we saw earlier can come in a larger granularity than NVMe's. Without
+patch 1, NVMe could never use that optimization on such an architecture,
+but now it can applications that choose to subscribe to that alignment.
 
+This patch, though, is more about being able to utilize user space
+buffers directly that can not be split into any valid IO's. This is
+possible now with patch one not relying on the virt boundary for IOMMU
+optimizations. In truth, for my use case, the IOMMU is either set to off
+or passthrough, so that optimzation isn't reachable. The use case I'm
+going for is taking zero-copy receive buffers from a network device and
+directly using them for storage IO. The user data doesn't arrive in
+nicely aligned segments from there.
 
