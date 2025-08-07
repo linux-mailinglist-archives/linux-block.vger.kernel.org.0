@@ -1,163 +1,145 @@
-Return-Path: <linux-block+bounces-25311-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25309-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F792B1D3EF
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 10:03:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A2EB1D329
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 09:19:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC3C1167A11
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 08:03:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E09B165735
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 07:19:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEDAE2236F4;
-	Thu,  7 Aug 2025 08:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BA9239E64;
+	Thu,  7 Aug 2025 07:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8j5Yebc"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FOJxSC7z";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QZg+PxFg";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RAfJhFuC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lY2gJQbn"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFC4A02;
-	Thu,  7 Aug 2025 08:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24FC231C91
+	for <linux-block@vger.kernel.org>; Thu,  7 Aug 2025 07:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754553828; cv=none; b=V82e8GoJXtDu/m24DZGg3D+EL7MVGGmNLQXF2rpIPxTRF6MWV7v0Y6Xa4wP1ZhtUWvrbQuchyXBfWWsx3eALJNASbJXzJejE+U2mroPscfzCYHXfVvoUyv1QHkFcwjG+zmloVK3FkLMtijiVnB1icsvfwlxf1iBceDdCPbLdtJY=
+	t=1754551168; cv=none; b=uHUoqnf6mGr+4mrRgeJsJaxNeNKa8E31cFKhm0r1b698gziHBzxGDW/r2owPfGX2jX6nzhJ63jGhm6lRFgLTbcHZx/0/xz3aPl4FmiWs9h50ikxRypc7+uftFmQRDLrCkN/YGvLUzGojGBIq+S01Z6cur1H5+kUgFm8qFRFBtjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754553828; c=relaxed/simple;
-	bh=wWVot/bRWGefR1FSnJlUkmpVMwrgagTyfs8qSQV0z0I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AF+78no4mKf9AyFyIBXNhA9b0LS6FIVdeczzk8//yonQ0qK5O8RiDo8/f6gekhybHDefzFDlGNiEzldjkxAAICriNU3wtVsO5rr3mCRjR5Omcr/GtKaLCnV9u+0aIriZWOXn1BVofdbpAD0mw2FSIz5h85MmSHDL+npTJgXycck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8j5Yebc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC53C4CEEB;
-	Thu,  7 Aug 2025 08:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754553828;
-	bh=wWVot/bRWGefR1FSnJlUkmpVMwrgagTyfs8qSQV0z0I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=g8j5Yebc4fzVLrcVIS0VhO5MpBkiyRMGTrWemsVmy4KlsEjMNFKQAo419SUlGGbtc
-	 hLzX4FOkYqR2Y8kPirYFfvn9M4pyYtO/+J+g+sZNaa4fCHq1CSESOee+DjdTwgg8I4
-	 2YUp/cNRmmJA1Hox308xGkVQRtW8hRZese9DNmb74hVNdyYKDBrL1kFsodjCl73a7B
-	 dKOjDFC9cD596KccbohBZIvchwzXZIFaJggeL+jV9PSVPAiOmXRcUXKieG59f0Clx4
-	 9aaxUXHLNheZI+2QyhSwpg2MVeGGHzH09Amm8zu84WSp83Axbb1Fz8E2J5UckpgdMy
-	 ok4DRQpUnQApA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
- Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/16] rust: block: normalize imports for `gen_disk.rs`
-In-Reply-To: <DC4C6260-9D2E-40B7-9A0F-F629EB831F5F@collabora.com>
-References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
- <20250711-rnull-up-v6-16-v3-6-3a262b4e2921@kernel.org>
- <1YjnBHBMF7DAKjkQrfW9goplGCUynLmjrUnLo3PrN5qMYx6uUcolbOtjWPNyVQEwyehPW8Xk7B1oeBAffoYr9A==@protonmail.internalid>
- <F5A3232C-50E8-4615-929A-80F3ED4EFEBA@collabora.com>
- <877bzg8pvp.fsf@kernel.org>
- <BPuVBI3Fi8DRIKGqquXjiih_dy_E_FMoZoJXUr644LzQLlW5GV2OFFRvzrFIWb7AswQo-zXkAp-QoF3xdT6Bcg==@protonmail.internalid>
- <DC4C6260-9D2E-40B7-9A0F-F629EB831F5F@collabora.com>
-Date: Thu, 07 Aug 2025 09:12:49 +0200
-Message-ID: <871ppn8v0u.fsf@kernel.org>
+	s=arc-20240116; t=1754551168; c=relaxed/simple;
+	bh=P2gSR1aLw59U4sqMXOhZY6Vgfj7g8iKPjxIPsUuA0P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dWOhcNVSjj6iZs0OgcXbaf+6NI8Bzrs5O4WauSLEHNvsgEH1IwAVhQV3vtaM22ukmuGDEdO3AnCMzc6CndmlhwyWy8p4UGalqpCXi0cwAmx9C5eHpiL6x3FRYaneg17hWkRf74bzApt85z5c1RDMiWFLflf9pAyQpjN7coFk/MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FOJxSC7z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QZg+PxFg; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RAfJhFuC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lY2gJQbn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B4A1B33C79;
+	Thu,  7 Aug 2025 07:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1754551163; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eLTKkM9X+h1vSlLK1ga+n6ZzEZYUtbam/CrQYcayB5w=;
+	b=FOJxSC7zGyCrvj8vxuhgICa+/ruIOTxJiTJsAUH9+L0qIhuj72AifnM6qa0L/7mCs78RBw
+	t/UTmAVt5cAgrzmTsWRnrZWVpLXF9HTeHIhCLLXQ8jrX5eQfrDdW6sEbKJlccEq4+mgbBB
+	SX4Zhy65i01jH8WWgqkn1X9KnGvnhTs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1754551163;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eLTKkM9X+h1vSlLK1ga+n6ZzEZYUtbam/CrQYcayB5w=;
+	b=QZg+PxFgXQw9Um9Xh9/LwUwACUTD2IhUJcpoi9gBZnCwMXh0YPciUjq55oA47mP53gq2w4
+	u04wtZEP8dCFCYBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1754551162; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eLTKkM9X+h1vSlLK1ga+n6ZzEZYUtbam/CrQYcayB5w=;
+	b=RAfJhFuCEq8++cmJU6YyWtl/iL/79g0/W5fcUDyMphuR5wW0+s/6YMu5clCzcgQI/h5Ei1
+	jhLCnG/umEjg9/ff4eKHCZmoXcpSrgKLILattR5OC1o6vbT5MU4e0JavqwB9fqIh72BZlz
+	HDP/4Rknt6eCYMAaJ0aN1Uq5ntIL9AU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1754551162;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eLTKkM9X+h1vSlLK1ga+n6ZzEZYUtbam/CrQYcayB5w=;
+	b=lY2gJQbnPkglW94gaAuw5FPWa/DsnU5Wn9ntzCqBFSFmJBxZwP6YXhfZ9Jw3Zbm2T2MoLW
+	35d9N77Y/OmI53Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A1F9413969;
+	Thu,  7 Aug 2025 07:19:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id einYJnpTlGhKEwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 07 Aug 2025 07:19:22 +0000
+Date: Thu, 7 Aug 2025 09:19:22 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Mohamed Khalfella <mkhalfella@purestorage.com>
+Cc: Yi Zhang <yi.zhang@redhat.com>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	Keith Busch <kbusch@kernel.org>, Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, 
+	Hannes Reinecke <hare@kernel.org>, Maurizio Lombardi <mlombard@redhat.com>, 
+	Jens Axboe <axboe@kernel.dk>, Randy Jennings <randyj@purestorage.com>, 
+	linux-nvme@lists.infradead.org, linux-block <linux-block@vger.kernel.org>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvmet: exit debugfs after discovery subsystem exits
+Message-ID: <3f440533-8feb-49bb-8dde-6ae520b81d39@flourine.local>
+References: <20250807053507.2794335-1-mkhalfella@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250807053507.2794335-1-mkhalfella@purestorage.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,flourine.local:mid,purestorage.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -4.30
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+On Wed, Aug 06, 2025 at 10:35:07PM -0700, Mohamed Khalfella wrote:
+> Commit 528589947c180 ("nvmet: initialize discovery subsys after debugfs
+> is initialized") changed nvmet_init() to initialize nvme discovery after
+> "nvmet" debugfs directory is initialized. The change broke nvmet_exit()
+> because discovery subsystem now depends on debugfs. Debugfs should be
+> destroyed after discovery subsystem. Fix nvmet_exit() to do that.
+> 
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/all/CAHj4cs96AfFQpyDKF_MdfJsnOEo=2V7dQgqjFv+k3t7H-=yGhA@mail.gmail.com/
+> Fixes: 528589947c180 ("nvmet: initialize discovery subsys after debugfs is initialized")
+> Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
 
->> On 6 Aug 2025, at 11:51, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->> "Daniel Almeida" <daniel.almeida@collabora.com> writes:
->>
->>>> On 11 Jul 2025, at 08:43, Andreas Hindborg <a.hindborg@kernel.org> wro=
-te:
->>>>
->>>> Clean up the import statements in `gen_disk.rs` to make the code easie=
-r to
->>>> maintain.
->>>>
->>>> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->>>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->>>> ---
->>>> rust/kernel/block/mq/gen_disk.rs | 10 +++++++---
->>>> 1 file changed, 7 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/g=
-en_disk.rs
->>>> index cd54cd64ea88..679ee1bb2195 100644
->>>> --- a/rust/kernel/block/mq/gen_disk.rs
->>>> +++ b/rust/kernel/block/mq/gen_disk.rs
->>>> @@ -5,9 +5,13 @@
->>>> //! C header: [`include/linux/blkdev.h`](srctree/include/linux/blkdev.=
-h)
->>>> //! C header: [`include/linux/blk_mq.h`](srctree/include/linux/blk_mq.=
-h)
->>>>
->>>> -use crate::block::mq::{raw_writer::RawWriter, Operations, TagSet};
->>>> -use crate::{bindings, error::from_err_ptr, error::Result, sync::Arc};
->>>> -use crate::{error, static_lock_class};
->>>> +use crate::{
->>>> +    bindings,
->>>> +    block::mq::{raw_writer::RawWriter, Operations, TagSet},
->>>> +    error::{self, from_err_ptr, Result},
->>>> +    static_lock_class,
->>>> +    sync::Arc,
->>>> +};
->>>> use core::fmt::{self, Write};
->>>>
->>>> /// A builder for [`GenDisk`].
->>>>
->>>> --
->>>> 2.47.2
->>>>
->>>>
->>>>
->>>
->>> Same comment as the preceding =E2=80=9Cimport=E2=80=9D patch: this is s=
-yntax is problematic.
->>
->> I used to share your viewpoint, but I changed my opinion and now prefer
->> "normalized" imports (the combined form).
->>
->> Now I can just blindly merge all the imports, remove duplicates and then
->> ask rust-analyzer to normalize imports again, and then format with
->> rustfmt. I find that this workflow is very low overhead.
->>
->>
->> Best regards,
->> Andreas Hindborg
->
-> That=E2=80=99s because you have a separate commit where you do this befor=
-e applying
-> your work on top. If you=E2=80=99re rebasing on top of someone else's wor=
-k, then a
-> lot of conflicts will pop up. And unlike the saner approach where each im=
-port
-> is in its own line, it=E2=80=99s now absolutely not clear how the conflic=
-ts should
-> be resolved.
->
-> The only thing that can be done then is to accept whatever the current ch=
-ange
-> is, and ask rust-analyzer to reimport everything and reformat.
->
-> IMHO, this is not great.
-
-If we apply the normalized format everywhere, this will not be an issue.
-Merging of imports can be almost automated. Just merge with strategy
-keep all, and then normalize and remove duplicates.
-
-
-Best regards,
-Andreas Hindborg
-
-
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
 
