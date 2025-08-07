@@ -1,133 +1,163 @@
-Return-Path: <linux-block+bounces-25308-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25311-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6956CB1D20F
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 07:35:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F792B1D3EF
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 10:03:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15FB83A7920
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 05:35:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC3C1167A11
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 08:03:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E86591EEA54;
-	Thu,  7 Aug 2025 05:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEDAE2236F4;
+	Thu,  7 Aug 2025 08:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Xe6/WqHp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8j5Yebc"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64865BE46
-	for <linux-block@vger.kernel.org>; Thu,  7 Aug 2025 05:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFC4A02;
+	Thu,  7 Aug 2025 08:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754544952; cv=none; b=J2IDzhQuqrCE4YNIzvYJX7zIUc6pkytiRkYh9BhLP8av5y3aFMxOo0X7phmCXYjoVqX+pSnGhtRrBAiYnlFPN540pA8hGAmAw0Z63iWvjPV5rgFI4D/pKTwa8GLoxVe/OmtPt4c/qiWNfL/1G83eLwJdXmNiMIQWYvXbwhysRbs=
+	t=1754553828; cv=none; b=V82e8GoJXtDu/m24DZGg3D+EL7MVGGmNLQXF2rpIPxTRF6MWV7v0Y6Xa4wP1ZhtUWvrbQuchyXBfWWsx3eALJNASbJXzJejE+U2mroPscfzCYHXfVvoUyv1QHkFcwjG+zmloVK3FkLMtijiVnB1icsvfwlxf1iBceDdCPbLdtJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754544952; c=relaxed/simple;
-	bh=SHbPesG0UHqenGAmo4nydeJuWPG9WKBwQJ78Ppc0048=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AcMC2TCfBcS9kWRLijAhVaDD2SXSm2LvF+kQrqYkgzUmqeUJuQ02Wwookl69bt6RkrCq4zo44el8sH86zOXfCV0qWO0PKvxIeA4jy6QskIjwmO2HC48W8EPqZVZl7hi1FFVaildGGqUBV42HmR0422JJ6B5O3B2srU8Djfr7l3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Xe6/WqHp; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-76bc68cc9e4so715757b3a.2
-        for <linux-block@vger.kernel.org>; Wed, 06 Aug 2025 22:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1754544951; x=1755149751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QoW10+RcxtJxMxrx5pWJddPJprR6x75GK3Y5SnJ1n5s=;
-        b=Xe6/WqHp0xJQgmdizMt3qukHHmbBnWm0NgENXpfUX7mx1NofvQE6Hu5W58DcM0pMgb
-         em6JQj72UYrvh62jw2jaiZEeFGId+d28Pm9K2JdLG3qN44hCNGAw2Nh/HZ1qBmNbVnja
-         ZBqaoUHaC0NnARLtGPYFNuyy737jRnumbIg+Kow1yafLtkYCsx/gq5/t4qKrLWcIjpNM
-         dwV+nZWuiMUes4bVSMy+jFNfmZ/lAEA852kgXoAM2AT/6qqjkMQhxglHa8iltYWkEvzz
-         8dQYiMVip3tRvXaAveV0M3aOJdpv1k33hgYVbjSNgWsbNHE0vd+pKQ3DtThdwcCRxmKO
-         oT9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754544951; x=1755149751;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QoW10+RcxtJxMxrx5pWJddPJprR6x75GK3Y5SnJ1n5s=;
-        b=ugUytIt8K0nH3nae7WnTVXG9JG+Rs0jQzIQI+5sbg+bIUgSWtdq+WjZy50xLdhs5Pi
-         hk3WEHg7nyh3P0aILFotXkCxjCDyuVtraMx+RnFP1kEVP+Vz+1ZcXHZ2bgsCsH2LoO31
-         c4dy/IdqmtTzR0CX7dWRGUib3HSfMvWgpyG5w68aDKpFxKbGYWSG029eYhLcJCUu5I47
-         oi3rP3oinDLU3V755Zlxog5iENp+nSffAQK+seEVG442oYE7EaLSkFPfwWvOzJ6NVu5r
-         zi9onOjtoZTT9nvO1SnxikEvT/e7Y1b4g643jU4XxnssgqusgpT0r+DrHn2adk1DX0zl
-         5TzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqT/523nqvMgZGWafXnTJbMI7DR5n41BARKjt8LCESAQosKIa9XxGWTfJgLnoifzJHURGzPZ8dckPKNQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkg3qrpdJ4CLrsREAYj9rc2oiFhAP1ER75Zs9yCwsbUz4iUrd/
-	27Fpl9MrBDPAg8OjhZIak1ZHED2CvxJ6zgCwzqfnB0Tl0jdv6gbPoy2uCiJfcljR0Qk=
-X-Gm-Gg: ASbGnctNxz2Eqx9h76bbVGbOtVYSSqbUNlj5Kbe18bn6KHWn8zPdJYDu40Ki6wn3dVD
-	FE8syrf1yGvsrt6mmB71/97xm7rBjIY6V1Nd1CH1BdwM0QR4r1u1pyzhpEeRzQzuWaHlF4GlFAl
-	Uo4ADWQ14pzblaI6XXxVA3knf89PNqpxfQTGbiOU9CIsRiVLEpxBYkZUrrTsA8BP+5m9z53bM16
-	lvscGNLTxTdiE/9epzaK/8lzPlgTAgR3jIWORu5BhG1x1ywrVQC5ND2i4Y8UNfrW0m1j+JGlwNM
-	BDrTMtd4QmY81AWAfoUBM8J/8f6B5D+BWGGI33j+w36iJJDWG4twAj8nDmqRie/FQXaT1/MLuS4
-	7a17BsX/d7XrEkvcOXzcjI1nq9OEpclDQJ4n9tBM=
-X-Google-Smtp-Source: AGHT+IGeyHcVUYRXGoHcwS/JcJOXNo7fQU6bAK888L0yq4XpFiifdOi5CrgPuZlMwnAPe9aSf/fYLg==
-X-Received: by 2002:a05:6a20:559a:b0:23d:9fd5:9231 with SMTP id adf61e73a8af0-240315b3ba3mr8005141637.46.1754544950644;
-        Wed, 06 Aug 2025 22:35:50 -0700 (PDT)
-Received: from localhost.localdomain ([2601:640:8202:6fb0::eb28])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-76bf772116asm10978824b3a.97.2025.08.06.22.35.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 22:35:50 -0700 (PDT)
-From: Mohamed Khalfella <mkhalfella@purestorage.com>
-To: Yi Zhang <yi.zhang@redhat.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Mohamed Khalfella <mkhalfella@purestorage.com>,
-	Hannes Reinecke <hare@kernel.org>,
-	Daniel Wagner <dwagner@suse.de>,
-	Maurizio Lombardi <mlombard@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Randy Jennings <randyj@purestorage.com>,
-	linux-nvme@lists.infradead.org,
-	linux-block <linux-block@vger.kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmet: exit debugfs after discovery subsystem exits
-Date: Wed,  6 Aug 2025 22:35:07 -0700
-Message-ID: <20250807053507.2794335-1-mkhalfella@purestorage.com>
-X-Mailer: git-send-email 2.49.1
+	s=arc-20240116; t=1754553828; c=relaxed/simple;
+	bh=wWVot/bRWGefR1FSnJlUkmpVMwrgagTyfs8qSQV0z0I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AF+78no4mKf9AyFyIBXNhA9b0LS6FIVdeczzk8//yonQ0qK5O8RiDo8/f6gekhybHDefzFDlGNiEzldjkxAAICriNU3wtVsO5rr3mCRjR5Omcr/GtKaLCnV9u+0aIriZWOXn1BVofdbpAD0mw2FSIz5h85MmSHDL+npTJgXycck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8j5Yebc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC53C4CEEB;
+	Thu,  7 Aug 2025 08:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754553828;
+	bh=wWVot/bRWGefR1FSnJlUkmpVMwrgagTyfs8qSQV0z0I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=g8j5Yebc4fzVLrcVIS0VhO5MpBkiyRMGTrWemsVmy4KlsEjMNFKQAo419SUlGGbtc
+	 hLzX4FOkYqR2Y8kPirYFfvn9M4pyYtO/+J+g+sZNaa4fCHq1CSESOee+DjdTwgg8I4
+	 2YUp/cNRmmJA1Hox308xGkVQRtW8hRZese9DNmb74hVNdyYKDBrL1kFsodjCl73a7B
+	 dKOjDFC9cD596KccbohBZIvchwzXZIFaJggeL+jV9PSVPAiOmXRcUXKieG59f0Clx4
+	 9aaxUXHLNheZI+2QyhSwpg2MVeGGHzH09Amm8zu84WSp83Axbb1Fz8E2J5UckpgdMy
+	 ok4DRQpUnQApA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/16] rust: block: normalize imports for `gen_disk.rs`
+In-Reply-To: <DC4C6260-9D2E-40B7-9A0F-F629EB831F5F@collabora.com>
+References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
+ <20250711-rnull-up-v6-16-v3-6-3a262b4e2921@kernel.org>
+ <1YjnBHBMF7DAKjkQrfW9goplGCUynLmjrUnLo3PrN5qMYx6uUcolbOtjWPNyVQEwyehPW8Xk7B1oeBAffoYr9A==@protonmail.internalid>
+ <F5A3232C-50E8-4615-929A-80F3ED4EFEBA@collabora.com>
+ <877bzg8pvp.fsf@kernel.org>
+ <BPuVBI3Fi8DRIKGqquXjiih_dy_E_FMoZoJXUr644LzQLlW5GV2OFFRvzrFIWb7AswQo-zXkAp-QoF3xdT6Bcg==@protonmail.internalid>
+ <DC4C6260-9D2E-40B7-9A0F-F629EB831F5F@collabora.com>
+Date: Thu, 07 Aug 2025 09:12:49 +0200
+Message-ID: <871ppn8v0u.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Commit 528589947c180 ("nvmet: initialize discovery subsys after debugfs
-is initialized") changed nvmet_init() to initialize nvme discovery after
-"nvmet" debugfs directory is initialized. The change broke nvmet_exit()
-because discovery subsystem now depends on debugfs. Debugfs should be
-destroyed after discovery subsystem. Fix nvmet_exit() to do that.
+"Daniel Almeida" <daniel.almeida@collabora.com> writes:
 
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Closes: https://lore.kernel.org/all/CAHj4cs96AfFQpyDKF_MdfJsnOEo=2V7dQgqjFv+k3t7H-=yGhA@mail.gmail.com/
-Fixes: 528589947c180 ("nvmet: initialize discovery subsys after debugfs is initialized")
-Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
----
- drivers/nvme/target/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> On 6 Aug 2025, at 11:51, Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>
+>> "Daniel Almeida" <daniel.almeida@collabora.com> writes:
+>>
+>>>> On 11 Jul 2025, at 08:43, Andreas Hindborg <a.hindborg@kernel.org> wro=
+te:
+>>>>
+>>>> Clean up the import statements in `gen_disk.rs` to make the code easie=
+r to
+>>>> maintain.
+>>>>
+>>>> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>>>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>>> ---
+>>>> rust/kernel/block/mq/gen_disk.rs | 10 +++++++---
+>>>> 1 file changed, 7 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/g=
+en_disk.rs
+>>>> index cd54cd64ea88..679ee1bb2195 100644
+>>>> --- a/rust/kernel/block/mq/gen_disk.rs
+>>>> +++ b/rust/kernel/block/mq/gen_disk.rs
+>>>> @@ -5,9 +5,13 @@
+>>>> //! C header: [`include/linux/blkdev.h`](srctree/include/linux/blkdev.=
+h)
+>>>> //! C header: [`include/linux/blk_mq.h`](srctree/include/linux/blk_mq.=
+h)
+>>>>
+>>>> -use crate::block::mq::{raw_writer::RawWriter, Operations, TagSet};
+>>>> -use crate::{bindings, error::from_err_ptr, error::Result, sync::Arc};
+>>>> -use crate::{error, static_lock_class};
+>>>> +use crate::{
+>>>> +    bindings,
+>>>> +    block::mq::{raw_writer::RawWriter, Operations, TagSet},
+>>>> +    error::{self, from_err_ptr, Result},
+>>>> +    static_lock_class,
+>>>> +    sync::Arc,
+>>>> +};
+>>>> use core::fmt::{self, Write};
+>>>>
+>>>> /// A builder for [`GenDisk`].
+>>>>
+>>>> --
+>>>> 2.47.2
+>>>>
+>>>>
+>>>>
+>>>
+>>> Same comment as the preceding =E2=80=9Cimport=E2=80=9D patch: this is s=
+yntax is problematic.
+>>
+>> I used to share your viewpoint, but I changed my opinion and now prefer
+>> "normalized" imports (the combined form).
+>>
+>> Now I can just blindly merge all the imports, remove duplicates and then
+>> ask rust-analyzer to normalize imports again, and then format with
+>> rustfmt. I find that this workflow is very low overhead.
+>>
+>>
+>> Best regards,
+>> Andreas Hindborg
+>
+> That=E2=80=99s because you have a separate commit where you do this befor=
+e applying
+> your work on top. If you=E2=80=99re rebasing on top of someone else's wor=
+k, then a
+> lot of conflicts will pop up. And unlike the saner approach where each im=
+port
+> is in its own line, it=E2=80=99s now absolutely not clear how the conflic=
+ts should
+> be resolved.
+>
+> The only thing that can be done then is to accept whatever the current ch=
+ange
+> is, and ask rust-analyzer to reimport everything and reformat.
+>
+> IMHO, this is not great.
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 83f3d2f8ef2d0..0dd7bd99afa32 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -1992,8 +1992,8 @@ static int __init nvmet_init(void)
- static void __exit nvmet_exit(void)
- {
- 	nvmet_exit_configfs();
--	nvmet_exit_debugfs();
- 	nvmet_exit_discovery();
-+	nvmet_exit_debugfs();
- 	ida_destroy(&cntlid_ida);
- 	destroy_workqueue(nvmet_wq);
- 	destroy_workqueue(buffered_io_wq);
--- 
-2.49.1
+If we apply the normalized format everywhere, this will not be an issue.
+Merging of imports can be almost automated. Just merge with strategy
+keep all, and then normalize and remove duplicates.
+
+
+Best regards,
+Andreas Hindborg
+
 
 
