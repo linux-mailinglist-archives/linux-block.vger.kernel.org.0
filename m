@@ -1,504 +1,182 @@
-Return-Path: <linux-block+bounces-25312-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25314-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EB4BB1D3F1
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 10:04:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EF08B1D438
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 10:23:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04E5216DA5C
-	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 08:04:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45993720AAF
+	for <lists+linux-block@lfdr.de>; Thu,  7 Aug 2025 08:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EAE24EABC;
-	Thu,  7 Aug 2025 08:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 510EC23ABA3;
+	Thu,  7 Aug 2025 08:23:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHpHOCww"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SNy/cDep";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ChiITLvC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SNy/cDep";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ChiITLvC"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032CB4A02;
-	Thu,  7 Aug 2025 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE742222D6
+	for <linux-block@vger.kernel.org>; Thu,  7 Aug 2025 08:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754553832; cv=none; b=SImiOc91RLjHu4WDOoCAMaIlfv47UGlDj9YMP0q/939XAURRf15tItDkNfrmI69YHdx/1fWcuu4rzchpABWpfG6nrfQcJbZQGy6IxrjcnxPFawa+DUZkzlAxmY/L8WLHd6C6FPI34Ns0s1DIMtzP1/fvItVktLkRgW/Ves9TMRg=
+	t=1754554993; cv=none; b=UPqPE3EEpLXA2zhpPR+DD8BSpq6nBQnqa3RMS5XvDpFsLKvbHXT72T42TkYYz3l+1SEw4UAF6knIgliQdv8B27PKInGmFCUKB0l2ezipQknEEGfB1YYlcY7sbwSp2wES+vL6XH9S9lOVBk0V2Mfuii3E538DS84uGiBUTy+aVZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754553832; c=relaxed/simple;
-	bh=DigsrD5oXyoi+hw/E7nzS9uA860Z7qmA03IEuU7gOx8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=W+9lEKvuuxW3wAFYN2aDrO0I2M+AWEINwLWriOdl23+geuWw7d/CgwnQf2/6Mdg/7FGpjUGqUCi1onLRaeO6haDzYJitLQDmVooi0Uh+XLzinR4Gnae+zYZwyCuD/ne0YlyZNqU/Of4Mh5GfCUHR8ITBsRkATbipCb71zDalxCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHpHOCww; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5C3C4CEEB;
-	Thu,  7 Aug 2025 08:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754553831;
-	bh=DigsrD5oXyoi+hw/E7nzS9uA860Z7qmA03IEuU7gOx8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gHpHOCwwxhBsxmCQGOWcBCNjqTZucQ4ckqY3O/z+siorf+Zrq3101A4QRUc6Z/xhJ
-	 aiMBYZgh5VbBBMvwaHXtZPsibo8bA3DQxeewFDGt8h2NqXYuAlIrl2bY0t94hGbBMH
-	 gbFRolP9EV0k+mk7qZ/QdRHoM/Kr4nIJLpyjXPHxg5qDyLn+/4YOUQWZX0uWs75zcb
-	 vHCN7ryyYgU2jfcLA69gWUUFSItdEI4UZqOAwMaR8CXmw/n52hha/WghmlOk5KpNTD
-	 GtV6btzd67wyfyrplhAmnPCvsM4Rk4+3xLUOFltxDjCh9bHjML7oFzFuC0X4H4jHS0
-	 lpOwAJKvrNcBg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
- Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 12/16] rnull: enable configuration via `configfs`
-In-Reply-To: <03D084B5-5844-4BC5-902C-14E53AC13DC9@collabora.com>
-References: <20250711-rnull-up-v6-16-v3-0-3a262b4e2921@kernel.org>
- <20250711-rnull-up-v6-16-v3-12-3a262b4e2921@kernel.org>
- <ja8Fq-6i7ve2g9-WET0f6gi7n7LRRoxxmur2UiowKZQN-_n2RVtLR7TGMJKyQfvrwIwgY7N1xFkPLp25-yrPsA==@protonmail.internalid>
- <03D084B5-5844-4BC5-902C-14E53AC13DC9@collabora.com>
-Date: Thu, 07 Aug 2025 10:02:52 +0200
-Message-ID: <87v7mz7e4z.fsf@kernel.org>
+	s=arc-20240116; t=1754554993; c=relaxed/simple;
+	bh=QEqg73s6sFYnqMqGBE1SH2IlzCEUFgrHzIxne7HMXSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=engwwRHCr15JH6Pc+K3kG0XPBwGvyUrHTtbCU7LKVvlR0gU0PE307FNsTYc719pUUyxHCtzCs5U7vrqx/IhWjnQe4aMp/ph7TXqL5qNtJMoX/gGP2r0kOyuTGli+yeZ5ZjflMf+ufwL7GFc3xUOe8IUs4FVTZf5Od44QTr9TOJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SNy/cDep; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ChiITLvC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SNy/cDep; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ChiITLvC; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B46EB1F7F4;
+	Thu,  7 Aug 2025 08:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1754554989; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QGEAN017bliOyl2SdA5tKF8ug9wKFUQ4OjKLerQ0lic=;
+	b=SNy/cDepnjs8OmfRS4x9JUz+KxkAyY81771ANu+iQC/tK8fx/jaJkpneLBgUvqyxxyl/wL
+	gWMlUGAqvYFv8RuyoUUFnpq3vZfA3BNTna8PZ0yXZjDf9UICBSLXWN859cKuvQilrlWsEW
+	6dKaUe/LAKoJyui2+p544rqciT/WuHA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1754554989;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QGEAN017bliOyl2SdA5tKF8ug9wKFUQ4OjKLerQ0lic=;
+	b=ChiITLvCoN9YdHUeqa6ZiodBVXelh6pGawj/WmENOPW4R/UMevizIcnwVLOx1QYy9p76uy
+	PQf6d/fi/WeYjDBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1754554989; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QGEAN017bliOyl2SdA5tKF8ug9wKFUQ4OjKLerQ0lic=;
+	b=SNy/cDepnjs8OmfRS4x9JUz+KxkAyY81771ANu+iQC/tK8fx/jaJkpneLBgUvqyxxyl/wL
+	gWMlUGAqvYFv8RuyoUUFnpq3vZfA3BNTna8PZ0yXZjDf9UICBSLXWN859cKuvQilrlWsEW
+	6dKaUe/LAKoJyui2+p544rqciT/WuHA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1754554989;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QGEAN017bliOyl2SdA5tKF8ug9wKFUQ4OjKLerQ0lic=;
+	b=ChiITLvCoN9YdHUeqa6ZiodBVXelh6pGawj/WmENOPW4R/UMevizIcnwVLOx1QYy9p76uy
+	PQf6d/fi/WeYjDBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B586136DC;
+	Thu,  7 Aug 2025 08:23:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GXPBEG1ilGgBKAAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 07 Aug 2025 08:23:09 +0000
+Message-ID: <3b2765ff-4a7d-4bf7-b390-b392b695c675@suse.de>
+Date: Thu, 7 Aug 2025 10:23:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvmet: exit debugfs after discovery subsystem exits
+To: Mohamed Khalfella <mkhalfella@purestorage.com>,
+ Yi Zhang <yi.zhang@redhat.com>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>
+Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ Hannes Reinecke <hare@kernel.org>, Daniel Wagner <dwagner@suse.de>,
+ Maurizio Lombardi <mlombard@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ Randy Jennings <randyj@purestorage.com>, linux-nvme@lists.infradead.org,
+ linux-block <linux-block@vger.kernel.org>, linux-kernel@vger.kernel.org
+References: <20250807053507.2794335-1-mkhalfella@purestorage.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250807053507.2794335-1-mkhalfella@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,purestorage.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+On 8/7/25 07:35, Mohamed Khalfella wrote:
+> Commit 528589947c180 ("nvmet: initialize discovery subsys after debugfs
+> is initialized") changed nvmet_init() to initialize nvme discovery after
+> "nvmet" debugfs directory is initialized. The change broke nvmet_exit()
+> because discovery subsystem now depends on debugfs. Debugfs should be
+> destroyed after discovery subsystem. Fix nvmet_exit() to do that.
+> 
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/all/CAHj4cs96AfFQpyDKF_MdfJsnOEo=2V7dQgqjFv+k3t7H-=yGhA@mail.gmail.com/
+> Fixes: 528589947c180 ("nvmet: initialize discovery subsys after debugfs is initialized")
+> Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+> ---
+>   drivers/nvme/target/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+> index 83f3d2f8ef2d0..0dd7bd99afa32 100644
+> --- a/drivers/nvme/target/core.c
+> +++ b/drivers/nvme/target/core.c
+> @@ -1992,8 +1992,8 @@ static int __init nvmet_init(void)
+>   static void __exit nvmet_exit(void)
+>   {
+>   	nvmet_exit_configfs();
+> -	nvmet_exit_debugfs();
+>   	nvmet_exit_discovery();
+> +	nvmet_exit_debugfs();
+>   	ida_destroy(&cntlid_ida);
+>   	destroy_workqueue(nvmet_wq);
+>   	destroy_workqueue(buffered_io_wq);
 
->> On 11 Jul 2025, at 08:43, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->> Allow rust null block devices to be configured and instantiated via
->> `configfs`.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->> drivers/block/rnull/Kconfig      |   2 +-
->> drivers/block/rnull/configfs.rs  | 220 +++++++++++++++++++++++++++++++++=
-++++++
->> drivers/block/rnull/rnull.rs     |  58 ++++++-----
->> rust/kernel/block/mq/gen_disk.rs |   2 +-
->> 4 files changed, 253 insertions(+), 29 deletions(-)
->>
->> diff --git a/drivers/block/rnull/Kconfig b/drivers/block/rnull/Kconfig
->> index 6dc5aff96bf4..7bc5b376c128 100644
->> --- a/drivers/block/rnull/Kconfig
->> +++ b/drivers/block/rnull/Kconfig
->> @@ -4,7 +4,7 @@
->>
->> config BLK_DEV_RUST_NULL
->> tristate "Rust null block driver (Experimental)"
->> - depends on RUST
->> + depends on RUST && CONFIGFS_FS
->
-> Should this really be a dependency? IIUC, the driver still works with this
-> unset, it just doesn=E2=80=99t have this feature?
+Hehe. I knew this would've been the case once I've seen the latest
+blktest failure. Thanks for fixing it.
 
-It does not and I do not intend for it to operate without configfs.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-I did not try to build without configfs enabled, but the rnull driver
-has calls to symbols provided by the configfs subsystem, so it really
-should not work without configfs loaded.
+Cheers,
 
->
->> help
->>  This is the Rust implementation of the null block driver. Like
->>  the C version, the driver allows the user to create virutal block
->> diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/confi=
-gfs.rs
->> new file mode 100644
->> index 000000000000..6c0e3bbb36ec
->> --- /dev/null
->> +++ b/drivers/block/rnull/configfs.rs
->> @@ -0,0 +1,220 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +use super::{NullBlkDevice, THIS_MODULE};
->> +use core::fmt::Write;
->> +use kernel::{
->> +    block::mq::gen_disk::{GenDisk, GenDiskBuilder},
->> +    c_str,
->> +    configfs::{self, AttributeOperations},
->> +    configfs_attrs, new_mutex,
->> +    page::PAGE_SIZE,
->> +    prelude::*,
->> +    str::CString,
->> +    sync::Mutex,
->> +};
->> +use pin_init::PinInit;
->> +
->> +pub(crate) fn subsystem() -> impl PinInit<kernel::configfs::Subsystem<C=
-onfig>, Error> {
->> +    let item_type =3D configfs_attrs! {
->> +        container: configfs::Subsystem<Config>,
->> +        data: Config,
->> +        child: DeviceConfig,
->> +        attributes: [
->> +            features: 0,
->> +        ],
->> +    };
->> +
->> +    kernel::configfs::Subsystem::new(c_str!("rnull"), item_type, try_pi=
-n_init!(Config {}))
->> +}
->> +
->> +#[pin_data]
->> +pub(crate) struct Config {}
->
-> This still builds:
->
-> diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/config=
-fs.rs
-> index 3ae84dfc8d62..2e5ffa82e679 100644
-> --- a/drivers/block/rnull/configfs.rs
-> +++ b/drivers/block/rnull/configfs.rs
-> @@ -24,10 +24,9 @@ pub(crate) fn subsystem() -> impl PinInit<kernel::conf=
-igfs::Subsystem<Config>, E
->          ],
->      };
->
-> -    kernel::configfs::Subsystem::new(c_str!("rnull"), item_type, try_pin=
-_init!(Config {}))
-> +    kernel::configfs::Subsystem::new(c_str!("rnull"), item_type, Config =
-{})
->  }
->
-> -#[pin_data]
->  pub(crate) struct Config {}
->
-> Perhaps due to:
->
-> // SAFETY: the `__pinned_init` function always returns `Ok(())` and initi=
-alizes every field of
-> // `slot`. Additionally, all pinning invariants of `T` are upheld.
-> unsafe impl<T> PinInit<T> for T {
->     unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), Infallible>=
- {
->         // SAFETY: `slot` is valid for writes by the safety requirements =
-of this function.
->         unsafe { slot.write(self) };
->         Ok(())
->     }
-> }
-
-Hmm, when I apply this change it does not work out for me:
-
-      RUSTC [M] drivers/block/rnull/rnull.o
-    error[E0277]: the trait bound `Config: PinInit<Config, kernel::error::E=
-rror>` is not satisfied
-      --> /home/aeh/src/linux-rust/rnull-up-v6.16-rc1/drivers/block/rnull/c=
-onfigfs.rs:27:66
-        |
-    27  |     kernel::configfs::Subsystem::new(c_str!("rnull"), item_type, =
-Config {})
-        |     --------------------------------                             =
-^^^^^^^^^ the trait `PinInit<Config, kernel::error::Error>` is not implemen=
-ted for `Config`
-        |     |
-        |     required by a bound introduced by this call
-        |
-        =3D help: the following other types implement trait `PinInit<T, E>`:
-                  <AlwaysFail<T> as PinInit<T, ()>>
-                  <ChainPinInit<I, F, T, E> as PinInit<T, E>>
-                  <ChainInit<I, F, T, E> as PinInit<T, E>>
-                  <core::result::Result<T, E> as PinInit<T, E>>
-    note: required by a bound in `Subsystem::<Data>::new`
-      --> /home/aeh/src/linux-rust/rnull-up-v6.16-rc1/rust/kernel/configfs.=
-rs:151:20
-        |
-    148 |     pub fn new(
-        |            --- required by a bound in this associated function
-    ...
-    151 |         data: impl PinInit<Data, Error>,
-        |                    ^^^^^^^^^^^^^^^^^^^^ required by this bound in=
- `Subsystem::<Data>::new`
-
-    error[E0277]: the trait bound `Config: PinInit<Config, kernel::error::E=
-rror>` is not satisfied
-      --> /home/aeh/src/linux-rust/rnull-up-v6.16-rc1/drivers/block/rnull/c=
-onfigfs.rs:17:30
-        |
-    17  | pub(crate) fn subsystem() -> impl PinInit<kernel::configfs::Subsy=
-stem<Config>, Error> {
-        |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^^^^^^^^^ the trait `PinInit<Config, kernel::error::Error>` is n=
-ot implemented for `Config`
-        |
-        =3D help: the following other types implement trait `PinInit<T, E>`:
-                  <AlwaysFail<T> as PinInit<T, ()>>
-                  <ChainPinInit<I, F, T, E> as PinInit<T, E>>
-                  <ChainInit<I, F, T, E> as PinInit<T, E>>
-                  <core::result::Result<T, E> as PinInit<T, E>>
-    note: required by a bound in `Subsystem::<Data>::new`
-      --> /home/aeh/src/linux-rust/rnull-up-v6.16-rc1/rust/kernel/configfs.=
-rs:151:20
-        |
-    148 |     pub fn new(
-        |            --- required by a bound in this associated function
-    ...
-    151 |         data: impl PinInit<Data, Error>,
-        |                    ^^^^^^^^^^^^^^^^^^^^ required by this bound in=
- `Subsystem::<Data>::new`
-
-    error: aborting due to 2 previous errors
-
-I rebased on rust-6.17. What did you apply this series to?
-
->
->
->> +
->> +#[vtable]
->> +impl AttributeOperations<0> for Config {
->> +    type Data =3D Config;
->> +
->> +    fn show(_this: &Config, page: &mut [u8; PAGE_SIZE]) -> Result<usize=
-> {
->> +        let mut writer =3D kernel::str::Formatter::new(page);
->> +        writer.write_str("blocksize,size,rotational\n")?;
->> +        Ok(writer.bytes_written())
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::GroupOperations for Config {
->> +    type Child =3D DeviceConfig;
->> +
->> +    fn make_group(
->> +        &self,
->> +        name: &CStr,
->> +    ) -> Result<impl PinInit<configfs::Group<DeviceConfig>, Error>> {
->> +        let item_type =3D configfs_attrs! {
->> +            container: configfs::Group<DeviceConfig>,
->> +            data: DeviceConfig,
->> +            attributes: [
->> +                // Named for compatibility with C null_blk
->> +                power: 0,
->> +                blocksize: 1,
->> +                rotational: 2,
->> +                size: 3,
->> +            ],
->> +        };
->> +
->> +        Ok(configfs::Group::new(
->> +            name.try_into()?,
->> +            item_type,
->> +            // TODO: cannot coerce new_mutex!() to impl PinInit<_, Erro=
-r>, so put mutex inside
->
-> Isn=E2=80=99t this related to [0] ?
-
-No, I think this is a type inference problem.
-
->
->
->> +            try_pin_init!( DeviceConfig {
->> +                data <- new_mutex!( DeviceConfigInner {
->> +                    powered: false,
->> +                    block_size: 4096,
->> +                    rotational: false,
->> +                    disk: None,
->> +                    capacity_mib: 4096,
->> +                    name: name.try_into()?,
->> +                }),
->> +            }),
->> +        ))
->> +    }
->> +}
->> +
->> +#[pin_data]
->> +pub(crate) struct DeviceConfig {
->> +    #[pin]
->> +    data: Mutex<DeviceConfigInner>,
->> +}
->> +
->> +#[pin_data]
->> +struct DeviceConfigInner {
->> +    powered: bool,
->> +    name: CString,
->> +    block_size: u32,
->> +    rotational: bool,
->> +    capacity_mib: u64,
->> +    disk: Option<GenDisk<NullBlkDevice>>,
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<0> for DeviceConfig {
->> +    type Data =3D DeviceConfig;
->> +
->> +    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<=
-usize> {
->> +        let mut writer =3D kernel::str::Formatter::new(page);
->> +
->> +        if this.data.lock().powered {
->> +            writer.write_fmt(fmt!("1\n"))?;
->> +        } else {
->> +            writer.write_fmt(fmt!("0\n"))?;
->> +        }
->> +
->> +        Ok(writer.bytes_written())
->> +    }
->> +
->> +    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
->> +        let power_op: bool =3D core::str::from_utf8(page)?
->> +            .trim()
->> +            .parse::<u8>()
->> +            .map_err(|_| kernel::error::code::EINVAL)?
->
-> nit: I=E2=80=99d import that if I were you, but it=E2=80=99s your call.
-
-OK.
-
->
->> +            !=3D 0;
->> +
->> +        let mut guard =3D this.data.lock();
->> +
->> +        if !guard.powered && power_op {
->> +            guard.disk =3D Some(NullBlkDevice::new(
->> +                &guard.name,
->> +                guard.block_size,
->> +                guard.rotational,
->> +                guard.capacity_mib,
->> +            )?);
->> +            guard.powered =3D true;
->> +        } else if guard.powered && !power_op {
->> +            drop(guard.disk.take());
->> +            guard.powered =3D false;
->> +        }
->
-> nit: the guard is not used here, but it is still alive. This is harmless =
-in
-> this case, but as I general pattern, I find that using closures cuts back=
- on
-> the scope, i.e.:
->
-> this.with_locked_data(|data| {
->     // use the guard
-> });
->
-> // Guard is already free here, no surprises.
-
-I don't see `with_locked_data` anywhere in the kernel crate? It would be
-a method on `Mutex`? Or would you add the method to `DeviceConfig`?
-
->
->> +
->> +        Ok(())
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<1> for DeviceConfig {
->> +    type Data =3D DeviceConfig;
->> +
->> +    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<=
-usize> {
->> +        let mut writer =3D kernel::str::Formatter::new(page);
->> +        writer.write_fmt(fmt!("{}\n", this.data.lock().block_size))?;
->> +        Ok(writer.bytes_written())
->> +    }
->> +
->> +    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
->> +        if this.data.lock().powered {
->> +            return Err(EBUSY);
->> +        }
->> +
->> +        let text =3D core::str::from_utf8(page)?.trim();
->> +        let value =3D text
->> +            .parse::<u32>()
->> +            .map_err(|_| kernel::error::code::EINVAL)?;
->> +
->> +        GenDiskBuilder::validate_block_size(value)?;
->> +        this.data.lock().block_size =3D value;
->> +        Ok(())
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<2> for DeviceConfig {
->> +    type Data =3D DeviceConfig;
->> +
->> +    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<=
-usize> {
->> +        let mut writer =3D kernel::str::Formatter::new(page);
->> +
->> +        if this.data.lock().rotational {
->> +            writer.write_fmt(fmt!("1\n"))?;
->> +        } else {
->> +            writer.write_fmt(fmt!("0\n"))?;
->> +        }
->> +
->> +        Ok(writer.bytes_written())
->> +    }
->> +
->> +    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
->> +        if this.data.lock().powered {
->> +            return Err(EBUSY);
->> +        }
->> +
->> +        this.data.lock().rotational =3D core::str::from_utf8(page)?
->> +            .trim()
->> +            .parse::<u8>()
->> +            .map_err(|_| kernel::error::code::EINVAL)?
->> +            !=3D 0;
->> +
->> +        Ok(())
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<3> for DeviceConfig {
->> +    type Data =3D DeviceConfig;
->> +
->> +    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<=
-usize> {
->> +        let mut writer =3D kernel::str::Formatter::new(page);
->> +        writer.write_fmt(fmt!("{}\n", this.data.lock().capacity_mib))?;
->> +        Ok(writer.bytes_written())
->> +    }
->> +
->> +    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
->> +        if this.data.lock().powered {
->> +            return Err(EBUSY);
->> +        }
->> +
->> +        let text =3D core::str::from_utf8(page)?.trim();
->> +        let value =3D text
->> +            .parse::<u64>()
->> +            .map_err(|_| kernel::error::code::EINVAL)?;
->> +
->> +        this.data.lock().capacity_mib =3D value;
->> +        Ok(())
->> +    }
->> +}
->> diff --git a/drivers/block/rnull/rnull.rs b/drivers/block/rnull/rnull.rs
->> index d07e76ae2c13..d09bc77861e4 100644
->> --- a/drivers/block/rnull/rnull.rs
->> +++ b/drivers/block/rnull/rnull.rs
->> @@ -1,28 +1,26 @@
->> // SPDX-License-Identifier: GPL-2.0
->>
->> //! This is a Rust implementation of the C null block driver.
->> -//!
->> -//! Supported features:
->> -//!
->> -//! - blk-mq interface
->> -//! - direct completion
->> -//! - block size 4k
->
-> Why are these three removed?
-
-Because the list is stale and I did not want to maintain it.
-
-
-Best regards,
-Andreas Hindborg
-
-
-
-
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
