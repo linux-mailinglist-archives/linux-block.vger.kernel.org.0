@@ -1,180 +1,119 @@
-Return-Path: <linux-block+bounces-25368-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25376-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51CC6B1EC79
-	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 17:53:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28FDDB1ECB2
+	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 17:59:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DF5318C6956
-	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 15:53:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6753B189C8A5
+	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 15:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A598286424;
-	Fri,  8 Aug 2025 15:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BAB5286891;
+	Fri,  8 Aug 2025 15:58:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="b3WhRZIz"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="R1m+Mrbx"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f100.google.com (mail-io1-f100.google.com [209.85.166.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223B3285CBD
-	for <linux-block@vger.kernel.org>; Fri,  8 Aug 2025 15:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0386528689C
+	for <linux-block@vger.kernel.org>; Fri,  8 Aug 2025 15:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754668352; cv=none; b=NSWyGtQ4CzOC9Dk8CtqBUj14r/WVNoYyUX9+ztPZ/I2uORodoPRSWaDKT/G6HEuxkHT326vHX1uVlMQvpRxl2qaykMpjc9zUlgHb8Dds535ETHjrSqt7FsY9uoagBtjyjhwvEzpaVx1KeQa/y3sOqokgzXZgIomiptkD2/fQDsY=
+	t=1754668729; cv=none; b=oDfqwc0XSJbz23DdB6Vh+hJvNMRzScWUyLiVcADwffcwNpWMlIbsZ47bzVGBWte9IQsfdXS+juQ76I7bhUsPvv5JD45HWSR11gHDiQesItErd8iEnUq4Mpy9qX1U/jgclBS/077X37V4GQEzcqL3dIMAdAV0Tai3T3tbBaofgZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754668352; c=relaxed/simple;
-	bh=rwY+6H6u80joBsrhEhKEXk0cucLQiP1e1Ud9NkfJ2mk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q5hRCOrfULj66x/9ktDyE/+lOFjHPfgVW97YPmlvZkeXMOLg6QxwqAibo32QYw8ODB7AVX4G4Av3HKGgVDnyWzXvKR2zbUTSFTxMtyJ91nZhuj6kZh0He9kugekpCujyN9CJsFc4aGZSku6lBnnmo70IAIId1GI1cJ0v7A8jMtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=b3WhRZIz; arc=none smtp.client-ip=209.85.166.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-io1-f100.google.com with SMTP id ca18e2360f4ac-875c1f8793aso7585539f.2
-        for <linux-block@vger.kernel.org>; Fri, 08 Aug 2025 08:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1754668349; x=1755273149; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WDnFLQYE/9gqtmsTbT/ho+kOSDoyfUwk9gt7yBIm8Gk=;
-        b=b3WhRZIzCxE78fbKuhGfCrSHOuXdj+SjQwlmmPcQxBs0FZw1LVjkkgcQsRb/j6AMhp
-         HG5bqW/pDPS1JgvcPx1hrJcs4loVobRl/76uANt+IoUc4f39N9dMBQj3TqnqrF11UGuH
-         puoMm9o/SMUP2yxWx9d87D6lmmK2erZM95nCDNAjyTWOgMHff+fkSZcAz1FKpRtd68uZ
-         EwiraqzXBFW1MwynNzJ5NBGNcrnZ/pKcUNZYZB8cjIAU0ETEesf2PdXuf/Z7dtmfAndd
-         GcPfwCgsDhpZWP0v7GTVVoTLJ3Zr+dxTtMlO1WjCjjKQxBNT5CKJ+bCssBsuOsW/0ACK
-         3kIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754668349; x=1755273149;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WDnFLQYE/9gqtmsTbT/ho+kOSDoyfUwk9gt7yBIm8Gk=;
-        b=PViGJZiNipznHZxD5Gr70xOzPd7cAO90BSyi+HnkTP8f96Hy2/0Z6GzUXMeswCuQ91
-         x5kmdXLJ1zLVG2ghmF3XNHemZskj6/tubbRMxQpasACguqwnlte1asb7GY1S+5o3iDQC
-         mH1g16NasQtGrlGcH6UC1bAzefJiX4nnoRomBuvp22v4ffMEIOjNGHyachzGktbT5Zxz
-         dhmt/wKZoFOkzDfBVOZx7KzO88g1pR+uPecslcQBihQPTCfInhRv+b2kO1b60iBap+0a
-         idbV9OixdzSmqZ+wQiCfCzNxlfSbBHZxX6n+gRhIiBKlJu4CCsXyobrlsdnsP6lhJE5Z
-         bawQ==
-X-Gm-Message-State: AOJu0YxsQDn3SCK0U2wpI+VwiRDxqysQz7Su2vfYVzNaV54qfm1bv5z9
-	p2+sNorUnbGS9n7GMp0FoLVk1OBNcInp/ms48+5RGekrpnfmAPXEPzkojYsKivU3TBNl9quzrFT
-	4l5l52PaoxOgx6UvXCxJ5onRBkQy3Q/bR298l
-X-Gm-Gg: ASbGncsVfb+MOUOvPAAb8LQbRRE4ZWf1AvOmZx5vXHrzopaExBwLk1iGD5fuLgQA+5X
-	P6qtSQqVdGgrNlMzn3+HnWjuFty62hrFrVjeaL4yd91W4SOaZ2+QBrGV5xphgjJk/GheImqcA7O
-	6zpPweknXp7Z8HyEXWlOBA1E1Hz7tasyXyBUqjMW6/lk9mzBb7WpqTrFDU+kIO2GldijJ4+l/Br
-	OQ4qHfAbLPzaumzRMG8il21g/bZH4cMBUQH0mMHRitWoIQaIIq+hmEYsoE7eOX1XutZRl/LsCqG
-	uHxor1JZjYJQbsBogRl/7hrqPKQdy60BbkwTPUO/OAMwW+J2Rb9J4UgG2OwLEE5nu7VryXxF
-X-Google-Smtp-Source: AGHT+IHsEIHvzKEqwfGGH06NchR3RnM7OZwvoi0OVdp5Y0s9Go/QPEu1k6+RlpB3kq/7NyAS23S5mk4VQRpa
-X-Received: by 2002:a05:6602:3fc4:b0:87c:46f2:7075 with SMTP id ca18e2360f4ac-883f12ac4f6mr160145439f.5.1754668349110;
-        Fri, 08 Aug 2025 08:52:29 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-50ae9bb6bbfsm160766173.32.2025.08.08.08.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Aug 2025 08:52:29 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 821D4340237;
-	Fri,  8 Aug 2025 09:52:28 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 7C621E489B5; Fri,  8 Aug 2025 09:52:28 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Uday Shankar <ushankar@purestorage.com>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ublk: check for unprivileged daemon on each I/O fetch
-Date: Fri,  8 Aug 2025 09:52:15 -0600
-Message-ID: <20250808155216.296170-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1754668729; c=relaxed/simple;
+	bh=sIgBT7Vu1/n/e5EBmWiSawKpVS8eCmKmh8QU8V3hv0g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JtSdzc9uHEsBbWP/2kF6Y7lBlJkafiqPPkc0hXpLzLKMLh2liHV4QKwtE9tttNTcUv6yj4PsOXAioMozBHBPfXVPXb+l8eONsNMCIkSfmcHkouxg371JjC69VA1eLVsn8/qTg9KfX1g/gtBJMF4dd33wGZHXPF9tQk0sTlo8j7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=R1m+Mrbx; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 578FIqju012510
+	for <linux-block@vger.kernel.org>; Fri, 8 Aug 2025 08:58:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=jFORdkuYpnBcFvG1gO
+	x/i+B5cKvoQ9+xtADPU12ZRbM=; b=R1m+MrbxW/Iv0KVBdZiLhIFe4dX7FglyQp
+	mrsoKDwYyGtuzyJ4xUrgDcmoMeAfoGWOsQoMPaInleEshwsgZ1mGxu2himhhOHf5
+	8XE+h67PNej2L4wl79C6UNhqfyezFUxSS4V+axYZlYAd/rbpgGfXnOvoFjVoleXC
+	WdhLsqr5VOyVNpj6yBRCS2VNrFkUdUs+5/1uVxLhhny9M1YKtmNDXOx8HKYL6mwU
+	prASPf+HAxJhtdPOQyqx/wX9Ki8101xhmGveBFjoXxic2hy6yB2cAOdBeoes/yXY
+	aiPpU0jyuqmaGIYjtA048YHegB6Zwefzr0C05FLzIwV0iCLQDtWQ==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 48d1x5xjtu-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Fri, 08 Aug 2025 08:58:46 -0700 (PDT)
+Received: from twshared21625.15.frc2.facebook.com (2620:10d:c0a8:1c::11) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Fri, 8 Aug 2025 15:58:39 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 19B556C76BB; Fri,  8 Aug 2025 08:58:27 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv5 0/8] blk dma iter for integrity metadata
+Date: Fri, 8 Aug 2025 08:58:18 -0700
+Message-ID: <20250808155826.1864803-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA4MDEyOSBTYWx0ZWRfXxK96nNYIwStF a5HBv15gUaaTt6glzhAt06pG9mRndpkaeMhh5gl3e4mOV+4YU2r8FKu2of41PYxkzTUvJrAB0dt kWBTswzFFqspCbkGgJX8lpRQOF4aiCvHHgbGSOWzaiW1sDQJ6qc26bnYTjbrUh3yQJ2O+ygKpk6
+ S4phD9/msdyuzX01zQICkWqzriqQxAF2ApCVny6UxFL9TYiQnrpkIct6TZK7TudIWVx18GnGZlj YSgP9yNG8yI11BWuPnhiM4W2cSOm/VgCtHBGQWFcwieYzciNGRQEZBaSV4hX2XHK0dL5EcRQSsc GLW6Y3TvwT+bcp9kzANDgA42wvHlEW0WcURQC7N7OM6dxsQfSoOTN3YU0HPYcH5OfBHHWIvB63a
+ Qz1W8vwphSonmdbOw6hujcYqz4X9dBK5TJk9ingluUWvCRu/Ea28eb0XwRz6KQnWlJuDva0S
+X-Proofpoint-GUID: 4IoQhj4YycsUCXAX-cm0EwtB23cIZ19o
+X-Proofpoint-ORIG-GUID: 4IoQhj4YycsUCXAX-cm0EwtB23cIZ19o
+X-Authority-Analysis: v=2.4 cv=R4sDGcRX c=1 sm=1 tr=0 ts=68961eb6 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=QyXUC8HyAAAA:8 a=agJ6Vr9HkWBsIA0g1xEA:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-08_05,2025-08-06_01,2025-03-28_01
 
-Commit ab03a61c6614 ("ublk: have a per-io daemon instead of a per-queue
-daemon") allowed each ublk I/O to have an independent daemon task.
-However, nr_privileged_daemon is only computed based on whether the last
-I/O fetched in each ublk queue has an unprivileged daemon task.
-Fix this by checking whether every fetched I/O's daemon is privileged.
-Change nr_privileged_daemon from a count of queues to a boolean
-indicating whether any I/Os have an unprivileged daemon.
+From: Keith Busch <kbusch@kernel.org>
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Fixes: ab03a61c6614 ("ublk: have a per-io daemon instead of a per-queue daemon")
----
- drivers/block/ublk_drv.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Previous version:
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 6561d2a561fa..a035070dd690 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -233,11 +233,11 @@ struct ublk_device {
- 
- 	struct ublk_params	params;
- 
- 	struct completion	completion;
- 	unsigned int		nr_queues_ready;
--	unsigned int		nr_privileged_daemon;
-+	bool 			unprivileged_daemons;
- 	struct mutex cancel_mutex;
- 	bool canceling;
- 	pid_t 	ublksrv_tgid;
- };
- 
-@@ -1548,11 +1548,11 @@ static void ublk_reset_ch_dev(struct ublk_device *ub)
- 		ublk_queue_reinit(ub, ublk_get_queue(ub, i));
- 
- 	/* set to NULL, otherwise new tasks cannot mmap io_cmd_buf */
- 	ub->mm = NULL;
- 	ub->nr_queues_ready = 0;
--	ub->nr_privileged_daemon = 0;
-+	ub->unprivileged_daemons = false;
- 	ub->ublksrv_tgid = -1;
- }
- 
- static struct gendisk *ublk_get_disk(struct ublk_device *ub)
- {
-@@ -1978,16 +1978,14 @@ static void ublk_reset_io_flags(struct ublk_device *ub)
- /* device can only be started after all IOs are ready */
- static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
- 	__must_hold(&ub->mutex)
- {
- 	ubq->nr_io_ready++;
--	if (ublk_queue_ready(ubq)) {
-+	if (ublk_queue_ready(ubq))
- 		ub->nr_queues_ready++;
--
--		if (capable(CAP_SYS_ADMIN))
--			ub->nr_privileged_daemon++;
--	}
-+	if (!ub->unprivileged_daemons && !capable(CAP_SYS_ADMIN))
-+		ub->unprivileged_daemons = true;
- 
- 	if (ub->nr_queues_ready == ub->dev_info.nr_hw_queues) {
- 		/* now we are ready for handling ublk io request */
- 		ublk_reset_io_flags(ub);
- 		complete_all(&ub->completion);
-@@ -2878,12 +2876,12 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub,
- 	ub->dev_info.ublksrv_pid = ublksrv_pid;
- 	ub->ub_disk = disk;
- 
- 	ublk_apply_params(ub);
- 
--	/* don't probe partitions if any one ubq daemon is un-trusted */
--	if (ub->nr_privileged_daemon != ub->nr_queues_ready)
-+	/* don't probe partitions if any daemon task is un-trusted */
-+	if (ub->unprivileged_daemons)
- 		set_bit(GD_SUPPRESS_PART_SCAN, &disk->state);
- 
- 	ublk_get_device(ub);
- 	ub->dev_info.state = UBLK_S_DEV_LIVE;
- 
--- 
-2.45.2
+  https://lore.kernel.org/linux-block/20250731150513.220395-1-kbusch@meta=
+.com/
+
+Changes since v4:
+
+ - Fixed nvme initialization for metadata total length (Kanchan)
+
+ - Removed the now unused __REQ_FLAG_P2PDMA (Kanchan)
+
+ - Fixed checks with CONFIG_BLK_DEV_INTEGRITY is not set (lkp@intel.com)
+
+Keith Busch (8):
+  blk-mq-dma: introduce blk_map_iter
+  blk-mq-dma: provide the bio_vec list being iterated
+  blk-mq-dma: require unmap caller provide p2p map type
+  blk-mq: remove REQ_P2PDMA flag
+  blk-mq-dma: move common dma start code to a helper
+  blk-mq-dma: add support for mapping integrity metadata
+  nvme-pci: create common sgl unmapping helper
+  nvme-pci: convert metadata mapping to dma iter
+
+ block/bio.c                   |   2 +-
+ block/blk-mq-dma.c            | 239 +++++++++++++++++++++-------------
+ drivers/nvme/host/pci.c       | 197 +++++++++++++++-------------
+ include/linux/blk-integrity.h |  17 +++
+ include/linux/blk-mq-dma.h    |  18 ++-
+ include/linux/blk_types.h     |   2 -
+ 6 files changed, 287 insertions(+), 188 deletions(-)
+
+--=20
+2.47.3
 
 
