@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-25374-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25369-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A250B1ECB1
-	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 17:59:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49616B1ECAA
+	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 17:59:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BB177AEA97
-	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 15:57:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7491E173B55
+	for <lists+linux-block@lfdr.de>; Fri,  8 Aug 2025 15:59:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1D52868A1;
-	Fri,  8 Aug 2025 15:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A559286424;
+	Fri,  8 Aug 2025 15:58:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="LvCP1wKq"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="csFkBI1+"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3028286422
-	for <linux-block@vger.kernel.org>; Fri,  8 Aug 2025 15:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8024286422
+	for <linux-block@vger.kernel.org>; Fri,  8 Aug 2025 15:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754668726; cv=none; b=DJyTsuJXlTzR1/E62Cmumnxug8NvLOE504lmOs7KSOPxuAqR6tF84hiCCo4S3BA4B00zt2gyogm9HCPjtV++dcwu2h8EUmIK5sh+SKRt5Fd6UrEQqihGBD6MkYZtqI+nARdOCKhW/JDjBovIBMVk5pxEMkKrvytlcrKF/N4jc6c=
+	t=1754668715; cv=none; b=i/j2+d7dH0CIoTBKzUBJTAZpUvsMFMjYd5qiv8yn5DaFN3bX5qlEsrx8zN0+aaTgQZVTlagWbfZOfY9EfSbVPINR/JpXg8xc5IKdExMVDzifDpKbkQZusImM84GleLV0tdA2dqPd/Mx1K6S9LnZngoNC0aIN/tF7tN9OJzmTXa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754668726; c=relaxed/simple;
-	bh=nbFUNCLDIX77GQoVzB4uqxgHzKim+TlydsY1Xka5ps0=;
+	s=arc-20240116; t=1754668715; c=relaxed/simple;
+	bh=LNovEpmdBuAJVhQM5dgP9MtRGzsCjsrgUCjLGOfPjD4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eSE/3vgKvH0MJkR8irojqb56+sHjN//aLllGr8vdbgofA5EHBukHbBnj5FfehQxJnsNYVilPCM3a2WrOiHS0mwjy9K1UZE5mlpMfkEQ200ePNtW6R/kIHvbQrh2ttcJZ7LkFCr+qExBtLZzGPQg4nPN5RZazz9GwVzcwzAr/dts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=LvCP1wKq; arc=none smtp.client-ip=67.231.145.42
+	 MIME-Version:Content-Type; b=qb7gdpHiO//6vCDUw1DMw9VTXL12slp3A5GA7yid9au6zhOOpdPFzKPz8jh3LMvxxhp8FwxtaAeydK8Rl4rJuALeY2c9wYMCRAtuEwZ2RmTxKxBwVHwSWLZwGYapfOvf4vyIEFW9UPhOO4HtDuAY303FwnYQoXAOKERvnrlVcd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=csFkBI1+; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 578FJ2Vm027029
-	for <linux-block@vger.kernel.org>; Fri, 8 Aug 2025 08:58:44 -0700
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 578FKBb6021638
+	for <linux-block@vger.kernel.org>; Fri, 8 Aug 2025 08:58:33 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=OnVEN0Qg5E3J9URYGA3KFwVlmgiUbfXOh2icZeBfBt4=; b=LvCP1wKq0z1G
-	AXnWtDALY6omIsU12Vd1mfg3b/fJRNTwnm5i8C+ItGw2DpdhSbfA0Lg6+T8T0UDh
-	ugHrtXlXNn3afwPNnvNa4nRqzGKEiuXVo6TbIkkc2G2R9wOe0POWjQ27FmMi9+hC
-	3XkccIx8Ve+gruLy/l+NCUnp/ylyYc+NSnwOKF/ZXqjGC90hwSueEV+oMCLgm9ki
-	0GNNURsEP0VqaaiPMA1MQpTSIJ/AEg76zHyQlKmvzUF4H4HaKduVLOidGhDijSpE
-	WkT4hAelCUXp0oglkEbFaOBWFLR0TBguSD5HU4DMJxL1PkxPUNEBYlJv2Ux9zJjU
-	MNL4Civn0Q==
+	 bh=Kb4ack9vXfOSkVGDHJdpxKswW0fz+d5LtDVd0jctGeE=; b=csFkBI1+fT9S
+	jT8enHvgiuYhvaFkvQpOj1qbFEAWWd6Fqr7jxTGHp9qp3sbuUkUbKZXYFDqSmSsd
+	i7BhPLh9pVZssE/ufcA6oOi4ROTLQMds00piI10+VMXByFclowA6FwqzdUhsU0Mw
+	QOs6Zh/m5/pHDb8GW0O7Oac8NzzFTG1vaoUFL4n+bOWamdy9hKCi2Z6wLGch7Kuh
+	ofLoL1UWy8vb1E053t4f4DrskD0bZo4gdMu6IxKQpmHDGXPXyvqqtou3hntgKYh/
+	ADnD5SXyiOaOQX1YNlQBcMPp57KS/A7Nw6W1XMiNbtycjS/l6n8RmxKicKGR5nVH
+	U2CBgWdsRQ==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48d8mybvnm-16
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48dbwck3f3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Fri, 08 Aug 2025 08:58:44 -0700 (PDT)
-Received: from twshared7571.34.frc3.facebook.com (2620:10d:c0a8:1b::8e35) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Fri, 08 Aug 2025 08:58:32 -0700 (PDT)
+Received: from twshared10560.01.ash9.facebook.com (2620:10d:c0a8:1c::1b) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Fri, 8 Aug 2025 15:58:34 +0000
+ 15.2.2562.17; Fri, 8 Aug 2025 15:58:31 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id C22056C76C4; Fri,  8 Aug 2025 08:58:27 -0700 (PDT)
+	id DB4976C76C5; Fri,  8 Aug 2025 08:58:27 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
 CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
         Keith Busch
 	<kbusch@kernel.org>
-Subject: [PATCHv5 4/8] blk-mq: remove REQ_P2PDMA flag
-Date: Fri, 8 Aug 2025 08:58:22 -0700
-Message-ID: <20250808155826.1864803-5-kbusch@meta.com>
+Subject: [PATCHv5 5/8] blk-mq-dma: move common dma start code to a helper
+Date: Fri, 8 Aug 2025 08:58:23 -0700
+Message-ID: <20250808155826.1864803-6-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250808155826.1864803-1-kbusch@meta.com>
 References: <20250808155826.1864803-1-kbusch@meta.com>
@@ -74,105 +74,124 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=I5BlRMgg c=1 sm=1 tr=0 ts=68961eb4 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=gKVTuvNHKxM_LcN8e1sA:9
-X-Proofpoint-ORIG-GUID: vgRqn5hbsxSz2IW5JkDXreP7u_RNN-dQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA4MDEyOSBTYWx0ZWRfX1BgVO/fvBr8O mgJaJ5hSHo4zfsGUUNY70fAQSri2Lk5wC2zy/a9LLQfx/APcJHtUjIrE4K+5ePwPccpacEMRjhu +Eo86DlPnGSgMc7WP2S9so/PsSvSGEGXmnO415rCWhgpXq2Pni6UiDzGuhkM5JZzLvFxn3TCM4I
- d6JFzVuypCoIRVjsYouhwhrBJAlIrQHWQL8sIiJ3cgmyTwSxMIXePMBybmDkmeW+2SXYQiqRAUd F+VCsz3FP08QwLgHWUEzu3Y0qiEJ5wI090KadEsrL2lFAuQQSkGnq0s4nTIgHixwP1Z/6+f2h/L 0G3DJ3TytmcB0cZFSe3ze+JUXmAP1Yh/+I18IAbqxUTBwCZgsRQHp9YKi9UEfwpVZ4+9MvnVDul
- BsVVysSyIZEep4UF7lM9luqrJAqAxwDzriDbZC/DY6uowRWhK4SSPZIs+P3324zXMBQIIPca
-X-Proofpoint-GUID: vgRqn5hbsxSz2IW5JkDXreP7u_RNN-dQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA4MDEyOSBTYWx0ZWRfX+eYSTGOeTU5H 0Q53AyrcN7jUa32sBxpQSzRqZqLqOR4mnVw3+9cb96oQ0XRAtRhm4o91DYlzWwjNDgj26CQ4+Gl +0kuaGREWzGkBgqyBnGmCpDXfMpWJWp8Cg6Fb5yULfccuasp9sq7PqGNEwkwDY3pvxNkGwv6hH6
+ FI/oEbgmAZoBM21wFA/pZZzGfpCF9OVdTYvScI8ATnyxeGcUryE7wn59l+FFD/ktXAEhG+VONFy HEGApsuQDOBBXMWzjQBrgxi5l77/D0GtK1fZEq3L3jl+kmNTLilfQNMPe+sgizx3HA24+ulypKB YaktGh5Gl0azCLUEdFTjIN6MOPR3gQ92L99+SIFrAP4xiy+qeC5xtdxx9PvTXVOXXubpvLYikCH
+ Lj/wEkhP7J48Z0OrOyuF4Jvyhorzt80J9qW2ukajqmOBJKNhX64O4I/CaJCI4rW2cNzJZGak
+X-Proofpoint-GUID: vYFFWMFADsHiERQE8Aoj0pjJczYBa4nK
+X-Authority-Analysis: v=2.4 cv=DthW+H/+ c=1 sm=1 tr=0 ts=68961ea8 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=Udg8XZZ2YZ10bUHcV_QA:9
+X-Proofpoint-ORIG-GUID: vYFFWMFADsHiERQE8Aoj0pjJczYBa4nK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-08_05,2025-08-06_01,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-It's not serving any particular purpose. pci_p2pdma_state() already has
-all the appropriate checks, so the config and flag checks are not
-guarding anything.
+In preparing for dma mapping integrity metadata, move the common dma
+setup to a helper.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/bio.c               |  2 +-
- block/blk-mq-dma.c        | 30 ++++++++++++++----------------
- include/linux/blk_types.h |  2 --
- 3 files changed, 15 insertions(+), 19 deletions(-)
+ block/blk-mq-dma.c | 60 +++++++++++++++++++++++++---------------------
+ 1 file changed, 33 insertions(+), 27 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 92c512e876c8d..f56d285e6958e 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -981,7 +981,7 @@ void __bio_add_page(struct bio *bio, struct page *pag=
-e,
- 	WARN_ON_ONCE(bio_full(bio, len));
-=20
- 	if (is_pci_p2pdma_page(page))
--		bio->bi_opf |=3D REQ_P2PDMA | REQ_NOMERGE;
-+		bio->bi_opf |=3D REQ_NOMERGE;
-=20
- 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, off);
- 	bio->bi_iter.bi_size +=3D len;
 diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index 4a013703bcba5..988c27667df67 100644
+index 988c27667df67..bc694fecb39dc 100644
 --- a/block/blk-mq-dma.c
 +++ b/block/blk-mq-dma.c
-@@ -173,22 +173,20 @@ bool blk_rq_dma_map_iter_start(struct request *req,=
- struct device *dma_dev,
- 	if (!blk_map_iter_next(req, &iter->iter))
- 		return false;
+@@ -135,36 +135,12 @@ static struct blk_map_iter blk_rq_map_iter(struct r=
+equest *rq)
+ 	};
+ }
 =20
--	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && (req->cmd_flags & REQ_P2PDMA)) {
--		switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
--					 phys_to_page(iter->iter.paddr))) {
--		case PCI_P2PDMA_MAP_BUS_ADDR:
--			return blk_dma_map_bus(iter);
--		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
--			/*
--			 * P2P transfers through the host bridge are treated the
--			 * same as non-P2P transfers below and during unmap.
--			 */
--			req->cmd_flags &=3D ~REQ_P2PDMA;
--			break;
--		default:
--			iter->status =3D BLK_STS_INVAL;
--			return false;
--		}
-+	switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
-+				 phys_to_page(iter->iter.paddr))) {
-+	case PCI_P2PDMA_MAP_BUS_ADDR:
-+		return blk_dma_map_bus(iter);
-+	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-+		/*
-+		 * P2P transfers through the host bridge are treated the
-+		 * same as non-P2P transfers below and during unmap.
-+		 */
-+	case PCI_P2PDMA_MAP_NONE:
-+		break;
-+	default:
-+		iter->status =3D BLK_STS_INVAL;
-+		return false;
- 	}
+-/**
+- * blk_rq_dma_map_iter_start - map the first DMA segment for a request
+- * @req:	request to map
+- * @dma_dev:	device to map to
+- * @state:	DMA IOVA state
+- * @iter:	block layer DMA iterator
+- *
+- * Start DMA mapping @req to @dma_dev.  @state and @iter are provided by=
+ the
+- * caller and don't need to be initialized.  @state needs to be stored f=
+or use
+- * at unmap time, @iter is only needed at map time.
+- *
+- * Returns %false if there is no segment to map, including due to an err=
+or, or
+- * %true ft it did map a segment.
+- *
+- * If a segment was mapped, the DMA address for it is returned in @iter.=
+addr and
+- * the length in @iter.len.  If no segment was mapped the status code is
+- * returned in @iter.status.
+- *
+- * The caller can call blk_rq_dma_map_coalesce() to check if further seg=
+ments
+- * need to be mapped after this, or go straight to blk_rq_dma_map_iter_n=
+ext()
+- * to try to map the following segments.
+- */
+-bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_d=
+ev,
+-		struct dma_iova_state *state, struct blk_dma_iter *iter)
++static bool blk_dma_map_iter_start(struct request *req, struct device *d=
+ma_dev,
++		struct dma_iova_state *state, struct blk_dma_iter *iter,
++		unsigned int total_len)
+ {
+-	unsigned int total_len =3D blk_rq_payload_bytes(req);
+-
+ 	memset(&iter->p2pdma, 0, sizeof(iter->p2pdma));
+ 	iter->status =3D BLK_STS_OK;
+-	iter->iter =3D blk_rq_map_iter(req);
 =20
- 	if (blk_can_dma_map_iova(req, dma_dev) &&
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 09b99d52fd365..930daff207df2 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -386,7 +386,6 @@ enum req_flag_bits {
- 	__REQ_DRV,		/* for driver use */
- 	__REQ_FS_PRIVATE,	/* for file system (submitter) use */
- 	__REQ_ATOMIC,		/* for atomic write operations */
--	__REQ_P2PDMA,		/* contains P2P DMA pages */
  	/*
- 	 * Command specific flags, keep last:
- 	 */
-@@ -419,7 +418,6 @@ enum req_flag_bits {
- #define REQ_DRV		(__force blk_opf_t)(1ULL << __REQ_DRV)
- #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
- #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
--#define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
+ 	 * Grab the first segment ASAP because we'll need it to check for P2P
+@@ -194,6 +170,36 @@ bool blk_rq_dma_map_iter_start(struct request *req, =
+struct device *dma_dev,
+ 		return blk_rq_dma_map_iova(req, dma_dev, state, iter);
+ 	return blk_dma_map_direct(req, dma_dev, iter);
+ }
++
++/**
++ * blk_rq_dma_map_iter_start - map the first DMA segment for a request
++ * @req:	request to map
++ * @dma_dev:	device to map to
++ * @state:	DMA IOVA state
++ * @iter:	block layer DMA iterator
++ *
++ * Start DMA mapping @req to @dma_dev.  @state and @iter are provided by=
+ the
++ * caller and don't need to be initialized.  @state needs to be stored f=
+or use
++ * at unmap time, @iter is only needed at map time.
++ *
++ * Returns %false if there is no segment to map, including due to an err=
+or, or
++ * %true ft it did map a segment.
++ *
++ * If a segment was mapped, the DMA address for it is returned in @iter.=
+addr and
++ * the length in @iter.len.  If no segment was mapped the status code is
++ * returned in @iter.status.
++ *
++ * The caller can call blk_rq_dma_map_coalesce() to check if further seg=
+ments
++ * need to be mapped after this, or go straight to blk_rq_dma_map_iter_n=
+ext()
++ * to try to map the following segments.
++ */
++bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_d=
+ev,
++		struct dma_iova_state *state, struct blk_dma_iter *iter)
++{
++	iter->iter =3D blk_rq_map_iter(req);
++	return blk_dma_map_iter_start(req, dma_dev, state, iter,
++				      blk_rq_payload_bytes(req));
++}
+ EXPORT_SYMBOL_GPL(blk_rq_dma_map_iter_start);
 =20
- #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
-=20
+ /**
 --=20
 2.47.3
 
