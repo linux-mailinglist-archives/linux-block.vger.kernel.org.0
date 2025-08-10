@@ -1,113 +1,72 @@
-Return-Path: <linux-block+bounces-25399-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25405-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBA12B1F9CA
-	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 13:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19339B1FA5B
+	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 16:12:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 159D418989AC
-	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 11:43:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DBDA1897F0D
+	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 14:12:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDDD624676C;
-	Sun, 10 Aug 2025 11:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qgy74BJ8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008C1AD51;
+	Sun, 10 Aug 2025 14:12:35 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1892153C1;
-	Sun, 10 Aug 2025 11:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D02F1FDA
+	for <linux-block@vger.kernel.org>; Sun, 10 Aug 2025 14:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754826186; cv=none; b=nKCLbHubVNrQwgfB2DaRfv6V9HZV2oFJI3O+ZfB1nXZ8qnGndm4Z2G+rMPlUlwu05MDz6IYG/AieGs4J776lzTJTU3OlcvqgRg3UDZkZ78CHHTdM6plgPHOHsTcKbP932nYa33ytvAfmywNcGURcqEcFNUGzM0Tl5ASVzrZX1PU=
+	t=1754835154; cv=none; b=UvlknJH+UuwuNKA5B4s28ZlZwzYB44WSfaSgtQHg8AzE12Yu6ZWERtZE6hNn0WuuKfCba9uGB8VPughcaIKZ0nj5G9kk8fv2IUeM5sWINz/2/6/TtoR12SF/iolbUcdSPICCY+W5j8LM+Q035bR7OfSaZTHUhyNn89382DytLSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754826186; c=relaxed/simple;
-	bh=91ET5rF86WWJH2uEOY8goKvqnyw4egDzDk+qkBG4z3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kFY1PC1ei8MXbKxnz18oTwkPmhHfgGyUQ2zuhuuvW7jwbfHdPva1DKm77jxo3hoAEb8WuA/+HAwasalZ6NXOz2/A7TnORwub9PGuywqVTphL8NuI2tJUTbLJS9/RTLzyJ2yGbWPqISy29HjvLQQ/WctiClAsFZgGEjdiE1DELj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qgy74BJ8; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31f3f978cd1so746074a91.2;
-        Sun, 10 Aug 2025 04:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754826185; x=1755430985; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=91ET5rF86WWJH2uEOY8goKvqnyw4egDzDk+qkBG4z3c=;
-        b=Qgy74BJ8zODdIZT/Oh21nrMfefWPDo4ZkyMqQr7OFTd6FMZbwCUGGSaUqAc39nKTEJ
-         2MkBajrsMYi7iXZAAFB9vYfGyrSaV4GWjIROrR01/3XK9pPzlohbC0qvvmh25mYYn2ia
-         O2j3gDM4++noGILMM+T9qQWGxqc9rtyQj02GI73yFrjJZiXMXgSDVhX2BRmwRqjLAhgn
-         9q5fuywNoZVoRgAFUXx70CcxDuxVk6f8X+Ey0cIYfIhvoVk8+VsKqZBLX6ykhECPbBx2
-         0d7HCdaYWqqlh2ja2RNfsarjP+r3z5BF1+jIkhdxAnxp7XLASBkh00HJvBbarVbHLdqe
-         YP8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754826185; x=1755430985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=91ET5rF86WWJH2uEOY8goKvqnyw4egDzDk+qkBG4z3c=;
-        b=lWHLHPTuQQk4xFSz0sTfVGLkMl6UL0/52GqppuXS6aA3wtDpbeyzb3laNp/xxxFNsA
-         DO0Jt165kZUER/SAEX/sLsmOqVXdcIVqCMF7mVLMV3/zPiaOf9r0b4CrOe0b39/ruyLy
-         km019blT7RJJz0C03t9gvg7hI/WcD+5hVTMyytjbCiKapypsofwaZupT3PSWGEyQtHFG
-         BKrjChMPgPEM/mEEAfdTyehp8UgQu1uTgrHE6etpdCryaA8XT+hBA/2c7/xcAATQ2tWY
-         ZAwN2+TnqlSDkLMI1BVSB/VIALgmtfUtFuQJJX4nYQEhyjikLLijx4L6dhddAvqKjrg6
-         wIog==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ1VFhsXGnxqISOqmTzLxj+zkei+0IoufkBA8JhCvMKh5vdOOHz2iAoxshwvLsg76zQCUy2h0p8IAbg4nTuT0=@vger.kernel.org, AJvYcCVRi7Ms4CQwMz35p8FbMSXZPydnv6shR8249qyJMztS+tz1Jvbr4DjY2Hw6CYxE2VNIcpcS1ioKFrqZAQ==@vger.kernel.org, AJvYcCX+nJqrKmApAyZElK/SSGaHy1I/53V+KwploS19k6bjLD3sbNaYooi/wdVZYYp3A9ov9K/6NgezmpW5Q5VP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVS4P17+0n0PmL+VN4X91SAbkd/10fGKYyuBFo2CYEIaoCqYHp
-	mOjVZARFettXWQKK+frl2ds6LpUPRVfmB86eWyaFsDu7i/5ZUWMSD31eMtROucW+cjwSStDMXfn
-	MhpGwjClkeTJpqnqZuaEKdt7q1w13OSc=
-X-Gm-Gg: ASbGncsM6PxUqUqr9Fga+bl98f1D/IJTmAZpf25a74QkIhy7IgwfVzvRuIFZATinsYJ
-	huDn7o4wJk8iIbHrzwqX08iT6Nwqs7Fn9DoDWl1KuyypI4hxXt9XqchoTaXCh+GgEIOk0fwkEC9
-	Q3qL880ovHYEpExh17UePiBT0eRRWP9FP0NH3SJtQIkoq84M0WvQO3EjFppEkz6s5RUpCsClAFi
-	hOxbz2hJ05U03gG0vU=
-X-Google-Smtp-Source: AGHT+IEqlt+PxFuiuxU8+W6GDdBLu+oKjOa+sDHv3M270eVfk0DsWulSC2im2qIc7BEaNIkCa9aAu0zY6SmB9nZdT+w=
-X-Received: by 2002:a17:902:ceca:b0:240:33c7:fbf9 with SMTP id
- d9443c01a7336-242d6d83ea4mr32253205ad.11.1754826184602; Sun, 10 Aug 2025
- 04:43:04 -0700 (PDT)
+	s=arc-20240116; t=1754835154; c=relaxed/simple;
+	bh=JTlXLbXoFTyhghznWR96Bo6YuCMTMf720M8aVAzxNws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SqNswfAz0bGGGYm2sOly8yENpCZ3XA8OOkGsmM0XN2qPNTtoL/LTH9YWt2dCcJ0aIrwy7+Sx25E3+tNZ2zRkALSE+kYd5L9D0wHBJ1knm0sj/dL0VGK+8rDYjwLJonJvL+lkfU0wFe6si38Mich9y4N0Hri2OPfZUPh9rBLmNtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 06A01227A87; Sun, 10 Aug 2025 16:04:49 +0200 (CEST)
+Date: Sun, 10 Aug 2025 16:04:48 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
+	axboe@kernel.dk, joshi.k@samsung.com,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCHv5 1/8] blk-mq-dma: introduce blk_map_iter
+Message-ID: <20250810140448.GA4262@lst.de>
+References: <20250808155826.1864803-1-kbusch@meta.com> <20250808155826.1864803-2-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <KnSfzGK6OiA0mL5BZ32IZgEYWCuETu6ggzSHiqnzsYBLsUHWR5GcVRzt-FSa8sCXmYXz_jOKWGZ6B_QyeTZS2w==@protonmail.internalid>
- <20250716090712.809750-1-shankari.ak0208@gmail.com> <87cy965edf.fsf@kernel.org>
-In-Reply-To: <87cy965edf.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 10 Aug 2025 13:42:53 +0200
-X-Gm-Features: Ac12FXziWX50nYsrNpMzmQ37_zE0gmW2f0vWbEXqgMwK4juLfdxsar3rKHw4jKs
-Message-ID: <CANiq72=Yb=APVFiJbdveVD45=fwmAbXR3vUXLTBfqu_n-BpcOA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] rust: block: update ARef and AlwaysRefCounted imports
- from sync::aref
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Shankari Anand <shankari.ak0208@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, linux-block@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250808155826.1864803-2-kbusch@meta.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Aug 8, 2025 at 11:53=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
+> +struct blk_map_iter {
+> +	phys_addr_t			paddr;
+> +	u32				len;
+> +	struct bvec_iter		iter;
+> +	struct bio			*bio;
+> +};
 
-I think you can pick this one, i.e. the idea was to allow changes to
-be picked independently.
+This now mixes the output previous in the phys_vec, and instead
+of keeping it private to the implementation exposes it to all the
+callers.  I could not find an explanation in the commit log, nor
+something that makes use of it later in the series.
 
-Otherwise, I can pick it eventually with the final change, but it
-would be best to get these cleanups done.
+If possible I'd like to keep these separate and the output isolated
+in blk-mq-dma.c.  But if there's a good reason to merge them, please
+add it to the commit log, and also clearly document the usage of the
+fields in the (public) structure.  Especially the len member could
+very easily confuse.
 
-Thanks!
-
-Cheers,
-Miguel
 
