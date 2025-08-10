@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-25404-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25406-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABCCEB1FA5A
-	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 16:10:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32DB0B1FA5E
+	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 16:16:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5165173507
-	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 14:10:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE1E73BC64C
+	for <lists+linux-block@lfdr.de>; Sun, 10 Aug 2025 14:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BBA51E7C18;
-	Sun, 10 Aug 2025 14:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DACD23F27B;
+	Sun, 10 Aug 2025 14:16:50 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C6F1E1DF0
-	for <linux-block@vger.kernel.org>; Sun, 10 Aug 2025 14:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D34239E7D
+	for <linux-block@vger.kernel.org>; Sun, 10 Aug 2025 14:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754835043; cv=none; b=MxEn2QnQ3ZqVRRY+0/Lz4KZC7NCxGxFobW7yLMUJWKdmcWK6d7dyZbufGPSDC+bMm8n+D23tJfTIhzYYOjZ1hoXn5DwqGSzKojFBrEWffUPRC1zr3UK27mhBZOM/u65xgcbWy/VX5kH6zQwFweJbwWFcO5K/ZFD/zbsnXsiRUC8=
+	t=1754835410; cv=none; b=ajdo9uL1QxGrOzoVSrWmQC7niWxt5kXGbKN0XM8S9bq6kA6Vu0I2tWWr+jXzQOM5xnm0Pf7e2ZCA04uDpSY1nvemKMWPA28NDRS6RzlPcX/62NLXqHufm752g/fZen66Bz7EmCQt6MAcg4PLoMOQ91cPXnGxeM+VPVu/xmmf7TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754835043; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1754835410; c=relaxed/simple;
+	bh=pza0sHlsefYrnnh/RzNe0H98jjuPtAof3ZiA2WkuHVM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PBLkXusPICrScqCuQ0653Sn2NobLPHLNJ2di9c73t9aDWzfNgqCmlaXbSuTm8UXiRsxN9dFVtyEguMsPZTFqO9Uvm4VWwRDcfbHlYB7MnO4d2RtyuXdyY/EjoN3c2ABMyO6UBlBGsRC8sl8KIoCO0W7z9IaRzjka9rGsO2MTXoc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=lIBd/9CQum16lJ5mIPOqAZ5vHP3WHnHl2oXXXKM450Kt08Vv1/xNZswApAky6gP9+gooVHgfsDsokbThwWFK9dV+mNZum1BERQLgtlo/+y9eD/iAIHzecJY96FV7kxnDdLfu1nRj85iHAUUHCXI+Px9C+FtpUSm4++ZSIjBOag8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id D1499227A88; Sun, 10 Aug 2025 16:10:36 +0200 (CEST)
-Date: Sun, 10 Aug 2025 16:10:36 +0200
+	id 1F4EA227A87; Sun, 10 Aug 2025 16:16:44 +0200 (CEST)
+Date: Sun, 10 Aug 2025 16:16:43 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Keith Busch <kbusch@meta.com>
 Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
 	axboe@kernel.dk, joshi.k@samsung.com,
 	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv5 5/8] blk-mq-dma: move common dma start code to a
- helper
-Message-ID: <20250810141036.GF4262@lst.de>
-References: <20250808155826.1864803-1-kbusch@meta.com> <20250808155826.1864803-6-kbusch@meta.com>
+Subject: Re: [PATCHv5 6/8] blk-mq-dma: add support for mapping integrity
+ metadata
+Message-ID: <20250810141643.GG4262@lst.de>
+References: <20250808155826.1864803-1-kbusch@meta.com> <20250808155826.1864803-7-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -49,11 +49,64 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250808155826.1864803-6-kbusch@meta.com>
+In-Reply-To: <20250808155826.1864803-7-kbusch@meta.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+On Fri, Aug 08, 2025 at 08:58:24AM -0700, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
+> Provide integrity metadata helpers equivalent to the data payload
+> helpers for iterating a request for dma setup.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Can you please also convert the SG mapping helpers to use the low-level
+iterator first like I've done for the data path?  That ensures we have
+less code to maintain, common behavior and also smaller kernel binaries.
+
+> +static bool __blk_map_iter_next(struct blk_map_iter *iter)
+> +{
+> +	if (iter->iter.bi_size)
+> +		return true;
+> +	if (!iter->bio || !iter->bio->bi_next)
+> +		return false;
+> +
+> +	iter->bio = iter->bio->bi_next;
+> +#ifdef CONFIG_BLK_DEV_INTEGRITY
+> +	if (iter->is_integrity) {
+> +		iter->iter = iter->bio->bi_integrity->bip_iter;
+> +		iter->bvec = iter->bio->bi_integrity->bip_vec;
+> +		return true;
+> +	}
+> +#endif
+> +	iter->iter = iter->bio->bi_iter;
+> +	iter->bvec = iter->bio->bi_io_vec;
+> +	return true;
+
+I wonder if we should use the bio_integrity() that would introduce two
+(probably optimized down to one by the compiler) extra branches for the 
+integrity mapping that are easily predicted, but make the think look much
+nicer as it would kill the ifdef and the ugly structure around it:
+
+	if (iter->is_integrity) {
+		iter->iter = bio_integrity(iter->bio)->bip_iter;
+		iter->bvec = bio_integrity(iter->bio)->bip_vec;
+	} else {
+		iter->iter = iter->bio->bi_iter;
+		iter->bvec = iter->bio->bi_io_vec;
+	}
+
+	return true;
+
+> +#ifdef CONFIG_BLK_DEV_INTEGRITY
+> +bool blk_rq_integrity_dma_map_iter_start(struct request *req,
+> +		struct device *dma_dev,  struct dma_iova_state *state,
+> +		struct blk_dma_iter *iter)
+
+Can you please add a kerneldoc comment here, which could be easily
+adapter from the data mapping path.
+
+> +bool blk_rq_integrity_dma_map_iter_next(struct request *req,
+> +               struct device *dma_dev, struct blk_dma_iter *iter)
+
+Same here.
 
 
