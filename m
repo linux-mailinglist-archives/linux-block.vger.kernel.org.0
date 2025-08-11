@@ -1,139 +1,102 @@
-Return-Path: <linux-block+bounces-25484-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25489-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA851B210D8
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 18:05:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF5EDB21135
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 18:13:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D50154E158A
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:05:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C376B18A3DF0
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:09:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FDE329BDAF;
-	Mon, 11 Aug 2025 15:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF182E5B11;
+	Mon, 11 Aug 2025 16:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="wL+LGZSW"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="EfQ81wHV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D88296BA2;
-	Mon, 11 Aug 2025 15:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01F32E610E
+	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 16:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754927744; cv=none; b=eeNURS5p9kc6g5fMeR8ddX5ExFBRVd5j8O6zAwQ1soy7feXlHHJvGHX5Ruj+wa5Qzq6udz3MxDl7DgYn3xwdoattbN55UkQ91jrWMWjIRRLS9abxzfu5rGeBkrsPOE2tLRQbCiRJl+n5Xc4RSDaM7mdYMSAPAhufxlOOqYwgVE4=
+	t=1754928074; cv=none; b=sgJ0R5ZX5Y1zVD1stL9wdPzsbGJNLwcheHN6Xb2KRY6ohDisJlTWgD2/zusj1+mtXHRV/Gr8H1Zv4yPpnkVtKw+HjWuGdXTba9RS3rXCME10qrfOqeJv8O+ZCtDtZ79muBUa2uGFYi6L6Rvrc6Vy8v2x3RaLC38Cy7pA5vnlwFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754927744; c=relaxed/simple;
-	bh=ElJ/T/tRj+7GGPhvILF3z+61P6Tjni3YzNxIaUm1aBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B/Ppws2R4aZKPd+W0yYqO5Y3V5qcKLcb4GQ4swH5x0HG3+l+ilp4myKXmXLiZGUOcI/o9U9/OhFDKQJhlvEWDAZWkuiw0TR/S6IAXuf4P82OrRqrLs3PBEdq0ehHiqm+Sb9BrblHs9rG+WKD+/iR9/dtZW0wTgohAT1g6g7hRME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=wL+LGZSW; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Received: from spock.localnet (unknown [212.20.115.26])
+	s=arc-20240116; t=1754928074; c=relaxed/simple;
+	bh=SDcxsc7hwFySjBr1w+u0k9w5DLRULJo40KLXb3tSRZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bD+ha95VUkhVWCh7xFyXGmywT3duIko5ug8othMVU5e2L9n76lSJpwjiaHIGVx2YeGWf63rLvW/u+1CR4X463j0nse/qbK7hmxQx6AqcTuTb4SRLTCtKQPgR+ZaJI/ESqbH1FUNj++8lDz4ijm1wN0D50uZ3QzvetmUH1/uAZC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=EfQ81wHV; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4c0zm92Y4rzm0ytH;
+	Mon, 11 Aug 2025 15:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from:received:received; s=mr01; t=
+	1754927832; x=1757519833; bh=i2pWneOcu2rAs1metYAsXDxHIhFMuCRZ0u0
+	2ELmB0t0=; b=EfQ81wHVp4RumfGni8mfvv1hFkQSqfCIgqBI6+h5vZwE1i+TdEG
+	EI5J2q2yJ4wNxq/H9f9aR5qFGEb96u00Y84BebWpt/T1KdPM900vKNFakjDc8UBR
+	L0o0roPXehBpgyOHPr23QYIkrTsOnVWNYA0oPiHyJ+s4k1eCF2XhdgP6qcmqCVS8
+	JPAj0dF8wgJd+ZL8L6kluO56yq/vZgqhls9tTnKVB5LEn48c7WDb3Q89JvxokgdK
+	q6ov+4ifA2ySYZed8BzEY3VlFO+4oA/cfS7sQwhfPA4oPHDqobKbik1B5W72Z4sN
+	g1f3wZtBtA9Db/XOKtXhl8/+0eIRthOmuSQ==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Nq0Gn8t6u0J9; Mon, 11 Aug 2025 15:57:12 +0000 (UTC)
+Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id 986B3635B040;
-	Mon, 11 Aug 2025 17:48:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1754927302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=1L9wHhKVuXZQmzSOEtmhCm41l8tFu1qnDWrexhilFd8=;
-	b=wL+LGZSWocUdhgr4uDnJkqv/zrJDjGwZO0DZ5R+3skpojeX9/PCnPdJb8dmZRkEGkhxQwm
-	fZlDnWEpL9uNRlPOF54P6RoNCeCYp1wG2BTGWGuhhQwXcg4qbGAtqFYW7khRm9CzynxQm9
-	KkqaxakLAtnJyncaLQ2jBvjGKFju27U=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Cc: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Damien Le Moal <dlemoal@kernel.org>, John Garry <john.g.garry@oracle.com>,
- Christoph Hellwig <hch@lst.de>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, linux-mm@kvack.org,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject:
- [REGRESSION][BISECTED] Unexpected OOM instead of reclaiming inactive file
- pages
-Date: Mon, 11 Aug 2025 17:48:08 +0200
-Message-ID: <5905724.LvFx2qVVIh@natalenko.name>
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4c0zm55PSXzm0yVL;
+	Mon, 11 Aug 2025 15:57:07 +0000 (UTC)
+From: Bart Van Assche <bvanassche@acm.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v2 0/5] Remove several superfluous sector casts
+Date: Mon, 11 Aug 2025 08:56:47 -0700
+Message-ID: <20250811155702.401150-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.50.1.703.g449372360f-goog
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3613097.ElGaqSPkdT";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
 
---nextPart3613097.ElGaqSPkdT
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Date: Mon, 11 Aug 2025 17:48:08 +0200
-Message-ID: <5905724.LvFx2qVVIh@natalenko.name>
-MIME-Version: 1.0
+Hi Jens,
 
-Hello Damien.
+This patch series fixes one bcache bug and removes superfluous casts of s=
+ector
+numbers / offsets. Please consider this patch series for the next merge w=
+indow.
 
-I'm fairly confident that the following commit
+Thanks,
 
-459779d04ae8d block: Improve read ahead size for rotational devices
+Bart.
 
-caused a regression in my test bench.
+Changes compared to v1:
+ - Rebased on top of v6.17-rc1.
+ - Added Acked-by and Reviewed-by tags.
 
-I'm running v6.17-rc1 in a small QEMU VM with virtio-scsi disk. It has got 1 GiB of RAM, so I can saturate it easily causing reclaiming mechanism to kick in.
+Bart Van Assche (5):
+  block, bfq: Remove a superfluous cast
+  block, genhd: Remove disk_stats.sectors casts
+  bcache, tracing: Do not truncate orig_sector
+  bcache, tracing: Remove superfluous casts
+  block, tracing: Remove superfluous casts
 
-If MGLRU is enabled:
-
-$ echo 1000 | sudo tee /sys/kernel/mm/lru_gen/min_ttl_ms
-
-then, once page cache builds up, an OOM happens without reclaiming inactive file pages: [1]. Note that inactive_file:506952kB, I'd expect these to be reclaimed instead, like how it happens with v6.16.
-
-If MGLRU is disabled:
-
-$ echo 0 | sudo tee /sys/kernel/mm/lru_gen/min_ttl_ms
-
-then OOM doesn't occur, and things seem to work as usual.
-
-If MGLRU is enabled, and 459779d04ae8d is reverted on top of v6.17-rc1, the OOM doesn't happen either.
-
-Could you please check this?
-
-Thank you.
-
--- 
-Oleksandr Natalenko, MSE
-
-[1]: https://paste.voidband.net/TG5OiZ29.log
---nextPart3613097.ElGaqSPkdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmiaELgACgkQil/iNcg8
-M0vbWRAA1sWIe8mVt6d0YmxKVEnYTYmMS1xatrN0wE+v1F22bp2RIiILZ5N1jlYM
-s7mU4zQPn+K3KGeskURO7fI+Pkxqhas8UeN4p2GXkDGxSW3/N+eglmgbn0ICCE1w
-I+fsBRbF7u5AI1xwUrDl4QDs+3YwW+v5RQbwFTwQYLu1oz9cARZD4tn4P80x7RIl
-ct/TtcUvkHWjs0JEKXxfCqDQfEe36dD5TD2hFk5Fo1tIrSQfMojmoJ+gMXPCtXsh
-tfPuXFeenpcySoLvu6PS5AayzqPCle4t2WOuVigE5KMhPkpNG22Of7PM4FbueRQa
-O4QECIWlzQNs0n5VVrCNlAWC5dCtzGHvV/HI2tOmEGIUjdpU39JmibrQa9OsK3TA
-lqMgmD8rgMT4r7TLgM0f4F48q5enU8nfSiuL3PVxeEWDJUlz2cCyb9cFp8u6ybI8
-NI9n/1l+G8rV24E4eWuB7+vWMdpcio+/C1xxB0KZS8tdSdB1vQJqFhv4o0TqJshS
-PurH9SL9ZoRz9s+JequLlnz5vZCULAHMD8pwcZ9KbjhuohA5BePtDt26IoH+0KoM
-ph1zjJobDbwNCLvGi+xXorBKXjytESPDJEyBfQK77T5HeEGiFgzF5OG+Nt/9V085
-ReA9mxcKPcpe1VXz4Hl3LHaPBUkg6ATQ9r0m+FTF6WIowpomIG0=
-=guvX
------END PGP SIGNATURE-----
-
---nextPart3613097.ElGaqSPkdT--
-
-
+ block/bfq-iosched.c           |  3 +--
+ block/genhd.c                 | 12 ++++++------
+ include/trace/events/bcache.h | 15 +++++++--------
+ include/trace/events/block.h  | 34 +++++++++++++---------------------
+ 4 files changed, 27 insertions(+), 37 deletions(-)
 
 
