@@ -1,71 +1,70 @@
-Return-Path: <linux-block+bounces-25491-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25485-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 673F6B21177
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 18:19:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8111B211AA
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 18:22:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAF9E188BA32
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:14:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5030A3E71CF
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B581C3C08;
-	Mon, 11 Aug 2025 16:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D2272D480F;
+	Mon, 11 Aug 2025 15:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="GRWOow07"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="OYETX48H"
 X-Original-To: linux-block@vger.kernel.org
 Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7E5296BDC
-	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 16:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2809F2D47F9
+	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 15:57:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754928554; cv=none; b=tYKTILcI5OSuwA67sM9OdQzI7E6Gn0mq21lqi3gWJtr6vJL8pqZjb/LodeS4on1F1worE4WNIJCip2RVQoVSAUT7O/NbyWAIDWHYnCpEVRP8pWsZlB+GcgwdlaMZaPesumS/JBkmDPS2NUOR4DMIYqWypr0MJcPk5w3eqJIbv8I=
+	t=1754927846; cv=none; b=K6uUOko/WO3XhbDoSHxoB79bsDLBqZkkHiuG2NXyBnWO4vOXRNL3oArO3c+OUoas+d+jnqIwpHSWi2Qf1dHnQR0TVNxEopqYK9RArsq+LiB/LLw9sfHpw2GsPIAis56srTGP0LivfgUKB1CV4ovQFJrKYrTXwBNcTd5m69JhAQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754928554; c=relaxed/simple;
-	bh=Nf+9f5a/6od9Bz4coXsjltP8SGWfOFgC2PDF4MDX8GQ=;
+	s=arc-20240116; t=1754927846; c=relaxed/simple;
+	bh=/7vAfKQ21uVJX4bb9D7qxgBPhUd6eFOUYku5Ybm8oLk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WmwTLk/ezYZC9PYY9Dg136M/aCz7L8o+TMAelVf4+iGJEUUn5/66LANWpkavSGdRAbIf/3AT2ESpJiI23ogrXsDOVLD2Gm3FQSiVahM43sW9IsRLHIF41fZW6dRMCeBPzQ1VzXub6vLzw/zYaAkx0RDXzQgAbcXvv0obpnQnMSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=GRWOow07; arc=none smtp.client-ip=199.89.3.7
+	 MIME-Version; b=UvVOHAC0aXDyCMsK05kVwuqvzvW0yqV3ft3d6Jmr1XBfWnCVKerQ91Ftlsd3FWneE6rp4icUAipR4/I1KqLQ10G9My0UIJgqsFb9nvpcGvrw6i69RLm9tKAZCFvXCNx4OVQSzu8cwKS1BjW1gN+WXEvHKZv008R5ABbXonxaJxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=OYETX48H; arc=none smtp.client-ip=199.89.3.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4c0zmH1cpczm0yVW;
-	Mon, 11 Aug 2025 15:57:19 +0000 (UTC)
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4c0zmN1Zjqzm0ySS;
+	Mon, 11 Aug 2025 15:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1754927837; x=1757519838; bh=B3JNc
-	AneosbMY4wsO+7W73aoFiZWiG04Xv/nCY+jFA0=; b=GRWOow07MR8i7ARl7Zgaz
-	jgVz0jFa/k/CQ+Q8wky5mwz1iOajR0gcVT+wGzXbzpB1G4QkaldDuQO5kT5mMwqf
-	lrcY/Ilo6Yhoi6JQ5W+lZx1pYtS4eknu9vZ3wpr34uP2La3vbqdaq24oqBUO4yKl
-	cPbunQlHcO31vKNrpPn+asPl8pXi//RDnMaJyreBPOs/oMb3MPvxelE7Syxnw/gz
-	qMc0TTK7z8pdabAAbe77F3JNiuBm9hDATmDQMTP8A9LlLddJlaqp/G2jz4jDhZzL
-	hT9JNtjCWoFIwMYJXPqgW5Hr2CNGO86aTiwrBMFkBFnm9AYg4hvpYgBe0HBFLnc5
-	Q==
+	:received:received; s=mr01; t=1754927843; x=1757519844; bh=bI/jD
+	0v++vk3p8+M7vNJ00gGanHhZeMPR8pRZJOELlY=; b=OYETX48H2TXCM3ufm2Vsq
+	bIfGp6HijVygDeWfAMR/QUd857B1hOauZERIcX5iVybw0ysiv+sAcSNzLntS1OHM
+	cm7HGsKFlulaiajda3NcgnVcqg8SINguB68V0tVzeBFUO239bVEu2kakeYDfBgZE
+	h1MLGbdYu5wFXhr7KuQLxneMuFac/50ly80nWRi52LBulFletSNbOZK85fIoupiP
+	wICaPtVhWPdylZsagdjQnfdrMopD3PVGoxD4rnSo7SbCiMNnNuvOFsNqIgVNe60W
+	sfJxMS7miVXnP3kcPdzXsD13Y1xz3Xdg4o2QoGcY8bqbJdbtAU0Oe9rm99ZOZcG/
+	g==
 X-Virus-Scanned: by MailRoute
 Received: from 004.mia.mailroute.net ([127.0.0.1])
  by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Es7VvrCQ16ol; Mon, 11 Aug 2025 15:57:17 +0000 (UTC)
+ id QAEk7IeNP8e6; Mon, 11 Aug 2025 15:57:23 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4c0zm93j9pzm0yVL;
-	Mon, 11 Aug 2025 15:57:12 +0000 (UTC)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4c0zmH3rMrzm0yVT;
+	Mon, 11 Aug 2025 15:57:18 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Bart Van Assche <bvanassche@acm.org>,
-	Yu Kuai <yukuai3@huawei.com>,
 	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v2 1/5] block, bfq: Remove a superfluous cast
-Date: Mon, 11 Aug 2025 08:56:48 -0700
-Message-ID: <20250811155702.401150-2-bvanassche@acm.org>
+Subject: [PATCH v2 2/5] block, genhd: Remove disk_stats.sectors casts
+Date: Mon, 11 Aug 2025 08:56:49 -0700
+Message-ID: <20250811155702.401150-3-bvanassche@acm.org>
 X-Mailer: git-send-email 2.50.1.703.g449372360f-goog
 In-Reply-To: <20250811155702.401150-1-bvanassche@acm.org>
 References: <20250811155702.401150-1-bvanassche@acm.org>
@@ -77,32 +76,54 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-sector_t is a synonym for u64 and all architectures define u64 as unsigne=
-d
-long long. Hence, it is not necessary to cast type sector_t to unsigned
-long long. Remove a superfluous cast to improve compile-time type checkin=
-g.
+In include/linux/part_stat.h, disk_stats.sectors is declared as
+unsigned long[]. Instead of casting disk_stats.sectors to unsigned long
+long and formatting it with %llu, remove the cast and format these number=
+s
+with %lu. No functionality has been changed.
 
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/bfq-iosched.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ block/genhd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 50e51047e1fe..d24143f55fd2 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -760,8 +760,7 @@ bfq_rq_pos_tree_lookup(struct bfq_data *bfqd, struct =
-rb_root *root,
- 	if (rb_link)
- 		*rb_link =3D p;
-=20
--	bfq_log(bfqd, "rq_pos_tree_lookup %llu: returning %d",
--		(unsigned long long)sector,
-+	bfq_log(bfqd, "rq_pos_tree_lookup %llu: returning %d", sector,
- 		bfqq ? bfqq->pid : 0);
-=20
- 	return bfqq;
+diff --git a/block/genhd.c b/block/genhd.c
+index 9bbc38d12792..31cff7980f70 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1074,19 +1074,19 @@ ssize_t part_stat_show(struct device *dev,
+ 	}
+ 	part_stat_read_all(bdev, &stat);
+ 	return sysfs_emit(buf,
+-		"%8lu %8lu %8llu %8u "
+-		"%8lu %8lu %8llu %8u "
++		"%8lu %8lu %8lu %8u "
++		"%8lu %8lu %8lu %8u "
+ 		"%8u %8u %8u "
+-		"%8lu %8lu %8llu %8u "
++		"%8lu %8lu %8lu %8u "
+ 		"%8lu %8u"
+ 		"\n",
+ 		stat.ios[STAT_READ],
+ 		stat.merges[STAT_READ],
+-		(unsigned long long)stat.sectors[STAT_READ],
++		stat.sectors[STAT_READ],
+ 		(unsigned int)div_u64(stat.nsecs[STAT_READ], NSEC_PER_MSEC),
+ 		stat.ios[STAT_WRITE],
+ 		stat.merges[STAT_WRITE],
+-		(unsigned long long)stat.sectors[STAT_WRITE],
++		stat.sectors[STAT_WRITE],
+ 		(unsigned int)div_u64(stat.nsecs[STAT_WRITE], NSEC_PER_MSEC),
+ 		inflight,
+ 		jiffies_to_msecs(stat.io_ticks),
+@@ -1097,7 +1097,7 @@ ssize_t part_stat_show(struct device *dev,
+ 						NSEC_PER_MSEC),
+ 		stat.ios[STAT_DISCARD],
+ 		stat.merges[STAT_DISCARD],
+-		(unsigned long long)stat.sectors[STAT_DISCARD],
++		stat.sectors[STAT_DISCARD],
+ 		(unsigned int)div_u64(stat.nsecs[STAT_DISCARD], NSEC_PER_MSEC),
+ 		stat.ios[STAT_FLUSH],
+ 		(unsigned int)div_u64(stat.nsecs[STAT_FLUSH], NSEC_PER_MSEC));
 
