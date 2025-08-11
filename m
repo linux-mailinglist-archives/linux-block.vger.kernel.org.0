@@ -1,87 +1,87 @@
-Return-Path: <linux-block+bounces-25476-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25474-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21823B20B33
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:06:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE9C5B20B23
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:04:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DE026227B3
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 14:04:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 920907AA927
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 14:01:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7856227574;
-	Mon, 11 Aug 2025 14:01:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5E622129E;
+	Mon, 11 Aug 2025 14:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TbFmKEry"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="fe4vvSYH"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439AD22A7E6
-	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 14:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF12E213E66
+	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 14:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754920914; cv=none; b=Yp99v3sB0blrmjp5gc7zjC31suoNdWQ8MxB1BMwm9vAVun8c6/Q2scFjtIWoOVdEh6xogxNTqUB43TbwlownvzJB9Tys+uCEsvyEPtVvmU5hpGnRTZmBcZLVKOfWpS8iRbY2/z3QJDHORP8WWL5m5zS0Tdz6P7qzWTwbPcSP/z4=
+	t=1754920911; cv=none; b=K8Qw9rIewey1QDl7ys09ZJqw9laKoqO0l/rwT9xdquDVeodx3osLDwhQeilg06x4Me3THLjo0Jsyx5mqSqUM+IBTTw8dKyaIzsGQI7Q5GypvQ69NVcKaKrggegsLKHDp7JG/GP1cnGFvT6ykCpf+VMmf8M+sNJ+wDaFckPk8dQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754920914; c=relaxed/simple;
-	bh=GubqMgiX4ooo3bzumQQGvJZHe1W3sY603ZYnm0heyNA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=r74oRQ7DhwNMcRkPN1PHRwuaVsp6i45o6dPHIOAZKQV39jvMxtLt8egJbIGXgQ+d8MFOJzsYr25plvVsPtdwAKldUZKudFCqXh/lysGqfLg6jd5LC7Jg+xFW/o9VFATgprpJF1it+QxgtC6Ce0tMzH17r+sJF9Ng9jIGnIQj95M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TbFmKEry; arc=none smtp.client-ip=209.85.216.54
+	s=arc-20240116; t=1754920911; c=relaxed/simple;
+	bh=wpWRq9lWa+DAIkUGC/99XuLhmwZ64WJqGihZA0nEgco=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PysYUWf1vf4nKZaxj6yiaYRNZEqMCndXGdiU+TFFKS4syHiqufyLc+eBOSiqSYzE7VbgFjmDJjghIq9ahNPjOLtQxbK/m09pClr+0uUv/93UjRlij1cIwjhvhiZP8wqp4e9pEZynUN3f3NblMNHx83nwakUdfUrfed6mQWWk8ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=fe4vvSYH; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-321a2faf29dso901321a91.3
-        for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 07:01:53 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b429b2470b7so2655196a12.3
+        for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 07:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1754920912; x=1755525712; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1754920909; x=1755525709; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pytqrPdqiE/DDlNNA2hijqy4loXEQIRQQTm8Sur8Efw=;
-        b=TbFmKEry4Dh+P3Q+YCEbJDE50VL3oSDVoSYpwx9JNi9tAYFgt8aMdUTp03/NCZXoBy
-         CmzutA0WgGXz8cB8B+ONn3WcCg1BMcZXsRCt+6rAM/slyOghKnXsFp9HIcNGbMBfhsKQ
-         /ayJtDSMtLFUQCNiIbuGhn/7qGIofoGkolSYovUrPf+3huqTAgRG6HaB5JHwMv1Di2sF
-         7m/fDZJbg/vjHLDSdWzI9qOONzl94D2c/QVDXqTFJTVQ3oxktQMNtAGYAUrYJgcxRBBk
-         dJLcQIB6zL1xGtIvDnsLrX1d41oryGKEilgAIzhZm5fgymoz9Lokqpc+vduCCvDByAFB
-         1+Qw==
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sxzfqq0wX7ihIYD40/KuEi0QaM/6IHAFXiB/aKCGEZE=;
+        b=fe4vvSYHMk/NGPpeXRWMtmpxIMDvqjFKAvGnVXr4GvuuD/aCPRt8CrtXGB8AH3mfdo
+         oVxsbAg4B6py8w7RrW884JHVnxOHLXnEwjN+ztjAD26zHzkB76TMqBzWNTyYTFV6q6PB
+         eLs6M35HoJfpzk42h66FPaDed84YaopVPPMzN1SzR8clSoG1HcqIqIBnPCBWqs+AAH4P
+         uHPhna87FSznGkv7P8UzdgPD+WHxlBRbNUQhkCHcyfIJctSlVMBS9cYaVgm/iQScFO+E
+         bP+z2YIMNSLe868IZec/zrXcFGIUwXqFgtE8SJaDi/qanixdaNl3waqFHpUAvp+Ei4S9
+         hW1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754920912; x=1755525712;
+        d=1e100.net; s=20230601; t=1754920909; x=1755525709;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pytqrPdqiE/DDlNNA2hijqy4loXEQIRQQTm8Sur8Efw=;
-        b=Aoy62wvD6wfM69pEmh1/7iq/KKyA8+YenP+IMzXK8G1ppndJTh9jKv2nLMBtNLA0zK
-         myxLkV40lIF+p3YUJO1mo7a0g7cZu0xCmVGMiHyLVShRsgUVgsxdOyCBR82rhzf+/rc7
-         o41Tgd2jN2tP1OpVMAbLFOVwMNLmkke3ALqnB7NaHzE+HkhH4aWz3J0YG8vPeCZyMltn
-         jjARGlG9cF+hmgfp5u7mUnGlrmsqr4J8MHHyIW/qJtPNM80No1gZadrxSJxNaA4zOsOC
-         OyxiWb1G/plW+6CFdqo8nAMJs8N6DTVTYYVNx/E4lyvWhwX8On5VoqUsEBaaLwI5DmJQ
-         QlWw==
-X-Gm-Message-State: AOJu0Yw0/DeDM9KE2lGTrYLayueyDT4ulz6nJorT7tnhHHPg7KQycaM4
-	sop5YB3R+4rhO7Lmru6mrTSiI9A6QVhj7uBVF8UhhK3QGv317Vei7xTWhSJwqojqedeyBBirHL8
-	JxVAG
-X-Gm-Gg: ASbGnctvCjmWKyJ+LuWl8tcLRfPmHxkwBayaiidoweeNcQPoVUGXeej/+F0TaQKU6b3
-	oIjOtDRjKvGYd2A42SGmYQ9j9UOGmxvTK9CeH12B8AGkLdU8fpnw7JkCwx0EPdoPiAeP3Yi0kK7
-	h5K785Gd2JR3afJ8pj4svFlpyIb8+G6zxLD3ScPz3uG6RhNC/S7eVlLLJa3Kneu9Fxmb+9DILed
-	gVxJaGEw8/yg7ENEeCeh3Vgp/bsrrfzEs9J+rfiQrROJFTXLdJSRKdGFRSEj6HFnJbRPZCU0+Ij
-	6zmJt8eI8B0bnU3m0n/oTiMvcZ7x6ryR9HpDRETocIRK0OLUPm8XWbb0m+8L5Z+aOZW1etNyZVi
-	v4I9a5e1QW/JEAG0=
-X-Google-Smtp-Source: AGHT+IENlkeiAPcHAcA+87B/RRXGblT9xTDrIHRKxm4Y7guv11yoxs8qU4OCwMNXyYFXMBIOsT6igQ==
-X-Received: by 2002:a17:90b:3a85:b0:311:ea13:2e63 with SMTP id 98e67ed59e1d1-32183a045c9mr17238321a91.13.1754920906362;
-        Mon, 11 Aug 2025 07:01:46 -0700 (PDT)
+        bh=sxzfqq0wX7ihIYD40/KuEi0QaM/6IHAFXiB/aKCGEZE=;
+        b=h10YQAqKto7LfYXyvBgZkxPU2Lp1M3ZObWPtLWLTuIpj6Y+FQL8G017kUGNZloOiBS
+         m6GFgdDFH18sK1JC+1OEKRCe8ePXJ40uoQRKbCR8WHEWGS0Lk7XIDtmKX4pLyWSiOeD7
+         iaD8+/WW10GOZKR1Bzz6eaSyhdC3csDUjs/Otukc40prvolXXBQfw1lEANLPjYH4Yyj4
+         ItWhoLkdxWqoC/sk8tQRVJRwHzwgMMblgBK1ENGaQpcsnv8ys5gwTHtSp4K/YVYO4z08
+         4dJvOL+u7EWC0NC0jlkKh44x5vgd39DxzvklSTU+2kmXjlYlfDBJ3fClNzqv4TMipk9w
+         k/ww==
+X-Forwarded-Encrypted: i=1; AJvYcCVXiW4yJTjrP5hhYNgUhwBMUj4DVKD86ejMMC62hFxt0Gjx2e4NTcQs+SED6OnVpc8zX5lP77uy659kJA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5G9scXCvmMR4Fpj45ypHUyk2QLJHYlSsMIDJJ7urBrDeyFR7n
+	e+OgFKyWJV98Cm0F/7O4pV8M+W6Bo8aYFVddUows0DwALoz9uJN5hmVKycKrKiBZ5g9JovxuM30
+	epA8Z
+X-Gm-Gg: ASbGncuwnpMOk8DKnGHQWdA1oC2bVc64faJeHYNvAKbhqm3YCDdu0Qh7WjG7orj2n9U
+	Y5+QvtjYOMNGCrcLhjLtfca8bdbQCJwHUiLj2mhaiEOOkD1hz1mW3h+UWX3R29442XV74G/8fkH
+	rD9AT7cci1M1/ejh/Uik0zQsr3Xbys8uflNwjHalwk5E8TOqUpqOKwzOl9MsBqfCq+B59bnaBDt
+	wNnZ2Mhy4HFpjuvU/T4+njlEekypfI8g5BdacvJ6Dtz+r18Wr+m7oAJMKG0jxxBPO5keLl1rMbK
+	6wSD5tKQUa6Z/DE9AHyuK0d8t9bsdnaUVPr1P7Wbe4RvQnOhh69TJKvQ8kYtNPuAWR+8g0qZWtt
+	PWfMZkYUCBJ3UMU0=
+X-Google-Smtp-Source: AGHT+IFYAdi9oz+XX6PvaUdl2rhcqAjpMkKXAAMFn0WpQhspYxYJUYREl3sf7qAAFMAFeXroFXUnDw==
+X-Received: by 2002:a17:90a:c105:b0:31e:3f7f:d4b1 with SMTP id 98e67ed59e1d1-32183c461b7mr19933233a91.24.1754920908868;
+        Mon, 11 Aug 2025 07:01:48 -0700 (PDT)
 Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32161259a48sm14821216a91.18.2025.08.11.07.01.45
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32161259a48sm14821216a91.18.2025.08.11.07.01.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 07:01:45 -0700 (PDT)
+        Mon, 11 Aug 2025 07:01:46 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
-To: Ming Lei <ming.lei@redhat.com>, Uday Shankar <ushankar@purestorage.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250808155216.296170-1-csander@purestorage.com>
-References: <20250808155216.296170-1-csander@purestorage.com>
-Subject: Re: [PATCH] ublk: check for unprivileged daemon on each I/O fetch
-Message-Id: <175492090530.697940.18050903274660070529.b4-ty@kernel.dk>
-Date: Mon, 11 Aug 2025 08:01:45 -0600
+To: Yu Kuai <yukuai3@huawei.com>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Qianfeng Rong <rongqianfeng@vivo.com>
+In-Reply-To: <20250811081135.374315-1-rongqianfeng@vivo.com>
+References: <20250811081135.374315-1-rongqianfeng@vivo.com>
+Subject: Re: [PATCH v2] block, bfq: remove redundant __GFP_NOWARN
+Message-Id: <175492090666.697940.8178912057347940228.b4-ty@kernel.dk>
+Date: Mon, 11 Aug 2025 08:01:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -93,21 +93,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3-dev-2ce6c
 
 
-On Fri, 08 Aug 2025 09:52:15 -0600, Caleb Sander Mateos wrote:
-> Commit ab03a61c6614 ("ublk: have a per-io daemon instead of a per-queue
-> daemon") allowed each ublk I/O to have an independent daemon task.
-> However, nr_privileged_daemon is only computed based on whether the last
-> I/O fetched in each ublk queue has an unprivileged daemon task.
-> Fix this by checking whether every fetched I/O's daemon is privileged.
-> Change nr_privileged_daemon from a count of queues to a boolean
-> indicating whether any I/Os have an unprivileged daemon.
+On Mon, 11 Aug 2025 16:11:35 +0800, Qianfeng Rong wrote:
+> Commit 16f5dfbc851b ("gfp: include __GFP_NOWARN in GFP_NOWAIT") made
+> GFP_NOWAIT implicitly include __GFP_NOWARN.
+> 
+> Therefore, explicit __GFP_NOWARN combined with GFP_NOWAIT (e.g.,
+> `GFP_NOWAIT | __GFP_NOWARN`) is now redundant.  Let's clean up these
+> redundant flags across subsystems.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] ublk: check for unprivileged daemon on each I/O fetch
-      commit: 5058a62875e1916e5133a1639f0207ea2148c0bc
+[1/1] block, bfq: remove redundant __GFP_NOWARN
+      commit: 8f3e4e87b0945aeea8b5a5aa43c419f4a1b4ca6a
 
 Best regards,
 -- 
