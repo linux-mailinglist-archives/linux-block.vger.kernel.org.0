@@ -1,81 +1,132 @@
-Return-Path: <linux-block+bounces-25466-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25492-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70D8FB2065F
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 12:53:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DED18B2119F
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 18:22:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30B763AA3AA
-	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 10:53:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89F8550727D
+	for <lists+linux-block@lfdr.de>; Mon, 11 Aug 2025 16:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935A72253FD;
-	Mon, 11 Aug 2025 10:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A449D2D4806;
+	Mon, 11 Aug 2025 16:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g8SAFBFU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p0JGKHXI"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2F726529E;
-	Mon, 11 Aug 2025 10:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B1BC13B
+	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 16:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754909536; cv=none; b=fFeBBY56Y7cWJa1vakS+wQ3aTWMsdeRvFAKU1rYHjzd5i5mqHh/R/P212alUXhG+P8KcqLeg/lTNsEu6iwBArrhEUScgQvj5hPyDgq9byC+eGDd9B4dk9pGgbZE3Znub72Ohpa+DYygXRLHaN/zhi9Wpmvl/IFNJEGrTZ4pSwy4=
+	t=1754928710; cv=none; b=QbHcJTIaFgRjbwVJfMCRJPqQM6oeO2KeoP37zBfJZY/m/36yXa70G6N4a4XI3id5RFv6Q8ndMZ0L8/C6i/CbGJm651QJ4MwP4DvIPIFBhO+OZd60KQBEY+WEb/i8/Sxx7hc4hxVwGTyswulOEJdV5QrtsPHDC7lCyl3RuIgeq4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754909536; c=relaxed/simple;
-	bh=nNhBGgfo5UDY3UdB7sNOLf/9518M0X6GiNtIAdmbeFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AClfWHe19Fnsv1u4x4EjvSQQ3d326iS5HWr6WtGKbtjWwPb/e4NvYfIDvKO86vwCewODK2Rn8iZV/uyf6Pr+0wpDMDPHAW43Hhs55trz05F3tTgTWvk0ocnYyKUjk6ChYSMNkkWi3V3au/PajX+ZhLyO1aNzfXBLX0ssdOpGVVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g8SAFBFU; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=r0kNG01CA6dOzzsRnPvIcMq2oWocxxH3LcP8Ljz9034=; b=g8SAFBFU7m+GF+PrkhLKmFMoVv
-	aTlPYoUoQxhawI1WRbb6rB+6ky+vo+mzcKjFCLYDo2Wlx3Jn5gnBP9JhbBdUWweYbEkgm7ZXkQeC0
-	rRRJtqtfZPc49dnFElvG6m0stugCZWJbxnbsdjzlVLhly1tqCHHiY5guJcTS8a5eqVs5SncvdE5WP
-	SkmGvWu9/bUKB8MtNWxlURk1WhT3ykWhV7WPjfGlfEcGVCs5cbgTaglajbm7SUd30A3qQxD1OTBSm
-	o+un9nWU4NtNbgZEPj5Gy/hl9qLx/Fyn/pfIP0/RcLPalLad9zGGNh0Hq7XIqGPB322mXb2bvJH3x
-	AKzFzeiQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulQ8U-00000007PQj-3cIg;
-	Mon, 11 Aug 2025 10:52:14 +0000
-Date: Mon, 11 Aug 2025 03:52:14 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH v3] f2fs: introduce flush_policy sysfs entry
-Message-ID: <aJnLXmepVBD4V2QH@infradead.org>
-References: <20250807034838.3829794-1-chao@kernel.org>
+	s=arc-20240116; t=1754928710; c=relaxed/simple;
+	bh=461NNFqYW8vODRa0XMCntP+Ns1i3I4ZKfkLc857RMH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=Ij/D5Q7uiLRlfHZxUKTmqsTwzIBOO5WN3AVFTHRViIn/2UXkkpH6fKgpb49jXqe24d7HFXG+NPnyNEXBr+Nk8am7LGx4ZyqyGkyUUVzeWgzdfdyXjGkwo8aEu+7e8QwS64mqJM7Jf9wk2pkwWI15C7L22r8Ao0X7+pngACINMFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=p0JGKHXI; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250811160141epoutp016c2fd3f4f7a3ea3cdf7f6522ae945ace~awc97U1MY1655416554epoutp01V
+	for <linux-block@vger.kernel.org>; Mon, 11 Aug 2025 16:01:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250811160141epoutp016c2fd3f4f7a3ea3cdf7f6522ae945ace~awc97U1MY1655416554epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1754928101;
+	bh=siDTiZ6gWv1WxIEz0y8F28ABhtxOu/ZHxQzHFfxxSQw=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=p0JGKHXIoRK9Jo5nqWQGCZ2V+3tdSJ7qEH3oFtgKM5PGO/8xEmLigUsxbEEj7oRpM
+	 RL0ZqmGhyuf6ILnNN+wwX49QKqqUl6FniwSGPYKRxQmw6bDIBagJ6IEbxchYu9JHGv
+	 oaCk03xUFL+UvMuAhtE8FC3v46vGwPdEviPYdnNc=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250811160141epcas5p340f005116258fb45253e6137cbc0368e~awc9gfiao0546305463epcas5p3i;
+	Mon, 11 Aug 2025 16:01:41 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.86]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4c0zsJ23Mnz6B9m5; Mon, 11 Aug
+	2025 16:01:40 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250811110308epcas5p22aed87bfd44b4efbe5714e7b9da42924~asYTaD7su1955319553epcas5p2E;
+	Mon, 11 Aug 2025 11:03:08 +0000 (GMT)
+Received: from [107.122.10.194] (unknown [107.122.10.194]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250811110307epsmtip14f77183b7991d75fbef00a41a527ebc0~asYSODvPG1637416374epsmtip1o;
+	Mon, 11 Aug 2025 11:03:07 +0000 (GMT)
+Message-ID: <c1d4d4b6-ef17-4726-bfbc-0ac1cd04c1ed@samsung.com>
+Date: Mon, 11 Aug 2025 16:33:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250807034838.3829794-1-chao@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [blktests v1] block: add test for io_uring Protection
+ Information (PI) interface using FS_IOC_GETLBMD_CAP
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "vincent.fu@samsung.com" <vincent.fu@samsung.com>,
+	"anuj1072538@gmail.com" <anuj1072538@gmail.com>, "axboe@kernel.dk"
+	<axboe@kernel.dk>, "hch@infradead.org" <hch@infradead.org>,
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"joshi.k@samsung.com" <joshi.k@samsung.com>, "gost.dev@samsung.com"
+	<gost.dev@samsung.com>
+Content-Language: en-US
+From: Anuj Gupta/Anuj Gupta <anuj20.g@samsung.com>
+In-Reply-To: <v23bumua6pdez2kizqihersvyp4c5i6d5mecagtddwl426aaec@wfnq7zumao5n>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250811110308epcas5p22aed87bfd44b4efbe5714e7b9da42924
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250805061730epcas5p4ae7a8eda6d1d11cc90317a80738eb2ea
+References: <CGME20250805061730epcas5p4ae7a8eda6d1d11cc90317a80738eb2ea@epcas5p4.samsung.com>
+	<20250805061655.65690-1-anuj20.g@samsung.com>
+	<v23bumua6pdez2kizqihersvyp4c5i6d5mecagtddwl426aaec@wfnq7zumao5n>
 
-On Thu, Aug 07, 2025 at 11:48:38AM +0800, Chao Yu wrote:
-> This patch introduces a new sysfs entry /sys/fs/f2fs/<disk>/flush_policy
-> in order to tune performance of f2fs data flush flow.
+On 8/8/2025 5:10 PM, Shinichiro Kawasaki wrote:
+> On Aug 05, 2025 / 11:46, Anuj Gupta wrote:
+>> This test verifies end-to-end support for integrity metadata via the
+>> io-uring interface. It uses the FS_IOC_GETLBMD_CAP ioctl to query the
+>> logical block metadata capabilities of the device. These values are then
+>> passed to fio using the md_per_io_size option.
+>>
+>> io_uring PI interface: https://lore.kernel.org/all/20241128112240.8867-1-anuj20.g@samsung.com/
+>> fio support for interface: https://lore.kernel.org/all/20250725175808.2632-2-vincent.fu@samsung.com/
+>> ioctl: https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs-6.17.integrity
+>> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+>> Signed-off-by: Vincent Fu <vincent.fu@samsung.com>
 > 
-> For example, checkpoint will use REQ_FUA to persist CP metadata, however,
-> some kind device has bad performance on REQ_FUA command, result in that
-> checkpoint being blocked for long time, w/ this sysfs entry, we can give
-> an option to use REQ_PREFLUSH command instead of REQ_FUA during checkpoint,
-> it can help to mitigate long latency of checkpoint.
+> Anuj, thank you for the patch.
+> 
+> I wonder which test group this test case should go into, block or nvme. IIUC,
+> this test case runs only for nvme devices. Said that, block group looks good for
+> me since the test target ioctl interface belongs to the block layer.
+> 
+> I tried to run the test case using QEMU NVME emulation devices with some
+> ms=X,pi=Y options, but the test runs failed. The kernel reported a number of
+> "protection error"s. Can we run the test case with QEMU NVME emulation device?
+> If so, could you share the recommended set up of the device?
 
-That's and odd place to deal with this.  If that's a real issue it
-should be a block layer tweak to disable FUA, potentially with a quirk
-entry in the driver to disable it rather than having to touch a file
-system sysfs attribute.
+Could you please share/paste the errors that you encountered?
+
+The issue occurs because setting ms and pi in the QEMU command line is
+not enough, the namespace still needs to be formatted. Could you please
+run the test again after running the nvme format command on device with 
+the desired LBA format (PI enabled).
+
+Thanks,
+Anuj
+
+
+
 
 
