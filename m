@@ -1,45 +1,46 @@
-Return-Path: <linux-block+bounces-25577-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25578-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA5BAB22DA9
-	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 18:32:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC354B22DB4
+	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 18:33:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB98E682D13
-	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 16:25:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08385626B87
+	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 16:25:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD172F8BED;
-	Tue, 12 Aug 2025 16:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F232F83B8;
+	Tue, 12 Aug 2025 16:25:00 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6807F2F8BF1
-	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 16:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6612F747C
+	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 16:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755015887; cv=none; b=G7/D5PmGQNc44CZms/uMrkbC1TfEAd8mX96iSLxfiae2sUkvLsEu9SyKEmlb1wNbqyno2yIf6pL/hFnOS2CRWJ/dlokHNK0dH2Xgy4gyFbQ6ffECXtukklL583SNG8aCPuZxfDXuLdHfyzD17fwu6tKNRdJHzEFRDcEQUXepEAg=
+	t=1755015900; cv=none; b=EakSJadMFGeRX9qp4yNRembHz4NYAaQbEoemqWjmC/M4UNkRh2BtNReF4acmXU147i6UG6va6F6hvgIkwd8jeZ9dmBGbjAX/1jvdlp5wM8s/XFteWgmj0EuLDi/gsQA4qd0py04yEyBHpJC0Akwexoq0y23P05EViNos+BH7Y8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755015887; c=relaxed/simple;
+	s=arc-20240116; t=1755015900; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nV7b+BejCTtaviR6bE2x2Cz5o85vLw8jfw8L4hv36Gyv6Uk+W1AWaYBYrhq0cQ/fzzqb/echvU85pYWo8ggXmumQl8uFp23hwAOROhPQNHtnPQbns8mD/K0j4e7ckq9WfgFXW5xvPTc0lHf6ZdikYlseQo2r0nZCiHXCBzHxEhU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaaAdNQMiB6cXjeCZMthUeW6DTFJae06NEBteSzhoMHAcaB3biYiw8C4SyWrgxa5f4PMOAn4mtGRg8RsKncT6bpstE7ptNFaa/ncJ0Kyi3cNIk0WyPQ/xIv3gFaSIofhem32p5V2ZNdk4gVO5Hy3G1oIOBoyTc1degphhYdTfPA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 44C1A68BEB; Tue, 12 Aug 2025 18:24:32 +0200 (CEST)
-Date: Tue, 12 Aug 2025 18:24:31 +0200
+	id D2BEF68BFE; Tue, 12 Aug 2025 18:24:52 +0200 (CEST)
+Date: Tue, 12 Aug 2025 18:24:52 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Keith Busch <kbusch@meta.com>
 Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
 	axboe@kernel.dk, joshi.k@samsung.com,
 	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv6 1/8] blk-mq-dma: create blk_map_iter type
-Message-ID: <20250812162431.GA18150@lst.de>
-References: <20250812135210.4172178-1-kbusch@meta.com> <20250812135210.4172178-2-kbusch@meta.com>
+Subject: Re: [PATCHv6 2/8] blk-mq-dma: provide the bio_vec array being
+ iterated
+Message-ID: <20250812162452.GB18150@lst.de>
+References: <20250812135210.4172178-1-kbusch@meta.com> <20250812135210.4172178-3-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -48,7 +49,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250812135210.4172178-2-kbusch@meta.com>
+In-Reply-To: <20250812135210.4172178-3-kbusch@meta.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
