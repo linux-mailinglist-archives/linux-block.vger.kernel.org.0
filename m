@@ -1,139 +1,137 @@
-Return-Path: <linux-block+bounces-25564-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25570-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE4B0B22615
-	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 13:43:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46E2EB22960
+	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 15:57:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F117C1B60C23
-	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 11:44:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4773A7A963A
+	for <lists+linux-block@lfdr.de>; Tue, 12 Aug 2025 13:55:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 984BA2E9722;
-	Tue, 12 Aug 2025 11:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A203288C0C;
+	Tue, 12 Aug 2025 13:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8nImP1f"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="tgOKfAz1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2859228725A
-	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 11:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D441D288C1A
+	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 13:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754999025; cv=none; b=U37KMuEvh7hDbv0bjRRLWsBcXpymYio4iHAz3/94YMsxFUL6isqWwoy8FMAR9FO98SVmDEXd3wxEFQfXAjfaNHtQQDgZYvOtWXz88Rmk6HVRvWoOFLak2CPJHN/XNzRVPwc6qB7SwEF1tBecXHD6niIMMDeahk/OCtenyJ5M1IU=
+	t=1755006863; cv=none; b=hK4dO1eybBhxJuHrUX+RGWXh+qUGZbFmVysduOneafu7EHc9FZb1oeX+CJzgiBbCZjqgEdgd8blcCppKWsZwRBFD8DMTVrNeD84Mmr9hGkRHd59AfptCV2FE29MpgbuOZuoHqbebI9JVJsi+TiPhAxSJ8948d63Kb+bSyG2b3DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754999025; c=relaxed/simple;
-	bh=Klard7EodHx0BuguwRKimp/xR9gKIXujt8Mznl3SBwk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FGhtBIyd9dn/4fqO6X+z+CrH4qrI6dRa3Anhx6EKTxOR7B4r3KCRlxq3VG4WHtr2RF0pkQbGkhH1YnUuB4NqgQvSfHlAmQKFaeg+Z8vrGbOEUAzPl9kPa0e8ilOU1YhWBeQ2u/SawQVOiAyDSR7XoAbBPqfJB8c4/yhtfj7xWFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8nImP1f; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-76b36e6b9ddso4531618b3a.1
-        for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 04:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754999023; x=1755603823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4XtgVGWvwVfPQMmIu4LJkUy6MRizS23edvVNQ5h9lpk=;
-        b=S8nImP1fWxj/yY03epIwzcCjPDjbHMy5VfdjDB7Otm72dpYPLzCWYmK+mDEJXQRneG
-         7J+uwXr3+Na/OpQBdoBvMyzm12CWj5EsJfqqswUnmf29lXD6GYcLH9z5WPZThoQoMk1N
-         Ojn7h2d/84ZrV42cSjCv2bbuT1as16JpNKUic8bcSNkxsF2Cgx5cq+Jiz95z28vlb6rR
-         to3zIoJeOCYMdB02EBZV9a4GIMOBR3y/apQF14OLWM0+fkGaXozV0t2897RVpUxg37q1
-         +IE3Wf70QoPknDfVtinjg8zWMX6lDl/e12yunvYIZXVtAYsL5jLkwGY1+Uoj4LwmNH//
-         N5LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754999023; x=1755603823;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4XtgVGWvwVfPQMmIu4LJkUy6MRizS23edvVNQ5h9lpk=;
-        b=WhyFgif+8/bKxp5bYXzEUwNo6XJlnPTzHVNI7Np2bIjJjg2IjCsd28eDGe7f10a9sY
-         GF8PBston3BTW5PxDMK/hut+pT9I0wfQNufDLE3FLYlAr7E4+DAncGWOOdBVIEVz41ug
-         OsG5cCXQ0jDnlWQE5GRmv6JoArfUJRwnjkkJTFfRT/b0S/yZaIxPR6boDoxuyO9e4T9D
-         OMVMQwqq7ioRSU7rgwSDj/SAVKIRNwr6qmadFIl8ydI0dDe+ByJmOtX1e5dNORC3Dhm6
-         gOQM6DGjprs2mpC4wEAGo8nxv2ELxC2aW13/4DMCN6BiovRo8eTCfCsrNTgPjHn6tcDZ
-         wgQA==
-X-Gm-Message-State: AOJu0YzIrJsBghDNtTiWs0c7uhBm3rQXkNvx0OWY2yc5nAunBZ9cVwXT
-	ki55lDQ+PyCvm7kzUK4x2B6/B0fZikjzc5X02R1HubvmDReEa7L5h1yRld+xK3uHWsM=
-X-Gm-Gg: ASbGncslEtxBl730HLlGChmHm0V7/Kvpy/LbqPNJG46wMBQwBgqHQPlfOpaBP3yLIXD
-	0YQj/OueFbkWJlHlgWv2EtLzLQgj1xmft2h8lkNkUxiwl6WFd2Skx+mJH8hQrli5asfK5xYqJS8
-	3lH403vc8y0jg40QF/K4UMGnmRiKv1p4990g6L2nOur2+OUK3ARY+nzI8ub6+o+8E8hxk5zzFJp
-	EabbSSH98nG5GA5NJY5rRWHVz3gmKCOrt5q/UDeCrLur83FDjDD9avb6BJ1DDSDtjAsuivUjTFX
-	HtmIQ8kk3HVI9GpAdWsA5clQ9DY3A2Cz5ViAPVp8wD0hMFyue0v5xGoslcmAI3artICf0VHnc4L
-	eU59zluFzK00Jm15WQ438BYorEe0=
-X-Google-Smtp-Source: AGHT+IGQPQeHk++HXJbjfh7lgb4g3Bw01j92LnuTfJbLj4UN8VyQjJG4pIwNt0wd+N23FB6VqRP2XA==
-X-Received: by 2002:a05:6a00:1411:b0:76b:e805:30e4 with SMTP id d2e1a72fcca58-76e0df724eemr4737835b3a.24.1754999022962;
-        Tue, 12 Aug 2025 04:43:42 -0700 (PDT)
-Received: from localhost ([106.38.226.218])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bccfbd174sm29250526b3a.63.2025.08.12.04.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 04:43:42 -0700 (PDT)
-From: Julian Sun <sunjunchao2870@gmail.com>
-X-Google-Original-From: Julian Sun <sunjunchao@bytedance.com>
-To: linux-block@vger.kernel.org
-Cc: axboe@kernel.dk,
-	nilay@linux.ibm.com,
-	ming.lei@redhat.com,
-	Julian Sun <sunjunchao@bytedance.com>
-Subject: [PATCH] block: Fix wbt can not be enabled.
-Date: Tue, 12 Aug 2025 19:43:33 +0800
-Message-Id: <20250812114333.1252987-1-sunjunchao@bytedance.com>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1755006863; c=relaxed/simple;
+	bh=nPOO+sbd3PKv13vw4Ovol71QrBSNdGnxsJEX/eL6WeU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cj9Fpx8MY28cS1+cinphoGNxSlSwctVWq32VS2pv9HpYMVc8OvwNA86fjfd4gubGep0JvZVlDnMckleQqBmCOFjf2hfMkceQyhZkZuaCwVNf5pROyUB6f5sS/NIqEHW3FPCXXDjWRWLxjnEg6Oi+4r1ua8BvnKieT3pUJQ47XqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=tgOKfAz1; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CDno4F028298
+	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 06:54:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=xpOIwliMbime1ppBRv
+	QMOHqbeP8PzhQ+O2/c/TiQxeI=; b=tgOKfAz1MkWBzaZMwhTvYbs2fDqRhvjpMR
+	8yaa9zbWlpetAJ++rqasjCh4J8ds6mtJNgyJykXU/3FtvbEcnkPiNfmrjUzIAK7R
+	MQnEmQvbIMuMTmKnoIhtJXBn0EIZon700eRusP65cwkOB907sSGuSaMXxHpBc+Iv
+	ygWJLZK95VfalkcrJ4GgXDGRC3+q3boNvfCtQ/qOfNe0lPNVQYmOiP8RBtArta2J
+	c6WOIS4ARI/RDjMyg/9RhPX2H3sG4lwYKHFL6aDc2M3TBgJhFjPlGDKZ0MQGHSpD
+	0OJ2MIvLDOhPN2MtCnSm5p7eE5TO/Xc60O6RAoaoY1vS6TfV5Q+Q==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48g0jbufud-16
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 12 Aug 2025 06:54:20 -0700 (PDT)
+Received: from twshared71707.17.frc2.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Tue, 12 Aug 2025 13:52:23 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 807268D4075; Tue, 12 Aug 2025 06:52:11 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv6 0/8] blk dma iter for integrity metadata
+Date: Tue, 12 Aug 2025 06:52:02 -0700
+Message-ID: <20250812135210.4172178-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=O+w5vA9W c=1 sm=1 tr=0 ts=689b478c cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=WobvK_TCKI2ct00U_TsA:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDEzNCBTYWx0ZWRfXzIASqvYyoZUf N/m3X2Sb+g1mvuXNMYxDqCrUBujHOJM3BeHaAWvM0WKcCXGem5PpAHl3N8Ew1eIDIZj7dFHaXoF pnjY/N427DfN4F2kUxPC0PPlmRwm0RUn7FxKYM3iOj9aRfU/3gdSf5KGmp07IE1H0G10lCx79Sj
+ SxTJ9FOWXH+hMTVRIdr84A0UNoOQkTKIlJpbw9yKWEwosW0SefplsuRVPSoXTh4O+zki87OxHQH lUgmEurS6ptgdSATSBUgWxHgsMEozLC7PCEHeVa7znzM+Arr6lzk+TEDkUGinr2abdCbclhxE8W NANBOFbdV/zgojYrX3C4zn1NZttyIR2cex7SUhVkKKEHGWmlkpuzYQFA3Oz62lTvDOTDMtREOeM
+ opqnVYs2EvF2DFr7SS48q/S1JHfVsbtx3hXe6MVibGbXGNArKpUZsvp6PumPXV8Y74yp/eCy
+X-Proofpoint-ORIG-GUID: wy4NPDyBwIlaP_jm_ADLshv72H46C4Q4
+X-Proofpoint-GUID: wy4NPDyBwIlaP_jm_ADLshv72H46C4Q4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_07,2025-08-11_01,2025-03-28_01
 
-The commit 245618f8e45f ("block: protect wbt_lat_usec using q->elevator_lock")
-protected wbt_enable_default() with q->elevator_lock; however, it
-also placed wbt_enable_default() before blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);,
-resulting in wbt failing to be enabled.
+From: Keith Busch <kbusch@kernel.org>
 
-Moreover, the protection of wbt_enable_default() by q->elevator_lock was
-removed in commit 78c271344b6f ("block: move wbt_enable_default() out of queue freezing from sched ->exit()"),
-so we can directly fix this issue by placing wbt_enable_default()
-after blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);.
+Previous version:
 
-Additionally, this issue also causes the inability to read the
-wbt_lat_usec file, and the scenario is as follows:
+  https://lore.kernel.org/linux-block/20250808155826.1864803-1-kbusch@met=
+a.com/
 
-root@q:/sys/block/sda/queue# cat wbt_lat_usec
-cat: wbt_lat_usec: Invalid argument
+Changes since v5, addressing review feedback from Christoph:
 
-root@q:/data00/sjc/linux# ls /sys/kernel/debug/block/sda/rqos
-ls: cannot access '/sys/kernel/debug/block/sda/rqos': No such file or directory
+  - Keep the phys_vec, create a different iterator for the lower layer
+    separated from the phys_vec
 
-root@q:/data00/sjc/linux# find /sys -name wbt
-/sys/kernel/debug/tracing/events/wbt
+  - Commit log changes describing the bvec array being iterated.
 
-After testing with this patch, wbt can be enabled normally.
+  - Rename the blk_map_iter initialiation function; take a pointer
+    instead of returning a copy; make it inline
 
-Signed-off-by: Julian Sun <sunjunchao@bytedance.com>
----
- block/blk-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  - Rename the bvec pointer being iterated to "bvecs"
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index c611444480b3..eaa56040ae0f 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -877,9 +877,9 @@ int blk_register_queue(struct gendisk *disk)
- 
- 	if (queue_is_mq(q))
- 		elevator_set_default(q);
--	wbt_enable_default(disk);
- 
- 	blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);
-+	wbt_enable_default(disk);
- 
- 	/* Now everything is ready and send out KOBJ_ADD uevent */
- 	kobject_uevent(&disk->queue_kobj, KOBJ_ADD);
--- 
-2.20.1
+  - Have bio-integrity legacy scatter-gather iteration subscribe to the
+    new dma api. This required relocating some inline functions to
+    header files.
+
+  - Using 'bio_integrity()' to avoid needing "#ifdef CONFIG_" usage
+
+  - Kernel doc for integrity dma mapping APIs
+
+  - nvme comment explaining when we do or don't use MPTR format
+
+  - Various nvme code cleanups
+
+Keith Busch (8):
+  blk-mq-dma: create blk_map_iter type
+  blk-mq-dma: provide the bio_vec array being iterated
+  blk-mq-dma: require unmap caller provide p2p map type
+  blk-mq: remove REQ_P2PDMA flag
+  blk-mq-dma: move common dma start code to a helper
+  blk-mq-dma: add support for mapping integrity metadata
+  nvme-pci: create common sgl unmapping helper
+  nvme-pci: convert metadata mapping to dma iter
+
+ block/bio.c                   |   2 +-
+ block/blk-integrity.c         |  43 +++---
+ block/blk-mq-dma.c            | 251 +++++++++++++++++++++++-----------
+ block/blk-mq.h                |  26 ++++
+ drivers/nvme/host/pci.c       | 213 +++++++++++++++++------------
+ include/linux/blk-integrity.h |  17 +++
+ include/linux/blk-mq-dma.h    |  14 +-
+ include/linux/blk_types.h     |   2 -
+ 8 files changed, 364 insertions(+), 204 deletions(-)
+
+--=20
+2.47.3
 
 
