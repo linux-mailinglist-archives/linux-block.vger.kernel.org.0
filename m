@@ -1,120 +1,93 @@
-Return-Path: <linux-block+bounces-25618-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25621-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EDDAB2498E
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 14:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA053B24B1D
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:51:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9482E1B642B0
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 12:32:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5417188AE97
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 13:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D168E29DB6A;
-	Wed, 13 Aug 2025 12:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FA42EAB93;
+	Wed, 13 Aug 2025 13:46:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="AkyiuBeM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/cHBPZk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8FA200BA1
-	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 12:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC62EACE0;
+	Wed, 13 Aug 2025 13:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755088342; cv=none; b=nOYiyquU1ncCdyzXzhQfH+lSXqBV9KKWX8oQn15DxRwDcXdvP3vMS0SDmtoz2bhU7bmrhQgU8cBiMnts3G1iSes4rUhz2UlSXHWNQ3NEKgsumdnSX0i6Tm2K5RRjL5YPeH6R0TPLv+VM8t3zkgu9DeT/Ga2CrDzqSVNQ61vGHgM=
+	t=1755092818; cv=none; b=Y6axaw5iot/dumr7cHQQ5egPffo7TK58BH0HBdAA2zZick0yXGwk+i5uOb7n3Xu2tjZiJzFd7jza2mR9zxfbFwtvw96vD3fYjrh0cSEA14UX9kh7DMRHe9/n9W2nUHov/746fw11G19orvaXpIUlAXc9RDLncbY8XsRwQQXnaiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755088342; c=relaxed/simple;
-	bh=z4v/k+xEazihCbibG96JuAuBlCh9t85TYi3nbMjXIcQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qX/IQj2DOjsnobRVxIOxpsROgYUq3hs4wQ6GdkOlwTRRyp6rNrrU3g9iUUR5ZcRbziUUSZ9TmXiMAmEFEBy1pUC8PJaQpDER6ng4Nn7G+TLB+8r17TmPuSQkmO8oLoz23rtGKgVLflWIbqxTUYEGA46k5l6VUVyQFWUBHgN2CdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=AkyiuBeM; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24041a39005so41634895ad.2
-        for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 05:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1755088341; x=1755693141; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BOOchsUjzM3+ZVjtt7sbhib6V5OcY3gPPFMR9Tn6POs=;
-        b=AkyiuBeMgQiurJxbPmV5NB6ixysB5Te/bCM1j3Jiy2gRqukqfng6yaoZIRbcyZi6aI
-         rXptZDTv8q9xkG2Ec+f2eiyPYcKTADoKIhbQIKmvyQmrRIyV8RS5uG5nugqTrssmYxWC
-         AIUDwSGEPXteuc8JGHBqFfsrwj54Sk1N47/1o+48UUpWy1+mqzvqFo+SCWeg1yrK7DXP
-         t21SToUsrnbun2Kq0IsNzBmp5MzChWhH85M8+DILV8YeDSnQGgEtxFJEK9uRckUFt+44
-         jmPJv8+nBZ8tdIl/q2H6TAY1sAppXDlL/eGDlaSUFuULlopmTbHnlZKLAhJUWU+r8qTp
-         b/sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755088341; x=1755693141;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BOOchsUjzM3+ZVjtt7sbhib6V5OcY3gPPFMR9Tn6POs=;
-        b=YRCH1nV5vjK39MZ4CHvCLHMi/gfPbs62QnjtT1Mw12HaxkrReOutTKTihjg7unzDu3
-         pBG8iqLlBo/VjaeQTOO5kISaIGV+Eel/+yaLvAkgJxDlcjgAOTP1kSmlzMnXVQ+vrCiH
-         oSTaJU0WMnGElHLw4MdEs+SnbHo22el2MYMrOVR7kfVCBGHdbCCyYLUKHPXcAeQVJUF5
-         Z+AicYG4JOUtaP5I4Kt/cRPXpVDSw9LzXlGhZuMSEM5UJTzoI3z+i846kd/V23Huwuni
-         jaXUINimYIdMJMA9Htl+4rB5uFvUIvj9zRdNDkuD5sBgFo5jxIb/1CI/v8GtdRKH/dBg
-         wfGg==
-X-Gm-Message-State: AOJu0YzvWEBrCyU0fDLjMmcIhF+x/9zKPtfda12HKoFJCEEjmBSmzl+A
-	v5v5WwPfC6wrLlhB63XobkyNnocFBF9BcXGEAzwmvTd6ZfbJVxHnhFRc7rYPoK43a2s=
-X-Gm-Gg: ASbGncsqrnsJn5Tso+0TUhr9tTHUjGaG++2L5hqTEXIlvqcLiUd46tQkwxGhCIF7j4N
-	8BrcBrfOVgQ+kqAM0Wbp2TjwhxiwGwRp3JT4EWbjtFfCIxQ+dNOdGcNqdCkFX8ha2YOK1TO2yBj
-	q23eZnIqW4ydbDqVlVL1dVexb0pBreunipyZp1DamvLAj+Llw/vmUCznZoFfmzrQTWqVj+BmKvp
-	i7pX0OPhrxDdbGA8SVqRP9yePOHUTf95m+wSYLnJ+Rz7uDpRxU4HNDCWKNItqpbfKtXu1z8FJRJ
-	c7iPMhOPOqSe6YiD/Aq+yvHuKn0WcVX8DJVUHHQ3NSYXIk1P29vjBVpzgHEPglISL4ruNHj9Wk8
-	Q/zg1NQEg/cv3Wb1/6fG7uvlfxg==
-X-Google-Smtp-Source: AGHT+IHT5scgbby93gh1/cl+pL0WzlubhAl0HAVwY7hiL1W8RJkliPiwTa9RyjSOretmT7Mzh/VLUA==
-X-Received: by 2002:a17:902:ea09:b0:240:9ff:d546 with SMTP id d9443c01a7336-2430d0b4c7cmr38502445ad.6.1755088340685;
-        Wed, 13 Aug 2025 05:32:20 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3232553e4a2sm82418a91.4.2025.08.13.05.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 05:32:19 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Julian Sun <sunjunchao2870@gmail.com>
-Cc: nilay@linux.ibm.com, ming.lei@redhat.com, 
- Julian Sun <sunjunchao@bytedance.com>, stable@vger.kernel.org
-In-Reply-To: <20250812154257.57540-1-sunjunchao@bytedance.com>
-References: <20250812154257.57540-1-sunjunchao@bytedance.com>
-Subject: Re: [PATCH v2] block: restore default wbt enablement
-Message-Id: <175508833916.953995.11740099334208966785.b4-ty@kernel.dk>
-Date: Wed, 13 Aug 2025 06:32:19 -0600
+	s=arc-20240116; t=1755092818; c=relaxed/simple;
+	bh=UAO9FvzDnoYfoDrmrGeQdcrb/Ul+p/dFDaH44bIxgT4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S0LZbyXNgn6ls5T+0VaGRyLgl10oImRpDcDR72wHhkQ4ewfWCo98EzZuTKDkwj7A+d76e2RVLsrnuM2RSEqQEir+wPgOPbU5iENHSgaLr7QKp/ndXI9FpfNqZmvLQ17yYCc1FuCTLBwR3VWWhnK2YfGEpwjDArK/L9U9K3Pv0ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/cHBPZk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332B3C4CEEB;
+	Wed, 13 Aug 2025 13:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755092817;
+	bh=UAO9FvzDnoYfoDrmrGeQdcrb/Ul+p/dFDaH44bIxgT4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=d/cHBPZkrPeHH4eUrpq8GM07OApm1BfM5L1mK27jh1X4278IaHMdpzE+qr9TxzjTr
+	 L8TpgaEWHxcihTfRbBhMCHTeejJpHafcq6GmksAxlvVxNDOfQNMCbY+q47pPRgjXTE
+	 nd//EOi/PQptWdkO5j94smJX5ErkSpXfzSLTlbYgmiPLZ761Inb4cLWFp9+s8GdufM
+	 I8oPYBUDhY7ZbObOZ+KcogQyYqcuKw52tTp13O0RwVUes+VU5Z4/5p+jP7gVow7u/g
+	 Pn8EDU6iVOIhfZpp4qCbugMY7BvERMdVmT9S7LtLSXmQ5hRnc+SZ0CpAS91CpzPR+6
+	 3q+7Q+iQzUF5A==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
+ Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
+ <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/15] rust: str: introduce `NullTerminatedFormatter`
+In-Reply-To: <aJw88P7K_6GFmWvW@google.com>
+References: <20250812-rnull-up-v6-16-v4-0-ed801dd3ba5c@kernel.org>
+ <20250812-rnull-up-v6-16-v4-4-ed801dd3ba5c@kernel.org>
+ <vtPB4JcsqY753m500Pb4NVZEAxlKfEEzsrWBWUcEJcxqmhWrWYNqJDH8PFVm03IUm9nEweDNcYeaY2SbKHUOOA==@protonmail.internalid>
+ <aJw88P7K_6GFmWvW@google.com>
+Date: Wed, 13 Aug 2025 14:34:20 +0200
+Message-ID: <87frdvflir.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-2ce6c
+Content-Type: text/plain
 
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-On Tue, 12 Aug 2025 23:42:57 +0800, Julian Sun wrote:
-> The commit 245618f8e45f ("block: protect wbt_lat_usec using
-> q->elevator_lock") protected wbt_enable_default() with
-> q->elevator_lock; however, it also placed wbt_enable_default()
-> before blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);, resulting
-> in wbt failing to be enabled.
-> 
-> Moreover, the protection of wbt_enable_default() by q->elevator_lock
-> was removed in commit 78c271344b6f ("block: move wbt_enable_default()
-> out of queue freezing from sched ->exit()"), so we can directly fix
-> this issue by placing wbt_enable_default() after
-> blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);.
-> 
-> [...]
+> On Tue, Aug 12, 2025 at 10:44:22AM +0200, Andreas Hindborg wrote:
+>> Add `NullTerminatedFormatter`, a formatter that writes a null terminated
+>> string to an array or slice buffer. Because this type needs to manage the
+>> trailing null marker, the existing formatters cannot be used to implement
+>> this type.
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+>> +    #[expect(dead_code)]
+>> +    pub(crate) fn from_array<const N: usize>(
+>
+> Don't you delete this function in the next patch?
 
-Applied, thanks!
+It slipped through the cracks. I'll remove it and respin. Thanks.
 
-[1/1] block: restore default wbt enablement
-      commit: 8f5845e0743bf3512b71b3cb8afe06c192d6acc4
 
 Best regards,
--- 
-Jens Axboe
+Andreas Hindborg
 
 
 
