@@ -1,39 +1,39 @@
-Return-Path: <linux-block+bounces-25635-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25638-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C01BB24D8F
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 17:37:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 538F2B24D9D
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 17:39:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B0961890734
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:32:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B21232A7D24
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:35:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792D725CC75;
-	Wed, 13 Aug 2025 15:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE0B242927;
+	Wed, 13 Aug 2025 15:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
 	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="hFm9Tbor"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC611D7984
-	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 15:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABAF1C6FE5
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 15:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755099140; cv=none; b=HHhutEYAaREX5wqjRH/XNvHKhekdFnsE/7NEhU65ht2WorE3kfQIR/pg4vfkn981CNDLLpgObEccvEcFsVy3s36EGMkrGcA/6zEMO/0ALZLyN9xi4g8paOBLOF+1pfj126UCy4aeupr9EJcq3n9LgRgPsOdyKKlW1m+m5J54tWs=
+	t=1755099311; cv=none; b=nsEo5HTWE6QekyYIUl737vTVm4A8FxNbCrPWrtpsEmV8ZqtZjc7LBFF4NlyMNe/t/W0JAZNFqPNMRP/kkhQ5RaSA6XVQbc66GARk4lrRxymbkvLJ6mfN34kAOR938uGczHo4s155ewfn+u8JeibEntDowS/0mulODtHHbqds5k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755099140; c=relaxed/simple;
+	s=arc-20240116; t=1755099311; c=relaxed/simple;
 	bh=fsYXSOz75iZsydcMtOuZTOilfne377da20eN66zlKEE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m7BTAaAqoRBLOHDBCdgQPoStFLlJwAtDsvgiKnKz14e+LuJogXfp+Gm9jImgk7LZVMCNyX5JRrDah3A7QG7Xqk9oqsKMd8EdAf3+BagfAXnNxqzH9a77MxDtiFqBU3J2FmdsgCWXi8odzR+fWxuDvZ5jaqiCo74/OozweE1Jbho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=hFm9Tbor; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=HP7+r56rOTRTH3prczwQavOK/cvVNpa4LOSR+IWRIrLgN4y/sgaUsXOnavEMX1fOIqQ9Gnv6ZLZAg6wh2Aqf1rNRIsZ28LZ+P7Hp7U2RUDr2uUVpK7bMA1MGGR37jJcCGBog18LXc7ouowPpS3w9TrAb7qHycykMKssaJEi16jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=hFm9Tbor; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-	by m0001303.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 57DF1ZMa032629
-	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:32:15 -0700
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57DFYH1G019140
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:35:09 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
@@ -45,13 +45,13 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	VX3ErB+0EGZkuGpH4ZpJwDlO+V05bm45SO/S8WGgUGWXKuskRmBFcFcf7sraIQFY
 	ahcD+XGEnw==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by m0001303.ppops.net (PPS) with ESMTPS id 48gqmwte1f-17
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48gpru2mn4-4
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:32:15 -0700 (PDT)
-Received: from twshared24438.15.frc2.facebook.com (2620:10d:c085:108::150d) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:35:09 -0700 (PDT)
+Received: from twshared51809.40.frc1.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Wed, 13 Aug 2025 15:32:04 +0000
+ 15.2.2562.17; Wed, 13 Aug 2025 15:35:07 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
 	id 88CFC97CD86; Wed, 13 Aug 2025 08:32:00 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
@@ -74,12 +74,12 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=BaTY0qt2 c=1 sm=1 tr=0 ts=689cafff cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=95mi9lD3wWQj8gX5w1UA:9
-X-Proofpoint-GUID: cOTh95_5KWj9aPr7hdHo1tOwMc4GVcUQ
-X-Proofpoint-ORIG-GUID: cOTh95_5KWj9aPr7hdHo1tOwMc4GVcUQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE0NiBTYWx0ZWRfXyYd4y2350meq gq5WlF6aYYXJ3fCHVFFbDyfAESnM4DV0ky6ZiHXRTBGUtdRcEOw5nBrneOA8Wk5I8PEXGZ+oCaF GeIaN5k/LrFcsQuAzF8ufgLslGwE9sZ+b5H0RIFbdA9H4Ver+Esye0cN1rY3EchhQukf9dYOL+t
- lVGjdu/KVCg3cnjxeeyRabJih/R48OX6L4qZnuiibJ07C3/l5ExvPb943ZAi/NR+sfGCJ4fAhrW CUUNRUQ+uo+EIpf/0lWd4EW0haUBAh29+ONVZqEFsEWO49eKHuI018rfc+ixCh/KFdTkmDVViWD IINfsA4v0r19yOweD1JZ5RYNemznI31jti4yvznfMMJTwRkz5Im6xFWnjBcD/1DXb0/q9d8WzFp
- Fkh/j6BK1baUtg0KSev591rqdIUzdWaeUqjcsQRQRV8eLi7dMw5ZaHM613MDXjBPoGV1iOvf
+X-Proofpoint-ORIG-GUID: JXMSPX4low1pp5v4QGOmsbeMx9w8Okqb
+X-Authority-Analysis: v=2.4 cv=JKM7s9Kb c=1 sm=1 tr=0 ts=689cb0ad cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=95mi9lD3wWQj8gX5w1UA:9
+X-Proofpoint-GUID: JXMSPX4low1pp5v4QGOmsbeMx9w8Okqb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE0NiBTYWx0ZWRfX49WVUZDP6mzn U5CmCT70F8kZLavz/U6Gqg/A2+6bsz/8Zs/hfECgtXtCNpjwbQjC62IfBclS4NhDkYi06r3W8qL bRP1dNlx9rRtXi3fl2AkpntAb5k9f3pDYZ7LZTpgpo/Q9cDajW/+TuhZyobyubzQDJ0YNeGZaf4
+ qmzjflz3OPpaH9zqiasc/YvPLSgz0rbXYatsbe1ZdII/2ItIxbmv9A6vfu835rHQZQo4p4xtJgY pv/Yfd6rwjat0BOz2b4O6w2WJP1trB2X3JFppnNvnaGH4Y53AVWTYBkq73GN2A7fUat+byQS21f oBTVDthCJX9o1pZJCnXcxu+H4oLM/xRILFMwatAs+YPcfUxTxoqlqDEFs4AynDUehfZctOfBrcL
+ fo29kOKmCxqoE3/XvcMLJf/2J0CflUzaVzydUHXG6MCQtO6RQe0gR0QmYgBAyREMEvRcHvUb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-13_01,2025-08-11_01,2025-03-28_01
