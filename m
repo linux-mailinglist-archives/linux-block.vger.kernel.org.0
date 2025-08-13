@@ -1,151 +1,128 @@
-Return-Path: <linux-block+bounces-25630-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25634-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3959B24CED
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 17:13:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D3C66B24D92
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 17:37:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 26400175680
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:07:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2E332A7B04
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:32:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06542FDC53;
-	Wed, 13 Aug 2025 15:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55511F63D9;
+	Wed, 13 Aug 2025 15:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YENt6LTm"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Wb1YNZwj"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0A42F83CE;
-	Wed, 13 Aug 2025 15:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463221D7984
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 15:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755097643; cv=none; b=Qvg8Cqxo5WLA2wRy7JEgnG9rKc2IP+qoj3CF5ZmSlJFGHMCFFpoAJASGk6fDWBunY6ZJrz4IehTAAFfBhIn5DOSh40MPq2M5KRN/U/Nuu1KxYfNKsWdqRyj6ahKHSTrqz0XVodJqP58UyLyWZ3F7Z0jnleczWizuFwSz525CZf4=
+	t=1755099137; cv=none; b=gR7LuIyrrmFl9woZC0MCei0tPtbXSoDSJLDS/ddwrjnDPdcHfIYplSy59Sx/JPbKZAwfi3OOEju/sya8eYUpfN16GHbz0wwgHNB/itz3qeWRq0zcIWnEGcK7t8E54CIyM41ADY8U/rBrWO9fQYCZD4VBekOfRG2xAqghhCxSBOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755097643; c=relaxed/simple;
-	bh=AgCFVr8B6NzxkSuzvPEJMB9AhjM0iYqJptnGya/8rdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7m1svZiFDaZ0nHci6ZaIBKn9a+n+G40+lKu17ez50jptc+4LcdkE9drO3UZ/8nUpRwspBbABorq8IPDeSVYD9q+1WEj1+gq3H6fyE0S0N13lswcJh8AhUNmosGVapOsqANzgQ6YCTISJy1CvqV63nURmwKWhnEa7Cpa60Z8p4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YENt6LTm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B711C4CEF1;
-	Wed, 13 Aug 2025 15:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755097642;
-	bh=AgCFVr8B6NzxkSuzvPEJMB9AhjM0iYqJptnGya/8rdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YENt6LTmzTF5MtD2CCE/V13VNj4PuphZirCcbsVboFbdWpo5pbDoM+O1RwGND9hHA
-	 WetmjCRKzL7pVzJCuB6ANhgpmI5NnCbOUKiA98JWJtIXOH8N50EVLmuQyuay6zm6ky
-	 Onvhe46hQosw9HCamdkdEFdjBFc8sAKkHOvcvhEwHpJ12ST8cc+74GQ77yCDPQN8yP
-	 6Wv7nBFsNIocmJw6FI3A2Sw+oIhMT6YNdwdLIq5MhleD6VLBx07CKPNCPkvEmssek+
-	 ZjeG2ZowZ0nIKyT2jMky93WoiZsWFLORbU579a0ityJsLq0oaeKqLOOi+Bq4oEc02a
-	 vNc66YhlSs8qQ==
-Date: Wed, 13 Aug 2025 18:07:18 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v1 08/16] kmsan: convert kmsan_handle_dma to use physical
- addresses
-Message-ID: <20250813150718.GB310013@unreal>
-References: <cover.1754292567.git.leon@kernel.org>
- <5b40377b621e49ff4107fa10646c828ccc94e53e.1754292567.git.leon@kernel.org>
- <20250807122115.GH184255@nvidia.com>
+	s=arc-20240116; t=1755099137; c=relaxed/simple;
+	bh=/eduy8G868qMOAcMHCox+t7fwURHyAMkacgGLKyuUTU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J/UTD8t5ilaJ9/Hm+AuxI4kgYClISE8jqarJFCZ23pmZ1r8zqpa/RCoCRkUev3ocDYX9N/25Wq4r3rTFIvtiJutIQ5VXsy+uowlgHg1ctGLAd588LRvurGfc/Ve5gIOxY4JY/Diysdfei/DDzfjUvxlgXIf6E3DSpGicDQCcIAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Wb1YNZwj; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+	by m0001303.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 57DF1ZMW032629
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:32:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=/M1d/NZN2jGF4JwLAM
+	4nQoOj13sBQ+gz8kyS9mWZedY=; b=Wb1YNZwjbGmnIPHu6XXo8YbK6CPmKxEGQM
+	Ube4SEWqqyT3qnji8CBuAwQiAn419oU2PyinuZV7wgH8bYvw5KuTzEr369844Rqx
+	SxO7yjnHZEemjBlHgLxbBzGXGYg7n6D5zBa/oo7Wgh3IlwTgH1Fi9J+14idpwfkU
+	mxfdGhVzG/0tYF0tKAGFq51itzkF/TsYqiVpAiMpUejsscooLkwCyQbOh1uM18bQ
+	K8dtlhRIDZ/C6LEEocCt7moPhmI+qvP9uoexfzUuDfXRVXVlzWOEdpu+X2k4/aKK
+	BsLtzQAE88NFtC6NT4YQ0bVJUoeA1o95b0i7R+aIcEpd82uu3EDw==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by m0001303.ppops.net (PPS) with ESMTPS id 48gqmwte1f-13
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 08:32:12 -0700 (PDT)
+Received: from twshared24438.15.frc2.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Wed, 13 Aug 2025 15:32:04 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 3C27D97CD7C; Wed, 13 Aug 2025 08:32:00 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, <joshi.k@samsung.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv7 0/9] blk dma iter for integrity metadata
+Date: Wed, 13 Aug 2025 08:31:44 -0700
+Message-ID: <20250813153153.3260897-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250807122115.GH184255@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=BaTY0qt2 c=1 sm=1 tr=0 ts=689caffc cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=zCnT93EQd0_OxjDQTxwA:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-GUID: -nCKD_qBbLEoRbWuhU84-t1f2v49znd7
+X-Proofpoint-ORIG-GUID: -nCKD_qBbLEoRbWuhU84-t1f2v49znd7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE0NiBTYWx0ZWRfX3aXjJ/HeBJ1d ElhQMXhuF3eNEihX+2p9ilrehZvQzuUvg0uuapfHfIQBZJVjrdZO5g6ssWd4lESrOVXZa32OdAj coEKFmY17AHm9wckLW6MYoNlVLODvqv+H6P4B9a+leZ6M9wxQUMl6MMLng4Q2rf3sAsZIqmAoM6
+ Jjbze7ryE+URMZLosc/WeXJnxuM4iL516RMEGTZ7nSM3BshvTvXLB9zZq0/uvxnbXGxVF4iIfAM O4+2SY7WzGouG3XxiFWA3mfp+a8pceIfL5InYM7kgT5kNgXQUSH6K14ieqrNVZWm2LCRw3xdbVM 0NklyTFZsxLRryuGy3xbwT8UTKSKaASR7FalFW+naHvw7TDjra9XwsVARSSAL2XM358Y7CoBybT
+ AYS2ZMLL1IvX1X41NkBM7At/FdkNxoICHL8aU74DnRNJSiNH00mIlLuijJD0o+PZvygXws3+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-13_01,2025-08-11_01,2025-03-28_01
 
-On Thu, Aug 07, 2025 at 09:21:15AM -0300, Jason Gunthorpe wrote:
-> On Mon, Aug 04, 2025 at 03:42:42PM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Convert the KMSAN DMA handling function from page-based to physical
-> > address-based interface.
-> > 
-> > The refactoring renames kmsan_handle_dma() parameters from accepting
-> > (struct page *page, size_t offset, size_t size) to (phys_addr_t phys,
-> > size_t size). A PFN_VALID check is added to prevent KMSAN operations
-> > on non-page memory, preventing from non struct page backed address,
-> > 
-> > As part of this change, support for highmem addresses is implemented
-> > using kmap_local_page() to handle both lowmem and highmem regions
-> > properly. All callers throughout the codebase are updated to use the
-> > new phys_addr_t based interface.
-> 
-> Use the function Matthew pointed at kmap_local_pfn()
-> 
-> Maybe introduce the kmap_local_phys() he suggested too.
+From: Keith Busch <kbusch@kernel.org>
 
-At this point it gives nothing.
+Previous version:
 
-> 
-> >  /* Helper function to handle DMA data transfers. */
-> > -void kmsan_handle_dma(struct page *page, size_t offset, size_t size,
-> > +void kmsan_handle_dma(phys_addr_t phys, size_t size,
-> >  		      enum dma_data_direction dir)
-> >  {
-> >  	u64 page_offset, to_go, addr;
-> > +	struct page *page;
-> > +	void *kaddr;
-> >  
-> > -	if (PageHighMem(page))
-> > +	if (!pfn_valid(PHYS_PFN(phys)))
-> >  		return;
-> 
-> Not needed, the caller must pass in a phys that is kmap
-> compatible. Maybe just leave a comment. FWIW today this is also not
-> checking for P2P or DEVICE non-kmap struct pages either, so it should
-> be fine without checks.
+  https://lore.kernel.org/linux-block/20250812135210.4172178-1-kbusch@met=
+a.com/
 
-It is not true as we will call to kmsan_handle_dma() unconditionally in
-dma_map_phys(). The reason to it is that kmsan_handle_dma() is guarded
-with debug kconfig options and cost of pfn_valid() can be accommodated
-in that case. It gives more clean DMA code.
+Changes since v6 addressing review feeback from Christoph:
 
-   155 dma_addr_t dma_map_phys(struct device *dev, phys_addr_t phys, size_t size,
-   156                 enum dma_data_direction dir, unsigned long attrs)
-   157 {
-   <...>
-   187
-   188         kmsan_handle_dma(phys, size, dir);
-   189         trace_dma_map_phys(dev, phys, addr, size, dir, attrs);
-   190         debug_dma_map_phys(dev, phys, size, dir, addr, attrs);
-   191
-   192         return addr;
-   193 }
-   194 EXPORT_SYMBOL_GPL(dma_map_phys);
+  - Moved the integrity sg conversion to its own patch
 
-So let's keep this patch as is.
+  - implemented it in blk-mq-dma.c instead of blk-integrity.c to avoid
+    having to shuffling functions and common types around
 
-Thanks
+  - fixed a mistake in v6 that missed using the iter_next helper
+    function
+
+  - improved changelog for the patch introducing the scatterless
+    integrity mapping
+
+  - nvme cleanups
+
+Keith Busch (9):
+  blk-mq-dma: create blk_map_iter type
+  blk-mq-dma: provide the bio_vec array being iterated
+  blk-mq-dma: require unmap caller provide p2p map type
+  blk-mq: remove REQ_P2PDMA flag
+  blk-mq-dma: move common dma start code to a helper
+  blk-mq-dma: add scatter-less integrity data DMA mapping
+  blk-integrity: use iterator for mapping sg
+  nvme-pci: create common sgl unmapping helper
+  nvme-pci: convert metadata mapping to dma iter
+
+ block/bio.c                   |   2 +-
+ block/blk-integrity.c         |  58 -------
+ block/blk-mq-dma.c            | 278 ++++++++++++++++++++++++++--------
+ drivers/nvme/host/pci.c       | 197 +++++++++++++-----------
+ include/linux/blk-integrity.h |  17 +++
+ include/linux/blk-mq-dma.h    |  14 +-
+ include/linux/blk_types.h     |   2 -
+ 7 files changed, 350 insertions(+), 218 deletions(-)
+
+--=20
+2.47.3
+
 
