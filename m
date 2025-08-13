@@ -1,136 +1,144 @@
-Return-Path: <linux-block+bounces-25595-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25598-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AE6FB24111
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 08:07:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E99FB241E1
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 08:50:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6B807273D3
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 06:06:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65078163E3A
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 06:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F8ED2C033C;
-	Wed, 13 Aug 2025 06:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN2v0O2D"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DEF82D0C9A;
+	Wed, 13 Aug 2025 06:50:32 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AA82BEC25;
-	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CFC186295
+	for <linux-block@vger.kernel.org>; Wed, 13 Aug 2025 06:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755065108; cv=none; b=hWYXcjGFMvo5SO3d2mCCv+JpqImsg5CCKUyC4qUOq3LHDDhv+A9MMi08racK1TMQnpba2/ANb5tnCQpDLDa/XsJ0Foq/DH4X628CgBrotV1GoKqCK+eUdKgjYqqr4S43qG/7FnTUmcHepdCSHraynHikN4gqWnKsFEx0vPYt/WE=
+	t=1755067831; cv=none; b=C8nle6az5z3/8G6Ay7z/oDwKpfBRxFRsijsPEIFpiUbf+3/MfFhUetJ3HpzjhSjbqWxw4XKTwYvy6sLFvkBYxTnHiq1zrge+47D1i4aI2s8yczDwy33fuB91nTQPkAT3SC/dRnFigrTt3UFLjNPufsXLFb9IneT6AmnBf2d3sdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755065108; c=relaxed/simple;
-	bh=QN0m5GWtPJp7/qt9pQe5ZfZF+f+JOw2bQNcJ/j477Lc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UnzQe2MhoVnCZQy+KEmXsK4kc4Stfc8DW72ylRSnSIRMy3GunBGIRjflht/usXO/byh5BiLOG0d889QNggI0v14x5RXJ6ROpXiBzLyZ72lZRgEKs824wP0b/YBHavddKsTsvvICx/FSmMIiVvncg6SSK9Yhyt941oQ8idyrURrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN2v0O2D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D1014C4CEED;
-	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755065107;
-	bh=QN0m5GWtPJp7/qt9pQe5ZfZF+f+JOw2bQNcJ/j477Lc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=vN2v0O2D6b7ZNBrVP+aI0EyZqNil4Arrmo09niChnyGCF3ZxneVKyV8YWGJMVxlfk
-	 plM5Bp7HBTnc1lDhWi5RNv4Y2fp0W3UkNP5b3JWbocaMVq7bBna90EkFLoKLvXiIAO
-	 37qgb9K/qy+7vtOzljExb5SYP6UfNQ7PjheFtUZTBaK/bh9kvMxeYoTIoJP/x+kPvk
-	 osSFa6+BUQvYhV66e0NBCHXVuM5ISij5HVMzkO1/xxV9lLb3oKWnTj0z0ewakiv1cn
-	 VxJwmzpySOo5lBHuHP6T8uX+FPvTp9YVj3w2c62zXZ/e5b3G0PLh2UxHSQHU/rc7dA
-	 9kk0r85xlszXQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C0CA0EE3;
-	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
-From: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>
-Date: Wed, 13 Aug 2025 15:04:56 +0900
-Subject: [PATCH v3 2/2] iov_iter: iov_folioq_get_pages: don't leave empty
- slot behind
+	s=arc-20240116; t=1755067831; c=relaxed/simple;
+	bh=LVhBQ/o9P5G/7E4z/duDko1BgX1uy3YBs2okd9rZOxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hl2PbhLwqbm01O7MTV3Kfav1Zk7Cf25MWSH3AV+WXg18eVkHiVJoIzuD865hMh8g2eOYmGZlHYYLroCJBopDcRSY7TSEOiFqAuytkY/7wgglDzyWl+c8cnb91Q3VnmK2ovMZL3SmdjeNebDKv/WsGl+KD/SVFwcxszCvf8tbmcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 99004227A87; Wed, 13 Aug 2025 08:50:24 +0200 (CEST)
+Date: Wed, 13 Aug 2025 08:50:24 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de,
+	axboe@kernel.dk, joshi.k@samsung.com,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: [PATCHv6 6/8] blk-mq-dma: add support for mapping integrity
+ metadata
+Message-ID: <20250813065024.GA11825@lst.de>
+References: <20250812135210.4172178-1-kbusch@meta.com> <20250812135210.4172178-7-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250813-iot_iter_folio-v3-2-a0ffad2b665a@codewreck.org>
-References: <20250813-iot_iter_folio-v3-0-a0ffad2b665a@codewreck.org>
-In-Reply-To: <20250813-iot_iter_folio-v3-0-a0ffad2b665a@codewreck.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Maximilian Bosch <maximilian@mbosch.me>, Ryan Lahfa <ryan@lahfa.xyz>, 
- Christian Theune <ct@flyingcircus.io>, Arnout Engelen <arnout@bzzt.net>, 
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1129;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=hWtTUCvGG0PvbE6UasHSB7hwyWcYL54anMdr7Xzd+hY=;
- b=owEBbQKS/ZANAwAKAatOm+xqmOZwAcsmYgBonCsS8DBTLsHW8XBOAEFJt6+XqEbzlCN7ATJz5
- Z0/42O1PsmJAjMEAAEKAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCaJwrEgAKCRCrTpvsapjm
- cB0zEACWziYzUV7u3M9j8x4M7D0PqLTmDhsm+2LNpUdUGwVgEYqYBL80OMm9OztuncWP112oyQP
- 0nmA+62qaQDsmL38BAg/PVV2TAz8dgghGiVojmD6ZEyatETk9VubTS4YstNToWX4cLbLKxpvY8w
- BMsIfW6IpwSBhJJifmj/+WQx2trAMD9ir13yPnvU6IUMdebf7Fsl5G4Ser1Vy5V+ViqOkrBgPpU
- uAhi6DKdn6PUaLaZzro/nT3ysBMZjXL3Lw2Mvrt7dRPhSyM3ZCsBazHMRAnUVNjPAJIHMwzCbWH
- Q/Vt0gYuNbuf4jrdwVu4lkQfkIVE0W3PgyJVba+dFE0M+oOavlZ3xLp95r/rLLzDEMH/EIyZRJY
- PK05FQN/I8q2pmNuNpRd6KAd8u0nfcpZ/aDnnE3+CM7K3u9/9tL/zhq4LpLHeF5MBqIt+/iQljn
- h5l+hzwpSJHG28KiwuV6oXWyFhuwMKrAA9OTxICwwKEPRHxWUpthkrXBWDP2kObujVhpUZjDnsc
- eKjXZoznHbqdhmT2VUrxb3wvKAXBmRfqXVKxXix8v9FHziA1ZuGYyhB5eMk8M72Z/ChMXxGpPuS
- 6slhyOnhff3Xmv0ydjbZ2ngePhFFWsiBQ/Q5sH/84aqe+o9299b+6scTEQSfjhpKwjqRPISafgY
- rh9QyztOL/OFUDA==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
-X-Endpoint-Received: by B4 Relay for asmadeus@codewreck.org/default with
- auth_id=435
-X-Original-From: Dominique Martinet <asmadeus@codewreck.org>
-Reply-To: asmadeus@codewreck.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250812135210.4172178-7-kbusch@meta.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Dominique Martinet <asmadeus@codewreck.org>
+On Tue, Aug 12, 2025 at 06:52:08AM -0700, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
+> Provide integrity metadata helpers equivalent to the data payload
+> helpers for iterating a request for dma setup.
 
-After advancing into a folioq it makes more sense to point to the next
-slot than at the end of the current slot.
-This should not be needed for correctness, but this also happens to
-"fix" the 9p bug with iterate_folioq() not copying properly.
+This actually does two things:
 
-Acked-by: David Howells <dhowells@redhat.com>
-Tested-by: Arnout Engelen <arnout@bzzt.net>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
- lib/iov_iter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+  1) convert the existing SG helpers
+  2) add the new helpers
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index f9193f952f49945297479483755d68a34c6d4ffe..65c05134ab934e1e0bf5d010fff22983bfe9c680 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1032,9 +1032,6 @@ static ssize_t iter_folioq_get_pages(struct iov_iter *iter,
- 			maxpages--;
- 		}
- 
--		if (maxpages == 0 || extracted >= maxsize)
--			break;
--
- 		if (iov_offset >= fsize) {
- 			iov_offset = 0;
- 			slot++;
-@@ -1043,6 +1040,9 @@ static ssize_t iter_folioq_get_pages(struct iov_iter *iter,
- 				slot = 0;
- 			}
- 		}
-+
-+		if (maxpages == 0 || extracted >= maxsize)
-+			break;
- 	}
- 
- 	iter->count = count;
+Which probably should be split into a separate patches, and all of them
+could use a more detailed commit log.
 
--- 
-2.50.1
+> +	struct blk_map_iter iter;
+> +	struct phys_vec vec;
+> +
+> +	iter = (struct blk_map_iter) {
+> +		.bio = bio,
+> +		.iter = bio_integrity(bio)->bip_iter,
+> +		.bvecs = bio_integrity(bio)->bip_vec,
+> +		.is_integrity = true,
+> +	};
 
+Just initialize iter at declaration time:
 
+> +	struct blk_map_iter iter = {
+> +		.bio = bio,
+> +		.iter = bio_integrity(bio)->bip_iter,
+> +		.bvecs = bio_integrity(bio)->bip_vec,
+> +		.is_integrity = true,
+> +	};
+
+> +static bool __blk_map_iter_next(struct blk_map_iter *iter)
+> +{
+> +	if (iter->iter.bi_size)
+> +		return true;
+> +	if (!iter->bio || !iter->bio->bi_next)
+> +		return false;
+> +
+> +	iter->bio = iter->bio->bi_next;
+> +	if (iter->is_integrity) {
+> +		iter->iter = bio_integrity(iter->bio)->bip_iter;
+> +		iter->bvecs = bio_integrity(iter->bio)->bip_vec;
+> +	} else {
+> +		iter->iter = iter->bio->bi_iter;
+> +		iter->bvecs = iter->bio->bi_io_vec;
+> +	}
+> +	return true;
+> +}
+
+This seems unused, even with all patches applied.
+
+> -static inline struct scatterlist *
+> -blk_next_sg(struct scatterlist **sg, struct scatterlist *sglist)
+> -{
+> -	if (!*sg)
+> -		return sglist;
+> -
+> -	/*
+> -	 * If the driver previously mapped a shorter list, we could see a
+> -	 * termination bit prematurely unless it fully inits the sg table
+> -	 * on each mapping. We KNOW that there must be more entries here
+> -	 * or the driver would be buggy, so force clear the termination bit
+> -	 * to avoid doing a full sg_init_table() in drivers for each command.
+> -	 */
+> -	sg_unmark_end(*sg);
+> -	return sg_next(*sg);
+> -}
+
+Maybe just add the metadata mapping helpers into this file instead of
+moving stuff around?
+
+> --- a/block/blk-mq.h
+> +++ b/block/blk-mq.h
+> @@ -449,4 +449,30 @@ static inline bool blk_mq_can_poll(struct request_queue *q)
+>  		q->tag_set->map[HCTX_TYPE_POLL].nr_queues;
+>  }
+>  
+> +struct phys_vec {
+> +	phys_addr_t	paddr;
+> +	u32		len;
+> +};
+
+Leon has a patch to move this to linux/types.h, which if we have to
+move it is probably a better place.
+
+Otherwise this looks good.
 
