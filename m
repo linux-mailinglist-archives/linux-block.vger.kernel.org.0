@@ -1,98 +1,142 @@
-Return-Path: <linux-block+bounces-25594-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25597-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BA4BB2403B
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 07:35:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD55CB24113
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 08:07:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB899688402
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 05:34:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1299727153
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 06:06:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4872BE05F;
-	Wed, 13 Aug 2025 05:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7BD2C08CC;
+	Wed, 13 Aug 2025 06:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="egPHiuC/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNNC3Nyr"
 X-Original-To: linux-block@vger.kernel.org
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9062BDC3E;
-	Wed, 13 Aug 2025 05:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BA92BF3C5;
+	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755063289; cv=none; b=pKEfZvimQKHdLRhQ9M19R5icGFlwJ2eORG+1K3p/1hpwavC5CzKpv4eRnq4lBOybM9KR2a00qtPQN7DE2Q+vgr6PiVUvvrKeFconSbTtZqRwyMwxcK+JdgrVJW+Oiurf1tu78HfrS5CFClox521f6Z1mA4LwgDhbDltrfLpBx9M=
+	t=1755065108; cv=none; b=Tt5nx1lG/gJ459yrdsNe+xFHxg8WXX11E6RWJs6Yo1Xc9xasBgCVGnrUGgivdPyLxa2VPMsm/wvgGdciWnQytXbutGAIm3oX9KQFpKTtJ1RpAQ0SCSYKDthr75255KvTOk+ELT75oI5Re3Uydbb3Vfc0dBlXjcOB70yCaJTl2H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755063289; c=relaxed/simple;
-	bh=FDQ2bMLRusEapD25iBwCb7gdZGFnPUtA5/Dgwn3dckg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s79BqjhmUI4UPooyBzt9NO3Vz8BWSEjPDECZcVBYiPKFTEoelUdU0uG4PeLLfnRVHNOzNEUPuzf4ZS7Y7j0xFepnJETmzNVVaV/NTsb0CVk7TQN1Mq0A3OIWqaz04mlc1cxSvvlAHNa4w10HGpfWdV1ys3w/0nHHQ5gEVwxleqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=egPHiuC/; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 1CB7814C2D3;
-	Wed, 13 Aug 2025 07:34:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1755063287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XjWBHGXAcgSV563xYk+j+40WjifMEzSXGjNe9KQBgLk=;
-	b=egPHiuC/UC4UD4nFojr3h+78xh94q0eLp3Zq21uBe8/LCpwZK5VBHhPh9biDCwsjmCVJnC
-	CFyJ0T1fh3cJfPengyIw1VXIKESumJNM2n9UFWGwG0KkXgd34hp2B/yF1MQZjSAYiQ/d60
-	8PWe6PSIJFyJHf2TRZISebDIzWprvPBpvm55mgMY+d3Ib8JIirsbnKbO7ECSm+j9b5DenO
-	NJa+UHGLhlCaA8/WWL7kOYYRzgNKmLAq/YaBH5oieeCCQGoPB7YE+okWPLuEmWJhY6T4Rj
-	zmwT6YJssNSgb9Sb+7caUlK2ahGNWZaFZgv6Trd5sguwsYKpqxLITSfw0KCw1g==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 2a270480;
-	Wed, 13 Aug 2025 05:34:40 +0000 (UTC)
-Date: Wed, 13 Aug 2025 14:34:25 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: kernel test robot <lkp@intel.com>,
-	Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Maximilian Bosch <maximilian@mbosch.me>,
-	Ryan Lahfa <ryan@lahfa.xyz>, Christian Theune <ct@flyingcircus.io>,
-	Arnout Engelen <arnout@bzzt.net>, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] iov_iter: iterate_folioq: fix handling of offset >=
- folio size
-Message-ID: <aJwj4dQ3b599qKHn@codewreck.org>
-References: <20250811-iot_iter_folio-v1-1-d9c223adf93c@codewreck.org>
- <202508120250.Eooq2ydr-lkp@intel.com>
- <20250813051633.GA3895812@ax162>
+	s=arc-20240116; t=1755065108; c=relaxed/simple;
+	bh=07bYQurcwe4/P0VNBE1yzZCXDX+X9mzCfoRDaUlb8gI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JQqha47U7lnrTJxmytOcON/XzPZ3IQgtGxl6Q5HWbGt1C5qd9VdErf8EnQCd5YL/B0Rp07kzEW5QLCMU36IisAUXYz992re4lJnyA2/KbYMmwxM7YPPKigbFB+Umrtc8gqz/f0yWZIpQlMIACQ0VdAwgtJk6xdSxuheS956VQXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNNC3Nyr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4DB9C4CEEB;
+	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755065107;
+	bh=07bYQurcwe4/P0VNBE1yzZCXDX+X9mzCfoRDaUlb8gI=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=CNNC3NyrzOpzMY37EFinxUbnCHBNKR7UbZhcErsBK7X/lwhL5ym7b3xtzUx+D76W4
+	 DlCs++pJaQ+0w4U672QXP1lVryHB47bJO7iIWO6oBm4jmyiTWdpBG09CJGY8Xt4Q05
+	 7sZcYBINofC5a9B8RpJEAZ+BI+1Z+6TYDe46QCetXT/gl77nRF947FUYE70dAZuvVr
+	 xbIBVkK/oNTHU7Qwftlvyu2XWwdVqqks5xS6H/YQlhOE/KAHTf4sIIeaMGVx7L2Nb+
+	 s9hNdA+sZ+z4UvWdTLqDwFBS+/Vrw2pqw73QcnzHe1oyRhRcU5YGpto7+m28if3M7X
+	 IMWtEGsf0gxXg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1978CA0EE0;
+	Wed, 13 Aug 2025 06:05:07 +0000 (UTC)
+From: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>
+Subject: [PATCH v3 0/2] iterate_folioq bug when offset==size (Was:
+ [REGRESSION] 9pfs issues on 6.12-rc1)
+Date: Wed, 13 Aug 2025 15:04:54 +0900
+Message-Id: <20250813-iot_iter_folio-v3-0-a0ffad2b665a@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250813051633.GA3895812@ax162>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAYrnGgC/3XM0QrCIBTG8VcJrzP0uJh21XtEjKXH7VDM0GHF2
+ LvndhVFl/8Pvt/EEkbCxA6biUXMlCgMJdR2w2zfDh1ycqUZCNgLLSWnMDY0Ymx8uFHg8lLryni
+ tPTpWTveInp4reDqX7imNIb5WP8tl/UtlyQV3xgKo1nmj7NEGh4+I9roLsWMLl+GTgB8CCuGNq
+ UApYapafxPzPL8Bkoi6wPMAAAA=
+X-Change-ID: 20250811-iot_iter_folio-1b7849f88fed
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Maximilian Bosch <maximilian@mbosch.me>, Ryan Lahfa <ryan@lahfa.xyz>, 
+ Christian Theune <ct@flyingcircus.io>, Arnout Engelen <arnout@bzzt.net>, 
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-7be4f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1818;
+ i=asmadeus@codewreck.org; h=from:subject:message-id;
+ bh=07bYQurcwe4/P0VNBE1yzZCXDX+X9mzCfoRDaUlb8gI=;
+ b=owEBbQKS/ZANAwAKAatOm+xqmOZwAcsmYgBonCsPBj9gaG4feijqs3EEQSR6TtPma7iIu7xrL
+ utRtgTk7YiJAjMEAAEKAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCaJwrDwAKCRCrTpvsapjm
+ cAtAD/9CWzj+FBEEa30FyW0OaONRs4W9MKZciPtUYn3DEB6NA/gJ20yiis9TfvOJz/tJ3ju3N5m
+ MqftahWtlEKr6k8K05aDtlz8XUPJ4OPyI6B1L0Qw8yWFRcCNSFeJRyeVO3MNM2MqLdK8Lpd9PM9
+ xsVR0Ldzkk8UDiVdyjSa3D//zKpcOvJU592y90j/wRdMJXexEW4hMyWP9qjYANQIp4srH4x1GjD
+ b1QBqq8WNyhnS2cYMibpupZCetLmkSx0NpY+btpg1PC8vHVWLzPWFQsMJQhWry/GOEqrov8GfyC
+ Yc2QMPUMSvezHCA6OyvD2oRq1XJtFCkG/6bGRJbIcHNQmZyXZIj2a+awR9yTV/7/ZzpFpTLXBEc
+ ADVtTkyzzV7SWQoOx/WNLWqWdJRJ8qHcOZJ78BwWoPy1mjzz3w3m6KIpBlSR86QtqlNc3O5D7zX
+ I8jArKS0Y5OuVLYucx3rUyxc5+CrVsLGPGdnQHWswTVQnY09vbDfdpgmCyVJtt/wLlLEZFq7RrX
+ nAf2pkwN1/zgPKb4ekEq6wmhhPm9aRGi0CSJHo09feJA34zSVgU4n2xeGF5bbFj9FGi7hhFX6yS
+ QfRbB0d6cQ5DfJCJEEtGb1z++31aY2X7V+utiE9ME5TyRt3LCHlyQLquRycamho0myXOirgUzRx
+ Mn48f6TI4R7K8vw==
+X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
+ fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+X-Endpoint-Received: by B4 Relay for asmadeus@codewreck.org/default with
+ auth_id=435
+X-Original-From: Dominique Martinet <asmadeus@codewreck.org>
+Reply-To: asmadeus@codewreck.org
 
-Nathan Chancellor wrote on Tue, Aug 12, 2025 at 10:16:33PM -0700:
-> >    1 warning generated.
-> 
-> I see this in -next now, should remain be zero initialized or is there
-> some other fix that is needed?
+So we've had this regression in 9p for.. almost a year, which is way too
+long, but there was no "easy" reproducer until yesterday (thank you
+again!!)
 
-A zero-initialization is fine, I sent a v2 with zero-initialization
-fixed yesterday:
-https://lkml.kernel.org/r/20250812-iot_iter_folio-v2-1-f99423309478@codewreck.org
+It turned out to be a bug with iov_iter on folios,
+iov_iter_get_pages_alloc2() would advance the iov_iter correctly up to
+the end edge of a folio and the later copy_to_iter() fails on the
+iterate_folioq() bug.
 
-(and I'll send a v3 with the goto replaced with a bigger if later today
-as per David's request)
+Happy to consider alternative ways of fixing this, now there's a
+reproducer it's all much clearer; for the bug to be visible we basically
+need to make and IO with non-contiguous folios in the iov_iter which is
+not obvious to test with synthetic VMs, with size that triggers a
+zero-copy read followed by a non-zero-copy read.
 
-I assume Andrew will pick it up eventually?
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+---
+Changes in v3:
+- convert 'goto next' to a big "if there is valid data in current folio"
+Future optimizations can remove it again after making sure this (iov iter
+advanced to end of folio) can never happen.
+- Link to v2: https://lore.kernel.org/r/20250812-iot_iter_folio-v2-0-f99423309478@codewreck.org
+
+Changes in v2:
+- Fixed 'remain' being used uninitialized in iterate_folioq when going
+  through the goto
+- s/forwarded/advanced in commit message
+- Link to v1: https://lore.kernel.org/r/20250811-iot_iter_folio-v1-0-d9c223adf93c@codewreck.org
+
+---
+Dominique Martinet (2):
+      iov_iter: iterate_folioq: fix handling of offset >= folio size
+      iov_iter: iov_folioq_get_pages: don't leave empty slot behind
+
+ include/linux/iov_iter.h | 20 +++++++++++---------
+ lib/iov_iter.c           |  6 +++---
+ 2 files changed, 14 insertions(+), 12 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250811-iot_iter_folio-1b7849f88fed
+
+Best regards,
 -- 
-Dominique Martinet | Asmadeus
+Dominique Martinet <asmadeus@codewreck.org>
+
+
 
