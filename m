@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-25621-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25623-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA053B24B1D
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:51:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACBF8B24B24
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:52:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5417188AE97
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 13:47:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C42471A22150
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 13:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FA42EAB93;
-	Wed, 13 Aug 2025 13:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5A9F2ECD0C;
+	Wed, 13 Aug 2025 13:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/cHBPZk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M18xxNYe"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC62EACE0;
-	Wed, 13 Aug 2025 13:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBE472612;
+	Wed, 13 Aug 2025 13:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755092818; cv=none; b=Y6axaw5iot/dumr7cHQQ5egPffo7TK58BH0HBdAA2zZick0yXGwk+i5uOb7n3Xu2tjZiJzFd7jza2mR9zxfbFwtvw96vD3fYjrh0cSEA14UX9kh7DMRHe9/n9W2nUHov/746fw11G19orvaXpIUlAXc9RDLncbY8XsRwQQXnaiM=
+	t=1755092824; cv=none; b=kJpylb+WQLP5103vgoCsB58i0Jl6os8Pe2LJda3Rn8CGELSZylSFnBEnOmO6UjCHlfITpQrbqNfXpUpVPZRh4lvcM8aHR1ikli1fLyekLMzZ3dN33WTIDehHFll2ZiNcKxV+89fgg28xwf7/LGYWG2EqhNfZDDSws50QdJXGato=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755092818; c=relaxed/simple;
-	bh=UAO9FvzDnoYfoDrmrGeQdcrb/Ul+p/dFDaH44bIxgT4=;
+	s=arc-20240116; t=1755092824; c=relaxed/simple;
+	bh=skTD0SI9AspNlQ8bU333//dSbcnveCgVWNlXOLVrO7c=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S0LZbyXNgn6ls5T+0VaGRyLgl10oImRpDcDR72wHhkQ4ewfWCo98EzZuTKDkwj7A+d76e2RVLsrnuM2RSEqQEir+wPgOPbU5iENHSgaLr7QKp/ndXI9FpfNqZmvLQ17yYCc1FuCTLBwR3VWWhnK2YfGEpwjDArK/L9U9K3Pv0ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/cHBPZk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332B3C4CEEB;
-	Wed, 13 Aug 2025 13:46:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=BnrNzdLcQb6ZjK/gjHWnaLjrc5Fg/uWeSsQoAgmXdWH9GStEg2Xzgs+8OIpU0xSByrC2B1OzJKPZXyq1FaWri5JvgQVu/JkWxhRDWiUVy3UB4BmxT+8UXp8v9G/ZO+ewI34nv/fE+ktGjNm/AszNskIN4170OW9IhA1JReUOBjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M18xxNYe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87871C4CEF5;
+	Wed, 13 Aug 2025 13:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755092817;
-	bh=UAO9FvzDnoYfoDrmrGeQdcrb/Ul+p/dFDaH44bIxgT4=;
+	s=k20201202; t=1755092824;
+	bh=skTD0SI9AspNlQ8bU333//dSbcnveCgVWNlXOLVrO7c=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=d/cHBPZkrPeHH4eUrpq8GM07OApm1BfM5L1mK27jh1X4278IaHMdpzE+qr9TxzjTr
-	 L8TpgaEWHxcihTfRbBhMCHTeejJpHafcq6GmksAxlvVxNDOfQNMCbY+q47pPRgjXTE
-	 nd//EOi/PQptWdkO5j94smJX5ErkSpXfzSLTlbYgmiPLZ761Inb4cLWFp9+s8GdufM
-	 I8oPYBUDhY7ZbObOZ+KcogQyYqcuKw52tTp13O0RwVUes+VU5Z4/5p+jP7gVow7u/g
-	 Pn8EDU6iVOIhfZpp4qCbugMY7BvERMdVmT9S7LtLSXmQ5hRnc+SZ0CpAS91CpzPR+6
-	 3q+7Q+iQzUF5A==
+	b=M18xxNYePA2ppj61JQedKnSEcULx0Cbsb6JDG4xh6cNaw077TVzJgecCyFohttpHj
+	 1tPTL5MS9fQYth99e+6CXxPlLpgA/0jiskAJrzIcMFEruapXaSMwb/Y1oXNdFwiSb1
+	 j07UINH4E6YUZFwuRAYyizwo1GtaRIMttrupNVEFOot+hm8FmRSAjeu1Wan/mrVlU9
+	 YqHRPpNiRb/xzR8qmIkB+p0SujAnXbfRzVlxzIdLBAOVCqUmxcRAzv4jm1P9OJU8Fs
+	 ehF9OE/OMdJ7riJOxadaIU/NksaVWKJl0qXeV1aZKAQPBnFjTkaz9u67muFDWOv4ms
+	 +8+MV+bUznEFw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: Alice Ryhl <aliceryhl@google.com>
 Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
@@ -50,14 +50,14 @@ Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
  Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
  <axboe@kernel.dk>, linux-block@vger.kernel.org,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/15] rust: str: introduce `NullTerminatedFormatter`
-In-Reply-To: <aJw88P7K_6GFmWvW@google.com>
+Subject: Re: [PATCH v4 11/15] rnull: enable configuration via `configfs`
+In-Reply-To: <aJw-XWhDahVeejl3@google.com>
 References: <20250812-rnull-up-v6-16-v4-0-ed801dd3ba5c@kernel.org>
- <20250812-rnull-up-v6-16-v4-4-ed801dd3ba5c@kernel.org>
- <vtPB4JcsqY753m500Pb4NVZEAxlKfEEzsrWBWUcEJcxqmhWrWYNqJDH8PFVm03IUm9nEweDNcYeaY2SbKHUOOA==@protonmail.internalid>
- <aJw88P7K_6GFmWvW@google.com>
-Date: Wed, 13 Aug 2025 14:34:20 +0200
-Message-ID: <87frdvflir.fsf@t14s.mail-host-address-is-not-set>
+ <20250812-rnull-up-v6-16-v4-11-ed801dd3ba5c@kernel.org>
+ <mACGre8-fNXj9Z2EpuE3yez_o2T-TtqrdB6HB-VkO0cuvhXsqzECKWMhsz_c43NJUxpsnVpO_U0oLbaaNhXqRQ==@protonmail.internalid>
+ <aJw-XWhDahVeejl3@google.com>
+Date: Wed, 13 Aug 2025 14:47:54 +0200
+Message-ID: <87cy8zfkw5.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -68,26 +68,69 @@ Content-Type: text/plain
 
 "Alice Ryhl" <aliceryhl@google.com> writes:
 
-> On Tue, Aug 12, 2025 at 10:44:22AM +0200, Andreas Hindborg wrote:
->> Add `NullTerminatedFormatter`, a formatter that writes a null terminated
->> string to an array or slice buffer. Because this type needs to manage the
->> trailing null marker, the existing formatters cannot be used to implement
->> this type.
+> On Tue, Aug 12, 2025 at 10:44:29AM +0200, Andreas Hindborg wrote:
+>> Allow rust null block devices to be configured and instantiated via
+>> `configfs`.
 >>
 >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 >
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Overall LGTM, but a few comments below:
 >
->> +    #[expect(dead_code)]
->> +    pub(crate) fn from_array<const N: usize>(
+>> diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/configfs.rs
+>> new file mode 100644
+>> index 000000000000..8d469c046a39
+>> --- /dev/null
+>> +++ b/drivers/block/rnull/configfs.rs
+>> @@ -0,0 +1,218 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +use super::{NullBlkDevice, THIS_MODULE};
+>> +use core::fmt::Write;
+>> +use kernel::{
+>> +    block::mq::gen_disk::{GenDisk, GenDiskBuilder},
+>> +    c_str,
+>> +    configfs::{self, AttributeOperations},
+>> +    configfs_attrs, new_mutex,
 >
-> Don't you delete this function in the next patch?
+> It would be nice to add
+>
+> 	pub use configfs_attrs;
+>
+> to the configfs module so that you can import the macro from the
+> configfs module instead of the root.
 
-It slipped through the cracks. I'll remove it and respin. Thanks.
+OK, I'll do that.
+
+>
+>> +            try_pin_init!( DeviceConfig {
+>> +                data <- new_mutex!( DeviceConfigInner {
+>
+> Extra spaces in these macros.
+
+Thanks. I subconsciously like the space in that location, so when
+rustfmt is bailing, I get these things in my code.
+
+>> +        let power_op_str = core::str::from_utf8(page)?.trim();
+>> +
+>> +        let power_op = match power_op_str {
+>> +            "0" => Ok(false),
+>> +            "1" => Ok(true),
+>> +            _ => Err(EINVAL),
+>> +        }?;
+>
+> We probably want kstrtobool here instead of manually parsing the
+> boolean.
+
+Yea, I was debating on this a bit. I did want to consolidate this code,
+but I don't particularly like ktostrbool. But I guess in the name of
+consistency across the kernel it is the right choice.
+
+I'll add it to next spin.
 
 
 Best regards,
 Andreas Hindborg
+
 
 
 
