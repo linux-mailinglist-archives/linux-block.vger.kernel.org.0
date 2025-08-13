@@ -1,144 +1,123 @@
-Return-Path: <linux-block+bounces-25622-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25619-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCD5EB24B0F
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:51:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD57AB24ACF
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 15:41:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FD8116BB70
-	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 13:47:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD8391BC665C
+	for <lists+linux-block@lfdr.de>; Wed, 13 Aug 2025 13:40:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8274B2ECD31;
-	Wed, 13 Aug 2025 13:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EE02EAB8A;
+	Wed, 13 Aug 2025 13:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFJaXswK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N69VCTgc"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5381D72612;
-	Wed, 13 Aug 2025 13:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFFB2EA756;
+	Wed, 13 Aug 2025 13:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755092821; cv=none; b=R572mxmP+tW1CVgtmzY6uww8c8Yu6izmd8ZZBjBm5xEcc0B1O4Ydm9LV2WdNVfnTiiwQnq+KeQwyEeLsZtb7yHZk2393BGYtVYiZFSNoqmFHCzROnFr/1FDsuFKIVPgN4cTe2xspwuBEQDpY1Cp6SH5LhH7E7/KYJd2BjfjQaDQ=
+	t=1755092356; cv=none; b=cAZOzqqazsjSuNotJJelPVyT8ycO6FOQkLE0r8QRE2Bt9ilaHr68mgxTcLMCe/5OvMz9au/AeZR64Lb6mDhg/hC9oMQZKxqwZ4J0SIN2Ijn3vOBEegFhnEXSFqy9RAxj+AP5o1+38r96dUFyOhzt16GDVpHblvxm7W3zCFHPiVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755092821; c=relaxed/simple;
-	bh=EJYyeOv5ZSaTNdX5BL2jh/SZksaRmpZRfnRTezj2Irs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TLFmywO+fm8oQWJfOqLgmYd7HsGzb54qRYS6e0R+xZC/T9DmHITFWVAKs02Xv63NfsGy6jHIYNM5rvjtDspI2Xs+a5vYJwm+7OH+dPleQF822fKD3flbHf9N3bN6YMcvTfkZnSYP4h9EPWgmKuD8y87V91Cy04gbog9f1FXQM9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFJaXswK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F879C4CEF6;
-	Wed, 13 Aug 2025 13:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755092820;
-	bh=EJYyeOv5ZSaTNdX5BL2jh/SZksaRmpZRfnRTezj2Irs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=EFJaXswKUs3cDdFU19fktK4ee4MHO1Ci8TCx4IVbq4J3ZHqAaeXNmj/f9SW7eCNtt
-	 CGgSm8zhUIk6cC0LdcrD0ZhFw0zRPuPrt3WxF8Nu39Ojbur1sHYU0aFA65pK37S1Lc
-	 0Ovd6PBZ4QV8T6/De/vletNvtURR012xCaMjxFZalIpr5tnJ1/ZvoN22WYgVM0KEX3
-	 Y+n9+EinU1bgK4r6RKv7rjQROew+l+UtCioC5vYV16dzoxkkls/5Dgck0U21Q8KavX
-	 DHM9VsPGFzeXO6ffB6Nf/hP+1ec5TCB28AMZLTpLNitOys/58AaNk4a7Ol3zYywNMA
-	 aznm89cr+uhIw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
- Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
- <axboe@kernel.dk>, linux-block@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 12/15] rust: block: add `GenDisk` private data support
-In-Reply-To: <aJw_I-YQUfupWCXL@google.com>
-References: <20250812-rnull-up-v6-16-v4-0-ed801dd3ba5c@kernel.org>
- <20250812-rnull-up-v6-16-v4-12-ed801dd3ba5c@kernel.org>
- <I-QXOGdDtTAVOcFvHZksoPqkYUZThmxrTUNw1h_MEGXdk_X_dc2txQdKJPMLz-yPmqL956iydAqVD9D5aL2SDQ==@protonmail.internalid>
- <aJw_I-YQUfupWCXL@google.com>
-Date: Wed, 13 Aug 2025 14:56:58 +0200
-Message-ID: <87a543fkh1.fsf@t14s.mail-host-address-is-not-set>
+	s=arc-20240116; t=1755092356; c=relaxed/simple;
+	bh=MgEKOEyyAEorH8iuoL33yXvGl8kuoAn+H2uLs0OHw6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ClURwLywrHkkH3vOmPdX8tFNRtcXFf7Y0q1K+DE9Q6ILam4BOlPbiOnh0OauTmvVKE+eQulRs/FfC6bNz/k0KzxfL1/gUNljyeAIWA4Iay7tWqk+5k+X6E8O/DomNmKUiTqlsXZ/zsAr1XiHur8GB/VQDMErGAA6l7JpzfRmN8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N69VCTgc; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755092355; x=1786628355;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MgEKOEyyAEorH8iuoL33yXvGl8kuoAn+H2uLs0OHw6M=;
+  b=N69VCTgc2znvvSEUehniANxzpD3hWWSx+47afhTIARX43jRVo1LockXy
+   Fl4UCTt5IQrLvPp1bkUwd0Ffi1ZC4WtNBdan/awLrH9Y1hPzN5qFa2100
+   21cDiMFxBwz7Ngf34dq/2VXt/6Hm8PKSUC3JZ16/WBYDJYrRaPRjX0FCX
+   7DBC9aAAFRwLDMB97htYIxa1ylTavgBIc8WkVvFVX5b6j8HFyKZqmLhky
+   EWy1PN23AoV6Icht2ywa2WdUubwJK0dvksYYA4n2Ab+scmqeGEPQuB3P7
+   kyptlujCw7GSBDbW3wJ0AGUpa2MXopXryxwx1w9YUIwD3CdzkzYt4xoBW
+   A==;
+X-CSE-ConnectionGUID: FvYK9XeaSgGqRWn7aFed1g==
+X-CSE-MsgGUID: ZrL5Qxo8SP+7ousz5TP85w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="44964699"
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="44964699"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 06:39:14 -0700
+X-CSE-ConnectionGUID: N7uaji0FRw66mKcsookEbg==
+X-CSE-MsgGUID: sjsF9VtDR4iwOeSVE/y+eA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="170683697"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa005.fm.intel.com with ESMTP; 13 Aug 2025 06:39:10 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 2E07F95; Wed, 13 Aug 2025 15:39:09 +0200 (CEST)
+Date: Wed, 13 Aug 2025 15:39:09 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Maximilian Bosch <maximilian@mbosch.me>,
+	Ryan Lahfa <ryan@lahfa.xyz>, Christian Theune <ct@flyingcircus.io>,
+	Arnout Engelen <arnout@bzzt.net>, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] iov_iter: iterate_folioq: fix handling of offset >=
+ folio size
+Message-ID: <aJyVfWKX2eSMsfrb@black.igk.intel.com>
+References: <20250811-iot_iter_folio-v1-1-d9c223adf93c@codewreck.org>
+ <202508120250.Eooq2ydr-lkp@intel.com>
+ <20250813051633.GA3895812@ax162>
+ <aJwj4dQ3b599qKHn@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJwj4dQ3b599qKHn@codewreck.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Wed, Aug 13, 2025 at 02:34:25PM +0900, Dominique Martinet wrote:
+> Nathan Chancellor wrote on Tue, Aug 12, 2025 at 10:16:33PM -0700:
+> > >    1 warning generated.
+> > 
+> > I see this in -next now, should remain be zero initialized or is there
+> > some other fix that is needed?
+> 
+> A zero-initialization is fine, I sent a v2 with zero-initialization
+> fixed yesterday:
+> https://lkml.kernel.org/r/20250812-iot_iter_folio-v2-1-f99423309478@codewreck.org
+> 
+> (and I'll send a v3 with the goto replaced with a bigger if later today
+> as per David's request)
+> 
+> I assume Andrew will pick it up eventually?
 
-> On Tue, Aug 12, 2025 at 10:44:30AM +0200, Andreas Hindborg wrote:
->> Allow users of the rust block device driver API to install private data in
->> the `GenDisk` structure.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
-> Overall LGTM.
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->
->>          self,
->>          name: fmt::Arguments<'_>,
->>          tagset: Arc<TagSet<T>>,
->> +        queue_data: T::QueueData,
->>      ) -> Result<GenDisk<T>> {
->> +        let data = queue_data.into_foreign();
->> +        let recover_data = ScopeGuard::new(|| {
->> +            drop(
->> +                // SAFETY: T::QueueData was created by the call to `into_foreign()` above
->> +                unsafe { T::QueueData::from_foreign(data) },
->> +            );
->
-> This is usually formatted as:
->
-> // SAFETY: T::QueueData was created by the call to `into_foreign()` above
-> drop(unsafe { T::QueueData::from_foreign(data) });
+I hope this to happen sooner as it broke my builds too (I always do now `make W=1`
+and suggest all developers should follow).
 
-I don't really have a preference, my optimization function was to
-minimize distance to the unsafe block. Are there any rust guidelines on this?
-
->
->>  impl<T: Operations> Drop for GenDisk<T> {
->>      fn drop(&mut self) {
->> +        // SAFETY: By type invariant of `Self`, `self.gendisk` points to a valid
->> +        // and initialized instance of `struct gendisk`, and, `queuedata` was
->> +        // initialized with the result of a call to
->> +        // `ForeignOwnable::into_foreign`.
->> +        let queue_data = unsafe { (*(*self.gendisk).queue).queuedata };
->> +
->>          // SAFETY: By type invariant, `self.gendisk` points to a valid and
->>          // initialized instance of `struct gendisk`, and it was previously added
->>          // to the VFS.
->>          unsafe { bindings::del_gendisk(self.gendisk) };
->> +
->> +        drop(
->> +            // SAFETY: `queue.queuedata` was created by `GenDiskBuilder::build` with
->> +            // a call to `ForeignOwnable::into_foreign` to create `queuedata`.
->> +            // `ForeignOwnable::from_foreign` is only called here.
->> +            unsafe { T::QueueData::from_foreign(queue_data) },
->> +        );
->
-> Ditto here.
->
->>          //    reference counted by `ARef` until then.
->>          let rq = unsafe { Request::aref_from_raw((*bd).rq) };
->>
->> +        // SAFETY: `hctx` is valid as required by this function.
->> +        let queue_data = unsafe { (*(*hctx).queue).queuedata };
->> +
->> +        // SAFETY: `queue.queuedata` was created by `GenDisk::try_new()` with a
->> +        // call to `ForeignOwnable::into_pointer()` to create `queuedata`.
->> +        // `ForeignOwnable::from_foreign()` is only called when the tagset is
->> +        // dropped, which happens after we are dropped.
->> +        let queue_data = unsafe { T::QueueData::borrow(queue_data.cast()) };
->
-> Is this cast necessary? Is it not a void pointer?
-
-Leftover from old `ForeignOwnable` I think. I'll remove it.
-
-
-Best regards,
-Andreas Hindborg
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 
