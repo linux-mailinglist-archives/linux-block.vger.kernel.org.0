@@ -1,119 +1,148 @@
-Return-Path: <linux-block+bounces-25694-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25696-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E64AB2593F
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 03:45:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D4D0B259EF
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 05:43:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 223715A7D07
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 01:45:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 43FA37BC6D0
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 03:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE9921C16B;
-	Thu, 14 Aug 2025 01:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYALRBxU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8432238C0D;
+	Thu, 14 Aug 2025 03:43:13 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DC521B9D6;
-	Thu, 14 Aug 2025 01:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF32FF660;
+	Thu, 14 Aug 2025 03:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755135918; cv=none; b=duJu1ujakaMDFhmtuo/hkrWrHA2aqWkbQz72HeKzvrT5tKjSYQKS0PebncPtL92NShUtH4Rd7FREMC/FfWWY0aL9B/1MfEqOsoCo8zXMQRItVhgia+Ue6KEPFgcSr7KfW7YdVDzvm1lxRMh10ium4g25EUcjD7+QRPrrefyH7Dk=
+	t=1755142993; cv=none; b=E/kN5+Vpv5xYvZr1dG2H0rCacbDujNEJOgNkbJT9VybCmREqRJwEKBL4D9sOA0hdY+n/rJfP21cpOGQjWFNkmuodIegaksmaVqShWiwozXAa6gNNIgbzJ7bHFDUki82FDdhq5BqsoOi3vX2ThuSWiN8Km1JgZ+QrAW6Rpa8khrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755135918; c=relaxed/simple;
-	bh=i1y7qQa9SFhRvqFt20v8XEo9Q9dbavK0njZxN1E1hEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QR0CiZCYxRyFtSBTcvvPfLwtRKtxqieXD6SQe+YnG49n3l8i8XXjDVRRrxLKXck+Eru6+/Aucp7dbNVXZZTTkZt80YEQ8+NllExpRUsiOnceIWgtzyr7Y1bsR+L6Uy0rdd5I8qtX6ln//GQ17g7fxlLw2r/cUo+WAjvVPehiWJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYALRBxU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0192C4CEED;
-	Thu, 14 Aug 2025 01:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755135918;
-	bh=i1y7qQa9SFhRvqFt20v8XEo9Q9dbavK0njZxN1E1hEw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YYALRBxUqMJ+a9O2DJA0OI+d8U2eVb4vghGmYmkHPuACCSxiAyNFcZN9CKtvACSnq
-	 JtBXiJAprlL8dieMg+YUqZenFdoYTMQM3qCM+sFvAfw0ZJKnbklA3b1CCl2sLivabS
-	 Jyq6QcJ/hMtxUC2Eg7vb0AQozFUM9UiuiGe9B4S/t6LZGASKEg85nJKT4oYSFQfhvZ
-	 Jj7SP53EACoQARdrD4OiletkRcQ2NAy0nPdYU63lTkQNSnyXo4zTd/5YA8SzP1SlTy
-	 9W5wuCcs94qevo8gdrhzjCK1E9zTB7stWmlDMvju/ewfItbTbiTzR2/uUz/AU5OQok
-	 ggHvEA8Ed32cw==
-Message-ID: <b6860c56-e91d-45c8-8d4c-05bcae97a2bb@kernel.org>
-Date: Thu, 14 Aug 2025 10:42:35 +0900
+	s=arc-20240116; t=1755142993; c=relaxed/simple;
+	bh=jC6oI7rRAbAjUrisCPWDlL475SGNNs1YyfBpEci0GIw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KDElMUBkmNBtEuFiiggGl/j/P/9yQ/al+ib+e7FH2eLTK1tqTGeR9znm/1pfWaPqm0Cr3QXuxbdAfRDQqnwBS3amQUA8OULkp5Qae1GilYCz5vUkjlwNW2/x+tdmw734FbLQNAzNd20YjhrGGsVwz9g+2mnobd+fZ6qwKzkhRmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c2WKn03t0zKHMSH;
+	Thu, 14 Aug 2025 11:43:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 4A3A61A018D;
+	Thu, 14 Aug 2025 11:43:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCnIxRKW51ogs93Dg--.15627S4;
+	Thu, 14 Aug 2025 11:43:08 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	yukuai3@huawei.com,
+	bvanassche@acm.org,
+	nilay@linux.ibm.com,
+	hare@suse.de,
+	ming.lei@redhat.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH 00/16] blk-mq: introduce new queue attribute asyc_dpeth
+Date: Thu, 14 Aug 2025 11:35:06 +0800
+Message-Id: <20250814033522.770575-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 1/7] block: check for valid bio while splitting
-To: Keith Busch <kbusch@kernel.org>, Bart Van Assche <bvanassche@acm.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- snitzer@kernel.org, axboe@kernel.dk, dw@davidwei.uk, brauner@kernel.org,
- Hannes Reinecke <hare@suse.de>
-References: <20250805141123.332298-1-kbusch@meta.com>
- <20250805141123.332298-2-kbusch@meta.com> <aJzwO9dYeBQAHnCC@kbusch-mbp>
- <d9116c88-4098-46a7-8cbc-c900576a5da3@acm.org> <aJz9EUxTutWLxQmk@kbusch-mbp>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <aJz9EUxTutWLxQmk@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnIxRKW51ogs93Dg--.15627S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFWkGw4rWFWfCF17tF45Awb_yoW5GFWxp3
+	y3tF4akw1xKryxWF4fJw43Xr1rCws3ur43JrnxKr1rJr90kws2vFn5X3WrXryIvrWxCanF
+	gr1qgas8GrnFvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 8/14/25 6:01 AM, Keith Busch wrote:
-> On Wed, Aug 13, 2025 at 01:41:49PM -0700, Bart Van Assche wrote:
->> On 8/13/25 1:06 PM, Keith Busch wrote:
->>> But I can't make that change because many scsi devices don't set the dma
->>> alignment and get the default 511 value. This is fine for the memory
->>> address offset, but the lengths sent for various inquriy commands are
->>> much smaller, like 4 and 32 byte lengths. That length wouldn't pass the
->>> dma alignment granularity, so I think the default value is far too
->>> conservative. Does the address start size need to be a different limit
->>> than minimum length? I feel like they should be the same, but maybe
->>> that's just an nvme thing.
->>
->> Hi Keith,
->>
->> Maybe I misunderstood your question. It seems to me that the SCSI core
->> sets the DMA alignment by default to four bytes. From
->> drivers/scsi/hosts.c:
-> 
-> Thanks, I think you got my meaning. 
-> 
-> I'm using the AHCI driver. It looks like ata_scsi_dev_config() overrides
-> the dma_alignment to sector_size - 1, and that pattern goes way back,
-> almost 20 years ago, so maybe I can't change it.
+From: Yu Kuai <yukuai3@huawei.com>
 
-That is probably buggy now in the sense that the scsi layer should be able to
-send any command with a size not aligned to the LBA size or ATA sector (512 B)
-and libata-scsi SAT should do the translation using an internal 512B aligned
-command size.
+Backgroud and motivation:
 
-What makes a mess here is that SCSI allows having a media-access command
-specifying a transfer size that is not aligned on the LBA size. The transfer
-will be "short" in that case, which is perfectly fine with SCSI. But ATA does
-not allow that. It is all or nothing and the command size thus must always be
-aligned to the LBA size.
+At first, we test a performance regression from 5.10 to 6.6 in
+downstream kernel(described in patch 13), the regression is related to
+async_depth in mq-dealine.
 
-I think that dma_alignment was abused to check that. But I think it should not
-be too hard to check the alignment in libata-scsi when translating the command.
-SAS HBAs should be doing something similar too. Have never exactly tested that
-though, and I am afraid how many SAS HBAs will not like unaligned command to
-ATA devices...
+While trying to fix this regression, Bart suggests add a new attribute
+to request_queue, and I think this is a good idea because all elevators
+have similar logical, however only mq-deadline allow user to configure
+async_depth. And this is patch 9-16, where the performance problem is
+fixed in patch 13;
 
-We also have the different alignment for management commands (most of which use
-512B sector size) and media access commands which use the actual device LBA
-size alignment.
+Because async_depth is related to nr_requests, while reviewing related
+code, patch 2-7 are cleanups and fixes to nr_reqeusts.
 
-So it is a mess :)
+I was planning to send this set for the next merge window, however,
+during test I found the last block pr(6.17-rc1) introduce a regression
+if nr_reqeusts grows, exit elevator will panic, and I fix this by
+patch 1,8.
+
+So I send this set for now, and hope we can consider it for this merge
+window. If not, I'll have to rework the whole set and send the second
+kernel panic regression first.
+
+Yu Kuai (16):
+  blk-mq-sched: add new parameter nr_requests in
+    blk_mq_alloc_sched_tags()
+  blk-mq: remove useless checking from queue_requests_store()
+  blk-mq: remove useless checkings from blk_mq_update_nr_requests()
+  blk-mq: check invalid nr_requests in queue_requests_store()
+  blk-mq: fix elevator depth_updated method
+  blk-mq: cleanup shared tags case in blk_mq_update_nr_requests()
+  blk-mq: split bitmap grow and resize case in
+    blk_mq_update_nr_requests()
+  blk-mq: fix blk_mq_tags double free while nr_requests grown
+  block: convert nr_requests to unsigned int
+  blk-mq-sched: unify elevators checking for async requests
+  blk-mq: add a new queue sysfs attribute async_depth
+  kyber: covert to use request_queue->async_depth
+  mq-deadline: covert to use request_queue->async_depth
+  block, bfq: convert to use request_queue->async_depth
+  blk-mq: fix stale nr_requests documentation
+  blk-mq: add documentation for new queue attribute async_dpeth
+
+ Documentation/ABI/stable/sysfs-block | 24 ++++---
+ block/bfq-iosched.c                  | 64 +++++++------------
+ block/blk-core.c                     |  1 +
+ block/blk-mq-sched.c                 | 14 +++--
+ block/blk-mq-sched.h                 | 18 +++++-
+ block/blk-mq-tag.c                   | 23 +------
+ block/blk-mq.c                       | 93 +++++++++++++++++-----------
+ block/blk-mq.h                       |  2 +-
+ block/blk-sysfs.c                    | 63 ++++++++++++++++++-
+ block/elevator.c                     |  3 +-
+ block/elevator.h                     |  2 +-
+ block/kyber-iosched.c                | 40 ++----------
+ block/mq-deadline.c                  | 55 ++--------------
+ include/linux/blkdev.h               |  3 +-
+ 14 files changed, 194 insertions(+), 211 deletions(-)
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.39.2
+
 
