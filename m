@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-25702-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25707-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5ACDB259FA
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 05:44:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBE3CB25A06
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 05:45:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 459AF58879F
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 03:44:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0A0A17BC99C
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 03:44:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63362737F8;
-	Thu, 14 Aug 2025 03:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD86F27A114;
+	Thu, 14 Aug 2025 03:43:21 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434B26CE0A;
-	Thu, 14 Aug 2025 03:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5615270572;
+	Thu, 14 Aug 2025 03:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755142998; cv=none; b=nSkb5xShdyXhjVE8IxPTQRX9qlIZxtZtC65sbV6ZI4sfHGij87gko7TaCkK8UFGDFOhXPRcrkr41kokoxyvkH/mEunen+XD6pfH2AAHcI3GuOacgY7h4pQ7RBrl859OPY/rwOZftoxf5UdmeCjYs+hR+zeKnSyM2Ic0Hejai7pw=
+	t=1755143001; cv=none; b=IIT9JB/THUAs1TQm47lTI5YnjPvL3hSzlmiiA/YJaw0dIKj/Dl6ZL/WTwI8HJlHApUj6GJegTGPinKC2ZnXvGXa2YA5U8I6hy77gvlYmy+ZjfH7ZfES15x2H4N0p5tWgGKv1Dgbl/UCobceh9wlxSnsTqNl3lX88UE56ShAM4Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755142998; c=relaxed/simple;
-	bh=24T5+g8WMOUYYSAoco/LftJ3y+twWAskhfuDyz4/5jI=;
+	s=arc-20240116; t=1755143001; c=relaxed/simple;
+	bh=SJDQlr8kYnUVXlqjG3XTlvRhDl2Ax+wgpIYELK54IoE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dW2l2kEjpTyoIUMx1J5JcLI+nP1dvcXzQ+EbnXtgs4P4D7qKwi00+a80Efr0Q9vr5i/bBSNB8BPEZpQ9lnY++AauOd+z+WGf2tRjo9Xng9TYIBnWKUjHxJyPab+VXeMhunBKSeF8kN0Kc9ZNvmE994MnH2F+DAo7zwiVEHfbQJs=
+	 MIME-Version; b=k1MXgQBbBt0mEGTeD0ZgDv2TGErxtyN9zFYi2fhBwjuxmq1JNF5yl2gTARyZUdYo2BSCYwqObrjqcEG+ec53HrKjFmnXVZOX44O97dnBky24cueLbaQ/GTCwzCHbFx1Zi4T116oPh013ME9iNHu1nqP3j+KcM1hJEzJpkedJzVc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c2WKv63ywzKHMhx;
-	Thu, 14 Aug 2025 11:43:15 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c2WKw2FbVzKHMST;
+	Thu, 14 Aug 2025 11:43:16 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 24C601A01A3;
+	by mail.maildlp.com (Postfix) with ESMTP id 963951A1679;
 	Thu, 14 Aug 2025 11:43:15 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnIxRKW51ogs93Dg--.15627S18;
-	Thu, 14 Aug 2025 11:43:14 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgCnIxRKW51ogs93Dg--.15627S19;
+	Thu, 14 Aug 2025 11:43:15 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	yukuai3@huawei.com,
@@ -51,9 +51,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH 14/16] block, bfq: convert to use request_queue->async_depth
-Date: Thu, 14 Aug 2025 11:35:20 +0800
-Message-Id: <20250814033522.770575-15-yukuai1@huaweicloud.com>
+Subject: [PATCH 15/16] blk-mq: fix stale nr_requests documentation
+Date: Thu, 14 Aug 2025 11:35:21 +0800
+Message-Id: <20250814033522.770575-16-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250814033522.770575-1-yukuai1@huaweicloud.com>
 References: <20250814033522.770575-1-yukuai1@huaweicloud.com>
@@ -64,10 +64,10 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnIxRKW51ogs93Dg--.15627S18
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF48trWDGF4UtFW8Cw45KFg_yoW5Ar4xp3
-	y3tanxKr18JF429w1rAw1a9ryrKwn5uryfJF1ftryxJrZ8ZFn7ZF1YqFyrXr97Xr93Aw4U
-	XrWDZa95W3WIqF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgCnIxRKW51ogs93Dg--.15627S19
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFWDCryfKr15Zw1xKFWfZrb_yoW8Xw1Dp3
+	yft39Fgwn5Zw18Wr10yay8tF13Aa95Aw43Jr4DKF1rtr98Awn29Fs2qr1rXF4xZrZ7AFWU
+	urZ29r98Aa1qva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,81 +86,39 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-The default limits is unchanged, and user can configure async_depth now.
+The nr_requests documentation is still the removed single queue, remove
+it and update to current blk-mq.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/bfq-iosched.c | 43 +++++++++++++++++--------------------------
- 1 file changed, 17 insertions(+), 26 deletions(-)
+ Documentation/ABI/stable/sysfs-block | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index de0dee255ccf..46520e50f584 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -7112,39 +7112,29 @@ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg)
- static void bfq_depth_updated(struct request_queue *q)
- {
- 	struct bfq_data *bfqd = q->elevator->elevator_data;
--	unsigned int nr_requests = q->nr_requests;
-+	unsigned int async_depth = q->async_depth;
- 
- 	/*
--	 * In-word depths if no bfq_queue is being weight-raised:
--	 * leaving 25% of tags only for sync reads.
-+	 * By default:
-+	 *  - sync reads are not limited
-+	 * If bfqq is not being weight-raised:
-+	 *  - sync writes are limited to 75%(async depth default value)
-+	 *  - async IO are limited to 50%
-+	 * If bfqq is being weight-raised:
-+	 *  - sync writes are limited to ~37%
-+	 *  - async IO are limited to ~18
- 	 *
--	 * In next formulas, right-shift the value
--	 * (1U<<bt->sb.shift), instead of computing directly
--	 * (1U<<(bt->sb.shift - something)), to be robust against
--	 * any possible value of bt->sb.shift, without having to
--	 * limit 'something'.
-+	 * If request_queue->async_depth is updated by user, all limit are
-+	 * updated relatively.
- 	 */
--	/* no more than 50% of tags for async I/O */
--	bfqd->async_depths[0][0] = max(nr_requests >> 1, 1U);
--	/*
--	 * no more than 75% of tags for sync writes (25% extra tags
--	 * w.r.t. async I/O, to prevent async I/O from starving sync
--	 * writes)
--	 */
--	bfqd->async_depths[0][1] = max((nr_requests * 3) >> 2, 1U);
-+	bfqd->async_depths[0][1] = async_depth;
-+	bfqd->async_depths[0][0] = max(async_depth * 2 / 3, 1U);
-+	bfqd->async_depths[1][1] = max(async_depth >> 1, 1U);
-+	bfqd->async_depths[1][0] = max(async_depth >> 2, 1U);
- 
- 	/*
--	 * In-word depths in case some bfq_queue is being weight-
--	 * raised: leaving ~63% of tags for sync reads. This is the
--	 * highest percentage for which, in our tests, application
--	 * start-up times didn't suffer from any regression due to tag
--	 * shortage.
-+	 * Due to cgroup qos, the allowed request for bfqq might be 1
- 	 */
--	/* no more than ~18% of tags for async I/O */
--	bfqd->async_depths[1][0] = max((nr_requests * 3) >> 4, 1U);
--	/* no more than ~37% of tags for sync writes (~20% extra tags) */
--	bfqd->async_depths[1][1] = max((nr_requests * 6) >> 4, 1U);
+diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/stable/sysfs-block
+index 0ddffc9133d0..0ed10aeff86b 100644
+--- a/Documentation/ABI/stable/sysfs-block
++++ b/Documentation/ABI/stable/sysfs-block
+@@ -603,16 +603,10 @@ Date:		July 2003
+ Contact:	linux-block@vger.kernel.org
+ Description:
+ 		[RW] This controls how many requests may be allocated in the
+-		block layer for read or write requests. Note that the total
+-		allocated number may be twice this amount, since it applies only
+-		to reads or writes (not the accumulated sum).
 -
- 	blk_mq_set_min_shallow_depth(q, 1);
- }
+-		To avoid priority inversion through request starvation, a
+-		request queue maintains a separate request pool per each cgroup
+-		when CONFIG_BLK_CGROUP is enabled, and this parameter applies to
+-		each such per-block-cgroup request pool.  IOW, if there are N
+-		block cgroups, each request queue may have up to N request
+-		pools, each independently regulated by nr_requests.
++		block layer. Noted this value only represents the quantity for a
++		single blk_mq_tags instance. The actual number for the entire
++		device depends on the hardware queue count, whether elevator is
++		enabled, and whether tags are shared.
  
-@@ -7364,6 +7354,7 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_queue *eq)
- 	blk_queue_flag_set(QUEUE_FLAG_DISABLE_WBT_DEF, q);
- 	wbt_disable_default(q->disk);
- 	blk_stat_enable_accounting(q);
-+	q->async_depth = (q->nr_requests * 3) >> 2;
  
- 	return 0;
- 
+ What:		/sys/block/<disk>/queue/nr_zones
 -- 
 2.39.2
 
