@@ -1,176 +1,114 @@
-Return-Path: <linux-block+bounces-25717-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25719-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B46DBB25DB9
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 09:41:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B3AFB25E24
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 09:57:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A9D924E4630
-	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 07:41:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D1E11884A36
+	for <lists+linux-block@lfdr.de>; Thu, 14 Aug 2025 07:55:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26F7272E63;
-	Thu, 14 Aug 2025 07:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9A8E271465;
+	Thu, 14 Aug 2025 07:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2IxNEFy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SHZnmlxk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F42A270559;
-	Thu, 14 Aug 2025 07:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358A5192D97
+	for <linux-block@vger.kernel.org>; Thu, 14 Aug 2025 07:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755157227; cv=none; b=ksMmEkpw5ivVw2MR2BNKCxuIU9/T2IHCdCdCWwLt3g+OnOUGnpWsmyDv/8/wZvCIsaMhIZJf69skzEx8KaIUmdXZhspXDrIKlXelg7Y3rM58GXL7593kAgS4TFGleS8gX7+twzDhTOJUPnK/Mh5+Y9krXg259bDDXzyHrF1lsH4=
+	t=1755158071; cv=none; b=erFgyENW98I2KdDPQ7/J6SE9V0qMVNZrtFckfMGwO4vAMHFVYhkZRk1H1rKvewEPbz0uoJ9Ck82S5GFQJvyWYGyFGJt0GBwmQkLCwRDMHHICJ7e8NWMA88yIWJEKyv/SEOZ19MrDLNamaEi1KGZxDrVN4wix5wVkUTGqhNBXzFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755157227; c=relaxed/simple;
-	bh=+Gb5lCMHMsLqlAIttH2PAfl6IketLup6dYf05JSPbnQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uWvUNUB7hWuMqZ78SeufWnnGbWRjezUBy+k9grIi7AFfihxlNAjIWICyGP5P+Z767Y6mrWW4uQ5JgdGaqQ/L8vtrAak31s3zjlSTjQgY5FF4RtpRWLqK7jZXUrA2T5+gjODIwxprPkRQa8WwVvgY794yGw+y375vTrfln0kStbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2IxNEFy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D74C4CEF7;
-	Thu, 14 Aug 2025 07:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755157227;
-	bh=+Gb5lCMHMsLqlAIttH2PAfl6IketLup6dYf05JSPbnQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=o2IxNEFym0JKWZP1M9HsvDC6WtVQAsOM2aPJBT4qe5+jzI4zxNthfTZ9Nv98AsO/5
-	 cVn1uNfeQFg2pEgu+vl732JUypCdFXM9ZAVQ4fgXsaWQPaClqz7p5fKClYd5mn+y7O
-	 8hTG+flMW5l1TeBD38KBxagZwqWRCkJH46hApXnYa9TH309elY2tJQm7tddeTOYy+O
-	 8uf44Vt0HyV/NlVizPCi6ltE43ylFF4KfvWaNJdnZIZ3R8nXshmdtrIbQsc3f/AP32
-	 U28xHqSzSr8vu8jn/GBGxtMal4aA8Nm8QR7l28fNkHMClxP0P7uBc7zvYukzTBp3AX
-	 W9ySJwuTAJUEw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
- Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
- <axboe@kernel.dk>, linux-block@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 11/15] rnull: enable configuration via `configfs`
-In-Reply-To: <CAH5fLgi+R=ZW2bFnZP2=231vV6JAHTZJ0UBYkdojG=HjBYR3MA@mail.gmail.com>
-References: <20250812-rnull-up-v6-16-v4-0-ed801dd3ba5c@kernel.org>
- <20250812-rnull-up-v6-16-v4-11-ed801dd3ba5c@kernel.org>
- <mACGre8-fNXj9Z2EpuE3yez_o2T-TtqrdB6HB-VkO0cuvhXsqzECKWMhsz_c43NJUxpsnVpO_U0oLbaaNhXqRQ==@protonmail.internalid>
- <aJw-XWhDahVeejl3@google.com>
- <87cy8zfkw5.fsf@t14s.mail-host-address-is-not-set>
- <WporCpRrDB_e8ocWi63px_bwtPWqRjDL4kVPNNXFNoI6H-4bgk5P_n4iO0E4m-ElwkiNTyBITwgdMXjREE8VXQ==@protonmail.internalid>
- <CAH5fLggraEP7bwzJ+4ww8-7Ku-Z+d0Em3=NDUpa7r8oTLQy81A@mail.gmail.com>
- <877bz7f7jg.fsf@t14s.mail-host-address-is-not-set>
- <wKjTynzVeXix56T1eCrpF4Y7zM7dJVumIB3DljSJeXkHx7Vyb4jKR5X5c5B2yV0DFKItLrncGLWxcTkVynD12g==@protonmail.internalid>
- <CAH5fLgi+R=ZW2bFnZP2=231vV6JAHTZJ0UBYkdojG=HjBYR3MA@mail.gmail.com>
-Date: Thu, 14 Aug 2025 09:40:13 +0200
-Message-ID: <87zfc2e4gy.fsf@t14s.mail-host-address-is-not-set>
+	s=arc-20240116; t=1755158071; c=relaxed/simple;
+	bh=gFxsN1xHXuH4aYODzZvCn6y9twW0wvYlwEoeBLVoaNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8A7/N+pTI23PN354TIp7P4EaOHp0+Lre85gEtbtsQBZAiKK8eLBSM9ZBvdinBhYaElWL02cYtrqX9KqBeM7z8qhlHE5rJSflxmglbQnjZcMzh/D3AOOcAgRs873ocr1TPkZYyJdGNjFNxQIasx2n99KQGC3JJIrog4qIA5bJXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SHZnmlxk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755158068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gvCHjnpcSAUaN7gXzwggkNMvZ98WWP2pt/inhjEHLms=;
+	b=SHZnmlxkLF07TrXjmvKcFrWrwiaUufSgExrzsNftLz1/Tpo6LLqGsYbbnNrwK3WfIkkXw0
+	rLioeEie951IUm4gI01/HIpWX3C2SEuIna1zjvJLRyL4nksmAihMqmnmpklxToQb/m4THM
+	pVIf7zuMAL7mtefNBxQNhZdxAaYyi8s=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-27-bu6aYrPAMeysp_9OCXCHZA-1; Thu,
+ 14 Aug 2025 03:54:24 -0400
+X-MC-Unique: bu6aYrPAMeysp_9OCXCHZA-1
+X-Mimecast-MFC-AGG-ID: bu6aYrPAMeysp_9OCXCHZA_1755158062
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5BA711800298;
+	Thu, 14 Aug 2025 07:54:21 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.148])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 805F019327C0;
+	Thu, 14 Aug 2025 07:54:11 +0000 (UTC)
+Date: Thu, 14 Aug 2025 15:54:07 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, yukuai3@huawei.com, bvanassche@acm.org,
+	nilay@linux.ibm.com, hare@suse.de, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, johnny.chenyi@huawei.com
+Subject: Re: [PATCH 00/16] blk-mq: introduce new queue attribute asyc_dpeth
+Message-ID: <aJ2WH_RAMPQ9sd6r@fedora>
+References: <20250814033522.770575-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814033522.770575-1-yukuai1@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Thu, Aug 14, 2025 at 11:35:06AM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Backgroud and motivation:
+> 
+> At first, we test a performance regression from 5.10 to 6.6 in
+> downstream kernel(described in patch 13), the regression is related to
+> async_depth in mq-dealine.
+> 
+> While trying to fix this regression, Bart suggests add a new attribute
+> to request_queue, and I think this is a good idea because all elevators
+> have similar logical, however only mq-deadline allow user to configure
+> async_depth. And this is patch 9-16, where the performance problem is
+> fixed in patch 13;
+> 
+> Because async_depth is related to nr_requests, while reviewing related
+> code, patch 2-7 are cleanups and fixes to nr_reqeusts.
+> 
+> I was planning to send this set for the next merge window, however,
+> during test I found the last block pr(6.17-rc1) introduce a regression
+> if nr_reqeusts grows, exit elevator will panic, and I fix this by
+> patch 1,8.
 
-> On Wed, Aug 13, 2025 at 7:36=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
-el.org> wrote:
->>
->> "Alice Ryhl" <aliceryhl@google.com> writes:
->>
->> > For your convenience, I already wrote a safe wrapper of kstrtobool for
->> > an out-of-tree driver. You're welcome to copy-paste this:
->> >
->> > fn kstrtobool(kstr: &CStr) -> Result<bool> {
->> >     let mut res =3D false;
->> >     to_result(unsafe {
->> > kernel::bindings::kstrtobool(kstr.as_char_ptr(), &mut res) })?;
->> >     Ok(res)
->> > }
->>
->> Thanks, I did one as well today, accepting `&str` instead. The examples
->> highlight why it is not great:
->
-> Yeah, well, I think we should still use it for consistency.
->
->>   /// Convert common user inputs into boolean values using the kernel's =
-`kstrtobool` function.
->>   ///
->>   /// This routine returns `Ok(bool)` if the first character is one of '=
-YyTt1NnFf0', or
->>   /// [oO][NnFf] for "on" and "off". Otherwise it will return `Err(EINVA=
-L)`.
->>   ///
->>   /// # Examples
->>   ///
->>   /// ```
->>   /// # use kernel::str::kstrtobool;
->>   ///
->>   /// // Lowercase
->>   /// assert_eq!(kstrtobool("true"), Ok(true));
->>   /// assert_eq!(kstrtobool("tr"), Ok(true));
->>   /// assert_eq!(kstrtobool("t"), Ok(true));
->>   /// assert_eq!(kstrtobool("twrong"), Ok(true)); // <-- =F0=9F=A4=B7
->>   /// assert_eq!(kstrtobool("false"), Ok(false));
->>   /// assert_eq!(kstrtobool("f"), Ok(false));
->>   /// assert_eq!(kstrtobool("yes"), Ok(true));
->>   /// assert_eq!(kstrtobool("no"), Ok(false));
->>   /// assert_eq!(kstrtobool("on"), Ok(true));
->>   /// assert_eq!(kstrtobool("off"), Ok(false));
->>   ///
->>   /// // Camel case
->>   /// assert_eq!(kstrtobool("True"), Ok(true));
->>   /// assert_eq!(kstrtobool("False"), Ok(false));
->>   /// assert_eq!(kstrtobool("Yes"), Ok(true));
->>   /// assert_eq!(kstrtobool("No"), Ok(false));
->>   /// assert_eq!(kstrtobool("On"), Ok(true));
->>   /// assert_eq!(kstrtobool("Off"), Ok(false));
->>   ///
->>   /// // All caps
->>   /// assert_eq!(kstrtobool("TRUE"), Ok(true));
->>   /// assert_eq!(kstrtobool("FALSE"), Ok(false));
->>   /// assert_eq!(kstrtobool("YES"), Ok(true));
->>   /// assert_eq!(kstrtobool("NO"), Ok(false));
->>   /// assert_eq!(kstrtobool("ON"), Ok(true));
->>   /// assert_eq!(kstrtobool("OFF"), Ok(false));
->>   ///
->>   /// // Numeric
->>   /// assert_eq!(kstrtobool("1"), Ok(true));
->>   /// assert_eq!(kstrtobool("0"), Ok(false));
->>   ///
->>   /// // Invalid input
->>   /// assert_eq!(kstrtobool("invalid"), Err(EINVAL));
->>   /// assert_eq!(kstrtobool("2"), Err(EINVAL));
->>   /// ```
->>   pub fn kstrtobool(input: &str) -> Result<bool> {
->>       let mut result: bool =3D false;
->>       let c_str =3D CString::try_from_fmt(fmt!("{input}"))?;
->>
->>       // SAFETY: `c_str` points to a valid null-terminated C string, and=
- `result` is a valid
->>       // pointer to a bool that we own.
->>       let ret =3D unsafe { bindings::kstrtobool(c_str.as_char_ptr(), &mu=
-t result as *mut bool) };
->>
->>       kernel::error::to_result(ret).map(|_| result)
->>   }
->>
->> Not sure if we should take `CStr` or `str`, what do you think?
->
-> Using CStr makes sense, since it avoids having the caller perform a
-> useless utf-8 check.
+Please split the patchset into two:
 
-If we re-implement the entire function in rust, we can do the processing
-on a `&str`. That way, we can skip the allocation to enforce null
-termination. At least for this use case. I would rather do a utf8 check
-than allocate and copy.
+- one is for fixing recent regression on updating 'nr_requests', so this
+  can be merged to v6.17, and be backport easily for stable & downstream
+
+- another one is for improving IO performance related with async_depth.
 
 
-Best regards,
-Andreas Hindborg
-
-
+Thanks,
+Ming
 
 
