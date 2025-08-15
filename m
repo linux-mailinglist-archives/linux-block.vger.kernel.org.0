@@ -1,49 +1,50 @@
-Return-Path: <linux-block+bounces-25830-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25825-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 904E4B27A2B
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:36:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB35FB27A28
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:35:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 858A8189A1C4
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:35:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 439C9BA1963
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36542D1F5E;
-	Fri, 15 Aug 2025 07:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67182D7381;
+	Fri, 15 Aug 2025 07:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZgO7ZcU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G93voBOu"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8623207DFE;
-	Fri, 15 Aug 2025 07:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBEC31986D;
+	Fri, 15 Aug 2025 07:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755243141; cv=none; b=BRIOx75ERKhKx4RfDtr0kj3NxcR0heiPuWG3qbSUUrqZ73vB62z/L07ZGIUKgX929wCggV7ltEmv3tXMJgKfXFvT03AZ5rEr0o6wcT++oyazyjvZ0039NxsvSLUH/FLVaF8O+Ox4CEFH4gmnt8N61Tk2ex0NoKyVegduLo911CI=
+	t=1755243121; cv=none; b=H0BE/D1rJ0wMCOoMOrO6p1UPLAF+nWMu30nWz4mQaPcaLfgrU4gKmIZpV7RMnVlXl4QuyCKup4cDECsT5DY7z9DteeheAMRMcupxvjI00qHkdT4qs/rzfx7qXphbtkB22d++1Jz9At/YC95SYoZbUzhs5tTjSumJ73prb1dytjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755243141; c=relaxed/simple;
-	bh=OtQddS6ZPwb9NsJVIHicx+JPypcp8+9DXNsP2q69rJk=;
+	s=arc-20240116; t=1755243121; c=relaxed/simple;
+	bh=J0dcIO8q+R6ovaWgRSo4yUozRWOuH9a5eI1bG+1XmvE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=prPbvGhYIzQgACbwtCmCwcpHLh0B4aH+tB2t6OzarLRsygyAvVQTn35AcBwLYBVPNzDtmdoYjSYgiSrfi4JN3iUDH2l1g+xjey10k8bbnc9GjIuGxqMLTa+WvIBoGUkBBH5p/TApWltZ17QzXmDF9zlbX9csv89FrUOWvlg4FTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZgO7ZcU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707BEC4CEEB;
-	Fri, 15 Aug 2025 07:32:15 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=hcH3DwGhVM1Rku2LGm5fePpN87tg3njvdK3IA2FRE1gaLx8959mFlPYAduDXr+o4OHDLztkYeiTQj1M4wDrbG8HOVGYLgLNe3OPtrqkRW9iSZ8dF/Fyll6Pfajj6QHSNYrN9qBXlmWEHj4gruniN7kDx8c94yT7G3yfLqMXL9x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G93voBOu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7634FC4CEEB;
+	Fri, 15 Aug 2025 07:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755243138;
-	bh=OtQddS6ZPwb9NsJVIHicx+JPypcp8+9DXNsP2q69rJk=;
+	s=k20201202; t=1755243121;
+	bh=J0dcIO8q+R6ovaWgRSo4yUozRWOuH9a5eI1bG+1XmvE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qZgO7ZcUOShEL20wjOzsryQ3ygdF6qfuUgCBur6zonytmSQqSHSmZNJRpJE+x2o7N
-	 d1vf4dD0B0a7LSawyqY01xyvjUKWDwBViiYpmgEIHJRr1oFtrOMa6eWQcuAuJfxSIj
-	 t8mhcM7NgFyRp+vLnyTb1VPhqVOtcq+e9t6KFa/a0wpkQffo1cQrJIJ3ASim/j/flP
-	 nWXFYxcxXqf44VTYLr5rP6+ZqvVxBa83y5sbswBzK+y/TfOTpDK3lHa7zE0zGDbgaM
-	 fSvjZgJtiaSGYPY0nDgcSKiusHXy8ksE3KHgfsZXD6l90w1oF/Ck3/4VnWL4aaT69G
-	 PG5KbNoGygRsA==
+	b=G93voBOu5yyqPy0wLvdJTEzBzl4FMgbOnsNVI82Bp4GG0Lym0JrKLK57QIbN9Ev0+
+	 2a9QvclbQ/Fb7rlrqhTNQgOi9s4tOuttd3WCYIoW2z77leQo3f5lAM71m6HD46X4D2
+	 /jwmTpi4ZnPTSDgM7KLvjQeK5UYaaGT6XXgbzmb3XeyWi2QJzzyPa3fSLMbLZN97SL
+	 DLIo6CtkwTY7LdbcIR83u0GGtMPwQtBrLbKXi6D4HQi9Xe80ZAyiG8g/3FJa/jqIyj
+	 mAE5plPcOwjvPyMvx3F1oX/6/+KApPZQjkGX9KrLZXX6UoxEFQM2R0OXYpdwCkUrem
+	 YXfo4ODuX0wwg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 15 Aug 2025 09:30:41 +0200
-Subject: [PATCH v5 06/18] rust: str: add `bytes_to_bool` helper function
+Date: Fri, 15 Aug 2025 09:30:42 +0200
+Subject: [PATCH v5 07/18] rust: configfs: re-export `configfs_attrs` from
+ `configfs` module
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250815-rnull-up-v6-16-v5-6-581453124c15@kernel.org>
+Message-Id: <20250815-rnull-up-v6-16-v5-7-581453124c15@kernel.org>
 References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
 In-Reply-To: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,54 +65,61 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1366; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=OtQddS6ZPwb9NsJVIHicx+JPypcp8+9DXNsP2q69rJk=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBonuI590lR6f8ZJYdslPPTOmFmX4I5TThmacgAR
- 9fFdCr4UpqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaJ7iOQAKCRDhuBo+eShj
- d5ooD/98J4AUaj99036/IMhZ092yldDZQGM/wznNZmm64EQPuMLGwx9BYaMMckEb8qLzr7v2/WM
- zUSJpfKOpbOEDU78DHDNm2JZiEVUUB3WvlhhuYZlqauAae5MxSfxQgOXp2y78cFVoPeLCTG3txe
- c64LtWAoAFPY5R7TEvOiDA/iYAE7CK52XFpWbbSLbrbVWw4EBo5f/sOS8RoRlRFaviYvCyvN2Ee
- rptSENyTyRdOsUVl5f/81a7eqEfbMNbav+ionpwgetYQVvOtGHv6uoxFIQGT+bPdxaFyk2dp1M1
- qJaoPphFU9AgiHYuadktVpUd9quYqSdHqv6pmoE/wm5+APT3f0QpCm6FtNxtPFVtIe/o/fG+q6i
- AvF0d459YC0YtZeMRxee0YFEc5xBAiotlrmHSAbd5xkLqZ3cll5BwYoj/SIkf2RSu91pOVcigta
- DohSVD5GznhqG49BHko43ShmJqrr1rAsBvqVlcrwqho0dEB6/giuuzOiqu+fx0LQRtQUaCPgEAU
- ofwqBzb853b2u8W2nVfpvpExzUR9ANYYD9lo4geKCvjTXphaO9jPV/mq/xTH1EBuQ8vp62UtV1t
- C8RciBdoFQY51jxRuqlrjDgSOiOaV0Ob1hAZ1wCc8AQS1jhl+O7RPCzkJ4Rj8kUAofAEf/lRZDA
- bV3QkPnGsV0DoCQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=J0dcIO8q+R6ovaWgRSo4yUozRWOuH9a5eI1bG+1XmvE=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBonuI6R4/sQo6t1ylP+Cdy7ShyHbySRhr5YP0/6
+ U8522t06GGJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaJ7iOgAKCRDhuBo+eShj
+ d/YDD/sGRAPpZ7wgjqskbdog7R7HZgLmq5ybhci7fSz2TMcq28MfDjx5Er8eiKmrl6GxlS3kcCF
+ ymK4ZDO8lcKj7OY7qjrr/mpskAxtVXIPrQNhPDzgs5P+I3EVCeIsRdx0X7GfwXiYKHHzT5sGblQ
+ vLOQgNB58k/cbNHSG5PeFjPhV3yM1eD4vmGb2cZu5oadDRCN2MYz31ggHuN3mxGdeN9DK/JztPs
+ aPv7SzJhPLnTYE8ftUC5lCgE/v+ZfYVbKpxfqBEdZfo54pEBkc018VXHrYLZIlrIKWk0GXMWwnV
+ t+V979tio18dfXAPX2TdazPE2BybBFfQZnpMURFg4y9qr4dWqDNqScZvC6XYWjk8Edwu7H2sqE7
+ RrJAsSD2WDTWwZjDjA1J1Gn4E/x4A4i3r0D7LdrQGJDUw1UocFp27V/79ljFcqDwNftdc1nKbfT
+ 48XRAfuKKQi/hhV0NZQejJ2u3cu7bbS0hsKf5s6GVmQaiJ2YRaz/llUV5IEBVizCjOaG1Hx4W5o
+ 4yIPuSrKxuuHmna0OJiGoupG0pzZy/NYPPMBLBxzrto4/ZrJULL1QyCqEjGdc3FhgoVPYiXjMOK
+ Yi8qShcOQDT99J1TApCEYyzgCHXzqDFeYJszB19ybRJAJ2m0GDADiIcuCgCTwpdYzHtSiSU0wpZ
+ sDZu3pcxEkXqZSA==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add a convenience function to convert byte slices to boolean values by
-wrapping them in a null-terminated C string and delegating to the
-existing `kstrtobool` function. Only considers the first two bytes of
-the input slice, following the kernel's boolean parsing semantics.
+Re-export `configfs_attrs` from `configfs` module, so that users can import
+the macro from the `configfs` module rather than the root of the `kernel`
+crate.
+
+Also update users to import from the new path.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/str.rs | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ rust/kernel/configfs.rs       | 2 ++
+ samples/rust/rust_configfs.rs | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 5611f7846dc0..ced1cb639efc 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -978,6 +978,16 @@ pub fn kstrtobool(string: &CStr) -> Result<bool> {
-     kernel::error::to_result(ret).map(|()| result)
- }
+diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+index 2736b798cdc6..0ca35ca8acb8 100644
+--- a/rust/kernel/configfs.rs
++++ b/rust/kernel/configfs.rs
+@@ -121,6 +121,8 @@
+ use core::cell::UnsafeCell;
+ use core::marker::PhantomData;
  
-+/// Convert `&[u8]` to `bool` by deferring to [`kernel::str::kstrtobool`].
-+///
-+/// Only considers at most the first two bytes of `bytes`.
-+pub fn bytes_to_bool(bytes: &[u8]) -> Result<bool> {
-+    // `ktostrbool` only considers the first two bytes of the input.
-+    let nbuffer = [*bytes.first().unwrap_or(&0), *bytes.get(1).unwrap_or(&0), 0];
-+    let c_str = CStr::from_bytes_with_nul(nbuffer.split_inclusive(|c| *c == 0).next().unwrap())?;
-+    kstrtobool(c_str)
-+}
++pub use crate::configfs_attrs;
 +
- /// An owned string that is guaranteed to have exactly one `NUL` byte, which is at the end.
+ /// A configfs subsystem.
  ///
- /// Used for interoperability with kernel APIs that take C strings.
+ /// This is the top level entrypoint for a configfs hierarchy. To register
+diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
+index af04bfa35cb2..ad364fb93e53 100644
+--- a/samples/rust/rust_configfs.rs
++++ b/samples/rust/rust_configfs.rs
+@@ -5,7 +5,7 @@
+ use kernel::alloc::flags;
+ use kernel::c_str;
+ use kernel::configfs;
+-use kernel::configfs_attrs;
++use kernel::configfs::configfs_attrs;
+ use kernel::new_mutex;
+ use kernel::page::PAGE_SIZE;
+ use kernel::prelude::*;
 
 -- 
 2.47.2
