@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-25832-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25822-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57F97B27A2E
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:37:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 604D9B27A1B
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:34:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA4F7AC5BD9
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:35:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00E1917FD0F
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FAAC2E5B3B;
-	Fri, 15 Aug 2025 07:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947592D372F;
+	Fri, 15 Aug 2025 07:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgsr+D0M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCi6hrM/"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D4A2E5B22;
-	Fri, 15 Aug 2025 07:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BD52D3725;
+	Fri, 15 Aug 2025 07:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755243145; cv=none; b=LOd0HW7GRz6wH/5bY1+5H+rJ9Ynjk6eBiO9NW68pDn+LZu8sRK9+xMsvcE6xuMph0hPOQNVvZoxKDJTnWmeUu/HIU6OUyV0suhqyAo1yjOqgsQC9uI4Ws0EVUKagl3QBr+/jXPqWpOUkjkx556bxjyIcP3yBgqYChhH5HYujK/M=
+	t=1755243111; cv=none; b=sSNDpjYEC3mPHaPsWv431KJw6Mf7foJMOq55Ml3o9BYrN7gZd4TcY016jJDu4iPrkCtWPmTGb54UzWrcx3UVLDzhMG1OcxBMsN8BQoXOQ1tjZqSYw6Hg5wj+Jc7f7YgpftLX9mvzST4OXR5YODN7RPQqjRuZFprE3cy5D5soG1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755243145; c=relaxed/simple;
-	bh=9tB3J7dQh1l4F9h682AUS4KgJYolTIIS1I+Be6X1aiI=;
+	s=arc-20240116; t=1755243111; c=relaxed/simple;
+	bh=Ccx5zgSLlbSIiXofZb52HFU6BY4bx1BMin6k8F+fBLU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r16uji2k5j4dAyOTxt6qqv1VCQxw2KqpxFTtS+eFF6jZEofJLHSLWP0sTUVkIthPSTO0Jv9Vqg+/0rtXAUXYpk0pjOhvOEUZpnrL8dgbYGb7nMZtukB0YHisXGRIlQGOvN9njzn7QThxoS/01N+5RQqn1flkiK1YgvdfUVhFPcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgsr+D0M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE96C4CEEB;
-	Fri, 15 Aug 2025 07:32:22 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=BJmlHlVG0Z7eRjmEiVLMyqxJHxxACO1JICdap7xwse2m9cg/ucAiHUHm3Pu3qLQ6tTzp/jA9tWYzFkRVYVeqg9VSfoekyOMol3BDLRdz+Q5cwh2KlrQ/7+UlN9bsCcujDQsz3lTdvmEuG/SH23oJrIidOH19mC20ZGzlqij7reo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCi6hrM/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68790C4CEF5;
+	Fri, 15 Aug 2025 07:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755243145;
-	bh=9tB3J7dQh1l4F9h682AUS4KgJYolTIIS1I+Be6X1aiI=;
+	s=k20201202; t=1755243111;
+	bh=Ccx5zgSLlbSIiXofZb52HFU6BY4bx1BMin6k8F+fBLU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qgsr+D0MaqWugibKHWjkFj+jyGiYjwv/oPDwolUsyfl8N+IKngNZwLbArXpg+UTwU
-	 X3K0VFjGwHmOsSD6rxjr2klvoo8FjsqZApCJKKcih2MrGepGXAuqlh2xWCvHAXGwnp
-	 tOk2T582RanDt/IFXF62mzlp+LN+w63HqpnEZYtTdTTsNjKwpepIePczizA9ZThSAu
-	 ahp5JQQEMW303T7YslMkoUEMPtACf0mOlqeTfWgJ2N6Img4fRsVXAWtpl1Or4Nk9wI
-	 jKXjjEWCm08uff9DVPS4KDPIXTYre7Yu+5TwADlBOu3GVHMJDBFHBQJjZIf2DLmF89
-	 k1pIhtpz68Gsw==
+	b=VCi6hrM/NWYXHPrciG39yNdmLZPR5YDYNZlUFtZk8qAv8f1JmCMM/cyh0aPJo5ofV
+	 SWwQbtUQ/SJmHYMxn0FjdwC/EFhD3DWBStrD54lcccFVKQmnJBD8ToQB53x+iPhxtw
+	 S/bx4jXIqyFaZjcVtI+ug95RMi7hV2FGIEFdGSaOV4Yt9ApWDMIhtV8KXoaYLqUHl2
+	 824bZMbt5ppBXQn7kbXLtGqp0YPAjFhYUN1ZQr1OalI/+H7ll+E+xCh4he4kVTIvrX
+	 /itC+RvEX1VZyjCyFElkzLqWv+uqN5/B7JzDHIy2qRGEFztLGwVz4TtiX11M4Xgb4n
+	 KJkvX7vOk9abg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 15 Aug 2025 09:30:44 +0200
-Subject: [PATCH v5 09/18] rust: block: use `NullTerminatedFormatter`
+Date: Fri, 15 Aug 2025 09:30:45 +0200
+Subject: [PATCH v5 10/18] rust: block: remove `RawWriter`
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250815-rnull-up-v6-16-v5-9-581453124c15@kernel.org>
+Message-Id: <20250815-rnull-up-v6-16-v5-10-581453124c15@kernel.org>
 References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
 In-Reply-To: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -62,98 +62,110 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
  Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
  Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2901; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=9tB3J7dQh1l4F9h682AUS4KgJYolTIIS1I+Be6X1aiI=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBonuI8C7IcaT3KXeuk4OwrC7yn2hhwBakMYVjnx
- QoIQB7uJEaJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaJ7iPAAKCRDhuBo+eShj
- d/VjD/wMq9kMtBAqFA2AgP+zUOtNrIHoueX9M68IaQ23GkiBAUsf9CUMyVukOx25/fmMzL8/4lO
- VzjBom+MaWDDs1fU2CKU/5nu0Ol4t7qhkJlB5zNOh5gz+N9KrRpGnByEtm6Ulm91LuacSTE74V4
- AcBm78bgOqLd18Yln1+7VMQUanBPfpzl3ppQa+yhHhts6M5FzUnlfHO+RDd5TcfK/NW6Yp422Hm
- MmqEDON4wshS3nWrwr9Xof0bpg4i5Zg7dnD6la0zYoU+qt7XlomGHSweWvNBrC6jRT6iItxSS6f
- 62f9mTcBx0/WJvIli7UhqY3n0uCSNuo5v5Y1D9nd5Zo01p+TFxCbjfGwaACT/malUnGQieNKf6Z
- 2h1opvHsVo4cigPu0e2uJbWe78yntPTc0llngTM9nzOIpNNWREkcI5RClfZfWa4hFLxlCp5RxCP
- 2yiNnBhq0yGqJF9vRWpk3OoKqyN19u3oyHwjory4sltjuDnvm44Sbg0N6P2/Tdc9k04FGV89xMQ
- L5kKTotZDKyiXvnfIen1WIMCWvh8XSJYuGj729bi0VeI7YHOkatzMjKsxyEmrLmiSUvfrwXFZRg
- R9U3jhMX5/bKzMiYhacdcf16HzH1TuE2SO8uZYKA5bAkLOQEvFjhVgxbqf7gZcSZmmSzz62EYkC
- T7T/KIKQbwKNDpg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2507; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=Ccx5zgSLlbSIiXofZb52HFU6BY4bx1BMin6k8F+fBLU=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBonuI88IWZ7fNLhL0M+W00aAZDcjP7iujh+g0i6
+ ThQZ6OPhHaJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaJ7iPAAKCRDhuBo+eShj
+ d6EhEADF619stZYj6i5xxO6CmLRojhkTXGrwOWBatsaqHH782uAvz6pkM2dB6MZD2JLf/RR8eYr
+ fTONHUNnf8/2djGrAbNF/DtL9o4PQn0/7rMKOLQ06XpdKk/qSuC0g+XYc2ROzBt55WorpbC0B8M
+ HQGRbRFsSHvJ2y63x4s/3Vyc3NEJAvBc4ygOKlvnVeh/fTrhmhZ5GvGGA8v9NzJi7GZcQgseMM1
+ 3j342DuxIC2KRH8I1bYGsX6eVLoXbqhuMJoFvp7ywf3F4o/CPH1l4WMX9TuHmNKGOd82zchuzSc
+ Yner+FSZ3xJ71iHuikIFS65HeEZHvC+7XzlBN8Fds1BNeKTa0JhNK/4/2P6OJSMUZR+56+i09UH
+ IWQ2q4GALjiWSkIJWM9HmY5mmcXWvNvglucexsQMB3LmMI1ZeSq70K/t0RoJtX5KAb3ji3k4cTK
+ ELVibfziNnAMirMHQXWqdsx3qOzqhJ1P9FNuV2k2/ep+JE3cjQFxNr2tpB4lneNxGIZp+NMejC9
+ GtvhCfPVxnufPW/FnP5INlEj5u4/hZKgX6EMfP2Pur3RY8qO//zV6F3WEtfQhKi7CChhLFN79Rb
+ rFnitcP40afmfT+f/t4zjISZJqg05DCQi/Q91YYp+7sd252OlZQDYBGqjdMRDgfE7de3Elwrt0s
+ 3s5huC8FqyJI65A==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Use the new `NullTerminatedFormatter` to write the name of a `GenDisk` to
-the name buffer. This new formatter automatically adds a trailing null
-marker after the written characters, so we don't need to append that at the
-call site any longer.
+`RawWriter` is now dead code, so remove it.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/block/mq/gen_disk.rs   | 12 +++++++-----
- rust/kernel/block/mq/raw_writer.rs |  1 +
- rust/kernel/str.rs                 |  1 -
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ rust/kernel/block/mq.rs            |  1 -
+ rust/kernel/block/mq/raw_writer.rs | 56 --------------------------------------
+ 2 files changed, 57 deletions(-)
 
-diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
-index 679ee1bb2195..20f1d46c774d 100644
---- a/rust/kernel/block/mq/gen_disk.rs
-+++ b/rust/kernel/block/mq/gen_disk.rs
-@@ -7,9 +7,11 @@
+diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
+index 831445d37181..98fa0d6bc8f7 100644
+--- a/rust/kernel/block/mq.rs
++++ b/rust/kernel/block/mq.rs
+@@ -89,7 +89,6 @@
  
- use crate::{
-     bindings,
--    block::mq::{raw_writer::RawWriter, Operations, TagSet},
-+    block::mq::{Operations, TagSet},
-     error::{self, from_err_ptr, Result},
-+    prelude::*,
-     static_lock_class,
-+    str::NullTerminatedFormatter,
-     sync::Arc,
- };
- use core::fmt::{self, Write};
-@@ -143,14 +145,14 @@ pub fn build<T: Operations>(
-         // SAFETY: `gendisk` is a valid pointer as we initialized it above
-         unsafe { (*gendisk).fops = &TABLE };
+ pub mod gen_disk;
+ mod operations;
+-mod raw_writer;
+ mod request;
+ mod tag_set;
  
--        let mut raw_writer = RawWriter::from_array(
-+        let mut writer = NullTerminatedFormatter::new(
-             // SAFETY: `gendisk` points to a valid and initialized instance. We
-             // have exclusive access, since the disk is not added to the VFS
-             // yet.
-             unsafe { &mut (*gendisk).disk_name },
--        )?;
--        raw_writer.write_fmt(name)?;
--        raw_writer.write_char('\0')?;
-+        )
-+        .ok_or(EINVAL)?;
-+        writer.write_fmt(name)?;
- 
-         // SAFETY: `gendisk` points to a valid and initialized instance of
-         // `struct gendisk`. `set_capacity` takes a lock to synchronize this
 diff --git a/rust/kernel/block/mq/raw_writer.rs b/rust/kernel/block/mq/raw_writer.rs
-index 7e2159e4f6a6..0aef55703e71 100644
+deleted file mode 100644
+index 0aef55703e71..000000000000
 --- a/rust/kernel/block/mq/raw_writer.rs
-+++ b/rust/kernel/block/mq/raw_writer.rs
-@@ -24,6 +24,7 @@ fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
-         Ok(Self { buffer, pos: 0 })
-     }
- 
-+    #[expect(dead_code)]
-     pub(crate) fn from_array<const N: usize>(
-         a: &'a mut [crate::ffi::c_char; N],
-     ) -> Result<RawWriter<'a>> {
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index ced1cb639efc..2ea3ea1bdb4b 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -886,7 +886,6 @@ pub(crate) struct NullTerminatedFormatter<'a> {
- 
- impl<'a> NullTerminatedFormatter<'a> {
-     /// Create a new [`Self`] instance.
++++ /dev/null
+@@ -1,56 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-
+-use core::fmt::{self, Write};
+-
+-use crate::error::Result;
+-use crate::prelude::EINVAL;
+-
+-/// A mutable reference to a byte buffer where a string can be written into.
+-///
+-/// # Invariants
+-///
+-/// `buffer` is always null terminated.
+-pub(crate) struct RawWriter<'a> {
+-    buffer: &'a mut [u8],
+-    pos: usize,
+-}
+-
+-impl<'a> RawWriter<'a> {
+-    /// Create a new `RawWriter` instance.
+-    fn new(buffer: &'a mut [u8]) -> Result<RawWriter<'a>> {
+-        *(buffer.last_mut().ok_or(EINVAL)?) = 0;
+-
+-        // INVARIANT: We null terminated the buffer above.
+-        Ok(Self { buffer, pos: 0 })
+-    }
+-
 -    #[expect(dead_code)]
-     pub(crate) fn new(buffer: &'a mut [u8]) -> Option<NullTerminatedFormatter<'a>> {
-         *(buffer.first_mut()?) = 0;
- 
+-    pub(crate) fn from_array<const N: usize>(
+-        a: &'a mut [crate::ffi::c_char; N],
+-    ) -> Result<RawWriter<'a>> {
+-        Self::new(
+-            // SAFETY: the buffer of `a` is valid for read and write as `u8` for
+-            // at least `N` bytes.
+-            unsafe { core::slice::from_raw_parts_mut(a.as_mut_ptr().cast::<u8>(), N) },
+-        )
+-    }
+-}
+-
+-impl Write for RawWriter<'_> {
+-    fn write_str(&mut self, s: &str) -> fmt::Result {
+-        let bytes = s.as_bytes();
+-        let len = bytes.len();
+-
+-        // We do not want to overwrite our null terminator
+-        if self.pos + len > self.buffer.len() - 1 {
+-            return Err(fmt::Error);
+-        }
+-
+-        // INVARIANT: We are not overwriting the last byte
+-        self.buffer[self.pos..self.pos + len].copy_from_slice(bytes);
+-
+-        self.pos += len;
+-
+-        Ok(())
+-    }
+-}
 
 -- 
 2.47.2
