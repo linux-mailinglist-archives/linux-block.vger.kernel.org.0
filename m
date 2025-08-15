@@ -1,96 +1,104 @@
-Return-Path: <linux-block+bounces-25857-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25859-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 916DDB27AD2
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:21:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDFEBB27B07
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:30:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 450AD604160
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:21:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC34F1C8218C
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E4623FC66;
-	Fri, 15 Aug 2025 08:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E4E72BEC50;
+	Fri, 15 Aug 2025 08:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kEjJsjXD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+HhCZw3"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BC71FAC4D
-	for <linux-block@vger.kernel.org>; Fri, 15 Aug 2025 08:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D448A274656;
+	Fri, 15 Aug 2025 08:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246077; cv=none; b=q4shrAIElFGKO18VS81L51XXhTt+7e59bp+wra8frWGWe4imxYgTC5VPU+gcrbZNdulD/Ax+iI1wkkCoTs6hrR2u4XaOWjsREM048DETKjf8BcFp5zyNwa6QrOCbXy5GA+OOCiQXOJ4TcFbnQV9t2nlRpj4NeQHv7SRrPGI/ltA=
+	t=1755246572; cv=none; b=SUVV/lckcIqQCDs0bq/cm0r2SH/AKr1Fb/U2E0TIvCiOQsBT+5nfg+KKbE+dlrf8luW23gWBa0+8SR7yfayGmPrIw1FEdlBuzq/hAA3aSE6kRYsBieWcbnJjb311hwNkkzO6kY13/OcGyC7NJQ0LKCf6fSZty79U3b85UfSkMz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246077; c=relaxed/simple;
-	bh=hSfxyTbyhJVUsktaRzvTdGGxGaUMaidseyMOAWvH21E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j5/8AOm+8puWHOzCNYep0yWeKVzhkgTATQd2v2RujLLQt4ygBL7oNEsxODI/HYgQ6y0lgphtSSilgrOihFtNMlSRWt9KdbMXevU292r1pOQ66cztPSB8eDNcVBtKbUVVdmDH1X9P679lpsHucThK96dtVOvB2DG1GPNpiiRtf1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kEjJsjXD; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-45a1b05d251so8535885e9.1
-        for <linux-block@vger.kernel.org>; Fri, 15 Aug 2025 01:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755246074; x=1755850874; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vcSm1OtREGPb104alZ1yzuEUCvwCzNvElhs+/6tX29M=;
-        b=kEjJsjXDVSZ0XGKZIoPLMZ8Nd2o3r4RVuTUOTm35nzbBh43JW/HHonuatwlN2jTmck
-         t4Pbqy9j9Uxeuni2+Z0fQG7c1OjXJNfowze/AeFN0Nn0IeHJD2iqdeAdJuGKGwI2E+N5
-         zPcdKLPdDj0Mx5aZRh7lcI0aOfqEIH1AQYuPpY+/EyHUMOaoxJyTio3JjsbnXUuZ/zaF
-         pnpd+hdneYid3xeZWihPFJxoCak3a02djxo4gv387dO9kBley1gdESrJjRkICwpD12lQ
-         ZDQj8kpqXIynqkGbqcIFziwPR/S7Eh3w9juCNLq3526dGXouP+kyN82cBjDt5Jv22wyY
-         rJTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755246074; x=1755850874;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vcSm1OtREGPb104alZ1yzuEUCvwCzNvElhs+/6tX29M=;
-        b=BVl4yaCnSWcFswkYZbvtyC8lnVFAyQthUzHPWHl5PviNOmrXYhVCCBYrP5ST37fkty
-         BGGGbpFSA2PuEGPcLh/P/kB/Cqhgms+8gE1urH2gkrfWHhKcYoL5keA8zrjeWiE2JF8Y
-         ubXHTGjKGZq3K1chkh3wUdlXdeVV+B0d6B/4/BcL9EsGNIArqctCQp1oaW+C1O7v4Act
-         Qhj/LMRm+GS6+UATu/78IKLOuGeO7ZHOfOesEkYwPckhKRitqiq9cxUvP5Xf/RQSe+qS
-         CDzgVhQNnTrTy7wvUG+95AZ5nQGE7M9pO3s2mtdBCQy2PfJ62LxJ30bByFsu3ovxlUXw
-         hoVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeOMf8PKHVw1N+jwg3LHCMwiKltRZBqtxcnKWmsVLnhegK3BlMu8j/ocPeiARsRZG+BP3JnjmZxI/deg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuR0NIPJu+F1G/i6seuemYrhvSUhbsLF7GoSGOi45o9klcOBgq
-	Qmww3nnv2XdsPi77NeAkP2xCV0sMQlXxvf67035iJ1eLq/atSZWhtCc6D0ydyu8WnAZUaA09itd
-	ajCcW18lup5wPaSYQzA==
-X-Google-Smtp-Source: AGHT+IFutm5xxBBsC59USuggF9xEm41gGKiB1W5K+wZvTnUgdqDAaA6QwhiqihbNCQ9esv5k56Fiq6NBFva5rrc=
-X-Received: from wmbji1.prod.google.com ([2002:a05:600c:a341:b0:459:da33:b20c])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:524b:b0:456:29da:bb25 with SMTP id 5b1f17b1804b1-45a2183a65bmr12532315e9.19.1755246073966;
- Fri, 15 Aug 2025 01:21:13 -0700 (PDT)
-Date: Fri, 15 Aug 2025 08:21:13 +0000
-In-Reply-To: <20250815-rnull-up-v6-16-v5-18-581453124c15@kernel.org>
+	s=arc-20240116; t=1755246572; c=relaxed/simple;
+	bh=VxcsBOeu1J5e/lJVVvb1LNtN8gXPTdrV3QJ7TZwEt3c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tej0CKIAsg0YZsL0Wj5lPItkWW7XT4QsRO7MGm4WYiJs/PALEa7es4s+H2st8YOE5ZtIvt9krDMgpY4XsNEdiyPCXzMCwVt6XK9gZkO2HmkVsH08zrcV0iocTKdBaa2VcEwUG4hWrg8AUBn3I2ZwoTyssOw/gWwsZfHMMXqnpDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+HhCZw3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73CFC4CEEB;
+	Fri, 15 Aug 2025 08:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755246571;
+	bh=VxcsBOeu1J5e/lJVVvb1LNtN8gXPTdrV3QJ7TZwEt3c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=B+HhCZw30dw+stsBXNqRhZlm5vriSXWGVsysJE1U9167SxNHHYEVcV+gmz/tdXRYj
+	 D0zegd8d3oR7lXaUr0b9B/oEOOi62ZX4Xl7zNr4YjtwcB3qPPWHtgu0Azb/A1QrBQ9
+	 VbxzXGHarp2/DSwH4pPjTmOpiN85Tk1oZS/ITYj9S8wpBlrGj0QdVsT+zx7RgWC6bM
+	 4hhdYuZKrURi/yNYnPvdOeKssPJeJSI/8dm3lXQ4JKmvXgxCR01SOr92mdpLZv/RjT
+	 T1D3bwOcu7gJPxqbwqX9c9o7YOnmOcQkUiWLEcBJc3Y1RVq13/m9iROh//w7MK67lA
+	 fROYAjX85byDg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
+ Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
+ <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
+ linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 05/18] rust: str: introduce `kstrtobool` function
+In-Reply-To: <aJ7oY9pxlrnfAv8s@google.com>
+References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
+ <20250815-rnull-up-v6-16-v5-5-581453124c15@kernel.org>
+ <pgjDvgv_zgXpw__-x9lGE-DPbTDmrZqXuCOxL5pHZUrg6cbqMjfGmapEWAXq6nLueznXP4NwV5Uauc92SoufBQ==@protonmail.internalid>
+ <aJ7oY9pxlrnfAv8s@google.com>
+Date: Fri, 15 Aug 2025 10:21:44 +0200
+Message-ID: <87o6shdmg7.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org> <20250815-rnull-up-v6-16-v5-18-581453124c15@kernel.org>
-Message-ID: <aJ7t-XS2mXFc_Xc6@google.com>
-Subject: Re: [PATCH v5 18/18] rnull: add soft-irq completion support
-From: Alice Ryhl <aliceryhl@google.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Breno Leitao <leitao@debian.org>, linux-block@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, Aug 15, 2025 at 09:30:53AM +0200, Andreas Hindborg wrote:
-> rnull currently only supports direct completion. Add option for completing
-> requests across CPU nodes via soft IRQ or IPI.
-> 
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> On Fri, Aug 15, 2025 at 09:30:40AM +0200, Andreas Hindborg wrote:
+
+<cut>
+
+>> +pub fn kstrtobool(string: &CStr) -> Result<bool> {
+>> +    let mut result: bool = false;
+>> +
+>> +    // SAFETY: `string` is a valid null-terminated C string, and `result` is a valid
+>> +    // pointer to a bool that we own.
+>> +    let ret =
+>> +        unsafe { bindings::kstrtobool(string.as_char_ptr(), core::ptr::from_mut(&mut result)) };
+>
+> Using ptr::from_mut here seesm excessive IMO. I think that function
+> makes sense when it replaces an explicit `as` cast, but now when it can
+> be done by a coercion. This is perfectly readable:
+>
+> let ret = unsafe { bindings::kstrtobool(string.as_char_ptr(), &mut result) };
+>
+> Or if you insist, you could directly create a raw pointer:
+>
+> let ret = unsafe { bindings::kstrtobool(string.as_char_ptr(), &raw mut result) };
+
+Oh, I'll do the implicit coercion then.
+
+I was using `&mut result as *mut bool` but clippy told me to do the `from_mut`
+instead.
+
+
+Best regards,
+Andreas Hindborg
+
 
 
