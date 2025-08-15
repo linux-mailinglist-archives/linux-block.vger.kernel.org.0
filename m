@@ -1,109 +1,108 @@
-Return-Path: <linux-block+bounces-25858-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25861-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F10D2B27B01
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:30:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75B58B27B0F
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:32:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E5E81BC17F9
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:30:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01F30A28DFF
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:31:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E617E288C3B;
-	Fri, 15 Aug 2025 08:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFA5220F30;
+	Fri, 15 Aug 2025 08:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBit8ylj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5TAiuaL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7684274656;
-	Fri, 15 Aug 2025 08:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA7B1A2C06
+	for <linux-block@vger.kernel.org>; Fri, 15 Aug 2025 08:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246568; cv=none; b=X5PBsE2CpXs2uGkep4+fDLtvhFL7pMtB6E3GY5SDHqndmhBVI3w8TGgTfFt3rqIOW/8X3UxjG1qDB05fc1AI4NSYJMGFW2ZW7GWrSSPuO6uY2QZSyPsNPYwnK3St38dD8drA1ZTTMTE+3olNWKLWv97OCQZC0eXlD+tCcfBFgR8=
+	t=1755246662; cv=none; b=D3U/J35u1Oc6Bjf2YZVCCVSElv3yrsGzVYm3B+pzR8SyLZKXwMSTwKEW746VCsdokgKK4TTvU1hAWLXDk3iN8CWbwCrD1mkun3avFjrNJHYKjnVgXBayZQnibyV0DMjJEh1JRDldx3txbUcEsCnmM0I+0UgmHMYfskjD7mYlt2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246568; c=relaxed/simple;
-	bh=04WDM1P3dI298aPORjuUEvo2ZzH5WcrdlgbcYAXeKik=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tCpkDf9r1bHW7RFhjrux33E7Ocvub43nWrkxbmw6n0yVdxSVwavkj2bobqsVaB7dlanIuspXdm0kuVUhtKP75+1N6mSp/nhmH8CAh0XVY+TVzCPOt0x4DbpxeqK32GPZmYBohFmDRc7ihdQROx0Ub80qEpJknzFP5Q5bZeolhd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBit8ylj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DC6C4CEEB;
-	Fri, 15 Aug 2025 08:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755246568;
-	bh=04WDM1P3dI298aPORjuUEvo2ZzH5WcrdlgbcYAXeKik=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=WBit8ylj2asPwx1SZmIFbsQd/tWKfh9JYqqMUSZJTl48dxx/VAvCETS9frLuvtsb7
-	 oxxt8wenkSVCW9DqEReRzVrXLgz/YiMrC7L1L9pI1OFGLjeEAgKpnrbtNJ9/IZ1yrW
-	 NOMUP0uL5Leddg804Fsb2Z/spoNOl30CXuGGBOX/ucDFdlFzMeyqGPQ8s9VfADHSnG
-	 fgKomVzFp4J4sigCpbxMAqcTQjsaCbW07zrnBY9DCDeOiAp1YIsjx8id6VY52vSarE
-	 X+hJlBcY4DmcnmqxXC46XjDh8Nf0A+Rpb7uxNV2Vl5Gq5CBxDO8fpIOkLz+b8PN4Wd
-	 z8nvDYDwSSV7Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
- Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
- <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
- linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/18] rust: configfs: re-export `configfs_attrs`
- from `configfs` module
-In-Reply-To: <aJ7sQF6ObVlwX3U0@google.com>
-References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
- <20250815-rnull-up-v6-16-v5-7-581453124c15@kernel.org>
- <UNKR4V3pgHcYGU76GBf8aBKpJPgL7tf5Ct7oM0C_JEiL6Hq2uewAuV3yQCcJ55QSQJ-0_bMM3zA7f_zmAIGHjg==@protonmail.internalid>
- <aJ7sQF6ObVlwX3U0@google.com>
-Date: Fri, 15 Aug 2025 10:29:15 +0200
-Message-ID: <87ikipdm3o.fsf@t14s.mail-host-address-is-not-set>
+	s=arc-20240116; t=1755246662; c=relaxed/simple;
+	bh=UQcJChL1z6SPalX2fGTv92LMBnWLGK7AcpH+aKksyfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qm474SYSPzzH1q2CEI6/IKwQ59m7dhql/u/UbyPlbH/Ml183gAYFwFL+EzBUxr6iFI0yjxhMd4KGCDnJsMpxsGHBg9OcP9XzLnvioyNyl11aukoiefAQVxHKelZoWY45wBUcrGh8sLlo/Js4DPDetwyMarIAG3IV+bh+/SVpZvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5TAiuaL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755246659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n0hSepW5WjWx+taheJm8TbQB80RTQNqQPc4V+jMToCU=;
+	b=Y5TAiuaL+YNdnEDfa6lBt44WHl4Q7HRTAIXBu0xQL2Yr20500GOonbGwjv1r2a1W6i1PLY
+	la+TRhlY6Cg9cEIjt3fwOAsH+aWDhOuHDjQHYpBb3LoG5XiRU3Ce2pWv4zq4qh/Fq8phe/
+	JXID+eFMWMbp5sP3xT0eHdCk0Ap31r0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-HsaJxG8tOzKH5gBR2XGoOA-1; Fri,
+ 15 Aug 2025 04:30:54 -0400
+X-MC-Unique: HsaJxG8tOzKH5gBR2XGoOA-1
+X-Mimecast-MFC-AGG-ID: HsaJxG8tOzKH5gBR2XGoOA_1755246652
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD73D1954228;
+	Fri, 15 Aug 2025 08:30:51 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.153])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A07EF1800447;
+	Fri, 15 Aug 2025 08:30:45 +0000 (UTC)
+Date: Fri, 15 Aug 2025 16:30:40 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, hare@suse.de, nilay@linux.ibm.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: Re: [PATCH 00/10] blk-mq: fix blk_mq_tags double free while
+ nr_requests grown
+Message-ID: <aJ7wMFkuTewlyx1P@fedora>
+References: <20250815080216.410665-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250815080216.410665-1-yukuai1@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Fri, Aug 15, 2025 at 04:02:06PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> In the case user trigger tags grow by queue sysfs attribute nr_requests,
+> hctx->sched_tags will be freed directly and replaced with a new
+> allocated tags, see blk_mq_tag_update_depth().
+> 
+> The problem is that hctx->sched_tags is from elevator->et->tags, while
+> et->tags is still the freed tags, hence later elevator exist will try to
+> free the tags again, causing kernel panic.
+> 
+> patch 1-6 are prep cleanup and refactor patches for updating nr_requests
+> patch 7,8 are the fix patches for the regression
+> patch 9 is cleanup patch after patch 8
+> patch 10 fix the stale nr_requests documentation
 
-> On Fri, Aug 15, 2025 at 09:30:42AM +0200, Andreas Hindborg wrote:
->> Re-export `configfs_attrs` from `configfs` module, so that users can import
->> the macro from the `configfs` module rather than the root of the `kernel`
->> crate.
->>
->> Also update users to import from the new path.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->
->>  rust/kernel/configfs.rs       | 2 ++
->>  samples/rust/rust_configfs.rs | 2 +-
->>  2 files changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
->> index 2736b798cdc6..0ca35ca8acb8 100644
->> --- a/rust/kernel/configfs.rs
->> +++ b/rust/kernel/configfs.rs
->> @@ -121,6 +121,8 @@
->>  use core::cell::UnsafeCell;
->>  use core::marker::PhantomData;
->>
->> +pub use crate::configfs_attrs;
->
-> In other re-exports of macros, we've placed it immediately after the
-> macro_rules! declaration.
+Please do not mix bug(regression) fix with cleanup.
 
-Ok, makes sense. I'll move it.
+The bug fix for updating nr_requests should have been simple enough in single
+or two patches, why do you make 10-patches for dealing with the regression?
+
+Not mention this way is really unfriendly for stable tree backport.
 
 
-Best regards,
-Andreas Hindborg
-
-
+Thanks,
+Ming
 
 
