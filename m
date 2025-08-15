@@ -1,99 +1,142 @@
-Return-Path: <linux-block+bounces-25866-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25864-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46033B27CF3
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 11:24:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A8FCB27C69
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 11:14:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4791FB04095
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:15:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89B8B1D044A4
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD0E258CF7;
-	Fri, 15 Aug 2025 09:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBGuIDA6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5592C26FDB3;
+	Fri, 15 Aug 2025 09:05:43 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D6323AB8B;
-	Fri, 15 Aug 2025 09:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8BA23A9A0;
+	Fri, 15 Aug 2025 09:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755249033; cv=none; b=BSDSApyLk3ucCrNOtI5wYOEANEECBp1pjIisi9TzAHBKIGIqpChIOG4cIJtiiTDNISl62yO05t1O2q+qr8r+O4/HpBjbtun4cOao+E8xn4KeFKr52HizsXuecAuLaMkEh3CyeRBbvmE/6iIw5UcIwRM5TckiNghWgooQ/jURAco=
+	t=1755248743; cv=none; b=rJEM+jo3TBIoXznLUinYK4kmETGOP5B0K12dfvpqEqkhu0mGxdQrWcDGrNtzfE5CzGaM6KNGetW+Mm0xa4jiIkHSh1lx+9UJaKHet1cZZyfMK2JVunu0wZAz3UadAf6OkIbksXojEAyFXjDGYYCydfaMavWLO8opkwI/OpUdwE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755249033; c=relaxed/simple;
-	bh=30vV9pXBRs2HMe5d6GPdXEani0gIO+FipecKZyNwFv8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Cz6ykvEbfwVqfiQSvHnHjLf9AYbqQ1UPcYxdiOOCn4vL8m7cLrlml4DffswVUOuft0bheUaFyvemIkqDGLgOt5fVyvkHw6ZBZYXY3h8koW+9U2EfioZfgmwyp4Kg8Z+ng1ovTTGnn8GPdqvosaUINZCIu7iP1JLCBOy2AIBiF0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBGuIDA6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBA0C4CEEB;
-	Fri, 15 Aug 2025 09:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755249033;
-	bh=30vV9pXBRs2HMe5d6GPdXEani0gIO+FipecKZyNwFv8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kBGuIDA6F0jog95YtwShwZjNbtnHMv6V0gQfSdAD6dvoefE9kpcaYIxTrk1kOvKY4
-	 oqJjOe66RZ6hTd29WQeq86NhwRCtMqGQIrRxHlQLY9tLQx/+4ER1q6L0CdNtakanZ4
-	 1ooWlBJifUfc/rJBJrnm6i21Onc1EQ/pS0EUgr21cpApXzw6kPqhCrXfv6tYOBJ4nP
-	 uDLnDQbpV6A+MLDdQfCAtV4chQLGS0OP4AlWfJglD3kn5WtYsmN7joTSA0LnAApJz6
-	 t52zJBQHfwFtSzI6Wz69WJnvFLAVWh8kZPWh4EiUb63olT9hdeH/h9XGeF1G6tMBGw
-	 cmTMOSy6unB+Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
- Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
- <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
- linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 14/18] rnull: enable configuration via `configfs`
-In-Reply-To: <aJ7tFulqpuF481Wg@google.com>
-References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
- <20250815-rnull-up-v6-16-v5-14-581453124c15@kernel.org>
- <PJhsfpOsp7EkWugCN65OhC9eUuui8Lt7SoAjHDCXqdUn59sTZrrZiopgyhYIVD5l5JamiZ8fXWRpM7E3dtORfA==@protonmail.internalid>
- <aJ7tFulqpuF481Wg@google.com>
-Date: Fri, 15 Aug 2025 11:04:09 +0200
-Message-ID: <87frdtdkhi.fsf@t14s.mail-host-address-is-not-set>
+	s=arc-20240116; t=1755248743; c=relaxed/simple;
+	bh=mKc1P53XG+rCnhVoLPZgdTOwUUOpQ4S+OcCGACdQcfo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PCs3lRrE4tSB2nZrpyxZE9jYG6JLpNbR/sdmEs0w6MPQdiBCrIlmj0d4inarOhfOX3tSRLvDvixdLhvyLoCO7mG3au9FbEjMyDBoFlTZ676KIVCApVQWJEE7p5KtRr5vSGMYUh+qS4gXYPjB4pWCRKCpdRynN1h/821TLVEwseY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c3GRP4dy4zYQvDL;
+	Fri, 15 Aug 2025 17:05:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 426D61A06D7;
+	Fri, 15 Aug 2025 17:05:36 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBHwhJe+J5oBoQDDw--.54303S3;
+	Fri, 15 Aug 2025 17:05:36 +0800 (CST)
+Subject: Re: [PATCH 00/10] blk-mq: fix blk_mq_tags double free while
+ nr_requests grown
+To: Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, hare@suse.de, nilay@linux.ibm.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250815080216.410665-1-yukuai1@huaweicloud.com>
+ <aJ7wMFkuTewlyx1P@fedora>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <abde1955-d634-29d4-d229-df8c6ebdc582@huaweicloud.com>
+Date: Fri, 15 Aug 2025 17:05:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <aJ7wMFkuTewlyx1P@fedora>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBHwhJe+J5oBoQDDw--.54303S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1kJr4fGF4fWr4rur4fuFg_yoW8ZrWUpw
+	4rWayakrs0qw18Jw4xJ34Fqw10yw4v9ryagryFyry8G3Z8XFWIvr4FqFsFqF97ur93GFsF
+	9FZ7Xan7ZFZrZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+Hi,
 
-> On Fri, Aug 15, 2025 at 09:30:49AM +0200, Andreas Hindborg wrote:
->> Allow rust null block devices to be configured and instantiated via
->> `configfs`.
+ÔÚ 2025/08/15 16:30, Ming Lei Ð´µÀ:
+> On Fri, Aug 15, 2025 at 04:02:06PM +0800, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
 >>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->
->> +impl NullBlkDevice {
->> +    fn new(
->> +        name: &CStr,
->> +        block_size: u32,
->> +        rotational: bool,
->> +        capacity_mib: u64,
->> +    ) -> Result<GenDisk<Self>> {
->> +        let tagset = Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
->
-> GFP_KERNEL is in the prelude.
+>> In the case user trigger tags grow by queue sysfs attribute nr_requests,
+>> hctx->sched_tags will be freed directly and replaced with a new
+>> allocated tags, see blk_mq_tag_update_depth().
+>>
+>> The problem is that hctx->sched_tags is from elevator->et->tags, while
+>> et->tags is still the freed tags, hence later elevator exist will try to
+>> free the tags again, causing kernel panic.
+>>
+>> patch 1-6 are prep cleanup and refactor patches for updating nr_requests
+>> patch 7,8 are the fix patches for the regression
+>> patch 9 is cleanup patch after patch 8
+>> patch 10 fix the stale nr_requests documentation
+> 
+> Please do not mix bug(regression) fix with cleanup.
+> 
+> The bug fix for updating nr_requests should have been simple enough in single
+> or two patches, why do you make 10-patches for dealing with the regression?
 
-OK, thanks.
+Ok, in short, my solution is:
 
+- serialize switching elevator with updating nr_requests
+- check the case that nr_requests will grow and allocate elevator_tags
+before freezing the queue.
+- for the grow case, switch to new elevator_tags.
 
-Best regards,
-Andreas Hindborg
+I do tried and I can't find a easy way to fix this without making
+related code uncomfortable. Perhaps because I do the cleanups and
+refactor first and I can't think outside the box...
 
+> 
+> Not mention this way is really unfriendly for stable tree backport.
 
+I checked the last time related code to queue_requests_store() was
+changed is commit 3efe7571c3ae ("block: protect nr_requests update using
+q->elevator_lock"), and I believe this is what the fixed patch relied
+on, so I think backport will not have much conflicts.
+
+Whatever stbale branch that f5a6604f7a44 ("block: fix lockdep warning
+caused by lock dependency in elv_iosched_store") is backported, I can
+make sure a proper fix is backported as well.
+
+Thanks,
+Kuai
+
+> 
+> 
+> Thanks,
+> Ming
+> 
+> 
+> .
+> 
 
 
