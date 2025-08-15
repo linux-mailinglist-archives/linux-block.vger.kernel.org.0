@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-25847-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25845-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D811BB27AA0
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:12:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1B99B27A9A
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:11:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5A3A7BB682
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:09:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38F143BFD70
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085BA2D321F;
-	Fri, 15 Aug 2025 08:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F232B2D0C6C;
+	Fri, 15 Aug 2025 08:10:12 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECC4245031;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D7246BB9;
 	Fri, 15 Aug 2025 08:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755245413; cv=none; b=QmmcNX0nM/G5hQL8ivxCpoXh+MQS9BovvfkIydpe4f+Nu0CJ7i9O9M/nqm+zmXVAFS9P8emk1o82syjseC5QoYKszcxrUN+id2QN9dNaf0H5eJ2aEsK+uZ5lfsAGxwTGWJXB+JakfzGE/SFjLfVDusgNlQ+vxn3JhJvIzp4vuuU=
+	t=1755245412; cv=none; b=lBLJGzOK8VpgkSwJEz80QdOiZjA32H9ZuwFNgny6HRWrYFDU98SM0nGqdHO1V9ugJmYCXi8+P4BYwRkjXEFOVyGYvfkFi2B8YIAMKuisyjfyXwqrwtu31BDJ34IzIEsNla1jVV8NPtn/vx6CrPTkFxfayylpTbGPOmHIO8W+skI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755245413; c=relaxed/simple;
-	bh=uwS4uv6TNa9vAE2OG+ULMVRqXVzT2KChvnTDwkVYLe4=;
+	s=arc-20240116; t=1755245412; c=relaxed/simple;
+	bh=qJyYXd4U74eACysqGJuJcbG8PT+aB8k8HUbQhaWO0YI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xf08ZpBOzZdIAILIGiXkFkbG2kfuYxL+tG0Jvah8+ymr46zjCAamnXjekp1nWyUtRM1ReSZT/2gcqlxYOhscDA7BUog/l0OeE1JOD4nN+Hk0j0rTHaNm83S4yQgsX7kMak2o/bcZsFjIzxD0WA4rQLb3Jg4nJAfQclBhQHbL14o=
+	 MIME-Version; b=JPuS1rPAuY+eR1uMbXJPeu9kyDtVoK2Oxrbi0ud2SlWwIMcNR9iO5xty1zv0qy9o4VHI/csF24F4DlTwfqFE93e/de5BQWgWKYavoPg836oDq4JGhqrZrJiOeykp7Hwk/gb2R16jduwvPW5pJ8EaxpxcRJw09PG7sTyXwK4IGlE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c3FCP0BsbzKHMl9;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c3FCP3gfRzKHMjH;
 	Fri, 15 Aug 2025 16:10:09 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 539A91A018D;
+	by mail.maildlp.com (Postfix) with ESMTP id C9A481A0E51;
 	Fri, 15 Aug 2025 16:10:08 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHjxBc655o+xX_Dg--.53834S8;
+	by APP4 (Coremail) with SMTP id gCh0CgDHjxBc655o+xX_Dg--.53834S9;
 	Fri, 15 Aug 2025 16:10:08 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -50,9 +50,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH 04/10] blk-mq: serialize updating nr_requests with update_nr_hwq_lock
-Date: Fri, 15 Aug 2025 16:02:10 +0800
-Message-Id: <20250815080216.410665-5-yukuai1@huaweicloud.com>
+Subject: [PATCH 05/10] blk-mq: cleanup shared tags case in blk_mq_update_nr_requests()
+Date: Fri, 15 Aug 2025 16:02:11 +0800
+Message-Id: <20250815080216.410665-6-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250815080216.410665-1-yukuai1@huaweicloud.com>
 References: <20250815080216.410665-1-yukuai1@huaweicloud.com>
@@ -63,10 +63,10 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHjxBc655o+xX_Dg--.53834S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFWxZF17AF47tw1fAr1UKFg_yoW8ZF4rpF
-	Z8C39Fkw1vq3W8X34UA3W7Ww17J3y0gr13GrWxtF13uFnrta97Zr18KFy7Wr48CrZ3ArsF
-	vw4kJFZ5AFyDZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgDHjxBc655o+xX_Dg--.53834S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1rWrWUuF1xZr17Cr1UAwb_yoW5JFWrpF
+	Waka13K34Fqr1avFWav39xXw4Ygrs3Wr1SkrsxtryFqr12kF4xGF4rWr1rXFW8trZ5AFsI
+	9F4DJFWUXr18W37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUma14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -77,7 +77,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7WFWxZF17AF47tw1fAr1UKFg_yoW8ZF4rpF
 	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
 	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
 	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
 	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
 	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
 	vfC2KfnxnUUI43ZEXa7VUbPC7UUUUUU==
@@ -85,72 +85,93 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-request_queue->nr_requests can be changed by:
-
-a) switching elevator by update nr_hw_queues
-b) switching elevator by elevator sysfs attribute
-c) configue queue sysfs attribute nr_requests
-
-Current lock order is:
-
-1) update_nr_hwq_lock, case a,b
-- allocate elevator tags
-2) freeze_queue
-3) elevator_lock, cas a,b,c
-- update nr_requests
-
-The update_nr_hwq_lock is not held by case c for now, and we need to check
-nr_requests while elevator_lock is held, however, we can't allocate
-elevator_tags whih queue freezed.
-
-Hence also require update_nr_hwq_lock and check nr_requests, make it
-possible to allocate new elevator_tags without queue freezed, also
-prevent nr_requests to be changed concurrently by other contexts.
+For shared tags case, all hctx->shared_tags/tags are the same, it
+doesn't make sense to call blk_mq_tag_update_depth() multiple times
+for the same tags.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/blk-sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ block/blk-mq-tag.c |  7 -------
+ block/blk-mq.c     | 42 ++++++++++++++++++++++--------------------
+ 2 files changed, 22 insertions(+), 27 deletions(-)
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index f3d08edcc34f..37eae7927b45 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -68,13 +68,14 @@ queue_requests_store(struct gendisk *disk, const char *page, size_t count)
- 	int ret, err;
- 	unsigned int memflags;
- 	struct request_queue *q = disk->queue;
-+	struct blk_mq_tag_set *set = q->tag_set;
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 7613a9889eb1..84a452e708e4 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -596,13 +596,6 @@ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 		struct blk_mq_tag_set *set = hctx->queue->tag_set;
+ 		struct blk_mq_tags *new;
  
- 	ret = queue_var_store(&nr, page, count);
- 	if (ret < 0)
- 		return ret;
+-		/*
+-		 * Only the sbitmap needs resizing since we allocated the max
+-		 * initially.
+-		 */
+-		if (blk_mq_is_shared_tags(set->flags))
+-			return 0;
+-
+ 		new = blk_mq_alloc_map_and_rqs(set, hctx->queue_num, tdepth);
+ 		if (!new)
+ 			return -ENOMEM;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 048d6b2cffe6..1e85fcd474c2 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -4926,33 +4926,35 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
  
--	memflags = blk_mq_freeze_queue(q);
--	mutex_lock(&q->elevator_lock);
-+	/* serialize with switching elevator */
-+	down_write(&set->update_nr_hwq_lock);
+ 	blk_mq_quiesce_queue(q);
  
- 	if (q->nr_requests == nr)
- 		goto unlock;
-@@ -89,13 +90,17 @@ queue_requests_store(struct gendisk *disk, const char *page, size_t count)
- 		goto unlock;
+-	queue_for_each_hw_ctx(q, hctx, i) {
+-		if (!hctx->tags)
+-			continue;
+-		/*
+-		 * If we're using an MQ scheduler, just update the scheduler
+-		 * queue depth. This is similar to what the old code would do.
+-		 */
+-		if (hctx->sched_tags)
+-			ret = blk_mq_tag_update_depth(hctx, &hctx->sched_tags,
+-						      nr);
+-		else
+-			ret = blk_mq_tag_update_depth(hctx, &hctx->tags, nr);
+-		if (ret)
+-			goto out;
+-	}
+-
+-	q->nr_requests = nr;
+-	if (q->elevator && q->elevator->type->ops.depth_updated)
+-		q->elevator->type->ops.depth_updated(q);
+-
+ 	if (blk_mq_is_shared_tags(set->flags)) {
+ 		if (q->elevator)
+ 			blk_mq_tag_update_sched_shared_tags(q);
+ 		else
+ 			blk_mq_tag_resize_shared_tags(set, nr);
++	} else {
++		queue_for_each_hw_ctx(q, hctx, i) {
++			if (!hctx->tags)
++				continue;
++			/*
++			 * If we're using an MQ scheduler, just update the
++			 * scheduler queue depth. This is similar to what the
++			 * old code would do.
++			 */
++			if (hctx->sched_tags)
++				ret = blk_mq_tag_update_depth(hctx,
++						&hctx->sched_tags, nr);
++			else
++				ret = blk_mq_tag_update_depth(hctx,
++						&hctx->tags, nr);
++			if (ret)
++				goto out;
++		}
  	}
  
-+	memflags = blk_mq_freeze_queue(q);
-+	mutex_lock(&q->elevator_lock);
- 	err = blk_mq_update_nr_requests(disk->queue, nr);
- 	if (err)
- 		ret = err;
- 
--unlock:
- 	mutex_unlock(&q->elevator_lock);
- 	blk_mq_unfreeze_queue(q, memflags);
++	q->nr_requests = nr;
++	if (q->elevator && q->elevator->type->ops.depth_updated)
++		q->elevator->type->ops.depth_updated(q);
 +
-+unlock:
-+	up_write(&set->update_nr_hwq_lock);
- 	return ret;
- }
+ out:
+ 	blk_mq_unquiesce_queue(q);
  
 -- 
 2.39.2
