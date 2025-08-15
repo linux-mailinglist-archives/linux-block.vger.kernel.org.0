@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-25860-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25858-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 374FAB27B05
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:30:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F10D2B27B01
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 10:30:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2018A289E2
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:30:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E5E81BC17F9
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 08:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32E31246BC6;
-	Fri, 15 Aug 2025 08:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E617E288C3B;
+	Fri, 15 Aug 2025 08:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CR/8qZrq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBit8ylj"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F4924635E;
-	Fri, 15 Aug 2025 08:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7684274656;
+	Fri, 15 Aug 2025 08:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246578; cv=none; b=HXJwFV8camhG01AMbo9f+rwVd1kRAKwPTPRS+O0cZRNg3dILNsoQKuMJFhduiTCkFJO8Lie9orkgJYW9IjQ21b5H23nvJm0Mp5Zi/jPrTE20mcr5+T6UsaJ8H4Sn47FWhVBd4Nboed7fekkAwXkD28M8J5CownRpZ73RYbt9Cio=
+	t=1755246568; cv=none; b=X5PBsE2CpXs2uGkep4+fDLtvhFL7pMtB6E3GY5SDHqndmhBVI3w8TGgTfFt3rqIOW/8X3UxjG1qDB05fc1AI4NSYJMGFW2ZW7GWrSSPuO6uY2QZSyPsNPYwnK3St38dD8drA1ZTTMTE+3olNWKLWv97OCQZC0eXlD+tCcfBFgR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246578; c=relaxed/simple;
-	bh=Xyye2AF1wmSsP0D40BarzXd3YLVHTSI2Ehw/u8Z/TTg=;
+	s=arc-20240116; t=1755246568; c=relaxed/simple;
+	bh=04WDM1P3dI298aPORjuUEvo2ZzH5WcrdlgbcYAXeKik=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jUs7DACyzZbChtFMxzWPKRVBUXFXtcLB0osEPwH5XjCfzEXctU4MIsNHYgiAjd5AxWKDt8IN96rJ2ptBASSptU15PAhRa6FOvCMpMIxO61OWrt2uz6qEBfhHqatvCCHIs2Q9G3GFueoIiiVBp0RpB+Kjlqp4sQKDZKvDAwQlnHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CR/8qZrq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0353FC4CEF4;
-	Fri, 15 Aug 2025 08:29:31 +0000 (UTC)
+	 MIME-Version:Content-Type; b=tCpkDf9r1bHW7RFhjrux33E7Ocvub43nWrkxbmw6n0yVdxSVwavkj2bobqsVaB7dlanIuspXdm0kuVUhtKP75+1N6mSp/nhmH8CAh0XVY+TVzCPOt0x4DbpxeqK32GPZmYBohFmDRc7ihdQROx0Ub80qEpJknzFP5Q5bZeolhd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBit8ylj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DC6C4CEEB;
+	Fri, 15 Aug 2025 08:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755246574;
-	bh=Xyye2AF1wmSsP0D40BarzXd3YLVHTSI2Ehw/u8Z/TTg=;
+	s=k20201202; t=1755246568;
+	bh=04WDM1P3dI298aPORjuUEvo2ZzH5WcrdlgbcYAXeKik=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CR/8qZrqwjQwjYJ0phriw9y4I1wwIB+XpdSacoRPLLaJoe3dvbg2UXioDbTd4f/2u
-	 ozX88f2vzdFFPy0FOaFC88ZxeQJjSw9VB2HysXyS9LPObXl6amgDdI8xipldKZBZti
-	 A+JHDPvspYPKp0RKc1O2coa1J5xA5Fg8Geh3lfUXnaJYLqi3+TbzUaeFfGlk0761jK
-	 fge08BleYeouq/bnYTswDhgmJsobxoO0LdjxGXxupNX/zVSqgpfYjbKDbEQ9WfoXO9
-	 M4IrKllrRKBjTgYp5B36hrTU0SzdyXQ3OJOtLRIOOfhs9lav8gUghRlWE3y3PUK5Bm
-	 HGZIKAakMtiIA==
+	b=WBit8ylj2asPwx1SZmIFbsQd/tWKfh9JYqqMUSZJTl48dxx/VAvCETS9frLuvtsb7
+	 oxxt8wenkSVCW9DqEReRzVrXLgz/YiMrC7L1L9pI1OFGLjeEAgKpnrbtNJ9/IZ1yrW
+	 NOMUP0uL5Leddg804Fsb2Z/spoNOl30CXuGGBOX/ucDFdlFzMeyqGPQ8s9VfADHSnG
+	 fgKomVzFp4J4sigCpbxMAqcTQjsaCbW07zrnBY9DCDeOiAp1YIsjx8id6VY52vSarE
+	 X+hJlBcY4DmcnmqxXC46XjDh8Nf0A+Rpb7uxNV2Vl5Gq5CBxDO8fpIOkLz+b8PN4Wd
+	 z8nvDYDwSSV7Q==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: Alice Ryhl <aliceryhl@google.com>
 Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
@@ -51,14 +51,15 @@ Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
  <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
  linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 06/18] rust: str: add `bytes_to_bool` helper function
-In-Reply-To: <aJ7r_W0BzdSYMfT6@google.com>
+Subject: Re: [PATCH v5 07/18] rust: configfs: re-export `configfs_attrs`
+ from `configfs` module
+In-Reply-To: <aJ7sQF6ObVlwX3U0@google.com>
 References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
- <20250815-rnull-up-v6-16-v5-6-581453124c15@kernel.org>
- <zsaOdCKnN1sVET34FMYvITPQpgAkfL_JPF6FtL4MUbyubgqSNo5PsO6bgIyzmMP2bhkEAbXEyui3iTqZEkrx0g==@protonmail.internalid>
- <aJ7r_W0BzdSYMfT6@google.com>
-Date: Fri, 15 Aug 2025 10:28:32 +0200
-Message-ID: <87ldnldm4v.fsf@t14s.mail-host-address-is-not-set>
+ <20250815-rnull-up-v6-16-v5-7-581453124c15@kernel.org>
+ <UNKR4V3pgHcYGU76GBf8aBKpJPgL7tf5Ct7oM0C_JEiL6Hq2uewAuV3yQCcJ55QSQJ-0_bMM3zA7f_zmAIGHjg==@protonmail.internalid>
+ <aJ7sQF6ObVlwX3U0@google.com>
+Date: Fri, 15 Aug 2025 10:29:15 +0200
+Message-ID: <87ikipdm3o.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -69,72 +70,35 @@ Content-Type: text/plain
 
 "Alice Ryhl" <aliceryhl@google.com> writes:
 
-> On Fri, Aug 15, 2025 at 09:30:41AM +0200, Andreas Hindborg wrote:
->> Add a convenience function to convert byte slices to boolean values by
->> wrapping them in a null-terminated C string and delegating to the
->> existing `kstrtobool` function. Only considers the first two bytes of
->> the input slice, following the kernel's boolean parsing semantics.
+> On Fri, Aug 15, 2025 at 09:30:42AM +0200, Andreas Hindborg wrote:
+>> Re-export `configfs_attrs` from `configfs` module, so that users can import
+>> the macro from the `configfs` module rather than the root of the `kernel`
+>> crate.
+>>
+>> Also update users to import from the new path.
 >>
 >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->>  rust/kernel/str.rs | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+>>  rust/kernel/configfs.rs       | 2 ++
+>>  samples/rust/rust_configfs.rs | 2 +-
+>>  2 files changed, 3 insertions(+), 1 deletion(-)
 >>
->> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
->> index 5611f7846dc0..ced1cb639efc 100644
->> --- a/rust/kernel/str.rs
->> +++ b/rust/kernel/str.rs
->> @@ -978,6 +978,16 @@ pub fn kstrtobool(string: &CStr) -> Result<bool> {
->>      kernel::error::to_result(ret).map(|()| result)
->>  }
+>> diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+>> index 2736b798cdc6..0ca35ca8acb8 100644
+>> --- a/rust/kernel/configfs.rs
+>> +++ b/rust/kernel/configfs.rs
+>> @@ -121,6 +121,8 @@
+>>  use core::cell::UnsafeCell;
+>>  use core::marker::PhantomData;
 >>
->> +/// Convert `&[u8]` to `bool` by deferring to [`kernel::str::kstrtobool`].
->> +///
->> +/// Only considers at most the first two bytes of `bytes`.
->> +pub fn bytes_to_bool(bytes: &[u8]) -> Result<bool> {
->> +    // `ktostrbool` only considers the first two bytes of the input.
->> +    let nbuffer = [*bytes.first().unwrap_or(&0), *bytes.get(1).unwrap_or(&0), 0];
->> +    let c_str = CStr::from_bytes_with_nul(nbuffer.split_inclusive(|c| *c == 0).next().unwrap())?;
->> +    kstrtobool(c_str)
->> +}
+>> +pub use crate::configfs_attrs;
 >
-> Ouch. That's unpleasant. I would probably suggest this instead to avoid
-> the length computation:
->
-> /// # Safety
-> /// `string` is a readable NUL-terminated string
-> unsafe fn kstrtobool_raw(string: *const c_char) -> Result<bool> {
->     let mut result: bool = false;
->     let ret = unsafe { bindings::kstrtobool(string, &raw mut result) };
->     kernel::error::to_result(ret).map(|()| result)
-> }
->
-> pub fn kstrtobool(string: &CStr) -> Result<bool> {
->     // SAFETY: Caller ensures that `string` is NUL-terminated.
->     unsafe { kstrtobool_cstr(string.as_char_ptr()) }
-> }
->
-> pub fn kstrtobool_bytes(string: &[u8]) -> Result<bool> {
->     let mut stack_string = [0u8; 3];
->
->     if let Some(first) = string.get(0) {
+> In other re-exports of macros, we've placed it immediately after the
+> macro_rules! declaration.
 
-Clippy will complain about `string.get(0)` suggesting `string.first()`.
-
->         stack_string[0] = *first;
->     }
->     if let Some(second) = string.get(1) {
->         stack_string[1] = *second;
->     }
-
-I don't really think this procedural assignment is better or worse than assigning
-at declaration.
-
->
->     // SAFETY: stack_string[2] is zero, so the string is NUL-terminated.
->     unsafe { kstrtobool_cstr(stack_string.as_ptr()) }
-
-I'll split it up.
+Ok, makes sense. I'll move it.
 
 
 Best regards,
