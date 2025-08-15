@@ -1,282 +1,320 @@
-Return-Path: <linux-block+bounces-25833-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25838-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1174BB27A31
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:37:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36623B27A61
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:53:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58A57188D13E
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:36:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D859D17ACAB
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 07:53:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2AD02E7BBE;
-	Fri, 15 Aug 2025 07:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfRtWcTn"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74D227C84E;
+	Fri, 15 Aug 2025 07:53:13 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0532D23B9;
-	Fri, 15 Aug 2025 07:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7ED10E0;
+	Fri, 15 Aug 2025 07:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755243148; cv=none; b=PposFRSR9B6MQNhDvwofYhnlqQ9fmFyifHdcuvXGbsEQ9b2b3QT0m/P05PihUq2/qulFY12ZukVDgLGZp2iRjA7lGMox+r/9UeXrYEmroFA2EhBmboXR6FfyQ11zu12ytY3GCLqhnAEru2sqsKSRhLo6J0P6GMGYYl9J7SJDC5s=
+	t=1755244393; cv=none; b=hJtnrSYj9PjSX1WteElfDIwr9zsHLTfhkf8Nq1OnVbWffP1PJsJ43X6YJVaeDVpaPYKFGadG0yoJ0T+kW8rj9yGV4KKe8baospsq5qWVglPLedELN3kHDrbtwOMNeHRC6mR84loWx02NQvSYoRzQtgv89gVUFxVWlLf7tmMN90g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755243148; c=relaxed/simple;
-	bh=W+DYHnlyo/3Sa+o2Sc3dmpZfrnUsGYHrKzmjAeLisGY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W/mF0ydxjdoKpzdr4LzA3jJv5lT5iY4hnEBlLeAkS6BnhuLmxE9ZOc+vWy2Ic+nGKkl7apiQ4ylTvMZ+jZreIpUlEgnEg2ZZeBxN++d/WaFA5aW2vQvJgs5tzcMSvpyhWgHsVHp/biOGQdWLtWgcAr3BPGDzA6H6/DUtSokipmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfRtWcTn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E65C4CEEB;
-	Fri, 15 Aug 2025 07:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755243148;
-	bh=W+DYHnlyo/3Sa+o2Sc3dmpZfrnUsGYHrKzmjAeLisGY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gfRtWcTn/QBPhQYeLScfmj4H9IcPxCbb6UHkfxkZzL76JRtaIFq3q1mBAVVKhfcqp
-	 oRwdwz/f5Lidx2eZU5fyM6e/zY0AUr/vORyTmcDv6VJ7RlH1y7gQ3jr325klLUpJhn
-	 6Udbd35KeGqUmo7vfR9NsNW+or+BwXbRCEaCqXIH6FAz1aD8xp/ucFZ/9vv+LFMn6+
-	 E4pnH2iHZQSprEJTntEOOXf5PfyLIe71c2u3TWtL3MmX8SacRxj9aXG/9NrOL2+t/B
-	 DtNwVh3/vdx7Clghe6s2Zzbh4gde4PA1eI/f1yiTy/BOYGFrAM1FVCjBiHCWRscE3o
-	 4C34KymZzx6GQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 15 Aug 2025 09:30:53 +0200
-Subject: [PATCH v5 18/18] rnull: add soft-irq completion support
+	s=arc-20240116; t=1755244393; c=relaxed/simple;
+	bh=E/nbNwfWlTTVzsAK1l2kL2cE73vo/5eDQGqNnWJ1A7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZXdZkhRQ35l5xGt6SzCBPkbbBsXDD+BdrYRh6KTTNnhMqPOJBWR+AyXHujSeuQ6+/yrKw9CVSeMGh6lxPkuBfMaKpUbmSb+vyeGjlNtRYQ8rkRCXvutTGEV7Eyhr7klxcsXG5wDpfW/BelBBYGXu9cFaB3ype95JZX9u1mtoJXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c3Dqn0l9DzYQv7h;
+	Fri, 15 Aug 2025 15:53:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A9A191A0359;
+	Fri, 15 Aug 2025 15:53:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDnrxBh555oQLj9Dg--.33563S4;
+	Fri, 15 Aug 2025 15:53:07 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: nilay@linux.ibm.com,
+	ming.lei@redhat.com,
+	axboe@kernel.dk,
+	bvanassche@acm.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH] blk-mq: fix elevator depth_updated method
+Date: Fri, 15 Aug 2025 15:45:17 +0800
+Message-Id: <20250815074517.367896-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250815-rnull-up-v6-16-v5-18-581453124c15@kernel.org>
-References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
-In-Reply-To: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>
-Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6342; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=W+DYHnlyo/3Sa+o2Sc3dmpZfrnUsGYHrKzmjAeLisGY=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBonuJEALxl5Ba/R/LoqX+1GBLRTMKyTcuBulT2l
- tlf/2tWyHCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaJ7iRAAKCRDhuBo+eShj
- d9e5EACODFBQuqVSnYJYQlsUAmfwrzv9+qNhzbBzxLnHSvyjDgKoDxB3uyqJuLciE+8sUw4oS5D
- lR0AvXm1x441hifAZMi6VR7hY0n0CQ68JyMUtQSCJfpqtY9WR1BK4Cuk80kTJ8srbobjivNtfSI
- xVIeQYg6FZSc36/B764Gs4y2+s/Z3f/EF3NjSXdWSg9I/j+A+8hGM7i31V4unJmjrbrwuLx4Fnt
- c39RVgcs67IlhemkwVed+WI83kZXFKD5lrreMPpdPsZs5Kaa9oikfEEGN3e/2IxH9ffMPcEc/hi
- obZ9DtUkWAqXTN8t+rntEazPv841wTcjugmuOheV6Rt8mI9x8pbk76BSfsRs5MMcYZaYnOZw54P
- pZoYPkkAh28C8sJ5YiIh5LI9PkuqlWBg4nUrYSnbeiNuei7sgZt/Ie1LLZlwytBhHkjdQyTH6XK
- PLbmjfe27vyuJFKjuR9LyEGMrpLiMkGSkyENfPUK8JeB/hUhHVFTPauyZFEg+X6aJvBweXpL7z/
- eAhZii5+bAHY+giejiV1MnsWX7PAePA/2LML1GynmSvCZeqfXOFSow0b8+ik6Mz58w0LPE9S8rG
- O8XDLFFHJXGdasNbYvmjxi4woa3ZIj3992P61Jkh5y2rGKe6FLGk0LscXrOqP7UKjPlyibZ9tt8
- ADEiS22QB+gRbKQ==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnrxBh555oQLj9Dg--.33563S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF4xWFyfGF4fZFyUKr17KFg_yoWfJr4UpF
+	W5tanrKryrtF4UuFWjy39xXw43K39agry2yFs3t34rKrZFgFs3XF1rGFyxXFWIqrZ5CFsr
+	Zr4kta4DXr1Iq3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-rnull currently only supports direct completion. Add option for completing
-requests across CPU nodes via soft IRQ or IPI.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Current depth_updated has some problems:
+
+1) depth_updated() will be called for each hctx, while all elevators
+will update async_depth for the disk level, this is not related to hctx;
+2) In blk_mq_update_nr_requests(), if previous hctx update succeed and
+this hctx update failed, q->nr_requests will not be updated, while
+async_depth is already updated with new nr_reqeuests in previous
+depth_updated();
+3) All elevators are using q->nr_requests to calculate async_depth now,
+however, q->nr_requests is still the old value when depth_updated() is
+called from blk_mq_update_nr_requests();
+
+Fix those problems by:
+
+- pass in request_queue instead of hctx;
+- move depth_updated() after q->nr_requests is updated in
+  blk_mq_update_nr_requests();
+- add depth_updated() call in blk_mq_init_sched();
+- remove init_hctx() method for mq-deadline and bfq that is useless now;
+
+Fixes: 77f1e0a52d26 ("bfq: update internal depth state when queue depth changes")
+Fixes: 39823b47bbd4 ("block/mq-deadline: Fix the tag reservation code")
+Fixes: 42e6c6ce03fd ("lib/sbitmap: convert shallow_depth from one word to the whole sbitmap")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/rnull/configfs.rs | 59 +++++++++++++++++++++++++++++++++++++++--
- drivers/block/rnull/rnull.rs    | 32 ++++++++++++++--------
- 2 files changed, 78 insertions(+), 13 deletions(-)
+ block/bfq-iosched.c   | 21 ++++-----------------
+ block/blk-mq-sched.c  |  3 +++
+ block/blk-mq-sched.h  | 11 +++++++++++
+ block/blk-mq.c        | 23 ++++++++++++-----------
+ block/elevator.h      |  2 +-
+ block/kyber-iosched.c | 10 ++++------
+ block/mq-deadline.c   | 15 ++-------------
+ 7 files changed, 37 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/configfs.rs
-index 488fe27f83a2..adc5bf5d2f8c 100644
---- a/drivers/block/rnull/configfs.rs
-+++ b/drivers/block/rnull/configfs.rs
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 50e51047e1fe..c0c398998aa1 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -7109,9 +7109,10 @@ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg)
+  * See the comments on bfq_limit_depth for the purpose of
+  * the depths set in the function. Return minimum shallow depth we'll use.
+  */
+-static void bfq_update_depths(struct bfq_data *bfqd, struct sbitmap_queue *bt)
++static void bfq_depth_updated(struct request_queue *q)
+ {
+-	unsigned int nr_requests = bfqd->queue->nr_requests;
++	struct bfq_data *bfqd = q->elevator->elevator_data;
++	unsigned int nr_requests = q->nr_requests;
  
- use super::{NullBlkDevice, THIS_MODULE};
--use core::fmt::Write;
-+use core::fmt::{Display, Write};
- use kernel::{
-     block::mq::gen_disk::{GenDisk, GenDiskBuilder},
-     c_str,
-@@ -36,7 +36,7 @@ impl AttributeOperations<0> for Config {
- 
-     fn show(_this: &Config, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-         let mut writer = kernel::str::Formatter::new(page);
--        writer.write_str("blocksize,size,rotational\n")?;
-+        writer.write_str("blocksize,size,rotational,irqmode\n")?;
-         Ok(writer.bytes_written())
-     }
- }
-@@ -58,6 +58,7 @@ fn make_group(
-                 blocksize: 1,
-                 rotational: 2,
-                 size: 3,
-+                irqmode: 4,
-             ],
-         };
- 
-@@ -72,6 +73,7 @@ fn make_group(
-                     rotational: false,
-                     disk: None,
-                     capacity_mib: 4096,
-+                    irq_mode: IRQMode::None,
-                     name: name.try_into()?,
-                 }),
-             }),
-@@ -79,6 +81,34 @@ fn make_group(
-     }
- }
- 
-+#[derive(Debug, Clone, Copy)]
-+pub(crate) enum IRQMode {
-+    None,
-+    Soft,
-+}
-+
-+impl TryFrom<u8> for IRQMode {
-+    type Error = kernel::error::Error;
-+
-+    fn try_from(value: u8) -> Result<Self> {
-+        match value {
-+            0 => Ok(Self::None),
-+            1 => Ok(Self::Soft),
-+            _ => Err(EINVAL),
-+        }
-+    }
-+}
-+
-+impl Display for IRQMode {
-+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+        match self {
-+            Self::None => f.write_str("0")?,
-+            Self::Soft => f.write_str("1")?,
-+        }
-+        Ok(())
-+    }
-+}
-+
- #[pin_data]
- pub(crate) struct DeviceConfig {
-     #[pin]
-@@ -92,6 +122,7 @@ struct DeviceConfigInner {
-     block_size: u32,
-     rotational: bool,
-     capacity_mib: u64,
-+    irq_mode: IRQMode,
-     disk: Option<GenDisk<NullBlkDevice>>,
- }
- 
-@@ -121,6 +152,7 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-                 guard.block_size,
-                 guard.rotational,
-                 guard.capacity_mib,
-+                guard.irq_mode,
-             )?);
-             guard.powered = true;
-         } else if guard.powered && !power_op {
-@@ -205,3 +237,26 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-         Ok(())
-     }
- }
-+
-+#[vtable]
-+impl configfs::AttributeOperations<4> for DeviceConfig {
-+    type Data = DeviceConfig;
-+
-+    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        let mut writer = kernel::str::Formatter::new(page);
-+        writer.write_fmt(fmt!("{}\n", this.data.lock().irq_mode))?;
-+        Ok(writer.bytes_written())
-+    }
-+
-+    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-+        if this.data.lock().powered {
-+            return Err(EBUSY);
-+        }
-+
-+        let text = core::str::from_utf8(page)?.trim();
-+        let value = text.parse::<u8>().map_err(|_| EINVAL)?;
-+
-+        this.data.lock().irq_mode = IRQMode::try_from(value)?;
-+        Ok(())
-+    }
-+}
-diff --git a/drivers/block/rnull/rnull.rs b/drivers/block/rnull/rnull.rs
-index 371786be7f47..85b1509a3106 100644
---- a/drivers/block/rnull/rnull.rs
-+++ b/drivers/block/rnull/rnull.rs
-@@ -4,6 +4,7 @@
- 
- mod configfs;
- 
-+use configfs::IRQMode;
- use kernel::{
-     alloc::flags,
-     block::{
-@@ -54,35 +55,44 @@ fn new(
-         block_size: u32,
-         rotational: bool,
-         capacity_mib: u64,
-+        irq_mode: IRQMode,
-     ) -> Result<GenDisk<Self>> {
-         let tagset = Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
- 
-+        let queue_data = Box::new(QueueData { irq_mode }, flags::GFP_KERNEL)?;
-+
-         gen_disk::GenDiskBuilder::new()
-             .capacity_sectors(capacity_mib << (20 - block::SECTOR_SHIFT))
-             .logical_block_size(block_size)?
-             .physical_block_size(block_size)?
-             .rotational(rotational)
--            .build(fmt!("{}", name.to_str()?), tagset, ())
-+            .build(fmt!("{}", name.to_str()?), tagset, queue_data)
-     }
- }
- 
-+struct QueueData {
-+    irq_mode: IRQMode,
-+}
-+
- #[vtable]
- impl Operations for NullBlkDevice {
--    type QueueData = ();
-+    type QueueData = KBox<QueueData>;
- 
-     #[inline(always)]
--    fn queue_rq(_queue_data: (), rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
--        mq::Request::end_ok(rq)
--            .map_err(|_e| kernel::error::code::EIO)
--            // We take no refcounts on the request, so we expect to be able to
--            // end the request. The request reference must be unique at this
--            // point, and so `end_ok` cannot fail.
--            .expect("Fatal error - expected to be able to end request");
+ 	/*
+ 	 * In-word depths if no bfq_queue is being weight-raised:
+@@ -7143,21 +7144,8 @@ static void bfq_update_depths(struct bfq_data *bfqd, struct sbitmap_queue *bt)
+ 	bfqd->async_depths[1][0] = max((nr_requests * 3) >> 4, 1U);
+ 	/* no more than ~37% of tags for sync writes (~20% extra tags) */
+ 	bfqd->async_depths[1][1] = max((nr_requests * 6) >> 4, 1U);
+-}
 -
-+    fn queue_rq(queue_data: &QueueData, rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
-+        match queue_data.irq_mode {
-+            IRQMode::None => mq::Request::end_ok(rq)
-+                .map_err(|_e| kernel::error::code::EIO)
-+                // We take no refcounts on the request, so we expect to be able to
-+                // end the request. The request reference must be unique at this
-+                // point, and so `end_ok` cannot fail.
-+                .expect("Fatal error - expected to be able to end request"),
-+            IRQMode::Soft => mq::Request::complete(rq),
-+        }
-         Ok(())
-     }
+-static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
+-{
+-	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
+-	struct blk_mq_tags *tags = hctx->sched_tags;
  
--    fn commit_rqs(_queue_data: ()) {}
-+    fn commit_rqs(_queue_data: &QueueData) {}
+-	bfq_update_depths(bfqd, &tags->bitmap_tags);
+-	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
+-}
+-
+-static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
+-{
+-	bfq_depth_updated(hctx);
+-	return 0;
++	blk_mq_set_min_shallow_depth(q, 1);
+ }
  
-     fn complete(rq: ARef<mq::Request<Self>>) {
-         mq::Request::end_ok(rq)
-
+ static void bfq_exit_queue(struct elevator_queue *e)
+@@ -7628,7 +7616,6 @@ static struct elevator_type iosched_bfq_mq = {
+ 		.request_merged		= bfq_request_merged,
+ 		.has_work		= bfq_has_work,
+ 		.depth_updated		= bfq_depth_updated,
+-		.init_hctx		= bfq_init_hctx,
+ 		.init_sched		= bfq_init_queue,
+ 		.exit_sched		= bfq_exit_queue,
+ 	},
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index e2ce4a28e6c9..bf7dd97422ec 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -585,6 +585,9 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e,
+ 			}
+ 		}
+ 	}
++
++	if (e->ops.depth_updated)
++		e->ops.depth_updated(q);
+ 	return 0;
+ 
+ out:
+diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+index b554e1d55950..fe83187f41db 100644
+--- a/block/blk-mq-sched.h
++++ b/block/blk-mq-sched.h
+@@ -92,4 +92,15 @@ static inline bool blk_mq_sched_needs_restart(struct blk_mq_hw_ctx *hctx)
+ 	return test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
+ }
+ 
++static inline void blk_mq_set_min_shallow_depth(struct request_queue *q,
++						unsigned int depth)
++{
++	struct blk_mq_hw_ctx *hctx;
++	unsigned long i;
++
++	queue_for_each_hw_ctx(q, hctx, i)
++		sbitmap_queue_min_shallow_depth(&hctx->sched_tags->bitmap_tags,
++						depth);
++}
++
+ #endif
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b67d6c02eceb..9c68749124c6 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -4951,20 +4951,21 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 						      false);
+ 		}
+ 		if (ret)
+-			break;
+-		if (q->elevator && q->elevator->type->ops.depth_updated)
+-			q->elevator->type->ops.depth_updated(hctx);
++			goto out;
+ 	}
+-	if (!ret) {
+-		q->nr_requests = nr;
+-		if (blk_mq_is_shared_tags(set->flags)) {
+-			if (q->elevator)
+-				blk_mq_tag_update_sched_shared_tags(q);
+-			else
+-				blk_mq_tag_resize_shared_tags(set, nr);
+-		}
++
++	q->nr_requests = nr;
++	if (q->elevator && q->elevator->type->ops.depth_updated)
++		q->elevator->type->ops.depth_updated(q);
++
++	if (blk_mq_is_shared_tags(set->flags)) {
++		if (q->elevator)
++			blk_mq_tag_update_sched_shared_tags(q);
++		else
++			blk_mq_tag_resize_shared_tags(set, nr);
+ 	}
+ 
++out:
+ 	blk_mq_unquiesce_queue(q);
+ 
+ 	return ret;
+diff --git a/block/elevator.h b/block/elevator.h
+index adc5c157e17e..c4d20155065e 100644
+--- a/block/elevator.h
++++ b/block/elevator.h
+@@ -37,7 +37,7 @@ struct elevator_mq_ops {
+ 	void (*exit_sched)(struct elevator_queue *);
+ 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+ 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+-	void (*depth_updated)(struct blk_mq_hw_ctx *);
++	void (*depth_updated)(struct request_queue *);
+ 
+ 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
+ 	bool (*bio_merge)(struct request_queue *, struct bio *, unsigned int);
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 70cbc7b2deb4..49ae52aa20d9 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -440,13 +440,12 @@ static void kyber_ctx_queue_init(struct kyber_ctx_queue *kcq)
+ 		INIT_LIST_HEAD(&kcq->rq_list[i]);
+ }
+ 
+-static void kyber_depth_updated(struct blk_mq_hw_ctx *hctx)
++static void kyber_depth_updated(struct request_queue *q)
+ {
+-	struct kyber_queue_data *kqd = hctx->queue->elevator->elevator_data;
+-	struct blk_mq_tags *tags = hctx->sched_tags;
++	struct kyber_queue_data *kqd = q->elevator->elevator_data;
+ 
+-	kqd->async_depth = hctx->queue->nr_requests * KYBER_ASYNC_PERCENT / 100U;
+-	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, kqd->async_depth);
++	kqd->async_depth = q->nr_requests * KYBER_ASYNC_PERCENT / 100U;
++	blk_mq_set_min_shallow_depth(q, kqd->async_depth);
+ }
+ 
+ static int kyber_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
+@@ -493,7 +492,6 @@ static int kyber_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
+ 	khd->batching = 0;
+ 
+ 	hctx->sched_data = khd;
+-	kyber_depth_updated(hctx);
+ 
+ 	return 0;
+ 
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index b9b7cdf1d3c9..578bc79c5654 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -507,22 +507,12 @@ static void dd_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ }
+ 
+ /* Called by blk_mq_update_nr_requests(). */
+-static void dd_depth_updated(struct blk_mq_hw_ctx *hctx)
++static void dd_depth_updated(struct request_queue *q)
+ {
+-	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+-	struct blk_mq_tags *tags = hctx->sched_tags;
+ 
+ 	dd->async_depth = q->nr_requests;
+-
+-	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
+-}
+-
+-/* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
+-static int dd_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
+-{
+-	dd_depth_updated(hctx);
+-	return 0;
++	blk_mq_set_min_shallow_depth(q, 1);
+ }
+ 
+ static void dd_exit_sched(struct elevator_queue *e)
+@@ -1048,7 +1038,6 @@ static struct elevator_type mq_deadline = {
+ 		.has_work		= dd_has_work,
+ 		.init_sched		= dd_init_sched,
+ 		.exit_sched		= dd_exit_sched,
+-		.init_hctx		= dd_init_hctx,
+ 	},
+ 
+ #ifdef CONFIG_BLK_DEBUG_FS
 -- 
-2.47.2
-
+2.39.2
 
 
