@@ -1,121 +1,110 @@
-Return-Path: <linux-block+bounces-25865-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25867-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7280AB27C6D
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 11:15:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25EE8B27CF5
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 11:24:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4554162103B
-	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:10:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4631C1D0523D
+	for <lists+linux-block@lfdr.de>; Fri, 15 Aug 2025 09:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5397270553;
-	Fri, 15 Aug 2025 09:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED5627056B;
+	Fri, 15 Aug 2025 09:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="XeJrVWWw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WkNesCAs"
 X-Original-To: linux-block@vger.kernel.org
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271424E4BD;
-	Fri, 15 Aug 2025 09:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EB2270553;
+	Fri, 15 Aug 2025 09:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755248941; cv=none; b=cFXCa/jF7d0UpP8Tx2BfqU6YqnZnDcZurG1I4cZq8O0c2Gpme94wXZ3Phr5of51q/kC2xbM0mYcqKq2/PscxMy41b7l7m/4WcdbXQ8t1H4CWZmLsaJiC4fNW4kaK0QWOmoHhqusmSKTQqsNeMlqv1x1FdiPoZT5I0PzojlcQBY0=
+	t=1755249038; cv=none; b=R4KwqP+0+RxnUjqS6WmmkbY6ssLXgQFZk9EglrzXJC6PComQh3/DJMReWF8uVCFtGP713vrLnwiGJt6h+JBebzS4S34YNH2ERnlCJfT6O1Kx69AK8YX2jX0lNWeb6HsMC+c1kYu1HMwylBfGGmtrI1a4Rm9UvAoVkXcslyGj090=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755248941; c=relaxed/simple;
-	bh=Ib0rLmgRr75p5p+Us9QCh6/Rw0bcD0RjRsjyrx2Zh+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a5oohIU7n0oMM4+CL65TMuICopEhBkoOIlsVobDuXsbpuuwuP+b5nLnP6nRN51OVSWLdwDyhcMWdaK80GlF5V+J7oTiUrCa4tC9wpDRDJxtJppsJkh0u89IxOLx88Me9TKx7H/SNk4gnAne0IE5+pOVvLIthQgihKopgOKOG4LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=XeJrVWWw; arc=none smtp.client-ip=117.135.210.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ny
-	5ii1rw2MF2Sep0fJUZ8uqET0SiKpLe8TvBVtoY/us=; b=XeJrVWWwdJqMuZIGV+
-	Ladviyyc1vu0WFBgyqP2hrVfXpmjKkn2rQwwyd6bCS9tzphU35+rCDJNyFryLnie
-	7tw2CdsobzcaR+uPfWL4nX2InZuA0npIEpox++Wwqr4B3n5N56Ksnjicm29AvIPD
-	tFsn9+4cFJM2XTDR4UejsAt3o=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3r1La+J5own4VCA--.56213S4;
-	Fri, 15 Aug 2025 17:07:57 +0800 (CST)
-From: Genjian <zhanggenjian@126.com>
-To: axboe@kernel.dk,
-	dlemoal@kernel.org,
-	shinichiro.kawasaki@wdc.com,
-	johannes.thumshirn@wdc.com,
-	kch@nvidia.com,
-	zhengqixing@huawei.com,
-	willy@infradead.org,
-	namcao@linutronix.de,
-	vincent.fu@samsung.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanggenjian@126.com,
-	Genjian Zhang <zhanggenjian@kylinos.cn>
-Subject: [PATCH v2] null_blk: Fix the description of the cache_size module argument
-Date: Fri, 15 Aug 2025 17:07:32 +0800
-Message-Id: <20250815090732.1813343-1-zhanggenjian@126.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1755249038; c=relaxed/simple;
+	bh=1Ha9xTn3T01Z4w9TlI+3LodHQqvdp4I2XLyHH/S4Gkg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TkFhKubWy8VzxyvPwK8EUrt5AnT20c2aSx6t2/5ug9V1kydyVubPZMCDyPwkOdGD02oL4OUCtUkiOdfwXR8NvkJJsEyEXZK7fdesIe3HF5AOkoKTPsAE99Oat8AaR6g+31fe1hxAEQHVmpUKst7f9kz68JGf/4oAuYxhmeCGVk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WkNesCAs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B89C4CEF4;
+	Fri, 15 Aug 2025 09:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755249036;
+	bh=1Ha9xTn3T01Z4w9TlI+3LodHQqvdp4I2XLyHH/S4Gkg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WkNesCAskg/QW2w1/FQNss4Hvhyeo1cnDm4vhZ1e8fHwu5HbEu77kiCxKax7CVTWL
+	 SQqYQFFy/7REIced2yy5XNSP+8FkcOUHISBZJuOfikgXY4PL0sVw4IxQTRudC6WPIC
+	 ihFFSy669LVtWhnHeDzGfi8x1MMaqoG8t/5R2JKnfShIpr6FxjDXfaMhJ1oBneM/D3
+	 XsHvXZpgU82rs4Z1LUsQ+espPx+BUmvjBRzwcafMbLGq3otLPGFssSKaotaWoPi8KP
+	 lrNVDwW4TSCJmb68ZIpF4qkL89yNBw7gjtPhdkzcE+23B7SBPi2PXRkgYCBe6dUTiW
+	 eL2nSEGTQW+CQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Trevor
+ Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe
+ <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
+ linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 15/18] rust: block: add `GenDisk` private data support
+In-Reply-To: <aJ7tcmOHfFmHgrY9@google.com>
+References: <20250815-rnull-up-v6-16-v5-0-581453124c15@kernel.org>
+ <20250815-rnull-up-v6-16-v5-15-581453124c15@kernel.org>
+ <Addn5RH8T6dPmcfVeF6HXK4Q3rVuAz-0N8es2JtgnRl3UhXIJhicxoB5Ns_F8aD2-sflnPXC6oeBQDLtCfXtLA==@protonmail.internalid>
+ <aJ7tcmOHfFmHgrY9@google.com>
+Date: Fri, 15 Aug 2025 11:08:59 +0200
+Message-ID: <87cy8xdk9g.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3r1La+J5own4VCA--.56213S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFyUury7GFyrWrWrJw1kXwb_yoW8WryUpr
-	ZrAF18JrW29F109a1DGws3ZFy5Ja48JFWYg3yak34Yvr4fXryxAwnrtas8urWUJ347Ar4f
-	ZF9rXasagFyDCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEf-P5UUUUU=
-X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbi5Qqqfmie920V5gAAsk
+Content-Type: text/plain
 
-From: Genjian Zhang <zhanggenjian@kylinos.cn>
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-When executing modinfo null_blk, there is an error in the description
-of module parameter mbps, and the output information of cache_size is
-incomplete.The output of modinfo before and after applying this patch
-is as follows:
+> On Fri, Aug 15, 2025 at 09:30:50AM +0200, Andreas Hindborg wrote:
+>> Allow users of the rust block device driver API to install private data in
+>> the `GenDisk` structure.
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+>>          self,
+>>          name: fmt::Arguments<'_>,
+>>          tagset: Arc<TagSet<T>>,
+>> +        queue_data: T::QueueData,
+>>      ) -> Result<GenDisk<T>> {
+>> +        let data = queue_data.into_foreign();
+>> +        let recover_data = ScopeGuard::new(|| {
+>> +            // SAFETY: T::QueueData was created by the call to `into_foreign()` above
+>> +            drop(unsafe { T::QueueData::from_foreign(data) });
+>> +        });
+>> +
+>>          // SAFETY: `bindings::queue_limits` contain only fields that are valid when zeroed.
+>>          let mut lim: bindings::queue_limits = unsafe { core::mem::zeroed() };
+>>
+>> @@ -113,7 +121,7 @@ pub fn build<T: Operations>(
+>>              bindings::__blk_mq_alloc_disk(
+>>                  tagset.raw_tag_set(),
+>>                  &mut lim,
+>> -                core::ptr::null_mut(),
+>> +                data.cast(),
+>
+> Is the cast necessary?
 
-Before:
-[...]
-parm:           cache_size:ulong
-[...]
-parm:           mbps:Cache size in MiB for memory-backed device.
-		Default: 0 (none) (uint)
-[...]
+Not any longer, no.
 
-After:
-[...]
-parm:           cache_size:Cache size in MiB for memory-backed device.
-		Default: 0 (none) (ulong)
-[...]
-parm:           mbps:Limit maximum bandwidth (in MiB/s).
-		Default: 0 (no limit) (uint)
-[...]
 
-Fixes: 058efe000b31 ("null_blk: add module parameters for 4 options")
-Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/block/null_blk/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+Andreas Hindborg
 
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 91642c9a3b29..f982027e8c85 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -223,7 +223,7 @@ MODULE_PARM_DESC(discard, "Support discard operations (requires memory-backed nu
- 
- static unsigned long g_cache_size;
- module_param_named(cache_size, g_cache_size, ulong, 0444);
--MODULE_PARM_DESC(mbps, "Cache size in MiB for memory-backed device. Default: 0 (none)");
-+MODULE_PARM_DESC(cache_size, "Cache size in MiB for memory-backed device. Default: 0 (none)");
- 
- static bool g_fua = true;
- module_param_named(fua, g_fua, bool, 0444);
--- 
-2.25.1
 
 
