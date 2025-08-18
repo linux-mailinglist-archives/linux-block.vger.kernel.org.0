@@ -1,121 +1,106 @@
-Return-Path: <linux-block+bounces-25960-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25963-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78787B2AF30
-	for <lists+linux-block@lfdr.de>; Mon, 18 Aug 2025 19:18:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA96FB2B0D1
+	for <lists+linux-block@lfdr.de>; Mon, 18 Aug 2025 20:50:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C23F2A37A6
-	for <lists+linux-block@lfdr.de>; Mon, 18 Aug 2025 17:18:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D16816A9BE
+	for <lists+linux-block@lfdr.de>; Mon, 18 Aug 2025 18:49:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901BC221FD4;
-	Mon, 18 Aug 2025 17:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 208BC26FD8F;
+	Mon, 18 Aug 2025 18:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="2FW8V74K"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="HUJsvhMY"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B372264A7
-	for <linux-block@vger.kernel.org>; Mon, 18 Aug 2025 17:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E478D1D9663;
+	Mon, 18 Aug 2025 18:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755537528; cv=none; b=n5mHEOOzffg8E+vFxvyBZrOqo29+VkJ2RwfCNMXOxK6QFNG7LS9MjBeKL/GnR8GwNm/hnPKXU/DhzCCJW+pAG6nOm2Gvv1bEaG/P8oSeZM+rwFBZ9wiL3AWMWqqSDjLy+LbA8rzAcp6PEW/bSn2HMoc1VNCJ1g/2Ok8Dgjeqs7M=
+	t=1755542973; cv=none; b=g2MwHldRjYX4ygFJr0hB6s5BQnRJor5k+G/muet9p2lksRpm7Tnuz1zC0m5S/6znTDmlFrOrcqawESZA+sfLzDuIM39kAPXW6ffwMDpm+/q+sRJJtZcuBPcVRp7hun3CIXSRCKwG3dZrlA/BZjKVHYpy88fwKb9KzDtDaPdEUBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755537528; c=relaxed/simple;
-	bh=w7Fzpn7SJ/Hb2R6gM6eyJk4m3715eX39NvQOLiXzCRY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nLze9/OsMUuAYYbcU5roJDr7KI253KutglNveWlttO0GBRhjlPqH9PyHehyyqM9x3HvCGWvYkIqconGCNk/STsbtX5x62WVHs5YkeX5OtDKACcp7VUKXw5U8gpuKeqzU2tg1T7MMYSi/c8a/1PDYP3qrXXYviMeEGogNXiVbngo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=2FW8V74K; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3e66da97a68so4793295ab.3
-        for <linux-block@vger.kernel.org>; Mon, 18 Aug 2025 10:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1755537526; x=1756142326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fu8r2yKO66DThw+kJlK6y2+lhb7FMN/P2S3CMzC2Wlc=;
-        b=2FW8V74K6T19uSMupc+yOPTlguayrjYxGBrKELPIXWX5cZnGMUI8rXdmwkL69cLyAC
-         rXwty+Uj1l9PPCjQZjzCKcsexznrtHF2NduGTzbvGb/FspWG7ysNQOkuJDNAVKEYQnlD
-         WkcUTcoqkCmxKwLdf268rUv+eqowxK3eser/6ohelC6CNnEWTi1HITN4Tv9K+Pyobgls
-         ZJQ40fXjEIiSPq+A2orMe/SvfWBo5josvwkb85sn87naSfaiwq5F58fD9a2n6vH+WTuL
-         4dxLnn69OjOBXLYa+rWkY7fFnw66lBu/Ldm2qlS2+PFca+FKad5CMik8R7/H90QWJkp8
-         EqRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755537526; x=1756142326;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fu8r2yKO66DThw+kJlK6y2+lhb7FMN/P2S3CMzC2Wlc=;
-        b=r7vlxMgHPuLFSkpqs0U2RIF2os6qPfZa57pXGpew++y7yP0REDU7dS05d8u3StOLS0
-         5Gxz/Do+9M4oNlDrowRQlI9YTCO0mJYm6Gy7W590J0z6pj0j2Ks0/i5rrH06duG9ozmh
-         uAS6V7sLfAKImzVw0e0RcBRJAvViiWVCW7sowdYRhnhM9GUw97apq2VLy3S5wlygd6fn
-         lYAkafJYazhxz9VaM+36LQtG8ZEa6a8MvdtP0kL/+SXjVUFvJGyCFR/nvtPQOM+AoESe
-         Q3tl/3nis5EoQOBCHJQSfnX/ZzsvFczAu4dacZtP7dc+ev5mQ9S7C+YO5+N6p+r54sUu
-         EZDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsWWqmf79nn5vpd64+8UBURiyirk6AuKOuj3fTSqOWoc2VVDv4t+uV7UQRLO3ldeMV0T9rKFHspUTwHQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw7xvQPAHycPAhDehep5SjiIQLSHXw8/yFRouYdxFy/v0z3RV6
-	lrO7ehAJZonRtwpb++ZUD9pQ11OjkVGYilrM1fam5oqJFp4COTHhVValrAqLsCp87ic=
-X-Gm-Gg: ASbGncsXDBAPibl1DKrJVimJ7q3qpo8A1etYvjN7QyWagRAEJ1Y2z2VzmcgLy3Y2e45
-	avkYLnDh+zrdIhCVBD3DpXeJUWWM+4ynX/B6e4ZBr0DNOoBvVdXkU/SMsZTflRlhS/pNIDcNQLa
-	yyl4QwjY5k/1FYZfMdO9vTpR+QoT2OZnDPGBufExiI4qCothcjvW/UvLr6zaBT7CVjYFU94FM/z
-	x3gIyQw5MY2l2091be9UOEAW/Z51gotWiuwDFRHgCwWrc3W01KkL0GJsGIlfUVIVOPIkFDU9OQL
-	v4tglXTMlWK+2oMBB53g2tJ74TNeTmE1uuMhzw9S8xNfGPIWffYQGVte3w7rMpZSPZIdoJcV6ZT
-	R/vVHmvQwxwY7eg==
-X-Google-Smtp-Source: AGHT+IGofyjOjXefOUTkdbQvdNHi/3ejsDvhudF69ftu0/UflWY1YbJ16NMpskRsqN16HQ53bFvpEA==
-X-Received: by 2002:a05:6e02:1a87:b0:3e5:2646:df03 with SMTP id e9e14a558f8ab-3e58390e18bmr179454925ab.12.1755537525819;
-        Mon, 18 Aug 2025 10:18:45 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3e57e58c321sm37866815ab.1.2025.08.18.10.18.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 10:18:44 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Anuj Gupta <anuj20.g@samsung.com>, linux-block@vger.kernel.org
-In-Reply-To: <20250818045456.1482889-1-hch@lst.de>
-References: <20250818045456.1482889-1-hch@lst.de>
-Subject: Re: fix stacking of PI-capable devices
-Message-Id: <175553752471.87011.16999242916763470821.b4-ty@kernel.dk>
-Date: Mon, 18 Aug 2025 11:18:44 -0600
+	s=arc-20240116; t=1755542973; c=relaxed/simple;
+	bh=umU1Cz5b5VF4Y2yhNDgjD9rjTReMlxo3yHS/O3/h0Cs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iKAyu6k8QNZG1Yy3azojtVC96bxECHfMcVENPPXBPmMq1R//BB7SoMzHwMYuhMO0LFzGt7IWGXPwfSLKTnxY1kXvzgTOxauHwJVudTWWKfIAv97paLzJxV+Om6YGsgLF94af9VVPwe8O5I7VB2LH69NNo0EBatA0BLgmXTczpS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=HUJsvhMY; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57IGWu50001189;
+	Mon, 18 Aug 2025 18:49:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pps0720; bh=W+KsTlQtUMNegy9RAtelMGZT1gbY74l453ylO
+	yTCqew=; b=HUJsvhMYmsxS/Ddcv6LXtT5nGXGnRYwyAgEE1a8RATm294QSpbkzl
+	ygiDXwYrqD3tEsR6QoT6nRKVb7zuVJk2vsfBh07yoheYyzYorL1Zt3XRJvtidTFc
+	e7FDVrL93SwF0xEExzDHL/C55dz//rjNIJtIthuC0mh/+Thss/GtA5uOohYMhKvo
+	eg2mrejfTpEXb6y4ITLDC5N7yn1nUNWCxy75wem5UCYL5cLa7a0VC9rcqFVJYdWF
+	BjgveT42xAOmfjYFWDDKZQ/VycnaPPdFXFFRdMlOLYaSdRT0W0U0wNcuUSPbT14E
+	DkJkZwj96CUuvHXajmTZMFnfnYGTzpYxQ==
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 48m4tw2uf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Aug 2025 18:49:23 +0000 (GMT)
+Received: from test-build-fcntl.hpe.com (unknown [192.58.206.35])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 55A45132D4;
+	Mon, 18 Aug 2025 18:48:50 +0000 (UTC)
+Received: by test-build-fcntl.hpe.com (Postfix, from userid 1000)
+	id EE48A883AC59; Mon, 18 Aug 2025 18:48:23 +0000 (UTC)
+From: Rajeev Mishra <rajeevm@hpe.com>
+To: axboe@kernel.dk, yukuai1@huaweicloud.com
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajeev Mishra <rajeevm@hpe.com>
+Subject: fixed commit message 
+Date: Mon, 18 Aug 2025 18:48:19 +0000
+Message-ID: <20250818184821.115033-1-rajeevm@hpe.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-2ce6c
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE4MDE3NiBTYWx0ZWRfX9Ro5b1XGfSB8
+ KyY5zL/UfPTtErpp4XOzspS6BqVMY597S5WQjfEqe3AOBJU6abtIfqekfsX5x/oCRXbh/3Mnhhh
+ 2hSuuCanr6ebp/yhT2LOhnxHAXxoMuFKJ8G4sxu0Q6wqMOUstKFjqiADDCXZ711185JhmXGo3xQ
+ pYNuIf6e0Ataf0n9FuOENHsgZGWG/ZuKBLclldJZ5OLMoCDEf6ipBN+U4CNh6VGML5tSs9J/jFR
+ t0MpSc1EMYal945kiGmmDofmFnSvO9/GWXQBbAb5z4FbP1/3QUa1NroNWsP3ApW8MpzxRYNsEAF
+ MWbO4w/2yvkLQJI2ZxspTtOCTjuOkggxzwNArDjyoPZ7Q0DjlquK0ERue7jdxEu+Z7rKjLLCml+
+ TlMPKvW/UyWIzMp6bYEts9YasnPBhlYcgOfLlOMQv3UVn3SvfYxQPi7cCoMr8PPpVz+cj34V
+X-Proofpoint-GUID: miUm8yF8XHJeqAoN3NkmpOesQBHojFzz
+X-Authority-Analysis: v=2.4 cv=B8C50PtM c=1 sm=1 tr=0 ts=68a375b3 cx=c_pps
+ a=5jkVtQsCUlC8zk5UhkBgHg==:117 a=5jkVtQsCUlC8zk5UhkBgHg==:17
+ a=2OwXVqhp2XgA:10 a=30U4ZI-q069OsqsH1RIA:9
+X-Proofpoint-ORIG-GUID: miUm8yF8XHJeqAoN3NkmpOesQBHojFzz
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-18_05,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=755 phishscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ clxscore=1015 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2507300000
+ definitions=main-2508180176
 
+fixed the commit message
+Rajeev Mishra (2):
+  loop: Consolidate size calculation logic into lo_calculate_size()
+  loop: use vfs_getattr_nosec for accurate file size
 
-On Mon, 18 Aug 2025 06:54:49 +0200, Christoph Hellwig wrote:
-> this series fixes stacking devices such as DM on top of PI-capable
-> devices by adding support for the new pi_tuple_size field to the
-> stacking helper.  It also makes the error message when this goes wrong
-> more readable.
-> 
-> Diffstat:
->  blk-settings.c |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> [...]
+ drivers/block/loop.c | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-Applied, thanks!
-
-[1/2] block: handle pi_tuple_size in queue_limits_stack_integrity
-      commit: 61ca3b891b4b9667334c1356a73f28954c92d43a
-[2/2] block: remove newlines from the warnings in blk_validate_integrity_limits
-      commit: f4ae1744033d54b63c31a3664a4fdf5cebec7f27
-
-Best regards,
 -- 
-Jens Axboe
-
-
+2.43.7
 
 
