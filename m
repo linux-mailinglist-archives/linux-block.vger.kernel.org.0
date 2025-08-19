@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-26000-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26002-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0CD9B2CAE0
-	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 19:38:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAC92B2CAEF
+	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 19:38:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C937F722CB7
-	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 17:37:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 097BB1C261AF
+	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 17:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D4F130C343;
-	Tue, 19 Aug 2025 17:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A16D30EF98;
+	Tue, 19 Aug 2025 17:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgbi4w2Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcfXQzEM"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C7A30BF6A;
-	Tue, 19 Aug 2025 17:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C902E30C35E;
+	Tue, 19 Aug 2025 17:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755625048; cv=none; b=Z0wNQEdAsqsstdyjMG1tY4Sa7F2sBtQJ0yovec07Q+pKbxsbu2yAB5jguwkKf0cJmUJENLJmWTmJOMtGAesZX1YFZINk8kg8v0BAejLXJErGCjmhIILGZHuNm5qtYZ56c62Xp0ej//AF/EeI3vdY79rtycPJc9prY4oAXQ7RIUA=
+	t=1755625061; cv=none; b=Cp0dIaKFF9oQySjZTvp+UxekgTn9ea2zydHI2n3pWtsvXicBHGdrh1oChzpmCqHdGu51zdMizsiAIWSAw+zWTE10PMAWqvm9sxOEpNLT9u5bcpYWkI17WL+ICk52n/HikKxWmKjIfazv30WBTpssiE0h31aNngPOsYbOc2OuAq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755625048; c=relaxed/simple;
-	bh=EWgy5B4A+Akm79sn7jh5YTuSXsOOCp8mk7trqVaPDEQ=;
+	s=arc-20240116; t=1755625061; c=relaxed/simple;
+	bh=mXPBKGOTAXMaA8YnIACrT4VeK6ColaZH6f/lOi0T5+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kYP71G1NcEMltNGUr2k2TQ2gOv38XgTYWJbtsCl8gYjn5Ki8J+GXZqUY1MH6VqKUMikSkFX1lQcN4AINJxUd0K7aemG5rFzzugKduv+WM0W8Tb+zicxxBYLIn9GGNxwNTOFBFTIg/x+6I36kP8M8nDW9Vwxv6riw1jt5Ts0UnoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgbi4w2Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24115C4CEF4;
-	Tue, 19 Aug 2025 17:37:27 +0000 (UTC)
+	 MIME-Version; b=ljGw7L9DuJoKwqzMltyoDkvaBzpeEsaIA/Du+eqCFcnC/bgzNdDX+y26qaZ5xItTIWLRYxoHlT2o8S3Bx1ClPsMJ7UZKsT/YQ4yV720OvbsyGt4vJX+6xZnTpx2rwKHCr0cgCMt/75iZ677kWiPT+mvWoqCY8jE52koalG/y/SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcfXQzEM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FEBC116B1;
+	Tue, 19 Aug 2025 17:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755625048;
-	bh=EWgy5B4A+Akm79sn7jh5YTuSXsOOCp8mk7trqVaPDEQ=;
+	s=k20201202; t=1755625061;
+	bh=mXPBKGOTAXMaA8YnIACrT4VeK6ColaZH6f/lOi0T5+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kgbi4w2Q8/qLfemYkqYCTlJubr4ZTtFUa79DQsgoMOtMnK9XVQtew1W9zkl8AXPTg
-	 5ouT8pZzyp7JtqBQN0iNERXAu/MVItkWE26bNq7tt2PQ51Vb3N7FOZu1tV27k+WDxS
-	 rDNXY9cVEdCtmprq96Y70alxWNTWqmdzaHB5D3PY10GcJh034Yri4T9esFwQ2SYYGH
-	 50WIZ3BWvYJhFJMsduRI2K8tz2LgY4zFEmijzvGKJlrZ1fVmLXd1pygDhMYan/xzfr
-	 ol/8IHtSLtS1VL0XNmH5RkFrbie3BoNUHMXdpMX5FRAvuLWuKe1gYX4KTtkiPKAqnI
-	 c3Ipp+NxzvqvA==
+	b=ZcfXQzEMtP4+AZ86jo3dtO0Oekoz5PxnIpxVGiM0bP5sSs9WMxZsIT5kYk/VnUi3R
+	 /kc0Vzr2i3fBfcwwoPTgAmdyvW5ST0B2y1uv9wp+i8hWG5QgN6gN0jrKDriRJyNDRP
+	 26rMrCRUHHKb1TjV3vj8pKsHfYCF8VeZXtu9+b4Vsvi65u3DslqBcB4jsQub3Gt2qD
+	 KJFY83CBFYAED4nL0OxEGnoJhmf5HiiRJ0eyTbwf76fL/xpbF4kq0K7Xr5ssJRHfaG
+	 Znxa2J61vk0Pu5GfNVrDFyX+mri+BrC7qwdiENTcRxzxBPp/BwoEirtjDV08OZLE7g
+	 87wPEgWDV7Xzg==
 From: Leon Romanovsky <leon@kernel.org>
 To: Marek Szyprowski <m.szyprowski@samsung.com>
 Cc: Leon Romanovsky <leonro@nvidia.com>,
@@ -79,9 +79,9 @@ Cc: Leon Romanovsky <leonro@nvidia.com>,
 	virtualization@lists.linux.dev,
 	Will Deacon <will@kernel.org>,
 	xen-devel@lists.xenproject.org
-Subject: [PATCH v4 01/16] dma-mapping: introduce new DMA attribute to indicate MMIO memory
-Date: Tue, 19 Aug 2025 20:36:45 +0300
-Message-ID: <08e044a00a872932e106f7e27449a8eab2690dbc.1755624249.git.leon@kernel.org>
+Subject: [PATCH v4 02/16] iommu/dma: implement DMA_ATTR_MMIO for dma_iova_link().
+Date: Tue, 19 Aug 2025 20:36:46 +0300
+Message-ID: <62d9a6c3ca03037631f6d0640ebec5fbac41d547.1755624249.git.leon@kernel.org>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <cover.1755624249.git.leon@kernel.org>
 References: <cover.1755624249.git.leon@kernel.org>
@@ -95,112 +95,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-This patch introduces the DMA_ATTR_MMIO attribute to mark DMA buffers
-that reside in memory-mapped I/O (MMIO) regions, such as device BARs
-exposed through the host bridge, which are accessible for peer-to-peer
-(P2P) DMA.
+This will replace the hacky use of DMA_ATTR_SKIP_CPU_SYNC to avoid
+touching the possibly non-KVA MMIO memory.
 
-This attribute is especially useful for exporting device memory to other
-devices for DMA without CPU involvement, and avoids unnecessary or
-potentially detrimental CPU cache maintenance calls.
+Also correct the incorrect caching attribute for the IOMMU, MMIO
+memory should not be cachable inside the IOMMU mapping or it can
+possibly create system problems. Set IOMMU_MMIO for DMA_ATTR_MMIO.
 
-DMA_ATTR_MMIO is supposed to provide dma_map_resource() functionality
-without need to call to special function and perform branching by
-the callers.
-
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- Documentation/core-api/dma-attributes.rst | 18 ++++++++++++++++++
- include/linux/dma-mapping.h               | 20 ++++++++++++++++++++
- include/trace/events/dma.h                |  3 ++-
- rust/kernel/dma.rs                        |  3 +++
- 4 files changed, 43 insertions(+), 1 deletion(-)
+ drivers/iommu/dma-iommu.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/core-api/dma-attributes.rst b/Documentation/core-api/dma-attributes.rst
-index 1887d92e8e92..0bdc2be65e57 100644
---- a/Documentation/core-api/dma-attributes.rst
-+++ b/Documentation/core-api/dma-attributes.rst
-@@ -130,3 +130,21 @@ accesses to DMA buffers in both privileged "supervisor" and unprivileged
- subsystem that the buffer is fully accessible at the elevated privilege
- level (and ideally inaccessible or at least read-only at the
- lesser-privileged levels).
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index ea2ef53bd4fe..e1185ba73e23 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -724,7 +724,12 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, struct device *dev
+ static int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
+ 		     unsigned long attrs)
+ {
+-	int prot = coherent ? IOMMU_CACHE : 0;
++	int prot;
 +
-+DMA_ATTR_MMIO
-+-------------
-+
-+This attribute indicates the physical address is not normal system
-+memory. It may not be used with kmap*()/phys_to_virt()/phys_to_page()
-+functions, it may not be cacheable, and access using CPU load/store
-+instructions may not be allowed.
-+
-+Usually this will be used to describe MMIO addresses, or other non-cacheable
-+register addresses. When DMA mapping this sort of address we call
-+the operation Peer to Peer as a one device is DMA'ing to another device.
-+For PCI devices the p2pdma APIs must be used to determine if
-+DMA_ATTR_MMIO is appropriate.
-+
-+For architectures that require cache flushing for DMA coherence
-+DMA_ATTR_MMIO will not perform any cache flushing. The address
-+provided must never be mapped cacheable into the CPU.
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 55c03e5fe8cb..4254fd9bdf5d 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -58,6 +58,26 @@
-  */
- #define DMA_ATTR_PRIVILEGED		(1UL << 9)
++	if (attrs & DMA_ATTR_MMIO)
++		prot = IOMMU_MMIO;
++	else
++		prot = coherent ? IOMMU_CACHE : 0;
  
-+/*
-+ * DMA_ATTR_MMIO - Indicates memory-mapped I/O (MMIO) region for DMA mapping
-+ *
-+ * This attribute indicates the physical address is not normal system
-+ * memory. It may not be used with kmap*()/phys_to_virt()/phys_to_page()
-+ * functions, it may not be cacheable, and access using CPU load/store
-+ * instructions may not be allowed.
-+ *
-+ * Usually this will be used to describe MMIO addresses, or other non-cacheable
-+ * register addresses. When DMA mapping this sort of address we call
-+ * the operation Peer to Peer as a one device is DMA'ing to another device.
-+ * For PCI devices the p2pdma APIs must be used to determine if DMA_ATTR_MMIO
-+ * is appropriate.
-+ *
-+ * For architectures that require cache flushing for DMA coherence
-+ * DMA_ATTR_MMIO will not perform any cache flushing. The address
-+ * provided must never be mapped cacheable into the CPU.
-+ */
-+#define DMA_ATTR_MMIO		(1UL << 10)
-+
- /*
-  * A dma_addr_t can hold any valid DMA or bus address for the platform.  It can
-  * be given to a device to use as a DMA source or target.  It is specific to a
-diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
-index d8ddc27b6a7c..ee90d6f1dcf3 100644
---- a/include/trace/events/dma.h
-+++ b/include/trace/events/dma.h
-@@ -31,7 +31,8 @@ TRACE_DEFINE_ENUM(DMA_NONE);
- 		{ DMA_ATTR_FORCE_CONTIGUOUS, "FORCE_CONTIGUOUS" }, \
- 		{ DMA_ATTR_ALLOC_SINGLE_PAGES, "ALLOC_SINGLE_PAGES" }, \
- 		{ DMA_ATTR_NO_WARN, "NO_WARN" }, \
--		{ DMA_ATTR_PRIVILEGED, "PRIVILEGED" })
-+		{ DMA_ATTR_PRIVILEGED, "PRIVILEGED" }, \
-+		{ DMA_ATTR_MMIO, "MMIO" })
+ 	if (attrs & DMA_ATTR_PRIVILEGED)
+ 		prot |= IOMMU_PRIV;
+@@ -1838,12 +1843,13 @@ static int __dma_iova_link(struct device *dev, dma_addr_t addr,
+ 		unsigned long attrs)
+ {
+ 	bool coherent = dev_is_dma_coherent(dev);
++	int prot = dma_info_to_prot(dir, coherent, attrs);
  
- DECLARE_EVENT_CLASS(dma_map,
- 	TP_PROTO(struct device *dev, phys_addr_t phys_addr, dma_addr_t dma_addr,
-diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index 2bc8ab51ec28..61d9eed7a786 100644
---- a/rust/kernel/dma.rs
-+++ b/rust/kernel/dma.rs
-@@ -242,6 +242,9 @@ pub mod attrs {
-     /// Indicates that the buffer is fully accessible at an elevated privilege level (and
-     /// ideally inaccessible or at least read-only at lesser-privileged levels).
-     pub const DMA_ATTR_PRIVILEGED: Attrs = Attrs(bindings::DMA_ATTR_PRIVILEGED);
-+
-+    /// Indicates that the buffer is MMIO memory.
-+    pub const DMA_ATTR_MMIO: Attrs = Attrs(bindings::DMA_ATTR_MMIO);
+-	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
++	if (!coherent && !(attrs & (DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_MMIO)))
+ 		arch_sync_dma_for_device(phys, size, dir);
+ 
+ 	return iommu_map_nosync(iommu_get_dma_domain(dev), addr, phys, size,
+-			dma_info_to_prot(dir, coherent, attrs), GFP_ATOMIC);
++			prot, GFP_ATOMIC);
  }
  
- /// An abstraction of the `dma_alloc_coherent` API.
+ static int iommu_dma_iova_bounce_and_link(struct device *dev, dma_addr_t addr,
+@@ -1949,9 +1955,13 @@ int dma_iova_link(struct device *dev, struct dma_iova_state *state,
+ 		return -EIO;
+ 
+ 	if (dev_use_swiotlb(dev, size, dir) &&
+-	    iova_unaligned(iovad, phys, size))
++	    iova_unaligned(iovad, phys, size)) {
++		if (attrs & DMA_ATTR_MMIO)
++			return -EPERM;
++
+ 		return iommu_dma_iova_link_swiotlb(dev, state, phys, offset,
+ 				size, dir, attrs);
++	}
+ 
+ 	return __dma_iova_link(dev, state->addr + offset - iova_start_pad,
+ 			phys - iova_start_pad,
 -- 
 2.50.1
 
