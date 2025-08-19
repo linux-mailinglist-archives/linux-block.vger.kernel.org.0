@@ -1,59 +1,59 @@
-Return-Path: <linux-block+bounces-25992-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-25994-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B826B2CA47
-	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 19:11:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A120B2CA49
+	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 19:11:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B1D8528861
-	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 17:11:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD9E0688498
+	for <lists+linux-block@lfdr.de>; Tue, 19 Aug 2025 17:11:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5AF2E2291;
-	Tue, 19 Aug 2025 17:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51B82E228F;
+	Tue, 19 Aug 2025 17:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Z8Ai8BrU"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="D7AKnHW7"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A352E228A
-	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 17:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4302D8DD4
+	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 17:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755623457; cv=none; b=NIotqlEvScUJw5wSeVQVQ797xYAGtf2alkZdNUZlthFFIeO7aLRAg5heOqYgyGuVcO4DMfHR1YxCRCKdHkf04mrhzhpdbOIShCGMT29oOy21Ahu/1MFrNK3iL7q9AsbB1HDxmSxqeugEVXIo86+5g5NVt+nMYwLsBNRkLp0Hqp8=
+	t=1755623458; cv=none; b=JNE24OhG4Vp3dUnYgfSUKpMKLzbYw5LqGuv7ktQIo0KIUaW70mMI5EEIRhvuLTT9ifGEpP3S813bi0Ee3SWY09bdFhc8i5qVbfQMdsDkFyViUmeASX5XViXPVmblhOwH+CKNbtfbDLVpovKAQVsnb/puBEGsjDKHPqN+Hoh56EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755623457; c=relaxed/simple;
-	bh=S4vQX7nEjyr+gyq3Etz01avtlyUujeeIa9MCb69MHzE=;
+	s=arc-20240116; t=1755623458; c=relaxed/simple;
+	bh=0rR9OGUY51qyMct0FZI1Vb5AOMdwpXefL2TIzvZmxd0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uhwhjbkiBSOfH/YVQTRCN4i4RIUvdUIciIs3K3A8UMppvWuo2HzmjkGY6xeoJctigu8Yq70aSNONfPGn6bL+8rtM4TpT81ezrA2p/eOpksYRn/9h5A9Zn9Udmh1FZeHA5chqQMTDrnEKmhFUf/O57xwVkv7CaWwdjRPnUuZEIts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Z8Ai8BrU; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=NvNZ+QaaYdvTKs4tujC5Dy96/hg3ZXgrqV7ZFuqSBxkyA+2alriH65FJJwS408otW1IpH7xV2+hW5PQ7BU5L9gcayVkAukrokvX29MAYAK/RF9w0UM+rOtcr61iDTlwGSaGDeFqeG/eFvTlya2eLvbvHEUTYwWbDaF+Ym5/EGc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=D7AKnHW7; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 57JF9hRU1378473
-	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 10:10:55 -0700
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 57JGuDxt1754206
+	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 10:10:56 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=YO0nQZjnXIP++9cJOqBf7rWHiXHgArifu5XawG4IlPY=; b=Z8Ai8BrUUt8z
-	Ni29+/2I7MqwIp3XHtmtEF2dXny5IzLI3e5RK/Dec8v5rxlH2WLHnbA1Jo3tjNgW
-	c3Ewaoh8IVSfTGS/hjNULiYeSYX8K4tGAkkiI9/eJjnBM5FNjaqMZ70SCs4bbw2R
-	OqShsTcNusVMDs+OU7yNwm0WgRuiu96AOZH8L0x3xtciqtkouRqit1F2rTNytu3X
-	UHBXX0nhltTMzfmCQ2QxSPoj0yeAeFjKuc5DQ+46sQYXXQ9KlXRmDF6LSag52JcS
-	rFELH64+G3YLEYK2JecvGgOa9kRj5r6bNSQyNdG0KJzzjd6WR1Yh5dSO4QDzTe6y
-	WynDN4Lb8A==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48munps719-14
+	 bh=59+Hb9AcNy1cne4phcT5L81KNgHgSLj+KSq3JExrmO0=; b=D7AKnHW7480O
+	lsNM4zkHfEpONuMx/e6MUs6dt82dEt9eKpJIpb0KlESc7wImiH8pwobRZ6m8gpF8
+	v1pBjQ45NwiI69vWfM5JkpjXJgQlFAV125AhHQ/xGEy4mtCTjpdYlSTr3xcPi+9j
+	rZJ3b4jxbehDwoj3I3saz+PkabKCSC2N+3xuhdW5aQVKPC/8t27mOmLMFbYlP7OM
+	nU6two7oV5XyjNkdMDvkE+w7uBWVGl2k9TxGNBMKSL3Ws8fjlr3FcoOE1Td0+umO
+	27O4RFub2+UeW1GECsVfDJvSav08yzaVUW1blxB1nfVLwPc6m2rT6K+IK5Iey0en
+	3zC/oeJxKQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48mw7hg5e7-16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 10:10:54 -0700 (PDT)
-Received: from twshared17671.07.ash8.facebook.com (2620:10d:c0a8:fe::f072) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Tue, 19 Aug 2025 10:10:55 -0700 (PDT)
+Received: from twshared60001.02.ash8.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.17; Tue, 19 Aug 2025 17:10:50 +0000
+ 15.2.2562.17; Tue, 19 Aug 2025 17:10:48 +0000
 Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id A1186C89F2D; Tue, 19 Aug 2025 09:49:48 -0700 (PDT)
+	id AAEF5C89F2F; Tue, 19 Aug 2025 09:49:48 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -62,9 +62,9 @@ CC: <snitzer@kernel.org>, <axboe@kernel.dk>, <dw@davidwei.uk>,
         <djwong@kernel.org>, <linux-xfs@vger.kernel.org>,
         <viro@zeniv.linux.org.uk>, Keith Busch <kbusch@kernel.org>,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCHv3 6/8] block: remove bdev_iter_is_aligned
-Date: Tue, 19 Aug 2025 09:49:20 -0700
-Message-ID: <20250819164922.640964-7-kbusch@meta.com>
+Subject: [PATCHv3 7/8] blk-integrity: use simpler alignment check
+Date: Tue, 19 Aug 2025 09:49:21 -0700
+Message-ID: <20250819164922.640964-8-kbusch@meta.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250819164922.640964-1-kbusch@meta.com>
 References: <20250819164922.640964-1-kbusch@meta.com>
@@ -77,52 +77,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDE2MCBTYWx0ZWRfX6J+QGACdx/wl
- x9CbxfSsPWuBsachxPc0+v+5ooQ9HHPoqTeXRSDwSyNNRi3Bk9d6TvW5MlN/yKKMZMDEG5PPlb1
- 3cNrfug/PW0xTefGHCXXC2+PQ6eiko1TzwwZJFYQrR60kpjwJDv3DoTEiqMrqBUjBOQUZLYSx6L
- 6qJIkhhiQX+u7YiM/d9zNDljqLOG4uTf7bcHbl+K0nWZgtxHEYaeuh4vbVZyREZydi/BDW3n45P
- lfPy3UTlSaXktj2ieUHgzpy5CedTunrObW9iiGBJloCNDP6b1GC5s1DE+QSaaXfwnd5koHUrOWI
- DDftx2e+leCnUqum/GLtoYluFgjvGpyNB3P9cUP5nlNUsqRza/1O3638397AAo3S3x2uWy4maHD
- 5o3gjlHcfX6tPi91L9sfmqb8mTla6g6hkRxLFzCViIJcvUuDZcaqWWkmWyCLLGTpIJQYaGrF
-X-Proofpoint-GUID: Bnflc-ZTtKZwGeI2rEOyr2Fqv209LsTr
-X-Proofpoint-ORIG-GUID: Bnflc-ZTtKZwGeI2rEOyr2Fqv209LsTr
-X-Authority-Analysis: v=2.4 cv=O/85vA9W c=1 sm=1 tr=0 ts=68a4b01f cx=c_pps
- a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
- a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=x-sBDG6hxYFL5DTe09MA:9
+X-Proofpoint-GUID: uopU4NhfUtPl2bAQGkJ8Ua5HjcLR4x6n
+X-Proofpoint-ORIG-GUID: uopU4NhfUtPl2bAQGkJ8Ua5HjcLR4x6n
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDE2MCBTYWx0ZWRfX/FVcamgGBntF
+ /hYG8Ev/JGbERf/EyoaJwMgEwNGqbdNvoAKMtFE301DdhK2gGBAXE2clbz3fJNFG69mR8EQ0zHm
+ DCbqbmv9l+prSSRt7YNsisQGACv9nUg2WAzFD8Vyb73R+y1YG6TLftC43BTXIJfHKCEyVZJ5n5i
+ lgB+h3OsuHb81TZF1Cmp0K7vASO0bjRfN3TSxPnco/7P8XyYk6RR0cBRmdcrx+MxrhFV7171+9z
+ TFxJIFh3vprPmvhdCjWVMvm1jE2k26M6bgE9tyGcQi4gMf/gA094C9ZyafHPzmzVGe4J451r7KH
+ LMf2Zv1/zAoCzEkcL576nU2/U1k9ocdQCJP/ah7WZqOhXRFzMDfXKBNbnHj1WjHrlo7NEug66uR
+ SWiFOvKBRU8yPoYSkLavPw5eMBoB0JWG7VmS7PAhGHdUo2HyCZ4OFSRSXjKmstKf8ppjw2yk
+X-Authority-Analysis: v=2.4 cv=etzfzppX c=1 sm=1 tr=0 ts=68a4b01f cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=yetF5jY7WHH6jeiS1L0A:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-19_02,2025-08-14_01,2025-03-28_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-No more callers.
+We're checking length and addresses against the same alignment value, so
+use the more simple iterator check.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 ---
- include/linux/blkdev.h | 7 -------
- 1 file changed, 7 deletions(-)
+ block/bio-integrity.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 7f83ad2df5425..a2128af3f08cf 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1589,13 +1589,6 @@ static inline unsigned int bdev_dma_alignment(stru=
-ct block_device *bdev)
- 	return queue_dma_alignment(bdev_get_queue(bdev));
- }
-=20
--static inline bool bdev_iter_is_aligned(struct block_device *bdev,
--					struct iov_iter *iter)
--{
--	return iov_iter_is_aligned(iter, bdev_dma_alignment(bdev),
--				   bdev_logical_block_size(bdev) - 1);
--}
--
- static inline unsigned int
- blk_lim_dma_alignment_and_pad(struct queue_limits *lim)
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 6b077ca937f6b..6d069a49b4aad 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -262,7 +262,6 @@ static unsigned int bvec_from_pages(struct bio_vec *b=
+vec, struct page **pages,
+ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
  {
+ 	struct request_queue *q =3D bdev_get_queue(bio->bi_bdev);
+-	unsigned int align =3D blk_lim_dma_alignment_and_pad(&q->limits);
+ 	struct page *stack_pages[UIO_FASTIOV], **pages =3D stack_pages;
+ 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec =3D stack_vec;
+ 	size_t offset, bytes =3D iter->count;
+@@ -285,7 +284,8 @@ int bio_integrity_map_user(struct bio *bio, struct io=
+v_iter *iter)
+ 		pages =3D NULL;
+ 	}
+=20
+-	copy =3D !iov_iter_is_aligned(iter, align, align);
++	copy =3D iov_iter_alignment(iter) &
++			blk_lim_dma_alignment_and_pad(&q->limits);
+ 	ret =3D iov_iter_extract_pages(iter, &pages, bytes, nr_vecs, 0, &offset=
+);
+ 	if (unlikely(ret < 0))
+ 		goto free_bvec;
 --=20
 2.47.3
 
