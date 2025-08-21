@@ -1,106 +1,156 @@
-Return-Path: <linux-block+bounces-26072-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26075-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A80B30094
-	for <lists+linux-block@lfdr.de>; Thu, 21 Aug 2025 18:57:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D2AB307B1
+	for <lists+linux-block@lfdr.de>; Thu, 21 Aug 2025 23:02:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4BDD16707A
-	for <lists+linux-block@lfdr.de>; Thu, 21 Aug 2025 16:56:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C3971D06CDE
+	for <lists+linux-block@lfdr.de>; Thu, 21 Aug 2025 20:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4510A2E6112;
-	Thu, 21 Aug 2025 16:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5459F350845;
+	Thu, 21 Aug 2025 20:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2pFq3sw"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="q7oVnO/F"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4DB2E1F11;
-	Thu, 21 Aug 2025 16:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD32350847
+	for <linux-block@vger.kernel.org>; Thu, 21 Aug 2025 20:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755795365; cv=none; b=ub+vuWw/3aKSPop+UwpnANDXZ01CFiovCHkrp1wFpLcWfY5cpDen/wYIYzkH4P+lF/IX6mIMrceAzecZeu+7ew3XmhTxRZEFvH3/UkqU2MEC7m2Z7jYHJ8t/T2Ob02yVO662WW+37CzG5BtOgxszibvaqnwjIoCSyuGGhkfHy+M=
+	t=1755809082; cv=none; b=byx7FYg5CRKz/Zg9YsU+A2v7mEiEJGE56XY7JB0p+OAjcBOwqQJx/15w2iY9GU1MCEfOhWaHmt+rWpLDpZRMYrXKcw7Ip0+22VsZMT5q+8rE7jWlcVVK9CxMy5k2KO0bD+pdJ4LDcWL5z92Dlji09euIIdY1gHranWjni6DpIMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755795365; c=relaxed/simple;
-	bh=OTJfMD5H4cDT5DeZwBC9vrpTKC9XBlJdn8JVZTk0OfA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lQg+5fz9ZmyhuoAIx3AqpXk8nuxUTRMGJ6cndZSleR66wqFAHvrfRnXyDLwqdmS0pOrzUd8o1VENpMR2jSBSMO0+EEAKQTG3OdKGzFSWetb9abP7j/Oxtf/QF//i05DjxqOezjjxpv1hc9ng6INkf8OwEFKiR1ia+NVHBRcNlgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2pFq3sw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C4FC4CEF4;
-	Thu, 21 Aug 2025 16:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755795364;
-	bh=OTJfMD5H4cDT5DeZwBC9vrpTKC9XBlJdn8JVZTk0OfA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X2pFq3swWLYIK/fEgSYiOtTYtShp4zuzf3sugfUz5NkK2zy+tphCNy/d/MvkUV5/l
-	 qFPdgdCYcUco0Hsy/E87K25hxzrJSQ31SToOjB/EDos+/4n0w6rK+chN1ioL48MHSe
-	 cOc5MJ6stgKBkcNayHxqqXcg8aqP6QVytAEXPOyhG5RaxxZ0QvEQbRMCvNLn88Jt8F
-	 1/zMcIHH7gpllTV7BrZG/PzZfyVGS6HQ3RO6p+MTrHHYJw3elBu54+axH4A+Wr4Ent
-	 XIxATolM0fhS3WrWQaGvf0yC85rJjWG5KjW/yH6esL8uKfzbkPthPD699lY0fSp/rN
-	 3mZePrUrR0Jsg==
-From: SeongJae Park <sj@kernel.org>
-To: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	shuah@kernel.org,
-	mic@digikod.net,
-	gnoack@google.com,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	ming.lei@redhat.com,
-	skhan@linuxfoundation.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH] selftests: centralise maybe-unused definition in kselftest.h
-Date: Thu, 21 Aug 2025 09:56:02 -0700
-Message-Id: <20250821165602.79023-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250821101159.2238-1-reddybalavignesh9979@gmail.com>
-References: 
+	s=arc-20240116; t=1755809082; c=relaxed/simple;
+	bh=QvHlQxJLoa3RiauM1XlYnSSKSxoDs4yZyOcjXPlH6rY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=prO1HY0CkstHgTL0qRndSdUa8d1e5QOVVn5uhZx4luA/ETZ4eZV9FN+ion1Pxk/pJ5D0K5QhOvTPq6/SmsocHQZpZ4enrCTTWdmhFXoEfGriKU6QP7DqBtwVx+w95TTH8b9kHThHlheR+h4vcg1iS9eT5ae7WO/ei12FrQl6yOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=q7oVnO/F; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 57LKUQ7e1193217
+	for <linux-block@vger.kernel.org>; Thu, 21 Aug 2025 13:44:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=hm2agGAshuZsugLZ0p
+	QzuhSejxyf1vg4VI5sjJjTHIk=; b=q7oVnO/F+6tqg0FT3m84IAsCH/DCGKGjWL
+	4IKjGbhd/+gemk/3P5LALqwkF+nAmCacz2Qyo1ecWyQI5UkYHvDy/TXj7aXMUU07
+	SxeNI9kNkIIgjoIclwcBzm311NuZbNV6C0jHyX293tL2Xo3BDP1Lz4usqh+9PHTF
+	yMq8KZSiqWFpdb2e1cRJiqU79ng1XGx1tZSxhp85BdT1/NXO8XDvV4giYrjgfCdl
+	VHYQ0tBC9ntwotXVibCy5/1DwIQH3x91Zu5LckqDdbdSIAH5EcKA/wpylspCSq1d
+	/nournMjajjRzXOGWimsyNXyMpINe9TodFsN2wstGWjzJqOMKKjQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48pa5a09gv-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Thu, 21 Aug 2025 13:44:39 -0700 (PDT)
+Received: from twshared31684.07.ash9.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.17; Thu, 21 Aug 2025 20:44:36 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 99F5ADAAF46; Thu, 21 Aug 2025 13:44:21 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv3 0/2] block+nvme: reducing virtual boundary mask reliance
+Date: Thu, 21 Aug 2025 13:44:18 -0700
+Message-ID: <20250821204420.2267923-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: r9n3gUtPn42i2v_MJ4VAgWY2MXCP4uBt
+X-Authority-Analysis: v=2.4 cv=F9UOtqhN c=1 sm=1 tr=0 ts=68a78537 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=t7V0oaV8DjCZFRwKODIA:9
+ a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIxMDE3NyBTYWx0ZWRfXzPC2lsphDPvB
+ uTl2VVLRabgRlHU7mKHgcTV3HZK2PaeT62s3hDs4YhEMYHgvJ4eCxRNeJoncZok1LslwUArSBEH
+ 1y7AV/9Gqpv0Qlxs6Ab1JDQOcQtC/JzgVOPwG02sVvmVcvj7FoQ//8dSLAE5VOX2vhrb9SbQ8KC
+ ccluCXJvMMGEbBquXISj3ALfOQERiEmScOK7Fl4rTAWLH+MrY2GGVLzihzk6CG3C8zI5U2wUkcI
+ Wi9deUVnKaPwBmv5FbBUNFVjJJ2h5rTVZqJcY7lKx3Ahdwv1q+V9cQ/QLgLCqalx8o6CqjqKITE
+ cRLrfVNmySRzLqwINhZqdJpPRnTuzpGUACZeSYbQQk5SF7vhNOFemJjxRMBGmTB1dL0XcRqfils
+ 57tBG7li4gUvKtwY5nY4C8S8gaNCF8sMqTvPV5rHCqlTZZPAr6ecvLuunKQ5S349D/HA+pNw
+X-Proofpoint-ORIG-GUID: r9n3gUtPn42i2v_MJ4VAgWY2MXCP4uBt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-21_04,2025-08-20_03,2025-03-28_01
 
-On Thu, 21 Aug 2025 15:41:59 +0530 Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com> wrote:
+From: Keith Busch <kbusch@kernel.org>
 
-> Several selftests subdirectories duplicated the define __maybe_unused,
-> leading to redundant code. Moved to kselftest.h header and removed
-> other definition.
-> 
-> This addresses the duplication noted in the proc-pid-vm warning fix
-> 
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Link:https://lore.kernel.org/lkml/20250820143954.33d95635e504e94df01930d0@linux-foundation.org/
-> 
-> Signed-off-by: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
+Previous version is here:
 
-Acked-by: SeongJae Park <sj@kernel.org>
+  https://lore.kernel.org/linux-nvme/20250805195608.2379107-1-kbusch@meta=
+.com/
 
+This patch set depends on this unmerged series for flexible direct-io
+here:
 
-Thanks,
-SJ
+  https://lore.kernel.org/linux-block/20250819164922.640964-1-kbusch@meta=
+.com/
 
-[...]
+The purpose of this is to allow optimization decisions to happen per IO.
+The virtual boundary that NVMe reports provides specific guarantees
+about the data alignment, but that might not be large enough for some
+CPU architectures to take advantage of even iif an applications uses
+aligned data buffers that could use it.
+
+At the same time, the virtual boundary prevents the driver from directly
+using memory in ways the hardware may be capable of accessing. This
+creates unnecessary needs on applications to double buffer their data
+into the more restrictive virtually contiguous format.
+
+This patch series provides an efficient way to track page boundary gaps
+per-IO so that the optimizations can be decided per-IO. This provides
+flexibility to use all hardware to their abilities beyond what the
+virtual boundary mask can provide.
+
+Note, abuse of this capability may result in worse performance compared
+to the bounce buffer solutions. Sending a bunch of tiny vectors for one
+IO incurs significant protocol overhead, so while this patch set allows
+you to do that, I recommend that you don't. We can't enforce a minimum
+size though because vectors may straddle pages with only a few words in
+the first and/or last pages, which we do need to support.
+
+Changes from v2:
+
+  - We only need to know about the lowest set bit in any bio vector page
+    gap. Use that to avoid increasing the bio size
+
+  - Fixed back merges; the previous was potentially missing one of the
+    bio's gaps
+
+  - Use pointers instead of relying on the inline to generate good code.
+
+  - Trivial name changes
+
+  - Comments explaing the new bio field, and the nvme usage for deciding
+    on SGL vs PRP DMA.
+
+Keith Busch (2):
+  block: accumulate segment page gaps per bio
+  nvme: remove virtual boundary for sgl capable devices
+
+ block/bio.c               |  1 +
+ block/blk-merge.c         | 39 ++++++++++++++++++++++++++++++++++++---
+ block/blk-mq-dma.c        |  3 +--
+ block/blk-mq.c            | 10 ++++++++++
+ drivers/nvme/host/core.c  | 21 ++++++++++++++++-----
+ drivers/nvme/host/pci.c   | 16 +++++++++++++---
+ include/linux/blk-mq.h    |  2 ++
+ include/linux/blk_types.h |  8 ++++++++
+ 8 files changed, 87 insertions(+), 13 deletions(-)
+
+--=20
+2.47.3
+
 
