@@ -1,189 +1,184 @@
-Return-Path: <linux-block+bounces-26113-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26115-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9634B31953
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 15:22:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2344B31A31
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 15:51:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 837187AC0B1
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 13:21:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABCF7AE3DFB
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 13:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F442FDC31;
-	Fri, 22 Aug 2025 13:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6A4303C91;
+	Fri, 22 Aug 2025 13:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="S3tLF5Jb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQonPoTE"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779728BABA
-	for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 13:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065C9302CD8;
+	Fri, 22 Aug 2025 13:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755868963; cv=none; b=mXEttiDCIqAKalBEM9L9NpJ9IuLNK2lwuNfyge50zQhgRA0Fangt/ox9pUVW1UQCmwOm1ljx5P/kzNrquYpeiLF2c3cOtt5CiJRiNyxxNHUILFwMjaZV+/tw8E5FVjt/bmlqHzcIzlDAiL/uqvbsfK4eiEVam7qpLv/DSuT5/g8=
+	t=1755870339; cv=none; b=Ghq1Cd1POmu4GtRi7w24SQUv3dMFDMvfCk+/zIYnFU7s+oQeDWXvCvTVV4C3TyaukpS3HJARwiiYq3xlZPeKFrzN02QYaGErnrHOvHyapVkGo7KmeyAC7Jt/q/2FW863i+3X8zUUuplP0gZEHpWO7NnKuUFehUzJZwZPXnye8PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755868963; c=relaxed/simple;
-	bh=fPrGcus9ToqMGbJctxK6AdAlu0aG2sUaZdcYe38F168=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=NdPzkjvDbahJvZXMfRGye2EC23bjPQqt4oh27eN00GFP0AeFDOxPDKZ3KMsyCrGsJnT7ACWuXXvuloPe0N7Tz5Klov1WefD0H5u6YZCyDO2Hl2KIYWiH5FpPs4QdUe9TrJSwJDSu/SWqJrtWi/WZKLkAMHbXFcfFMExIBdDtsQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=S3tLF5Jb; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3e974105ab8so1787545ab.1
-        for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 06:22:41 -0700 (PDT)
+	s=arc-20240116; t=1755870339; c=relaxed/simple;
+	bh=9guF4nYAdpubhBEM+nGDmqAXkJV2Tmi2Jyrl1UttPyo=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=ov6HGoUt5rjA4lI+QyGNlbnAEFgxfGHPgOZC17BVGDziS8mEu8aCdwJE8yJ5+KNJQp9SyKN/t6G7qgizwNn6tOcfMfN3esEc1tNlJKgNvUT+iTE8u15NzmiXSO83XHjX29DLCiMg4DpBUn9A0MiTL7KVTzZtPzgYZRRkEQOo224=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQonPoTE; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b49c0c5f4dfso547461a12.1;
+        Fri, 22 Aug 2025 06:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1755868960; x=1756473760; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pwOYSNq4BwI97YHWGfFtoIVRox2mUdKf4CZ6j/qpjpo=;
-        b=S3tLF5JbT4E1gB6Vx6RsMhUCCazHHHV7cqF7S9lMyb2lGGKgwpU4ozEPoPIsCth0WI
-         0Vq+5laliT7GAmWWMO4AXqEEaQ9Y3WxkCad55/MFapF/zkM3mR8FMUikA2WlGDO9YQyb
-         p5oPX2Bl20P2y5OlzZH10KjgpnEXSm3Pt03oilO3PrCe0xM383mZ0UBfZl75VJMl6OwJ
-         rNJfS3cQ98evJZD7ndKcc4MBmizZQWjH/CM74UBDzXmNP+8rlnT/10iCkhhjbm6VC4hr
-         OtgsNIns7IxDUKNLOkWCkVKRJQW8yhTlEqNAjT28H5XFtTWIWG15llpDPSVjmY7dwKim
-         1sPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755868960; x=1756473760;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+        d=gmail.com; s=20230601; t=1755870337; x=1756475137; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pwOYSNq4BwI97YHWGfFtoIVRox2mUdKf4CZ6j/qpjpo=;
-        b=awV9u+6BSp6F1UPJU7NJeD6pIjMA9FsvytPVwgLvGA4PHcn0mPcrto8br1YiMm970l
-         tveP7Qcqiwv61LObR5BsdoxTWRVx/rOCll1TA/KJW1ub3/yuDlAzHlO/Cyob7kC9u07G
-         cYtjmaGOStUKqdlu2oMJpEfYmAwVTcjB80PGPl5JKIvjTz2rVWX2s4v5qSrXK+zkTHm1
-         BqOopz7Xee+DHBljrHshNFothylhGmPUNCF8fMjvu+UDyvldoUi8lTqXU9GjwWxlJFvM
-         T7UHmsNwaQfSSfgaWtN+dRGr+DkC5wh7MidDQtTHakbc1Tc9FHyDHftI7gGaDakFs+WT
-         IRjQ==
-X-Gm-Message-State: AOJu0Yz396rSCdbyoNAJ6Al/v5kjlsL8oAdllSgxZ+f0L2juZQmzt+6N
-	QXh+XCsNVU3l+XFGSkJBYxHmd50bv3sbrVmxuRZd0g9CeucMZ9UInrrpCt6YYhY4olA=
-X-Gm-Gg: ASbGnctXKG8Teakw2oGKaHmWe++cR6Xn5XyjNG0oTlSvpO62Bpul/HWksfK9SYmTdrk
-	ABFI4EQTVviOWgheWaWDVQaybXvYnt5R7aKdag1xIu2vbQlkzR5F29408pGcPa/0F5XXeoi4TvW
-	0lMlxsvPFv/dAjQmg7daD5BcS8p3VJV8e9cWMUDqE44CNB5qzaYB2dKdcAilKg344DCs5jZSwoK
-	Cni5sYSYDnt6bJ4A3VK/jS5XQL131V6z75WkH7z+zMNkY6Mp47y07NG/wWxkAEGMMChnwjpt/lW
-	rptsZVF8EV78RUQF6+NItqFAF/q+sgSpPoRFDAzOKtZY0O2JEurF8X8VfAU9YcsoyO/znva08XD
-	OEV3gWyrLWCSgL+Svuso=
-X-Google-Smtp-Source: AGHT+IGyQbFsohXvTREpANEsUsCk3jGpEAAkoFWeOTMnu0PngC3QRVnblHfXL58F0oKyK3MOt9/YVA==
-X-Received: by 2002:a05:6e02:1807:b0:3e9:e1fd:2fa with SMTP id e9e14a558f8ab-3e9e1fd23efmr13523675ab.30.1755868960401;
-        Fri, 22 Aug 2025 06:22:40 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8843f83eb6dsm916445939f.9.2025.08.22.06.22.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Aug 2025 06:22:39 -0700 (PDT)
-Message-ID: <4761fdaa-c939-4150-9189-bb14ffbe6978@kernel.dk>
-Date: Fri, 22 Aug 2025 07:22:38 -0600
+        bh=uKWOYEUs0uCA6Fp6TXWX4VIxm5Onhrin5LUppg0AoHg=;
+        b=aQonPoTEl7hUsfik5a9lCN9sJJwfxCPICKMXO3kjxSJ+l6xQSxPIxAco82uVlqKN7F
+         6+xDg8InROAes+HibFsjYtYrARfWa/ieSnjMUtkR4BMytnK2w96Z7c39ub/8XytUgVk8
+         2FOZZNjpmh+LtShx2czhQQ+HpsaD4Vpd6LlPXRXDkBG0oTWyQNnEQSnXzlMItcW03ixs
+         4JyrATyKdEmZfof/E36yCr5xk9tCQK9ytjIKb770dqgegXsgUdtz0lVIJSfgWG+EU2HL
+         nIY4yBFD9WKaiM1S9t6KZSnytkbe/yOlOQPT6lon/Pt7d/KKhHij5nLSAtUMljI9rdaH
+         Wyhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755870337; x=1756475137;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uKWOYEUs0uCA6Fp6TXWX4VIxm5Onhrin5LUppg0AoHg=;
+        b=vMlCnLsl92d3r/PEUJYw2vLDO5AD9OUT8x/TcBZLTfCbUxY+PaRVsgpcAKYirxgFoC
+         SK9t5P/RLbqmcJw3yibo/5aZq9Uu2vmKSeaVR52r9DsI65go8c45Efbxu+EYLqC5NPwr
+         zo6PKiulaj4jHGEpO/sqhBqf/JXiDiYDrQymP09Rru9n0IQvQTKqeM1vtKXb+iSSd4gi
+         tlgsGoB76/BoqClQRp4bCtDDk1nmhKlhSHSIwrpDSgrP1OPMq+yiqFSOx62kTGA+hg9V
+         hujAhlW/uaErqYRkgVSV5AoVqAmx9Jh7kOfVwkdLxY8MQlA64jS5/aOpsJIOiAd1qExO
+         fIyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJg3+Y2AEUoQwxRGqwzAYfIJX1k07AexWEy7m+i/9+cWaE3csMgjS6mrCg8Ba29a0hPs5pDox0wDz1Xg==@vger.kernel.org, AJvYcCUd+p/7Trnb6DnTQaAe7FO0RTi1hIghr697cKnngh42j4KtZneQLKueiXxqn7oWu9NH6sB8vJ2mvm4pBpPH@vger.kernel.org, AJvYcCVRbxOxH5s9rh5I6nzKxgRlekP9Zyw0I39U+BQeOFF9AxUnrE8scGZbnvxXmxJne5ISyMfzv2O7ZLrXNg==@vger.kernel.org, AJvYcCWmEqk2F9OKAmwB/cLB4QaxXebPLZgnQJjREXwE/dsSyFyiADqCZtrK7jSkNy9ISbIeVoQTk9F+9zputzVbAQ==@vger.kernel.org, AJvYcCWzlBuyv3rC2GTA/Wlg283M8OZjWxVjWVCHGqL+b7jgEM5J0p4aeHpHDutb0i2EI4/D3arHAhcCL6kq@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMAkNSDjB2Fx/ZlvH8nVBNriwxeLH0EQZX2o4O7MI2JDuuZUwb
+	WxHXWnmzd9zuvKOp7aa2nn13JEpVJku80lnGruB7tf3Uwq8yQsIQfjU5
+X-Gm-Gg: ASbGncuaQgAz7zduzZaoQ7gJDVBRdVH+nrMZ6/gsHaXTtwCaH94Zje+X++GzyfxXnwk
+	E2M2w57vRNM0KA093ois8485efTnrc0aUjnhL7FEQwqgeyCsVkn47iUDQ7DCyXGsadDMXw912vL
+	MZioF/kIZaqhjpv89rZrQ3fxqApvpriEDpxP6omiqDa9RPDjrN35NSLAhHDNK4Yb6V19QQJQYdP
+	rWziG1FGUtno+qVZrObhy6xlx5deskRSWR7Xnas25wl43nE8bt+1vPof3PQynPwS2YHOJ2gI+YS
+	eBoctYEyx14bmyHDzV9D3VgHmCluCokSeWoBvdjq2eMX86i5M1NWFo3ami7bCr/cpuLvjjsbFOx
+	TON+VYBS+KQNWEg==
+X-Google-Smtp-Source: AGHT+IGWgCeQyNze15y8g6Rc5RnPSYAOGwg5TD20mIDdL4Y5P6UMgD46dIVXG0JZ8EnVWgy0ligsEw==
+X-Received: by 2002:a17:903:283:b0:240:7f7d:2b57 with SMTP id d9443c01a7336-2462eeb705dmr41706525ad.28.1755870336565;
+        Fri, 22 Aug 2025 06:45:36 -0700 (PDT)
+Received: from dw-tp ([171.76.85.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245f38ab988sm74460305ad.124.2025.08.22.06.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Aug 2025 06:45:35 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
+Cc: snitzer@kernel.org, axboe@kernel.dk, dw@davidwei.uk, brauner@kernel.org, hch@lst.de, martin.petersen@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org, viro@zeniv.linux.org.uk, Keith Busch <kbusch@kernel.org>, Jan Kara <jack@suse.com>
+Subject: Re: [PATCHv3 0/8] direct-io: even more flexible io vectors
+In-Reply-To: <20250819164922.640964-1-kbusch@meta.com>
+Date: Fri, 22 Aug 2025 18:57:08 +0530
+Message-ID: <87a53ra3mb.fsf@gmail.com>
+References: <20250819164922.640964-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From: Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] Block fixes for 6.17-rc3
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+Keith Busch <kbusch@meta.com> writes:
 
-Set of fixes for block that should go into this tree. A bit larger than
-I usually have at this point in time, a lot of that is the continued
-fixing of the lockdep annotation for queue freezing that we recently
-added, which has highlighted a number of little issues here and there.
-This pull request contains:
+> From: Keith Busch <kbusch@kernel.org>
+>
+> Previous version:
+>
+>   https://lore.kernel.org/linux-block/20250805141123.332298-1-kbusch@meta.com/
+>
+> This series removes the direct io requirement that io vector lengths
+> align to the logical block size.
+>
+> I tested this on a few raw block device types including nvme,
+> virtio-blk, ahci, and loop. NVMe is the only one I tested with 4k
+> logical sectors; everything else was 512.
+>
+> On each of those, I tested several iomap filesystems: xfs, ext4, and
+> btrfs. I found it interesting that each behave a little
+> differently with handling invalid vector alignments:
+>
+>   - XFS is the most straight forward and reports failures on invalid
+>     vector conditions, same as raw blocks devices.
+>
+>   - EXT4 falls back to buffered io for writes but not for reads.
 
-- MD pull request via Yu
-	- Add a legacy_async_del_gendisk mode, to prevent a user tools
-	  regression. New user tools releases will not use such a mode,
-	  the old release with a new kernel now will have warning about
-	  deprecated behavior, and we prepare to remove this legacy mode
-	  after about a year later.
-	- The rename in kernel causing user tools build failure, revert
-	  the rename in mdp_superblock_s.
-	- Fix a regression that interrupted resync can be shown as
-	  recover from mdstat or sysfs.
-
-- Improve file size detection for loop, particularly for networked file
-  systems, by using getattr to get the size rather than the cached inode
-  size.
-
-- Hotplug CPU lock vs queue freeze fix
-
-- Lockdep fix while updating the number of hardware queues
-
-- Fix stacking for PI devices
-
-- Silence bio_check_eod() for the known case of device removal where the
-  size is truncated to 0 sectors.
-
-Please pull!
+++linux-ext4 to get any historical context behind why the difference of
+behaviour in reads v/s writes for EXT4 DIO. 
 
 
-The following changes since commit 8f5845e0743bf3512b71b3cb8afe06c192d6acc4:
+BTW - I did some basic testing of the series against block device, XFS &
+EXT4 and it worked as expected (for both DIO & AIO-DIO) i.e.
+1. Individial iov_len need not be aligned to the logical block size anymore.
+2. Total length of iovecs should be logical block size aligned though.
 
-  block: restore default wbt enablement (2025-08-13 05:33:48 -0600)
+i.e. this combination works with this patch series now:
 
-are available in the Git repository at:
+    posix_memalign((void**)&aligned_buf, mem_align, 2 * BLOCK_SIZE);
+    struct iovec iov[4] = {
+        {.iov_base = aligned_buf, .iov_len = 500},
+        {.iov_base = aligned_buf + 500, .iov_len = 1500},
+        {.iov_base = aligned_buf + 2000, .iov_len = 2000},
+        {.iov_base = aligned_buf + 4000, .iov_len = 4192}
+    }; // 500 + 1500 + 2000 + 4192 = 8192
+ 
 
-  git://git.kernel.dk/linux.git tags/block-6.17-20250822
+-ritesh
 
-for you to fetch changes up to 370ac285f23aecae40600851fb4a1a9e75e50973:
-
-  block: avoid cpu_hotplug_lock depedency on freeze_lock (2025-08-21 07:11:11 -0600)
-
-----------------------------------------------------------------
-block-6.17-20250822
-
-----------------------------------------------------------------
-Akhilesh Patil (1):
-      selftests: ublk: Use ARRAY_SIZE() macro to improve code
-
-Christoph Hellwig (3):
-      block: handle pi_tuple_size in queue_limits_stack_integrity
-      block: remove newlines from the warnings in blk_validate_integrity_limits
-      block: tone down bio_check_eod
-
-Jens Axboe (1):
-      Merge tag 'md-6.17-20250819' of gitolite.kernel.org:pub/scm/linux/kernel/git/mdraid/linux into block-6.17
-
-Ming Lei (1):
-      blk-mq: fix lockdep warning in __blk_mq_update_nr_hw_queues
-
-Nilay Shroff (3):
-      block: skip q->rq_qos check in rq_qos_done_bio()
-      block: decrement block_rq_qos static key in rq_qos_del()
-      block: avoid cpu_hotplug_lock depedency on freeze_lock
-
-Rajeev Mishra (2):
-      loop: Consolidate size calculation logic into lo_calculate_size()
-      loop: use vfs_getattr_nosec for accurate file size
-
-Xiao Ni (2):
-      md: add legacy_async_del_gendisk mode
-      md: keep recovery_cp in mdp_superblock_s
-
-Zheng Qixing (2):
-      md: add helper rdev_needs_recovery()
-      md: fix sync_action incorrect display during resync
-
- block/blk-core.c                     |   2 +-
- block/blk-mq-debugfs.c               |   1 +
- block/blk-mq.c                       |  13 ++--
- block/blk-rq-qos.c                   |   8 +--
- block/blk-rq-qos.h                   |  48 +++++++++-----
- block/blk-settings.c                 |  12 ++--
- drivers/block/loop.c                 |  39 +++++------
- drivers/md/md.c                      | 122 ++++++++++++++++++++++++++---------
- include/linux/blkdev.h               |   1 +
- include/uapi/linux/raid/md_p.h       |   2 +-
- tools/testing/selftests/ublk/kublk.c |   4 +-
- 11 files changed, 169 insertions(+), 83 deletions(-)
-
--- 
-Jens Axboe
-
+>
+>   - BTRFS doesn't even try direct io for any unusual alignments; it
+>     chooses buffered io from the start.
+>
+> So it has been a little slow going figuring out which results to expect
+> from various tests, but I think I've got all the corner cases covered. I
+> can submit the tests cases to blktests and fstests for consideration
+> separately, too.
+>
+> I'm not 100% sure where we're at with the last patch. I think Mike
+> initially indicated this was okay to remove, but I could swear I read
+> something saying that might not be the case anymore. I just can't find
+> the message now. Mike?
+>
+> Changes from v2:
+>
+>   Include vector lengths when validating a split. The length check is
+>   only valid for r/w commands, and skipped for passthrough
+>   DRV_IN/DRV_OUT commands.
+>
+>   Introduce a prep patch having bio_iov_iter_get_pages() take the
+>   caller's desired length alignment.
+>
+>   Additional code comments explaing less obvious error conditions.
+>
+>   Added reviews on the patches that haven't changed.
+>
+> Keith Busch (8):
+>   block: check for valid bio while splitting
+>   block: add size alignment to bio_iov_iter_get_pages
+>   block: align the bio after building it
+>   block: simplify direct io validity check
+>   iomap: simplify direct io validity check
+>   block: remove bdev_iter_is_aligned
+>   blk-integrity: use simpler alignment check
+>   iov_iter: remove iov_iter_is_aligned
+>
+>  block/bio-integrity.c  |  4 +-
+>  block/bio.c            | 64 ++++++++++++++++++----------
+>  block/blk-map.c        |  2 +-
+>  block/blk-merge.c      | 20 +++++++--
+>  block/fops.c           | 13 +++---
+>  fs/iomap/direct-io.c   |  6 +--
+>  include/linux/bio.h    | 13 ++++--
+>  include/linux/blkdev.h | 20 +++++----
+>  include/linux/uio.h    |  2 -
+>  lib/iov_iter.c         | 95 ------------------------------------------
+>  10 files changed, 94 insertions(+), 145 deletions(-)
+>
+> -- 
+> 2.47.3
 
