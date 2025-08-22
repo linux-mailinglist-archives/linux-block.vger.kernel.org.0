@@ -1,79 +1,132 @@
-Return-Path: <linux-block+bounces-26114-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26116-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EAA8B31A0D
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 15:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A83ADB31A40
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 15:53:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A217642390
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 13:40:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9FB71786F2
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 13:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB1231353A;
-	Fri, 22 Aug 2025 13:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291ED223DD1;
+	Fri, 22 Aug 2025 13:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+txNMt/"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cfqqVNDA"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A05730E853
-	for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 13:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43A9301476
+	for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 13:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755869794; cv=none; b=LSpuFOvlC8ZymnAmbk/KTuILIILsriMoDTZpQKcf0fqYbrk1NDG1AgXF6Ee3gHr9SemMnRSPVBpho3abmL2YCmWSkUS9uv2SRi596Qk7DQMpPMBo12+EMQ5l3i+GHMTpQfwASfa95Ri9wsk0TUv/yjPAbLFUmC/z4+Cy1jL9eFE=
+	t=1755870419; cv=none; b=ndqgzjGhKSw7vQVBGk6nL8TN5QyDL7Dm46VUXkdRFoTpUhlyGflv1TNarAbN0lYtsOFmy0Z8QrONnK6ZpI+twmjXXhOfCLtZu3KpQDAB8gKy7ESxODc4Ehgv3sZ0w63Cm0CcoM30fs2mLLch/PDS8JHygzhsIQtp7GTQWpOpGBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755869794; c=relaxed/simple;
-	bh=u36tcjq1n/R5K6SY7c8IWVEU3aujyptCtZTOzTq8TgM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ur6Gh2sZKwnO3c/gzwVCYuj+vU6tOOniAXw0pgRBuWGw7Ju1UsHnQ+E9d/YrMIRhi0xpzynV5Vc31tqRFFmS3tP6H59pydzkZfkH99IQErTzPAopRkcsWuVAOVzhEjm5A9Z99n9RvUNp4UxHWkBMNh5Nfxkyby/dDVDxxihrnzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+txNMt/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA11C4CEED;
-	Fri, 22 Aug 2025 13:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755869794;
-	bh=u36tcjq1n/R5K6SY7c8IWVEU3aujyptCtZTOzTq8TgM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=C+txNMt/sQYcopGEIeXNdmw7oyPXwUqfk4f/MFHllOrZn+6s98+kIm50MZwFh3P8I
-	 edy/iv6MHNkwKgX3z2YaCaAYuWidFntP5MWwXs3G5rbwr+epPEUHY730FID1ckASOT
-	 QYNH93TkXI9ULhUoLiLzrxOiUkuLGFhNZ0z6LR97HhzT0OLsvYHyS/GjO0zj9FYb85
-	 pCcKa7Mfw1M9mCdZ+wgpKp225/xAlqXBJOKlFiWhmWhKahsFFGvo9XNtUodO5e/ZBm
-	 Soo4DFnADUy1ANV4a4DVZs3+rw81lHK/wBVQ3rLJlQdvelb0HmCblmjh9xED8oTGIX
-	 88lpgsXvbv7Bw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD83383BF6A;
-	Fri, 22 Aug 2025 13:36:44 +0000 (UTC)
-Subject: Re: [GIT PULL] Block fixes for 6.17-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <4761fdaa-c939-4150-9189-bb14ffbe6978@kernel.dk>
-References: <4761fdaa-c939-4150-9189-bb14ffbe6978@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <4761fdaa-c939-4150-9189-bb14ffbe6978@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.17-20250822
-X-PR-Tracked-Commit-Id: 370ac285f23aecae40600851fb4a1a9e75e50973
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a2e94e80790bb103ca72f8a2991f43c80474a4b6
-Message-Id: <175586980329.1831455.4178692814833792238.pr-tracker-bot@kernel.org>
-Date: Fri, 22 Aug 2025 13:36:43 +0000
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+	s=arc-20240116; t=1755870419; c=relaxed/simple;
+	bh=APQoGb7oJHGZ6Mj01fq5MbAELxwQW2xj4Pe4Rxnr6cA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C5BkpPmqzH2KGtnUDxTRqQIW7MP8YDgXeTm8MZPNjp5WVjDndW4WPh148tjgt4I/c7ALD8QBFDBGiEuvxoPNoYxj+Y+yXrY7OaIpxDBgYEqybcThkUUiXHftFvvlYTa/+4+PKGE8qZuCQ47j/oPv2Fa/5DL4cZiECSgKoEG/Qn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cfqqVNDA; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb78fb04cso278268266b.1
+        for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 06:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1755870415; x=1756475215; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NRu/0FoVw+bU0VwjyXzuUF8CXZhxspV/ZyS4JSE6Hqs=;
+        b=cfqqVNDApQweNVxsxTjcec1rnyC2gDXuHW1AhM+piZbNswOinrpjYBqWWmU0mvna3f
+         91vNBZWHQHi2Bj5r74DvRUFae28DY9O5qfTKrdwohX6QerdjMJtbeIYS9qMMt54m7H81
+         LLhFzh/pugcCU8toxdu+jGQw7fNRuRcNY18xc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755870415; x=1756475215;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NRu/0FoVw+bU0VwjyXzuUF8CXZhxspV/ZyS4JSE6Hqs=;
+        b=rIJINvLJISEmh43tY3EJoStGwNirzOhQL9qKifR/mcMmUvEDxAyzdo0vhf0Y1RLBc4
+         M2NBqTsweWDbsOFbQWo+a88tYonil/zsnqyZqZCWDEhOX4+u0/xkZKmuKz1hvpwrjVTv
+         MsAw1pww3abBjjH9vOMHBCeBKF1pUoyNcQy7ye32hfDmulSV0Wl4MBScd+43YcAlqwnE
+         Hdxm7CBkYvFNmPb82LasB5WgNOA1/MUjh9hBQ9ShNvRkY+JBpDEeZUI3fyJzqYoLcivG
+         OqoNpGjyLLsRNfYRwMUOADP5x27hJrVeshEadsNb2i9DOOlMRWIqpSy6cBzPoduhYdvH
+         sCBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUyIi0FyILDD0oLtoCXqTi5Gqz05ggNexfCqRtfDZyhMlrogw0wkbiFmIvNF67m/OvrAc4pvugV1CWSg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPXuTpKED9KWkLzKnbAf/lZvTo9nTSp45zFPQMM8SeqeSXz2lU
+	MUUr2/AjxTZHDDC9jeR1qZ6dZmMCMl04k0CRSJZuN/n40y0t9aoxfcMXUpvCGEwn7b41A7Hs30W
+	9GeNlYag=
+X-Gm-Gg: ASbGncuH2ImuxE/WOirsVsIBEbIEi7H3fweX3D/tBASGskF5Sev17tzlyvurNpAeLp+
+	gYeFPMxLhyYU7Q4Tz5OTALBNPArsOG31mzwz6aOk/+GQM1kCA0NSEKcdln5IeFf4Y+Zs1pXulqw
+	mAFbT35TzQfGgJ1jgcdEBlTLAUQbmJeAvAnF1UGz72wwYBGMtP0Nx+UKAQcJgErUOHL6Whrca9f
+	8lm9LqIs3sLXxDqwcSFtrp4TKUJYP+oC2bDF92RKuDPxLVcOLTXrTjQdnBpTTwnxFKy9xKJl9Zn
+	c4wzYQt5B1ZPeQbby06cBTFOIUSVUCsPeX1wZ7whksZFZJR74U7tu4C4sPf1ZK7WiupN75LwX9s
+	R56GW2IO1vFAAORBy0Dcs72h5dbqyAWz78TZaicWUx4Rf2AinXZW4BoMCVx+dTEdCyKPN7XpBoP
+	F4nvJ5pI8=
+X-Google-Smtp-Source: AGHT+IHDhqBQmYarPKU+pjZ9XcGXPo4JGNFU7vWSUYw4y7qOL3JUVVlIlFymwnQTzV3MPPwbdRIDTA==
+X-Received: by 2002:a17:907:980b:b0:ad8:9997:aa76 with SMTP id a640c23a62f3a-afe295c0defmr257298466b.37.1755870415153;
+        Fri, 22 Aug 2025 06:46:55 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe0b8d12e7sm357567366b.98.2025.08.22.06.46.54
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Aug 2025 06:46:55 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6188b5b1f1cso3092583a12.0
+        for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 06:46:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU33lA7LvSFjayVHtv6QNtIhOKhmfh5/j//iRld9hmUtHD/CDv3MOVeG6GGw6JASNz4yPTFfdPMaL7kRw==@vger.kernel.org
+X-Received: by 2002:a05:6402:5110:b0:615:6481:d1c with SMTP id
+ 4fb4d7f45d1cf-61c1b450840mr2274281a12.1.1755870414406; Fri, 22 Aug 2025
+ 06:46:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1755854833.git.christophe.leroy@csgroup.eu> <82b9c88e63a6f1f5926e39471364168b345d84cc.1755854833.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <82b9c88e63a6f1f5926e39471364168b345d84cc.1755854833.git.christophe.leroy@csgroup.eu>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 22 Aug 2025 09:46:37 -0400
+X-Gmail-Original-Message-ID: <CAHk-=whKeVCEtR2mQJQjT2ndSOXGDdb+L0=WoVUQUGumm88VpA@mail.gmail.com>
+X-Gm-Features: Ac12FXyg7aT4BFeJsiyaeWdfrE2FPhwu5xUJIJ1D8_vj4L1z_hVeZFuzgKfsNNk
+Message-ID: <CAHk-=whKeVCEtR2mQJQjT2ndSOXGDdb+L0=WoVUQUGumm88VpA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] uaccess: Add speculation barrier to copy_from_user_iter()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Andre Almeida <andrealmeid@igalia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Laight <david.laight.linux@gmail.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 22 Aug 2025 07:22:38 -0600:
+On Fri, 22 Aug 2025 at 05:58, Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+> The results of "access_ok()" can be mis-speculated.  The result is that
+> you can end speculatively:
+>
+>         if (access_ok(from, size))
+>                 // Right here
 
-> git://git.kernel.dk/linux.git tags/block-6.17-20250822
+I actually think that we should probably just make access_ok() itself do this.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a2e94e80790bb103ca72f8a2991f43c80474a4b6
+We don't have *that* many users since we have been de-emphasizing the
+"check ahead of time" model, and any that are performance-critical can
+these days be turned into masked addresses.
 
-Thank you!
+As it is, now we're in the situation that careful places - like
+_inline_copy_from_user(), and with your patch  copy_from_user_iter() -
+do maybe wethis by hand and are ugly as a result, and lazy and
+probably incorrect places don't do it at all.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+That said, I don't object to this patch and maybe we should do that
+access_ok() change later and independently of any powerpc work.
+
+                 Linus
 
