@@ -1,283 +1,189 @@
-Return-Path: <linux-block+bounces-26110-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26113-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6E0B3179D
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:24:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9634B31953
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 15:22:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1EA9626B63
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:20:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 837187AC0B1
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 13:21:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A52E3093AF;
-	Fri, 22 Aug 2025 12:16:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F442FDC31;
+	Fri, 22 Aug 2025 13:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Po+xr1kJ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="S3tLF5Jb"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DF93093A6;
-	Fri, 22 Aug 2025 12:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779728BABA
+	for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 13:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864979; cv=none; b=NBQ4EQq7nRHI0dwLSZJuiJwp4MtCQteHW3hTlM56vf4sIl/f2PJqAAGqExQRzvtMoZyWO+/TJloc5x5dennQZhE4yvtqPgJv71QPAutjtLozF9hxYh2HvQS815M8OV2GGIP1BSy8a/eA6JBYhK9ysdhNGnFy5tRxCl3gkNRkmZs=
+	t=1755868963; cv=none; b=mXEttiDCIqAKalBEM9L9NpJ9IuLNK2lwuNfyge50zQhgRA0Fangt/ox9pUVW1UQCmwOm1ljx5P/kzNrquYpeiLF2c3cOtt5CiJRiNyxxNHUILFwMjaZV+/tw8E5FVjt/bmlqHzcIzlDAiL/uqvbsfK4eiEVam7qpLv/DSuT5/g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864979; c=relaxed/simple;
-	bh=OzYLZcoR2X2ar16/GYPn46bn5FFs0TT9hSw7MAwyKy0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lcn1kFuXOIZcIj4ked8+P/Nj3G57MhA2WkaD4bYCZ7up8hHCcAxNJpWzfD9HFsMjlO0O5f8lAquD+aiYEVwmWwI/9KzQk/B3+ZtynLc0HaNnOk+6NCTPok9l1Inwp1LyinSIkas/aWPS8ZAFWPQG6cm+zhGIQ2JMyQtR7FaxMqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Po+xr1kJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C51C4CEED;
-	Fri, 22 Aug 2025 12:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755864978;
-	bh=OzYLZcoR2X2ar16/GYPn46bn5FFs0TT9hSw7MAwyKy0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Po+xr1kJaQN1T2m1C8jqLNFgZsBbLa+lSQdi84iOJxr7Mr1W/8kPLLGK9OqwUoX4v
-	 UeQCeTxa+29nq6ApUVS6iCrRGxH0W4OjHIjpqx1iIjhOuzyxx8ZiFvm8uQaLHPq7nA
-	 FL+o9pJH6xMZuj4Vg18PXH7YYVt+S6W6l/3tEv6DLVYcmMVdLhaWlxMTPZRcut/h8w
-	 qXKxHmAIMArPKuEQpFfKr2Q8Lh/99Rwweoe/Ut7KmT/pJsJvhtWmOFd+4VTCAx3pjy
-	 YSl3vW2+KA5pdvY9ys7gXWj3piyg7rqSGsie2I4soxkUC0xD/AfVqj/YZF3BYZDeP4
-	 2zZObObkvDKKw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 22 Aug 2025 14:14:54 +0200
-Subject: [PATCH v6 18/18] rnull: add soft-irq completion support
+	s=arc-20240116; t=1755868963; c=relaxed/simple;
+	bh=fPrGcus9ToqMGbJctxK6AdAlu0aG2sUaZdcYe38F168=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=NdPzkjvDbahJvZXMfRGye2EC23bjPQqt4oh27eN00GFP0AeFDOxPDKZ3KMsyCrGsJnT7ACWuXXvuloPe0N7Tz5Klov1WefD0H5u6YZCyDO2Hl2KIYWiH5FpPs4QdUe9TrJSwJDSu/SWqJrtWi/WZKLkAMHbXFcfFMExIBdDtsQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=S3tLF5Jb; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3e974105ab8so1787545ab.1
+        for <linux-block@vger.kernel.org>; Fri, 22 Aug 2025 06:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1755868960; x=1756473760; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pwOYSNq4BwI97YHWGfFtoIVRox2mUdKf4CZ6j/qpjpo=;
+        b=S3tLF5JbT4E1gB6Vx6RsMhUCCazHHHV7cqF7S9lMyb2lGGKgwpU4ozEPoPIsCth0WI
+         0Vq+5laliT7GAmWWMO4AXqEEaQ9Y3WxkCad55/MFapF/zkM3mR8FMUikA2WlGDO9YQyb
+         p5oPX2Bl20P2y5OlzZH10KjgpnEXSm3Pt03oilO3PrCe0xM383mZ0UBfZl75VJMl6OwJ
+         rNJfS3cQ98evJZD7ndKcc4MBmizZQWjH/CM74UBDzXmNP+8rlnT/10iCkhhjbm6VC4hr
+         OtgsNIns7IxDUKNLOkWCkVKRJQW8yhTlEqNAjT28H5XFtTWIWG15llpDPSVjmY7dwKim
+         1sPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755868960; x=1756473760;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pwOYSNq4BwI97YHWGfFtoIVRox2mUdKf4CZ6j/qpjpo=;
+        b=awV9u+6BSp6F1UPJU7NJeD6pIjMA9FsvytPVwgLvGA4PHcn0mPcrto8br1YiMm970l
+         tveP7Qcqiwv61LObR5BsdoxTWRVx/rOCll1TA/KJW1ub3/yuDlAzHlO/Cyob7kC9u07G
+         cYtjmaGOStUKqdlu2oMJpEfYmAwVTcjB80PGPl5JKIvjTz2rVWX2s4v5qSrXK+zkTHm1
+         BqOopz7Xee+DHBljrHshNFothylhGmPUNCF8fMjvu+UDyvldoUi8lTqXU9GjwWxlJFvM
+         T7UHmsNwaQfSSfgaWtN+dRGr+DkC5wh7MidDQtTHakbc1Tc9FHyDHftI7gGaDakFs+WT
+         IRjQ==
+X-Gm-Message-State: AOJu0Yz396rSCdbyoNAJ6Al/v5kjlsL8oAdllSgxZ+f0L2juZQmzt+6N
+	QXh+XCsNVU3l+XFGSkJBYxHmd50bv3sbrVmxuRZd0g9CeucMZ9UInrrpCt6YYhY4olA=
+X-Gm-Gg: ASbGnctXKG8Teakw2oGKaHmWe++cR6Xn5XyjNG0oTlSvpO62Bpul/HWksfK9SYmTdrk
+	ABFI4EQTVviOWgheWaWDVQaybXvYnt5R7aKdag1xIu2vbQlkzR5F29408pGcPa/0F5XXeoi4TvW
+	0lMlxsvPFv/dAjQmg7daD5BcS8p3VJV8e9cWMUDqE44CNB5qzaYB2dKdcAilKg344DCs5jZSwoK
+	Cni5sYSYDnt6bJ4A3VK/jS5XQL131V6z75WkH7z+zMNkY6Mp47y07NG/wWxkAEGMMChnwjpt/lW
+	rptsZVF8EV78RUQF6+NItqFAF/q+sgSpPoRFDAzOKtZY0O2JEurF8X8VfAU9YcsoyO/znva08XD
+	OEV3gWyrLWCSgL+Svuso=
+X-Google-Smtp-Source: AGHT+IGyQbFsohXvTREpANEsUsCk3jGpEAAkoFWeOTMnu0PngC3QRVnblHfXL58F0oKyK3MOt9/YVA==
+X-Received: by 2002:a05:6e02:1807:b0:3e9:e1fd:2fa with SMTP id e9e14a558f8ab-3e9e1fd23efmr13523675ab.30.1755868960401;
+        Fri, 22 Aug 2025 06:22:40 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8843f83eb6dsm916445939f.9.2025.08.22.06.22.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Aug 2025 06:22:39 -0700 (PDT)
+Message-ID: <4761fdaa-c939-4150-9189-bb14ffbe6978@kernel.dk>
+Date: Fri, 22 Aug 2025 07:22:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 6.17-rc3
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-rnull-up-v6-16-v6-18-ec65006e2f07@kernel.org>
-References: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
-In-Reply-To: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>
-Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6372; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=OzYLZcoR2X2ar16/GYPn46bn5FFs0TT9hSw7MAwyKy0=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF9CEw3x/wP6LFyggIIgSviVsPb85GCgiEaau
- Mt5L6d3SSSJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfQgAKCRDhuBo+eShj
- d/aEEACrZFNVeRnnwzbNU9bsVXC6SOQ9PeQzgDNcR5APm1K90vavLZtiVvFIYQMb1sIyREVkhDL
- nz0Cadgcb6ipuj1T+SF7BoXy6vAr8LKEjtqBgqguFErS2CmlqMg4/tirtPDjd7HLLS2CagQkyVv
- YAum7ai/cb2FRO+eN+Ps75/Yx7W15kLpUSmK1d7QCdxcrtmSkqCHYHN00JTVg5GV7IqYET8pGLM
- AmETYYUVuYb8d77ywUd7m4kx8bgO1WapFUfQ7UK3Iw7ioUNYP45+CiuQkol1f0QEqXWKePknGsa
- PhmTIvYm2nDYbJmC8ECNW+Fjn45WwWHj1FbIvuR+qIpnumvnwjZTmOmmrfY1lVj8uahi/57oJci
- uGscKuVGXLSJvT+neKvDf34vaiu9dB6Gqidgx14LCZsyfzhwEmY538/LpyeQek+7tmToC6Lq75J
- 8cONxUfT0mlMuJqxLuHzOl4JWg2qgWwZUSqMu6gwKLO5fAjiyiMbTvoF3BURdA27FwSea7LPqu0
- 6FKKC4ZRnuLEy4b0JAWDNbAhRA5/bSBzbZlZpTKK8PPhPG7xvC1a0F3gXlxGti2Zl8SWd3O+HNt
- bxykHH8so8hRAiV2J8gx5lcA9ZPQdXoV3SjoR0/nWzw5mFqS7CxrMS2RZvZ8BRszFy/8ekcW+V4
- cvuKxOCotTtQ/pQ==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-rnull currently only supports direct completion. Add option for completing
-requests across CPU nodes via soft IRQ or IPI.
+Hi Linus,
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- drivers/block/rnull/configfs.rs | 59 +++++++++++++++++++++++++++++++++++++++--
- drivers/block/rnull/rnull.rs    | 32 ++++++++++++++--------
- 2 files changed, 78 insertions(+), 13 deletions(-)
+Set of fixes for block that should go into this tree. A bit larger than
+I usually have at this point in time, a lot of that is the continued
+fixing of the lockdep annotation for queue freezing that we recently
+added, which has highlighted a number of little issues here and there.
+This pull request contains:
 
-diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/configfs.rs
-index 46710a1e1af4..8498e9bae6fd 100644
---- a/drivers/block/rnull/configfs.rs
-+++ b/drivers/block/rnull/configfs.rs
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- use super::{NullBlkDevice, THIS_MODULE};
--use core::fmt::Write;
-+use core::fmt::{Display, Write};
- use kernel::{
-     block::mq::gen_disk::{GenDisk, GenDiskBuilder},
-     c_str,
-@@ -36,7 +36,7 @@ impl AttributeOperations<0> for Config {
- 
-     fn show(_this: &Config, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-         let mut writer = kernel::str::Formatter::new(page);
--        writer.write_str("blocksize,size,rotational\n")?;
-+        writer.write_str("blocksize,size,rotational,irqmode\n")?;
-         Ok(writer.bytes_written())
-     }
- }
-@@ -58,6 +58,7 @@ fn make_group(
-                 blocksize: 1,
-                 rotational: 2,
-                 size: 3,
-+                irqmode: 4,
-             ],
-         };
- 
-@@ -72,6 +73,7 @@ fn make_group(
-                     rotational: false,
-                     disk: None,
-                     capacity_mib: 4096,
-+                    irq_mode: IRQMode::None,
-                     name: name.try_into()?,
-                 }),
-             }),
-@@ -79,6 +81,34 @@ fn make_group(
-     }
- }
- 
-+#[derive(Debug, Clone, Copy)]
-+pub(crate) enum IRQMode {
-+    None,
-+    Soft,
-+}
-+
-+impl TryFrom<u8> for IRQMode {
-+    type Error = kernel::error::Error;
-+
-+    fn try_from(value: u8) -> Result<Self> {
-+        match value {
-+            0 => Ok(Self::None),
-+            1 => Ok(Self::Soft),
-+            _ => Err(EINVAL),
-+        }
-+    }
-+}
-+
-+impl Display for IRQMode {
-+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+        match self {
-+            Self::None => f.write_str("0")?,
-+            Self::Soft => f.write_str("1")?,
-+        }
-+        Ok(())
-+    }
-+}
-+
- #[pin_data]
- pub(crate) struct DeviceConfig {
-     #[pin]
-@@ -92,6 +122,7 @@ struct DeviceConfigInner {
-     block_size: u32,
-     rotational: bool,
-     capacity_mib: u64,
-+    irq_mode: IRQMode,
-     disk: Option<GenDisk<NullBlkDevice>>,
- }
- 
-@@ -121,6 +152,7 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-                 guard.block_size,
-                 guard.rotational,
-                 guard.capacity_mib,
-+                guard.irq_mode,
-             )?);
-             guard.powered = true;
-         } else if guard.powered && !power_op {
-@@ -205,3 +237,26 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-         Ok(())
-     }
- }
-+
-+#[vtable]
-+impl configfs::AttributeOperations<4> for DeviceConfig {
-+    type Data = DeviceConfig;
-+
-+    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        let mut writer = kernel::str::Formatter::new(page);
-+        writer.write_fmt(fmt!("{}\n", this.data.lock().irq_mode))?;
-+        Ok(writer.bytes_written())
-+    }
-+
-+    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
-+        if this.data.lock().powered {
-+            return Err(EBUSY);
-+        }
-+
-+        let text = core::str::from_utf8(page)?.trim();
-+        let value = text.parse::<u8>().map_err(|_| EINVAL)?;
-+
-+        this.data.lock().irq_mode = IRQMode::try_from(value)?;
-+        Ok(())
-+    }
-+}
-diff --git a/drivers/block/rnull/rnull.rs b/drivers/block/rnull/rnull.rs
-index a19c55717c4f..1ec694d7f1a6 100644
---- a/drivers/block/rnull/rnull.rs
-+++ b/drivers/block/rnull/rnull.rs
-@@ -4,6 +4,7 @@
- 
- mod configfs;
- 
-+use configfs::IRQMode;
- use kernel::{
-     block::{
-         self,
-@@ -53,35 +54,44 @@ fn new(
-         block_size: u32,
-         rotational: bool,
-         capacity_mib: u64,
-+        irq_mode: IRQMode,
-     ) -> Result<GenDisk<Self>> {
-         let tagset = Arc::pin_init(TagSet::new(1, 256, 1), GFP_KERNEL)?;
- 
-+        let queue_data = Box::new(QueueData { irq_mode }, GFP_KERNEL)?;
-+
-         gen_disk::GenDiskBuilder::new()
-             .capacity_sectors(capacity_mib << (20 - block::SECTOR_SHIFT))
-             .logical_block_size(block_size)?
-             .physical_block_size(block_size)?
-             .rotational(rotational)
--            .build(fmt!("{}", name.to_str()?), tagset, ())
-+            .build(fmt!("{}", name.to_str()?), tagset, queue_data)
-     }
- }
- 
-+struct QueueData {
-+    irq_mode: IRQMode,
-+}
-+
- #[vtable]
- impl Operations for NullBlkDevice {
--    type QueueData = ();
-+    type QueueData = KBox<QueueData>;
- 
-     #[inline(always)]
--    fn queue_rq(_queue_data: (), rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
--        mq::Request::end_ok(rq)
--            .map_err(|_e| kernel::error::code::EIO)
--            // We take no refcounts on the request, so we expect to be able to
--            // end the request. The request reference must be unique at this
--            // point, and so `end_ok` cannot fail.
--            .expect("Fatal error - expected to be able to end request");
--
-+    fn queue_rq(queue_data: &QueueData, rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
-+        match queue_data.irq_mode {
-+            IRQMode::None => mq::Request::end_ok(rq)
-+                .map_err(|_e| kernel::error::code::EIO)
-+                // We take no refcounts on the request, so we expect to be able to
-+                // end the request. The request reference must be unique at this
-+                // point, and so `end_ok` cannot fail.
-+                .expect("Fatal error - expected to be able to end request"),
-+            IRQMode::Soft => mq::Request::complete(rq),
-+        }
-         Ok(())
-     }
- 
--    fn commit_rqs(_queue_data: ()) {}
-+    fn commit_rqs(_queue_data: &QueueData) {}
- 
-     fn complete(rq: ARef<mq::Request<Self>>) {
-         mq::Request::end_ok(rq)
+- MD pull request via Yu
+	- Add a legacy_async_del_gendisk mode, to prevent a user tools
+	  regression. New user tools releases will not use such a mode,
+	  the old release with a new kernel now will have warning about
+	  deprecated behavior, and we prepare to remove this legacy mode
+	  after about a year later.
+	- The rename in kernel causing user tools build failure, revert
+	  the rename in mdp_superblock_s.
+	- Fix a regression that interrupted resync can be shown as
+	  recover from mdstat or sysfs.
+
+- Improve file size detection for loop, particularly for networked file
+  systems, by using getattr to get the size rather than the cached inode
+  size.
+
+- Hotplug CPU lock vs queue freeze fix
+
+- Lockdep fix while updating the number of hardware queues
+
+- Fix stacking for PI devices
+
+- Silence bio_check_eod() for the known case of device removal where the
+  size is truncated to 0 sectors.
+
+Please pull!
+
+
+The following changes since commit 8f5845e0743bf3512b71b3cb8afe06c192d6acc4:
+
+  block: restore default wbt enablement (2025-08-13 05:33:48 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux.git tags/block-6.17-20250822
+
+for you to fetch changes up to 370ac285f23aecae40600851fb4a1a9e75e50973:
+
+  block: avoid cpu_hotplug_lock depedency on freeze_lock (2025-08-21 07:11:11 -0600)
+
+----------------------------------------------------------------
+block-6.17-20250822
+
+----------------------------------------------------------------
+Akhilesh Patil (1):
+      selftests: ublk: Use ARRAY_SIZE() macro to improve code
+
+Christoph Hellwig (3):
+      block: handle pi_tuple_size in queue_limits_stack_integrity
+      block: remove newlines from the warnings in blk_validate_integrity_limits
+      block: tone down bio_check_eod
+
+Jens Axboe (1):
+      Merge tag 'md-6.17-20250819' of gitolite.kernel.org:pub/scm/linux/kernel/git/mdraid/linux into block-6.17
+
+Ming Lei (1):
+      blk-mq: fix lockdep warning in __blk_mq_update_nr_hw_queues
+
+Nilay Shroff (3):
+      block: skip q->rq_qos check in rq_qos_done_bio()
+      block: decrement block_rq_qos static key in rq_qos_del()
+      block: avoid cpu_hotplug_lock depedency on freeze_lock
+
+Rajeev Mishra (2):
+      loop: Consolidate size calculation logic into lo_calculate_size()
+      loop: use vfs_getattr_nosec for accurate file size
+
+Xiao Ni (2):
+      md: add legacy_async_del_gendisk mode
+      md: keep recovery_cp in mdp_superblock_s
+
+Zheng Qixing (2):
+      md: add helper rdev_needs_recovery()
+      md: fix sync_action incorrect display during resync
+
+ block/blk-core.c                     |   2 +-
+ block/blk-mq-debugfs.c               |   1 +
+ block/blk-mq.c                       |  13 ++--
+ block/blk-rq-qos.c                   |   8 +--
+ block/blk-rq-qos.h                   |  48 +++++++++-----
+ block/blk-settings.c                 |  12 ++--
+ drivers/block/loop.c                 |  39 +++++------
+ drivers/md/md.c                      | 122 ++++++++++++++++++++++++++---------
+ include/linux/blkdev.h               |   1 +
+ include/uapi/linux/raid/md_p.h       |   2 +-
+ tools/testing/selftests/ublk/kublk.c |   4 +-
+ 11 files changed, 169 insertions(+), 83 deletions(-)
 
 -- 
-2.47.2
-
+Jens Axboe
 
 
