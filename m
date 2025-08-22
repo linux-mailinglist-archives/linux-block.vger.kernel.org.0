@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-26100-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26112-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 001EAB31783
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:20:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD5F7B317A0
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:24:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8878B02ABA
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:17:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B5BDB03AAF
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:21:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D092FDC2E;
-	Fri, 22 Aug 2025 12:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C901430E0F2;
+	Fri, 22 Aug 2025 12:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSd+jrfY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5kSOHAj"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6183009DA;
-	Fri, 22 Aug 2025 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F39430E0E3;
+	Fri, 22 Aug 2025 12:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864940; cv=none; b=VFbCdiUJJeunltveCIqcIB30B/pifVQ+6Rdi8AkBFSwOsHWHUoTJFyBPDyXpYtozsxSjvSRcWfSs5DI1BonnNCsH+e9vCiWnPBlFYkM5DbiZ+ok2FKNc/JsaHnzVp0k9jJq1U9cxUtGkTxHyXZvDlWaus1ntOc7I7lYoUYR5DKY=
+	t=1755864986; cv=none; b=MnEDcqdXFjmUgI09p9QsAYhm/TqFB2l27p0q1A51j70uydaEOkO7tGrCJ6hvM4Tvv7V3nbg3jDRD3EoFgff85/Ab/m3CaQGrOdpPmTg7aUdn1TC8mr503AgQJdvZQgoQNXAxdowF2ujM/kFgaN5QDzjydz7WCNCgFCgW9cfe48U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864940; c=relaxed/simple;
-	bh=pIuBZvrIaCfOxk5R8QT6fU57Jtv4V7ScNiWvZ/2peFE=;
+	s=arc-20240116; t=1755864986; c=relaxed/simple;
+	bh=iW4yDCdWglsE+9DJN1QwjcjeXTNvaRhTe3qyZwnbuV4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bp17TVpEDQxfFDOxfeSBs+EkQ++RNnvH+QVFGQQh1OUgt9jLb1YZArUqmL0siaR7JHmeo1mkdrDVcPnIYqHtQmtfyV+o3o08Tb5X27B2zl7i9B+7n/0/ZgteSzRbp+wID9yQI1li8UO33eabOaxTQ5zzUguhLjcCW5uvmBCWN0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSd+jrfY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B2CC113D0;
-	Fri, 22 Aug 2025 12:15:36 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=fBaqpQiGtbk79AOTkIMAxKfDK7HVdzFHVVyzCZX92aHloNKBv6AGWjCPv9KvQTco+/RFAIfQgBdIW6RWnAHDZD3diqrurgAvUQs0Vlv0eIhlJIU5shjEnWRMBxtBla6ybxeTg6udKJAL85FmTeBqzZRVsFpgcEObcDW88/tmdBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5kSOHAj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C9DC4CEED;
+	Fri, 22 Aug 2025 12:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755864939;
-	bh=pIuBZvrIaCfOxk5R8QT6fU57Jtv4V7ScNiWvZ/2peFE=;
+	s=k20201202; t=1755864986;
+	bh=iW4yDCdWglsE+9DJN1QwjcjeXTNvaRhTe3qyZwnbuV4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rSd+jrfYFV5sW5ZHN15MdlosaaP5RKDfXXjcYs35eYY+tzxYF6zKhp7OsBQKLDdaz
-	 eZwtaJh4IR9JAD1SNQukCbLFZgSm1Ao5IuEgkJA66YfQRLRTr3RLRuhxIFCkX/1VR9
-	 fS0b2sUDoEw5pQ3+0NrsSCDmpFjs/Whu0QfZeGCIyfsVmVWUsV+bYhZ8zDS5GnY6oP
-	 vT7NZmb84gIyOrlr6hqIfKgTPP6duwTpVea/ubfEXZHmdq1mOXN8quQ0vw5agYZkdr
-	 UbQtHFJqEm3dBUEHIvXxDdAUVW0y6PYwgr2DXDLZxA/KdL0Ci3b3dunk8Kg6qKTRM7
-	 IPevpiYDSuJ2g==
+	b=F5kSOHAjTL69SW+2oyROThVneKvWw7if+tPNMyZXHwQ6Z5VD9V+5UaKyBBhjIReTR
+	 9zAp4ytX7gJxRmH5XYMuZ6nvHqZchXw/kVFtRJ9AfSVGESxCnBV7TNMsx4eDH2GKWY
+	 PzGjGv0J3fz3LGWfvtE7DvfAD0o3eBVIxArdGxiL0hzpStSztVRo7/+Z5jLy3/Jxh3
+	 ldKDSCN0CXKcBIoWgUzAL1rOqKFrc0Iu15rGUZgrp5ZCkhQfLCIWyDWkssEMn78TGo
+	 Ar7c/uMmyGGzFUGbr26ofr6CADJaIxH+COk80f046Np5bwBi/sXAso7dKkaglGdKt4
+	 n1c0MvPiuNAMA==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 22 Aug 2025 14:14:49 +0200
-Subject: [PATCH v6 13/18] rnull: move driver to separate directory
+Date: Fri, 22 Aug 2025 14:14:50 +0200
+Subject: [PATCH v6 14/18] rnull: enable configuration via `configfs`
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-rnull-up-v6-16-v6-13-ec65006e2f07@kernel.org>
+Message-Id: <20250822-rnull-up-v6-16-v6-14-ec65006e2f07@kernel.org>
 References: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 In-Reply-To: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -62,136 +62,375 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
  Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
  Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3780; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=pIuBZvrIaCfOxk5R8QT6fU57Jtv4V7ScNiWvZ/2peFE=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF89GOSg2qFj2udURlTwvSVv2liyoM3WDOLhl
- v8N4YeKOXWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfPQAKCRDhuBo+eShj
- d0bED/9uBA/z+Yy0POTVykqZ537WGT9ztvQilq8u2+Ai3d8yzTH5Krr02S4mdyFwsf4wUguhMmL
- fLv76qn0kC5TvT5VfRajnrQdBLZRY1Jw6j06n4LG/Bw4g5wtAaci9iXmtVlhWuS/ydHqKEMskLI
- ARZgXKz2+ot+ucaE3X9Yn2B7qyDkp/WBqPXQRC79XDdyYf922d2UcMVkhP6vkpAjhtDJd0jb96y
- fPHFXOZ7IK8hdmZLI9G8G21jt9psa/MneXoCt/8vvjrEG0Rtfm4t/CSSOzY4yb3LfN29Vp72uDG
- 6DZ1ANddIM9VooXMiPSyBbz2RoJTPU6Un6u5dvDHWE5AmSejAQTECnKTe8FeuYVm8A3Aa/2IUtg
- YzOCr1N7Z3HNVuL/4ekdVsah4WCTByqofL4GoDkEuvf6tPhGrHRH3O6zgtK9UH5ibOEbl5TSdAh
- kfumZcxXFrpqFmDSZeVdP9RSAv5/0JmyuuKIsrkZ/FuDlupCE4tU5+nGOpLey64lAqrmjhQ8sLW
- dHjgvpUNX7KuZw/Na3sGmELVE6xtMCwP7EUYNzbeU5ujTqnDsrGZTzqcX5lRByIvl+wbklymWta
- 4OCV2Ad9cKa2JQFVeWfxOjhu1ToRVoUAZifc9Vd72KYPkSwAdobXxhfbgDXiBEKnRHt3TcVpUH2
- 6QVem7vFQOUnGlQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10549;
+ i=a.hindborg@kernel.org; h=from:subject:message-id;
+ bh=iW4yDCdWglsE+9DJN1QwjcjeXTNvaRhTe3qyZwnbuV4=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF8+c7BLemjjK/8SdYg0VzN5/42FjSr7yUTRF
+ ZkmkF3eeYmJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfPgAKCRDhuBo+eShj
+ dzTiD/0bjy0NPt6q3dRTSYNJfq2FpMzH1mamhEZY51Me13GfCRS/zuUaf9C1Y9SQ8FAhkNqAKp9
+ I/Lw8iG2u0NlfW/om/LXRyrfD5jECPNQlcKV1dYQFAEEM63fAcUvkc9MZoGs19J8nofTQTKFBhV
+ DAkaIgRlfPMqEpW4pvn0Y56zY2t0tt2I3DwbqqPiRhXrwO1WW2XlfZpc1NfH1Tnnq8PXC/bmv/N
+ LR1+Y1/3poZHA7NzKevcwqyRZDYnWUQU9mFwe0dHNLvrwex2cY+gjMm13H9uZxpxUQQs4eCLgAN
+ aNwrW7DKxgfCfxxoJVQ/LClwI4YPc3pu1S1d6mdl4dy1ER4NOQExMzs4s+oFiXvhgs3FiO24hpr
+ 6sJxE8LTznVSd+798V26w3+J2UamOvwi8rvvJVC4GC4OGMG8gv819/L5uW4pwElAJ+J+44XJSQ5
+ dsO6ckx/ZdyMkZxDKp7okXmtvD6gvZfSeYZregLx+Hzxv1P1/fDEm9TqbX/MUUEGnWlwHEi2p4Z
+ 2nBr6+7+m/ieSS0tKQzPq22YrKCNvP9uszrKGTQogLEaqANG6nW60cjMkUXpHIPEEYAijy36APy
+ LBi/rYhDA04iBsG+om5/DcXe2IAxxhabufPlfPoWu01zulxiOQgp29VXl+HBMrGDdi2sYPQRdJA
+ qhcqYTuABrK8xFQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-The rust null block driver is about to gain some additional modules. Rather
-than pollute the current directory, move the driver to a subdirectory.
+Allow rust null block devices to be configured and instantiated via
+`configfs`.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- MAINTAINERS                        |  2 +-
- drivers/block/Kconfig              | 10 +---------
- drivers/block/Makefile             |  4 +---
- drivers/block/rnull/Kconfig        | 13 +++++++++++++
- drivers/block/rnull/Makefile       |  3 +++
- drivers/block/{ => rnull}/rnull.rs |  0
- 6 files changed, 19 insertions(+), 13 deletions(-)
+ drivers/block/rnull/Kconfig      |   2 +-
+ drivers/block/rnull/configfs.rs  | 207 +++++++++++++++++++++++++++++++++++++++
+ drivers/block/rnull/rnull.rs     |  59 +++++------
+ rust/kernel/block/mq/gen_disk.rs |   2 +-
+ 4 files changed, 240 insertions(+), 30 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index daf520a13bdf..d5addcc4b132 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4343,7 +4343,7 @@ W:	https://rust-for-linux.com
- B:	https://github.com/Rust-for-Linux/linux/issues
- C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
- T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
--F:	drivers/block/rnull.rs
-+F:	drivers/block/rnull/
- F:	rust/kernel/block.rs
- F:	rust/kernel/block/
- 
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index df38fb364904..77d694448990 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -17,6 +17,7 @@ menuconfig BLK_DEV
- if BLK_DEV
- 
- source "drivers/block/null_blk/Kconfig"
-+source "drivers/block/rnull/Kconfig"
- 
- config BLK_DEV_FD
- 	tristate "Normal floppy disk support"
-@@ -311,15 +312,6 @@ config VIRTIO_BLK
- 	  This is the virtual block driver for virtio.  It can be used with
-           QEMU based VMMs (like KVM or Xen).  Say Y or M.
- 
--config BLK_DEV_RUST_NULL
--	tristate "Rust null block driver (Experimental)"
--	depends on RUST
--	help
--	  This is the Rust implementation of the null block driver. For now it
--	  is only a minimal stub.
--
--	  If unsure, say N.
--
- config BLK_DEV_RBD
- 	tristate "Rados block device (RBD)"
- 	depends on INET && BLOCK
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index a695ce74ef22..2d8096eb8cdf 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -9,9 +9,6 @@
- # needed for trace events
- ccflags-y				+= -I$(src)
- 
--obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
--rnull_mod-y := rnull.o
--
- obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
- obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
- obj-$(CONFIG_BLK_DEV_FD)	+= floppy.o
-@@ -38,6 +35,7 @@ obj-$(CONFIG_ZRAM) += zram/
- obj-$(CONFIG_BLK_DEV_RNBD)	+= rnbd/
- 
- obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
-+obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull/
- 
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- obj-$(CONFIG_BLK_DEV_ZONED_LOOP) += zloop.o
 diff --git a/drivers/block/rnull/Kconfig b/drivers/block/rnull/Kconfig
-new file mode 100644
-index 000000000000..6dc5aff96bf4
---- /dev/null
+index 6dc5aff96bf4..7bc5b376c128 100644
+--- a/drivers/block/rnull/Kconfig
 +++ b/drivers/block/rnull/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Rust null block device driver configuration
-+
-+config BLK_DEV_RUST_NULL
-+	tristate "Rust null block driver (Experimental)"
-+	depends on RUST
-+	help
-+	  This is the Rust implementation of the null block driver. Like
-+	  the C version, the driver allows the user to create virutal block
-+	  devices that can be configured via various configuration options.
-+
-+	  If unsure, say N.
-diff --git a/drivers/block/rnull/Makefile b/drivers/block/rnull/Makefile
+@@ -4,7 +4,7 @@
+ 
+ config BLK_DEV_RUST_NULL
+ 	tristate "Rust null block driver (Experimental)"
+-	depends on RUST
++	depends on RUST && CONFIGFS_FS
+ 	help
+ 	  This is the Rust implementation of the null block driver. Like
+ 	  the C version, the driver allows the user to create virutal block
+diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/configfs.rs
 new file mode 100644
-index 000000000000..11cfa5e615dc
+index 000000000000..46710a1e1af4
 --- /dev/null
-+++ b/drivers/block/rnull/Makefile
-@@ -0,0 +1,3 @@
++++ b/drivers/block/rnull/configfs.rs
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
-+rnull_mod-y := rnull.o
-diff --git a/drivers/block/rnull.rs b/drivers/block/rnull/rnull.rs
-similarity index 100%
-rename from drivers/block/rnull.rs
-rename to drivers/block/rnull/rnull.rs
++use super::{NullBlkDevice, THIS_MODULE};
++use core::fmt::Write;
++use kernel::{
++    block::mq::gen_disk::{GenDisk, GenDiskBuilder},
++    c_str,
++    configfs::{self, AttributeOperations},
++    configfs_attrs, new_mutex,
++    page::PAGE_SIZE,
++    prelude::*,
++    str::{kstrtobool_bytes, CString},
++    sync::Mutex,
++};
++use pin_init::PinInit;
++
++pub(crate) fn subsystem() -> impl PinInit<kernel::configfs::Subsystem<Config>, Error> {
++    let item_type = configfs_attrs! {
++        container: configfs::Subsystem<Config>,
++        data: Config,
++        child: DeviceConfig,
++        attributes: [
++            features: 0,
++        ],
++    };
++
++    kernel::configfs::Subsystem::new(c_str!("rnull"), item_type, try_pin_init!(Config {}))
++}
++
++#[pin_data]
++pub(crate) struct Config {}
++
++#[vtable]
++impl AttributeOperations<0> for Config {
++    type Data = Config;
++
++    fn show(_this: &Config, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++        writer.write_str("blocksize,size,rotational\n")?;
++        Ok(writer.bytes_written())
++    }
++}
++
++#[vtable]
++impl configfs::GroupOperations for Config {
++    type Child = DeviceConfig;
++
++    fn make_group(
++        &self,
++        name: &CStr,
++    ) -> Result<impl PinInit<configfs::Group<DeviceConfig>, Error>> {
++        let item_type = configfs_attrs! {
++            container: configfs::Group<DeviceConfig>,
++            data: DeviceConfig,
++            attributes: [
++                // Named for compatibility with C null_blk
++                power: 0,
++                blocksize: 1,
++                rotational: 2,
++                size: 3,
++            ],
++        };
++
++        Ok(configfs::Group::new(
++            name.try_into()?,
++            item_type,
++            // TODO: cannot coerce new_mutex!() to impl PinInit<_, Error>, so put mutex inside
++            try_pin_init!( DeviceConfig {
++                data <- new_mutex!(DeviceConfigInner {
++                    powered: false,
++                    block_size: 4096,
++                    rotational: false,
++                    disk: None,
++                    capacity_mib: 4096,
++                    name: name.try_into()?,
++                }),
++            }),
++        ))
++    }
++}
++
++#[pin_data]
++pub(crate) struct DeviceConfig {
++    #[pin]
++    data: Mutex<DeviceConfigInner>,
++}
++
++#[pin_data]
++struct DeviceConfigInner {
++    powered: bool,
++    name: CString,
++    block_size: u32,
++    rotational: bool,
++    capacity_mib: u64,
++    disk: Option<GenDisk<NullBlkDevice>>,
++}
++
++#[vtable]
++impl configfs::AttributeOperations<0> for DeviceConfig {
++    type Data = DeviceConfig;
++
++    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++
++        if this.data.lock().powered {
++            writer.write_str("1\n")?;
++        } else {
++            writer.write_str("0\n")?;
++        }
++
++        Ok(writer.bytes_written())
++    }
++
++    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
++        let power_op = kstrtobool_bytes(page)?;
++        let mut guard = this.data.lock();
++
++        if !guard.powered && power_op {
++            guard.disk = Some(NullBlkDevice::new(
++                &guard.name,
++                guard.block_size,
++                guard.rotational,
++                guard.capacity_mib,
++            )?);
++            guard.powered = true;
++        } else if guard.powered && !power_op {
++            drop(guard.disk.take());
++            guard.powered = false;
++        }
++
++        Ok(())
++    }
++}
++
++#[vtable]
++impl configfs::AttributeOperations<1> for DeviceConfig {
++    type Data = DeviceConfig;
++
++    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++        writer.write_fmt(fmt!("{}\n", this.data.lock().block_size))?;
++        Ok(writer.bytes_written())
++    }
++
++    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
++        if this.data.lock().powered {
++            return Err(EBUSY);
++        }
++
++        let text = core::str::from_utf8(page)?.trim();
++        let value = text.parse::<u32>().map_err(|_| EINVAL)?;
++
++        GenDiskBuilder::validate_block_size(value)?;
++        this.data.lock().block_size = value;
++        Ok(())
++    }
++}
++
++#[vtable]
++impl configfs::AttributeOperations<2> for DeviceConfig {
++    type Data = DeviceConfig;
++
++    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++
++        if this.data.lock().rotational {
++            writer.write_str("1\n")?;
++        } else {
++            writer.write_str("0\n")?;
++        }
++
++        Ok(writer.bytes_written())
++    }
++
++    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
++        if this.data.lock().powered {
++            return Err(EBUSY);
++        }
++
++        this.data.lock().rotational = kstrtobool_bytes(page)?;
++
++        Ok(())
++    }
++}
++
++#[vtable]
++impl configfs::AttributeOperations<3> for DeviceConfig {
++    type Data = DeviceConfig;
++
++    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++        writer.write_fmt(fmt!("{}\n", this.data.lock().capacity_mib))?;
++        Ok(writer.bytes_written())
++    }
++
++    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
++        if this.data.lock().powered {
++            return Err(EBUSY);
++        }
++
++        let text = core::str::from_utf8(page)?.trim();
++        let value = text.parse::<u64>().map_err(|_| EINVAL)?;
++
++        this.data.lock().capacity_mib = value;
++        Ok(())
++    }
++}
+diff --git a/drivers/block/rnull/rnull.rs b/drivers/block/rnull/rnull.rs
+index d07e76ae2c13..8690ff5f974f 100644
+--- a/drivers/block/rnull/rnull.rs
++++ b/drivers/block/rnull/rnull.rs
+@@ -1,28 +1,25 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ //! This is a Rust implementation of the C null block driver.
+-//!
+-//! Supported features:
+-//!
+-//! - blk-mq interface
+-//! - direct completion
+-//! - block size 4k
+-//!
+-//! The driver is not configurable.
++
++mod configfs;
+ 
+ use kernel::{
+-    alloc::flags,
+-    block::mq::{
++    block::{
+         self,
+-        gen_disk::{self, GenDisk},
+-        Operations, TagSet,
++        mq::{
++            self,
++            gen_disk::{self, GenDisk},
++            Operations, TagSet,
++        },
+     },
+     error::Result,
+-    new_mutex, pr_info,
++    pr_info,
+     prelude::*,
+-    sync::{Arc, Mutex},
++    sync::Arc,
+     types::ARef,
+ };
++use pin_init::PinInit;
+ 
+ module! {
+     type: NullBlkModule,
+@@ -35,33 +32,39 @@
+ #[pin_data]
+ struct NullBlkModule {
+     #[pin]
+-    _disk: Mutex<GenDisk<NullBlkDevice>>,
++    configfs_subsystem: kernel::configfs::Subsystem<configfs::Config>,
+ }
+ 
+ impl kernel::InPlaceModule for NullBlkModule {
+     fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+         pr_info!("Rust null_blk loaded\n");
+ 
+-        // Use a immediately-called closure as a stable `try` block
+-        let disk = /* try */ (|| {
+-            let tagset = Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
+-
+-            gen_disk::GenDiskBuilder::new()
+-                .capacity_sectors(4096 << 11)
+-                .logical_block_size(4096)?
+-                .physical_block_size(4096)?
+-                .rotational(false)
+-                .build(format_args!("rnullb{}", 0), tagset)
+-        })();
+-
+         try_pin_init!(Self {
+-            _disk <- new_mutex!(disk?, "nullb:disk"),
++            configfs_subsystem <- configfs::subsystem(),
+         })
+     }
+ }
+ 
+ struct NullBlkDevice;
+ 
++impl NullBlkDevice {
++    fn new(
++        name: &CStr,
++        block_size: u32,
++        rotational: bool,
++        capacity_mib: u64,
++    ) -> Result<GenDisk<Self>> {
++        let tagset = Arc::pin_init(TagSet::new(1, 256, 1), GFP_KERNEL)?;
++
++        gen_disk::GenDiskBuilder::new()
++            .capacity_sectors(capacity_mib << (20 - block::SECTOR_SHIFT))
++            .logical_block_size(block_size)?
++            .physical_block_size(block_size)?
++            .rotational(rotational)
++            .build(fmt!("{}", name.to_str()?), tagset)
++    }
++}
++
+ #[vtable]
+ impl Operations for NullBlkDevice {
+     #[inline(always)]
+diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
+index 20f1d46c774d..6b1b846874db 100644
+--- a/rust/kernel/block/mq/gen_disk.rs
++++ b/rust/kernel/block/mq/gen_disk.rs
+@@ -51,7 +51,7 @@ pub fn rotational(mut self, rotational: bool) -> Self {
+ 
+     /// Validate block size by verifying that it is between 512 and `PAGE_SIZE`,
+     /// and that it is a power of two.
+-    fn validate_block_size(size: u32) -> Result {
++    pub fn validate_block_size(size: u32) -> Result {
+         if !(512..=bindings::PAGE_SIZE as u32).contains(&size) || !size.is_power_of_two() {
+             Err(error::code::EINVAL)
+         } else {
 
 -- 
 2.47.2
