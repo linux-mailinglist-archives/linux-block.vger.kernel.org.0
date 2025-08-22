@@ -1,49 +1,50 @@
-Return-Path: <linux-block+bounces-26098-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26095-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5944B31780
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:19:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0786B3177B
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5295BAC6EF6
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:17:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F500B03798
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:16:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 203292FD7B8;
-	Fri, 22 Aug 2025 12:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05C62FD1A7;
+	Fri, 22 Aug 2025 12:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBWTYKQo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdX5lPCb"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D449E2FD7A6;
-	Fri, 22 Aug 2025 12:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DA42FC03C;
+	Fri, 22 Aug 2025 12:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864933; cv=none; b=DikjWHK4MlRhIhN3pQVY3Z9jPbf8Ba1EZFAJZ1lspi8HvyI48nMC5qnmciqgVh3SUPitjExz5yAOHItBxBt1reO0Ebp7ghgSh2WN0c56LzBq43ye2wZ2ZtON3n7NP9t2ad9PuRa+qhYX2YV5ByhXd6b0hOjD2nqAVOBokQ2iAh0=
+	t=1755864918; cv=none; b=SEg8WoIiK5WokLf/hAcIYIEo2JJZ85x6Mno34sBqkWUxuZ93ZQIAhJDr7KQZSSfKTXzPeZbhfPjoDCjjrpm1+ocO5BySaCKK8WRAT/RdA6mdmbZ+if7N93VyX3YMezP2Q2VxvTk2in7PxDB2gwfis4RQx9RUmkw0MTi/b1oLMf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864933; c=relaxed/simple;
-	bh=WE0oYMKVocpeSumFth9LF4yM1uvggXOmT17lbIpdQMg=;
+	s=arc-20240116; t=1755864918; c=relaxed/simple;
+	bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ES1ykIrMLpVV5UKUxGbKbNKCM3WIQwbuXwWr61cQ5bv5u1QtaaHoodbSapKGPaPeE120nBAxdDTzHQuwLTUQwh8uxXmjEMmvX0HWD6z53mYiK+a18Odrgkoj0/BZ2f+MqngPkgW4SPfNL7Q6kwLHbAhTTmgjUiAQTk8Cj2NJ3OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBWTYKQo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B2EC4AF09;
-	Fri, 22 Aug 2025 12:15:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=dO5aNsSxr3eWHd3A2BDVGWR+PtjRsSe01CVGbKhLZSyfToveyR3KhgcwCo/60Gao/52jwypbZyrv9VbqV75GcjMmRReE4gtcOZxk+6eveDmLpUbEbyQ9WinE+3sjOCP2gEX5aHVv6B06uSQizrXNja2/eFY+T/ZhyHqzRAktOg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdX5lPCb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69583C4CEED;
+	Fri, 22 Aug 2025 12:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755864931;
-	bh=WE0oYMKVocpeSumFth9LF4yM1uvggXOmT17lbIpdQMg=;
+	s=k20201202; t=1755864918;
+	bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YBWTYKQoenj0/Ay3VOigpzS9rvs1/HiznpaF0fi/5X/prxjG5Tb7ef4S+oxBWtc9r
-	 5NTLaydzcZOf8QSBMhNoIp885rD5UWmxt6nfG9C2/Y5uV015kr4jqeSoYfA7TPR3JH
-	 IlcOb1Y0HRkuCrWRLu05hz4nGIp68aig45DPLRzS92tQ7Y6CIyjUBr8DDjgHnkNfnk
-	 RV8rdTLqL0EoLfegEd8t5iMnLZHEPl1Wh07CEEJFhsmaChcnjBi2FHi+45QSA144oh
-	 oyRu6WRVoAQuXq35DqMGw3+klYEA5dx30ZZy6pYxRyYX/JQ7H/5PU2iSkhvL0S0Ygy
-	 RGPhb5q9DGahQ==
+	b=YdX5lPCb/yI3Y1wC+QWIW6K7Lx/o0oQ2TJZtr/21ijWoMz26dP/IKX6iwLLjVqjH3
+	 esFsQjyfUYTfTmh+WEvvyjlHMn94bzI8vDph7BBszSASy9r7fIh5XoDFWSvWnwIm2M
+	 fsuS2Qhk6BpSgW9zqckcvCSw1jBwiwDXnrSbdHC7rMSqrziPugTP8qkpGbSvm/PW7I
+	 AC4ase2hxTuiGu+pxMn+K1aH1Pu7CeEEqatiULmRfDPZbMJJPADVBgflhaSnGI+bP9
+	 aa9ouP7fMoPM514IBpZ0rPHEpH7rZhecTgBujNXMxxjXDWFEey9jjEiubOz1yQLW8+
+	 zKlPt0DqS7Epw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 22 Aug 2025 14:14:37 +0200
-Subject: [PATCH v6 01/18] rust: str: normalize imports in `str.rs`
+Date: Fri, 22 Aug 2025 14:14:38 +0200
+Subject: [PATCH v6 02/18] rust: str: allow `str::Formatter` to format into
+ `&mut [u8]`.
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-rnull-up-v6-16-v6-1-ec65006e2f07@kernel.org>
+Message-Id: <20250822-rnull-up-v6-16-v6-2-ec65006e2f07@kernel.org>
 References: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 In-Reply-To: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -64,54 +65,90 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=871; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=WE0oYMKVocpeSumFth9LF4yM1uvggXOmT17lbIpdQMg=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF8yQBXW+JFCudmtBmoZUtf2BkqMp1/Om1gIZ
- E47ujvZOVqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfMgAKCRDhuBo+eShj
- d1tmD/4j5/ZDzjuBD6KFdFM2l9aVRVQysnhE30axIgf4tlhXuvirDhm5DoS5rA0SobhehVSFv23
- GgkK+fTI7ZCyP2Uj+91lnRq3bbezPZIJANTB3aiXY1zfiRuRViNVdwRSVKQWAQcZ1nPYJsL//KX
- uJ9o7xD2BU7D0lnWytAIrT6AKm+UNTlZoGQ4h2gHCNDudtBWIDXo8GpyUn83yZPedKSQyyErOsb
- ZzLo0Iv97f5ZCcF5SlPO9Z9uHUaN4zimLF/+5685bIoPcGtkxRp9gXy7Ix7cMhNmgboYwKFGjSO
- yN9vUYy5Lj0w09E+T2slkLeBKAwOIGuSY2LTrmHjoFoMvdZfU/nOuWx1rBEIHT8NMjBIOd2olvI
- h9EKGh2vwcKwXQqbSQW1IHIwik2J1+0r1db16oxIadxzmEopm0RwTyrR4svQ2cOMJg1sbcUShOV
- iKEuamFDJH7wI6JnoT5GabhiNG87m5pprFGgVLKi18yMToHwwYrfl+b+G6JwPjNCN421FVQ7EcH
- M9G/gbE2NuMqQ58YsjFJK1djpFWqZ7ooNqR8iZ39LtOXmxiUX7fZ8UEYgmeI6jYExy/Hq5dAyOt
- QXH4YkuFO3/I4lXwOyOUi8r1noECuZNxTf+mKf6rW8+KXXl754E0UWLa42E+gKtcBMD3WI5hQfS
- Pw03ZI2x7hH5B6w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2330; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF8zhIn+GVKRFOTsaKYZiWBbPIfzc7f0NsPbt
+ s7TiC8R71uJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfMwAKCRDhuBo+eShj
+ dzerD/wNMRoN7oTltvty/HcxYgoiej+j/Yo8g6zwoAFfnPaxTMhVZW6zIpLpKSKUeoWVDQrCsT7
+ k/LruEV7vzKUykXHsXICE8ZIa5uYGfqizepqwYB/tT0GQb4xJ+X5O/2M3ODDzWXsu5+8kJ5KE4g
+ 5JKuhnaMovBR5Kahbsj84AIdnA/WVfLzYkBu6mZoWTsFV0FThVYH03irwRTCtSckVOffQD62ygs
+ 3Ba1yvEY+2C9I2RtpgSEbupcZ0GlqJ0l1ghaXHBvslE1yFPHvYxuA6GK/wYyXPzSlBJTNASmhgT
+ gbdbKAwAmDXRfxbqomDl+lqFHlWw2QFxRD7ZiRWSo4AJlI1s1Kk2N9KZAsDhMWlM07RSL+4L9cB
+ TNqKqNkLWjnYif2U8/csmxQUm+8K67BeTx0US6HigxT3aOmWjvGAWWfJqrFsKgR3CON8RBNiqze
+ czxCpQmEGV1CoS/zY/pQvPHbYKnxk2Q0MP38ll5bxNCaKgfBXWaIF3pCIjYaAg/aOuct2FibFFq
+ R3xyxUC8PS0pkTNClLTE6mF6uoKCOwLu43J22UXOLnmlC/j6xOiZJjGaCjq8CUU+eapJGNmVAGW
+ wPErnSBddDw9uEucsd+mTGTS+nmk9e90NlUwC8tG6lViw+Os6dd7y7JezF/vnusCC2IRAFO9vXz
+ i3sNZRHy3KKCn/g==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Clean up imports in `str.rs`. This makes future code manipulation more
-manageable.
+Improve `Formatter` so that it can write to an array or slice buffer.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/str.rs | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ rust/kernel/str.rs | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 6c892550c0ba..082790b7a621 100644
+index 082790b7a621..76632da357a6 100644
 --- a/rust/kernel/str.rs
 +++ b/rust/kernel/str.rs
-@@ -2,12 +2,13 @@
- 
- //! String representations.
- 
--use crate::alloc::{flags::*, AllocError, KVec};
--use crate::fmt::{self, Write};
-+use crate::{
-+    alloc::{flags::*, AllocError, KVec},
-+    fmt::{self, Write},
-+    prelude::*,
+@@ -7,7 +7,10 @@
+     fmt::{self, Write},
+     prelude::*,
+ };
+-use core::ops::{self, Deref, DerefMut, Index};
++use core::{
++    marker::PhantomData,
++    ops::{self, Deref, DerefMut, Index},
 +};
- use core::ops::{self, Deref, DerefMut, Index};
  
--use crate::prelude::*;
--
  /// Byte string without UTF-8 validity guarantee.
  #[repr(transparent)]
- pub struct BStr([u8]);
+@@ -825,9 +828,9 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
+ /// Allows formatting of [`fmt::Arguments`] into a raw buffer.
+ ///
+ /// Fails if callers attempt to write more than will fit in the buffer.
+-pub(crate) struct Formatter(RawFormatter);
++pub(crate) struct Formatter<'a>(RawFormatter, PhantomData<&'a mut ()>);
+ 
+-impl Formatter {
++impl Formatter<'_> {
+     /// Creates a new instance of [`Formatter`] with the given buffer.
+     ///
+     /// # Safety
+@@ -836,11 +839,19 @@ impl Formatter {
+     /// for the lifetime of the returned [`Formatter`].
+     pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
+         // SAFETY: The safety requirements of this function satisfy those of the callee.
+-        Self(unsafe { RawFormatter::from_buffer(buf, len) })
++        Self(unsafe { RawFormatter::from_buffer(buf, len) }, PhantomData)
++    }
++
++    /// Create a new [`Self`] instance.
++    #[expect(dead_code)]
++    pub(crate) fn new(buffer: &mut [u8]) -> Self {
++        // SAFETY: `buffer` is valid for writes for the entire length for
++        // the lifetime of `Self`.
++        unsafe { Formatter::from_buffer(buffer.as_mut_ptr(), buffer.len()) }
+     }
+ }
+ 
+-impl Deref for Formatter {
++impl Deref for Formatter<'_> {
+     type Target = RawFormatter;
+ 
+     fn deref(&self) -> &Self::Target {
+@@ -848,7 +859,7 @@ fn deref(&self) -> &Self::Target {
+     }
+ }
+ 
+-impl fmt::Write for Formatter {
++impl fmt::Write for Formatter<'_> {
+     fn write_str(&mut self, s: &str) -> fmt::Result {
+         self.0.write_str(s)?;
+ 
 
 -- 
 2.47.2
