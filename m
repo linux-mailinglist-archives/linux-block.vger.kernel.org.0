@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-26095-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26108-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0786B3177B
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C8C90B31795
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 14:23:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F500B03798
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:16:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEFC4A07228
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05C62FD1A7;
-	Fri, 22 Aug 2025 12:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687B4307AC4;
+	Fri, 22 Aug 2025 12:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdX5lPCb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CteaHG5u"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DA42FC03C;
-	Fri, 22 Aug 2025 12:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C36E2FE58B;
+	Fri, 22 Aug 2025 12:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864918; cv=none; b=SEg8WoIiK5WokLf/hAcIYIEo2JJZ85x6Mno34sBqkWUxuZ93ZQIAhJDr7KQZSSfKTXzPeZbhfPjoDCjjrpm1+ocO5BySaCKK8WRAT/RdA6mdmbZ+if7N93VyX3YMezP2Q2VxvTk2in7PxDB2gwfis4RQx9RUmkw0MTi/b1oLMf4=
+	t=1755864969; cv=none; b=gYCc6ZRNQvj1BaANkWSYsxFB7/+XKWfxogoUJP3vCt0fUOAp5Bi3kCpKJ/NPHFdhy2OKylSumqjIk6U+ZufZw34fxgCdVE+1K9X8DYZg1kH6sVhrNWUOxHX59iaLUYmRBVW2VLqVh7eDwo+GqcEc26iaOHrwjd5UOjlVcU6XTgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864918; c=relaxed/simple;
-	bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
+	s=arc-20240116; t=1755864969; c=relaxed/simple;
+	bh=0EwZ8Bosdo4P1PMrvkQ74N/d1HBPfa9SjJN+YgtIPJo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dO5aNsSxr3eWHd3A2BDVGWR+PtjRsSe01CVGbKhLZSyfToveyR3KhgcwCo/60Gao/52jwypbZyrv9VbqV75GcjMmRReE4gtcOZxk+6eveDmLpUbEbyQ9WinE+3sjOCP2gEX5aHVv6B06uSQizrXNja2/eFY+T/ZhyHqzRAktOg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdX5lPCb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69583C4CEED;
-	Fri, 22 Aug 2025 12:15:15 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=UwQLdmSulWV23xmMjsygvaxDNCKoOd73z9emspJ3TiemlfJWPlVtgfnsKZz+EI68J4zuu8Etrcq3nk5ejFNEEu+zKrK/6vJT+TFWfjVk5saGEp4jgAKDW8yfspZcoP8HS+ExC2Jb6ePVE/XYQ5fsrD5jSpJjvgy6fVmdCSYgCLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CteaHG5u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E3AC4CEF1;
+	Fri, 22 Aug 2025 12:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755864918;
-	bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
+	s=k20201202; t=1755864968;
+	bh=0EwZ8Bosdo4P1PMrvkQ74N/d1HBPfa9SjJN+YgtIPJo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YdX5lPCb/yI3Y1wC+QWIW6K7Lx/o0oQ2TJZtr/21ijWoMz26dP/IKX6iwLLjVqjH3
-	 esFsQjyfUYTfTmh+WEvvyjlHMn94bzI8vDph7BBszSASy9r7fIh5XoDFWSvWnwIm2M
-	 fsuS2Qhk6BpSgW9zqckcvCSw1jBwiwDXnrSbdHC7rMSqrziPugTP8qkpGbSvm/PW7I
-	 AC4ase2hxTuiGu+pxMn+K1aH1Pu7CeEEqatiULmRfDPZbMJJPADVBgflhaSnGI+bP9
-	 aa9ouP7fMoPM514IBpZ0rPHEpH7rZhecTgBujNXMxxjXDWFEey9jjEiubOz1yQLW8+
-	 zKlPt0DqS7Epw==
+	b=CteaHG5uYu+fgU0ydpsQctoO+NcRp99GavfSh0gZ5Neygi8ZsqBkW9AUBuxranIFn
+	 rbioL8nUK4Hhqi1+tqYeIb99EazrzYRS8hxspN/PnuD/uaaLgq8RF2NoZcrIWb4OZL
+	 WOkRFSR/IUk3hn0BuKjSPpgk4cn89mWouD89h9OiTDz2a3TSMJdP+ghSHu2uC0rxyw
+	 oj4ZTKSyUmqRGomL9CDsA9CMZcHmlBpx9stSUKrjNikXxl+R7xGILPGXQs3g6kxxMC
+	 625e0YKD1/5VCRGhbQ1mxeuNelgz3D9hZFvwrTFBDghkP6eK8DX1vvcJ9JTUY/SLoS
+	 ybtXg1rw+1PPw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 22 Aug 2025 14:14:38 +0200
-Subject: [PATCH v6 02/18] rust: str: allow `str::Formatter` to format into
- `&mut [u8]`.
+Date: Fri, 22 Aug 2025 14:14:39 +0200
+Subject: [PATCH v6 03/18] rust: str: expose `str::{Formatter,
+ RawFormatter}` publicly.
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-rnull-up-v6-16-v6-2-ec65006e2f07@kernel.org>
+Message-Id: <20250822-rnull-up-v6-16-v6-3-ec65006e2f07@kernel.org>
 References: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 In-Reply-To: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -65,90 +65,73 @@ To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2330; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=FkVup2wcuL8c9tJJq2cNTZw4TsjvE38QLG8Ll4ELGPI=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF8zhIn+GVKRFOTsaKYZiWBbPIfzc7f0NsPbt
- s7TiC8R71uJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfMwAKCRDhuBo+eShj
- dzerD/wNMRoN7oTltvty/HcxYgoiej+j/Yo8g6zwoAFfnPaxTMhVZW6zIpLpKSKUeoWVDQrCsT7
- k/LruEV7vzKUykXHsXICE8ZIa5uYGfqizepqwYB/tT0GQb4xJ+X5O/2M3ODDzWXsu5+8kJ5KE4g
- 5JKuhnaMovBR5Kahbsj84AIdnA/WVfLzYkBu6mZoWTsFV0FThVYH03irwRTCtSckVOffQD62ygs
- 3Ba1yvEY+2C9I2RtpgSEbupcZ0GlqJ0l1ghaXHBvslE1yFPHvYxuA6GK/wYyXPzSlBJTNASmhgT
- gbdbKAwAmDXRfxbqomDl+lqFHlWw2QFxRD7ZiRWSo4AJlI1s1Kk2N9KZAsDhMWlM07RSL+4L9cB
- TNqKqNkLWjnYif2U8/csmxQUm+8K67BeTx0US6HigxT3aOmWjvGAWWfJqrFsKgR3CON8RBNiqze
- czxCpQmEGV1CoS/zY/pQvPHbYKnxk2Q0MP38ll5bxNCaKgfBXWaIF3pCIjYaAg/aOuct2FibFFq
- R3xyxUC8PS0pkTNClLTE6mF6uoKCOwLu43J22UXOLnmlC/j6xOiZJjGaCjq8CUU+eapJGNmVAGW
- wPErnSBddDw9uEucsd+mTGTS+nmk9e90NlUwC8tG6lViw+Os6dd7y7JezF/vnusCC2IRAFO9vXz
- i3sNZRHy3KKCn/g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2004; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=0EwZ8Bosdo4P1PMrvkQ74N/d1HBPfa9SjJN+YgtIPJo=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoqF80+rrHS7+GZ81ClKoMp1B5FnJIH4cZzbR+9
+ k4O04baqHKJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaKhfNAAKCRDhuBo+eShj
+ d2ldD/9QpdZrIQFQXXsHosaGs8sNuzaafpIEffo9hkUXORjV1Rp3i23cpbWzjtks/RHCyW6Jjy4
+ +K7ZNNnngVY391rjjkrHlC8syOouJ3mnX8il3XHbCNIJ+n01lGo2SEGLm4RjQCzRWjn2N4ZvGJW
+ H4BkX0y/BWTERKMdul0uDDP1U/FsFU2IgvWBG5W5zo4yrvmZD59aH5un5o/PbvzEXyDA7Psgm8+
+ FAp0G5Gy/J8IfP5AGi+yzfcaFS+P4wMNmcwd11Wm1zu5FE40M7rgkMzRX978p5ssLt9cbwyfbfc
+ Bj7EA7yKKMF+cm0PNxEoY+UdlRG2IyaECRExjmINEJfUAJxYWmrqqrBGgGfysKdH9a3zyi72Tti
+ mVDe9w3lC7k6EM4YOMFLkILPe2JrN/q9wshtTbG9yTAZYBTTD+y+wP5fPKkqpgIux/KBIPa3doy
+ tuBJHbl1RuFVniYBy9fc2M+6+FBHfyo27/r2llTI1/aC/RPJtObVXMAuHgAZ0ikkjQT3IwoNMez
+ b/HbXvf8JR26GWQLuG0MywcNDTjXT/QLeK7U8pQKZkArXvdK4DpVcyi64l+Lb4pdir66N4XN4A2
+ hMn+/985BOYL+TEPqLL/UjNMwaQVvspPfMAqZLGxjjt99lNVfL5uEJCQ2bt8DTIX4mGFpj/qp7n
+ dV3odvICku5OSuQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Improve `Formatter` so that it can write to an array or slice buffer.
+rnull is going to make use of `str::Formatter` and `str::RawFormatter`, so
+expose them with public visibility.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/str.rs | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ rust/kernel/str.rs | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 082790b7a621..76632da357a6 100644
+index 76632da357a6..46cdc85dad63 100644
 --- a/rust/kernel/str.rs
 +++ b/rust/kernel/str.rs
-@@ -7,7 +7,10 @@
-     fmt::{self, Write},
-     prelude::*,
- };
--use core::ops::{self, Deref, DerefMut, Index};
-+use core::{
-+    marker::PhantomData,
-+    ops::{self, Deref, DerefMut, Index},
-+};
+@@ -736,7 +736,7 @@ fn test_bstr_debug() -> Result {
+ ///
+ /// The memory region between `pos` (inclusive) and `end` (exclusive) is valid for writes if `pos`
+ /// is less than `end`.
+-pub(crate) struct RawFormatter {
++pub struct RawFormatter {
+     // Use `usize` to use `saturating_*` functions.
+     beg: usize,
+     pos: usize,
+@@ -794,7 +794,7 @@ pub(crate) fn pos(&self) -> *mut u8 {
+     }
  
- /// Byte string without UTF-8 validity guarantee.
- #[repr(transparent)]
-@@ -825,9 +828,9 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
+     /// Returns the number of bytes written to the formatter.
+-    pub(crate) fn bytes_written(&self) -> usize {
++    pub fn bytes_written(&self) -> usize {
+         self.pos - self.beg
+     }
+ }
+@@ -828,7 +828,7 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
  /// Allows formatting of [`fmt::Arguments`] into a raw buffer.
  ///
  /// Fails if callers attempt to write more than will fit in the buffer.
--pub(crate) struct Formatter(RawFormatter);
-+pub(crate) struct Formatter<'a>(RawFormatter, PhantomData<&'a mut ()>);
+-pub(crate) struct Formatter<'a>(RawFormatter, PhantomData<&'a mut ()>);
++pub struct Formatter<'a>(RawFormatter, PhantomData<&'a mut ()>);
  
--impl Formatter {
-+impl Formatter<'_> {
+ impl Formatter<'_> {
      /// Creates a new instance of [`Formatter`] with the given buffer.
-     ///
-     /// # Safety
-@@ -836,11 +839,19 @@ impl Formatter {
-     /// for the lifetime of the returned [`Formatter`].
-     pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
-         // SAFETY: The safety requirements of this function satisfy those of the callee.
--        Self(unsafe { RawFormatter::from_buffer(buf, len) })
-+        Self(unsafe { RawFormatter::from_buffer(buf, len) }, PhantomData)
-+    }
-+
-+    /// Create a new [`Self`] instance.
-+    #[expect(dead_code)]
-+    pub(crate) fn new(buffer: &mut [u8]) -> Self {
-+        // SAFETY: `buffer` is valid for writes for the entire length for
-+        // the lifetime of `Self`.
-+        unsafe { Formatter::from_buffer(buffer.as_mut_ptr(), buffer.len()) }
+@@ -843,8 +843,7 @@ pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
      }
- }
  
--impl Deref for Formatter {
-+impl Deref for Formatter<'_> {
-     type Target = RawFormatter;
- 
-     fn deref(&self) -> &Self::Target {
-@@ -848,7 +859,7 @@ fn deref(&self) -> &Self::Target {
-     }
- }
- 
--impl fmt::Write for Formatter {
-+impl fmt::Write for Formatter<'_> {
-     fn write_str(&mut self, s: &str) -> fmt::Result {
-         self.0.write_str(s)?;
- 
+     /// Create a new [`Self`] instance.
+-    #[expect(dead_code)]
+-    pub(crate) fn new(buffer: &mut [u8]) -> Self {
++    pub fn new(buffer: &mut [u8]) -> Self {
+         // SAFETY: `buffer` is valid for writes for the entire length for
+         // the lifetime of `Self`.
+         unsafe { Formatter::from_buffer(buffer.as_mut_ptr(), buffer.len()) }
 
 -- 
 2.47.2
