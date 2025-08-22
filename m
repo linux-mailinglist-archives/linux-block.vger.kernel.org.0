@@ -1,111 +1,167 @@
-Return-Path: <linux-block+bounces-26081-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26092-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F08BAB313F3
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 11:48:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED2F8B31546
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 12:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5309AE69BC
-	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 09:41:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03E39623BA9
+	for <lists+linux-block@lfdr.de>; Fri, 22 Aug 2025 10:23:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ADF12F0C4C;
-	Fri, 22 Aug 2025 09:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDsaz9+3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521BC2D3A74;
+	Fri, 22 Aug 2025 10:21:24 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C717F2F068E;
-	Fri, 22 Aug 2025 09:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2FDD2F872;
+	Fri, 22 Aug 2025 10:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755855375; cv=none; b=DO28k+e9FLmBLKB/BL06yKCVRmcqNXLo1w0cCOqqy922HZN8QryCRCgUda16+HhmW3kly8J09DbjTxVsnItSo79mmzqT/POU/LdwiB1dIPKOGDsM95X2+XUWPdMNSz/VtGaVrIyKqnOkxMfg2snS6eifELb7nLCGLNHe76P4qIw=
+	t=1755858084; cv=none; b=ZpIoN/fYP2bAwCsDp4mRcLNNS/6VAN+CMlESsuI0j2a3lkI8MSK293oiKv1AxYBLjFqvCsxTnPdwHLzd7nMHwHh/NQNIeMlR4aT+Yqt3FtyiuFsJgZ30eMgYeIB/DLDtZDfs3mVorceh2QPrQbirJ4r0hFF0qpT9EmngdFZeZLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755855375; c=relaxed/simple;
-	bh=rXY2Zyhv7wbJPlQxeHTH9gfaadUzm0ipeM5O7Zztx3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5pstm/TU2SkfG6fIjAeJIdWhWqGACuEpqutWqbjoKEjvcogaj/jrU2r0TnKPI8QMon4J7AJ8UeHgAgOmytACDtrkehPfMZKsIb37gmIg+9YenyJlONSTVBv57yIc4JclPJqhY7Y9NqfxIqibvwwbTjV/KdEHJKOpOMGICPUzuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDsaz9+3; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755855374; x=1787391374;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rXY2Zyhv7wbJPlQxeHTH9gfaadUzm0ipeM5O7Zztx3c=;
-  b=cDsaz9+38CR+W+cU/BWs7iUabjS76FOzWhBtHnNK+5Ysh3AENq9DmU0B
-   Npfiw73xfSSbYq52DhxIjUzSSRCF1lKH5zzTNKZ3Xx47Ro/99mf05AD1j
-   UF0E2TYNLy8Z/frEXLFPncGupJ3AmslYlz/B5an65u6Eq3HID4jM4+KtZ
-   fKbO0tg/Ck+IDIM9JchyzXmBZq7q8yvoQqtKF7iO6URttWmGyqntSMjBj
-   V6oQHyMr9nzrUu9OzdBfJiQt0gRZilaJK15zgyNB77hLDi0Y4LBg9vpal
-   Tv810+qDyvoDXYZmN6lIcK1xCTXAmkT44vI1fp4tjPT4RPynu0ve4Yz1G
-   g==;
-X-CSE-ConnectionGUID: 5uxeXMT/TJ+/vUfboV/JPA==
-X-CSE-MsgGUID: SE2niaHPTFixfSWHsSW6bw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="68433201"
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="68433201"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 02:36:13 -0700
-X-CSE-ConnectionGUID: lqVp1h1xS0SKP4Yjt2TPlg==
-X-CSE-MsgGUID: GAC3aRMdRwuebj5vMQkgWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="169029493"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 02:36:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1upOBr-00000007Tk3-3IyP;
-	Fri, 22 Aug 2025 12:36:07 +0300
-Date: Fri, 22 Aug 2025 12:36:07 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Zhang Heng <zhangheng@kylinos.cn>
-Cc: axboe@kernel.dk, phasta@kernel.org, broonie@kernel.org,
-	lizetao1@huawei.com, viro@zeniv.linux.org.uk,
-	fourier.thomas@gmail.com, anuj20.g@samsung.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: mtip32xx: Remove the redundant return
-Message-ID: <aKg6B6buH5xYlnxL@smile.fi.intel.com>
-References: <20250822024100.991144-1-zhangheng@kylinos.cn>
+	s=arc-20240116; t=1755858084; c=relaxed/simple;
+	bh=/phN/AgtMsLAd6ka2rRe1+fTTKRpm5UtXySxy3tBMG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ACaVQdkPgSVEQZKgPmQA+ZTMUIFjxXW/VypnAE/lkqbZRne3w3qeygvP8DhKmDUTL1UkjWl84vN43uVD4xDJSJp5ol2FSzQU+vSMU7XgAEveCD3rsZqBXEqYz2EVh3LvafRJFXsVVjqAQ7XeZvEsUvAtLD6HZ/Vlif/Dr+SK68E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4c7bGk5BLBz9sS8;
+	Fri, 22 Aug 2025 11:58:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id IWDZVwqsS1ox; Fri, 22 Aug 2025 11:58:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4c7bGk4BThz9sRs;
+	Fri, 22 Aug 2025 11:58:06 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7BEF38B781;
+	Fri, 22 Aug 2025 11:58:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id eIHQVHg49t7f; Fri, 22 Aug 2025 11:58:06 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BEC98B775;
+	Fri, 22 Aug 2025 11:58:05 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Andre Almeida" <andrealmeid@igalia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Borkmann <daniel@iogearbox.net>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org
+Subject: [PATCH v2 00/10] powerpc: Implement masked user access
+Date: Fri, 22 Aug 2025 11:57:56 +0200
+Message-ID: <cover.1755854833.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250822024100.991144-1-zhangheng@kylinos.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755856678; l=3745; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=/phN/AgtMsLAd6ka2rRe1+fTTKRpm5UtXySxy3tBMG8=; b=1V9AFEKpjDyk6FnUrGnkLYoDWwBrkQcqv5fCGwg429FpoGvEzmMQhX1fRZY0SIQqSAI16OrRi R6sNAdKx0x1A+t4how5qZX/b5neGHfNC9U+6+4eTmM1L60Bhm6fz49y
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 22, 2025 at 10:41:00AM +0800, Zhang Heng wrote:
-> Remove the redundant return
+Masked user access avoids the address/size verification by access_ok().
+Allthough its main purpose is to skip the speculation in the
+verification of user address and size hence avoid the need of spec
+mitigation, it also has the advantage to reduce the amount of
+instructions needed so it also benefits to platforms that don't
+need speculation mitigation, especially when the size of the copy is
+not know at build time.
 
-Missing period.
+Patches 1,2,4 are cleaning up some redundant barrier_nospec()
+introduced by commit 74e19ef0ff80 ("uaccess: Add speculation barrier
+to copy_from_user()"). To do that, a speculation barrier is added to
+copy_from_user_iter() so that the barrier in powerpc raw_copy_from_user()
+which is redundant with the one in copy_from_user() can be removed. To
+avoid impacting x86, copy_from_user_iter() is first converted to using
+masked user access.
 
-...
+Patch 3 adds masked_user_read_access_begin() and
+masked_user_write_access_begin() to match with user_read_access_end()
+and user_write_access_end().
 
->  iomap_err:
->  	kfree(dd);
+Patches 5,6,7 are cleaning up powerpc uaccess functions.
 
->  	pci_set_drvdata(pdev, NULL);
+Patches 8 and 9 prepare powerpc/32 for the necessary gap at the top
+of userspace.
 
-I'm wondering if this also being redundant. I know about some corner cases, so
-is this one of them, or can it be removed as well?
+Last patch implements masked user access.
 
-> -	return rv;
->  done:
->  	return rv;
+Changes in v2:
+- Converted copy_from_user_iter() to using masked user access.
+- Cleaned up powerpc uaccess function to minimise code duplication
+when adding masked user access
+- Automated TASK_SIZE calculation to minimise use of BUILD_BUG_ON()
+- Tried to make some commit messages more clean based on feedback from
+version 1 of the series.
+
+Christophe Leroy (10):
+  iter: Avoid barrier_nospec() in copy_from_user_iter()
+  uaccess: Add speculation barrier to copy_from_user_iter()
+  uaccess: Add masked_user_{read/write}_access_begin
+  powerpc/uaccess: Move barrier_nospec() out of
+    allow_read_{from/write}_user()
+  powerpc/uaccess: Remove unused size and from parameters from
+    allow_access_user()
+  powerpc/uaccess: Remove
+    {allow/prevent}_{read/write/read_write}_{from/to/}_user()
+  powerpc/uaccess: Refactor user_{read/write/}_access_begin()
+  powerpc/32s: Fix segments setup when TASK_SIZE is not a multiple of
+    256M
+  powerpc/32: Automatically adapt TASK_SIZE based on constraints
+  powerpc/uaccess: Implement masked user access
+
+ arch/powerpc/Kconfig                          |   3 +-
+ arch/powerpc/include/asm/barrier.h            |   2 +-
+ arch/powerpc/include/asm/book3s/32/kup.h      |   3 +-
+ arch/powerpc/include/asm/book3s/32/mmu-hash.h |   5 +-
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |   4 -
+ arch/powerpc/include/asm/book3s/64/kup.h      |   6 +-
+ arch/powerpc/include/asm/kup.h                |  52 +------
+ arch/powerpc/include/asm/nohash/32/kup-8xx.h  |   3 +-
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |   4 -
+ arch/powerpc/include/asm/nohash/kup-booke.h   |   3 +-
+ arch/powerpc/include/asm/task_size_32.h       |  28 +++-
+ arch/powerpc/include/asm/uaccess.h            | 134 +++++++++++++-----
+ arch/powerpc/kernel/asm-offsets.c             |   2 +-
+ arch/powerpc/kernel/head_book3s_32.S          |   6 +-
+ arch/powerpc/mm/book3s32/mmu.c                |   4 +-
+ arch/powerpc/mm/mem.c                         |   2 -
+ arch/powerpc/mm/nohash/8xx.c                  |   2 -
+ arch/powerpc/mm/ptdump/segment_regs.c         |   2 +-
+ fs/select.c                                   |   2 +-
+ include/linux/uaccess.h                       |   7 +
+ kernel/futex/futex.h                          |   4 +-
+ lib/iov_iter.c                                |  22 ++-
+ lib/strncpy_from_user.c                       |   2 +-
+ lib/strnlen_user.c                            |   2 +-
+ 24 files changed, 172 insertions(+), 132 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
 
