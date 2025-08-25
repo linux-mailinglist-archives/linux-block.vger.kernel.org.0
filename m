@@ -1,185 +1,105 @@
-Return-Path: <linux-block+bounces-26191-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26193-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EFBAB33ED7
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 14:09:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D131B33FFA
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 14:49:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 500291A841B3
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 12:09:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1ACF201D26
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 12:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 647A42F0687;
-	Mon, 25 Aug 2025 12:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C4A26C3A7;
+	Mon, 25 Aug 2025 12:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t1ZmTaIM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="83HSOpmW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t1ZmTaIM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="83HSOpmW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8SG8MrV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF52EFD9E
-	for <linux-block@vger.kernel.org>; Mon, 25 Aug 2025 12:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7F2270ED2
+	for <linux-block@vger.kernel.org>; Mon, 25 Aug 2025 12:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756123648; cv=none; b=a5jN2JcHjh2ikbuIa8e++jf9H5Zy4qu2F4iPoBNNbQYwGeu8jCtvZ85/zpzPaozxvJDkEiA/Ax5R425i2ZiTMHZvzoQNY2dOSLTqheAWuTNpEh4P3I6IDEEHLewwOMfyadZFKyZP8yj9b7dhnIIgHlFnSOrVapG4KpWRwgjKYpU=
+	t=1756126153; cv=none; b=kVY7cqwavqLxVt3Y9bQ9hwj1fthEkJfN5rJqoZEz4ifzH+MT9FItMqZRJ9lV8LA/l/rEfhwZEJ2EaEOrzbIDbD1wCEzSyglxGqBmvnFzj+SV9nuzuCtc6YSOoJmhDD+qqq+GLsPa+e/ggAtX3vQsnPSO1G+YItraLKVKq0XKYTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756123648; c=relaxed/simple;
-	bh=MWkWojGEIs+5EgCLVlLnBOjxSlqnFs4gPeEtmO3HGug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujJPQ/utKea1a/GBJJnx8+TRJ5f4eeuCMj35B+EcKD0AAodrK90g+DIxnWwQAeLNIHqrZHtM05/E0Fb8fdLmOVnUu6L+khGGIlIc96v/n3Qx2VC38cfjE66zFpqQtc87utYCx+K/wY9ZXWLCmc/ABDnUfzYhqxyRFlpoAzApNoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t1ZmTaIM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=83HSOpmW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t1ZmTaIM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=83HSOpmW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1756126153; c=relaxed/simple;
+	bh=wE+b5SfvlhAZ3EtNwxr7EY6eYceepz/tuP9WeS8c1Nc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJqd1sM6Z1VE/Dwsp541QIB2Xr6VsVeipGeYAKQ1z8xYCzw9G+wDoYB+kIIlIaT4dMhn/N9jfk4mvLrvUOedtBbhM4qBnLk/2ZgM5FLqj38oS1KoH0LCxp+DecSZtVTe+IQ8PvG9UvZucdRSGBl7ZmHEIETrueuROnFaCg+fyww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q8SG8MrV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756126150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wWiO+k0dOHTECn0yUrYb6y1dZkfsp112py2a3IEf9no=;
+	b=Q8SG8MrVHYxx8thYGdqyYV8YfgOTXJromxz5Edj4h8UCcc8lbcTgJ7Wb+WR7iufyO8jZSr
+	ydNSfGHdL2egK/5painfPz0pzB5b9rOVObDTi2M71JxgLoj0hvG/MfQJ01Tcma21YFnZW5
+	37h9f0NOu6LXzBYjK1PY88cPSfJuHAQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-ulXsg3WuPu6CK4hrnJothw-1; Mon,
+ 25 Aug 2025 08:49:07 -0400
+X-MC-Unique: ulXsg3WuPu6CK4hrnJothw-1
+X-Mimecast-MFC-AGG-ID: ulXsg3WuPu6CK4hrnJothw_1756126144
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F26CE2125B;
-	Mon, 25 Aug 2025 12:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1756123644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5esCATGxFy1rPdQ5wxmc7jMFTL/ZNi1qRrQlBSRFzPk=;
-	b=t1ZmTaIM0+z6zSJxxyOEwYyPqpiki++QwLvf6SbdhQDAXsJzbiPx6tgrlLwtDXBYKzjUz6
-	XmNeoO6v4iiBYcICYhf9+vPppYOsxvqC0O4Z72aLVDKRmHnsaowAsXrRZ/ZkawLyUHVbbD
-	GD4rB/NSxgCYXEY0yC3iDkhx6piJlwo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1756123644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5esCATGxFy1rPdQ5wxmc7jMFTL/ZNi1qRrQlBSRFzPk=;
-	b=83HSOpmWO0E4yGKjz/4xp57phgsCaOgr6D95jxGWvKcSI3kfxKy5OpEcOUKKfaG93/AcKo
-	9/pSeIvPZeujdIDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=t1ZmTaIM;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=83HSOpmW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1756123644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5esCATGxFy1rPdQ5wxmc7jMFTL/ZNi1qRrQlBSRFzPk=;
-	b=t1ZmTaIM0+z6zSJxxyOEwYyPqpiki++QwLvf6SbdhQDAXsJzbiPx6tgrlLwtDXBYKzjUz6
-	XmNeoO6v4iiBYcICYhf9+vPppYOsxvqC0O4Z72aLVDKRmHnsaowAsXrRZ/ZkawLyUHVbbD
-	GD4rB/NSxgCYXEY0yC3iDkhx6piJlwo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1756123644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5esCATGxFy1rPdQ5wxmc7jMFTL/ZNi1qRrQlBSRFzPk=;
-	b=83HSOpmWO0E4yGKjz/4xp57phgsCaOgr6D95jxGWvKcSI3kfxKy5OpEcOUKKfaG93/AcKo
-	9/pSeIvPZeujdIDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC8EC1368F;
-	Mon, 25 Aug 2025 12:07:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cU+HNftRrGjtDQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 25 Aug 2025 12:07:23 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 707ACA0951; Mon, 25 Aug 2025 14:07:15 +0200 (CEST)
-Date: Mon, 25 Aug 2025 14:07:15 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	snitzer@kernel.org, axboe@kernel.dk, dw@davidwei.uk, brauner@kernel.org, hch@lst.de, 
-	martin.petersen@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org, 
-	viro@zeniv.linux.org.uk, Keith Busch <kbusch@kernel.org>, Jan Kara <jack@suse.com>
-Subject: Re: [PATCHv3 0/8] direct-io: even more flexible io vectors
-Message-ID: <g35u5ugmyldqao7evqfeb3hfcbn3xddvpssawttqzljpigy7u4@k3hehh3grecq>
-References: <20250819164922.640964-1-kbusch@meta.com>
- <87a53ra3mb.fsf@gmail.com>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C42418333EE;
+	Mon, 25 Aug 2025 12:48:53 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.18])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A9F530001A5;
+	Mon, 25 Aug 2025 12:48:51 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V2 0/2] ublk: avoid ublk_io_release() called after ublk char dev is closed
+Date: Mon, 25 Aug 2025 20:48:23 +0800
+Message-ID: <20250825124827.2391820-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a53ra3mb.fsf@gmail.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: F26CE2125B
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim]
-X-Spam-Score: -2.51
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Fri 22-08-25 18:57:08, Ritesh Harjani wrote:
-> Keith Busch <kbusch@meta.com> writes:
-> 
-> > From: Keith Busch <kbusch@kernel.org>
-> >
-> > Previous version:
-> >
-> >   https://lore.kernel.org/linux-block/20250805141123.332298-1-kbusch@meta.com/
-> >
-> > This series removes the direct io requirement that io vector lengths
-> > align to the logical block size.
-> >
-> > I tested this on a few raw block device types including nvme,
-> > virtio-blk, ahci, and loop. NVMe is the only one I tested with 4k
-> > logical sectors; everything else was 512.
-> >
-> > On each of those, I tested several iomap filesystems: xfs, ext4, and
-> > btrfs. I found it interesting that each behave a little
-> > differently with handling invalid vector alignments:
-> >
-> >   - XFS is the most straight forward and reports failures on invalid
-> >     vector conditions, same as raw blocks devices.
-> >
-> >   - EXT4 falls back to buffered io for writes but not for reads.
-> 
-> ++linux-ext4 to get any historical context behind why the difference of
-> behaviour in reads v/s writes for EXT4 DIO. 
+Hi Jens,
 
-Hum, how did you test? Because in the basic testing I did (with vanilla
-kernel) I get EINVAL when doing unaligned DIO write in ext4... We should be
-falling back to buffered IO only if the underlying file itself does not
-support any kind of direct IO.
+The 1st patch fixes ublk_io_release(), and avoids warning from ublk
+selftest(test_stress_04.sh).
 
-								Honza
+The 2nd patch adds test case for this issue.
+
+V2:
+	- release ublk char device in async way for avoiding dependency with
+	io_uring_release(), where sqe buffers may be unregistered finally
+
+Ming Lei (2):
+  ublk: avoid ublk_io_release() called after ublk char dev is closed
+  ublk selftests: add --no_ublk_fixed_fd for not using registered ublk
+    char device
+
+ drivers/block/ublk_drv.c                      | 94 ++++++++++++++++++-
+ tools/testing/selftests/ublk/file_backed.c    | 10 +-
+ tools/testing/selftests/ublk/kublk.c          | 38 ++++++--
+ tools/testing/selftests/ublk/kublk.h          | 46 ++++++---
+ tools/testing/selftests/ublk/null.c           |  4 +-
+ tools/testing/selftests/ublk/stripe.c         |  4 +-
+ .../testing/selftests/ublk/test_stress_04.sh  |  6 +-
+ 7 files changed, 167 insertions(+), 35 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.47.0
+
 
