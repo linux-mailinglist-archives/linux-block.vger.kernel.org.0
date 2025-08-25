@@ -1,66 +1,57 @@
-Return-Path: <linux-block+bounces-26160-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26162-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 775A1B33A9E
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 11:21:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04B9AB33B22
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 11:30:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6A6344E2F4F
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 09:21:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 047F31883AE8
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 09:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E68F393DD1;
-	Mon, 25 Aug 2025 09:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5596F224B03;
+	Mon, 25 Aug 2025 09:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y+miYzet"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YjPK4Vwt"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAED5190664;
-	Mon, 25 Aug 2025 09:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F821EE7B9
+	for <linux-block@vger.kernel.org>; Mon, 25 Aug 2025 09:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756113665; cv=none; b=YhxlNqrFqwaKWLIvBcnIoLTdGc/Hl+w7FGrg1JMeGwoQZcvYDC0GonezybYp75R/YaiqvtKJ9qzJC7JOC/Uq4m3bH4wtTjboyfajvi6YrDVZV2Da19J1skP01vudqX4JMy2kBLGdyW1LwjnFvICejrzMwmy23sJd5QEhgZr9ano=
+	t=1756114227; cv=none; b=YdixinC96MCtU2QBHTv3A4ySK1jKOmZTo2kFubLmqdm/8XgnKJ16M63A3/7IUEhKodz5DIdqovFoiNMiGktCuprXoTmxDkBGZ3Z6dUwldtt9QSQXWZPHp/JEpX1BkBB4mcubCVkhnkloTdrrx+7aHmTJkfWyGygmwD4B4+zVA7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756113665; c=relaxed/simple;
-	bh=lbwwu9GkccV8IALX4pZOCD5WicHbuX6iwVCs1iocpkU=;
+	s=arc-20240116; t=1756114227; c=relaxed/simple;
+	bh=OU7VDv3Ik5OquhYHOS8hDGWMbyIjdDAMocFMVEM+aeg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sr4u4ffJbCgYnxgVC2dGt0gMBKetyhGDXAWfB7RdLecpDB4YJ1LMGZChuLT1MERhyIlK2bVuq6a9eb9IPLmw069pGoQMj8EssSrYZV/qUg5+3ET8f3GTdrT09OiK2Y/G0873wqjepLcGTNE8K/xW/PvoZSaIrI1MzGlmOvq4C9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Y+miYzet; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=hBahk2zHRTTt5oQCcBgmX37EJ3q1mQX5HVQ+Z62Jb6NDenPJ7DE1LlbPntwKzKhBicSRdD8oAIx/vzDk/hsiIEFa1jPii2RvnG3KK9ZcaRX921EURn4UUze4eYVWPiktUUrAYQetm8F8eeUkWbHRLwLblwZbR90fc3eXrmzsyCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YjPK4Vwt; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Sc+4JMWsbFGBBm8p/kWO4ggW989b86QDhZeWOOAn3rI=; b=Y+miYzetmddZoPUtzWBaeCZ++j
-	gcJOULlYnYuqAoIHehypEMijuD1lpgjTMuqg7+MAkipyyhC/N6SRqQgjM9haj7OTmUHEap5pkutun
-	l1/wfld0HBTRJdL1Bt6/ZGyPs6HZ8xGWu1v3Ru+vHSF5mJaUNAY6KVwMHC0/i7Z6sXJIrd5p9bdFQ
-	qE0MITL9C/h5nQjh7TFTRsQqY7H0/x7lRfo2MRKlFRtbSgwgdSW5b1K3bumHRV1m0tFkcIW2rZHvr
-	9drEcleajm8VQ2k2TrI/xxq6ishDtVUbPUd9yyAK4ScTTHkehWj9q3PUFLDzykIEBZWL1Chedf+Ze
-	zIFG2wPw==;
+	bh=tIy6NvyzpEVL57IiRP/CxCN/mr82a9jUaywBE6NxTH0=; b=YjPK4VwtPEQGIYTEjehOYplBl3
+	5lPKqdrvu5xD2BrGXHfbv10YVTlrOYO4yPVkDz3NArcjdq3AsIbcwDVYHla4tnm4L2maSUOjllbe+
+	PvyaiA6JpvEwooAs0jPYqW4ekBFO9L9QfEcHYr3KoaDgkGztlS/99u4CCqyBDIHW/4+TfOxXZvJg1
+	xrT1m0FoKq2c04cheQ2Z4U8IHnBMXs2WeFxEpUlJ3Ctxx2MR6EzA43pxvF2ILdJnUdPhumVbJcg+o
+	81tk2XP1F9hY7dk1B64aQY+BS3DZbhTQhxGhukPX0oPO74yLTYW32MzIW/sppOU+bKgaSSOW4S/3x
+	MnIaTyFg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqTNt-00000007Tvp-3p1b;
-	Mon, 25 Aug 2025 09:21:01 +0000
-Date: Mon, 25 Aug 2025 02:21:01 -0700
+	id 1uqTWz-00000007VXi-1Z87;
+	Mon, 25 Aug 2025 09:30:25 +0000
+Date: Mon, 25 Aug 2025 02:30:25 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Fengnan Chang <changfengnan@bytedance.com>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH] iomap: allow iomap using the per-cpu bio cache
-Message-ID: <aKwq_QoiEvtK89vY@infradead.org>
-References: <20250822082606.66375-1-changfengnan@bytedance.com>
- <20250822150550.GP7942@frogsfrogsfrogs>
- <aKiP966iRv5gEBwm@casper.infradead.org>
- <877byv9w6z.fsf@gmail.com>
- <aKif_644529sRXhN@casper.infradead.org>
- <874ityad1d.fsf@gmail.com>
- <CAPFOzZufTPCT_56-7LCc6oGHYiaPixix30yFNEsiFfN1s9ySMQ@mail.gmail.com>
+To: Keith Busch <kbusch@meta.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, ming.lei@redhat.com,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] block: rename min_segment_size
+Message-ID: <aKwtMbB0LQGURNMF@infradead.org>
+References: <20250822171038.1847867-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -69,14 +60,19 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPFOzZufTPCT_56-7LCc6oGHYiaPixix30yFNEsiFfN1s9ySMQ@mail.gmail.com>
+In-Reply-To: <20250822171038.1847867-1-kbusch@meta.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Aug 25, 2025 at 04:51:27PM +0800, Fengnan Chang wrote:
-> No restrictions for now, I think we can enable this by default.
-> Maybe better solution is modify in bio.c?  Let me do some test first.
+On Fri, Aug 22, 2025 at 10:10:38AM -0700, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
+> Despite its name, the block layer is fine with segments smaller that the
+> "min_segment_size" limit. The value is an optimization limit indicating
+> the largest aligned segment that can be used without considering segment
+> boundary limits, so give it a name that reflects that.
 
-Any kind of numbers you see where this makes a different, including
-the workloads would also be very valuable here.
+But max_aligned_segment also feels wrong for that.  It's not really
+the maximum alignmnet, it is the fast path alignment.  Maybe something
+like fast_segment_granularity or nosplit_segment_granularity?
 
 
