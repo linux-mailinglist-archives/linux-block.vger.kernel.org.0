@@ -1,121 +1,124 @@
-Return-Path: <linux-block+bounces-26163-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26166-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8048BB33B34
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 11:36:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AC37B33B65
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 11:45:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4170F3AB553
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 09:36:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 774A7189E049
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 09:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4620C2C17B4;
-	Mon, 25 Aug 2025 09:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12F802C159F;
+	Mon, 25 Aug 2025 09:45:32 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E74F235041;
-	Mon, 25 Aug 2025 09:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDA32C15B1;
+	Mon, 25 Aug 2025 09:45:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756114571; cv=none; b=LwCCv+7tgLcm99ALKaxhP0l1A4/qGeaPDFRA4pna2xC63c4KZ10rsIZuYarQp6KPeKeEyyALSwWZ5XBig7Ea/NwwWZGOKZM8pqU7q7IQgLKNwYssvdRCh1SKljn2jMsjSzhQH3V0Ikanv+1Qbmm/SBauynGDgAFdYt15e7e5HFw=
+	t=1756115131; cv=none; b=iARcn0YzN+X3IUVJrXjB15KlT04obxjbgBjAKz/ePhuzdy0SgzTHIao+BvI5n5EtbGNw4u7Qo6+ueOSj13gzAP8RSWqCiIw/caVkOBxKrkLEiBE9twoG+b68s7+9d8JUA3RE29tLQBVZYZd1UXTdt7GZKZSh3WrKjelCRXnf/sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756114571; c=relaxed/simple;
-	bh=N9qWtkRk3fJ5bIXuhkjNCG48R1vPFV+wVc1tIXHExks=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UxVPPP/+TgFLLYSw0Q1gzBwBLpyn9/7YS8wlPmuNbAZ5qcrZGxX/ESsa6wYqa/DMMa4WG7yx9+u0sdWE57p/DE7PK1x+/lPG9aREbZ8Dra6Fx0OzZX3nOILLxAHhDbKonhBGQaryEZV+0BFmjq5IQLR3bi++Jy32QANl3S4oJDY=
+	s=arc-20240116; t=1756115131; c=relaxed/simple;
+	bh=2yjjvo3ufYFsl3ZDOcn9W92qBsYVrRKHbAkhuPAHNBg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JcAK0YX+oyVjHJJCNlO/Q8oIuvHC+Ai4Wk3+PNlUnkYIaFFlgkSQuHCSKxs5miczdwIBjb5kgI1OPwcISKgdvaKF7Yl+zIHFHol/e0L9TomI4sLBI2q6a8PJt0MibQnes9LyFvTKQa/kp+HniCH1uMFYGE0U4y7baONvNEpCzm0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c9Qdy2sppzYQtnt;
-	Mon, 25 Aug 2025 17:36:06 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c9Qrm3p0nzYQvgT;
+	Mon, 25 Aug 2025 17:45:28 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E9F391A01A1;
-	Mon, 25 Aug 2025 17:36:04 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAXYIyCLqxo09rwAA--.44762S3;
-	Mon, 25 Aug 2025 17:36:04 +0800 (CST)
-Subject: Re: [PATCH] loop: fix zero sized loop for block special file
-To: Christoph Hellwig <hch@infradead.org>, Ming Lei <ming.lei@redhat.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, rajeevm@hpe.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
- linux-fsdevel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250825062300.2485281-1-yukuai1@huaweicloud.com>
- <aKwlVypJuBtPH_EL@fedora> <aKwqUVmX-yH6_lZy@infradead.org>
+	by mail.maildlp.com (Postfix) with ESMTP id 104B31A1003;
+	Mon, 25 Aug 2025 17:45:27 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAXYIy1MKxonJnxAA--.44975S4;
+	Mon, 25 Aug 2025 17:45:26 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <eb572576-89f4-c192-09ab-b4585d09b75a@huaweicloud.com>
-Date: Mon, 25 Aug 2025 17:36:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+To: hch@infradead.org,
+	colyli@kernel.org,
+	hare@suse.de,
+	tieren@fnnas.com,
+	axboe@kernel.dk,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	akpm@linux-foundation.org,
+	neil@brown.name
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH RFC 0/7] block: fix disordered IO in the case recursive split
+Date: Mon, 25 Aug 2025 17:36:53 +0800
+Message-Id: <20250825093700.3731633-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aKwqUVmX-yH6_lZy@infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXYIyCLqxo09rwAA--.44762S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruF48CrWrCF1fKw4xAF43Jrb_yoWftrb_Wr
-	1rAFyDt348Zrn2k3y3K3WDtrZ5GF4jkry3X3y0kF9Fywn7X34fuF1rZ343WF12qryjyrsI
-	9w43Zr1UJry3ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-TRANSID:gCh0CgAXYIy1MKxonJnxAA--.44975S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Jry8XrWxWF45tF45XF1kZrb_yoW8Jr1DpF
+	43WrW3Zr18Gr1a9r9xZw4Ut3Z8JF48G34UKrnxXw48XF9xZFy0yw1UAry8Gryjgryft3yU
+	Xr1UAr45GF1UGFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjTRRBT5DUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Yu Kuai <yukuai3@huawei.com>
 
-ÔÚ 2025/08/25 17:18, Christoph Hellwig Ð´µÀ:
-> On Mon, Aug 25, 2025 at 04:56:55PM +0800, Ming Lei wrote:
->> `stat $BDEV_PATH` never works for getting bdev size, so it looks wrong
->> to call vfs_getattr_nosec() with bdev path for retrieving bdev's size.
-> 
-> Exactly.
-> 
+patch 1 export a bio split helper;
+patch 2-6 unfiy bio split code from mdraid to use the helper;
+patch 7 convert the helper to insert split bio to the head of current
+bio_list
 
-Ok.
->> So just wondering why not take the following more readable way?
->>
->> 	/* vfs_getattr() never works for retrieving bdev size */
->> 	if (S_ISBLK(stat.mode)) {
->> 		loopsize = i_size_read(file->f_mapping->host);
->> 	} else {
->>            ret = vfs_getattr_nosec(&file->f_path, &stat, STATX_SIZE, 0);
->>            if (ret)
->>                    return 0;
->>            loopsize = stat.size;
->> 	}
+This set is just test for raid5 for now, see details in patch 7;
 
-Just we can't use stat.mode here, I'll replace it with:
+Yu Kuai (7):
+  block: export helper bio_submit_split()
+  md/raid0: convert raid0_handle_discard() to use bio_submit_split()
+  md/raid1: convert to use bio_submit_split()
+  md/raid10: convert read/write to use bio_submit_split()
+  md/raid5: convert to use bio_submit_split()
+  md/md-linear: convert to use bio_submit_split()
+  block: fix disordered IO in the case recursive split
 
-S_ISBLK(file_inode(file)->i_mode)
+ block/blk-core.c       | 54 ++++++++++++++++++++++++-------------
+ block/blk-merge.c      | 60 +++++++++++++++++++++++++++---------------
+ block/blk-throttle.c   |  2 +-
+ block/blk.h            |  3 ++-
+ drivers/md/md-linear.c | 14 +++-------
+ drivers/md/raid0.c     | 20 ++++++--------
+ drivers/md/raid1.c     | 35 ++++++++++--------------
+ drivers/md/raid10.c    | 53 ++++++++++++++++---------------------
+ drivers/md/raid10.h    |  1 +
+ drivers/md/raid5.c     | 12 +++++----
+ include/linux/bio.h    |  2 ++
+ 11 files changed, 135 insertions(+), 121 deletions(-)
 
-Thanks,
-Kuai
-
->>
->> Also the above looks like how application reads file size in case of bdev
->> involved.
-> 
-> That's not just more readable, but simply the way to go.  Maybe split
-> it into a helper for readability, though.
-> .
-> 
+-- 
+2.39.2
 
 
