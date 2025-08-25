@@ -1,128 +1,239 @@
-Return-Path: <linux-block+bounces-26174-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26176-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B285AB33BB2
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 11:52:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68317B33C78
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 12:20:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A55F188B5F8
-	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 09:51:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E0363BAB4C
+	for <lists+linux-block@lfdr.de>; Mon, 25 Aug 2025 10:20:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363BA2D46A7;
-	Mon, 25 Aug 2025 09:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C19B52C158E;
+	Mon, 25 Aug 2025 10:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iram.es header.i=@iram.es header.b="f276yTAV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx08-006a4e02.pphosted.com (mx08-006a4e02.pphosted.com [143.55.148.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1102D5C9B;
-	Mon, 25 Aug 2025 09:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703022C0F84;
+	Mon, 25 Aug 2025 10:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.55.148.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756115348; cv=none; b=Hu15D2FPnn460h+wbHVaf59BCiwtCPrVz9X3b3JeDbX1NjwT2zrGywdM8+TBIC1P1o4FCP/SN1zpvP/Sip7Lm97ovLvhsHaAMEfKMmKL/FjqMklYMXjDUYuVrNzClSIzCmaaP2zSPjQf7QJZ3B+IAsLiP50lwbRd4E6Nm8JZ9cU=
+	t=1756117222; cv=none; b=dIrcBxPpZXkFViYJ9/Sl6H7pSZ2l0ehuWFLjQaDDb+9gUdYRvKzwr9SE5QAWbcaaRGUdMNpNm16N6fY/5jOcya9XmyVF5fuSOC6S2t4rz0OWHaGA8987p3k1fXjN6gxO8pDc2shKtGBGF81XTikgb0T23QiwW8zwEEbZ+rTv50U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756115348; c=relaxed/simple;
-	bh=FCNe7R2tu9pEL+yxNl6HqlgLNxIQ1nzimAYmzB4Boeo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=i2TActjlNKxExxAu9fPPeKDrTmMFx5C/ROUpB5gc4nmgE2RoIPV0MRWrvo7NzsplLYe5owB9hEFHUuSxzZtd9dg3F8D6SiOtpmbtpxbvHnWSWmvYV/Z+dv9v82VHdIeFImjdstctjuX8y6DFjkqhKy7cp4EC8CS3BgtRkrvwG64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c9Qwv4mvkzKHNKY;
-	Mon, 25 Aug 2025 17:49:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 409DC1A0839;
-	Mon, 25 Aug 2025 17:49:03 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgD3QY6NMaxoyuHxAA--.63474S3;
-	Mon, 25 Aug 2025 17:49:03 +0800 (CST)
-Subject: Re: [PATCH] block: fix disordered IO in the case recursive split
-To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, neil@brown.name, akpm@linux-foundation.org,
- linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, colyli@kernel.org, xni@redhat.com,
- yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
- tieren@fnnas.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250821074707.2604640-1-yukuai1@huaweicloud.com>
- <aKbcM1XDEGeay6An@infradead.org>
- <54fc027f-f4dc-0412-0d6d-b44a3e644c39@huaweicloud.com>
- <aKbgqoF0UN4_FbXO@infradead.org>
- <060396d7-797e-b876-9945-1dc9c8cbf2b4@huaweicloud.com>
- <aKwqGHE_ImVwoH6B@infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <dc98ae47-5abf-05dc-5441-547cbb4b9c80@huaweicloud.com>
-Date: Mon, 25 Aug 2025 17:49:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1756117222; c=relaxed/simple;
+	bh=EOYa/83/mPvbS46RIHex0d0IdkRkDgz6A9nE8p9HOOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OK1fMOlEagTLv6pD8FVPjXchuxedMS3GIDct4D/KHC0sqND/60gKs+ouShJJwJ/+FYKED77cFWdwIXzPsRyGgH9CVAPdtfHuQocPCtCFx8FYHW4Hea/QI7owg9dqLHYrBCd9VSvgCoy4bgnePw4fUeaswg9lyE1OfticgEf+5l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iram.es; spf=pass smtp.mailfrom=iram.es; dkim=pass (2048-bit key) header.d=iram.es header.i=@iram.es header.b=f276yTAV; arc=none smtp.client-ip=143.55.148.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iram.es
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iram.es
+Received: from pps.filterd (m0316694.ppops.net [127.0.0.1])
+	by m0316694.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 57P6PW3W020069;
+	Mon, 25 Aug 2025 12:18:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iram.es; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=dkim3; bh=D2RQ
+	QU+xVYCIYE9iCJ4jbQxYZO59NkcR2A8V0GUG+Mo=; b=f276yTAVV1SD26/ulkZ2
+	ssJY8XTewysYT4tMLHnjnSIBPzgblP8WuCw3pnh/XAa52lQyDLxmxShvX17t1EXs
+	AoQda248LCfIMXON/nZwXpeu4+MTA43njmbgfGliPSIcYHT6eGt5tvWcsz+Ebm8/
+	4lIyyZv8wrgSbUY90OllDWqU/MTlR6SEhvM2DfGVcewE1Kv7qk7AtlaNhqjqabwW
+	IOCDoLYjGRp5sJ9N4qvDQOAd9gPixccJfFHXTLWq+WrJuREyVW1zYVGsiH/zFMSl
+	OAyS7jVvPh7W7XrmyRecvqRovk6Azt/V4iwX6CHVY52rTnzQCWQmiOXOKm2ygevf
+	nw==
+Received: from sim.rediris.es (mta-out04.sim.rediris.es [130.206.24.46])
+	by m0316694.ppops.net (PPS) with ESMTPS id 48qs26hbtk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Aug 2025 12:18:43 +0200 (MEST)
+Received: from sim.rediris.es (localhost.localdomain [127.0.0.1])
+	by sim.rediris.es (Postfix) with ESMTPS id 26F1D181FAE;
+	Mon, 25 Aug 2025 12:18:42 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by sim.rediris.es (Postfix) with ESMTP id 00B66181FAC;
+	Mon, 25 Aug 2025 12:18:41 +0200 (CEST)
+X-Amavis-Modified: Mail body modified (using disclaimer) -
+ mta-out04.sim.rediris.es
+Received: from sim.rediris.es ([127.0.0.1])
+ by localhost (mta-out04.sim.rediris.es [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id T0a5k0mKOE42; Mon, 25 Aug 2025 12:18:41 +0200 (CEST)
+Received: from lt-gp.iram.es (haproxy02.sim.rediris.es [130.206.24.70])
+	by sim.rediris.es (Postfix) with ESMTPA id 4570418007C;
+	Mon, 25 Aug 2025 12:18:40 +0200 (CEST)
+Date: Mon, 25 Aug 2025 12:18:38 +0200
+From: Gabriel Paubert <paubert@iram.es>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andre Almeida <andrealmeid@igalia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Laight <david.laight.linux@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH v2 10/10] powerpc/uaccess: Implement masked user access
+Message-ID: <aKw4frSacjCoruSJ@lt-gp.iram.es>
+References: <cover.1755854833.git.christophe.leroy@csgroup.eu>
+ <647f1b1db985aec8ec1163bf97688563ae6f9609.1755854833.git.christophe.leroy@csgroup.eu>
+ <aKwnMo7UllLZkOcK@lt-gp.iram.es>
+ <16679d56-5ee0-469d-a11c-475a45a1c2b9@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aKwqGHE_ImVwoH6B@infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3QY6NMaxoyuHxAA--.63474S3
-X-Coremail-Antispam: 1UD129KBjvJXoWruFyfuFWkJw47Xr1Dtr13Arb_yoW8Jry7pF
-	WfWa15Jw4qyF4a9as2qw4j93WFy393ZrW5ZFnYkr4DZr90gr92grnxJw4FkFyUGrWvga10
-	vayFvrZ5Gw4UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <16679d56-5ee0-469d-a11c-475a45a1c2b9@csgroup.eu>
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODI0MDAxMSBTYWx0ZWRfXyQKmoH9DesXw
+ ky5qpDKRbPVEO1j5P6RR/dl92Vu5gG46S+qU0RD2h9TCpiV9lxYjE4Rf4eAAbziJN1WFf5iKIoL
+ vwHyFf4hVFUMvanQ6xRm7ygYHGMCvWURJrObfA0zrkO/dAoKD6EpbGdosihHgY3UjjtywmHeIhh
+ zadbuk6ri8Bjd//t+fuudKJvFfCA6JbBQ9N+HL1oXH8gyaqcVqF4z95oY0uvqMW92ZBVK+g2n6Z
+ F5336k0OeSJ784mGbOt0xTivvX2ToRO8PW2UCuoqsfP7MIu8uTDDGoglgFl+oLkNRfmAFLuzTMV
+ j3inHZqHmiMrvZjyNxDRXcurMFxlSzfQPLVCuFgRq2ZkLrTZLm79a044/SvNKtbKXHZ8D77pt49
+ kvezQV2k
+X-Proofpoint-GUID: gpjt9l5GPC7skcU5Z664_moW2gPMxUzU
+X-Authority-Analysis: v=2.4 cv=GqFC+l1C c=1 sm=1 tr=0 ts=68ac3883 cx=c_pps
+ a=Kke4r4mcy+kRAsMtzpf9hg==:117 a=Kke4r4mcy+kRAsMtzpf9hg==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=_EeEMxcBAAAA:8 a=LQ9UBoVtz5yYhqZLJvEA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: gpjt9l5GPC7skcU5Z664_moW2gPMxUzU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-25_05,2025-08-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=salida_notspam policy=salida score=0
+ priorityscore=1501 malwarescore=0 phishscore=0 bulkscore=0 adultscore=0
+ spamscore=0 suspectscore=0 clxscore=1011 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508240011
 
-Hi,
+On Mon, Aug 25, 2025 at 11:40:48AM +0200, Christophe Leroy wrote:
+> Hi Gabriel,
+>=20
+> Le 25/08/2025 =C3=A0 11:04, Gabriel Paubert a =C3=A9crit=C2=A0:
+> > [Vous ne recevez pas souvent de courriers de paubert@iram.es. D?couvr=
+ez pourquoi ceci est important ? https://urldefense.com/v3/__https://aka.=
+ms/LearnAboutSenderIdentification__;!!D9dNQwwGXtA!QUcSIXoDBBj9wAtcyQ-z3nP=
+EAj-RnJpPgYwjOeb6LZWLejdLzq4uYsPMecQuK5Qy3147APjCNc-hcXGT71XuBh1AJI2M$  ]
+> >=20
+> > Hi Christophe,
+> >=20
+> > On Fri, Aug 22, 2025 at 11:58:06AM +0200, Christophe Leroy wrote:
+> > > Masked user access avoids the address/size verification by access_o=
+k().
+> > > Allthough its main purpose is to skip the speculation in the
+> > > verification of user address and size hence avoid the need of spec
+> > > mitigation, it also has the advantage of reducing the amount of
+> > > instructions required so it even benefits to platforms that don't
+> > > need speculation mitigation, especially when the size of the copy i=
+s
+> > > not know at build time.
+> > >=20
+> > > So implement masked user access on powerpc. The only requirement is
+> > > to have memory gap that faults between the top user space and the
+> > > real start of kernel area.
+> > >=20
+> > > On 64 bits platforms the address space is divided that way:
+> > >=20
+> > >        0xffffffffffffffff      +------------------+
+> > >                                |                  |
+> > >                                |   kernel space   |
+> > >                                |                  |
+> > >        0xc000000000000000      +------------------+  <=3D=3D PAGE_O=
+FFSET
+> > >                                |//////////////////|
+> > >                                |//////////////////|
+> > >        0x8000000000000000      |//////////////////|
+> > >                                |//////////////////|
+> > >                                |//////////////////|
+> > >        0x0010000000000000      +------------------+  <=3D=3D TASK_S=
+IZE_MAX
+> > >                                |                  |
+> > >                                |    user space    |
+> > >                                |                  |
+> > >        0x0000000000000000      +------------------+
+> > >=20
+> > > Kernel is always above 0x8000000000000000 and user always
+> > > below, with a gap in-between. It leads to a 4 instructions sequence=
+:
+> > >=20
+> > >    80: 7c 69 1b 78     mr      r9,r3
+> > >    84: 7c 63 fe 76     sradi   r3,r3,63
+> > >    88: 7d 29 18 78     andc    r9,r9,r3
+> > >    8c: 79 23 00 4c     rldimi  r3,r9,0,1
+> > >=20
+> > > This sequence leaves r3 unmodified when it is below 0x8000000000000=
+000
+> > > and clamps it to 0x8000000000000000 if it is above.
+> > >=20
+> >=20
+> > This comment looks wrong: the second instruction converts r3 to a
+> > replicated sign bit of the address ((addr>0)?0:-1) if treating the
+> > address as signed. After that the code only modifies the MSB of r3. S=
+o I
+> > don't see how r3 could be unchanged from the original value...
+>=20
+> Unless I'm missing something, the above rldimi leaves the MSB of r3
+> unmodified and replaces all other bits by the same in r9.
+>=20
+> This is the code generated by GCC for the following:
+>=20
+> 	unsigned long mask =3D (unsigned long)((long)addr >> 63);
+>=20
+> 	addr =3D ((addr & ~mask) & (~0UL >> 1)) | (mask & (1UL << 63));
+>=20
+>=20
+> >=20
+> > OTOH, I believe the following 3 instructions sequence would work,
+> > input address (a) in r3, scratch value (tmp) in r9, both intptr_t:
+> >=20
+> >          sradi r9,r3,63  ; tmp =3D (a >=3D 0) ? 0L : -1L;
+> >          andc r3,r3,r9   ; a =3D a & ~tmp; (equivalently a =3D (a >=3D=
+ 0) ? a : 0)
+> >          rldimi r3,r9,0,1 ; copy MSB of tmp to MSB of a
+> >=20
+> > But maybe I goofed...
+> >=20
+>=20
+> From my understanding of rldimi, your proposed code would:
+> - Keep r3 unmodified when it is above 0x8000000000000000
+> - Set r3 to 0x7fffffffffffffff when it is below 0x8000000000000000
+>=20
+> Extract of ppc64 ABI:
+>=20
+> rldimi RA,RS,SH,MB
+>=20
+> The contents of register RS are rotated 64 left SH bits.
+> A mask is generated having 1-bits from bit MB
+> through bit 63=E2=88=92 SH and 0-bits elsewhere. The rotated
+> data are inserted into register RA under control of the
+> generated mask.
 
-ÔÚ 2025/08/25 17:17, Christoph Hellwig Ð´µÀ:
-> On Thu, Aug 21, 2025 at 05:37:15PM +0800, Yu Kuai wrote:
->> Fix bio splitting by the crypto fallback code
-> 
-> Yes.
-> 
->>
->> I'll take look at all the callers of bio_chain(), in theory, we'll have
->> different use cases like:
->>
->> 1) chain old -> new, or chain new -> old
->> 2) put old or new to current->bio_list, currently always in the tail,
->> we might want a new case to the head;
->>
->> Perhaps it'll make sense to add high level helpers to do the chain
->> and resubmit and convert all callers to use new helpers, want do you
->> think?
-> 
-> I don't think chaining really is problem here, but more how bios
-> are split when already in the block layer.  It's been a bit of a
-> source for problems, so I think we'll need to sort it out.  Especially
-> as the handling of splits for the same device vs devices below the
-> current one seems a bit problematic in general.
-> 
+Sorry, you are right, I got the polarity of the mask reversed in my
+head.
 
-I just send a new rfc verion to unify block layer and mdraid to use
-the same helper bio_submit_split(), and convert only that helper to
-insert split bio to the head of current->bio_list(). And probably
-blk-crypto-fallback can use this new helper as well.
 
-Can you take a look? This is the proper solution that I can think of
-for now.
+Once again I may goof, but I believe that the following sequence
+would work:
 
-Thanks,
-Kuai
+	sradi r9,r3,63
+	andc r3,r3,r9
+	rldimi r3,r9,63,0  ; insert LSB of r9 into MSB of R3
 
-> .
-> 
+Cheers,
+Gabriel
+ 
 
 
