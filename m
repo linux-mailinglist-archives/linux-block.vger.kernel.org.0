@@ -1,93 +1,98 @@
-Return-Path: <linux-block+bounces-26273-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26271-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54C35B37436
-	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 23:07:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD45DB37350
+	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 21:41:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 745667B751E
-	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 21:06:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49DFF5E85AB
+	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 19:41:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F9702F83B4;
-	Tue, 26 Aug 2025 21:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C4030CD9D;
+	Tue, 26 Aug 2025 19:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tLMhM2UN"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBD42F745D;
-	Tue, 26 Aug 2025 21:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.233.160.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E952A5661;
+	Tue, 26 Aug 2025 19:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756242467; cv=none; b=GLAm+n28FcGgQdAfhE8Yx4MjNb3GL82N3eOHUh5kP1ZYxLY8yOP+95rjpddcLMSb8VN+zht23Vtfbb611pcYCWJkE6U/B+9KC7/k4t5DLwrRwQhbZ/pOouIHvfC6yzA2Stp7+TY2hGzT6RRY4SntVlrTa7yVgQE6C1uyNKL1yy8=
+	t=1756237270; cv=none; b=kcU6p2ArxRvAtnZLDJRKH+jjrF1neXOlD2deR5w0tl+Y1fXUxajihZyz4xTcjyooQdYoqv/sAeDg3q2ikQvVoJZgfRfiQ1dKQfhhyJWIKb+UjoTu1mkkQDorplSHJOIX55DRooI2mcK6JS2SL0QWJs+hZGbzPFRStjIwH5GbHv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756242467; c=relaxed/simple;
-	bh=RQTsYZ1AgxLFnb7VlUK+eaCnvDmS7ejPqAXLXKB0OIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kkP1bz1rNN/Sz83ffRoJOsVDGy+kh3Ta5xd7UIWQJZwx+HuanPHy0nKZF6d+Wx6AkWJQbSp4goZ7LM1TKCV8eFuAAckXJAtmuiVCrdPGcFX8hOl/AJxSo2cb4g3qyZOUpjIfdfrIRYHDUXDrueFVEpax3LN2RzKj6vQJq3/GLfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk; spf=fail smtp.mailfrom=youngman.org.uk; arc=none smtp.client-ip=85.233.160.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=youngman.org.uk
-Received: from host86-131-189-159.range86-131.btcentralplus.com ([86.131.189.159] helo=[192.168.1.65])
-	by smtp.hosts.co.uk with esmtpa (Exim)
-	(envelope-from <antmbox@youngman.org.uk>)
-	id 1uqxZl-000000004ck-2zC9;
-	Tue, 26 Aug 2025 18:35:17 +0100
-Message-ID: <835fe512-4cff-4130-8b67-d30b91d95099@youngman.org.uk>
-Date: Tue, 26 Aug 2025 18:35:10 +0100
+	s=arc-20240116; t=1756237270; c=relaxed/simple;
+	bh=pB0HN5+AQjHtb2JgkDO+ZgAWnxex9FXJJaeFRpvCmWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=grlSm8nbhKEIWcv96tjlykv5YJty0EkXdnxfl9B8w47bUC/ECTkIpv+FcUu4mKXAyLNQI05zOPgoeBaP0pCy79GHbmUIsCSOvDQVvoZzdTWJE073zS5ZyfLYU3c/CeCj1zLrFda0f41DeeV+0Q5HjRswdMt0bGtgblVicM5fg/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tLMhM2UN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CXZHG7FeAOLOdb03rd+3Zpl+8D1DiDY/d4hTHKY6fqE=; b=tLMhM2UN+tFtFq/me9RYX9Ry4N
+	ZLFYOPNJDlPOeXHAENuvC6xLP+OdJYI7lc9H8OEOWi9UiN5RLcky/5CUBRBznFnZ6KHGPMYyeTcS6
+	vV2+YZVbTe3o+lsHsGETnLvtBva1cNmCaV6pdcntMCvIOwUceGiHBoTTWA59pzOb9fSoh7yayjYQW
+	K9wbPXqGA8LG++N7xJ2YyC+SSvQEYwLcO6fa+eBqu6c6BPuZF5i11STRG8+wDnYdzSvu+SKOS2i8K
+	y+V17UBijIjB1jEODonYhpqCAedvVkN+vaxSzzditWefHn+TObeP3XWCKO0s/+kEdQDVzJmqx8Gp1
+	Sm1t0+PA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uqzXT-00000008f9y-2mU8;
+	Tue, 26 Aug 2025 19:41:03 +0000
+Date: Tue, 26 Aug 2025 20:41:03 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/7] aoe: Stop calling page_address() in free_page()
+Message-ID: <aK4NzxmGZjKvsGz8@casper.infradead.org>
+References: <20250826193258.902608-1-vishal.moola@gmail.com>
+ <20250826193258.902608-3-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 4/7] md/raid10: convert read/write to use
- bio_submit_split()
-To: Yu Kuai <yukuai1@huaweicloud.com>, Christoph Hellwig <hch@infradead.org>
-Cc: colyli@kernel.org, hare@suse.de, tieren@fnnas.com, axboe@kernel.dk,
- tj@kernel.org, josef@toxicpanda.com, song@kernel.org,
- akpm@linux-foundation.org, neil@brown.name, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, John Garry <john.g.garry@oracle.com>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250825093700.3731633-1-yukuai1@huaweicloud.com>
- <20250825093700.3731633-5-yukuai1@huaweicloud.com>
- <aKxCJT6ul_WC94-x@infradead.org>
- <6c6b183a-bce7-b01c-8749-6e0b5a078384@huaweicloud.com>
- <aK1ocfvjLrIR_Xf2@infradead.org>
- <fe595b6a-8653-d1aa-0ae3-af559107ac5d@huaweicloud.com>
-Content-Language: en-GB
-From: anthony <antmbox@youngman.org.uk>
-In-Reply-To: <fe595b6a-8653-d1aa-0ae3-af559107ac5d@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250826193258.902608-3-vishal.moola@gmail.com>
 
-On 26/08/2025 10:14, Yu Kuai wrote:
->> Umm, that's actually a red flag.  If a device guarantees atomic behavior
->> it can't just fail it.  So I think REQ_ATOMIC should be disallowed
->> for md raid with bad block tracking.
->>
+On Tue, Aug 26, 2025 at 12:32:53PM -0700, Vishal Moola (Oracle) wrote:
+> free_page() should be used when we only have a virtual address. We
+> should call __free_page() directly on our page instead.
 > 
-> I agree that do not look good, however, John explained while adding this
-> that user should retry and fallback without REQ_ATOMIC to make things
-> work as usual.
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 
-Whether a device promises atomic write is orthogonal to whether that 
-write succeeds - it could fail for a whole host of reasons, so why can't 
-"this is too big to be atomic" just be another reason for failing?
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Yes you want to know *why* the write failed, if you can't pass that 
-back, then you have a problem, but if you can pass back the error "too 
-big for atomic write" then the caller can sort it out.
+Probably should have run ./scripts/get_maintainer.pl drivers/block/aoe/aoecmd.c
+Adding ccs.
 
-That then allows the driver - if it knows the block size of the device - 
-to manage atomic writes (in the sense that it can refuse writes that are 
-too large), even if the device doesn't claim to support it. It can just 
-force the caller to submit small enough blocks.
-
-Cheers,
-Wol
+>  drivers/block/aoe/aoecmd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+> index 6298f8e271e3..a9affb7c264d 100644
+> --- a/drivers/block/aoe/aoecmd.c
+> +++ b/drivers/block/aoe/aoecmd.c
+> @@ -1761,6 +1761,6 @@ aoecmd_exit(void)
+>  	kfree(kts);
+>  	kfree(ktiowq);
+>  
+> -	free_page((unsigned long) page_address(empty_page));
+> +	__free_page(empty_page);
+>  	empty_page = NULL;
+>  }
+> -- 
+> 2.51.0
+> 
+> 
 
