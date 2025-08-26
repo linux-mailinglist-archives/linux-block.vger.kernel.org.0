@@ -1,129 +1,100 @@
-Return-Path: <linux-block+bounces-26244-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26246-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E82B6B3549C
-	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 08:29:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5DF4B35625
+	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 09:54:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23E6D1B21916
-	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 06:28:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA064243598
+	for <lists+linux-block@lfdr.de>; Tue, 26 Aug 2025 07:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F10DF19E96D;
-	Tue, 26 Aug 2025 06:27:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EC22F49FD;
+	Tue, 26 Aug 2025 07:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XJPYCkI1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C5121A453;
-	Tue, 26 Aug 2025 06:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2379227E7EC;
+	Tue, 26 Aug 2025 07:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756189666; cv=none; b=OUDh8o7VF5V3KuPC1dynhzy2J1X80Xs4Yi5R6sYR3rdsTcDnQnZTBC1uMj3yMLyFifxUkDDJm0D/FGrUQdQ3WifETPgFPDXTVmlvA3SmVZ4AfjvHeH5utERA/KRGgwKyPuomOnYw9WlCzPqoLI5kg160bqM4HlFNlSQuB/pfz7U=
+	t=1756194870; cv=none; b=jnOrVV1j4tLm+HxUznqN1yXxBDY8v7sspD1D1WtWJwTTfhhQcTnUs1VS+rxpBMiDbGV42ASLAA7+7aU53ntEXkEqbXHY8PizxajjJhYS49cneLpUuryFPeKiCnKD0+IrK+CHdjgIsCBwTVzRlQ9b2JLz0FLny3auPcMp11nFJdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756189666; c=relaxed/simple;
-	bh=r0h+91TIIPBHTec6V3ZjgapP7MwF3HiLZxw0A69u1oQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bTZJVYxzvGiQ+JM3HIqIXGDySfmCm40t8LCsVCzd54s0p0h8/KMlKzZg0G5gXmb2cxAkfOQhWdOQ0G70MEsav6yFpxLKlaHl29f0HmmjK1sungxY8tqJpQ2LEZJkbG5iay3NkvyVdhBqnrxkqJdxvJjNg+rHZY7VwazDrMO565Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c9yQ55jk9zYQvf1;
-	Tue, 26 Aug 2025 14:27:41 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 557411A084D;
-	Tue, 26 Aug 2025 14:27:40 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCn8Y3YU61o3MNUAQ--.23294S3;
-	Tue, 26 Aug 2025 14:27:38 +0800 (CST)
-Subject: Re: [PATCH v3 0/2] blk-mq: fix update nr_requests regressions
-To: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, bvanassche@acm.org,
- ming.lei@redhat.com, nilay@linux.ibm.com, hare@suse.de
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250821060612.1729939-1-yukuai1@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <95389918-b809-f81b-5fd0-2e350154ca01@huaweicloud.com>
-Date: Tue, 26 Aug 2025 14:27:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1756194870; c=relaxed/simple;
+	bh=tPZ5eO8+915S84l1cBlowqpFwI9FLfn+yVU6PoYNhJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQc/LspBIt2uf9xoLfqjKzsOH/mWMmgsRH94oc5zJjVtoFWcpFTfTK+6e4r8wCIzh7RtokqdeCIJllug5a1JR5jWmNTX6eix9EL0J+lvrMJQmCakUmkzX1wAQGDPPWbgBIRokaccLhdI4ToLKdNIiAiOeRcZ8pu2+GVR5nAGFro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XJPYCkI1; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ZhRBEmozLyGOB9uB9XvPxf7VcUxvlYe4L+OsgeA0lLs=; b=XJPYCkI101c/29XbH5mbcZpUeX
+	aFp1lBXSb5ASbAzG2L9sXB6p3ZDYAWJY6CHAIyyhrEP3N+DTfdegs8+nDa2i43bvKMe8oFTPcxsxv
+	QlGh0QcX8TOzRUl1TJbygH2T3s9tqCONsh7GxfjRmrYEp4F4x1YoGIirtLUIh8QR/6J4L8Bu1GYjN
+	uva6R1mVjluouXJYS03GTl/lYuzAvhEBqpRm1bvHJ8zp4Q5g60Sd152twiTi0WlunHW+Cj8KJ8wtv
+	t2vYni9RcwNKgsqYz1VQgdYZfwmBooQFkNTPJqaqyuNq5Iap8D+TFC0j+6yA06hASv++KtyT+lbW4
+	typ/SOGQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uqoVZ-0000000AuhZ-2JWd;
+	Tue, 26 Aug 2025 07:54:21 +0000
+Date: Tue, 26 Aug 2025 00:54:21 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Christoph Hellwig <hch@infradead.org>, colyli@kernel.org, hare@suse.de,
+	tieren@fnnas.com, axboe@kernel.dk, tj@kernel.org,
+	josef@toxicpanda.com, song@kernel.org, akpm@linux-foundation.org,
+	neil@brown.name, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, johnny.chenyi@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH RFC 2/7] md/raid0: convert raid0_handle_discard() to use
+ bio_submit_split()
+Message-ID: <aK1oLSppbXNELKCX@infradead.org>
+References: <20250825093700.3731633-1-yukuai1@huaweicloud.com>
+ <20250825093700.3731633-3-yukuai1@huaweicloud.com>
+ <aKxBgNQXphpa1BNt@infradead.org>
+ <2984b719-f555-7588-fa2a-1f78d2691e8a@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250821060612.1729939-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCn8Y3YU61o3MNUAQ--.23294S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF4rtrWDJryrCrW8Cr45Wrg_yoW8Wry3pr
-	W3tFsIkr18Kr4xXF4fAw17Xr1rAw4kXw15uFsxtw1rJ3s09r1xGF10gF18WF9FqrWSgrsF
-	grn0q34DWw1UArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <2984b719-f555-7588-fa2a-1f78d2691e8a@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi, Jens
+On Tue, Aug 26, 2025 at 09:08:33AM +0800, Yu Kuai wrote:
+> åœ¨ 2025/08/25 18:57, Christoph Hellwig å†™é“:
+> > On Mon, Aug 25, 2025 at 05:36:55PM +0800, Yu Kuai wrote:
+> > > +		bio = bio_submit_split(bio,
+> > > +				zone->zone_end - bio->bi_iter.bi_sector,
+> > > +				&mddev->bio_set);
+> > 
+> > Do you know why raid0 and linear use mddev->bio_set for splitting
+> > instead of their own split bio_sets like raid1/10/5?  Is this safe?
+> > 
+> 
+> I think it's not safe, as mddev->bio_split pool size is just 2, reuse
+> this pool to split multiple times before submitting will need greate
+> pool size to make this work.
+> 
+> By the way, do you think it's better to increate disk->bio_split pool
+> size to 4 and convert all mdraid internal split to use disk->bio_split
+> directly?
 
-ÔÚ 2025/08/21 14:06, Yu Kuai Ð´µÀ:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Changes in v3:
->   - call depth_updated() directly in init_sched() method in patch 1;
->   - fix typos in patch 2;
->   - add review for patch 2;
-> Changes in v2:
->   - instead of refactor and cleanups and fix updating nr_requests
->   thoroughly, fix the regression in patch 2 the easy way, and dealy
->   refactor and cleanups to next merge window.
-> 
-> patch 1 fix regression that elevator async_depth is not updated correctly
-> if nr_requests changes, first from error path and then for mq-deadline,
-> and recently for bfq and kyber.
-> 
-> patch 2 fix regression that if nr_requests grow, kernel will panic due
-> to tags double free.
-> 
-> Yu Kuai (2):
->    blk-mq: fix elevator depth_updated method
->    blk-mq: fix blk_mq_tags double free while nr_requests grown
-> 
->   block/bfq-iosched.c   | 22 +++++-----------------
->   block/blk-mq-sched.h  | 11 +++++++++++
->   block/blk-mq-tag.c    |  1 +
->   block/blk-mq.c        | 23 ++++++++++++-----------
->   block/elevator.h      |  2 +-
->   block/kyber-iosched.c | 19 +++++++++----------
->   block/mq-deadline.c   | 16 +++-------------
->   7 files changed, 42 insertions(+), 52 deletions(-)
-> 
-
-Friendly ping, please consider this set in this merge window.
-
-BTW, I see that for-6.18/block branch was created, however, I have
-a pending set[1] for the next merge window that will have conflicts with
-this set, not sure if you want to rebase for-6.18/block with block-6.17
-or handle conflicts later for 6.18-rc1.
-
-[1] 
-https://lore.kernel.org/all/20250815080216.410665-1-yukuai1@huaweicloud.com/
-
-Thanks,
-Kuai
+I don't really know where that magic number 4 or even the current number
+comes from, but I think Jens might be amenable to a small increase with a
+good explanation.
 
 
