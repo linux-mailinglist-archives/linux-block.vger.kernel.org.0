@@ -1,117 +1,143 @@
-Return-Path: <linux-block+bounces-26297-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26299-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E802B37FA5
-	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 12:17:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37495B38129
+	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 13:36:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BBD95E4F2F
-	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 10:16:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BD56160476
+	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 11:36:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09AD634A337;
-	Wed, 27 Aug 2025 10:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC052F6561;
+	Wed, 27 Aug 2025 11:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lSlEYh2D";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G5IgJnA2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4QNr4JO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DB534A334
-	for <linux-block@vger.kernel.org>; Wed, 27 Aug 2025 10:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971152E1C78
+	for <linux-block@vger.kernel.org>; Wed, 27 Aug 2025 11:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289779; cv=none; b=jvpLhf64vN3vdEMIv0CKwYbO8vmLln7epA717S6ZpXN/8FATmo5xWrmiDu1WgUm49+mdG4MAY5JXQAcVdvTX1hyeu/6cDwNVO0cU6aFj1A4AD8jp/43BaRer5bUl1rrIIgTcBCPgsFBLzzt7aLs38U3yt04kz+24rPLuZm+Slq8=
+	t=1756294570; cv=none; b=eqdv5aKeZOcwY4rnb2goscR7WS7Br87eAWZwN3X54gQiAdiE/l3jtEznYpcBWyshACc4fgkWqPjgAEAZGhmodp4d87HGlmZ2tf5wnYgDv82gjPpasFtgF0Fffc+TGGci1GG1wjZC4BBKKaeQysbccOQMp4v7+K73dZ70pIewmeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289779; c=relaxed/simple;
-	bh=CZqe5rzTDS5ajZjIcC88VV1OoN4rTkwjNr3LOMmJSW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JDOik4XkQIo1z9CVdd4mle6waRLEIz69frD2zJjjc1fLoxwh5IhcRPu2rO1o5VCagpuZeRpAJj3gjT8Sg0KwOrqGhF4wnJ3EWw50uctxLpUaYy74L4wAJwi/HZRjmXV39lk2fgH2pg0z0T44eqFewaznl76/KjmyVfUhSikQmeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lSlEYh2D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G5IgJnA2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Wed, 27 Aug 2025 12:16:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756289776;
+	s=arc-20240116; t=1756294570; c=relaxed/simple;
+	bh=wgh29TBAWfK7IKN4tu05jI5GQ1jj7c3Y9FY4aM9NduY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TKffArmnc9dRYg5FLF1r9V5c1UQIplptxEH3Zslr3ZOS5zyN90hbcdSxUoGGvD5duwrFkJ56nqOjVFxryYXqRbnWd9+4JASci3YZRCR5ak9vD1dTcfqAirKMy4Uptqi61rxc4zFupt249HZHYdilPyqHMQn1YwMS6pEOxUwx4Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O4QNr4JO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756294567;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7z4kOkb9hJ5KDJ7AViQ8ws/d+x00zbISk9ncb+f0SBk=;
-	b=lSlEYh2DN9jgZYMsEqm8iUPctwZCanA05KGl62AiwDceD49ZYGCyfg/BRjtdVuCvzJGTWR
-	ckcA4Qcc2x+BTr2/PkeBdEdG2eBX6ZpAc0VCrYKp1JwtK6XWH2k/xgjOTLGfUIBkMhIVl7
-	7ftU3vwc2WngKYOEyUHI8cFAqRJePrWUByJWM6BpFskEYNJklQjAmNUB8OB5voPPbYwGNa
-	SWNiYW2DzEx7jzfruVDTQekht+jzQROqG1N/whAk47BuS/6vnyCVKwXAJywSmY8hBnDFRm
-	8SwYBDD88W1Rlukmg5vIikvM+fajAax8k2bk6BoRZOYA2XyJSFT2D/WeopFXZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756289776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7z4kOkb9hJ5KDJ7AViQ8ws/d+x00zbISk9ncb+f0SBk=;
-	b=G5IgJnA2BvwMrCwiHFriaLI2ml1hac0nZXXi99JSUtpruyXSPXQjcSZzAKG6Tha1gUKRjX
-	fbNMACPMH0NJTYAQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2] block: Increase BLK_DEF_MAX_SECTORS_CAP
-Message-ID: <20250827101614.K6_74JSa@linutronix.de>
-References: <20250618060045.37593-1-dlemoal@kernel.org>
- <175078375641.82625.9467584315092336312.b4-ty@kernel.dk>
- <20250827070705.4iWhHGPE@linutronix.de>
- <20250827073836.GA25169@lst.de>
- <20250827075221.6hTi-i7m@linutronix.de>
- <39ac5089-794c-4e50-a090-6dabf4a60575@kernel.org>
- <20250827084248.tLS5-C5i@linutronix.de>
- <ebd83628-162c-4f5e-9563-8713cbf5854e@kernel.org>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=39v9pRG04LvRBmUW/1LxWE2Bfz+SiAEdqQeLGr3S5f8=;
+	b=O4QNr4JO8SvfsaHPcnDlP29yZzVcmmDgK6zeqDst3YWDp75dGhNWHXtrd+SHKgdAYyh5Zm
+	lT43V9HChxUghH5YLr1r3ynz0joe78u3HrsABD7RlIMU0apDdOhlX0MGbfq70KwirJRShv
+	T8w1U1q1HBzWe2l16aMhUdDtqAC4AoU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-dKZKw90oNq2ZzKzLX-7iCA-1; Wed,
+ 27 Aug 2025 07:36:05 -0400
+X-MC-Unique: dKZKw90oNq2ZzKzLX-7iCA-1
+X-Mimecast-MFC-AGG-ID: dKZKw90oNq2ZzKzLX-7iCA_1756294564
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA6261955F29;
+	Wed, 27 Aug 2025 11:36:03 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.24])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 85AA730001A8;
+	Wed, 27 Aug 2025 11:36:02 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: "Martin K . Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org
+Cc: linux-block@vger.kernel.org,
+	Ming Lei <ming.lei@redhat.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] scsi: sr: Set rotational feature flag back
+Date: Wed, 27 Aug 2025 19:35:50 +0800
+Message-ID: <20250827113550.2614535-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ebd83628-162c-4f5e-9563-8713cbf5854e@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 2025-08-27 18:01:58 [+0900], Damien Le Moal wrote:
-> Yep, looks like it.
-> What is the driver used for that "PowerEdge R6525 which exposes a "DELLBOSS VD"
-> device with firmware MV.R00-0" ? Is it the regular ahci driver ?
-> If yes, we can quirk it to limit the max command size, but we would need to
-> know what the limit is. That means repeating that test with varying max command
-> sise (max_sectors_kb) to try to figure out the threshold.
+Set rotational feature flag back for cd-rom which is really rotational disk,
+and the flag is `cleared` since commit bd4a633b6f7c ("block: move the nonrot
+flag to queue_limits"). And this way breaks some applications.
 
-issued 'dd if=/dev/sda of=/dev/null bs=4M count=1 iflag=direct'
+Move queue limits configuration from get_sectorsize() to
+sr_revalidate_disk(), so that it is more readable to set rotational
+feature flag and sector size limit in sr_revalidate_disk().
 
-| echo 3584 > /sys/block/sda/queue/max_sectors_kb
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: bd4a633b6f7c ("block: move the nonrot flag to queue_limits")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/scsi/sr.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-survives
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index b17796d5ee66..add13e306898 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -475,13 +475,21 @@ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt)
+ 
+ static int sr_revalidate_disk(struct scsi_cd *cd)
+ {
++	struct request_queue *q = cd->device->request_queue;
+ 	struct scsi_sense_hdr sshdr;
++	struct queue_limits lim;
++	int sector_size;
+ 
+ 	/* if the unit is not ready, nothing more to do */
+ 	if (scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr))
+ 		return 0;
+ 	sr_cd_check(&cd->cdi);
+-	return get_sectorsize(cd);
++	sector_size = get_sectorsize(cd);
++
++	lim = queue_limits_start_update(q);
++	lim.logical_block_size = sector_size;
++	lim.features |= BLK_FEAT_ROTATIONAL;
++	return queue_limits_commit_update_frozen(q, &lim);
+ }
+ 
+ static int sr_block_open(struct gendisk *disk, blk_mode_t mode)
+@@ -721,10 +729,8 @@ static int sr_probe(struct device *dev)
+ 
+ static int get_sectorsize(struct scsi_cd *cd)
+ {
+-	struct request_queue *q = cd->device->request_queue;
+ 	static const u8 cmd[10] = { READ_CAPACITY };
+ 	unsigned char buffer[8] = { };
+-	struct queue_limits lim;
+ 	int err;
+ 	int sector_size;
+ 	struct scsi_failure failure_defs[] = {
+@@ -795,9 +801,7 @@ static int get_sectorsize(struct scsi_cd *cd)
+ 		set_capacity(cd->disk, cd->capacity);
+ 	}
+ 
+-	lim = queue_limits_start_update(q);
+-	lim.logical_block_size = sector_size;
+-	return queue_limits_commit_update_frozen(q, &lim);
++	return sector_size;
+ }
+ 
+ static int get_capabilities(struct scsi_cd *cd)
+-- 
+2.47.1
 
-| echo 4096 > /sys/block/sda/queue/max_sectors_kb
-dies after a few attempts.
-
-| lrwxrwxrwx 1 root root 0 Aug 27 11:01 0:0:0:0 -> ../../../devices/pci0000:a0/0000:a0:03.1/0000:a1:00.0/ata1/host0/target0:0:0/0:0:0:0
-| a1:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 x2 4-port SATA 6 Gb/s RAID Controller (rev 11)
-|         Subsystem: Dell BOSS-S1 Adapter
-|         Kernel driver in use: ahci
-|         Kernel modules: ahci
-
-so a Marvell one. Interesting.
-
-> And maybe contact Dell support too if this is still a supported device.
-> (I have zero experience with this, no idea what that DELLBOSS VD is...)
-
-There are two physical disks which are behind this controller and
-exposed as one virtual device after applying some raid magic. I have no
-idea if this limitation is due to the physical device or the controller.
-
-Now, how do I put this. The disk behind it is an INTEL SSDSCKKB240G8R.
-The firmware XC31DL6P exposed this problem. After an update to XC31DL6R
-the problem is gone.
-
-Sebastian
 
