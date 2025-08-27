@@ -1,175 +1,142 @@
-Return-Path: <linux-block+bounces-26296-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26298-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA658B37E4C
-	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 11:05:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A63FB37FBA
+	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 12:19:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39B9C3A30E8
-	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 09:04:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 572F31B684E1
+	for <lists+linux-block@lfdr.de>; Wed, 27 Aug 2025 10:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34AE12D2485;
-	Wed, 27 Aug 2025 09:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB34341ABD;
+	Wed, 27 Aug 2025 10:19:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8a6eFvL"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sx5RwQl4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IydAXml5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sx5RwQl4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IydAXml5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFEB2F3C0E
-	for <linux-block@vger.kernel.org>; Wed, 27 Aug 2025 09:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3CB3164B4
+	for <linux-block@vger.kernel.org>; Wed, 27 Aug 2025 10:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756285491; cv=none; b=KFa2HkTY+90EYeUKqfJ/XdFZOuVcsin5ThGtRd614U1qQiBNZjVA8oodIp6lv4OTkWyXz5jEizzCw1Et0mjcpYKnchq4cfgE/r1XXRB3Gcezr05KEb2OBq9DQur8JYcBVAm04kaysrnV/pyb0ZeU44SZox+RxZlGVSJzTP7mNgI=
+	t=1756289966; cv=none; b=W3XwLDZZEH563Z4+y8w1AM1DsHyTPKMxkLNZ2rNNfp43FlOifgFeLy/5nH5fjIi3W1th7b7ZOKrcwVApo4Nttrnwg7Jl/tZczJ2mKpRwlvhgmj1JR103XAoEvfY3Ngo+XkYAsRQf/cMucQNyyASa784DWnuALqX8TtEopfo6/I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756285491; c=relaxed/simple;
-	bh=h8Nh6vjagkTKh4v7APxW+XLaKYxIafmSdsb9jWC3U8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ulywh8biypliRWYKN6aom3Qo+8bNT6UitTNjyLah6hzytifw9DI5h4G1qAColZuYryAIUpm/zA0YjlMrLXrh8VPKgh+Ul4bw+kS8bwrGqwNhVrUzRw8e8iTm41pNY18ov1AwpTzN+mhJ9ILp9lTceV6agrpKw8Ruoc10f2KVb5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8a6eFvL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0727FC4CEEB;
-	Wed, 27 Aug 2025 09:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756285490;
-	bh=h8Nh6vjagkTKh4v7APxW+XLaKYxIafmSdsb9jWC3U8E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h8a6eFvL7RFwGj+3incQ3Jd/LRsY663tu2RxCs0Lm/DKKuJH7ffregwUuU442sifv
-	 2z04h5z5t4Ao/y8SOw1ActdrBZNzseCZE00tMZlvPHOR95mQeGrnSzpC2SE2+VFKAN
-	 vsFcJG+caYW3gCWSSkxB032YdX1gTgQF1fcJ28pySfIqPVZHPe5iOtIgYgVonYHD2u
-	 CV1q8sqe9NFtYDC9dhCDn94BXyfIou3ELu8tEVGGrf2h76zaYKN8VmnrDUZT31FwZu
-	 gkRVQZS4ulsMiri2YXCGu7y/casAkudFkaedIoCxLUe12bpcHoChQIBeVJX4ppfxg6
-	 AL2B+WObD8n5Q==
-Message-ID: <ebd83628-162c-4f5e-9563-8713cbf5854e@kernel.org>
-Date: Wed, 27 Aug 2025 18:01:58 +0900
+	s=arc-20240116; t=1756289966; c=relaxed/simple;
+	bh=dCfxmqI5NQievIDHdaUucZ8EXZqp2k9O4S3tudNYjfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hB2zXJ1cdpXcnR4Q0qTW4ULptZG4Ysb2aPm+CCxpB01Vbl6nrlzv1bdfejdiSxVWULxC7ykgkOzB/qrDj8boh8Vfp/5VHqnN/uX4oOlwDO4zDOPvewn17Q3Qgpi++KCawWGC32MTYHvWgsSc1rkGZtvCoFg6fWbHzzOOA59pgJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sx5RwQl4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IydAXml5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sx5RwQl4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IydAXml5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1304D22221;
+	Wed, 27 Aug 2025 10:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756289427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NxE5rKnj5TjaBsXbpbII/rsOANqwX+dNrTnexSalI0E=;
+	b=Sx5RwQl4mdrvGKXWphXUQ0hvtykvK3pbomkWvnnY3C/J3xN+x2ZHAOSBJLxC4GLt4+IHP6
+	fhIb397Tjh7ZItBttJVZrcn5W6MbblkxSPnUuMkh2m4qZnlZylUmCvuzsNJNQDI/fgYDPT
+	CxFKOH1aH8JG61b+9eFz6FNE5WZULgs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756289427;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NxE5rKnj5TjaBsXbpbII/rsOANqwX+dNrTnexSalI0E=;
+	b=IydAXml5RA8wO5fCwvDAMvtOzsuRqzJS78ZPyZQjET5bKCdXt3mdY6VsEVH2Z8wcR9Zny6
+	ul1gwma8lALLX1Cg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756289427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NxE5rKnj5TjaBsXbpbII/rsOANqwX+dNrTnexSalI0E=;
+	b=Sx5RwQl4mdrvGKXWphXUQ0hvtykvK3pbomkWvnnY3C/J3xN+x2ZHAOSBJLxC4GLt4+IHP6
+	fhIb397Tjh7ZItBttJVZrcn5W6MbblkxSPnUuMkh2m4qZnlZylUmCvuzsNJNQDI/fgYDPT
+	CxFKOH1aH8JG61b+9eFz6FNE5WZULgs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756289427;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NxE5rKnj5TjaBsXbpbII/rsOANqwX+dNrTnexSalI0E=;
+	b=IydAXml5RA8wO5fCwvDAMvtOzsuRqzJS78ZPyZQjET5bKCdXt3mdY6VsEVH2Z8wcR9Zny6
+	ul1gwma8lALLX1Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 038D713310;
+	Wed, 27 Aug 2025 10:10:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Z+iAO5LZrmg1JQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 27 Aug 2025 10:10:26 +0000
+Date: Wed, 27 Aug 2025 12:10:26 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, 
+	"nbd@other.debian.org" <nbd@other.debian.org>, "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: blktests failures with v6.17-rc1 kernel
+Message-ID: <ff748a3f-9f07-4933-b4b3-b4f58aacac5b@flourine.local>
+References: <suhzith2uj75uiprq4m3cglvr7qwm3d7gi4tmjeohlxl6fcmv3@zu6zym6nmvun>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] block: Increase BLK_DEF_MAX_SECTORS_CAP
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>
-References: <20250618060045.37593-1-dlemoal@kernel.org>
- <175078375641.82625.9467584315092336312.b4-ty@kernel.dk>
- <20250827070705.4iWhHGPE@linutronix.de> <20250827073836.GA25169@lst.de>
- <20250827075221.6hTi-i7m@linutronix.de>
- <39ac5089-794c-4e50-a090-6dabf4a60575@kernel.org>
- <20250827084248.tLS5-C5i@linutronix.de>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20250827084248.tLS5-C5i@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <suhzith2uj75uiprq4m3cglvr7qwm3d7gi4tmjeohlxl6fcmv3@zu6zym6nmvun>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On 8/27/25 5:42 PM, Sebastian Andrzej Siewior wrote:
-> On 2025-08-27 17:01:49 [+0900], Damien Le Moal wrote:
->> Don't read a file. Read the disk directly. So please use "if=/dev/sdX".
->> Also, there is no way that a 1GiB I/O will be done as a single large command.
->> That is not going to happen.
->>
->> With 345c5091ffec reverted, what does:
->>
->> cat /sys/block/sdX/queue/max_sectors_kb
->> cat /sys/block/sdX/queue/max_hw_sectors_kb
->>
->> say ?
+On Wed, Aug 13, 2025 at 10:50:34AM +0000, Shinichiro Kawasaki wrote:
+> #4: nvme/061 (fc transport)
 > 
-> | # cat /sys/block/sda/queue/max_sectors_kb
-> | 1280
-> | # cat /sys/block/sda/queue/max_hw_sectors_kb
-> | 32767
+>     The test case nvme/061 sometimes fails for fc transport due to a WARN and
+>     refcount message "refcount_t: underflow; use-after-free." Refer to the
+>     report for the v6.15 kernel [5].
 > 
->> Likely, the first one is "1280". So before running dd, you need to do:
->>
->> echo 4096 > /sys/block/sdX/queue/max_sectors_kb
->>
->> and then
->>
->> dd if=/dev/sdX of=/dev/null bs=4M count=1 iflag=direct
-> 
-> | # echo 4096 > /sys/block/sda/queue/max_sectors_kb
-> | # cat /sys/block/sda/queue/max_sectors_kb 
-> | 4096
-> | # dd if=/dev/sda of=/dev/null bs=4M count=1 iflag=direct
-> | 1+0 records in
-> | 1+0 records out
-> | 4194304 bytes (4.2 MB, 4.0 MiB) copied, 0.00966543 s, 434 MB/s
-> 
-> It passed.
-> After a reboot I issued the same dd command five times and all came
-> back. Then I increased the sector size and issued it again. The first
-> two came back and then
-> 
-> | root@zen3:~# dd if=/dev/sda of=/dev/null bs=4M count=1 iflag=direct
-> | 1+0 records in
-> | 1+0 records out
-> | 4194304 bytes (4.2 MB, 4.0 MiB) copied, 33.1699 s, 126 kB/s
-> | root@zen3:~# dd if=/dev/sda of=/dev/null bs=4M count=1 iflag=direct
-> | 1+0 records in
-> | 1+0 records out
-> | 4194304 bytes (4.2 MB, 4.0 MiB) copied, 57.3711 s, 73.1 kB/s
-> | root@zen3:~# dd if=/dev/sda of=/dev/null bs=4M count=1 iflag=direct
-> | 1+0 records in
-> | 1+0 records out
-> | 4194304 bytes (4.2 MB, 4.0 MiB) copied, 0.0264171 s, 159 MB/s
-> 
-> They all came back but as you see on the speed side, it took while. And
-> I see
-> | [  191.641315] ata1.00: exception Emask 0x0 SAct 0x800000 SErr 0x0 action 0x6 frozen
-> | [  191.648839] ata1.00: failed command: READ FPDMA QUEUED
-> | [  191.653995] ata1.00: cmd 60/00:b8:00:00:00/20:00:00:00:00/40 tag 23 ncq dma 4194304 in
-> |                         res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
-> | [  191.669306] ata1.00: status: { DRDY }
-> | [  191.672981] ata1: hard resetting link
-> | [  192.702763] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> | [  192.702964] ata1.00: Security Log not supported
-> | [  192.703207] ata1.00: Security Log not supported
-> | [  192.703215] ata1.00: configured for UDMA/133
-> | [  192.703282] ata1: EH complete
-> | [  248.985303] ata1.00: exception Emask 0x0 SAct 0x10001 SErr 0x0 action 0x6 frozen
-> | [  248.992733] ata1.00: failed command: READ FPDMA QUEUED
-> | [  248.997889] ata1.00: cmd 60/00:00:00:00:00/20:00:00:00:00/40 tag 0 ncq dma 4194304 in
-> |                         res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
-> | [  249.013107] ata1.00: status: { DRDY }
-> | [  249.016775] ata1.00: failed command: WRITE FPDMA QUEUED
-> | [  249.022011] ata1.00: cmd 61/08:80:40:d1:18/00:00:00:00:00/40 tag 16 ncq dma 4096 out
-> |                         res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
+>     [5]
+>     https://lore.kernel.org/linux-block/2xsfqvnntjx5iiir7wghhebmnugmpfluv6ef22mghojgk6gilr@mvjscqxroqqk/
 
-The drive is not responding. So likely a drive/adapter FW bug.
+This one might be fixed with
 
-> | [  249.037135] ata1.00: status: { DRDY }
-> | [  249.040802] ata1: hard resetting link
-> | [  250.076059] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> | [  250.076258] ata1.00: Security Log not supported
-> | [  250.076471] ata1.00: Security Log not supported
-> | [  250.076478] ata1.00: configured for UDMA/133
-> | [  250.076537] ata1: EH complete
-> 
->> And you will likely trigger the issue, even with 345c5091ffec reverted.
->> The issue is likely caused by a FW bug handling large commands.
->> Please try.
-> Done. It seems the firmware is not always dedicated to fulfill larger
-> requests.
-
-Yep, looks like it.
-What is the driver used for that "PowerEdge R6525 which exposes a "DELLBOSS VD"
-device with firmware MV.R00-0" ? Is it the regular ahci driver ?
-If yes, we can quirk it to limit the max command size, but we would need to
-know what the limit is. That means repeating that test with varying max command
-sise (max_sectors_kb) to try to figure out the threshold.
-
-And maybe contact Dell support too if this is still a supported device.
-(I have zero experience with this, no idea what that DELLBOSS VD is...)
-
-
--- 
-Damien Le Moal
-Western Digital Research
+https://lore.kernel.org/linux-nvme/20250821-fix-nvmet-fc-v1-1-3349da4f416e@kernel.org/
 
