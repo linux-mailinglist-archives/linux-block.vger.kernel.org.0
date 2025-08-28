@@ -1,137 +1,112 @@
-Return-Path: <linux-block+bounces-26368-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26370-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 954DBB394B0
-	for <lists+linux-block@lfdr.de>; Thu, 28 Aug 2025 09:08:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 943E4B394DE
+	for <lists+linux-block@lfdr.de>; Thu, 28 Aug 2025 09:19:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 835EA1C24FB2
-	for <lists+linux-block@lfdr.de>; Thu, 28 Aug 2025 07:09:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D33B6188F4BA
+	for <lists+linux-block@lfdr.de>; Thu, 28 Aug 2025 07:19:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7562F531C;
-	Thu, 28 Aug 2025 07:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686102D6E71;
+	Thu, 28 Aug 2025 07:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRN/lRAy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F362E0B55;
-	Thu, 28 Aug 2025 07:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEB6285C8F;
+	Thu, 28 Aug 2025 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756364786; cv=none; b=GsXF3RsqHDkDry3qmhSG3aflUHXIdeYcCBkPyd/bI+4DerY5hOKuRvx004LWJnkVI4MWlkQOHq2Kk9FDU6w0xV0ll2hzYX5BYQk6VJgNjkgdGA7MjDSI5F3fJsIzRau6g0br3KpEXCOkKhR18jxqKLkT3Jk58E5eMuVJ2b9p5vg=
+	t=1756365526; cv=none; b=WtvOIalSdLr4EusTzxtmJoQ83Wg5G38Gs9QG7R553shhRW8y4G6wFHoU4N5PkM+wYHGbVp3CH7Bnp1B12iNZBdwOPU59gLt9Arn5bmQDS4eTBEzuu6+4OJnq1aNCyPjdbGdsINIDSY+jB77UsTfkcWkbxyJoLdPn0bVnGFGfDNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756364786; c=relaxed/simple;
-	bh=WKYbnLBmIvalKSVpovZvWe4Z3P0Ec5QsPs9wHco190E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EMwDhqUnihVymR3DOVjcutHgAo7E7DEfd/T9VZccknvIklGYnEjly6mGQplDXS3uvcbM0kS9dxaNVYMERFp+v5FsXH/fZhRr7z4ByfFNKgTGD3Ct986sWHboTr3p03UFTGwq3ksdbCdYW38gZTPFmlkdkJk/JCWBw8dOdYjd6kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cCC9n09k9zKHMcp;
-	Thu, 28 Aug 2025 15:06:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id AD7B31A171E;
-	Thu, 28 Aug 2025 15:06:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCn8Izh_69o_X89Ag--.14658S14;
-	Thu, 28 Aug 2025 15:06:20 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	song@kernel.org,
-	neil@brown.name,
-	akpm@linux-foundation.org,
-	hch@infradead.org,
-	colyli@kernel.org,
-	hare@suse.de,
-	tieren@fnnas.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH RFC v2 10/10] md/raid0: convert raid0_make_request() to use bio_submit_split_bioset()
-Date: Thu, 28 Aug 2025 14:57:33 +0800
-Message-Id: <20250828065733.556341-11-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250828065733.556341-1-yukuai1@huaweicloud.com>
-References: <20250828065733.556341-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1756365526; c=relaxed/simple;
+	bh=cA5MEAXP03zgaSoPxfhsQEUE2K98DB+Y39M3JJff4ZE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=SmuZn4O9ScyIPqcCXqyPO4V3VFELplF0pKJjVTBS/UbNUOZ0oykIqjrmxYAk11cMPUrPmmlADvbJakCp5tK+pDK9SUA2BtKFoxc+0RTFUdmFVhpUb8MCmK6oY3EkUphLM9l/dB0adwGkTpA/qab6t7AEF/ItTYUvkjgTyiQL5jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRN/lRAy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206CFC4CEF4;
+	Thu, 28 Aug 2025 07:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756365525;
+	bh=cA5MEAXP03zgaSoPxfhsQEUE2K98DB+Y39M3JJff4ZE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=nRN/lRAyvpRJH454PxRYY42feW1jFX7UY6o9HXLD3ibezaBcrl7ViwrsPZySLqk1q
+	 jSDVpUv7F3QCGFGjQyZsPZwshYrFkfDBN/CP99fx3eTc/kJP2hVThBF+JQtShFeaf1
+	 TM8FM/qu426/8PAZtk2prUMcl4R2rmhS9O0EK2jPtyELmrq9iDuu4NMCtYqBp67mnn
+	 INi9cRwtl0/zwqwRWdXgX98UhuLSEvqzIz619FN1Cjma8+GVd3zKpFzwBRE05ahzDG
+	 876/psvv67SgRkv4TQEJX9VkhlqrV04Mizhrh9jfPVzXKpv/ukczRAT/B2QrEDmdqh
+	 /Ti2rXxvLqE3Q==
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCn8Izh_69o_X89Ag--.14658S14
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1rJF1DAw1xXw1xCF4fuFg_yoW8Gry7pw
-	43WF4Sq3yUJFZYgwsrXa4qyas5AFyjgrW8KFZ8X3s5ur1Ivr9Fkr4Yg34rtFy5ArWrCF98
-	tw1vyrn8C3WUJrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0pRQJ5wUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 28 Aug 2025 09:18:40 +0200
+Message-Id: <DCDVM56I5WPT.2L24NI3SBBIHU@kernel.org>
+Subject: Re: [PATCH v5 4/5] rust: block: convert `block::mq` to use
+ `Refcount`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Gary Guo" <gary@garyguo.net>
+Cc: "Gary Guo" <gary@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Will Deacon" <will@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Tamir Duberstein"
+ <tamird@gmail.com>, "Francesco Zardi" <frazar00@gmail.com>, "Antonio
+ Hickey" <contact@antoniohickey.com>, <rust-for-linux@vger.kernel.org>,
+ "David Gow" <davidgow@google.com>, <linux-block@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250723233312.3304339-1-gary@kernel.org>
+ <20250723233312.3304339-5-gary@kernel.org>
+ <DC0AUNNAKGJI.4KX0TW6LG83Y@kernel.org>
+ <20250827205121.59e4cc32.gary@garyguo.net>
+In-Reply-To: <20250827205121.59e4cc32.gary@garyguo.net>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Wed Aug 27, 2025 at 9:51 PM CEST, Gary Guo wrote:
+> On Tue, 12 Aug 2025 10:17:44 +0200
+> "Benno Lossin" <lossin@kernel.org> wrote:
+>> On Thu Jul 24, 2025 at 1:32 AM CEST, Gary Guo wrote:
+>> > @@ -34,6 +36,18 @@ fn as_ptr(&self) -> *mut bindings::refcount_t {
+>> >          self.0.get()
+>> >      }
+>> > =20
+>> > +    /// Get the underlying atomic counter that backs the refcount.
+>> > +    ///
+>> > +    /// NOTE: This will be changed to LKMM atomic in the future. =20
+>>=20
+>> Can we discourage using this function a bit more in the docs? At least
+>> point people to try other ways before reaching for this, since it allows
+>> overflowing & doesn't warn on saturate etc.
+>
+> Would this additional doc comment be good enough for you?
+>
+> /// NOTE: usage of this function is discouraged unless there is no way
+> /// to achieve the desired result using APIs in `refcount.h`. If an API
+> /// in `refcount.h` does not currently contain a binding, please
+> /// consider adding a binding for it instead.
 
-Currently, raid0_make_request() will remap the original bio to underlying
-disks to prevent disordered IO. Now that bio_submit_split_bioset() will put
-original bio to the head of current->bio_list, it's safe converting to use
-this helper and bio will still be ordered.
+I'd like to stress that the atomic doesn't have the same protections as
+the refcount type, how about:
 
-On the one hand unify bio split code; On the other hand fix missing
-blkcg_bio_issue_init() and trace_block_split() for split IO.
+    /// NOTE: usage of this function is discouraged as it can circumvent th=
+e protections offered by
+    /// `refcount.h`. If there is no way to achieve the result using APIs i=
+n `refcount.h`, then this
+    /// function can be used. Otherwise consider adding a binding for the r=
+equired API.
 
-CC: Jan Kara <jack@suse.cz>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/raid0.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 4dcc5133d679..8773f633299e 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -607,17 +607,9 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		 : sector_div(sector, chunk_sects));
- 
- 	if (sectors < bio_sectors(bio)) {
--		struct bio *split = bio_split(bio, sectors, GFP_NOIO,
--					      &mddev->bio_set);
--
--		if (IS_ERR(split)) {
--			bio->bi_status = errno_to_blk_status(PTR_ERR(split));
--			bio_endio(bio);
-+		bio = bio_submit_split_bioset(bio, sectors, &mddev->bio_set);
-+		if (!bio)
- 			return true;
--		}
--		bio_chain(split, bio);
--		raid0_map_submit_bio(mddev, bio);
--		bio = split;
- 	}
- 
- 	raid0_map_submit_bio(mddev, bio);
--- 
-2.39.2
-
+Cheers,
+Benno
 
