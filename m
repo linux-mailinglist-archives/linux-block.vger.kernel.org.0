@@ -1,294 +1,186 @@
-Return-Path: <linux-block+bounces-26517-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26519-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D0CDB3DCDC
-	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 10:45:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CCD2B3DD89
+	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 11:04:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61F903A6A0B
-	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 08:45:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F16621A806E5
+	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 09:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F7B22FB972;
-	Mon,  1 Sep 2025 08:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3B00305071;
+	Mon,  1 Sep 2025 09:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jBTY4D2k"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kEqJM6ny";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5FxxqrJO";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kEqJM6ny";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5FxxqrJO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B45A2FB62E
-	for <linux-block@vger.kernel.org>; Mon,  1 Sep 2025 08:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147E430506F
+	for <linux-block@vger.kernel.org>; Mon,  1 Sep 2025 09:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756716310; cv=none; b=c7skFusmco4N+08ljmc8wIWrdsJKVv9JLIdaFmMOxySCZsItbKJJ7jUmRxRj2N1d+I9Kq05vAgwJ3DWcVQC7xYM6YzQdIa4NbaOmzmycwM0r24vmAZYEz5XeXRmereAFn50Ovhx4trvI4SPeczEit3HOo4yTae6Zcum0SNq9SaE=
+	t=1756717342; cv=none; b=FN6ANHnv15zmMcmr4nEp1ZK+4PnnT+CeQzMFfY8tmTYs6I59+aAjz7dtu4y6yl0z1EqEMy86s9YuOc+VXGPdvMV/tts+E88qhQYWsc0Y7z6/GXnr5VaQcYTUoU6H9caeG6X7seCDYQe7pvl3p0fs1X/teETdspFtTxbF0LyL86M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756716310; c=relaxed/simple;
-	bh=AhlvBVxDwZhYCV6Gj7StDOKIz3Ja9P9Dxs64SVFXK1w=;
+	s=arc-20240116; t=1756717342; c=relaxed/simple;
+	bh=/I7E2fk1T0Aqgi6iRHMY63UidkJpRR/LHgnlOMO4SIk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBis0sWNgKfFx/JaoZvNaf4aVsycGsJD3QUcuBXouMtcfpygQuryCqiTImSZwJ7vCARNygBTSrDm8APQsJx/1lEw/+/D37CD+SSIDBemQ4YNwgfjfMJEB0MWOhR2Ox/syYYK07EprxbwIFWS25YAFmHaXmJXOTOSMJuuO+QClL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jBTY4D2k; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756716307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/uvxiJPSJQkMyA7rnxksrv/oRovVQH2ELYUFsb6+os4=;
-	b=jBTY4D2krb6ri8LQ+Ri+XPkKGNz1diE0HHUrvnHtPfW6I4Q061lgRvwPSVtrZo0cllHg1B
-	tCYETyiqMU92IhxUnSlctsELinKvpBKJMlYLz8OJbqT7Muj06Neyh0xh8OZ8xMLYwCZmOC
-	tBNhOkvZgbwNCTg0/tp3XCg74Xr+Zt4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-CYjqnNLCP7CpS6bD0yCp1A-1; Mon,
- 01 Sep 2025 04:45:05 -0400
-X-MC-Unique: CYjqnNLCP7CpS6bD0yCp1A-1
-X-Mimecast-MFC-AGG-ID: CYjqnNLCP7CpS6bD0yCp1A_1756716304
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	 Content-Type:Content-Disposition:In-Reply-To; b=h24Z9IEqFuM09c07on1OR3k8RAuqWxwpfkPZnUsu2rFZFDex5U8UL5KDDthKKICaJXW0uzKXYUm1cibBcozmNFkP8wnaFuhatSMc1s0jzlDJAy7gKjASq7bKVPiyhryfXSdRi0KMpQMcdkiU8ClfxUgCQwpXRaqRRVxoEP+FinA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kEqJM6ny; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5FxxqrJO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kEqJM6ny; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5FxxqrJO; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99F9D195E90A;
-	Mon,  1 Sep 2025 08:45:04 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.133])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DEDBE1955EA4;
-	Mon,  1 Sep 2025 08:45:00 +0000 (UTC)
-Date: Mon, 1 Sep 2025 16:44:55 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Uday Shankar <ushankar@purestorage.com>,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH V2 1/2] ublk: avoid ublk_io_release() called after ublk
- char dev is closed
-Message-ID: <aLVdB4q_Bk5Ypzcr@fedora>
-References: <20250825124827.2391820-1-ming.lei@redhat.com>
- <20250825124827.2391820-2-ming.lei@redhat.com>
- <CADUfDZp1-Tg+Gp+9kaudFNYyz3mLjNn+v=H3wKLEoKDftcX1wg@mail.gmail.com>
- <aK1xLM9TLUBxEmmC@fedora>
- <CADUfDZqJ8PN8FT50gg0grJ+Kj+gOaosRctS_dimWAaRC-myfRw@mail.gmail.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3047C1F388;
+	Mon,  1 Sep 2025 09:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756717336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NNItQtiBSkxwIsvVF62gD4BFcFmFvPJ0ltQD6wGBjM=;
+	b=kEqJM6nywEAUgYQb4LPOCS9x9CjMVjfT2pnsMCSV9DTx/jgNqP8IZLV2t+plzC1sP9wMaL
+	GOhKuDM0yWqpfeHp0cfONI9h9TLcBAWteTn9V0Or7jy/w+iMKKO2kGC6yzLNhG0hF6mwka
+	bdi0JTTtuJOsZkiBNVwarHRzIqGBH18=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756717336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NNItQtiBSkxwIsvVF62gD4BFcFmFvPJ0ltQD6wGBjM=;
+	b=5FxxqrJOXYxi7cIuJhJkfSbGklr2EzNlJDQByDz2Au4l+Js2PvkmKMv5kolMeUygTW4FHp
+	T+tOdYG8QsLfJEDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756717336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NNItQtiBSkxwIsvVF62gD4BFcFmFvPJ0ltQD6wGBjM=;
+	b=kEqJM6nywEAUgYQb4LPOCS9x9CjMVjfT2pnsMCSV9DTx/jgNqP8IZLV2t+plzC1sP9wMaL
+	GOhKuDM0yWqpfeHp0cfONI9h9TLcBAWteTn9V0Or7jy/w+iMKKO2kGC6yzLNhG0hF6mwka
+	bdi0JTTtuJOsZkiBNVwarHRzIqGBH18=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756717336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NNItQtiBSkxwIsvVF62gD4BFcFmFvPJ0ltQD6wGBjM=;
+	b=5FxxqrJOXYxi7cIuJhJkfSbGklr2EzNlJDQByDz2Au4l+Js2PvkmKMv5kolMeUygTW4FHp
+	T+tOdYG8QsLfJEDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 200681378C;
+	Mon,  1 Sep 2025 09:02:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZJoTBxhhtWgnZgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 01 Sep 2025 09:02:16 +0000
+Date: Mon, 1 Sep 2025 11:02:15 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, 
+	"nbd@other.debian.org" <nbd@other.debian.org>, "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: blktests failures with v6.17-rc1 kernel
+Message-ID: <7a773833-a193-4243-80f4-fc52243883a9@flourine.local>
+References: <suhzith2uj75uiprq4m3cglvr7qwm3d7gi4tmjeohlxl6fcmv3@zu6zym6nmvun>
+ <ff748a3f-9f07-4933-b4b3-b4f58aacac5b@flourine.local>
+ <rsdinhafrtlguauhesmrrzkybpnvwantwmyfq2ih5aregghax5@mhr7v3eryci3>
+ <6ef89cb5-1745-4b98-9203-51ba6de40799@flourine.local>
+ <u4ttvhnn7lark5w3sgrbuy2rxupcvosp4qmvj46nwzgeo5ausc@uyrkdls2muwx>
+ <629ddb72-c10d-4930-9d81-61d7322ed3b0@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADUfDZqJ8PN8FT50gg0grJ+Kj+gOaosRctS_dimWAaRC-myfRw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <629ddb72-c10d-4930-9d81-61d7322ed3b0@flourine.local>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -4.30
 
-On Fri, Aug 29, 2025 at 08:37:28AM -0700, Caleb Sander Mateos wrote:
-> On Tue, Aug 26, 2025 at 1:33 AM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > On Mon, Aug 25, 2025 at 10:49:49PM -0700, Caleb Sander Mateos wrote:
-> > > On Mon, Aug 25, 2025 at 5:49 AM Ming Lei <ming.lei@redhat.com> wrote:
-> > > >
-> > > > When running test_stress_04.sh, the following warning is triggered:
-> > > >
-> > > > WARNING: CPU: 1 PID: 135 at drivers/block/ublk_drv.c:1933 ublk_ch_release+0x423/0x4b0 [ublk_drv]
-> > > >
-> > > > This happens when the daemon is abruptly killed:
-> > > >
-> > > > - some references may still be held, because registering IO buffer
-> > > > doesn't grab ublk char device reference
-> > >
-> > > Ah, good observation. That's definitely a problem.
-> > >
-> > > >
-> > > > OR
-> > > >
-> > > > - io->task_registered_buffers won't be cleared because io buffer is
-> > > > released from non-daemon context
-> > >
-> > > I don't think the task_registered_buffers optimization is really
-> > > involved here; that's just a different way of tracking the reference
-> > > count. Regardless of what task the buffer is registered or
-> > > unregistered on, the buffer still counts as 1 reference on the
-> > > ublk_io. Summing up the reference counts and making sure they are both
-> > > reset to 0 seems like a good approach to me.
-> >
-> > The warning in ublk_queue_reinit() is triggered because
-> >
-> > - the reference is not dropped
-> >
-> > OR
-> >
-> > - the io buf unregister is done from another task context(kernel wq), so
-> > both io->ref and io->task_registered_buffers are not zero, which is started
-> > from task_registered_buffers optimization
+On Mon, Sep 01, 2025 at 10:34:23AM +0200, Daniel Wagner wrote:
+> The test is removing the ports while the host driver is about to
+> reconnect and accesses a stale pointer.
 > 
-> Right, but I would consider that to be an outstanding reference. I
-> think we're on the same page.
+> nvme_fc_create_association is calling nvme_fc_ctlr_inactive_on_rport in
+> the error path. The problem is that nvme_fc_create_association gets half
+> through the setup and then fails. In the cleanup path
 > 
-> >
-> > >
-> > > >
-> > > > For zero-copy and auto buffer register modes, I/O reference crosses
-> > > > syscalls, so IO reference may not be dropped naturally when ublk server is
-> > > > killed abruptly. However, when releasing io_uring context, it is guaranteed
-> > > > that the reference is dropped finally, see io_sqe_buffers_unregister() from
-> > > > io_ring_ctx_free().
-> > > >
-> > > > Fix this by adding ublk_drain_io_references() that:
-> > > > - Waits for active I/O references dropped in async way by scheduling
-> > > >   work function, for avoiding ublk dev and io_uring file's release
-> > > >   dependency
-> > > > - Reinitializes io->ref and io->task_registered_buffers to clean state
-> > > >
-> > > > This ensures the reference count state is clean when ublk_queue_reinit()
-> > > > is called, preventing the warning and potential use-after-free.
-> > >
-> > > One scenario I worry about is if the ublk server has already issued
-> > > UBLK_IO_COMMIT_AND_FETCH_REQ for an I/O but is killed while it still
-> > > has registered buffer(s). It's possible the ublk server hasn't
-> > > finished performing I/O to/from the registered buffers and so the I/O
-> > > isn't really complete yet. But when io_uring automatically releases
-> > > the registered buffers, the reference count will hit 0 and the ublk
-> > > I/O will be completed successfully. There seems to be some data
-> > > corruption risk in this scenario.
-> >
-> > The final io buffer unregister is from freeing io_uring conext in
-> > io_uring_release(), any user of this uring context has been done,
-> > so it isn't possible that ublk server is performing io with the
-> > un-registered buffer.
+> 	dev_warn(ctrl->ctrl.device,
+> 		"NVME-FC{%d}: create_assoc failed, assoc_id %llx ret %d\n",
+> 		ctrl->cnum, ctrl->association_id, ret);
 > 
-> Well, the ublk server could have been killed before it could submit an
-> I/O using the registered buffer. But it's an existing concern,
-> certainly not introduced by your patch. I think you can make a
-> reasonable argument that a ublk server shouldn't submit a
-> UBLK_IO_COMMIT_AND_FETCH_REQ until it knows the I/O completed
-> successfully or with an error, otherwise it won't be able to change
-> the result code if the I/O using the registered buffer unexpectedly
-> fails.
-
-Yes, it was one trouble because ublk server can do whatever.
-
-However, since your task_registered_buffers optimization, ublk request
-won't be completed from freeing uring_ctx context any more, and it is always
-aborted from ublk_abort_queue(), so it is failed in case of killed ublk
-server.
-
-The situation can be improved by failing request explicitly by setting io->res
-as -EIO, then -EIO can be taken first in case of killed ublk server.
-
+> is issued and then nvme_fc_ctlr_inactive_on_rport is called. And there
+> is the log message above, so it's clear the error path is taken.
 > 
-> >
-> > > But maybe it doesn't make sense for
-> > > a ublk server to issue UBLK_IO_COMMIT_AND_FETCH_REQ with a result code
-> > > before knowing whether the zero-copy I/Os succeeded?
-> > >
-> > > >
-> > > > Fixes: 1f6540e2aabb ("ublk: zc register/unregister bvec")
-> > > > Fixes: 1ceeedb59749 ("ublk: optimize UBLK_IO_UNREGISTER_IO_BUF on daemon task")
-> > > > Fixes: 8a8fe42d765b ("ublk: optimize UBLK_IO_REGISTER_IO_BUF on daemon task")
-> > > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > > ---
-> > > >  drivers/block/ublk_drv.c | 94 +++++++++++++++++++++++++++++++++++++++-
-> > > >  1 file changed, 92 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > > index 99abd67b708b..f608c7efdc05 100644
-> > > > --- a/drivers/block/ublk_drv.c
-> > > > +++ b/drivers/block/ublk_drv.c
-> > > > @@ -239,6 +239,7 @@ struct ublk_device {
-> > > >         struct mutex cancel_mutex;
-> > > >         bool canceling;
-> > > >         pid_t   ublksrv_tgid;
-> > > > +       struct delayed_work     exit_work;
-> > > >  };
-> > > >
-> > > >  /* header of ublk_params */
-> > > > @@ -1595,12 +1596,84 @@ static void ublk_set_canceling(struct ublk_device *ub, bool canceling)
-> > > >                 ublk_get_queue(ub, i)->canceling = canceling;
-> > > >  }
-> > > >
-> > > > -static int ublk_ch_release(struct inode *inode, struct file *filp)
-> > > > +static void ublk_reset_io_ref(struct ublk_device *ub)
-> > > >  {
-> > > > -       struct ublk_device *ub = filp->private_data;
-> > > > +       int i, j;
-> > > > +
-> > > > +       if (!(ub->dev_info.flags & (UBLK_F_SUPPORT_ZERO_COPY |
-> > > > +                                       UBLK_F_AUTO_BUF_REG)))
-> > > > +               return;
-> > > > +
-> > > > +       for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-> > > > +               struct ublk_queue *ubq = ublk_get_queue(ub, i);
-> > > > +
-> > > > +               for (j = 0; j < ubq->q_depth; j++) {
-> > > > +                       struct ublk_io *io = &ubq->ios[j];
-> > > > +                       /*
-> > > > +                        * Reinitialize reference counting fields after
-> > > > +                        * draining. This ensures clean state for queue
-> > > > +                        * reinitialization.
-> > > > +                        */
-> > > > +                       refcount_set(&io->ref, 0);
-> > > > +                       io->task_registered_buffers = 0;
-> > > > +               }
-> > > > +       }
-> > > > +}
-> > > > +
-> > > > +static bool ublk_has_io_with_active_ref(struct ublk_device *ub)
-> > > > +{
-> > > > +       int i, j;
-> > > > +
-> > > > +       if (!(ub->dev_info.flags & (UBLK_F_SUPPORT_ZERO_COPY |
-> > > > +                                       UBLK_F_AUTO_BUF_REG)))
-> > > > +               return false;
-> > > > +
-> > > > +       for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-> > > > +               struct ublk_queue *ubq = ublk_get_queue(ub, i);
-> > > > +
-> > > > +               for (j = 0; j < ubq->q_depth; j++) {
-> > > > +                       struct ublk_io *io = &ubq->ios[j];
-> > > > +                       unsigned int refs = refcount_read(&io->ref) +
-> > > > +                               io->task_registered_buffers;
-> > > > +
-> > > > +                       /*
-> > > > +                        * UBLK_REFCOUNT_INIT or zero means no active
-> > > > +                        * reference
-> > > > +                        */
-> > > > +                       if (refs != UBLK_REFCOUNT_INIT && refs != 0)
-> > > > +                               return true;
-> > >
-> > > It's technically possible to hit refs == UBLK_REFCOUNT_INIT by having
-> > > UBLK_REFCOUNT_INIT active references. It would be safer to check
-> > > UBLK_IO_FLAG_OWNED_BY_SRV: if the flag is set, the reference count
-> > > needs to reach UBLK_REFCOUNT_INIT; if the flag is unset, the reference
-> > > count needs to reach 0.
-> >
-> > It is actually one invariant that the two's sum is zero or UBLK_REFCOUNT_INIT
-> > any time if the io buffer isn't registered, so it is enough and
-> > simpler.
+> But the thing is fcloop is not supposed to remove the ports when the
+> host driver is still using it. So there is a race window where it's
+> possible to enter nvme_fc_create_assocation and fcloop removing the
+> ports.
 > 
-> I think it's theoretically possible to make the reference count
-> arbitrarily high with ublk registered buffers, which can cause it to
-> actually have UBLK_REFCOUNT_INIT references (not because all
-> references are released) or the reference count to overflow back to 0.
-> One way to do this would be to register the same I/O's buffer in many
-> slots of many io_urings at the same time.
+> So between nvme_fc_create_assocation and nvme_fc_ctlr_active_on_rport.
 
-The reference is initialized as UBLK_REFCOUNT_INIT, the only way for
-triggering it is to make the counter overflow first.
+I think the problem is that nvme_fc_create_association is not holding
+the rport locks when checking the port_state and marking the rport
+active. This races with nvme_fc_unregister_remoteport.
 
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 3e12d4683ac7..03987f497a5b 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -3032,11 +3032,17 @@ nvme_fc_create_association(struct nvme_fc_ctrl *ctrl)
 
-> Another possibility would be
-> to repeatedly register the buffer, use it in an I/O that never
-> completes (e.g. recv from an empty socket), and then unregister the
-> buffer. But this reference count overflow issue is an existing issue,
-> not introduced by the patch.
+ 	++ctrl->ctrl.nr_reconnects;
 
-Yes, overflow can be detected & warned by refcount checking, also it is only
-allowed for privileged user, so looks this way is just fine.
+-	if (ctrl->rport->remoteport.port_state != FC_OBJSTATE_ONLINE)
++	spin_lock_irqsave(&ctrl->rport->lock, flags);
++	if (ctrl->rport->remoteport.port_state != FC_OBJSTATE_ONLINE) {
++		spin_unlock_irqrestore(&ctrl->rport->lock, flags);
+ 		return -ENODEV;
++	}
 
+-	if (nvme_fc_ctlr_active_on_rport(ctrl))
++	if (nvme_fc_ctlr_active_on_rport(ctrl)) {
++		spin_unlock_irqrestore(&ctrl->rport->lock, flags);
+ 		return -ENOTUNIQ;
++	}
++	spin_unlock_irqrestore(&ctrl->rport->lock, flags);
 
-Thanks, 
-Ming
+ 	dev_info(ctrl->ctrl.device,
+ 		"NVME-FC{%d}: create association : host wwpn 0x%016llx "
 
+I'll to reproduce it and see if this patch does make a difference.
 
