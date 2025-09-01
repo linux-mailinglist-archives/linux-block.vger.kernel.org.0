@@ -1,169 +1,131 @@
-Return-Path: <linux-block+bounces-26510-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26515-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAB72B3DC3E
-	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 10:22:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EE17B3DC87
+	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 10:34:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9028B3BF935
-	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 08:22:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5DED1888A99
+	for <lists+linux-block@lfdr.de>; Mon,  1 Sep 2025 08:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 039FA2F1FE4;
-	Mon,  1 Sep 2025 08:22:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C2A2FB96C;
+	Mon,  1 Sep 2025 08:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QEZuqizp";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4gSHy4hN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lIcLqprB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TIOtsifw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1MM2tS+T"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465E52ED868
-	for <linux-block@vger.kernel.org>; Mon,  1 Sep 2025 08:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B8A2FAC0E
+	for <linux-block@vger.kernel.org>; Mon,  1 Sep 2025 08:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756714945; cv=none; b=eZeHJQoWzzNEQVISyBfvSb3z4yohM91ST+XVgosYox0ag6K2iHt6wRFyVaOIy4HKW6jfBuP8Ac0xKKgou/ZeGjSfdaPtxiBAvmMmVFwqQbdfZxeKiZ0lyDD9rGqBtGUnwY0Fr7m93S6SuKlmPeA6gnlWcwCT4X0SfppCTmOIL18=
+	t=1756715669; cv=none; b=jPjRMvuYZdpeVn/vIJHtFVVm+dCq4ilHwqpA1VS8wbOlIvEpABZfOY8nkxDK/zuYx8HMkJOXzwh3bs8Y1+y2TqLKYXVxjzb2l3F71WXF4+Fw1i7BUrbncNHHhftrzTzc2IKd5Eftg4L4HggNCjwdlD2ji9rxu28HYxwwCKPzDCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756714945; c=relaxed/simple;
-	bh=XRUDSgtxTTxuWhDNa4in4GjAvQGAPT/sjCzdg09WsHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XlbQVEr91Z/c5G8mXnwStkn8WdxpPRZ6mTiULdTGe/lw83lgNTxFfYCo2upkr6DsaXcDl6P4yZ70ZcT/pjCEWxGJmkyqM62wWXaGTCNANu9JFTwYODr8fdCndYBrjTObjswhwF9Miu976n28HsjmzD2IbqVRzNk3oTboA52fpeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QEZuqizp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4gSHy4hN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lIcLqprB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TIOtsifw; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 53CD21F385;
-	Mon,  1 Sep 2025 08:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1756714942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jc93DC8/518ttB14IHOBnsZbVgcaKhtkLkqQaq8m83k=;
-	b=QEZuqizpIcE4TC+ff3N9YgCIMEsRBtQwT5LVST64p4EI78oKEETSL9Z5nNxCFkmyKE3M86
-	W5BbMSmD6S8n7fWlcOz91M0mZDuEUpKDsHq7Rp5B6UstnKIjtstLmrc3CMMKmx1QBOoBME
-	fYXwufHEB58/mlHkMzCRULjnZOiaxkY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1756714942;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jc93DC8/518ttB14IHOBnsZbVgcaKhtkLkqQaq8m83k=;
-	b=4gSHy4hN3MhiXGkITdWBGz0NvxkYZxVOg366H0Wiuut6f30nbgHdmNYb872MP5Q8suEcEa
-	SDOz27al+gckA0CQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1756714941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jc93DC8/518ttB14IHOBnsZbVgcaKhtkLkqQaq8m83k=;
-	b=lIcLqprBcVFIOm/B3oKmFS/3vU+91bkO7Z0U6t7OSg0CYQaBm3tXe0IdJcDRYaMt6pIMNc
-	9FBY0konTIBXGO967QU7CyAwKRD07yzKwEN7U+l0OQPErPScnqL3EjbweMvxSfXt/JOhYG
-	bsMRrsFnTGpAgTXjcYqjiHirlLP/KUk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1756714941;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jc93DC8/518ttB14IHOBnsZbVgcaKhtkLkqQaq8m83k=;
-	b=TIOtsifw1J2K+sP/znkwM5n23x+zz4eZc1xem3Esnm3k/+5WKgusFEUkGgsu695M17u6tM
-	zSh+0wZZfMf70ZCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 42E72136ED;
-	Mon,  1 Sep 2025 08:22:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4u9NEL1XtWh8WQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 01 Sep 2025 08:22:21 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DB15EA099B; Mon,  1 Sep 2025 10:22:20 +0200 (CEST)
-Date: Mon, 1 Sep 2025 10:22:20 +0200
-From: Jan Kara <jack@suse.cz>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Ritesh Harjani <ritesh.list@gmail.com>, 
-	Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org, snitzer@kernel.org, axboe@kernel.dk, 
-	dw@davidwei.uk, brauner@kernel.org, hch@lst.de, martin.petersen@oracle.com, 
-	djwong@kernel.org, linux-xfs@vger.kernel.org, viro@zeniv.linux.org.uk, 
-	Jan Kara <jack@suse.com>, Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCHv3 0/8] direct-io: even more flexible io vectors
-Message-ID: <bqfazli7us3afm5opm5c6ntrblw2tekshd7ohf7nqagyoauwd7@6biytmjbkqgz>
-References: <20250819164922.640964-1-kbusch@meta.com>
- <87a53ra3mb.fsf@gmail.com>
- <g35u5ugmyldqao7evqfeb3hfcbn3xddvpssawttqzljpigy7u4@k3hehh3grecq>
- <aKx485EMthHfBWef@kbusch-mbp>
- <87cy8ir835.fsf@gmail.com>
- <ua7ib34kk5s6yfthqkgy3m2pnbk33a34g7prezmwl7hfwv6lwq@fljhjaogd6gq>
- <aK9amCpLYsxIweMk@kbusch-mbp>
+	s=arc-20240116; t=1756715669; c=relaxed/simple;
+	bh=vxf3frNnb2xUAvh4qiTlt/x1zHJJCkVQHi/Jb4XzkLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CVRBSeL0hw5VYlyOW4cguD1vaYFW2w13C0ZjvzqGi25CEh/EPNmVQp9SSvhLZS3UVrBC7WhdM7mU6ClCVqJQdGUiCmQKVRcPl+W+IZmwlxZfXZb3x7Bgy6TdjrA+zgJE0Lt+HcAZ03SSNVfqAyjHS6rJkYf6CCFm6tqdJ2zWLik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1MM2tS+T; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3d3ff4a4d6fso935098f8f.0
+        for <linux-block@vger.kernel.org>; Mon, 01 Sep 2025 01:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756715666; x=1757320466; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MJq1AsV0F4VVQPu0qkVK0I8t0NKOlj0yZgOhHKRTknE=;
+        b=1MM2tS+Tl9lcIqjdUjaD/UMGFkL1wZRQSdH8k8psKyGvLLN0t3PcFCgr25htJKyGkx
+         dkFmiGSzERO+Qpkv6lgSS0ChGJxo2GIM36CPaDmUEYDTCqtyy64Dbr182BDOr9ucIKus
+         DAuYIdW7ht69ESIm3kI+NLwubmGbLBhOssEvARK5jId3mPyhPD++8OL96AL5OnYZW+ww
+         W/gPKUXfL4fLn6lReGh0ZCrf0KiUD6HplKe03/GNNc+faiNzF5JHGVl/9EKRPr0M6pG2
+         0fCKnP2by7rFpkvuwjVyew+3FyMikD6iAgUinORy40IlHB+CFDtOJKhvobxCjWU2Qlb0
+         DxEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756715666; x=1757320466;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MJq1AsV0F4VVQPu0qkVK0I8t0NKOlj0yZgOhHKRTknE=;
+        b=vz5+Ae2XB8eJXYdXA/QNyOrw3ktpRod5nnhOxRf8fuTQh9qd4jtfg1j5SXm0xSEK2U
+         WBrE+FuCVayj6HOX/c2Z2fGowrAZ9J266uZmaO+fw3AawNkDsgyWgg1/Qs17QOvqgv51
+         aZ2xmfmFeglXl2xLLvpxr+dXb3XMDB605QCjtUSMhg1lP3us3qcLXIBNJrXkX+Xnoa8J
+         0SU68IyI7BB1DJ1LdFOS9NfH82wta4BpfUHSix7kAlNp2WmxJOmUWsBk72Cwa69NAKmX
+         XdfqrRdDS2yVtkzPtcpXVPnFAItaSj66XphSLE+EhIxqYHSfEYP2bmiO1oq4NZhTvmbU
+         ezxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6QjFhb9fbndDk7JUlm9djov9jVgYyWCN1blCBQTEQuAvjaSlqOZeT7ayiUzXEJwpdvqkFu2bkOVK5Lw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA0JlwzpmMld2UBeCL5JUzpenBVPmDP+QKGSJZ+ru+L1sE8b9Y
+	bpPB/ZbSdAbYbysWzbvvhqw0UA5D/HR+p/KGeyieA+92KVWrYlB7HYG41gH1MWK0RwFJLKmM6TM
+	KFVmjQbR/CB+B2oRc6dWrDj0KHjfCuHvF8stFEfnn
+X-Gm-Gg: ASbGnctIB7+ifxRsA7gYn4TQWoeYcDoMaL8hq1F99ip8duvhxuDYrCrdwnuebL31hGZ
+	j6fXP9nN0f/8D3mLwUipXtHlt4dtf1D9WuxZ4el979NZSTvGeZKO/tCDVpZuzmftA6w1/MeL3VG
+	u+Tnd7w5uHWeVpAZlpteTlT0Vnf6w6fmaMcPwCPKu7nruxBw8FDp2m7szvgobFQbt5OYQthKfmB
+	TMQ9t55Jbmz/205bH3BlcBr3yNE+/+Y40eTZr7lq0eRFLep9JKgrGOxWCXdYGaoRvNexfAkqsL+
+	zpr4i58ZX18=
+X-Google-Smtp-Source: AGHT+IEqychM0kd4Zsw2vuepz+apqlzQMNpjvyb9uiC43q/iOeK6qyzAvN4IB2lZ5WRji1lUoq2GIIj530u75dtTQ04=
+X-Received: by 2002:a05:6000:2f87:b0:3d4:d572:b8e7 with SMTP id
+ ffacd0b85a97d-3d4d5820341mr4043412f8f.13.1756715665708; Mon, 01 Sep 2025
+ 01:34:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aK9amCpLYsxIweMk@kbusch-mbp>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,meta.com,vger.kernel.org,kernel.org,kernel.dk,davidwei.uk,lst.de,oracle.com,zeniv.linux.org.uk,suse.com,redhat.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -2.30
+References: <20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel.org> <20250822-rnull-up-v6-16-v6-6-ec65006e2f07@kernel.org>
+In-Reply-To: <20250822-rnull-up-v6-16-v6-6-ec65006e2f07@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 1 Sep 2025 10:34:12 +0200
+X-Gm-Features: Ac12FXxdTlByQ2-9hQCbGi5H1XEmMHIWRiWw8FW5DNBM2QeOGAEX-3c-DXqMpN8
+Message-ID: <CAH5fLgiHVoOSMDwnXDZ5tH58iTPre_BAu0AE5=0a0_P6B4j_Kg@mail.gmail.com>
+Subject: Re: [PATCH v6 06/18] rust: str: add `bytes_to_bool` helper function
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>, 
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 27-08-25 13:20:56, Keith Busch wrote:
-> On Wed, Aug 27, 2025 at 05:20:53PM +0200, Jan Kara wrote:
-> > Now both the old and new behavior make some sense so I won't argue that the
-> > new iomap_iter() behavior is wrong. But I think we should change ext4 back
-> > to the old behavior of failing unaligned dio writes instead of them falling
-> > back to buffered IO. I think something like the attached patch should do
-> > the trick - it makes unaligned dio writes fail again while writes to holes
-> > of indirect-block mapped files still correctly fall back to buffered IO.
-> > Once fstests run completes, I'll do a proper submission...
-> 
-> Your suggestion looks all well and good, but I have a general question
-> about fstests. I've written up some to test this series, and I have
-> filesystem specific expectations for what should error or succeed. If
-> you modify ext4 to fail direct-io as described, my test will have to be
-> kernel version specific too. Is there a best practice in fstests for
-> handling such scenarios?
+On Fri, Aug 22, 2025 at 2:15=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> Add a convenience function to convert byte slices to boolean values by
+> wrapping them in a null-terminated C string and delegating to the
+> existing `kstrtobool` function. Only considers the first two bytes of
+> the input slice, following the kernel's boolean parsing semantics.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Well, I'd just expect EINVAL for ext4 in the test. Certain kernel versions
-(since February or so) will fail but that's just an indication you should
-backport the fix if you care...
+One nit below, but generally looks good.
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> +/// # Safety
+> +///
+> +/// - `string` must point to a null terminated string that is valid for =
+read.
+> +unsafe fn kstrtobool_raw(string: *const u8) -> Result<bool> {
+> +    let mut result: bool =3D false;
+> +
+> +    // SAFETY:
+> +    // - By function safety requirement, `string` is a valid null-termin=
+ated string.
+> +    // - `result` is a valid `bool` that we own.
+> +    let ret =3D unsafe { bindings::kstrtobool(string, &mut result) };
+> +
+> +    kernel::error::to_result(ret).map(|()| result)
+
+I think this is easier to read as:
+
+to_result(unsafe { bindings::kstrtobool(string, &mut result) })?;
+Ok(result)
+
+Alice
 
