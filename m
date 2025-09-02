@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-26600-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26605-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2795B3FB73
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:58:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33573B3FB81
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:59:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E3C53ABD05
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 09:57:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17DC33AEC0E
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 09:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F18E2F2906;
-	Tue,  2 Sep 2025 09:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057C92F549C;
+	Tue,  2 Sep 2025 09:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ck9dwNAN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5V1zOvK"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051922F1FE7;
-	Tue,  2 Sep 2025 09:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0922EFD87;
+	Tue,  2 Sep 2025 09:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806955; cv=none; b=KBvL4cdaCRZt2EMN84XS0v85dXzPqbhIQ9ITxU3vkhRMKJ4SHifmSZ6+xDSvrOXZ1MA8F8Ny6ch8GgixmQlihhDmGAfq6LmuJZVpybpeb8ePSMg9D1cJkvAsdXFTZU+5AE8eGlA3cKGQL0B0ETsP9sQz/HNnQQllbyR3k8NGHds=
+	t=1756806978; cv=none; b=fdKYFDVeLolKcCA6Y+aWZTU65uiz0lfK2VaZAfq0Qta9S5xl9KEirVbms7DaPQ2B5q5BlHSgXEmSlD7kA4O3wZuTJH07wyOJuUgnkUbC6Rky9yZYDw+7iXX17Jxf38n+Kd6f8RbdCOYIjQTwC1sRTcYEKbzU795G92EOHDTjeTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806955; c=relaxed/simple;
-	bh=YwUF3HJQztP31Vw7ZaxJ69OuXp+5+j2Zu1cR8QzNe+g=;
+	s=arc-20240116; t=1756806978; c=relaxed/simple;
+	bh=aP8rjJy/aucU/AdvUODqarq27NqARAu9QR2SBF7RTRs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HkjmrcZ/7N/QR1+kzVGhgAlpc7FjoZOuR6pyCNryHV5sujXkRAH8cB8H0uhQShrgZ6P/7vdhCc0B40BreamY1KUbd5ChXdlv4aK29d5cAsZAsPZd7hiQZWV+R5xDcz1dhe3gNbqwJvLVqVUkfH/zoqabb6K8OLIOYihWb+ckUv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ck9dwNAN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFA2C4CEED;
-	Tue,  2 Sep 2025 09:55:51 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=lLFvmjhwnHxD001OrQx9Boau8ckrK+20dlslzxsYLGvuRFw7jqqtPQf/V9RzJY+4zx7dGBwnp13XZ9VcFE6lrggYyE/UsMA9L+7VVZNZ3m+K9idSyXW34c87i32n3RYIFie3HlGKUo8B8IBukU/gV1EpuNMxMl5WCx0SP69ctXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5V1zOvK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDFADC4CEED;
+	Tue,  2 Sep 2025 09:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756806954;
-	bh=YwUF3HJQztP31Vw7ZaxJ69OuXp+5+j2Zu1cR8QzNe+g=;
+	s=k20201202; t=1756806978;
+	bh=aP8rjJy/aucU/AdvUODqarq27NqARAu9QR2SBF7RTRs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ck9dwNANve8Ne07xu+AirZzR2EBbPSww8ib2Vc8HjgubaHxLCmRmMZ1hCtNta5ipZ
-	 PwY+nMPI7lp/yvz6I2fpQz1GZ+4pH8h4P2VZzkcv/z9D0gy5Xokj9hAtxDfrO0zIa8
-	 +5lsuG404qojoocZrC6Sp+6qhK6MJ4AJba1OBNoso1PneKZckOiyKiUs58w1tkfsFu
-	 nkZ0t6KLNCMbjNPoMERvwyHf4iwXjM4w1/rb/5gAJCAPWmdrAIF2aNY895V9nbP+GO
-	 yvY5dpHycAe2i/7b64wMtPyWItWvPh7BkDJZeM+c/b9XMPB+u6B2bcz93Ho9HsxluF
-	 4N1zDc+WaJ3zw==
+	b=q5V1zOvK66uXPBVXkTZAGq2iioQokxkC4nWSiQJjAQb+TNt6LorkfQja9Du5E4dZh
+	 WDZpdhhLzfl7IgBGJO0QP68IWialXEXvv9pxm52ErY7moNUK8jvP911AT/QpbmoxUt
+	 cGOmcjQhodpkuSNsxSPzeqj17lEJIueXt3StNigIxRAKBIEhg2zUMsCFIfUJaGn+rx
+	 0sifpYLLtwhp9NMKaDqyXXu9xWQDVaHCIpp9gs7accLAjjc8xFmO5IiKAsGpHdKG4y
+	 7ktvew5XKqisobTcvVczvI0nRTaPK+1UnCq9wNv3Sht5qcboHo8mwoxRvBttm9yPbG
+	 Eehv74/5KqtXQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 02 Sep 2025 11:55:10 +0200
-Subject: [PATCH v7 16/17] rust: block: add remote completion to `Request`
+Date: Tue, 02 Sep 2025 11:55:11 +0200
+Subject: [PATCH v7 17/17] rnull: add soft-irq completion support
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-rnull-up-v6-16-v7-16-b5212cc89b98@kernel.org>
+Message-Id: <20250902-rnull-up-v6-16-v7-17-b5212cc89b98@kernel.org>
 References: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 In-Reply-To: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -65,139 +65,218 @@ Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>, 
  Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5096; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=YwUF3HJQztP31Vw7ZaxJ69OuXp+5+j2Zu1cR8QzNe+g=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr8HVoiFEohNXcMvJ10o1RLWE0ZZxSrQFCEj7
- KsX6wNYVOuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa/BwAKCRDhuBo+eShj
- d432D/4zM1sRmiacMnsFNRMn96mFZy6dtbiRextv5n51Q1z+n+WKRdCnPqqkm9nDvocudZE8PQ/
- OIJOfwZCMsDwUnDUhFU3TzR+61GK0PhdxslCeBy6LrHnWZqw+mjsm5WSXV94EehtZCsejiedItR
- 4hsKAjFt+dYfWkEOQBSyyang5iott/7IyABtmM4iAHnvLGxrLp+/xPfk4217EyvtS8oOOWK40EJ
- 7YUhy0U2T53IyTZ1bbhgZv3eH/gTQGqtHVKK7sMrBeuz+vCAR7Br15qgdLsWC5MvdhPk6BkKPK6
- CTYs/TzSw9Jl8JvrUGKwIJqld+rpTwwoIAALQnnS8LFDCvA3yNmOyCS4T02cyzSS9fiIIfxDG+e
- SNmRWhccoF5f7m1Ppx6gj3mmSf+ljv9gUXXFpXJ37/LZNYRhVCUr7iHUpo+po3eiY37siNQ7toz
- 6+yGzbUWAvszqfwGpQXTDH0kCFRK6irveEKzSh3IAnHP+b6x0pZhDBGDTg2CgY7MwJzNLwDAiWX
- V4h62DDs3Jxvzfe6SbOfePNwb4I6/9hP1dKeDG3DNm3sJLBJLUFVj92hxVEiMCKW2zogFzHofzu
- 1ZKdzyVrGAMekKGQASkz+6dZupYftF6jCTsbkGxSCQ7XJhQIj7ypEe8SzlNKW6GrZKHBtLWe3A/
- m/vRrgl4jESHYpQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6432; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=aP8rjJy/aucU/AdvUODqarq27NqARAu9QR2SBF7RTRs=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr8IjCY/BdHMZ8XJPjj87NQsvEdfa7Mg1jHq7
+ bfQXYRKm0yJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa/CAAKCRDhuBo+eShj
+ d8kqEACDbS/6X7I8dK6VSVaSFhS2Ylq/gIAKfVNieEzjfUJ5TX1+SGgo8UsqzY9bXWbIuH0Pyip
+ 8PVho4RQiTAjnyzIuTQIzjqxLThq899ASeTejTVNaJ6+XeU/8QwZ+GeQALzYl6HqNw1Apnsl3wj
+ 5Psrx8ICZQtS4pyppo7+GYw6l1REJ+Uo/GWDZVrVKsofi+UB/o9crUXnxLvUGaHKyBovxeUVc8q
+ SrjMpJKPgICW2zdM0A182JSzwO/FZ2XN1NK5eMUfvLb7tPWhAT4rJ0P4Pm4nvrf9VdXQA5SMnLI
+ Z5rU+a7j0CuXQiwn5F/n6q4/wPleqN+NuGPdauRgdbniBMAe/lvnGABThW5lSCxTY3Iw4HGRrbT
+ vkkGz14i+UGQ5/t3/t26DMsiyLvnNYD/1OUwi7wRLyPeJYXjfRBjKPxH7jlxQBU3fRgAycOgdY1
+ Ew8AztcmGIJUR+TvH07j20Mo5+GSQxUh8R2dwY89vMwh2bBaG3rf0FDZDttlTtJzoNuUuTcBrUz
+ Dx8gnmBQ3Tb0hONgiBOoKHSSRu7zKx8ED5e/Pi/ibFv/EWHjeHsy/yplk41XbLq7u8WhglYTl0P
+ odUukwtDLyL314zJcQ9HE3RwgGBkMcrc7ZiJ4mDDV07k3tdrhM6UMl35/M2HqePPE0rgCJgHp6Q
+ SdLTo0l4pCpiLzQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Allow users of rust block device driver API to schedule completion of
-requests via `blk_mq_complete_request_remote`.
+rnull currently only supports direct completion. Add option for completing
+requests across CPU nodes via soft IRQ or IPI.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- drivers/block/rnull/rnull.rs       |  9 +++++++++
- rust/kernel/block/mq.rs            |  6 ++++++
- rust/kernel/block/mq/operations.rs | 19 +++++++++++++++----
- rust/kernel/block/mq/request.rs    | 17 +++++++++++++++++
- 4 files changed, 47 insertions(+), 4 deletions(-)
+ drivers/block/rnull/configfs.rs | 59 +++++++++++++++++++++++++++++++++++++++--
+ drivers/block/rnull/rnull.rs    | 32 ++++++++++++++--------
+ 2 files changed, 78 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/block/rnull/configfs.rs b/drivers/block/rnull/configfs.rs
+index 46710a1e1af4..8498e9bae6fd 100644
+--- a/drivers/block/rnull/configfs.rs
++++ b/drivers/block/rnull/configfs.rs
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ use super::{NullBlkDevice, THIS_MODULE};
+-use core::fmt::Write;
++use core::fmt::{Display, Write};
+ use kernel::{
+     block::mq::gen_disk::{GenDisk, GenDiskBuilder},
+     c_str,
+@@ -36,7 +36,7 @@ impl AttributeOperations<0> for Config {
+ 
+     fn show(_this: &Config, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
+         let mut writer = kernel::str::Formatter::new(page);
+-        writer.write_str("blocksize,size,rotational\n")?;
++        writer.write_str("blocksize,size,rotational,irqmode\n")?;
+         Ok(writer.bytes_written())
+     }
+ }
+@@ -58,6 +58,7 @@ fn make_group(
+                 blocksize: 1,
+                 rotational: 2,
+                 size: 3,
++                irqmode: 4,
+             ],
+         };
+ 
+@@ -72,6 +73,7 @@ fn make_group(
+                     rotational: false,
+                     disk: None,
+                     capacity_mib: 4096,
++                    irq_mode: IRQMode::None,
+                     name: name.try_into()?,
+                 }),
+             }),
+@@ -79,6 +81,34 @@ fn make_group(
+     }
+ }
+ 
++#[derive(Debug, Clone, Copy)]
++pub(crate) enum IRQMode {
++    None,
++    Soft,
++}
++
++impl TryFrom<u8> for IRQMode {
++    type Error = kernel::error::Error;
++
++    fn try_from(value: u8) -> Result<Self> {
++        match value {
++            0 => Ok(Self::None),
++            1 => Ok(Self::Soft),
++            _ => Err(EINVAL),
++        }
++    }
++}
++
++impl Display for IRQMode {
++    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
++        match self {
++            Self::None => f.write_str("0")?,
++            Self::Soft => f.write_str("1")?,
++        }
++        Ok(())
++    }
++}
++
+ #[pin_data]
+ pub(crate) struct DeviceConfig {
+     #[pin]
+@@ -92,6 +122,7 @@ struct DeviceConfigInner {
+     block_size: u32,
+     rotational: bool,
+     capacity_mib: u64,
++    irq_mode: IRQMode,
+     disk: Option<GenDisk<NullBlkDevice>>,
+ }
+ 
+@@ -121,6 +152,7 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
+                 guard.block_size,
+                 guard.rotational,
+                 guard.capacity_mib,
++                guard.irq_mode,
+             )?);
+             guard.powered = true;
+         } else if guard.powered && !power_op {
+@@ -205,3 +237,26 @@ fn store(this: &DeviceConfig, page: &[u8]) -> Result {
+         Ok(())
+     }
+ }
++
++#[vtable]
++impl configfs::AttributeOperations<4> for DeviceConfig {
++    type Data = DeviceConfig;
++
++    fn show(this: &DeviceConfig, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
++        let mut writer = kernel::str::Formatter::new(page);
++        writer.write_fmt(fmt!("{}\n", this.data.lock().irq_mode))?;
++        Ok(writer.bytes_written())
++    }
++
++    fn store(this: &DeviceConfig, page: &[u8]) -> Result {
++        if this.data.lock().powered {
++            return Err(EBUSY);
++        }
++
++        let text = core::str::from_utf8(page)?.trim();
++        let value = text.parse::<u8>().map_err(|_| EINVAL)?;
++
++        this.data.lock().irq_mode = IRQMode::try_from(value)?;
++        Ok(())
++    }
++}
 diff --git a/drivers/block/rnull/rnull.rs b/drivers/block/rnull/rnull.rs
-index 8255236bc550..a19c55717c4f 100644
+index a19c55717c4f..1ec694d7f1a6 100644
 --- a/drivers/block/rnull/rnull.rs
 +++ b/drivers/block/rnull/rnull.rs
-@@ -82,4 +82,13 @@ fn queue_rq(_queue_data: (), rq: ARef<mq::Request<Self>>, _is_last: bool) -> Res
-     }
+@@ -4,6 +4,7 @@
  
-     fn commit_rqs(_queue_data: ()) {}
+ mod configfs;
+ 
++use configfs::IRQMode;
+ use kernel::{
+     block::{
+         self,
+@@ -53,35 +54,44 @@ fn new(
+         block_size: u32,
+         rotational: bool,
+         capacity_mib: u64,
++        irq_mode: IRQMode,
+     ) -> Result<GenDisk<Self>> {
+         let tagset = Arc::pin_init(TagSet::new(1, 256, 1), GFP_KERNEL)?;
+ 
++        let queue_data = Box::new(QueueData { irq_mode }, GFP_KERNEL)?;
 +
-+    fn complete(rq: ARef<mq::Request<Self>>) {
-+        mq::Request::end_ok(rq)
-+            .map_err(|_e| kernel::error::code::EIO)
-+            // We take no refcounts on the request, so we expect to be able to
-+            // end the request. The request reference must be unique at this
-+            // point, and so `end_ok` cannot fail.
-+            .expect("Fatal error - expected to be able to end request");
-+    }
+         gen_disk::GenDiskBuilder::new()
+             .capacity_sectors(capacity_mib << (20 - block::SECTOR_SHIFT))
+             .logical_block_size(block_size)?
+             .physical_block_size(block_size)?
+             .rotational(rotational)
+-            .build(fmt!("{}", name.to_str()?), tagset, ())
++            .build(fmt!("{}", name.to_str()?), tagset, queue_data)
+     }
  }
-diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
-index 6e546f4f3d1c..c0ec06b84355 100644
---- a/rust/kernel/block/mq.rs
-+++ b/rust/kernel/block/mq.rs
-@@ -77,6 +77,12 @@
- //!     }
- //!
- //!     fn commit_rqs(_queue_data: ()) {}
-+//!
-+//!     fn complete(rq: ARef<Request<Self>>) {
-+//!         Request::end_ok(rq)
-+//!             .map_err(|_e| kernel::error::code::EIO)
-+//!             .expect("Fatal error - expected to be able to end request");
-+//!     }
- //! }
- //!
- //! let tagset: Arc<TagSet<MyBlkDevice>> =
-diff --git a/rust/kernel/block/mq/operations.rs b/rust/kernel/block/mq/operations.rs
-index 9e31d24e1164..d098a8a3e434 100644
---- a/rust/kernel/block/mq/operations.rs
-+++ b/rust/kernel/block/mq/operations.rs
-@@ -42,6 +42,9 @@ fn queue_rq(
-     /// Called by the kernel to indicate that queued requests should be submitted.
-     fn commit_rqs(queue_data: ForeignBorrowed<'_, Self::QueueData>);
  
-+    /// Called by the kernel when the request is completed.
-+    fn complete(rq: ARef<Request<Self>>);
++struct QueueData {
++    irq_mode: IRQMode,
++}
 +
-     /// Called by the kernel to poll the device for completed requests. Only
-     /// used for poll queues.
-     fn poll() -> bool {
-@@ -143,13 +146,21 @@ impl<T: Operations> OperationsVTable<T> {
-         T::commit_rqs(queue_data)
-     }
+ #[vtable]
+ impl Operations for NullBlkDevice {
+-    type QueueData = ();
++    type QueueData = KBox<QueueData>;
  
--    /// This function is called by the C kernel. It is not currently
--    /// implemented, and there is no way to exercise this code path.
-+    /// This function is called by the C kernel. A pointer to this function is
-+    /// installed in the `blk_mq_ops` vtable for the driver.
-     ///
-     /// # Safety
-     ///
--    /// This function may only be called by blk-mq C infrastructure.
--    unsafe extern "C" fn complete_callback(_rq: *mut bindings::request) {}
-+    /// This function may only be called by blk-mq C infrastructure. `rq` must
-+    /// point to a valid request that has been marked as completed. The pointee
-+    /// of `rq` must be valid for write for the duration of this function.
-+    unsafe extern "C" fn complete_callback(rq: *mut bindings::request) {
-+        // SAFETY: This function can only be dispatched through
-+        // `Request::complete`. We leaked a refcount then which we pick back up
-+        // now.
-+        let aref = unsafe { Request::aref_from_raw(rq) };
-+        T::complete(aref);
-+    }
- 
-     /// This function is called by the C kernel. A pointer to this function is
-     /// installed in the `blk_mq_ops` vtable for the driver.
-diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
-index 3848cfe63f77..f7f757f7459f 100644
---- a/rust/kernel/block/mq/request.rs
-+++ b/rust/kernel/block/mq/request.rs
-@@ -135,6 +135,23 @@ pub fn end_ok(this: ARef<Self>) -> Result<(), ARef<Self>> {
+     #[inline(always)]
+-    fn queue_rq(_queue_data: (), rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
+-        mq::Request::end_ok(rq)
+-            .map_err(|_e| kernel::error::code::EIO)
+-            // We take no refcounts on the request, so we expect to be able to
+-            // end the request. The request reference must be unique at this
+-            // point, and so `end_ok` cannot fail.
+-            .expect("Fatal error - expected to be able to end request");
+-
++    fn queue_rq(queue_data: &QueueData, rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
++        match queue_data.irq_mode {
++            IRQMode::None => mq::Request::end_ok(rq)
++                .map_err(|_e| kernel::error::code::EIO)
++                // We take no refcounts on the request, so we expect to be able to
++                // end the request. The request reference must be unique at this
++                // point, and so `end_ok` cannot fail.
++                .expect("Fatal error - expected to be able to end request"),
++            IRQMode::Soft => mq::Request::complete(rq),
++        }
          Ok(())
      }
  
-+    /// Complete the request by scheduling `Operations::complete` for
-+    /// execution.
-+    ///
-+    /// The function may be scheduled locally, via SoftIRQ or remotely via IPMI.
-+    /// See `blk_mq_complete_request_remote` in [`blk-mq.c`] for details.
-+    ///
-+    /// [`blk-mq.c`]: srctree/block/blk-mq.c
-+    pub fn complete(this: ARef<Self>) {
-+        let ptr = ARef::into_raw(this).cast::<bindings::request>().as_ptr();
-+        // SAFETY: By type invariant, `self.0` is a valid `struct request`
-+        if !unsafe { bindings::blk_mq_complete_request_remote(ptr) } {
-+            // SAFETY: We released a refcount above that we can reclaim here.
-+            let this = unsafe { Request::aref_from_raw(ptr) };
-+            T::complete(this);
-+        }
-+    }
-+
-     /// Return a pointer to the [`RequestDataWrapper`] stored in the private area
-     /// of the request structure.
-     ///
+-    fn commit_rqs(_queue_data: ()) {}
++    fn commit_rqs(_queue_data: &QueueData) {}
+ 
+     fn complete(rq: ARef<mq::Request<Self>>) {
+         mq::Request::end_ok(rq)
 
 -- 
 2.47.2
