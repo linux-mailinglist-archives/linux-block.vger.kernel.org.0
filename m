@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-26594-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26609-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B3EBB3FB65
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:56:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 122D2B3FB85
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:59:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB1584815B8
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 09:55:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CA361B245CC
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 10:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 626BF27AC2E;
-	Tue,  2 Sep 2025 09:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB352F90C5;
+	Tue,  2 Sep 2025 09:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXGOcorj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1/R2Qqz"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C88F2E5412;
-	Tue,  2 Sep 2025 09:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD702F747A;
+	Tue,  2 Sep 2025 09:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806933; cv=none; b=ChYwRN2KQItbs0gh0pk60HN+zW82gXhB2wKuTsxjAf6JmPfVRuXkDhMboGuy8i7S/EYDEtNJUOud46rsf2D9HcbHIvJaR8sYBT/dsXJSCsCtwmGOMpDA6Z/7oMobQ2ju/fXJuFXlu5Gu+xrkDYYx52fwgcuSxBd+oQU9d5uLeLc=
+	t=1756806995; cv=none; b=RDwSAE5/SCN15VB/k/hvsP4e0LZz9y9DrjnoQ2pk2PxYxIbN7mWfBRc8m356Ica6opkzbODhsc07sn+CLhrek+NI+16t09NmaJ0T8UH4+0kbtIJDtLqBUEbyG8Xj4Q9Tvo4toSVK6FQmT19O2/1EU9nppIlapkRz8PJZkkkcwy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806933; c=relaxed/simple;
-	bh=vipqlYY6O+HI8HCAO+GyfEa49mZe/gTyx2DU5+fC7G8=;
+	s=arc-20240116; t=1756806995; c=relaxed/simple;
+	bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M8lgJyZrK1WPWLVwNQ8g8q84kL25hHbVjdZcvd6TIsleOuF3KKmu7tL6KARrvqwpzgxZ3FyZE6l1mephVIkeiCNmBYQEHV77q5ux7t+wd3oAcP25qwX9x5B266VRGmEDvXonevIxdBcQ6CQrsKaEGhsgIkdU9NvYfjkNLye4kuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXGOcorj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908D0C4CEED;
-	Tue,  2 Sep 2025 09:55:29 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ApFoTx/7xPIVYXxslktApje7zM0hv1Qf9QljTDohAkRkW0kEVpW/OMH10105pAomY/H852RVjkeE9WA9B4+w7HsY6ZG8CtWa/kwrw8a5tAkrgOwnlV6SifLzQIlyFRxoVBu1AKxjvwOFDbE9XRP5RbBrewz8dkKugLr3U5iDn0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1/R2Qqz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18A3C4CEED;
+	Tue,  2 Sep 2025 09:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756806932;
-	bh=vipqlYY6O+HI8HCAO+GyfEa49mZe/gTyx2DU5+fC7G8=;
+	s=k20201202; t=1756806995;
+	bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mXGOcorjYYunTLKayMB8otxsrtPF++SLHAEYKdc56DJxlBQC+VeaJdPizub/IpUEJ
-	 l1vot1Pazn8M8qpRJDhYD5NrDWhmVELGJQcSTROJvBEvXJ8p+82BR7EVDEWts+TUpT
-	 M9XF5aq+7dxa9VyVRrNX6aNLaNXefdvsFqI+us4ewxar8a28HyIKsG7RKZz2yh6PFA
-	 vfjf9eoMRByxzG7kfXBJxTa6bc/DBvnqkvKcciRSkOVkpS2WLgtv5V/LVifV0e5yV0
-	 1O/HgKqamPWHtb2KaVgAZQvykWLbyiz3BVKQLbpYZIF89T3hd5fzj6G4+11fRC/dJu
-	 BdyO/hvolLmbQ==
+	b=m1/R2QqzD5hyXp4MZasOnKHRVFrY3nX4WGUqhsZvgxNuIvTRnShMRVIDOJUtLoJou
+	 DoV+/7jLgBon4qimx0AkcWwcx1MW6FNJ/6ytcnGSrCXxHvqtIL9sUQVGKPNf05z/YD
+	 Qb26bRrnqWcbEt92OC6+CwY6wBWCfzkxHeQ3s3vjY9xWZYQvHgOoHebv43uF7yiuWx
+	 JRNdIrxJ1i834VuI/XxS3jgr2ZdVrHrT6YgoqTwbETP9ElBTuiW45ruSyXrn9zINfR
+	 h7nGu3ZNlnVdYyoGL0GHTmoKOm1XYDpRIbnG0CAdYx0siNadpCBAKeBDJOeQ60Qw+E
+	 t6pCAz1v0jttQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 02 Sep 2025 11:54:58 +0200
-Subject: [PATCH v7 04/17] rust: str: introduce `NullTerminatedFormatter`
+Date: Tue, 02 Sep 2025 11:54:59 +0200
+Subject: [PATCH v7 05/17] rust: str: introduce `kstrtobool` function
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-rnull-up-v6-16-v7-4-b5212cc89b98@kernel.org>
+Message-Id: <20250902-rnull-up-v6-16-v7-5-b5212cc89b98@kernel.org>
 References: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 In-Reply-To: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -65,90 +65,124 @@ Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>, 
  Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2636; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=vipqlYY6O+HI8HCAO+GyfEa49mZe/gTyx2DU5+fC7G8=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr78P7RWlhh3LZjfg/zSaOl3/ULIeC8XSBg6R
- WriczEieiuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa+/AAKCRDhuBo+eShj
- d85FD/9lgcr6JFiftAbDoyBrJLly3m8r4Gxt2Y1rZLpBFPLCG+r5kQwX9fbK39HxI53I7Zm4sAh
- 0aWVuRc3r4S+uXqjhU2rYhrg16aYPnmkjW1HN65R7+o7pyq6QckbaAgViGdsU4ruy+P0OVxZQI9
- WWT9G+vNJ4Ezy5l7LQuyEPJlpchoIp99X8gydSvdMSodwdsZVGr6M5ojo0aldqD8GTv1azBdIRK
- TI6vYztEzfyFEa4FD5Cqy0iAISb3NcPnN2ckaTsVZVtAYrHMo1vTFympTe9QzxA9WOfSspZ4PD6
- isyy1CjhdQ4hh3fiIu0SmBGFOvv8XpM+MPOgg1oxkeNmb5VdwaRrZDraHfvyYxXL4xUobkkbVor
- vJp5MtOfqxydVSSnWpXXD8uDNw49XLbuCrbG/TCh1BbQ5uK6fTxw7CI1MuICFWAmTxlGz6F62FK
- rgfYuncAxdVa9FZQEphPTmMnX/PkezVopJQT7Rrs2Goziv1vgthnSf9gfKKwTgSrD5kdj1YBAjr
- bTbh0bi7juPC8zF5QFIWbqsSKiHLqmDGlFtj0cvjEgwLLgK74rdJ1kVjKptQit3Qp2F76IYcHzR
- W4Ofth99Dl7b2acH6yFnVwKIejGi0m/jdYBAt303ceh4drC7SKdVxUwIWtavQxoiCMe/nFoWt5g
- 8+3lvBQVNI6tYnQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4167; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr79HmUgz6G4EBNPl0dxD+hrow3LluSvmaZ7b
+ DUemhcllo6JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa+/QAKCRDhuBo+eShj
+ d7f3EAC4hPem+YJYIxRpY9Smx8FEBMRBSZc6i+RAphuzs2bA5MVN0sGrE7SsNaXNWpp8Mp5hZP4
+ piq6lWQJGH7WgD56FYlAAWzfYYJxVClE8MRYK5/47hA5Mf0jkvQUeLUoSBvTD/EXdoKTe7OMLwP
+ LQWJclK3CDKw53T+tGgYCw0TYiRXxoWAqMV8bNNbfSAK6TsLa9To8NaKRkX7y/h1gK/LtvQ0WSP
+ jrVNLxIGJv1CuFGwIhJWBABfHN0kuOcbY3YA1R0k2KeDWFO71iIzy3iQnt2hXBY9YnhiKiwTSQx
+ EaqG8XYmeBIivFZPHb/TKUknh94OHCEx1sb2hIyftiaKtyvs+FodCjRFWhrpa9cHPwYiLXzHwHT
+ 8Pl5kew8rW4oNODzqfzZIbAMiqURVpbic9uIABYgnGh3mY8JTh9797SCiQKR51waIEmhY67uYDB
+ pyCsg47gHPhNiBJBiLeMB1q2RFHnHHs6ZCh279spjTo+Ri1CoBsZR1Xx5l9lTDZE56enisp8TKE
+ FzK+8M3/Xyjg71ZqdIM8o5m6/i3RH5Qu6dsL38/xE574jthnCU4fxcvnl78xTCTN6uIcCI8J1z9
+ wkfGjRwj36z/zwZ3k/PntVEAWG15i/w1NxNvZmxLYFO00iVlboYlaCIbZnULBrZvJYtLiBY63nG
+ 5YrSZc+/LVBO4yQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add `NullTerminatedFormatter`, a formatter that writes a null terminated
-string to an array or slice buffer. Because this type needs to manage the
-trailing null marker, the existing formatters cannot be used to implement
-this type.
+Add a Rust wrapper for the kernel's `kstrtobool` function that converts
+common user inputs into boolean values.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/str.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ rust/kernel/str.rs | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
 diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 46cdc85dad63..d8326f7bc9c1 100644
+index d8326f7bc9c1..d2f9ebc94b75 100644
 --- a/rust/kernel/str.rs
 +++ b/rust/kernel/str.rs
-@@ -871,6 +871,55 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
+@@ -4,6 +4,7 @@
+ 
+ use crate::{
+     alloc::{flags::*, AllocError, KVec},
++    error::{to_result, Result},
+     fmt::{self, Write},
+     prelude::*,
+ };
+@@ -920,6 +921,84 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
      }
  }
  
-+/// A mutable reference to a byte buffer where a string can be written into.
++/// # Safety
 +///
-+/// The buffer will be automatically null terminated after the last written character.
-+///
-+/// # Invariants
-+///
-+/// * The first byte of `buffer` is always zero.
-+/// * The length of `buffer` is at least 1.
-+pub(crate) struct NullTerminatedFormatter<'a> {
-+    buffer: &'a mut [u8],
++/// - `string` must point to a null terminated string that is valid for read.
++unsafe fn kstrtobool_raw(string: *const u8) -> Result<bool> {
++    let mut result: bool = false;
++
++    // SAFETY:
++    // - By function safety requirement, `string` is a valid null-terminated string.
++    // - `result` is a valid `bool` that we own.
++    to_result(unsafe { bindings::kstrtobool(string, &mut result) })?;
++    Ok(result)
 +}
 +
-+impl<'a> NullTerminatedFormatter<'a> {
-+    /// Create a new [`Self`] instance.
-+    #[expect(dead_code)]
-+    pub(crate) fn new(buffer: &'a mut [u8]) -> Option<NullTerminatedFormatter<'a>> {
-+        *(buffer.first_mut()?) = 0;
-+
-+        // INVARIANT:
-+        //  - We wrote zero to the first byte above.
-+        //  - If buffer was not at least length 1, `buffer.first_mut()` would return None.
-+        Some(Self { buffer })
-+    }
++/// Convert common user inputs into boolean values using the kernel's `kstrtobool` function.
++///
++/// This routine returns `Ok(bool)` if the first character is one of 'YyTt1NnFf0', or
++/// \[oO\]\[NnFf\] for "on" and "off". Otherwise it will return `Err(EINVAL)`.
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::{c_str, str::kstrtobool};
++///
++/// // Lowercase
++/// assert_eq!(kstrtobool(c_str!("true")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("tr")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("t")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("twrong")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("false")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("f")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("yes")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("no")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("on")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("off")), Ok(false));
++///
++/// // Camel case
++/// assert_eq!(kstrtobool(c_str!("True")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("False")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("Yes")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("No")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("On")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("Off")), Ok(false));
++///
++/// // All caps
++/// assert_eq!(kstrtobool(c_str!("TRUE")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("FALSE")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("YES")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("NO")), Ok(false));
++/// assert_eq!(kstrtobool(c_str!("ON")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("OFF")), Ok(false));
++///
++/// // Numeric
++/// assert_eq!(kstrtobool(c_str!("1")), Ok(true));
++/// assert_eq!(kstrtobool(c_str!("0")), Ok(false));
++///
++/// // Invalid input
++/// assert_eq!(kstrtobool(c_str!("invalid")), Err(EINVAL));
++/// assert_eq!(kstrtobool(c_str!("2")), Err(EINVAL));
++/// ```
++pub fn kstrtobool(string: &CStr) -> Result<bool> {
++    // SAFETY:
++    // - The pointer returned by `CStr::as_char_ptr` is guaranteed to be
++    //   null terminated.
++    // - `string` is live and thus the string is valid for read.
++    unsafe { kstrtobool_raw(string.as_char_ptr()) }
 +}
 +
-+impl Write for NullTerminatedFormatter<'_> {
-+    fn write_str(&mut self, s: &str) -> fmt::Result {
-+        let bytes = s.as_bytes();
-+        let len = bytes.len();
-+
-+        // We want space for a zero. By type invariant, buffer length is always at least 1, so no
-+        // underflow.
-+        if len > self.buffer.len() - 1 {
-+            return Err(fmt::Error);
-+        }
-+
-+        let buffer = core::mem::take(&mut self.buffer);
-+        // We break the zero start invariant for a short while.
-+        buffer[..len].copy_from_slice(bytes);
-+        // INVARIANT: We checked above that buffer will have size at least 1 after this assignment.
-+        self.buffer = &mut buffer[len..];
-+
-+        // INVARIANT: We write zero to the first byte of the buffer.
-+        self.buffer[0] = 0;
-+
-+        Ok(())
-+    }
++/// Convert `&[u8]` to `bool` by deferring to [`kernel::str::kstrtobool`].
++///
++/// Only considers at most the first two bytes of `bytes`.
++pub fn kstrtobool_bytes(bytes: &[u8]) -> Result<bool> {
++    // `ktostrbool` only considers the first two bytes of the input.
++    let stack_string = [*bytes.first().unwrap_or(&0), *bytes.get(1).unwrap_or(&0), 0];
++    // SAFETY: `stack_string` is null terminated and it is live on the stack so
++    // it is valid for read.
++    unsafe { kstrtobool_raw(stack_string.as_ptr()) }
 +}
 +
  /// An owned string that is guaranteed to have exactly one `NUL` byte, which is at the end.
