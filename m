@@ -1,130 +1,121 @@
-Return-Path: <linux-block+bounces-26648-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26650-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4422DB40E03
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 21:41:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E581B40E4A
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 22:01:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 037B03A6053
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 19:41:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF38D4871BC
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 20:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7717B2E6CA3;
-	Tue,  2 Sep 2025 19:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 218E430BB94;
+	Tue,  2 Sep 2025 20:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="VDlptCP2"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="fFx7tsOI"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AA7198A11;
-	Tue,  2 Sep 2025 19:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756842088; cv=pass; b=FcUP59+DGCu/B5+fF0uj9lHmq7I2VZdQ20TH1473dUlgNSXkjiOcA40VrVw0lM9QOCwMH+0mDW57NijzvC9EX6VfDPd0YvqoUNVI5w6SBcgW4WdJxVl145vYWsMdx6yzTqZQKxDPgyzbJ//Umlye1Yk556+9RqPRM1nyWvyuqJo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756842088; c=relaxed/simple;
-	bh=9KUiVlHOSx3yLQtBjqIEEn8A6eLglGZix9UneSF8ZFo=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LjyzLTWahXFBAq6ZTmiEPvp1l7upiugSKDW9TwCCYI5ovWV+pDgPxVOohRBQ6yYkMRVah7UHgEccduaHaFvt9IqNrosJnGpVOZHDmSwB/gIoGTU87N0BP3y6GzqgFLqNBQ+79vJu8BmvZXNpOlZ9wdQC5nCfUFNaX/Epes/OqLs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=VDlptCP2; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1756842064; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UHvzHgVFpRNKwZW6xC3IYWq3/z1MAQ+WGRwP83cnUgUArqIimwAZXtbUBFa3e1kfr4XvsNx6YvUvuD5UFGrcSCS7/hx1ZKWMNKk+h73Le0QfwhAEpglvarnvqLzCDcICbaOrtVFeD+NbDQIYvNbXGUZLUrBI73IGAIOmdmfFBU0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1756842064; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=9KUiVlHOSx3yLQtBjqIEEn8A6eLglGZix9UneSF8ZFo=; 
-	b=URq60oLY7951Lx9OjIWl1GVh3uQYNQwZ/3I6cteQKzWKdE4BBTKFB8OExO08zASrEcO3hUk2OwV3l/TAQ0NBXrOZTd3j+WNrncBnqCn9eIqGDw8SyTjy8D9FuWlWb1ACfmutJ6sz5TplSfI5lfasNU5eWP3czJvxtcU7Y5Qmto8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756842064;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=9KUiVlHOSx3yLQtBjqIEEn8A6eLglGZix9UneSF8ZFo=;
-	b=VDlptCP2gcaFGw4epeQDpIxmm1hV7gbUHrrpW2N3yLLYYR8cl/h4N6EcjivXbGhl
-	fp4B7F2ccRpo52GKB92eZ36LugVEgUkBN0DeL56lqoFJuskFEEMd/q9iyW0a2S6gVJF
-	vd4uTh2j9NzvxdDoo7mN1XhVs9E5kt1eTQT5fZ58=
-Received: by mx.zohomail.com with SMTPS id 1756842062765279.12565293887326;
-	Tue, 2 Sep 2025 12:41:02 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A5826D4E2
+	for <linux-block@vger.kernel.org>; Tue,  2 Sep 2025 20:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756843304; cv=none; b=Avoo/yqzcZlZY2RqnXTWeyRCIjUI7Bghe8U8YYQsy09ORYnoTj+EAm50ezgVIOqnONihBeg9UNlj8J5yxGhW1pbKTceNQMBCK3G3Yh3wP8sA5ndS+/cnk3bgU1bb0BIcU7ilVMcmhXxeE4mpZMHSrgZ1wOg0x6TOKL+iRcr2VnA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756843304; c=relaxed/simple;
+	bh=CKb0qa2EwVbAZlDXyciR9KwmzofMhiVf3/s7y3mEtnQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RD+kDp72bmUQcu3Qz7sWUkfw2WKhbt+1JgbPF0P2TrAd3vjyCKDPDPSg8FjamyVg+1WAxpkPYUKPirslJMu80XQtW72ekS63z9cc8GoxTUJYfkrZByvd1vrnGOTtgL13GBCv1eBNnwXuze9E+bi9ZvoM8RZwprGaw0PhGCyvN8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=fFx7tsOI; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 582IJahl4048692
+	for <linux-block@vger.kernel.org>; Tue, 2 Sep 2025 13:01:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=9ORkJ89cvsyKX82bbv
+	xxMnq3y50ntuJ0q7elgqyduRc=; b=fFx7tsOI3VbZjmuPYy/AZYAp/FT2SkEvQ6
+	1vJQ64wdltI4YWHKv9vGHQUnoi5F03r4T17z4RGDk6lF375NfLlhWkLcTWLbqY9d
+	etmeWCEqaldYp3mNEKApAyaw2iKaQZFen/cwCny9SVhbodm9s+oPWI6jCAYgR5z/
+	qzyOSvUNAVYeoQRaMFVAQECuV7Ex3PEnnDmeal/B40BTQH0qCnEN4sH9Foq9PmMn
+	u7tjs2Qk/Qpa6SxdL7x2aWGraGNHXh3L5UbGs94mLqjAdX4FDztwTEByeqTpPP4X
+	gYl96WUw7v3Jp6IeobRQ5ZFmBgnPurxd4ZpqUHEtGVfbov5b7ZVQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 48x5rtgsn1-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 02 Sep 2025 13:01:41 -0700 (PDT)
+Received: from twshared24438.15.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.20; Tue, 2 Sep 2025 20:01:38 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 9A9B6142C455; Tue,  2 Sep 2025 13:01:22 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, <martin.petersen@oracle.com>,
+        <jgg@nvidia.com>, <leon@kernel.org>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2 0/2] blk-mq-dma: p2p cleanups and integrity fixup
+Date: Tue, 2 Sep 2025 13:01:19 -0700
+Message-ID: <20250902200121.3665600-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v7 00/17] rnull: add configfs, remote completion to rnull
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
-Date: Tue, 2 Sep 2025 16:40:46 -0300
-Cc: Boqun Feng <boqun.feng@gmail.com>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Jens Axboe <axboe@kernel.dk>,
- Breno Leitao <leitao@debian.org>,
- linux-block@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <6A619CD0-4B72-433D-97D9-CBA8AC37DB01@collabora.com>
-References: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.700.81)
-X-ZohoMailClient: External
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: zPn1w0uNNsq0XK0dhMgWOYLvYvoDQ-GE
+X-Proofpoint-GUID: zPn1w0uNNsq0XK0dhMgWOYLvYvoDQ-GE
+X-Authority-Analysis: v=2.4 cv=duXbC0g4 c=1 sm=1 tr=0 ts=68b74d25 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=f_Omk_ncVSdtrnns-hoA:9
+ a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTAyMDE5OCBTYWx0ZWRfX2a7LXJfbrLw0
+ 09nyAMUmRwIkWFew4SZgiiF3ZvT6GRu8zpbCDq4e4Nlptm5cl1s2zpTUk418SdksR05LA+aiD55
+ SZkWlvVHlndTPrVj48y9l9NlnQGJf7x43mzTDQ43MzZbx+QfZODybRPFp225PFGvdLh4RGsszJt
+ EWUwUpsjyB9cczbDVBM3CObE2nzqHbAeyQdgNWoXTeQR6SFYuYodHooxf3hbmYzAaqFfbgt9J3s
+ BRgZ83NuxBnNnvDZU4iwzJ0BhTr4VUPUmtiHquD8NV0wu3Vi2PrkCGT5L0pLvTwXYYVkKKmojnm
+ p3uYe1A4RLue/C2hp6rAQYFxn25Qa5m5fDWwDRiTE4d2+iOHMM9EL0R50pi6EU=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-02_06,2025-08-28_01,2025-03-28_01
 
-Hi Andreas,
+From: Keith Busch <kbusch@kernel.org>
 
-> On 2 Sep 2025, at 06:54, Andreas Hindborg <a.hindborg@kernel.org> =
-wrote:
->=20
-> This series adds configuration via configfs and remote completion to
-> the rnull driver. The series also includes a set of changes to the
-> rust block device driver API: a few cleanup patches, and a few =
-features
-> supporting the rnull changes.
->=20
-> The series removes the raw buffer formatting logic from =
-`kernel::block`
-> and improves the logic available in `kernel::string` to support the =
-same
-> use as the removed logic.
->=20
-> This series is a smaller subset of the patches available in the
-> downstream rnull tree. I hope to minimize the delta between upstream
-> and downstream over the next few kernel releases.
->=20
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
-> Changes in v7:
-> - Fix name of `kstrtobool_bytes` in commit message of patch 06/18.
-> - Fix stale safety comments in patch 15/18.
-> - Refactor `kstrtobool_raw` for readability.
-> - Link to v6: =
-https://lore.kernel.org/r/20250822-rnull-up-v6-16-v6-0-ec65006e2f07@kernel=
-.org
->=20
+This series moves the p2p dma tracking from the caller to the block
+layer, and makes it possible to actually use p2p for metadata payloads.
 
-You told me that some of my tags were not picked up by accident?
+v1:
 
-I checked again and all patches seem to have my rb tag. In any case,
+  https://lore.kernel.org/linux-nvme/20250829142307.3769873-1-kbusch@meta=
+.com/
 
-For the series:
+Changes:
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+  Folded in a fixed to patch 1 that was inadvertently included in patch 2=
+.
 
-This should be enough for "b4 trailers" to pick this up.
+  Added review.
 
-=E2=80=94 Daniel=
+Keith Busch (2):
+  blk-integrity: enable p2p source and destination
+  blk-mq-dma: bring back p2p request flags
+
+ block/bio-integrity.c         | 21 +++++++++++++++++----
+ block/blk-mq-dma.c            |  4 ++++
+ drivers/nvme/host/pci.c       | 21 ++++-----------------
+ include/linux/bio-integrity.h |  1 +
+ include/linux/blk-integrity.h | 14 ++++++++++++++
+ include/linux/blk-mq-dma.h    | 11 +++++++++--
+ include/linux/blk_types.h     |  2 ++
+ 7 files changed, 51 insertions(+), 23 deletions(-)
+
+--=20
+2.47.3
+
 
