@@ -1,49 +1,50 @@
-Return-Path: <linux-block+bounces-26609-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26597-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 122D2B3FB85
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:59:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79BE9B3FB6E
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 11:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CA361B245CC
-	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 10:00:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BB033A531E
+	for <lists+linux-block@lfdr.de>; Tue,  2 Sep 2025 09:56:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB352F90C5;
-	Tue,  2 Sep 2025 09:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 409DF2F066C;
+	Tue,  2 Sep 2025 09:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1/R2Qqz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnTiX9CV"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD702F747A;
-	Tue,  2 Sep 2025 09:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142C62EF657;
+	Tue,  2 Sep 2025 09:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806995; cv=none; b=RDwSAE5/SCN15VB/k/hvsP4e0LZz9y9DrjnoQ2pk2PxYxIbN7mWfBRc8m356Ica6opkzbODhsc07sn+CLhrek+NI+16t09NmaJ0T8UH4+0kbtIJDtLqBUEbyG8Xj4Q9Tvo4toSVK6FQmT19O2/1EU9nppIlapkRz8PJZkkkcwy4=
+	t=1756806944; cv=none; b=dCNoUngCDsa8sWkZrINzekcDI3CBroo6iMdshbmCeoEaHc5yN7q9QCb6x6I1uynC6cKYpjgj3zzYGLGunQAZblsxXHVJDKxhUUYjm661zkVVodnouN8O6pd+7Zxgcu58FXGqwdnzHZ6fU2e3eYIWL82kpQOglQ2QKmb5mjIT3IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806995; c=relaxed/simple;
-	bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
+	s=arc-20240116; t=1756806944; c=relaxed/simple;
+	bh=nwKi1FGptwRfXIELQTuMx2CYoPiscRWnpzAnP5fcCw4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ApFoTx/7xPIVYXxslktApje7zM0hv1Qf9QljTDohAkRkW0kEVpW/OMH10105pAomY/H852RVjkeE9WA9B4+w7HsY6ZG8CtWa/kwrw8a5tAkrgOwnlV6SifLzQIlyFRxoVBu1AKxjvwOFDbE9XRP5RbBrewz8dkKugLr3U5iDn0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1/R2Qqz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18A3C4CEED;
-	Tue,  2 Sep 2025 09:56:31 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=BLJ82vLSFR6qTWu8vwaWxCsn5hSZNZUNc+Zh8aQ6pVzktK5cxbodAMonRBoTmMjznnfGLpRSarqAbdxLx8yJnkqCaVgVBC5YC0w5yQZ2fztuJZ7KlmXepXzagdZnvfLdQU7AnNyEUAHc+UIT0ld35qPnB8H2K1Y1/idW4qC/zU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnTiX9CV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D1DC4CEF5;
+	Tue,  2 Sep 2025 09:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756806995;
-	bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
+	s=k20201202; t=1756806943;
+	bh=nwKi1FGptwRfXIELQTuMx2CYoPiscRWnpzAnP5fcCw4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m1/R2QqzD5hyXp4MZasOnKHRVFrY3nX4WGUqhsZvgxNuIvTRnShMRVIDOJUtLoJou
-	 DoV+/7jLgBon4qimx0AkcWwcx1MW6FNJ/6ytcnGSrCXxHvqtIL9sUQVGKPNf05z/YD
-	 Qb26bRrnqWcbEt92OC6+CwY6wBWCfzkxHeQ3s3vjY9xWZYQvHgOoHebv43uF7yiuWx
-	 JRNdIrxJ1i834VuI/XxS3jgr2ZdVrHrT6YgoqTwbETP9ElBTuiW45ruSyXrn9zINfR
-	 h7nGu3ZNlnVdYyoGL0GHTmoKOm1XYDpRIbnG0CAdYx0siNadpCBAKeBDJOeQ60Qw+E
-	 t6pCAz1v0jttQ==
+	b=HnTiX9CVzwT/BoVDHWh0NnYwjx5NSS7a4yXI5nhM/SfOlp+tMgeVkJ2ZMPBkKUEyN
+	 K5r6xxH0otPBBDcL702IREHPQBzm+j71uhC6W/oGcVLiJyFEqWxaPkHiPmbyhVPKgT
+	 cVm+ruWWCEj8W2IBGbpHxl0j7mvlIEZYd72s96WslaTUSXf3M8orQjRI7bxnikqtem
+	 BzcoEtfYCpLLub9/zeu5sCoF7xq8Khcct6WQTWzw0HbOK7N7yxy8uL9bIr16fAEEJr
+	 /0bpHIgKN6BTuE6VoWgtND9xcm9BS0oLHtrxIjNBY4/wPiqnIirE4Ny2RCR7Tv+xQg
+	 +6Eq/o4RpgQhQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 02 Sep 2025 11:54:59 +0200
-Subject: [PATCH v7 05/17] rust: str: introduce `kstrtobool` function
+Date: Tue, 02 Sep 2025 11:55:00 +0200
+Subject: [PATCH v7 06/17] rust: configfs: re-export `configfs_attrs` from
+ `configfs` module
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-rnull-up-v6-16-v7-5-b5212cc89b98@kernel.org>
+Message-Id: <20250902-rnull-up-v6-16-v7-6-b5212cc89b98@kernel.org>
 References: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 In-Reply-To: <20250902-rnull-up-v6-16-v7-0-b5212cc89b98@kernel.org>
 To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -65,129 +66,60 @@ Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>, 
  Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4167; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=PA2GD1ivE6Vnr85r4kVB0yNi08FXMSJYufL38ad/0LA=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr79HmUgz6G4EBNPl0dxD+hrow3LluSvmaZ7b
- DUemhcllo6JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa+/QAKCRDhuBo+eShj
- d7f3EAC4hPem+YJYIxRpY9Smx8FEBMRBSZc6i+RAphuzs2bA5MVN0sGrE7SsNaXNWpp8Mp5hZP4
- piq6lWQJGH7WgD56FYlAAWzfYYJxVClE8MRYK5/47hA5Mf0jkvQUeLUoSBvTD/EXdoKTe7OMLwP
- LQWJclK3CDKw53T+tGgYCw0TYiRXxoWAqMV8bNNbfSAK6TsLa9To8NaKRkX7y/h1gK/LtvQ0WSP
- jrVNLxIGJv1CuFGwIhJWBABfHN0kuOcbY3YA1R0k2KeDWFO71iIzy3iQnt2hXBY9YnhiKiwTSQx
- EaqG8XYmeBIivFZPHb/TKUknh94OHCEx1sb2hIyftiaKtyvs+FodCjRFWhrpa9cHPwYiLXzHwHT
- 8Pl5kew8rW4oNODzqfzZIbAMiqURVpbic9uIABYgnGh3mY8JTh9797SCiQKR51waIEmhY67uYDB
- pyCsg47gHPhNiBJBiLeMB1q2RFHnHHs6ZCh279spjTo+Ri1CoBsZR1Xx5l9lTDZE56enisp8TKE
- FzK+8M3/Xyjg71ZqdIM8o5m6/i3RH5Qu6dsL38/xE574jthnCU4fxcvnl78xTCTN6uIcCI8J1z9
- wkfGjRwj36z/zwZ3k/PntVEAWG15i/w1NxNvZmxLYFO00iVlboYlaCIbZnULBrZvJYtLiBY63nG
- 5YrSZc+/LVBO4yQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1232; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=nwKi1FGptwRfXIELQTuMx2CYoPiscRWnpzAnP5fcCw4=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBotr7+i+yQ3swVe5U9MLrSxaZg5jxxn784e/SvU
+ q+ylRqmmC+JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaLa+/gAKCRDhuBo+eShj
+ d3iuD/9L8zSZvRa4HWcj9rN3REcp2gI7x5Z59IyF5rjRNVv+DbZE3RVAmoQutGL4FVjkxHKRPDa
+ oIRP0+w2azN3CS3t+aNNBvsLZ+nSS6q5OCxUo1W523ZrKqBHFAxb1DctxBYTSTKG1IrsIAXDHNA
+ w5yHzibzWChVdBrXz8yZ5aN2av36kCkBJ/4H/JVYRaI7Pa/WVtgCEtieGCeCHOo0x2V5iTTFpLu
+ +UsYONTfZmnSAJEAZJYfxvfaoF6XYHUGEk8EZWTtv0mYnJAVli+tmz0PetzuCGbX6F8oCCi6qk/
+ QqTGUgO/mwaOYIP+egJJssAsgAuxDVsHEWBDJxtutHiuh9zsCeJ5iTLx8+roTd3G906wvMek9hv
+ T0Qmu/EOsXIkPBIVXY98KjFfez6ajw8rO8LEmJ6Bluke7m3ZvUpyuCDcQXzyc1nWMa/g/4baE5x
+ /mSZIpMwQBevLsv3/zzN6snBmdP5K5T2Q65lEyMomb6meRTvsjohP0ogf4H3trybXBdv5R9P0M4
+ GmmilFnDOofcZ+lGBb3Zn7u1zpFZ2ZOfFjWwVRnvMZymw+B0+wGEkkRNCLLjMn//by3RBUa0Cyu
+ h6saa7xuDBWCm4UGzhZhxoXymx/vO01V20hkwNsbCRIOlbZ9dNG7t86my99nqxChhCNsH7dSfhx
+ MginnAqqtuuSkbg==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add a Rust wrapper for the kernel's `kstrtobool` function that converts
-common user inputs into boolean values.
+Re-export `configfs_attrs` from `configfs` module, so that users can import
+the macro from the `configfs` module rather than the root of the `kernel`
+crate.
 
+Also update users to import from the new path.
+
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/str.rs | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ rust/kernel/configfs.rs       | 2 ++
+ samples/rust/rust_configfs.rs | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index d8326f7bc9c1..d2f9ebc94b75 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -4,6 +4,7 @@
+diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+index 2736b798cdc6..318a2f073d1c 100644
+--- a/rust/kernel/configfs.rs
++++ b/rust/kernel/configfs.rs
+@@ -1039,3 +1039,5 @@ macro_rules! configfs_attrs {
+     };
  
- use crate::{
-     alloc::{flags::*, AllocError, KVec},
-+    error::{to_result, Result},
-     fmt::{self, Write},
-     prelude::*,
- };
-@@ -920,6 +921,84 @@ fn write_str(&mut self, s: &str) -> fmt::Result {
-     }
  }
- 
-+/// # Safety
-+///
-+/// - `string` must point to a null terminated string that is valid for read.
-+unsafe fn kstrtobool_raw(string: *const u8) -> Result<bool> {
-+    let mut result: bool = false;
 +
-+    // SAFETY:
-+    // - By function safety requirement, `string` is a valid null-terminated string.
-+    // - `result` is a valid `bool` that we own.
-+    to_result(unsafe { bindings::kstrtobool(string, &mut result) })?;
-+    Ok(result)
-+}
-+
-+/// Convert common user inputs into boolean values using the kernel's `kstrtobool` function.
-+///
-+/// This routine returns `Ok(bool)` if the first character is one of 'YyTt1NnFf0', or
-+/// \[oO\]\[NnFf\] for "on" and "off". Otherwise it will return `Err(EINVAL)`.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::{c_str, str::kstrtobool};
-+///
-+/// // Lowercase
-+/// assert_eq!(kstrtobool(c_str!("true")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("tr")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("t")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("twrong")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("false")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("f")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("yes")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("no")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("on")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("off")), Ok(false));
-+///
-+/// // Camel case
-+/// assert_eq!(kstrtobool(c_str!("True")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("False")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("Yes")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("No")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("On")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("Off")), Ok(false));
-+///
-+/// // All caps
-+/// assert_eq!(kstrtobool(c_str!("TRUE")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("FALSE")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("YES")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("NO")), Ok(false));
-+/// assert_eq!(kstrtobool(c_str!("ON")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("OFF")), Ok(false));
-+///
-+/// // Numeric
-+/// assert_eq!(kstrtobool(c_str!("1")), Ok(true));
-+/// assert_eq!(kstrtobool(c_str!("0")), Ok(false));
-+///
-+/// // Invalid input
-+/// assert_eq!(kstrtobool(c_str!("invalid")), Err(EINVAL));
-+/// assert_eq!(kstrtobool(c_str!("2")), Err(EINVAL));
-+/// ```
-+pub fn kstrtobool(string: &CStr) -> Result<bool> {
-+    // SAFETY:
-+    // - The pointer returned by `CStr::as_char_ptr` is guaranteed to be
-+    //   null terminated.
-+    // - `string` is live and thus the string is valid for read.
-+    unsafe { kstrtobool_raw(string.as_char_ptr()) }
-+}
-+
-+/// Convert `&[u8]` to `bool` by deferring to [`kernel::str::kstrtobool`].
-+///
-+/// Only considers at most the first two bytes of `bytes`.
-+pub fn kstrtobool_bytes(bytes: &[u8]) -> Result<bool> {
-+    // `ktostrbool` only considers the first two bytes of the input.
-+    let stack_string = [*bytes.first().unwrap_or(&0), *bytes.get(1).unwrap_or(&0), 0];
-+    // SAFETY: `stack_string` is null terminated and it is live on the stack so
-+    // it is valid for read.
-+    unsafe { kstrtobool_raw(stack_string.as_ptr()) }
-+}
-+
- /// An owned string that is guaranteed to have exactly one `NUL` byte, which is at the end.
- ///
- /// Used for interoperability with kernel APIs that take C strings.
++pub use crate::configfs_attrs;
+diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
+index af04bfa35cb2..ad364fb93e53 100644
+--- a/samples/rust/rust_configfs.rs
++++ b/samples/rust/rust_configfs.rs
+@@ -5,7 +5,7 @@
+ use kernel::alloc::flags;
+ use kernel::c_str;
+ use kernel::configfs;
+-use kernel::configfs_attrs;
++use kernel::configfs::configfs_attrs;
+ use kernel::new_mutex;
+ use kernel::page::PAGE_SIZE;
+ use kernel::prelude::*;
 
 -- 
 2.47.2
