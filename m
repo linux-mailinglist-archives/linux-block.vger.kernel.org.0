@@ -1,57 +1,109 @@
-Return-Path: <linux-block+bounces-26727-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26729-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98013B4318F
-	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 07:25:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53E72B43201
+	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 08:08:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57A664860CC
-	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 05:25:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D5091BC7E2F
+	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 06:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A3023B638;
-	Thu,  4 Sep 2025 05:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BD06245014;
+	Thu,  4 Sep 2025 06:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="au07x3TM"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A3C22C355
-	for <linux-block@vger.kernel.org>; Thu,  4 Sep 2025 05:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532961F61C;
+	Thu,  4 Sep 2025 06:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756963542; cv=none; b=PwXDv+lAAENBcJTR6V+/vd/ReM950HfoeWQxCqeZNxMnnyc/nPJG5GrVLIh8nOR2dfANwa8oQvyyB9/oa4AwDkVCbuDj87knFuGqMdjja6iqrf/lTX+ZUYP5cF5amALzHnkKUB0KXef7S3a+8VM1JubN/HJnBW7ddV43NG5gLow=
+	t=1756966118; cv=none; b=Z5VhQxdVrmzmhMW469iNRZYPIMWOsdkxhXf5p2OwphcwuWzlEY5U8vb0cvNnhByhzIBijn2t3uApKELK6pAYQ2X+AwPg3RCzAx0FKyHS/CCO9QhjPLKvKgU8Yo55p7lBSyRCX4AyyLet0yQUCujuZZ/uWP8r20pjaXuktZQxpyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756963542; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXGjs4FKiTiD9XckCoRNV9AIdF31N8s4qW4AGrj6uKHR/09SItJlTG/RYyrOYP61PkLcZAhSWH+pReOsh/cQSbEoP7XN0XN5gd/khKpqgLN6k6Ah7II7Rji8eXBu6fxAxxNkmUUlwPivsTdvcPdznMPEadihalloLtu6hatkj8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0581D68AA6; Thu,  4 Sep 2025 07:25:35 +0200 (CEST)
-Date: Thu, 4 Sep 2025 07:25:34 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-block@vger.kernel.org, axboe@kernel.dk, hch@lst.de,
-	leon@kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] blk-map: provide the bdev to bio if one exists
-Message-ID: <20250904052534.GA27516@lst.de>
-References: <20250903202746.3629381-1-kbusch@meta.com>
+	s=arc-20240116; t=1756966118; c=relaxed/simple;
+	bh=PmZFJJavb6Kwq93U9mkw4U/klXTp2W/31GQQ7sn+wws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gqA5REeek1VsjYlckGsB0IMYdf4mFB1CTYktL5erDW2DZ3XmmtnmWobhn29hbyc8Z2VbdwcPKOPJzr4W3pYQ/bpEwAb2FyedgPqf7JPTtiPIfSoxlyHSBaZlMIK7fdX0tP57fFCKvPtS21v0D8LCbEjm9gipjUy1JlGXGjg2kds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=au07x3TM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4F1C4CEF0;
+	Thu,  4 Sep 2025 06:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756966117;
+	bh=PmZFJJavb6Kwq93U9mkw4U/klXTp2W/31GQQ7sn+wws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=au07x3TMJQ7ulcaCzRTpdroHWQ4RICbPmium6XlYuUvNyvw2iXHLsiAZofIlD0YOg
+	 fB1opSBxi6GuGE2pTVGN5rjNlmRTYK6bpYfNb3P1Fks1umaehTcGtS6keATZipjVnT
+	 iNC9jd1MEhhtTC8/Pp/o/Y76fKkLfaXH3G5f0GE1dGelR0wZfPCb80Zj1WycP9kRq9
+	 Ks9mTO+RnvQQE0FTwHf2tF6e8H0/VqrPNxrXEpn3R2qLdxfJOWxgXaILANP3a9rHpd
+	 bX93N++yM/BC5nn2m3up5wzRHw+m8ejy2SOtLRIIXorxR2oVNDp+M5YHKp6WAa3azs
+	 mVS6bZaOcLItg==
+Message-ID: <5561e689-03be-4cb2-9cd6-788accfd520a@kernel.org>
+Date: Thu, 4 Sep 2025 15:05:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250903202746.3629381-1-kbusch@meta.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] elevator: avoid redundant conditions
+To: Markus Elfring <Markus.Elfring@web.de>,
+ Liao Yuanhong <liaoyuanhong@vivo.com>, linux-block@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20250903121405.386483-1-liaoyuanhong@vivo.com>
+ <a8d29094-2db3-495e-8a71-9d11992c4d9c@web.de>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <a8d29094-2db3-495e-8a71-9d11992c4d9c@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Looks good:
+On 9/4/25 3:05 PM, Markus Elfring wrote:
+> …
+>> it avoids writing out a condition that is unnecessary. Let's drop such
+> 
+>                                                          Thus?
+> 
+> 
+>> unnecessary conditions.
+> 
+>   an unnecessary condition?
+> 
+> 
+> Would a summary phrase like “Avoid redundant condition in elv_rb_add()”
+> be nicer?
+> 
+> 
+> …
+>> +++ b/block/elevator.c
+>> @@ -240,7 +240,7 @@ void elv_rb_add(struct rb_root *root, struct request *rq)
+>>  
+>>  		if (blk_rq_pos(rq) < blk_rq_pos(__rq))
+>>  			p = &(*p)->rb_left;
+>> -		else if (blk_rq_pos(rq) >= blk_rq_pos(__rq))
+>> +		else
+>>  			p = &(*p)->rb_right;
+> 
+> 
+> Would you dare to apply a conditional expression here?
+> 
+> 		p = (blk_rq_pos(rq) < blk_rq_pos(__rq)) ? &(*p)->rb_left : &(*p)->rb_right;
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This is far less readable.
 
+> 
+> 
+> Regards,
+> Markus
+
+
+-- 
+Damien Le Moal
+Western Digital Research
 
