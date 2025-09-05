@@ -1,210 +1,253 @@
-Return-Path: <linux-block+bounces-26770-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26772-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B9D4B45218
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 10:52:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B742B454BD
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 12:30:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 084AD3B0FBD
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 08:52:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7C19560892
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 10:30:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC1B304BDA;
-	Fri,  5 Sep 2025 08:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5861D29BDBA;
+	Fri,  5 Sep 2025 10:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z74N/31q"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="VBXdwpkZ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C564328031D
-	for <linux-block@vger.kernel.org>; Fri,  5 Sep 2025 08:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A8D163;
+	Fri,  5 Sep 2025 10:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757062335; cv=none; b=gq4y+tWIUbXkPY155AokYmoHaptBlnQ4expKIfIDRSEenrilaG9IxqQIbQeTUWVZ7yonXr7RuNLvZEN6I9dYTTEldnybmDVnystAWKk+AIuHawTBEzcYBGYzlPrJLWTlwD4vKdONFyDLF52Sg6k9vEIsxCOMTl5SIKrcVpXa3Ok=
+	t=1757068203; cv=none; b=SZISXeIVpiG5yk2BcuBQv1ZCf8jm5XJoFpm3dlxNGBuOriZOb8S1l7TfkCdDuwNHWxlNlxDqS1ENHTd90StI9kkvC8pA/uvWr9fBtQNGtpsk6duXpAQ61FAEFNM1PI/Uogf8d/LJLExfFb9t/bzLoDRX+yhH4VXVguRV27sLwc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757062335; c=relaxed/simple;
-	bh=DF/iEzWHIQwESB2SDSgXYrot5syuW7SMnlKhZF3RVYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S9HF+qoNsb5Sjs2Cz+th6C/I5V16H4uq9NqFkVQF85dZuV4q+BdJDSbLtZWhvJT/ZR7aNxZBhyr1PPrb2W8HKOZ/vPy0zuEPy9VKA5IelgWF2z6xWAKrRumqykNxxL61dG6oFGhshpJGCBfonsbTnFdOoHnq6dJmalG9YFE0ffo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z74N/31q; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45cb6428c46so15565995e9.1
-        for <linux-block@vger.kernel.org>; Fri, 05 Sep 2025 01:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1757062332; x=1757667132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9mgapDPHuM0mgof/uZH7wCRcMetT8aod2+Badkbrp1o=;
-        b=Z74N/31qYKQjWAV+cE7YhKB9H6JM2rXegGNk3T14tSwjo3iCOEM+y7XmssXafgg7n7
-         QliGaWAxNS/nxl8KjP4hiB+ySKVwNY0a41JR+Te7EWtGhePE4i+5O+EL505kCVcShigS
-         hRpEbkwbRD9j76uvVNRUUWGO7mDCn5pZxE8TObZo/Z6ppn7k0HiJaBmjPRh6dYe3xtcY
-         mwKKVlN7bnegKjH8cflzXhfi46jxGOssRnXcN4p2DbABPFyzmEaE7OtKuviHEufgN1g/
-         vtBCgTHs6hBf7NZRSD2Rdya9cpX8LTreLYc9+oCl99QDamGR3Yi5fSzTNMDNGsqQR7/Z
-         ZeFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757062332; x=1757667132;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9mgapDPHuM0mgof/uZH7wCRcMetT8aod2+Badkbrp1o=;
-        b=ZqhQiQ9TVHFA1Ofy6tnb7XB+d1xfNDoRLryft/Qhn7NzB77KRZ+7f/kJDcSdEiYjXu
-         LkR4ysY6axWiHux+0bhHPFzY2hgLYEFJVOnMMyHt2+ZpngcYiPTrhprR/hcVERMWSNUf
-         3shiGepgM4DTUZ0L2yRTNEi6In5ynVSpQ8nI9rOz4OeTkhW7JTw4pUChwE73DYokaLNS
-         Tco4XtVkhtG4b/1XJLrd45/nGHh9Jy8H5u+7Kd247mz0wXunytErkqGCb1nw9+hilmUf
-         K/LE95o4D06hYwXAmIj0RF0UAf9Y9qaQg/OplhMVRdS2PdA8bX5PLzCcOyywO9J+AmO8
-         ReAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqMzETPPPRCLctEIIAH5+MQRle3oB3BiE7p0jRSbjJ8EgL4Tu7bubUWgkMqhkIkSrfCrq1oXKZa+UWeg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQwE+paZTQoTc14arNBLSvtcZ1c1aOyRJytP8ehnRwBwvEvwoo
-	LqWiAnQAo4cMJ4oHQPGuWvxpGwEYpTTM6A4a0pVEsBwqxe/6bGqfJ5YoCWTIIKmu+QU=
-X-Gm-Gg: ASbGncvGjhAdvacA8Aqb8/w3PoSucA6qa3BXAL9Dl0U58FBriS3hTDfAj/Ws4CiD7Oa
-	cOGm6Q9Fuus1DPRV9tHdkOVvEtwwTK6udtenB7J34e/CF25mdkVUWfgqCUX+lh2YzY7MkMQZ1ZY
-	wq4tKCJzKt2y4M00+dvS7wVGPES1COsWVPxi03L8S02jtXG9E5xkdPq2gLCiBOoWsUR6h1tG07t
-	xERD061OVDAJBRvrePr4Uod1VED2yacanahfDvHV/XYnNzaXuK4Y6wQEwYSv1MdHOPSC0ckTWrY
-	E32JSF/NoiMn+PvfnnKVTo7vKC33vjExkm0pjNUmxZqRblMSiHDbApXFZe/aY7uVfLg6qUWIbCt
-	l2gbau/qoQRQn7d53LGlGchorJ3yXGKFPbi83FYpSV3i66Wo=
-X-Google-Smtp-Source: AGHT+IHFQYNFVYiIXssiaSNUtqeFtGmKO8sqK1MzfGdIBLqddINzipVIOD+1qcAfN7bHYh9ABu5QFw==
-X-Received: by 2002:a05:600c:c48f:b0:45b:7c4c:cfbf with SMTP id 5b1f17b1804b1-45b855709d3mr171510145e9.23.1757062332004;
-        Fri, 05 Sep 2025 01:52:12 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b940bbc0dsm166359115e9.2.2025.09.05.01.52.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 01:52:11 -0700 (PDT)
-From: Marco Crivellari <marco.crivellari@suse.com>
-To: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/3] drivers/block: WQ_PERCPU added to alloc_workqueue users
-Date: Fri,  5 Sep 2025 10:51:41 +0200
-Message-ID: <20250905085141.93357-4-marco.crivellari@suse.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250905085141.93357-1-marco.crivellari@suse.com>
-References: <20250905085141.93357-1-marco.crivellari@suse.com>
+	s=arc-20240116; t=1757068203; c=relaxed/simple;
+	bh=LxoUUTM4Lhq7LVBoS37CQ51tMJsfbc8SZeLeZfmdiKo=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=gRbkz7cNWBFyKOaMppjdNUZ6QhtZpsFpxpqh69+F1BHtZnayiXtSuGUJMhNcMbfWbdNTWV0KuVfz1NHgr4vALe1UUdgR5eiITQlAyfebsQ6MFVodFIXQI4gUjBrz6yNKqqiwS2X75zE7f5xndvP7G1mMUQKD1e0Ac+41NcFiTFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=VBXdwpkZ; arc=none smtp.client-ip=162.62.57.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1757067888;
+	bh=6CzGc88AhXYQStJl9NyjeWpFWRbHkdfeVp4hWLrDfJE=;
+	h=From:To:Cc:Subject:Date;
+	b=VBXdwpkZRQeBMpx3xu1HXJTv99/a0R+SdaM3L/LzNw2PJC6dC6Z3iB2WpKT73ScN/
+	 BOX61ddMyfvPAMv+D75H5nIMls317lTRlBjzFyqbU7xgZRrVZyPTBhYEJ+1218Z/2P
+	 fk9ONrZ0y1HYMwmA++blFYf8wF1qsriyz9jBGkxY=
+Received: from SSOC3-SH.company.local ([58.33.109.195])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 6122C8F1; Fri, 05 Sep 2025 18:24:18 +0800
+X-QQ-mid: xmsmtpt1757067858tmfm1wuve
+Message-ID: <tencent_E009F9D3A4C7F814018C1DFA80304944BA0A@qq.com>
+X-QQ-XMAILINFO: NvH2zBBgt3uTinj3dsRo7W8LDD6ajpi3LhkMG8/QA6s0nKnaYOdOanBaiJSJcL
+	 Zmab59O/XxNYUsPfBJSQywB7Xt90rzZmysydFTVg+6gZFb4tcOTjnmaLpwp59rRpWV5/Sk7lSVuy
+	 Cs3B6kSJ1feF2Vig0LtAYETqtCjkDlZkB71RmExBO/II2pOWOh6V+mD82tbhTFOdE0nvSXZUIra1
+	 uYk2ycZwNoo9yax8+nnYJNBBpZMgV5sA2ReaZTGjQe0rBp4Qa9Gn8keN/kFxMRpE1crcpdGpuE3X
+	 kKskkLJRxoGSgQC57ZZjjwLXO8h6eBkp1QHSimGBCg8G2ovlqVPKeSUJU26aZ+U5SxueC/6Td3/R
+	 JIaFVsNZyVYVFT0gcBE7r34KxM4qEsrSv+dG5magqRBjjYqfu0XTWGPyQjFnuO0puyQTN9GsGoX0
+	 cIizQUrNIUg5AKljsJyAvnezaIrUahTlJFtw7k4ZPqfeKGfhbzZ9t2un3qQBldHbnvx/UsgeQ4Ft
+	 vWHgS7ZNTd5k0fChoM8txK5JLnvakj0GfAKRmtxf6RuwlA6ostZ1lth7mQp9VJLTJ3kwWaOUKDQ9
+	 fwRUc6gc3zR3dGqQiUlFc9OzRzO5zDlZ/lbp631cVt73va8TmXmhKBQbiwDsl5TAfHeTpvlic7Cp
+	 j9VzmdHTDDBHnVr/DfACV7CHApOBFxJsyfI9JG1V0/PTl/UY7zxo699da3YLoAVvliym3LjX9GXH
+	 +fh8ZyL7My/YYnr7rhBKQ4Qn2Vhnqs2qZ3xUYANHN09KRrQkvb7XQ6TkzQ8EXl6hKwTB+P0eY0OG
+	 VsZm8iYS1hTypOQsrFqJZcwwBLgHMT3SGELXiJWBY/zOM+GoF/xCYA2H9GegogFmx/9pV1aUNuiL
+	 9FHlH+9QjWNLu9ryiNEAOK9XtB3vHywfT8ln7St8GXaO1bMXaa0OfkA0m6MgIxXHFRvMzpe4C30p
+	 Gt8SZCNZVnXhcuVCJirc8rqetucg1HRCnyjxGO0JrzsvBX1St8LkF13bWUBnEuUdJeAz8dvQvNPE
+	 TM0fcbPDvVqPktFVOKKL+7Eh2s0qo=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Han Guangjiang <gj.han@foxmail.com>
+To: yukuai1@huaweicloud.com,
+	Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org (open list:BLOCK LAYER),
+	linux-kernel@vger.kernel.org (open list)
+Cc: hanguangjiang@lixiang.com,
+	fanggeng@lixiang.com,
+	yangchen11@lixiang.com,
+	liangjie@lixiang.com
+Subject: [PATCH v3] blk-throttle: fix access race during throttle policy activation
+Date: Fri,  5 Sep 2025 18:24:11 +0800
+X-OQ-MSGID: <20250905102413.3973379-1-gj.han@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Currently if a user enqueue a work item using schedule_delayed_work() the
-used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
-WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
-schedule_work() that is using system_wq and queue_work(), that makes use
-again of WORK_CPU_UNBOUND.
-This lack of consistentcy cannot be addressed without refactoring the API.
+From: Han Guangjiang <hanguangjiang@lixiang.com>
 
-alloc_workqueue() treats all queues as per-CPU by default, while unbound
-workqueues must opt-in via WQ_UNBOUND.
+On repeated cold boots we occasionally hit a NULL pointer crash in
+blk_should_throtl() when throttling is consulted before the throttle
+policy is fully enabled for the queue. Checking only q->td != NULL is
+insufficient during early initialization, so blkg_to_pd() for the
+throttle policy can still return NULL and blkg_to_tg() becomes NULL,
+which later gets dereferenced.
 
-This default is suboptimal: most workloads benefit from unbound queues,
-allowing the scheduler to place worker threads where they’re needed and
-reducing noise when CPUs are isolated.
+ Unable to handle kernel NULL pointer dereference
+ at virtual address 0000000000000156
+ ...
+ pc : submit_bio_noacct+0x14c/0x4c8
+ lr : submit_bio_noacct+0x48/0x4c8
+ sp : ffff800087f0b690
+ x29: ffff800087f0b690 x28: 0000000000005f90 x27: ffff00068af393c0
+ x26: 0000000000080000 x25: 000000000002fbc0 x24: ffff000684ddcc70
+ x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000000000
+ x20: 0000000000080000 x19: ffff000684ddcd08 x18: ffffffffffffffff
+ x17: 0000000000000000 x16: ffff80008132a550 x15: 0000ffff98020fff
+ x14: 0000000000000000 x13: 1fffe000d11d7021 x12: ffff000688eb810c
+ x11: ffff00077ec4bb80 x10: ffff000688dcb720 x9 : ffff80008068ef60
+ x8 : 00000a6fb8a86e85 x7 : 000000000000111e x6 : 0000000000000002
+ x5 : 0000000000000246 x4 : 0000000000015cff x3 : 0000000000394500
+ x2 : ffff000682e35e40 x1 : 0000000000364940 x0 : 000000000000001a
+ Call trace:
+  submit_bio_noacct+0x14c/0x4c8
+  verity_map+0x178/0x2c8
+  __map_bio+0x228/0x250
+  dm_submit_bio+0x1c4/0x678
+  __submit_bio+0x170/0x230
+  submit_bio_noacct_nocheck+0x16c/0x388
+  submit_bio_noacct+0x16c/0x4c8
+  submit_bio+0xb4/0x210
+  f2fs_submit_read_bio+0x4c/0xf0
+  f2fs_mpage_readpages+0x3b0/0x5f0
+  f2fs_readahead+0x90/0xe8
 
-This default is suboptimal: most workloads benefit from unbound queues,
-allowing the scheduler to place worker threads where they’re needed and
-reducing noise when CPUs are isolated.
+Tighten blk_throtl_activated() to also require that the throttle policy
+bit is set on the queue:
 
-This patch adds a new WQ_PERCPU flag to explicitly request the use of
-the per-CPU behavior. Both flags coexist for one release cycle to allow
-callers to transition their calls.
+  return q->td != NULL &&
+         test_bit(blkcg_policy_throtl.plid, q->blkcg_pols);
 
-Once migration is complete, WQ_UNBOUND can be removed and unbound will
-become the implicit default.
+This prevents blk_should_throtl() from accessing throttle group state
+until policy data has been attached to blkgs.
 
-With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
-any alloc_workqueue() caller that doesn’t explicitly specify WQ_UNBOUND
-must now use WQ_PERCPU.
-
-All existing users have been updated accordingly.
-
-Suggested-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+Fixes: a3166c51702b ("blk-throttle: delay initialization until configuration")
+Co-developed-by: Liang Jie <liangjie@lixiang.com>
+Signed-off-by: Liang Jie <liangjie@lixiang.com>
+Signed-off-by: Han Guangjiang <hanguangjiang@lixiang.com>
 ---
- drivers/block/aoe/aoemain.c   | 2 +-
- drivers/block/rbd.c           | 2 +-
- drivers/block/rnbd/rnbd-clt.c | 2 +-
- drivers/block/sunvdc.c        | 2 +-
- drivers/block/virtio_blk.c    | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+v2:
+ - remove the comment about freeze queue in blk_should_throtl()
+ - Retitle: "blk-throttle: fix access race during throttle policy activation"
+v3:
+ - move blkcg_policy_enabled() to blk-cgroup.h
+ - use blkcg_policy_enabled() instead in blk_throtl_activated()
+ - remove the comment about freeze queue in blk_throtl_init()
+ - add some comments to decribe the throttle init synchronization
+ - Link to v2: https://lore.kernel.org/lkml/tencent_2B678DA920124B08854638A6BE68746CCC05@qq.com/
+---
+ block/blk-cgroup.c   |  6 ------
+ block/blk-cgroup.h   |  6 ++++++
+ block/blk-throttle.c |  6 +-----
+ block/blk-throttle.h | 18 +++++++++++-------
+ 4 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/block/aoe/aoemain.c b/drivers/block/aoe/aoemain.c
-index cdf6e4041bb9..3b21750038ee 100644
---- a/drivers/block/aoe/aoemain.c
-+++ b/drivers/block/aoe/aoemain.c
-@@ -44,7 +44,7 @@ aoe_init(void)
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index fe9ebd6a2e14..7246fc256315 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -110,12 +110,6 @@ static struct cgroup_subsys_state *blkcg_css(void)
+ 	return task_css(current, io_cgrp_id);
+ }
+ 
+-static bool blkcg_policy_enabled(struct request_queue *q,
+-				 const struct blkcg_policy *pol)
+-{
+-	return pol && test_bit(pol->plid, q->blkcg_pols);
+-}
+-
+ static void blkg_free_workfn(struct work_struct *work)
  {
- 	int ret;
+ 	struct blkcg_gq *blkg = container_of(work, struct blkcg_gq,
+diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
+index 81868ad86330..83367086cb6a 100644
+--- a/block/blk-cgroup.h
++++ b/block/blk-cgroup.h
+@@ -459,6 +459,12 @@ static inline bool blk_cgroup_mergeable(struct request *rq, struct bio *bio)
+ 		bio_issue_as_root_blkg(rq->bio) == bio_issue_as_root_blkg(bio);
+ }
  
--	aoe_wq = alloc_workqueue("aoe_wq", 0, 0);
-+	aoe_wq = alloc_workqueue("aoe_wq", WQ_PERCPU, 0);
- 	if (!aoe_wq)
- 		return -ENOMEM;
++static inline bool blkcg_policy_enabled(struct request_queue *q,
++				const struct blkcg_policy *pol)
++{
++	return pol && test_bit(pol->plid, q->blkcg_pols);
++}
++
+ void blk_cgroup_bio_start(struct bio *bio);
+ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta);
+ #else	/* CONFIG_BLK_CGROUP */
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index 397b6a410f9e..cfa1cd60d2c5 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -1327,17 +1327,13 @@ static int blk_throtl_init(struct gendisk *disk)
+ 	INIT_WORK(&td->dispatch_work, blk_throtl_dispatch_work_fn);
+ 	throtl_service_queue_init(&td->service_queue);
  
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index faafd7ff43d6..af0e21149dbc 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -7389,7 +7389,7 @@ static int __init rbd_init(void)
- 	 * The number of active work items is limited by the number of
- 	 * rbd devices * queue depth, so leave @max_active at default.
- 	 */
--	rbd_wq = alloc_workqueue(RBD_DRV_NAME, WQ_MEM_RECLAIM, 0);
-+	rbd_wq = alloc_workqueue(RBD_DRV_NAME, WQ_MEM_RECLAIM | WQ_PERCPU, 0);
- 	if (!rbd_wq) {
- 		rc = -ENOMEM;
- 		goto err_out_slab;
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 15627417f12e..b3a0470f9e80 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -1809,7 +1809,7 @@ static int __init rnbd_client_init(void)
- 		unregister_blkdev(rnbd_client_major, "rnbd");
- 		return err;
- 	}
--	rnbd_clt_wq = alloc_workqueue("rnbd_clt_wq", 0, 0);
-+	rnbd_clt_wq = alloc_workqueue("rnbd_clt_wq", WQ_PERCPU, 0);
- 	if (!rnbd_clt_wq) {
- 		pr_err("Failed to load module, alloc_workqueue failed.\n");
- 		rnbd_clt_destroy_sysfs_files();
-diff --git a/drivers/block/sunvdc.c b/drivers/block/sunvdc.c
-index 442546b05df8..851763e5dd18 100644
---- a/drivers/block/sunvdc.c
-+++ b/drivers/block/sunvdc.c
-@@ -1215,7 +1215,7 @@ static int __init vdc_init(void)
+-	/*
+-	 * Freeze queue before activating policy, to synchronize with IO path,
+-	 * which is protected by 'q_usage_counter'.
+-	 */
+ 	memflags = blk_mq_freeze_queue(disk->queue);
+ 	blk_mq_quiesce_queue(disk->queue);
+ 
+ 	q->td = td;
+ 	td->queue = q;
+ 
+-	/* activate policy */
++	/* activate policy, blk_throtl_activated() will return true */
+ 	ret = blkcg_activate_policy(disk, &blkcg_policy_throtl);
+ 	if (ret) {
+ 		q->td = NULL;
+diff --git a/block/blk-throttle.h b/block/blk-throttle.h
+index 3b27755bfbff..9d7a42c039a1 100644
+--- a/block/blk-throttle.h
++++ b/block/blk-throttle.h
+@@ -156,7 +156,13 @@ void blk_throtl_cancel_bios(struct gendisk *disk);
+ 
+ static inline bool blk_throtl_activated(struct request_queue *q)
  {
- 	int err;
+-	return q->td != NULL;
++	/*
++	 * q->td guarantees that the blk-throttle module is already loaded,
++	 * and the plid of blk-throttle is assigned.
++	 * blkcg_policy_enabled() guarantees that the policy is activated
++	 * in the request_queue.
++	 */
++	return q->td != NULL && blkcg_policy_enabled(q, &blkcg_policy_throtl);
+ }
  
--	sunvdc_wq = alloc_workqueue("sunvdc", 0, 0);
-+	sunvdc_wq = alloc_workqueue("sunvdc", WQ_PERCPU, 0);
- 	if (!sunvdc_wq)
- 		return -ENOMEM;
+ static inline bool blk_should_throtl(struct bio *bio)
+@@ -164,11 +170,6 @@ static inline bool blk_should_throtl(struct bio *bio)
+ 	struct throtl_grp *tg;
+ 	int rw = bio_data_dir(bio);
  
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 7cffea01d868..a5a48f976a20 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -1683,7 +1683,7 @@ static int __init virtio_blk_init(void)
+-	/*
+-	 * This is called under bio_queue_enter(), and it's synchronized with
+-	 * the activation of blk-throtl, which is protected by
+-	 * blk_mq_freeze_queue().
+-	 */
+ 	if (!blk_throtl_activated(bio->bi_bdev->bd_queue))
+ 		return false;
+ 
+@@ -194,7 +195,10 @@ static inline bool blk_should_throtl(struct bio *bio)
+ 
+ static inline bool blk_throtl_bio(struct bio *bio)
  {
- 	int error;
- 
--	virtblk_wq = alloc_workqueue("virtio-blk", 0, 0);
-+	virtblk_wq = alloc_workqueue("virtio-blk", WQ_PERCPU, 0);
- 	if (!virtblk_wq)
- 		return -ENOMEM;
+-
++	/*
++	 * block throttling takes effect if the policy is activated
++	 * in the bio's request_queue.
++	 */
+ 	if (!blk_should_throtl(bio))
+ 		return false;
  
 -- 
-2.51.0
+2.25.1
 
 
