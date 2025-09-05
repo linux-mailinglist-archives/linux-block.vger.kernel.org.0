@@ -1,81 +1,70 @@
-Return-Path: <linux-block+bounces-26746-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26748-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED22CB44E7B
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 08:59:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76E58B44EEF
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 09:17:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A36673B06A1
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 06:59:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35943585038
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 07:17:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EB02D0C62;
-	Fri,  5 Sep 2025 06:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="bZL3kugS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6DFF2D8390;
+	Fri,  5 Sep 2025 07:15:57 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A191D9663;
-	Fri,  5 Sep 2025 06:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FE233E1;
+	Fri,  5 Sep 2025 07:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757055555; cv=none; b=qBJxNz1+LeOJlgzKqE2cI9w6oO1QpNN9xncDG8+lOynocZDOpkKAzSvF/3lWYOcuWmcEZLuVTBwAhASOoUp49N8t6iLy5PYCXV2DU3bEpCptJndB/jqg+DdiVKlxDqHAZgCWLaYVeRtOtYyDOhcvPWVstLxhDhcHnhXQMQoMbW8=
+	t=1757056557; cv=none; b=XvqIx7pv3YaZIJqlC91EmzdqqVoPval7ZB2eEoYVubOcp54AlpiqYfpa48Y3T9qd5mLXa28FPlhISVjH0wCAbaGCHVcF+6XhBtLPqxdQuJGI7jrcKwJ40BNAd8WuJhHA4uG55Tz1/Qg9S+yVhNo2otQiJtTEdNcA5xV8NR8nWYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757055555; c=relaxed/simple;
-	bh=GCymIAAz+qgJ568yGWceZTlQrmAP9ECs9uIP5Bj7Z6k=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=DIJ6Vzzy25b69M/11g5iLln/P23KjsO6AsvjNKjo/Pk+lDNB1MBQO8b6vPTlTAvrhRHMq5vPzowO7o7b3XyGDj9n3KMgAwFa9KZVHmQM55GaUF+R4GYwIyBPWqD1CdXB2goY+nrtSPshRh1kbFNxg3z0cNf42TofwhCQo2S4Mi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=bZL3kugS; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1757055243;
-	bh=zG32oskllLDTV9iENtVUUWrH0a2xe00cXMqSoc2pacs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bZL3kugSRKfgnTui3iHwqVFrfDNpT5Y1O6ycIGOUmHGHdbSWZAbn2dGS6QLhK/36J
-	 vYOAxu6ceJFzRcCUAE0t5U/z0/7NwOU69JVRebfA9Xk3LqN8KEdXn/T3ybwZq9KmHH
-	 +YKbSpYI/SpShc1gUWEcHdXmO9bPjnPjTUQ7Zvo8=
-Received: from SSOC3-SH.company.local ([58.33.109.195])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id D6F050B6; Fri, 05 Sep 2025 14:53:47 +0800
-X-QQ-mid: xmsmtpt1757055227t6bzsb5ab
-Message-ID: <tencent_F6A864CCCE079BE929924EE899C63BC6A705@qq.com>
-X-QQ-XMAILINFO: Od8VqZhFMB3NzFK+BtdDdfkcQNPpMJOdx0xsk2IqOcb1TU1n/qMItJiYqME34F
-	 4T5hqRG90iZduHwBfSx50kjl9upmQFMO+250lD9+poS/vMTUrR9qdnQuwwJSuTbunzVvUzGRdqTO
-	 hePgOo0LkSJrWQVrn7WhaiFd7BDkgJhlIlTidIKmDhF9GFzNooa6aBC6oqQNHdwHhVvB5haGFRO0
-	 rSvnCThEMMpEe2azlR7B2CE9ereGGL9mPSmW386TKMqJGVKZfQnxf+7k5Sx0Myk76K7bq4SQP61v
-	 V35YRXUPT3mTFk8JhHjjd1mFLi1WtDVNhHpWEoBe+gmn1VwPfbtQ/5r1Wkd/ekSQL8UDY9cHZJlB
-	 mGsVVRbUiOvb3la0poGBhTM5vEQjamcQYu8udMbvkcAcSSrBFiR8D8fjP5suir+5DvjuyEvozetH
-	 JSc2tlnNqTsEj+5BpZLpibHG0xXbIT+cNNfWdRggH5auYv4fEoIflV0oKPsUG0PXLpoynQW9Hb6x
-	 uuEJnRKjqVwsm+uvuH5Ad5BfLLNt6T+nXuPY41DfGgCCmnKHicgLCfGLYBjqNmb4bs4MM4kRqiKS
-	 P6fMJuSMTWndRHu+m4GfbSZYRAQnW94SH2w6qm3y3N85TKVyNOScXYKcL6lDxIXnLfKZC/luQIHi
-	 LGY3p4WxDR4v+u8R3Mqdzt6v61mr4DdhgdihgHE0tgajjfc49x8RSr7k+Q8H5flJsyOeiC8B+YRH
-	 3r6/7xX/4/a3KDxEQOtchtp1XBotL7fug3tRCzcAeIyoKKoEiFebV13yZTTUK/zUlm7xvwFXY53A
-	 759vPY2kAW69LLNJNkDEo+vTfbC+6fGY14t0z4sfQeucXYHgUNPqf4xJnyL4QH7id0FfacbgFCTX
-	 DlYCyR5daLBsoHOm7AKcjB7SGL6OseAFZqSW2jCqLsj46NXI2MT+NHC+u7jN4n2jr6CXN83+oOmZ
-	 YBmvVGMmgRHuMAjajxE/7BjWMd7a6fMwDpAby497wUu3K4/N9XeYyrM1ARNBatZU/FhMoBInzq2C
-	 SDnbk2uA==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Han Guangjiang <gj.han@foxmail.com>
-To: yukuai1@huaweicloud.com
-Cc: axboe@kernel.dk,
-	fanggeng@lixiang.com,
-	gj.han@foxmail.com,
-	hanguangjiang@lixiang.com,
-	liangjie@lixiang.com,
-	linux-block@vger.kernel.org,
+	s=arc-20240116; t=1757056557; c=relaxed/simple;
+	bh=WUqZ/mUGOa9rCdNCzxpP38onIg1k5jMJhJu8ZhqIBZo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=trVEn7NpNCqvceLY3sotDA84+fZbeZ6CyY3GNagwkMuSt8ZKSC5vjLJ786QeRSGIc8x7LEa5fugwbjWVJ8/snw4GSbNgXiY2+WdLcEpxcvzGPZzEuhUpBdOuVG39yVon3Y8FuQRHOikbDi+urud7PKnaXYvQV6nTkGpPn2h/WKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cJ7146K3gzYQvYT;
+	Fri,  5 Sep 2025 15:15:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5BE8F1A101F;
+	Fri,  5 Sep 2025 15:15:51 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAncIwkjrpowYbQBQ--.23573S4;
+	Fri, 05 Sep 2025 15:15:50 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: hch@infradead.org,
+	colyli@kernel.org,
+	hare@suse.de,
+	dlemoal@kernel.org,
+	tieren@fnnas.com,
+	bvanassche@acm.org,
+	axboe@kernel.dk,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	satyat@google.com,
+	ebiggers@google.com,
+	kmo@daterainc.com,
+	akpm@linux-foundation.org,
+	neil@brown.name
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yangchen11@lixiang.com,
-	yukuai3@huawei.com
-Subject: Re: [PATCH] blk-throttle: check policy bit in blk_throtl_activated()
-Date: Fri,  5 Sep 2025 14:53:46 +0800
-X-OQ-MSGID: <20250905065346.3345118-1-gj.han@foxmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <1f9c674a-9f5b-6c89-0504-1f6985095fa0@huaweicloud.com>
-References: <1f9c674a-9f5b-6c89-0504-1f6985095fa0@huaweicloud.com>
+	cgroups@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH for-6.18/block 00/16] block: fix reordered IO in the case recursive split
+Date: Fri,  5 Sep 2025 15:06:27 +0800
+Message-Id: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -83,114 +72,93 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAncIwkjrpowYbQBQ--.23573S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW7KF48XryfWr15GF43trb_yoW5XF43pw
+	4agr4fZr4xGFsagFsIq3W7tFn5GanY9FW5Jr9xXws5ZFyqyry8tw48XrW8tryDGrWfC3yU
+	XF1UCryUGr15GFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
+	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0s2-5UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Yu Kuai <yukuai3@huawei.com>
 
-> >>>    static inline bool blk_throtl_activated(struct request_queue *q)
-> >>>    {
-> >>> -        return q->td != NULL;
-> >>> +        return q->td != NULL && 
-> >>> +               test_bit(blkcg_policy_throtl.plid, q->blkcg_pols);
-> >>>    }
-> >> You can just remove the fist checking, p->td must be set if policy is
-> >> enabled. And please make blkcg_policy_enabled() inline function in
-> >> blk-cgroup.h and use it here.
-> > We intentionally kept the q->td != NULL check because we cannot guarantee
-> > that the policy module is fully loaded when this function is called.
-> > If the policy module is not loaded yet, blkcg_policy_throtl.plid might not be
-> > assigned, which could cause the test_bit() check to be incorrect.
-> >
-> > By keeping this check, we ensure that we have at least reached the cgroup
-> > configuration flow, indicating that the policy loading is complete.
-> >
-> > I'm wondering if there are any risks here and whether we should remove
-> > the q->td != NULL check?
-> 
-> I think there is none. blk-throttle can't be build as module, if config is n,
-> blk_throtl_bio() is a non-function, if config is y, policy is registered during
-> init. And throtl_init() failure will panic, noted blkcg_policy_register() will
-> never fail for blk-throttle. BTW, policy pid is not a dynamic value at runtime.
+Changes from RFC v3:
+ - initialize bio->issue_time_ns in blk_mq_submit_bio, patch 2;
+ - set/clear new queue_flag when iolatency is enabled/disabled, patch 3;
+ - fix compile problem for md-linear, patch 12;
+ - make should_fail_bio() non-static, and open code new helper, patch 14;
+ - remove the checking for zoned disk, patch 15;
+Changes from RFC v2:
+ - add patch 1,2 to cleanup bio_issue;
+ - add patch 3,4 to fix missing processing for split bio first;
+ - bypass zoned device in patch 14;
+Changes from RFC:
+ - export a new helper bio_submit_split_bioset() instead of
+export bio_submit_split() directly;
+ - don't set no merge flag in the new helper;
+ - add patch 7 and patch 10;
+ - add patch 8 to skip bio checks for resubmitting split bio;
 
-I understand your point, but I think there's still a potential race 
-condition during kernel initialization. While blk-throttle is built as a 
-built-in module, block devices can also be built as built-in modules, and 
-at the same initcall level, the loading order may be unpredictable. 
-Additionally, the policy plid is allocated during blk-throttle module 
-initialization, so we need to verify this timing issue.
+patch 1-5 cleanup bio_issue, and fix missing processing for split bio;
+patch 6 export a bio split helper;
+patch 7-13 unify bio split code;
+path 14,15 convert the helper to insert split bio to the head of current
+bio list;
+patch 16 is a follow cleanup for raid0;
 
-I conducted an experiment on the qemu platform by adding a BUG() statement 
-in the blk_throtl_activated() function:
+Yu Kuai (16):
+  block: cleanup bio_issue
+  block: initialize bio issue time in blk_mq_submit_bio()
+  blk-mq: add QUEUE_FLAG_BIO_ISSUE_TIME
+  md: fix mssing blktrace bio split events
+  blk-crypto: fix missing blktrace bio split events
+  block: factor out a helper bio_submit_split_bioset()
+  md/raid0: convert raid0_handle_discard() to use
+    bio_submit_split_bioset()
+  md/raid1: convert to use bio_submit_split_bioset()
+  md/raid10: add a new r10bio flag R10BIO_Returned
+  md/raid10: convert read/write to use bio_submit_split_bioset()
+  md/raid5: convert to use bio_submit_split_bioset()
+  md/md-linear: convert to use bio_submit_split_bioset()
+  blk-crypto: convert to use bio_submit_split_bioset()
+  block: skip unnecessary checks for split bio
+  block: fix reordered IO in the case recursive split
+  md/raid0: convert raid0_make_request() to use
+    bio_submit_split_bioset()
 
-------------[ cut here ]------------
-kernel BUG at block/blk-throttle.h:157!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT_RT SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.17-g69f6c99f1c48 #2
-Hardware name: linux,dummy-virt (DT)
-pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : submit_bio_noacct+0xec/0x388
-lr : submit_bio_noacct+0x40/0x388
-sp : ffff80008135b530
-x29: ffff80008135b530 x28: ffff00000180f000 x27: fffffdffc00876c0
-x26: 0000000000000040 x25: ffff800080a405f0 x24: 0000000000000004
-x23: ffff800080393128 x22: ffff000002720000 x21: ffff0000018c0700
-x20: 0000000000000000 x19: ffff00000207b180 x18: 0000000000000020
-x17: 0000000000000002 x16: 0000000000000002 x15: ffffffffffffffff
-x14: 0000000000000000 x13: ffff800080dff350 x12: ffffffffffffffff
-x11: 0000000000000000 x10: 0000000000000020 x9 : ffff8000804cd088
-x8 : ffff00000180f088 x7 : 0000000000000000 x6 : ffff00000207b1f8
-x5 : 0000000000000008 x4 : ffff0000018c0700 x3 : ffff7fffdee71000
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-Call trace:
- submit_bio_noacct+0xec/0x388
- submit_bio+0xb4/0x150
- submit_bh_wbc+0x14c/0x1d0
- block_read_full_folio+0x25c/0x398
- blkdev_read_folio+0x24/0x38
- filemap_read_folio+0x34/0xf0
- do_read_cache_folio+0x150/0x290
- read_cache_folio+0x1c/0x30
- read_part_sector+0x48/0xd0
- read_lba+0x9c/0x180
- efi_partition+0xa0/0x780
- bdev_disk_changed+0x238/0x608
- blkdev_get_whole+0xac/0x150
- bdev_open+0x28c/0x418
- bdev_file_open_by_dev+0xe0/0x150
- disk_scan_partitions+0x74/0x160
- device_add_disk+0x3f4/0x448
- virtblk_probe+0x74c/0x920
- virtio_dev_probe+0x1a4/0x250
- really_probe+0xb4/0x2b0
- __driver_probe_device+0x80/0x140
- driver_probe_device+0xdc/0x178
- __driver_attach+0x9c/0x1b8
- bus_for_each_dev+0x7c/0xe8
- driver_attach+0x2c/0x40
- bus_add_driver+0xec/0x218
- driver_register+0x68/0x138
- __register_virtio_driver+0x2c/0x50
- virtio_blk_init+0x74/0xd0
- do_one_initcall+0x64/0x290
- kernel_init_freeable+0x214/0x408
- kernel_init+0x2c/0x1f0
- ret_from_fork+0x10/0x20
+ block/bio.c                 |  2 +-
+ block/blk-cgroup.h          |  6 ----
+ block/blk-core.c            | 19 ++++++-----
+ block/blk-crypto-fallback.c | 16 ++++------
+ block/blk-iolatency.c       | 19 +++++------
+ block/blk-merge.c           | 64 +++++++++++++++++++++++++------------
+ block/blk-mq-debugfs.c      |  1 +
+ block/blk-mq.c              |  3 ++
+ block/blk-throttle.c        |  2 +-
+ block/blk.h                 | 45 ++------------------------
+ drivers/md/md-linear.c      | 14 ++------
+ drivers/md/raid0.c          | 30 ++++++-----------
+ drivers/md/raid1.c          | 38 ++++++++--------------
+ drivers/md/raid1.h          |  4 ++-
+ drivers/md/raid10.c         | 54 ++++++++++++++-----------------
+ drivers/md/raid10.h         |  2 ++
+ drivers/md/raid5.c          | 10 +++---
+ include/linux/blk_types.h   |  7 ++--
+ include/linux/blkdev.h      |  3 ++
+ 19 files changed, 141 insertions(+), 198 deletions(-)
 
-From the experimental results, we can see that virtio block device is 
-executing blk_throtl_activated() during initialization in do_one_initcall() 
-when loading virio-blk module_init(). 
-
-Combined with the information that blk-throttle is also loaded as a 
-built-in module, there exists a scenario where the block device probes 
-first, at which point the plid has not been allocated yet, and 
-blk_throtl_activated() is executed, followed by the loading of the 
-blk-throttle built-in module.
-
-Given this experimental evidence, I'm wondering if we should consider 
-keeping the q->td != NULL check as a safeguard against this initialization 
-race condition. I'd appreciate your thoughts on this matter.
-
-Thanks,
-Han Guangjiang
+-- 
+2.39.2
 
 
