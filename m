@@ -1,78 +1,78 @@
-Return-Path: <linux-block+bounces-26771-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26769-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBA0AB4521A
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 10:52:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBAD4B45217
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 10:52:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5B757B2098
-	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 08:51:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B1061C233CA
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 08:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B0AE280328;
-	Fri,  5 Sep 2025 08:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B989130499D;
+	Fri,  5 Sep 2025 08:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RJK9eNQ8"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="J/1X21Hv"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1494A27EFFF
-	for <linux-block@vger.kernel.org>; Fri,  5 Sep 2025 08:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56B5280328
+	for <linux-block@vger.kernel.org>; Fri,  5 Sep 2025 08:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757062336; cv=none; b=lU7KA1RH+JtSX7cWloodIHS5Q5zuS3U4MALu5yqSLMcLHorhZi6WamBLYBx4EMs0A3cBlH40W6B3qKsPiu1Vi8Z3D9YR+tFLsjzrzAzfyQ+narfHn7W6SirxAkxueAfcdXoH6oRvI9BotOB4NTxOaUQ/NuVUs257gCPTTPCsOvg=
+	t=1757062335; cv=none; b=AL+g763DlB6dFpZbQe1ry8QHvqDHulUtPW4pzK60OqLVhwxhf0JMRTnOT84oJrT7m9vdytJp0CUQLvvklvrq/kXmOtCC6iBnH1kS+9EnCGqApNxtBL2VILuVxHJGHWjO/yWHJxwtsLhKfkpaLLph6THr4yuYxd3uijJZHB7RSIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757062336; c=relaxed/simple;
-	bh=JvX7TqkBXPSB8OitMgWG1eESIdw6g3S6GklBekHhnLw=;
+	s=arc-20240116; t=1757062335; c=relaxed/simple;
+	bh=++ys8qf1mVFh7eaJ0LPRH0noW+e/5qWo081uJ6QywX4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S5gxDoqIxeZWZnPGo2ygzlTXE1qqiRyORYsB3s+VMReu/F1yFmtorVT6RxNQ96REZzgFasKWBojpDhsIvFZ9DXfWNr6JuVYgdztG0A5bcAf7UiJHSrbPirCP+8bauzPi5l8AvTncDuq8RA2nEXY+8wZb9kqoelt2sBI/TBWyp8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RJK9eNQ8; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=OyIGCw4QxGMfEU6ewIV70BK5OThiELPt294WfZfnE4IJCJr7fdHl+gUjja9u3UU71PnO7DFPj2vKwETgR8uqoRY3U7tBZijwo8Pi/HN4AtSg+JkI6vv9MpDhSs75bYfC2wBRiU5endntbmEnSLkrSzY0h+Ls5a+DfdJOXz0r8Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=J/1X21Hv; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45cb5e5e71eso10803605e9.2
-        for <linux-block@vger.kernel.org>; Fri, 05 Sep 2025 01:52:11 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45b7722ea37so9865865e9.1
+        for <linux-block@vger.kernel.org>; Fri, 05 Sep 2025 01:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1757062330; x=1757667130; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1757062331; x=1757667131; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r4OYQnEDg2MM33An1P1417ylBBWSz1KWKHVVwtk+B0Y=;
-        b=RJK9eNQ8NtG1DjQt93AMB4WCTuw0VWhar18lbJMEpGdvB0Eh3efS8NpMuxj+p9GuXq
-         gcnQT0VBtfXHR2SL15funqBpFaWXP9uxrpIEbvE5seSAkhxDHQuO/R9mHZmxHHhbqmOQ
-         sHyhotVjGHjDTykHs/FBSrFkqJqxGr0rf7X3BXC/WdkW/EVccFleQxwZ42yDy6p78PQQ
-         dj1YMFZR68KGAeDILcxknWjlHh1o8ZdthqnT/tuQcTY+imHKG3xR2PlS5okQ01Lxqchs
-         rnhFso7L2Pe86x7xeDBrS6VExKfqZx8CG/n0klM1/aq/BDvGpbpNqh9K4LQFtK+iGwQF
-         3kPw==
+        bh=6o4r2c6Wzzp+J29SS3YZXj6FxIBq7GTFCT9Pn6IdrUA=;
+        b=J/1X21Hv9aeS3pK1XqRWVYzLZUylMw79x3kM7hwjj4PKyLuexMappeM6E6+biSXjoP
+         sd6c3rfJZnLntDYkXdCxUskuyPCTD+25RNzIK7VNCtKEzXehW9wnE506YLyhj49CT2Oa
+         OK73kobcTr32n3pe3Uaeew6C8hnEHqc/cZZX1bkCkl3q0VATh4QHbnuAYmnr+t+OZAyI
+         xv98opbmchHpz+KDBgQWL3Yml3saNw9a+rhkkTcaMqN8n/+RqSX0ka1jKv/i7K+0SQ0I
+         QGPzW3xhhVks2OnSnSfG38Y2bMGy9ajRa8+CIQLkjSask0aAHxbcdk+FH9R4CDajwgKb
+         WIpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757062330; x=1757667130;
+        d=1e100.net; s=20230601; t=1757062331; x=1757667131;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r4OYQnEDg2MM33An1P1417ylBBWSz1KWKHVVwtk+B0Y=;
-        b=VGNhyqBYbl8f6T+BFKEvUGHNI659tbFFEOGxEU2MEMjTEgh1lkBrfz/Y3j8nDvcLN/
-         VFGwI5H910eygCqTLJamrHHUi/BIs2uC3H8f2oE76kf0j/GIQP3nAwbcL22cWE80HtxO
-         EQ1QbHrXnzGpJlqbsZSPQpbLir1/LtNc1ISuZvGUlpUGu/YwYrf+9O+INKl2hGFOvOUj
-         vm0Mh7ThKgpPdX6YOGMC0DFQxPN8+FnCjeZ+MUPeqaNPuaVeCwSAAvEWRSlveGIEosc/
-         7FEjb9HIV8VREtst4oyjmPagczfgmAIuzEo7ldOG6CtSTPGLSXgAqhFi2dwvQ9S5992j
-         vbag==
-X-Forwarded-Encrypted: i=1; AJvYcCUQlO/Dre91wfDWDpjvqLq9EpK9OJDtL/43gWMHrsguxm7PB3M5ZCNHCQBLqzdqd+oz8n+quAURDO29Ig==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2dWYGCCZAmDkbYWAJPjWWLaTt90RIZVPcqqCAl4f8tSY6KmlG
-	qkZdRhfV6vyYXsJp4uaWBVTuewdzOYd1UrP15D7ag59GihJl1t9TjW8mHw5TJ69s+L4=
-X-Gm-Gg: ASbGnct1Vyn5T3xckZI+R3ozBNMei0D3m6AeuYg7w610Fkh0VtOgJmiaEag1Ywi4BEk
-	DkxAiG/RDJ6i96eqwuytyBB9CtOI9vlZ5L3tb6lh8QcrMveyb1ycbFMeaHMYBVtuyG9mVgXX1db
-	FDyABMxA5qeC59tJkEiSHlrP/pVEjQ478IsS8vDsYJO2y5fYESYhVw32dSUtbhRnSq3SLuT89K7
-	6pSe7de10L0Lzoh8EECkPsOuFXRwJKNGAV/V05LFHAqRgfZdv+xccHk6Lz0o0f3YgdphHZBpMEB
-	QpW7/Qm9dNOaCBG8+vtu5HaqbF3w4CSfZBEc72IX1mCLs9q6pOyqQOUT3Iss+n2m4YBfNJrTW/x
-	HkEchEqE1l9gUuXZU5WR+xyFmhTaD2WYtvD3SwLiGiAe2CfftHP/y5OdKMg==
-X-Google-Smtp-Source: AGHT+IEqBd4ds0RW6PXStRIDBwTEDhSLakCtAA3K8GPmgNvMAMaafWSh2e4vyXdrFtjFO7ZutFqBzg==
-X-Received: by 2002:a05:600c:4f8f:b0:456:f1e:205c with SMTP id 5b1f17b1804b1-45b85550704mr189754635e9.4.1757062330275;
-        Fri, 05 Sep 2025 01:52:10 -0700 (PDT)
+        bh=6o4r2c6Wzzp+J29SS3YZXj6FxIBq7GTFCT9Pn6IdrUA=;
+        b=Pc1n6NXln9X2geOSVBjM1tsyEUGt2QMRDKGjkiIOlVXPsdZJ1a3QStlQ6Taj4ozv3M
+         6xBo/FZVkPkNAJAt7mhChaR9mt/fZBREptuMERgZWQZ7mpXsboU6slNKP3qU2Jwy570f
+         QG4EsKOu7fRVVuMTBKhqc2DENNKXNPdxaVbmXvzKD5Df/I3oScaLD9/67spe2YM0Vr68
+         MstIXmmqv1aY2Qwo4eluJWpgP5DFHxvcp6qXMPxmyNv7nK+TfX8sXzU3BXBQ4MpqPAhO
+         +HfBa+h7lSeov2AWW3frH94Xo5eFSXR42qWJGDXB7LblogbbHWx94k+2UcDqXeNjE2Cl
+         P1nA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnoQ3XXzyeIROLe5zkHHNWPDGf4p5a/8LiwKxzKj/lMg65pfmGMQoT3QLBdqGGRO79R9Fda0Qrh1xkgQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRW9JOgtivrfDhux8fgse2MZRpTfXWo6MMAhzzdYWM8C7/WWa7
+	/V/7MP9tG5Ag+Fi6LC93OZ8m6AJ1+32QF4eRTMjV5YGQeGBv9tPhmpozmekJZmgjZr0=
+X-Gm-Gg: ASbGnctpd0X4yVksKvdUeotToBYlnL6vjLd5vEkaoqQ0E+9FXdTSwnTn+utdksm/Sj6
+	H5020f5x6yGuVcbtEVIc/WojjdhOG2t/hgvGuPrAeEsL2wmUfRi/j39UzYW/TYua3YD+6T6lff0
+	C+sN3VZXfqUakR/S4Efhp+JwkxXHigLmpo35fgCF4bhiSWYqvmne/35hLVrsaTYWDKonrGNz78I
+	+24wru8dxg0JADLs/8jX/CCM+FOtQwPkOQ0t8jLgICW6CRYhA76wGScREOytv8MirtYesQKFdTC
+	IfpwT+RaCIxioODF0PgYQIDYp7lCzwQurldtPANt65hWWW+nsX2LHEe6Dh2nQqBP5ngCkQC1Ctz
+	C3zo2k1WYQRTno0sBuYgnxUWjTTCixLt2g6lGvmPRU6F+RqtoVkp/CxGnCQ==
+X-Google-Smtp-Source: AGHT+IGzUSTZ0dDnwg+i9qkis6hQBvZ5e7JyYMSkRPsAT6NSK9nycRZK+BwlgAZJyKeWJKn15q8TDw==
+X-Received: by 2002:a05:600c:3b01:b0:45d:d202:77f0 with SMTP id 5b1f17b1804b1-45dd5b3c05fmr20914855e9.5.1757062331095;
+        Fri, 05 Sep 2025 01:52:11 -0700 (PDT)
 Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b940bbc0dsm166359115e9.2.2025.09.05.01.52.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b940bbc0dsm166359115e9.2.2025.09.05.01.52.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 01:52:09 -0700 (PDT)
+        Fri, 05 Sep 2025 01:52:10 -0700 (PDT)
 From: Marco Crivellari <marco.crivellari@suse.com>
 To: linux-kernel@vger.kernel.org,
 	linux-block@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>,
 	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 1/3] drivers/block: replace use of system_wq with system_percpu_wq
-Date: Fri,  5 Sep 2025 10:51:39 +0200
-Message-ID: <20250905085141.93357-2-marco.crivellari@suse.com>
+Subject: [PATCH 2/3] drivers/block: replace use of system_unbound_wq with system_dfl_wq
+Date: Fri,  5 Sep 2025 10:51:40 +0200
+Message-ID: <20250905085141.93357-3-marco.crivellari@suse.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250905085141.93357-1-marco.crivellari@suse.com>
 References: <20250905085141.93357-1-marco.crivellari@suse.com>
@@ -119,36 +119,22 @@ The old system_unbound_wq will be kept for a few release cycles.
 Suggested-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 ---
- drivers/block/nbd.c    | 2 +-
- drivers/block/sunvdc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/zram/zram_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 7bdc7eb808ea..7738fce177fa 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -311,7 +311,7 @@ static void nbd_mark_nsock_dead(struct nbd_device *nbd, struct nbd_sock *nsock,
- 		if (args) {
- 			INIT_WORK(&args->work, nbd_dead_link_work);
- 			args->index = nbd->index;
--			queue_work(system_wq, &args->work);
-+			queue_work(system_percpu_wq, &args->work);
- 		}
- 	}
- 	if (!nsock->dead) {
-diff --git a/drivers/block/sunvdc.c b/drivers/block/sunvdc.c
-index b5727dea15bd..442546b05df8 100644
---- a/drivers/block/sunvdc.c
-+++ b/drivers/block/sunvdc.c
-@@ -1187,7 +1187,7 @@ static void vdc_ldc_reset(struct vdc_port *port)
- 	}
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index fda7d8624889..c7e0fa29a572 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -975,7 +975,7 @@ static int read_from_bdev_sync(struct zram *zram, struct page *page,
+ 	work.entry = entry;
  
- 	if (port->ldc_timeout)
--		mod_delayed_work(system_wq, &port->ldc_reset_timer_work,
-+		mod_delayed_work(system_percpu_wq, &port->ldc_reset_timer_work,
- 			  round_jiffies(jiffies + HZ * port->ldc_timeout));
- 	mod_timer(&port->vio.timer, round_jiffies(jiffies + HZ));
- 	return;
+ 	INIT_WORK_ONSTACK(&work.work, zram_sync_read);
+-	queue_work(system_unbound_wq, &work.work);
++	queue_work(system_dfl_wq, &work.work);
+ 	flush_work(&work.work);
+ 	destroy_work_on_stack(&work.work);
+ 
 -- 
 2.51.0
 
