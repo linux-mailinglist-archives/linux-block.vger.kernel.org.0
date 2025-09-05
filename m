@@ -1,153 +1,112 @@
-Return-Path: <linux-block+bounces-26743-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26745-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7E6B448B0
-	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 23:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39B97B44C89
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 06:01:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16C7D542FD4
-	for <lists+linux-block@lfdr.de>; Thu,  4 Sep 2025 21:38:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09A19164FBD
+	for <lists+linux-block@lfdr.de>; Fri,  5 Sep 2025 04:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E3352C159F;
-	Thu,  4 Sep 2025 21:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e9Abxpzu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B64149C6F;
+	Fri,  5 Sep 2025 04:00:58 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3392C1589
-	for <linux-block@vger.kernel.org>; Thu,  4 Sep 2025 21:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D191A9F90
+	for <linux-block@vger.kernel.org>; Fri,  5 Sep 2025 04:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757021919; cv=none; b=ioExv+Fx5ffdMEC6HNCLU4NBrkl7bEBhGGwLLv9FQgFeng4NpnP9eJrTnRbE1P5bvXNkxdId3mUVk9fBWPsQRJg+2fIwT7YQPE35kOceK2oK5YdEZ3JZ8yY0+T6e+OUVj/cmUArUQKHAYHcEEalIRIRA8kGIB8Frx2DnC9pkl2A=
+	t=1757044858; cv=none; b=pKO4Am5VUStiPCTA5GPf0PrIgNoyh22OpH7GPnzw1UL7iNjFcHeXuiAsS26ggVXVKbbxulJJu1ICrexMrd6Cf/ifbDLNhOsArQaEnRyGgZv3MYe0kUj0Fv47d/u+1IvSj5k83C7Y1FMUHa/oV6ZDLuSGunuc0hSifoXzXw3x6uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757021919; c=relaxed/simple;
-	bh=+ZrUvtnLM9xSVjfFb/jug+Mxt/vh9q4WYgIFgX9cQDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JmIUj6/h34Yg63JXpT6E7A+T425ReGvfU3V2e6hdhVtYao7pEWgplpNH5D0hIj8WHPYJL0GpL7KeEaCND62pCdLijJlVHVhqUbBZHuocxwyVdheqvK/MZ2xbutNaFyCh7wx+R5Fh/kIu9SBtczns0tmRS+8aULdMrN7Qzwj4ESA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e9Abxpzu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757021915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9rHD7plJVEZkv8PkFJEx5BeBVBt5QFBtzvV5bLJfU1s=;
-	b=e9AbxpzukcoKaOXSeXcp2w3w7k2MS+2IyhSpbfnhUREQ0UIZ7BCE9qj1yqrtxOdSrvzjTC
-	YPGkhDyA76fdqF+amJQ3SE2d/QTdtu/tmsliab5J2tRhxI89SVzLzsByv5Ijve04EkS0du
-	meZvvHlh2Zv+1cNBUPG2Y5DjPFA8Y5c=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-MGhHZUMcNj2RyeI6JXRgFg-1; Thu, 04 Sep 2025 17:38:34 -0400
-X-MC-Unique: MGhHZUMcNj2RyeI6JXRgFg-1
-X-Mimecast-MFC-AGG-ID: MGhHZUMcNj2RyeI6JXRgFg_1757021913
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45b96c2f4ccso8174455e9.0
-        for <linux-block@vger.kernel.org>; Thu, 04 Sep 2025 14:38:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757021913; x=1757626713;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9rHD7plJVEZkv8PkFJEx5BeBVBt5QFBtzvV5bLJfU1s=;
-        b=EliEggX0csP+CwlUEYduDPHdErNl90Wow3C6fxvhhUeu9nsBFnzS32qKLsrJO2vzq4
-         YLyOVo06yegjh3+S0dr3WNccwm6mlSj4vWDSQ16SK7evHxDtb206cGCgCk7j4kMGHVqE
-         cVudTQcn0/OLnBMhDiojCjg1NqkP4g4ygBA4Vg7+QIqww9L2380ZEmBrIrJ51KBTX5m0
-         hNiSTABlpJAsO58dDkg4xhM0aCEhgY0TvCY99imKlC8thUT4O8R9mOpv3wxQHwFOwl6z
-         jdO4Om6Qc7aUTh/Q84AqHaJd48vqSJ1L/cu800R58Gu3MfKEZKC3L2dyJPByM/qsjP0z
-         XPAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzvh3rigql3rNBDs6fbQguJwKctuJu1+0Gf+6YLkeeyL8X/SgIgks97Btps3YAP0arFI7Qs934GAm8YQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqJ1+2Y/Zl3Zp6Cc8LhtQhlGuanG1hyArWUd8z1gpqM//Z7mFO
-	v9DypSwhPgTSfuG29YVyD8Og5In3K2km9/1PGT1Pu+Q39Cl4+Tcn6WsceJDCHlbt5quZSN11eUI
-	dPOiMRaHSNiGfIwV2miV4BfMijPE4kOQmDHbjSByzw+CMvB5Jr719xoA4vUm7YKDg
-X-Gm-Gg: ASbGncvZj7DfaWWeUxgnn2GWxqVq34WoyjA5hRRn6z7V2EBXo6VZp7eMBLKIDel84+5
-	OaYcQLTiXMyKcSoF944ulBWya0/1DzlD2R606ucQQmR6U1lPyfNJ+3DpPnQIm6NEiXf7kJaxRpr
-	Bh0WwnV6yyomNBvWh4e4fAMSv3xkmwY5h6EMHnjq0s23Yp+NiMO+PxCYxaSgdhAdDbBV9yo+PtU
-	azrFtBWzUfa38NVqc+ER81tF6z1PXY3dP3GQWlPSOVF1xnNbrn2DVjSsvUkVl1r93+71jvYYeSp
-	3YxPhhi9j6M2bUh+JLnLOF9+Hag8ZjDFyfSXx8VcC8oAZDxOXsSvHVSErTIwdgB3xg==
-X-Received: by 2002:a05:600c:1d10:b0:45b:891f:afcf with SMTP id 5b1f17b1804b1-45b891fb24dmr144597865e9.27.1757021913369;
-        Thu, 04 Sep 2025 14:38:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWbBDlkpyRRxeIt/+qH4VagktWDBCJazVbSXDHRMhx/diXSZUFSBaQ6M24PtRDNYL0yu7m/g==
-X-Received: by 2002:a05:600c:1d10:b0:45b:891f:afcf with SMTP id 5b1f17b1804b1-45b891fb24dmr144597725e9.27.1757021912965;
-        Thu, 04 Sep 2025 14:38:32 -0700 (PDT)
-Received: from redhat.com (93-51-222-138.ip268.fastwebnet.it. [93.51.222.138])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf3458a67fsm1872200f8f.62.2025.09.04.14.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 14:38:32 -0700 (PDT)
-Date: Thu, 4 Sep 2025 17:38:30 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org, virtualization@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v3 7/7] virtio_balloon: Stop calling page_address() in
- free_pages()
-Message-ID: <20250904173824-mutt-send-email-mst@kernel.org>
-References: <20250903185921.1785167-1-vishal.moola@gmail.com>
- <20250903185921.1785167-8-vishal.moola@gmail.com>
+	s=arc-20240116; t=1757044858; c=relaxed/simple;
+	bh=HGZiA7x1ZmZhqE8f+DrMGS1Hthd2nFBg3LbAhPkwepI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PLaN0JhcZKq1ijFrGiVAtb32JBF/uLOmI1y7RS/zIqkWSAWoWwJu4Dkrr3AcePnrjYi0Sj4/6BUzUhy5mdRq8zuttUzrAMzg7JnRpT1y11ELdxWdPVjjdDi077rRudVTF7OTKaiDHJSYX2+QeAQehLSubBMbHXULqrqOQYW8wTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cJ2K759W0zYQv2n;
+	Fri,  5 Sep 2025 11:44:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3A7661A134F;
+	Fri,  5 Sep 2025 11:44:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAncIyWXLpoEr6_BQ--.19448S4;
+	Fri, 05 Sep 2025 11:44:24 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	inux-raid@vger.kernel.org,
+	song@kernel.org,
+	linan122@huawei.com
+Cc: yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [GIT PULL] md-6.17-20250905
+Date: Fri,  5 Sep 2025 11:35:17 +0800
+Message-Id: <20250905033517.1179192-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250903185921.1785167-8-vishal.moola@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAncIyWXLpoEr6_BQ--.19448S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw17tw4rJw1ftrWktryUtrb_yoWDXFX_ua
+	yxJayxJ3yUtr4Uuw43Jr1I9rW2gw4UGa15Cr1FyrWUX3sxZrnFvw1q9rWxXw1kXF1DCrs8
+	JrZ8X3s0vw129jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, Sep 03, 2025 at 11:59:21AM -0700, Vishal Moola (Oracle) wrote:
-> free_pages() should be used when we only have a virtual address. We
-> should call __free_pages() directly on our page instead.
-> 
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Hi, Jens
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Please consider pulling following changes on your block-6.17 branch,
+this pull request contains:
 
-> ---
->  drivers/virtio/virtio_balloon.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index eae65136cdfb..7f3fd72678eb 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -488,8 +488,7 @@ static unsigned long return_free_pages_to_mm(struct virtio_balloon *vb,
->  		page = balloon_page_pop(&vb->free_page_list);
->  		if (!page)
->  			break;
-> -		free_pages((unsigned long)page_address(page),
-> -			   VIRTIO_BALLOON_HINT_BLOCK_ORDER);
-> +		__free_pages(page, VIRTIO_BALLOON_HINT_BLOCK_ORDER);
->  	}
->  	vb->num_free_page_blocks -= num_returned;
->  	spin_unlock_irq(&vb->free_page_list_lock);
-> @@ -719,8 +718,7 @@ static int get_free_page_and_send(struct virtio_balloon *vb)
->  	if (vq->num_free > 1) {
->  		err = virtqueue_add_inbuf(vq, &sg, 1, p, GFP_KERNEL);
->  		if (unlikely(err)) {
-> -			free_pages((unsigned long)p,
-> -				   VIRTIO_BALLOON_HINT_BLOCK_ORDER);
-> +			__free_pages(page, VIRTIO_BALLOON_HINT_BLOCK_ORDER);
->  			return err;
->  		}
->  		virtqueue_kick(vq);
-> @@ -733,7 +731,7 @@ static int get_free_page_and_send(struct virtio_balloon *vb)
->  		 * The vq has no available entry to add this page block, so
->  		 * just free it.
->  		 */
-> -		free_pages((unsigned long)p, VIRTIO_BALLOON_HINT_BLOCK_ORDER);
-> +		__free_pages(page, VIRTIO_BALLOON_HINT_BLOCK_ORDER);
->  	}
->  
->  	return 0;
-> -- 
-> 2.51.0
+ - fix data lost for writemostly in raid1, by Yu Kuai;
+ - fix potentional data lost by skipping recovery, by Li Nan;
+
+The following changes since commit 95a7c5000956f939b86d8b00b8e6b8345f4a9b65:
+
+  bcache: change maintainer's email address (2025-08-28 10:05:37 -0600)
+
+are available in the Git repository at:
+
+ https://git.kernel.org/pub/scm/linux/kernel/git/mdraid/linux.git tags/md-6.17-20250905
+
+for you to fetch changes up to 7202082b7b7a256d04ec96131c7f859df0a79f64:
+
+  md: prevent incorrect update of resync/recovery offset (2025-09-05 00:31:18 +0800)
+
+----------------------------------------------------------------
+Li Nan (1):
+      md: prevent incorrect update of resync/recovery offset
+
+Yu Kuai (1):
+      md/raid1: fix data lost for writemostly rdev
+
+ drivers/md/md.c    | 5 +++++
+ drivers/md/raid1.c | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 
