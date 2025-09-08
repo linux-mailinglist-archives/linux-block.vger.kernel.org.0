@@ -1,265 +1,128 @@
-Return-Path: <linux-block+bounces-26851-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26853-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 196F5B4887C
-	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 11:30:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E35DB48897
+	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 11:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD5C53A5F52
-	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 09:30:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A46D3B20D7
+	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 09:34:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A25A2F7ACB;
-	Mon,  8 Sep 2025 09:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9571E570D;
+	Mon,  8 Sep 2025 09:34:38 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004262F069C;
-	Mon,  8 Sep 2025 09:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7ED21C186;
+	Mon,  8 Sep 2025 09:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757323773; cv=none; b=iVHIXENXwQZzjZlyIqrfsal/jeolw28BKlydwIpPlrNhbDJfXVpCFcJQWrNsfO3QSX/wnYVzaz4mg8sc+j0TTT6tzTq0CyqblIrlVnqIUNpJya55WwvtypP7XZEIxCIm+ZR75O6+/cekt38XSv0jWaT45W7u+/ZsuHmh9XiDko8=
+	t=1757324078; cv=none; b=KPo5/1XKjSp+v3rLopvJp8teuAGRWTTec/RBfkvSoBsqnEyZopyj6tbUxY0THD4ATrcp5A2CJhHNR4FhruoPGcT5mrM0x9PQnUyRM88bj872pfglf3Kq0CJGa4b7kttF/LKo0CVmjIHZz9P1eAi17iWYKKvr89nC2k1BalavK7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757323773; c=relaxed/simple;
-	bh=WPz79VF6Fr9zr+SPrvDTdY9SUdYOoerXVi6P+YlD9ms=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PNXpYkyDabvD32ngjFdwsq/gw3hJ4pykPhgrAKpCzgXbHGAB9qi8yBLle4jN0dA05mK+LwUIf9MLIUn0MIlHdpVc3+EU6iW8PUcyvXr6+EwP0EwUGV7JfLr0EoaeVrTYQkXX5vkTIl0Jha2hzqO/NHMnqsfuEYYnUuqbXWnz+gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1757324078; c=relaxed/simple;
+	bh=YzsJwu4bSe8qpnD0n9Z1JQk+MCIqNJAEcPjaD9JFnJE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dApmv0316Bd8daQezXFTfDB6x+ACCkKCQRHxwi97s1jVgbmoocM2vwcVRlFVFSIPm9JCxL//WXGB/o3765pIRJ7D1NVTj2MaZRnBFUGCguaLzgYjB1LvSW0BrmAjZuWFrmYTBukyhm69Su2ihZhyFeAv5NmIDJ1RUCxdVjvQ54w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cL1qt4JcGzYQvZ6;
-	Mon,  8 Sep 2025 17:29:30 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cL1xh3DCXzKHMyt;
+	Mon,  8 Sep 2025 17:34:32 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1BFC31A174E;
-	Mon,  8 Sep 2025 17:29:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAXYIzzob5oGjMyBw--.46699S9;
-	Mon, 08 Sep 2025 17:29:28 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 884D41A0DCA;
+	Mon,  8 Sep 2025 17:34:32 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB3wY0mo75oX50yBw--.65125S3;
+	Mon, 08 Sep 2025 17:34:32 +0800 (CST)
+Subject: Re: [syzbot] [net?] possible deadlock in inet_shutdown
+To: Eric Dumazet <edumazet@google.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: syzbot <syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com>,
+ Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+ davem@davemloft.net, dsahern@kernel.org, horms@kernel.org, kuba@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ming.lei@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com, thomas.hellstrom@linux.intel.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <68bb4160.050a0220.192772.0198.GAE@google.com>
+ <CANn89iLNFHBMTF2Pb6hHERYpuih9eQZb6A12+ndzBcQs_kZoBA@mail.gmail.com>
+ <CANn89iJaY+MJPUJgtowZOPwHaf8ToNVxEyFN9U+Csw9+eB7YHg@mail.gmail.com>
+ <c035df1c-abaf-9173-032f-3dd91b296101@huaweicloud.com>
+ <CANn89iKVbTKxgO=_47TU21b6GakhnRuBk2upGviCK0Y1Q2Ar2Q@mail.gmail.com>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-To: dlemoal@kernel.org,
-	hare@suse.de,
-	bvanassche@acm.org,
-	ming.lei@redhat.com,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk,
-	yukuai3@huawei.com
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH v4 for-6.18/block 5/5] blk-mq-sched: support request batch dispatching for sq elevator
-Date: Mon,  8 Sep 2025 17:20:07 +0800
-Message-Id: <20250908092007.3796967-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250908092007.3796967-1-yukuai1@huaweicloud.com>
-References: <20250908092007.3796967-1-yukuai1@huaweicloud.com>
+Message-ID: <51adf9cb-619e-9646-36f0-1362828e801e@huaweicloud.com>
+Date: Mon, 8 Sep 2025 17:34:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CANn89iKVbTKxgO=_47TU21b6GakhnRuBk2upGviCK0Y1Q2Ar2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXYIzzob5oGjMyBw--.46699S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFWkXFyfCF1kuF15XFy7Wrg_yoWrAF4kpF
-	48Ja1YyrW0qasFqF93Cw47Jw15Aw4xuF9rGryfKr43tan7XrsxAr1rJFyUZF4xAr4fCFsr
-	ur4DWrykW3WIq37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUma14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
-	vfC2KfnxnUUI43ZEXa7VUbPC7UUUUUU==
+X-CM-TRANSID:gCh0CgB3wY0mo75oX50yBw--.65125S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XryfKFyruw1ruFWDWr4kWFg_yoWkuwb_Cr
+	48uwn3Ga17Xr13tFsxKrn7Gw1qqasYg34DXwn5Ja4fu3Z3ArWUAF18C3WrZw4rtan7KasI
+	krZ09a1ftFy3KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbSkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi,
 
-For dispatch_request method, current behavior is dispatching one request at
-a time. In the case of multiple dispatching contexts, This behavior, on the
-one hand, introduce intense lock contention:
+在 2025/09/08 17:07, Eric Dumazet 写道:
+> On Mon, Sep 8, 2025 at 1:52 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> Hi,
+>>
+>> 在 2025/09/06 17:16, Eric Dumazet 写道:
+>>> On Fri, Sep 5, 2025 at 1:03 PM Eric Dumazet <edumazet@google.com> wrote:
+>>>>
+>>>> On Fri, Sep 5, 2025 at 1:00 PM syzbot
+>>>> <syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com> wrote:
+>>>
+>>> Note to NBD maintainers : I held about  20 syzbot reports all pointing
+>>> to NBD accepting various sockets, I  can release them if needed, if you prefer
+>>> to triage them.
+>>>
+>> I'm not NBD maintainer, just trying to understand the deadlock first.
+>>
+>> Is this deadlock only possible for some sepecific socket types? Take
+>> a look at the report here:
+>>
+>> Usually issue IO will require the order:
+>>
+>> q_usage_counter -> cmd lock -> tx lock -> sk lock
+>>
+> 
+> I have not seen the deadlock being reported with normal TCP sockets.
+> 
+> NBD sets sk->sk_allocation to  GFP_NOIO | __GFP_MEMALLOC;
+> from __sock_xmit(), and TCP seems to respect this.
+> .
+> 
 
-t1:                     t2:                     t3:
-lock                    lock                    lock
-// grab lock
-ops.dispatch_request
-unlock
-                        // grab lock
-                        ops.dispatch_request
-                        unlock
-                                                // grab lock
-                                                ops.dispatch_request
-                                                unlock
+What aboud iscsi and nvme-tcp? and probably other drivers, where
+sk_allocation is GFP_ATOMIC, do they have similar problem?
 
-on the other hand, messing up the requests dispatching order:
-t1:
-
-lock
-rq1 = ops.dispatch_request
-unlock
-                        t2:
-                        lock
-                        rq2 = ops.dispatch_request
-                        unlock
-
-lock
-rq3 = ops.dispatch_request
-unlock
-
-                        lock
-                        rq4 = ops.dispatch_request
-                        unlock
-
-//rq1,rq3 issue to disk
-                        // rq2, rq4 issue to disk
-
-In this case, the elevator dispatch order is rq 1-2-3-4, however,
-such order in disk is rq 1-3-2-4, the order for rq2 and rq3 is inversed.
-
-Fix those problems by introducing elevator_dispatch_requests(), this
-helper will grab the lock and dispatch a batch of requests while holding
-the lock.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-mq-sched.c | 65 +++++++++++++++++++++++++++++++++++++++++---
- block/blk-mq.h       | 18 ++++++++++++
- 2 files changed, 79 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index e6305b680db9..3809ad880d49 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -192,6 +192,59 @@ static int blk_mq_finish_dispatch(struct sched_dispatch_ctx *ctx)
- 	return !!dispatched;
- }
- 
-+static void blk_mq_dispatch_requests(struct sched_dispatch_ctx *ctx)
-+{
-+	struct request_queue *q = ctx->hctx->queue;
-+	struct elevator_queue *e = q->elevator;
-+	bool has_get_budget = q->mq_ops->get_budget != NULL;
-+	int budget_token[BUDGET_TOKEN_BATCH];
-+	int count = q->nr_requests;
-+	int i;
-+
-+	while (true) {
-+		if (!blk_mq_should_dispatch(ctx))
-+			return;
-+
-+		if (has_get_budget) {
-+			count = blk_mq_get_dispatch_budgets(q, budget_token);
-+			if (count <= 0)
-+				return;
-+		}
-+
-+		elevator_dispatch_lock(e);
-+		for (i = 0; i < count; ++i) {
-+			struct request *rq =
-+				e->type->ops.dispatch_request(ctx->hctx);
-+
-+			if (!rq) {
-+				ctx->run_queue = true;
-+				goto err_free_budgets;
-+			}
-+
-+			if (has_get_budget)
-+				blk_mq_set_rq_budget_token(rq, budget_token[i]);
-+
-+			list_add_tail(&rq->queuelist, &ctx->rq_list);
-+			ctx->count++;
-+
-+			if (rq->mq_hctx != ctx->hctx)
-+				ctx->multi_hctxs = true;
-+
-+			if (!blk_mq_get_driver_tag(rq)) {
-+				i++;
-+				goto err_free_budgets;
-+			}
-+		}
-+		elevator_dispatch_unlock(e);
-+	}
-+
-+err_free_budgets:
-+	elevator_dispatch_unlock(e);
-+	if (has_get_budget)
-+		for (; i < count; ++i)
-+			blk_mq_put_dispatch_budget(q, budget_token[i]);
-+}
-+
- /*
-  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
-  * its queue by itself in its completion handler, so we don't need to
-@@ -212,10 +265,14 @@ static int __blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 	else
- 		max_dispatch = hctx->queue->nr_requests;
- 
--	do {
--		if (!blk_mq_dispatch_one_request(&ctx))
--			break;
--	} while (ctx.count < max_dispatch);
-+	if (!hctx->dispatch_busy && blk_queue_sq_sched(hctx->queue)) {
-+		blk_mq_dispatch_requests(&ctx);
-+	} else {
-+		do {
-+			if (!blk_mq_dispatch_one_request(&ctx))
-+				break;
-+		} while (ctx.count < max_dispatch);
-+	}
- 
- 	return blk_mq_finish_dispatch(&ctx);
- }
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index af09eb617d11..1f35f9ec146d 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -38,6 +38,7 @@ enum {
- };
- 
- #define BLK_MQ_CPU_WORK_BATCH	(8)
-+#define BUDGET_TOKEN_BATCH	(8)
- 
- typedef unsigned int __bitwise blk_insert_t;
- #define BLK_MQ_INSERT_AT_HEAD		((__force blk_insert_t)0x01)
-@@ -274,6 +275,23 @@ static inline int blk_mq_get_dispatch_budget(struct request_queue *q)
- 	return 0;
- }
- 
-+static inline int blk_mq_get_dispatch_budgets(struct request_queue *q,
-+					      int *budget_token)
-+{
-+	int count = 0;
-+
-+	while (count < BUDGET_TOKEN_BATCH) {
-+		int token = q->mq_ops->get_budget(q);
-+
-+		if (token < 0)
-+			return count;
-+
-+		budget_token[count++] = token;
-+	}
-+
-+	return count;
-+}
-+
- static inline void blk_mq_set_rq_budget_token(struct request *rq, int token)
- {
- 	if (token < 0)
--- 
-2.39.2
+Thanks,
+Kuai
 
 
