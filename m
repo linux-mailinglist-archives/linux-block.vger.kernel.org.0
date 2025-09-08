@@ -1,128 +1,255 @@
-Return-Path: <linux-block+bounces-26846-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26847-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE9BBB487CE
-	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 11:07:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47467B48870
+	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 11:29:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3907C1647FC
-	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 09:07:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3514E1B23F2A
+	for <lists+linux-block@lfdr.de>; Mon,  8 Sep 2025 09:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87E912F0683;
-	Mon,  8 Sep 2025 09:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sHpLbmEB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8372F1FE8;
+	Mon,  8 Sep 2025 09:29:31 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0782EFD9C
-	for <linux-block@vger.kernel.org>; Mon,  8 Sep 2025 09:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7942F069D;
+	Mon,  8 Sep 2025 09:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757322439; cv=none; b=QUE4qvX50puOFMf3AwtFqmeJgxAMlXBsq9rxqv/oqU5d5t63jj1SoonQruDBu5RNgqH9sV95XNSwhS98qc8hGhOdcqHVcFgNdAMw5e/IdpuUCrk/D7CjTnaAypvhoWdbdzrKb8Ne1tVNUIqCQ3drpIZmi3203sLUjPi/ftEKdbQ=
+	t=1757323771; cv=none; b=q/tCF1VRUys7kEQt24BCEtrbbii1Q2XWfOl997UP+LCDnH8l1bwuIihm7n5LyCSBR1kcPREY2/raYLp9cUhUbgCLdyVQ8GgimMWWoluKl9TR/bn1/XC0AUsFE9GHjkhHqy9FkblggKpNrDaEFVOsUrJ6Bb+yscQn4TN1fWPYaeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757322439; c=relaxed/simple;
-	bh=TfjlXGG0z5FLjNjKAlAUtHBt3K275PETyHD7xxP0JqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OnSLKd/eaqdM+wc9EBm1MKxhsBd164LqX1NyEAURgph1AVE4NMtsUs6BqFEDWis5FrDVyY4TUjSWZ/FppYGkrmMGTXK3gmlR0P2obBFFURL4eoq44AqiKqrBOePRCPXGHvjOqQwQTi6uinRvocGOrK1u5ypdwA/KxZgJPUuXIR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sHpLbmEB; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4b5ed9d7e30so32920611cf.3
-        for <linux-block@vger.kernel.org>; Mon, 08 Sep 2025 02:07:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757322437; x=1757927237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nc6d2xJT+7rO5xhcGtQLI+Y4wTR3jsomRWKDey59PKc=;
-        b=sHpLbmEBh3ETXnUVqHM4b5EqndUC6MI+vEjgHSpe2vSet7bb6IcWhA34xzBIuFfpLC
-         P3VvGij3z0my/AyqUy7mTKOP2NdyiZKjjFEtGvdD1UWuEY5fjvOxUmLd+TKCqIMBY+QQ
-         EvFDGeY9pUjXItt4Uealn6KI5sEZGcp5Tfk1LykKMiih59+Se+r+B0VtEm4PU5tEZ/ay
-         QyYP7FRH1FI0eetI3yBbuRa5i6Y2lYtr0tMA9QoK4pMmiQXslSXURw7Ej3Ipo1ghJo3J
-         UY79I4qRDMudNFPZWULTaQT0SFz2u/8nff+HknGG3RpyFJnKsjbeEPnMYd2yvGub+nmL
-         nw+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757322437; x=1757927237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nc6d2xJT+7rO5xhcGtQLI+Y4wTR3jsomRWKDey59PKc=;
-        b=ELgKyWN+KH46qRxgDSvqtXVHuXGBmKk6GztQ00cx99cyKQQPKh01mcbFF9LB6XR+GO
-         PLNr0I0ZpDW00uuF35HIuObKMkIqH9n0RRK3lF1h55IWwAtyF93+vzOFG0OCHpj/Ewkj
-         M8wF92CiD0bxs2eIRFa4AFXgyn2txF28R8eSLm6VXuyyzQvb8xItZZUBi6CkItLOYmUG
-         LcKS7YyM8yguFvtMeilOYfPoXfP9TGLy2PF7vIjT/ZTHij5KESbl2hKMALpkMtfv9pIn
-         WIJeB0Az1xFN/SriB3csTLI3OlPtCn2GfwjTCzsQNIm9WLz/tZqvRQZrHFSAmYcT8j+/
-         ecMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ/S/eYti3GUcLv/VSkD0CrwwYzolwjH5FkgPtISZoOvhp3qjJs2M4n+ivoKRkeaoxI+IUOs2MNo7i+w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZkq2ivdnx9dQqYc4WAliWZgdLLnwy9g50A+dheIk+xJY0bCF7
-	IpO0Ur+gx6eTUFMV4okYgCxxUrVD7X0vNV2+2ZgsoLj+R/yfScYlrH6ZK3J3Ku2qC2P1UBKi2gC
-	vafDJNAINNRobnWiVKQnf1S8jgd3TqrHl1wqn25cL
-X-Gm-Gg: ASbGncui8Z9xb51btqaA5q6ioX7/jhScLKCI76iIH0eP5hn8O2A00TsuInWsFBdtdSy
-	WPqLRI2qxUkyQzf9qtdhJWDXgn1rVcSWPcea2XOIc1+a0ygA1gLnryzEZRmjpIXM0x2yGu6Aqt0
-	/lCbj3dAyes7/jzEu/tJQzuAaj1bpALVoQouLHQrNoGuKbIj+IBqAeW+2/INnzDI2CVDN86SL1q
-	gm8HafLcXYOyA==
-X-Google-Smtp-Source: AGHT+IH70yEY2mD+Da9VfBC/BGhMy1BSMWeXgwdvkJRstrAo8GGMJXYIVhFKhXW0wz/7Iipcm/G3lGVXveb52DY4HcE=
-X-Received: by 2002:a05:622a:180a:b0:4b5:f59b:2e7 with SMTP id
- d75a77b69052e-4b5f844811emr81065361cf.9.1757322436444; Mon, 08 Sep 2025
- 02:07:16 -0700 (PDT)
+	s=arc-20240116; t=1757323771; c=relaxed/simple;
+	bh=WzCrMAhkDA+aG0BGBU3kEEBYjaDMJw7LyiiNySBW7NY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q97d0hmcCctMRDUNKwePsknbTEX42XvV1RyCH/tkqjmFH9E1ch/oXWVcll1T2r/309/Hdt9EX0zcGzMwIZDcP55Yf+/NwNHR1PreqBVhQKic6vpKTRlUY+/XEnZdS+xcXRW4K9m9Xz//kH5DQB6vY/yzARgGgtm2JzTQ73lMR3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cL1qp0cCwzKHLv3;
+	Mon,  8 Sep 2025 17:29:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 2FA9E1A1751;
+	Mon,  8 Sep 2025 17:29:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAXYIzzob5oGjMyBw--.46699S4;
+	Mon, 08 Sep 2025 17:29:25 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: dlemoal@kernel.org,
+	hare@suse.de,
+	bvanassche@acm.org,
+	ming.lei@redhat.com,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk,
+	yukuai3@huawei.com
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v4 for-6.18/block 0/5] blk-mq-sched: support request batch dispatching for sq elevator
+Date: Mon,  8 Sep 2025 17:20:02 +0800
+Message-Id: <20250908092007.3796967-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <68bb4160.050a0220.192772.0198.GAE@google.com> <CANn89iLNFHBMTF2Pb6hHERYpuih9eQZb6A12+ndzBcQs_kZoBA@mail.gmail.com>
- <CANn89iJaY+MJPUJgtowZOPwHaf8ToNVxEyFN9U+Csw9+eB7YHg@mail.gmail.com> <c035df1c-abaf-9173-032f-3dd91b296101@huaweicloud.com>
-In-Reply-To: <c035df1c-abaf-9173-032f-3dd91b296101@huaweicloud.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 8 Sep 2025 02:07:05 -0700
-X-Gm-Features: Ac12FXxIur2KzUGuY-o3zxu5ad5O4y1neb-cgZgcxAKaEuWlDfe2OI8kd7LHND8
-Message-ID: <CANn89iKVbTKxgO=_47TU21b6GakhnRuBk2upGviCK0Y1Q2Ar2Q@mail.gmail.com>
-Subject: Re: [syzbot] [net?] possible deadlock in inet_shutdown
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: syzbot <syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>, davem@davemloft.net, 
-	dsahern@kernel.org, horms@kernel.org, kuba@kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ming.lei@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, thomas.hellstrom@linux.intel.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXYIzzob5oGjMyBw--.46699S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW3uF13Kr45tF4DXFWDArb_yoWrAryDpF
+	WfW3ZIkF4DW3ZIqwn7uw17Jr1rGw48X345Gr15tr4ft3WDAr47JFn5XFy8ZFW7JryfWFsr
+	Ww1DXry8Wa4UWaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbmsjUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Mon, Sep 8, 2025 at 1:52=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> wr=
-ote:
->
-> Hi,
->
-> =E5=9C=A8 2025/09/06 17:16, Eric Dumazet =E5=86=99=E9=81=93:
-> > On Fri, Sep 5, 2025 at 1:03=E2=80=AFPM Eric Dumazet <edumazet@google.co=
-m> wrote:
-> >>
-> >> On Fri, Sep 5, 2025 at 1:00=E2=80=AFPM syzbot
-> >> <syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com> wrote:
-> >
-> > Note to NBD maintainers : I held about  20 syzbot reports all pointing
-> > to NBD accepting various sockets, I  can release them if needed, if you=
- prefer
-> > to triage them.
-> >
-> I'm not NBD maintainer, just trying to understand the deadlock first.
->
-> Is this deadlock only possible for some sepecific socket types? Take
-> a look at the report here:
->
-> Usually issue IO will require the order:
->
-> q_usage_counter -> cmd lock -> tx lock -> sk lock
->
+From: Yu Kuai <yukuai3@huawei.com>
 
-I have not seen the deadlock being reported with normal TCP sockets.
+Chagnes from v3:
+ - add a helper elevator_dispatch_lock/unlock, and flag
+ ELEVATOR_FLAG_DISPATCH_IRQ, so that mq-deadline don't have to disable
+ irq like bfq while dispatching;
+ - rebase for-6.18/block
 
-NBD sets sk->sk_allocation to  GFP_NOIO | __GFP_MEMALLOC;
-from __sock_xmit(), and TCP seems to respect this.
+Changes from v2:
+ - add elevator lock/unlock macros in patch 1;
+ - improve coding style and commit messages;
+ - retest with a new environment
+ - add test for scsi HDD and nvme;
+
+Changes from v1:
+ - the ioc changes are send separately;
+ - change the patch 1-3 order as suggested by Damien;
+
+Currently, both mq-deadline and bfq have global spin lock that will be
+grabbed inside elevator methods like dispatch_request, insert_requests,
+and bio_merge. And the global lock is the main reason mq-deadline and
+bfq can't scale very well.
+
+For dispatch_request method, current behavior is dispatching one request at
+a time. In the case of multiple dispatching contexts, This behavior, on the
+one hand, introduce intense lock contention:
+
+t1:                     t2:                     t3:
+lock                    lock                    lock
+// grab lock
+ops.dispatch_request
+unlock
+                        // grab lock
+                        ops.dispatch_request
+                        unlock
+                                                // grab lock
+                                                ops.dispatch_request
+                                                unlock
+
+on the other hand, messing up the requests dispatching order:
+t1:
+
+lock
+rq1 = ops.dispatch_request
+unlock
+                        t2:
+                        lock
+                        rq2 = ops.dispatch_request
+                        unlock
+
+lock
+rq3 = ops.dispatch_request
+unlock
+
+                        lock
+                        rq4 = ops.dispatch_request
+                        unlock
+
+//rq1,rq3 issue to disk
+                        // rq2, rq4 issue to disk
+
+In this case, the elevator dispatch order is rq 1-2-3-4, however,
+such order in disk is rq 1-3-2-4, the order for rq2 and rq3 is inversed.
+
+While dispatching request, blk_mq_get_disatpch_budget() and
+blk_mq_get_driver_tag() must be called, and they are not ready to be
+called inside elevator methods, hence introduce a new method like
+dispatch_requests is not possible.
+
+In conclusion, this set factor the global lock out of dispatch_request
+method, and support request batch dispatch by calling the methods
+multiple time while holding the lock.
+
+Test Environment:
+arm64 Kunpeng-920, with 4 nodes 128 cores
+nvme: HWE52P431T6M005N
+scsi HDD: MG04ACA600E attached to hisi_sas_v3
+
+null_blk set up:
+
+modprobe null_blk nr_devices=0 &&
+    udevadm settle &&
+    cd /sys/kernel/config/nullb &&
+    mkdir nullb0 &&
+    cd nullb0 &&
+    echo 0 > completion_nsec &&
+    echo 512 > blocksize &&
+    echo 0 > home_node &&
+    echo 0 > irqmode &&
+    echo 128 > submit_queues &&
+    echo 1024 > hw_queue_depth &&
+    echo 1024 > size &&
+    echo 0 > memory_backed &&
+    echo 2 > queue_mode &&
+    echo 1 > power ||
+    exit $?
+
+null_blk and nvme test script:
+
+[global]
+filename=/dev/{nullb0,nvme0n1}
+rw=randwrite
+bs=4k
+iodepth=32
+iodepth_batch_submit=8
+iodepth_batch_complete=8
+direct=1
+ioengine=io_uring
+time_based
+
+[write]
+numjobs=16
+runtime=60
+
+scsi HDD test script: noted this test aims to test if batch dispatch
+will affect IO merge.
+
+[global]
+filename=/dev/sda
+rw=write
+bs=4k
+iodepth=32
+iodepth_batch_submit=1
+direct=1
+ioengine=libaio
+
+[write]
+offset_increment=1g
+numjobs=128
+
+Test Result:
+1) nullblk: iops test with high IO pressue
+|                 | deadline | bfq      |
+| --------------- | -------- | -------- |
+| before this set | 256k     | 153k     |
+| after this set  | 594k     | 283k     |
+
+2) nvme: iops test with high IO pressue
+|                 | deadline | bfq      |
+| --------------- | -------- | -------- |
+| before this set | 258k     | 142k     |
+| after this set  | 568k     | 214k     |
+
+3) scsi HDD: io merge test, elevator is deadline
+|                 | w/s   | %wrqm | wareq-sz | aqu-sz |
+| --------------- | ----- | ----- | -------- | ------ |
+| before this set | 92.25 | 96.88 | 128      | 129    |
+| after this set  | 92.63 | 96.88 | 128      | 129    |
+
+Yu Kuai (5):
+  blk-mq-sched: introduce high level elevator lock
+  mq-deadline: switch to use elevator lock
+  block, bfq: switch to use elevator lock
+  blk-mq-sched: refactor __blk_mq_do_dispatch_sched()
+  blk-mq-sched: support request batch dispatching for sq elevator
+
+ block/bfq-cgroup.c   |   6 +-
+ block/bfq-iosched.c  |  54 +++++-----
+ block/bfq-iosched.h  |   2 -
+ block/blk-mq-sched.c | 246 ++++++++++++++++++++++++++++++-------------
+ block/blk-mq.h       |  18 ++++
+ block/elevator.c     |   1 +
+ block/elevator.h     |  31 +++++-
+ block/mq-deadline.c  |  60 +++++------
+ 8 files changed, 278 insertions(+), 140 deletions(-)
+
+-- 
+2.39.2
+
 
