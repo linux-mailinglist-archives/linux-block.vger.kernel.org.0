@@ -1,46 +1,46 @@
-Return-Path: <linux-block+bounces-26995-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26993-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5892B4FD1C
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 15:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 905EFB4FD10
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 15:31:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80139160A8D
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:31:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3435B4E64E6
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA7FC352FC2;
-	Tue,  9 Sep 2025 13:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB956350D56;
+	Tue,  9 Sep 2025 13:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yn9O7EXt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mpt2hgsJ"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811C4352096;
-	Tue,  9 Sep 2025 13:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756E2342C8C;
+	Tue,  9 Sep 2025 13:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757424542; cv=none; b=AdFgk2wlowBHt38MODR+/O2LfQA7ei1kzATPHAIiWmQUWAdZ2qhraB3qVrz1Iti6jPNbyrgW/ewhgJsoUj7Pk74WNX9n2nzMpv9jLAizN86SXEgsEy7o4rivrRa294N7ruvez9tqH5aatwqqTX6BleDRhOXHO/LrdBlHPw8e1jw=
+	t=1757424533; cv=none; b=aijB9/E+cI+09QbKJDXUqV+VhiQghXcceRZA+XC+sqviEx2SHNmE3ruBy9OVzVSsJBes8IPWXPF8j3/rEEHlvjgarzmc/gGmJQgbwCT/Eha67ZVgsnf66dgX/UTTRVoK0V9+h2lcMc3rI2nnsbPjogMFmlvj3MvPC8D1c3O6GEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757424542; c=relaxed/simple;
-	bh=OcM9fkdXGiKETEVH8cBKggBd8afyqoLB0RolB6LyNkA=;
+	s=arc-20240116; t=1757424533; c=relaxed/simple;
+	bh=7uEF0lKa6/2PTd5roUeWZMSJr/PVEy6yTszu34DH254=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UtyrFzOeR8eoCqmPQfnOA1e0HGx2UnO2UgXf9IR3TKg6MfNEz9+od49SNBecNYKwoLrX/WXQ88lOhFj2T+PoI1u9HbkylXip0QS5ffLfA3eOSsgtOTQpqSdFiJmZsLEpr8DkNf3M8wNgxs6B5WDjcslrlU74HuB6oeiQ3fTIg5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yn9O7EXt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA0AC4CEFB;
-	Tue,  9 Sep 2025 13:29:01 +0000 (UTC)
+	 MIME-Version; b=lvDeNk0AaJ621GKrYz8WPDYd1u/XGbL3b2GTkTyPyp9amgnmCvasRZruDqGjOx320oM7PxIoSoAih8pgLzxQXNBmnZLaTHUBqiLPSwpJwqRgI8qUKc7Nk9qMz6e+tmo52BONutCMv6VtaSreqhWktgYK5bx0eVGR6DDqoBaAXnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mpt2hgsJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849B1C4CEFB;
+	Tue,  9 Sep 2025 13:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757424542;
-	bh=OcM9fkdXGiKETEVH8cBKggBd8afyqoLB0RolB6LyNkA=;
+	s=k20201202; t=1757424533;
+	bh=7uEF0lKa6/2PTd5roUeWZMSJr/PVEy6yTszu34DH254=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yn9O7EXt2i8TlTaF6Sd1iT2ojuajj2KIE2jrl5UhotsRQnaPwquEa2I6cD/7jlt78
-	 XzUOKFVinPt3koMpplOVHfrrycPx1YW4URaCTEj9GV17QqK1Icqmm24uElNn4aNE6g
-	 dyEXXglk755dAMizt1Low/9xHQbk9wGW/sAxTH/ig1Nx27Rmc511QRKeXmuB4uajDS
-	 ry3EbwT8QF9bfs0VlcNQJBaOrGGd32GVtmtPUIlyAl6AFO5fHanUGGe7YyTbMEnZUk
-	 af3JTensL0djx/ZctZdYrUUhgTz59dgEpyExsvDCG5MthdUQLFpoXIVWvYnKwiOkhb
-	 czV9UQ2BdYnEw==
+	b=Mpt2hgsJQLyoPhqjQriUYwGxGpWOvhlRgZACUtJZjHzMze/5G5TKeJL+AIhpyHxHM
+	 vtE7nDo43ohKMBF9jSzvLXexcmcqvZC/y3uNm14s8yMrtQUg4js6SK/BCrc9vovOvy
+	 m+/ZwBtY3Q1G+3xu+k84+QsJ/t1V9cxoPLxU52E20FJDPGZnEBXHN59+tO8YeP9uQZ
+	 6cc03DpD9wq/4u9y1z6U4q62L+IvJgAhPZxl9KlxwRXT+EJ6mm07Qgk8GBpvwvcFFE
+	 HITZ7A5WwXv0OciZ4Op8uJ/UR8Zev+4BsP82OybASTk3DMWQh9knb+FPHYLwK64zVG
+	 XT3P1zTpAz7tA==
 From: Leon Romanovsky <leon@kernel.org>
 To: Marek Szyprowski <m.szyprowski@samsung.com>
 Cc: Leon Romanovsky <leonro@nvidia.com>,
@@ -80,9 +80,9 @@ Cc: Leon Romanovsky <leonro@nvidia.com>,
 	virtualization@lists.linux.dev,
 	Will Deacon <will@kernel.org>,
 	xen-devel@lists.xenproject.org
-Subject: [PATCH v6 09/16] dma-mapping: implement DMA_ATTR_MMIO for dma_(un)map_page_attrs()
-Date: Tue,  9 Sep 2025 16:27:37 +0300
-Message-ID: <3660e2c78ea409d6c483a215858fb3af52cd0ed3.1757423202.git.leonro@nvidia.com>
+Subject: [PATCH v6 10/16] xen: swiotlb: Open code map_resource callback
+Date: Tue,  9 Sep 2025 16:27:38 +0300
+Message-ID: <e9c66a92e818f416875441b6711963f9782dbbeb.1757423202.git.leonro@nvidia.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1757423202.git.leonro@nvidia.com>
 References: <cover.1757423202.git.leonro@nvidia.com>
@@ -96,90 +96,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Make dma_map_page_attrs() and dma_map_page_attrs() respect
-DMA_ATTR_MMIO.
+General dma_direct_map_resource() is going to be removed
+in next patch, so simply open-code it in xen driver.
 
-DMA_ATR_MMIO makes the functions behave the same as
-dma_(un)map_resource():
- - No swiotlb is possible
- - Legacy dma_ops arches use ops->map_resource()
- - No kmsan
- - No arch_dma_map_phys_direct()
-
-The prior patches have made the internal functions called here
-support DMA_ATTR_MMIO.
-
-This is also preparation for turning dma_map_resource() into an inline
-calling dma_map_phys(DMA_ATTR_MMIO) to consolidate the flows.
-
+Reviewed-by: Juergen Gross <jgross@suse.com>
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- kernel/dma/mapping.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ drivers/xen/swiotlb-xen.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index e47bcf7cc43d7..95eab531e2273 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -158,6 +158,7 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
- 	phys_addr_t phys = page_to_phys(page) + offset;
-+	bool is_mmio = attrs & DMA_ATTR_MMIO;
- 	dma_addr_t addr;
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index da1a7d3d377cf..dd7747a2de879 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -392,6 +392,25 @@ xen_swiotlb_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
+ 	}
+ }
  
- 	BUG_ON(!valid_dma_direction(dir));
-@@ -166,14 +167,25 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
- 		return DMA_MAPPING_ERROR;
- 
- 	if (dma_map_direct(dev, ops) ||
--	    arch_dma_map_phys_direct(dev, phys + size))
-+	    (!is_mmio && arch_dma_map_phys_direct(dev, phys + size)))
- 		addr = dma_direct_map_phys(dev, phys, size, dir, attrs);
- 	else if (use_dma_iommu(dev))
- 		addr = iommu_dma_map_phys(dev, phys, size, dir, attrs);
--	else
-+	else if (is_mmio) {
-+		if (!ops->map_resource)
-+			return DMA_MAPPING_ERROR;
++static dma_addr_t xen_swiotlb_direct_map_resource(struct device *dev,
++						  phys_addr_t paddr,
++						  size_t size,
++						  enum dma_data_direction dir,
++						  unsigned long attrs)
++{
++	dma_addr_t dma_addr = paddr;
 +
-+		addr = ops->map_resource(dev, phys, size, dir, attrs);
-+	} else {
-+		/*
-+		 * The dma_ops API contract for ops->map_page() requires
-+		 * kmappable memory, while ops->map_resource() does not.
-+		 */
- 		addr = ops->map_page(dev, page, offset, size, dir, attrs);
++	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
++		dev_err_once(dev,
++			     "DMA addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
++			     &dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);
++		WARN_ON_ONCE(1);
++		return DMA_MAPPING_ERROR;
 +	}
- 
--	kmsan_handle_dma(phys, size, dir);
-+	if (!is_mmio)
-+		kmsan_handle_dma(phys, size, dir);
- 	trace_dma_map_phys(dev, phys, addr, size, dir, attrs);
- 	debug_dma_map_phys(dev, phys, size, dir, addr, attrs);
- 
-@@ -185,14 +197,18 @@ void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
- 		enum dma_data_direction dir, unsigned long attrs)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
-+	bool is_mmio = attrs & DMA_ATTR_MMIO;
- 
- 	BUG_ON(!valid_dma_direction(dir));
- 	if (dma_map_direct(dev, ops) ||
--	    arch_dma_unmap_phys_direct(dev, addr + size))
-+	    (!is_mmio && arch_dma_unmap_phys_direct(dev, addr + size)))
- 		dma_direct_unmap_phys(dev, addr, size, dir, attrs);
- 	else if (use_dma_iommu(dev))
- 		iommu_dma_unmap_phys(dev, addr, size, dir, attrs);
--	else
-+	else if (is_mmio) {
-+		if (ops->unmap_resource)
-+			ops->unmap_resource(dev, addr, size, dir, attrs);
-+	} else
- 		ops->unmap_page(dev, addr, size, dir, attrs);
- 	trace_dma_unmap_phys(dev, addr, size, dir, attrs);
- 	debug_dma_unmap_phys(dev, addr, size, dir);
++
++	return dma_addr;
++}
++
+ /*
+  * Return whether the given device DMA address mask can be supported
+  * properly.  For example, if your device can only drive the low 24-bits
+@@ -426,5 +445,5 @@ const struct dma_map_ops xen_swiotlb_dma_ops = {
+ 	.alloc_pages_op = dma_common_alloc_pages,
+ 	.free_pages = dma_common_free_pages,
+ 	.max_mapping_size = swiotlb_max_mapping_size,
+-	.map_resource = dma_direct_map_resource,
++	.map_resource = xen_swiotlb_direct_map_resource,
+ };
 -- 
 2.51.0
 
