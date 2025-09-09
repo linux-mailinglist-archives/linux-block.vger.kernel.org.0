@@ -1,61 +1,62 @@
-Return-Path: <linux-block+bounces-26947-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-26949-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77E4AB4AB31
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:10:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59B12B4AB33
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:10:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23E1F36185B
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 11:10:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 513C11C62BB8
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 11:10:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6939332BF55;
-	Tue,  9 Sep 2025 11:07:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548F732CF69;
+	Tue,  9 Sep 2025 11:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="V2Xbl5dH"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="d3fXcU64"
 X-Original-To: linux-block@vger.kernel.org
 Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F473218B4;
-	Tue,  9 Sep 2025 11:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB74C32CF67;
+	Tue,  9 Sep 2025 11:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757416052; cv=none; b=kmmzlThdNLi4rI+yYG8rtDPhodAU3Nk6t0t5RWeCGZfgMqerg33qccC9Fvt7er/0r+YrnjyitMkzDdfcXnIYgFMBKi4sazxcS2V8WD7+++pgtqP9H8m2v6hSPd4FVq8LD67TVWPDuY73tJ5UuDOglCFC4cajBt7JFy+v4f1lt7o=
+	t=1757416057; cv=none; b=pZB7D6foGpXZHOM+0sRkCAVi9uFQWfEj7GPmVcOE5f0R4w5Tb9IBfCdmZr9bqimY5QgYdoH+tFR3tmONz+BNhYf8fkx0Y91VatE6XgCfHDrT+kLax2SP1vSRShzxN2jiwBRdnYJ0Y/D+IGwERAPCwC12Yu3HKXDWtFfYwFTZbC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757416052; c=relaxed/simple;
-	bh=CJ3G1wVnxv49/fvmTsL4eWGGuuImeFDwM8NEg9yz98E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kqe9lN2/wGqGZfZGZRQYt16GHHBRd260yldV9uHk0bbvw21ptdYL3qKKrfS7q+IHY31rUvFtewalc6PQ8PL5O4FHhI8DoCwFn0QcN2xxtniE9CzEqIL8MC6Ql4Qd3QovqTcQ6riokIL4KzY4is+TFnj7i5GxXTSwDH/Zt/tzD8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=V2Xbl5dH; arc=none smtp.client-ip=216.71.154.42
+	s=arc-20240116; t=1757416057; c=relaxed/simple;
+	bh=xuD/RysWcAGhVFKyhR6sNICgPdydUjswb4x8pX1x4WM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ME1dlrjWCHsc0tj5r7N7KnwgY2pOEhfaVgJdACRZnlgBcLmRrLJWqqGw/Z2zMzbtmDTkNnpHLHXJ/GFfXoYrTWhBSyJjGQ9kp7o6B2cOoK8JyTTF6db8tCTayMBwq5a+zaLuqLVg0INgCM/dJwCbvbaFVZkSGXB4WXXCBCXxDKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=d3fXcU64; arc=none smtp.client-ip=216.71.154.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1757416051; x=1788952051;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CJ3G1wVnxv49/fvmTsL4eWGGuuImeFDwM8NEg9yz98E=;
-  b=V2Xbl5dHyslkH1yDLNrsfHmCsYPX2UkQldHUuMQM+2tuqPTlOcYP5n5B
-   5w2WPq9bF5zzaIW7/bx5xHjBG9Kmkna1CEFZgGINS6tsIE5gCoJxpnlDy
-   pByyx2ZVpAm4Epk2yPdpwXLgGvax+O3SRMa6y28c9CKLJMQlEprvSdVXf
-   EVGOm7csqjmrOMQq3OeVcaWp1Y3zURK9iNZSZHPBcIQfhpCF5LQAJ65e7
-   AB9vK/8QKRY1DrWGo5kgFWT2z5F0PdyLcUWgwGSOTyot9XRJysS17mw02
-   uO/NmHFF7tbKLh2C1+epoPkebpk7V5ozrrvXaVSozLKSTe4nLHyfHDz9q
-   A==;
-X-CSE-ConnectionGUID: 4GQ2PeTPT1OiP8JfWqCqUw==
-X-CSE-MsgGUID: q04WWpgfR0mo5S67zPrPXg==
+  t=1757416056; x=1788952056;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xuD/RysWcAGhVFKyhR6sNICgPdydUjswb4x8pX1x4WM=;
+  b=d3fXcU64qLemb4GXlq5n4KuSPxaznf7ggLPTZVf6C5ENmPeni5lzd+Pq
+   /eKUoGPXvWFRaD9X15g96ALtQLqSHy/HlHLDTvf09gGg+wwZGXWG2vuTw
+   5Ad6FCTA7HBq82eIJXt4W6iAxS+vNW0KtLZ+60PNSGt7Zzdhbi6sA6/c9
+   GMxuKbqeNrQn6uE1Il5LACHfjzcKiWl4PZ4RrAHlb1iD3mIR2weV2dkXZ
+   EWFy+JZaI7xDfQSjaVOEuMPo0RQJkVVDNdZczePDy1+O9lwR8jK+xQw+1
+   SJyCNMzeI/KY4p/efCC5YOCxpcSgZYFTfrX106Sz3TRi8XfrzctTM0f4J
+   g==;
+X-CSE-ConnectionGUID: 58OSBwTLQQWY3fStF0OWtQ==
+X-CSE-MsgGUID: gA+O/iY9QI6K7O1MO/cWeg==
 X-IronPort-AV: E=Sophos;i="6.18,251,1751212800"; 
-   d="scan'208";a="112810310"
+   d="scan'208";a="112810372"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Sep 2025 19:07:30 +0800
-IronPort-SDR: 68c00a72_7RUJ8T7UsWDNMt2aY4u2Y/jjftHUrMm4a/W5WWzI/B4mhCK
- VF/8bFoQly3IHi6O0CgxvaEs+pRzIpMHH3sx7yw==
+  by ob1.hgst.iphmx.com with ESMTP; 09 Sep 2025 19:07:35 +0800
+IronPort-SDR: 68c00a77_N5n+m0Zmi7fLTy+WF0lpBZbjccv/mBfEd86tgEEv6Cz/gjW
+ P5T28fH5cUGJ7bKRWzDcSeOYEufgGf21m3x75Pw==
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Sep 2025 04:07:30 -0700
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Sep 2025 04:07:35 -0700
 WDCIronportException: Internal
 Received: from c02g55f6ml85.ad.shared (HELO C02G55F6ML85.wdc.com) ([10.224.183.46])
-  by uls-op-cesaip01.wdc.com with ESMTP; 09 Sep 2025 04:07:26 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 09 Sep 2025 04:07:30 -0700
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
@@ -74,10 +75,12 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 00/21] blktrace: Add user-space support for zoned command tracing
-Date: Tue,  9 Sep 2025 13:07:02 +0200
-Message-Id: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
+Subject: [PATCH 01/21] fix comment for struct blk_trace_setup:
+Date: Tue,  9 Sep 2025 13:07:03 +0200
+Message-Id: <20250909110723.75676-2-johannes.thumshirn@wdc.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
+References: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -86,61 +89,24 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series extends the user-space blktrace tools to support the new
-trace events for zoned block device commands introduced in the corresponding
-kernel patch series.
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ blktrace_api.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The updates include:
-
-- Introduction of a new ioctl requesting the v2 version of the trace
-- Definitions for new zoned operation trace events.
-- Parsing support in blkparse for these events.
-- Display of the new events with clear labeling (e.g., ZO, ZA, ZR).
-- Backward-compatible changes that do not affect existing functionality.
-
-These changes complement the kernel patches and allow full visibility into
-zone management commands in blktrace output, enabling better analysis and
-debugging of zoned storage workloads.
-
-The updated blktrace utility will first issue the BLKTRACESETUP2 ioctl and if
-it fails transpartently fall back to BLKTRACESETUP allowing backwards
-compatibility.
-
-Feedback and testing on additional device types are appreciated.
-
-Johannes Thumshirn (21):
-  fix comment for struct blk_trace_setup:
-  add definitions for BLKTRACESETUP2
-  call BLKTRACESETUP2 ioctl per default to setup a trace
-  blktrace: change size of action to 64 bits
-  blktrace: add definitions for blk_io_trace2
-  blktrace: support protocol version 8
-  blkparse: pass magic to get_magic
-  blkparse: read 'magic' first
-  blkparse: factor out reading of a singe blk_io_trace event
-  blkparse: skip unsupported protocol versions
-  blkparse: make get_pdulen() take the pdu_len
-  blkiomon: read 'magic' first
-  blktrace: pass magic to CHECK_MAGIC macro
-  blktrace: pass magic to verify_trace
-  blktrace: rename trace_to_cpu to bit_trace_to_cpu
-  blkparse: use blk_io_trace2 internally
-  blkparse: natively parse blk_io_trace2
-  blkparse: parse zone (un)plug actions
-  blkparse: add zoned commands to fill_rwbs()
-  blkparse: parse zone management commands
-  blkparse: parse zone append completions
-
- act_mask.c     |   4 +-
- blkiomon.c     |  15 +-
- blkparse.c     | 450 ++++++++++++++++++++++++++++++++++---------------
- blkparse_fmt.c | 105 +++++++++---
- blkrawverify.c |  14 +-
- blktrace.c     |  40 ++++-
- blktrace.h     |  64 +++++--
- blktrace_api.h |  54 +++++-
- 8 files changed, 560 insertions(+), 186 deletions(-)
-
+diff --git a/blktrace_api.h b/blktrace_api.h
+index 8c760b8..172b4c2 100644
+--- a/blktrace_api.h
++++ b/blktrace_api.h
+@@ -127,7 +127,7 @@ struct blk_io_cgroup_payload {
+ };
+ 
+ /*
+- * User setup structure passed with BLKSTARTTRACE
++ * User setup structure passed with BLKTRACESETUP
+  */
+ struct blk_user_trace_setup {
+ 	char name[32];			/* output */
 -- 
 2.51.0
 
