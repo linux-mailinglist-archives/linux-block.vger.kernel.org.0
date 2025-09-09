@@ -1,91 +1,86 @@
-Return-Path: <linux-block+bounces-27000-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27002-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE9E0B4FD34
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 15:34:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B29B7B4FD68
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 15:38:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E3A7541E2D
-	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:32:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0CBB542ABB
+	for <lists+linux-block@lfdr.de>; Tue,  9 Sep 2025 13:35:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6753570C1;
-	Tue,  9 Sep 2025 13:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6092D6621;
+	Tue,  9 Sep 2025 13:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3Fz/YLx2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="07HN/Kh0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104BF3451AB
-	for <linux-block@vger.kernel.org>; Tue,  9 Sep 2025 13:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D69353356
+	for <linux-block@vger.kernel.org>; Tue,  9 Sep 2025 13:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757424560; cv=none; b=nEnCDnO8MElO8uu9FrtPa0gK5hcY5pxTCR4berESqOdWHjWGaUlA7nZlRnz4sk2YK5mlXsqGqM35a4/u9fvv96Sx4ugdup8C6Y3OrKyBZvP98u9Hy4VIYeAjKLU59MjODthEtAiI3JCGuzTSmY0SkqD8EEtdIuQmZskeulbjT20=
+	t=1757424739; cv=none; b=h71ekBFAaukTZrB17ZM483oyhMce4+CcCTsi5arU2n0DzEGrupsf+HGUVe/gkhcFcLM4RN89YMmafzwfPLYjZgcU7o00teg1AcW4Jv/nfi1plFd/Hmk6/zbQMDRrEHeP2FQGYm7LeNhPt7YV4iQ50Ys7nPqNxZuAmD0reRkcJFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757424560; c=relaxed/simple;
-	bh=sdAUUAnXyg3K/25QJcJ/H03t1J2tpAN5WH0WT43DIUw=;
+	s=arc-20240116; t=1757424739; c=relaxed/simple;
+	bh=hkagkYSn8JCIKje4opj+ZWhB95aqsDfPnVS7kaY2IQs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aAKdDAshWl+0r3AnyIIdYJGWJtks4ZkB1Wy+2x9b7MUlgfxJxH6MDHT9MmIGXJOyboKfbGrvQEzbGUT/DtKe+zMQ1D1PgAesFn0n62UBn2+i2okjwQJ/YMfvPIOgBBo8yNt5fPlr22pYy9grL6OCM+S7hxE8j60ALqpAV0JaK6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3Fz/YLx2; arc=none smtp.client-ip=209.85.166.54
+	 MIME-Version:Content-Type; b=JM4SxtkcWS5O7umuiasKfRpJUCciUGL7FTYr+EQttNcY6pWhxFo97me6L+Ry1u8Cc/obN8i4kqcIJnazp4XSCnhics9eEDhe8wA58apdxBRy+0rHXYUQyMBapSIcnu+uGuIg49UoE7HONdjjPhR3lHpNE6+WI7tIg0VIhfYrIOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=07HN/Kh0; arc=none smtp.client-ip=209.85.166.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-8876de33c86so341845839f.3
-        for <linux-block@vger.kernel.org>; Tue, 09 Sep 2025 06:29:17 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-88758c2a133so519122439f.0
+        for <linux-block@vger.kernel.org>; Tue, 09 Sep 2025 06:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1757424557; x=1758029357; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1757424737; x=1758029537; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VrUpdS9XW8kCmiI/HdKgdDuMgaTmT22blEzvxDbI6UY=;
-        b=3Fz/YLx2M8b0ASqOsObwg/F7nj6Bz1m4S5gi2raA8xXcMWalm8Vza4oIPHmgsbAJOP
-         fVjQ3DXRLa9zsLK16oheajgZ1lUoH7Kx1dfepg6OiMAn7rwb+iVdWN0Qm3Rdf7EzPzIW
-         5AH1DjDwM7M8WXhc6Uuhg8+ckMZ17hLSh/1oAt86eY7xXKYGw0db1TVux1ylNkQzWL95
-         StKd7j5VgC6YIulq5Iaz6k+GCU3MgvZraHDajQF3s7jIUGU7cDC7K2j6EA28rOkxZTWP
-         UG/2n2HTeY3uE0Bpc9RFOlIFcKrB2Nc3wEIF6gOh5r2Ns6Jysh5pDMyG23QsNs/4hIA0
-         kl3g==
+        bh=yO59olxiRg1XK9XpYrLC+/QiojSbULiCcu8M5YdCEYE=;
+        b=07HN/Kh0QkSNklSttlAwuVw0Zy7rx3Vk4lCustIfbo4NA7UVeFLOQeDLnNSBgV13HA
+         hI/p7sXx5nxxTYiynuLbftkxm3mRCLSe8JeGLhRKNGcYQmviGOXnBuZ3FtkFNnbUfUBc
+         DQa9KodnuYrC/J4XV4bEAcby471GU6Y805tsjesTGYvwBfmEBXpPMp2PXzZ+AFTa2vqB
+         zkq/kb5wgi78QQU1COgrvV5lZ61waBQ+uhB9tInL59mM+aWSZ+hAtce42KSGBgW2yX4A
+         WKZx3KCvON/TyscoCbRn2FDpAb6gau5tMOtMmFIOgF6C/SA0802scfuhURCpcb7GKCjM
+         kpiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757424557; x=1758029357;
+        d=1e100.net; s=20230601; t=1757424737; x=1758029537;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VrUpdS9XW8kCmiI/HdKgdDuMgaTmT22blEzvxDbI6UY=;
-        b=jgDlRXq88FqE5uDNBzO3fX7OkCfyskqghc60zt3wP2t/dgaOdgkOPbuEKBvdHXtcrB
-         4psZPIu/uT5vY8QDX6dn0/X/6MtHxl0eVk/Tnmwf4BFNhUQ+iLmwdo+hkgjyayZpZEts
-         0EqEVyihn+Zu5hS0F9tqW2VQc4uXADI/xBfEZQ6/0Ioxok7g2ENd8COJGl3Swipsbg71
-         rFPzP/zaTSaXEtA9LKvZEySWxez9yv/1fisdxyhy71x0iE7BkPxyxflv5F68KUEUL9v2
-         fgXQ3R21qVjbwIelti3GwYp8U2D0KLN9N1c8ABJpxww/OSh3kftRGZR7HtS8m+nTTixG
-         rraw==
-X-Forwarded-Encrypted: i=1; AJvYcCXifHePCVdOGSEvs7vAtlZwbtFk6SEJ6yFP0Kv0QO9pelK5SAQzUYwpHsrbzcCUB0W1l/pRPi2zevxJvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YytAbgxpZW8nYhk11jtKQnFapdSjWZyk7rGNV3ugsyUZSH62n38
-	KDorwY4tOxeAnPwx2lBbm6uFElcw1U9+vYmD+FPTCBM49Gpyo/SVliZZEnILuRPYMpQ=
-X-Gm-Gg: ASbGncs6F/NRvo1azznqcjUH/Us6o1fdP+u2RDj3Cn2XRGreK5q8ksHGv/1HYpedNXF
-	11KJ/HZLxbsRnvIjqXAxNU+9+qtBTkLfvAhKcM8h2Y4Hn+wx4a18fmtUmRd2vjS/bYXgD989Wgb
-	+vjHdBwZZZ1I6daK3/n8wZ7/3Gqnhs7cxHhFyROQwHJWFU31aGZmi0PrIHBvibuqzWmLFL8N/Dr
-	YbHBlXRlQp2RhQSYRfHrlLsibDmkxsp8OWKJsIS/TbacBqerJgUYNd3TXWwHddqfJwKYL8SesGG
-	rD8wWNjqNg6tqol7tSGXVlk5LM0u18z4AVWboqDSr0x5gasarOGuX+21QjN+GwPAkzPPvf8P5Q3
-	+4J1HuMSgXpUB85RKjNMJJXe5S3X82uYRKLw=
-X-Google-Smtp-Source: AGHT+IEIjWqcE1zYENpDxaX7YutdAIuak1sO9GmLbuURziKcQXpN8xbXlPbtAPoitLTAuWNCpHzs7g==
-X-Received: by 2002:a05:6e02:3784:b0:3f3:bbda:d037 with SMTP id e9e14a558f8ab-3fd965c4d04mr182350825ab.26.1757424557099;
-        Tue, 09 Sep 2025 06:29:17 -0700 (PDT)
+        bh=yO59olxiRg1XK9XpYrLC+/QiojSbULiCcu8M5YdCEYE=;
+        b=Ef7x+OhaEKOaTP4O9QkTkWQl3jwjoV0sOzcFqjruG3a4gAkOLirK85tnJffJJTn+RZ
+         41LWSKYop6iVDQJTmdnaYptm7urg0q1MkoNghgd04Bgx+KFBrVoETcRYryENc70Bn+22
+         2iI5vL8xqBJw+BBFi32FGWdfFhvdgifgcAlSRSef/V2oK7Y+gn8TeC+5mdEYKjchASwy
+         dkz3ZHdzUZ9ZVhM/1fFXrRGJd5TisO2oowIfT++8wUQsml4drWbJiBdiwC5A7xa18CAG
+         3AgaAQinPXHEaC4ypUkrmwf7Kj9tIU7bKaRCAJ9yH86S8oLpv0wF6UGt9qTNJ9PFCoWM
+         04oQ==
+X-Gm-Message-State: AOJu0YzwvRelxZrHGiU2YDpLniWw7LTK9wkULjwgBOX4ftwF/+6GKHFI
+	qalM+2fL555vCSasi7ukSDWwn5Y145us2JzTLIVCPHTH/SlQY+xXkSucefYIQqvJ5qG25DaMr7j
+	K30QN
+X-Gm-Gg: ASbGnctOrdb13pe8FLcRAiIze5fWTZFdvIOlY8rTjupt7igyHpZMAQVYT1jDXVcylkW
+	pUrq/DZZNewMgeU9IxXw2O4OGZoOZIx+ShzJEtVmvz2ouCvurSvxAgaGCyk8BINx33BNFOh8IBA
+	rmJR42EvHj1aexmAsp7e2iQWCv5hDflrWJJbw3IlvF8pKq0ofmPyDRzVXavnU7SWIDOClMVASMB
+	x4430W37Lx0XpwSxtcoZlbtme3WYyO+PCPBSsoWbqWoC9UmkINcM4kevCxaimKV/ZeP0L4oty1s
+	OgcBLgDdS+rAHJ66dRPiLgfaM5dTkZ+t4aXidU+J+1UOEaYTOFbU1xkS4pXSzPbFojieUEz6ECE
+	Mrh3Evk9W3yil5Mc+73ELRwsw
+X-Google-Smtp-Source: AGHT+IFRgx8SXH+61I5ht3ylw3r3rKrFFUhy+QHUQResarsL2INHTZU94tdJ3saaPxvTkCDTmKcaAA==
+X-Received: by 2002:a05:6602:6c0c:b0:881:94db:6c1a with SMTP id ca18e2360f4ac-8877753bfbfmr1794053539f.5.1757424736548;
+        Tue, 09 Sep 2025 06:32:16 -0700 (PDT)
 Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50d8f31f6e4sm9895116173.47.2025.09.09.06.29.16
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8875d8791dasm577204439f.8.2025.09.09.06.32.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 06:29:16 -0700 (PDT)
+        Tue, 09 Sep 2025 06:32:16 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
-To: Josef Bacik <josef@toxicpanda.com>, Eric Dumazet <edumazet@google.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
- Eric Dumazet <eric.dumazet@gmail.com>, 
- syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com, 
- Mike Christie <mchristi@redhat.com>, 
- "Richard W.M. Jones" <rjones@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, 
- linux-block@vger.kernel.org, nbd@other.debian.org
-In-Reply-To: <20250909132243.1327024-1-edumazet@google.com>
-References: <20250909132243.1327024-1-edumazet@google.com>
-Subject: Re: [PATCH] nbd: restrict sockets to TCP and UDP
-Message-Id: <175742455632.75115.15346620038817180242.b4-ty@kernel.dk>
-Date: Tue, 09 Sep 2025 07:29:16 -0600
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org
+In-Reply-To: <20250908105653.4079264-1-hch@lst.de>
+References: <20250908105653.4079264-1-hch@lst.de>
+Subject: Re: remove the bi_inline_vecs field struct bio
+Message-Id: <175742473605.75938.8479854785092722671.b4-ty@kernel.dk>
+Date: Tue, 09 Sep 2025 07:32:16 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -97,20 +92,46 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3-dev-2ce6c
 
 
-On Tue, 09 Sep 2025 13:22:43 +0000, Eric Dumazet wrote:
-> Recently, syzbot started to abuse NBD with all kinds of sockets.
+On Mon, 08 Sep 2025 12:56:37 +0200, Christoph Hellwig wrote:
+> the bi_inline_vecs causes sparse to warn when a bio is embedded into a
+> structure, but not the last member.   This is a bit annoying but
+> probably not a big.  But it can be easily fixed by just removing the
+> member and doing pointer arithmetics in a helper, so do that.
 > 
-> Commit cf1b2326b734 ("nbd: verify socket is supported during setup")
-> made sure the socket supported a shutdown() method.
-> 
-> Explicitely accept TCP and UNIX stream sockets.
+> Diffstat:
+>  block/bio.c                        |   10 +++++++---
+>  block/blk-crypto-fallback.c        |    3 +--
+>  block/blk-map.c                    |    8 ++++----
+>  drivers/md/bcache/debug.c          |    3 +--
+>  drivers/md/bcache/io.c             |    3 +--
+>  drivers/md/bcache/journal.c        |    2 +-
+>  drivers/md/bcache/movinggc.c       |    8 ++++----
+>  drivers/md/bcache/super.c          |    2 +-
+>  drivers/md/bcache/writeback.c      |    8 ++++----
+>  drivers/md/dm-bufio.c              |    2 +-
+>  drivers/md/dm-flakey.c             |    2 +-
+>  drivers/md/dm-vdo/vio.c            |    2 +-
+>  drivers/md/raid1.c                 |    2 +-
+>  drivers/md/raid10.c                |    4 ++--
+>  drivers/target/target_core_pscsi.c |    2 +-
+>  fs/bcachefs/btree_io.c             |    2 +-
+>  fs/bcachefs/data_update.h          |    1 -
+>  fs/bcachefs/journal.c              |    6 +++---
+>  fs/bcachefs/journal_io.c           |    2 +-
+>  fs/bcachefs/super-io.c             |    2 +-
+>  fs/squashfs/block.c                |    2 +-
+>  include/linux/bio.h                |    5 +++++
+>  include/linux/blk_types.h          |   12 +++++-------
+>  23 files changed, 48 insertions(+), 45 deletions(-)
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] nbd: restrict sockets to TCP and UDP
-      commit: 9f7c02e031570e8291a63162c6c046dc15ff85b0
+[1/2] block: add a bio_init_inline helper
+      commit: 70a6f71b1a77decfc5b1db426ccbe914b58adb38
+[2/2] block: remove the bi_inline_vecs variable sized array from struct bio
+      commit: d86eaa0f3c56da286853b698b45c8ce404291082
 
 Best regards,
 -- 
