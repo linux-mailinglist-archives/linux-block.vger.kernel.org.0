@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-27078-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27085-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 774B5B510D7
-	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 10:15:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38617B510EE
+	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 10:17:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CD161885CC3
-	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 08:15:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D13143B3E9B
+	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 08:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8148D30EF72;
-	Wed, 10 Sep 2025 08:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4083126B5;
+	Wed, 10 Sep 2025 08:14:22 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766F629E115;
-	Wed, 10 Sep 2025 08:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FA53115A3;
+	Wed, 10 Sep 2025 08:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757492056; cv=none; b=I5Sh1/p9Ukp9JrFj5ISDAJ7XOkQWjJH42SLo4Fft2t6orxXyLHBIrj+sjI9d0vYTP7vtwaCZMiFiEWLTteeCZg3wNUa8Xx6TrQetunX/dmZ6VJhM53WpQRkC63c5c9dcNUjFkGbGXFKVUt0oz1ad4Ttvd+W8Uv+zQlc5WMIUKPc=
+	t=1757492062; cv=none; b=etuXQhHQRjHQg8C3Hvd2r4Mhg8KvO4MaVJN0+BvgPvIzMZoD9sYvhxsbTe44D4WE9y80n7HvD6FHxfYY/3PRW44v8ntir1JsQEiLLCCS4PcLnAxuzMwbgAclluYmrMnuYmp1ZEw/GKQq+C1uej/ocPAGbY8aaoXcYTUvmYblV9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757492056; c=relaxed/simple;
-	bh=Cklyw+CMmajJivSK2g/XiugCyYOVffDk6UvJ1UF0Ct0=;
+	s=arc-20240116; t=1757492062; c=relaxed/simple;
+	bh=SvfqHcfgVZT8JpRjERmPrhVusoKfNDeu1R0KsVJBGLs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mP3EMThBuN2lCGMGy4KSM/EC1A3E1Zj+kWUJtCt9t34rwOixpH+yKcab+/uscALkEWKRJnhA6SExhJ54NaOzi81Kx/YrokdUdicqUhpToCiS37BXhBDBPaefpCGvRbiVX/ZXDvYzJvp5B3sm9rKV4fFbePkV5GgEwVVe7y5+R/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=YOGUxXrnQLiYBlB9frOFEBpRH//E2dEaOZ320wqL2M+RmajcKMgCRyrNr2j/9JDsWK4TxQpGMtoTyBjjfNge6jyumGF2j7QieLq6Z9UE/cAc1PkBhsCTG5+Wz6ytb+5e0gNXeMR4c7MG7jlid9z7f0T3teiBYxZJChYezqJ9Q9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cMD450zZTzYQvhx;
-	Wed, 10 Sep 2025 16:14:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9D0391A0ACF;
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cMD435q20zKHNJx;
 	Wed, 10 Sep 2025 16:14:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 0C28C1A1307;
+	Wed, 10 Sep 2025 16:14:12 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDnMY5QM8Fo1ggRCA--.52270S6;
+	by APP4 (Coremail) with SMTP id gCh0CgDnMY5QM8Fo1ggRCA--.52270S7;
 	Wed, 10 Sep 2025 16:14:11 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -48,9 +48,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v2 for-6.18/block 02/10] blk-mq: remove useless checkings in blk_mq_update_nr_requests()
-Date: Wed, 10 Sep 2025 16:04:37 +0800
-Message-Id: <20250910080445.239096-3-yukuai1@huaweicloud.com>
+Subject: [PATCH v2 for-6.18/block 03/10] blk-mq: check invalid nr_requests in queue_requests_store()
+Date: Wed, 10 Sep 2025 16:04:38 +0800
+Message-Id: <20250910080445.239096-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250910080445.239096-1-yukuai1@huaweicloud.com>
 References: <20250910080445.239096-1-yukuai1@huaweicloud.com>
@@ -61,67 +61,157 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnMY5QM8Fo1ggRCA--.52270S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw13XF4fZrW8XFyrtw17trb_yoWkWFg_CF
-	y0kFn2qrs5tr4fZwsFka1YyF18G3WDJF4fWFyDtr9rXr1kG3ZxJFWDGr15GFsrW3yxC3Wx
-	uw15WF43Jw42vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
-	8IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
-	021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
-	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
-	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWU
-	JVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU2WrWUUUUU
+X-CM-TRANSID:gCh0CgDnMY5QM8Fo1ggRCA--.52270S7
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF4ruw1rXr45Kr17urWfXwb_yoWrAF1DpF
+	W5KanFk340qr10vFWIyay7Jw13Kws5Kr1xJFsaqa4Yvr12kr4xXF1FqrWrXr40yrWkCF47
+	Ar4DtrW5JF1kGrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
+	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
+	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU14xRDUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-1) queue_requests_store() is the only caller of
-blk_mq_update_nr_requests(), where queue is already freezed, no need to
-check mq_freeze_depth;
-2) q->tag_set must be set for request based device, and queue_is_mq() is
-already checked in blk_mq_queue_attr_visible(), no need to check
-q->tag_set.
+queue_requests_store() is the only caller of
+blk_mq_update_nr_requests(), and blk_mq_update_nr_requests() is the
+only caller of blk_mq_tag_update_depth(), however, they all have
+checkings for nr_requests input by user.
+
+Make code cleaner by moving all the checkings to the top function:
+
+1) nr_requests > reserved tags;
+2) if there is elevator, 4 <= nr_requests <= 2048;
+3) if elevator is none, 4 <= nr_requests <= tag_set->queue_depth;
+
+Meanwhile, case 2 is the only case tags can grow and -ENOMEM might be
+returned.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
 ---
- block/blk-mq.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ block/blk-mq-tag.c | 16 +---------------
+ block/blk-mq.c     |  8 ++------
+ block/blk-mq.h     |  2 +-
+ block/blk-sysfs.c  | 13 +++++++++++++
+ 4 files changed, 17 insertions(+), 22 deletions(-)
 
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 086c67849e06..56f9bc839000 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -610,14 +610,10 @@ void blk_mq_free_tags(struct blk_mq_tag_set *set, struct blk_mq_tags *tags)
+ }
+ 
+ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+-			    struct blk_mq_tags **tagsptr, unsigned int tdepth,
+-			    bool can_grow)
++			    struct blk_mq_tags **tagsptr, unsigned int tdepth)
+ {
+ 	struct blk_mq_tags *tags = *tagsptr;
+ 
+-	if (tdepth <= tags->nr_reserved_tags)
+-		return -EINVAL;
+-
+ 	/*
+ 	 * If we are allowed to grow beyond the original size, allocate
+ 	 * a new set of tags before freeing the old one.
+@@ -626,16 +622,6 @@ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 		struct blk_mq_tag_set *set = hctx->queue->tag_set;
+ 		struct blk_mq_tags *new;
+ 
+-		if (!can_grow)
+-			return -EINVAL;
+-
+-		/*
+-		 * We need some sort of upper limit, set it high enough that
+-		 * no valid use cases should require more.
+-		 */
+-		if (tdepth > MAX_SCHED_RQ)
+-			return -EINVAL;
+-
+ 		/*
+ 		 * Only the sbitmap needs resizing since we allocated the max
+ 		 * initially.
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 31cc743ffad7..55ccc9f4435d 100644
+index 55ccc9f4435d..9b97f2f3f2c9 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -4930,21 +4930,14 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
- {
- 	struct blk_mq_tag_set *set = q->tag_set;
- 	struct blk_mq_hw_ctx *hctx;
--	int ret;
-+	int ret = 0;
+@@ -4933,9 +4933,6 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 	int ret = 0;
  	unsigned long i;
  
--	if (WARN_ON_ONCE(!q->mq_freeze_depth))
--		return -EINVAL;
+-	if (q->nr_requests == nr)
+-		return 0;
 -
--	if (!set)
--		return -EINVAL;
--
- 	if (q->nr_requests == nr)
- 		return 0;
- 
  	blk_mq_quiesce_queue(q);
  
--	ret = 0;
  	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (!hctx->tags)
- 			continue;
+@@ -4947,10 +4944,9 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 		 */
+ 		if (hctx->sched_tags) {
+ 			ret = blk_mq_tag_update_depth(hctx, &hctx->sched_tags,
+-						      nr, true);
++						      nr);
+ 		} else {
+-			ret = blk_mq_tag_update_depth(hctx, &hctx->tags, nr,
+-						      false);
++			ret = blk_mq_tag_update_depth(hctx, &hctx->tags, nr);
+ 		}
+ 		if (ret)
+ 			goto out;
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index b96a753809ab..5d42c7d3a952 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -171,7 +171,7 @@ void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
+ 		unsigned int tag);
+ void blk_mq_put_tags(struct blk_mq_tags *tags, int *tag_array, int nr_tags);
+ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+-		struct blk_mq_tags **tags, unsigned int depth, bool can_grow);
++		struct blk_mq_tags **tags, unsigned int depth);
+ void blk_mq_tag_resize_shared_tags(struct blk_mq_tag_set *set,
+ 		unsigned int size);
+ void blk_mq_tag_update_sched_shared_tags(struct request_queue *q);
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 1ffa65feca4f..f99519f7a820 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -75,12 +75,25 @@ queue_requests_store(struct gendisk *disk, const char *page, size_t count)
+ 
+ 	memflags = blk_mq_freeze_queue(q);
+ 	mutex_lock(&q->elevator_lock);
++
++	if (nr == q->nr_requests)
++		goto unlock;
++
+ 	if (nr < BLKDEV_MIN_RQ)
+ 		nr = BLKDEV_MIN_RQ;
+ 
++	if (nr <= q->tag_set->reserved_tags ||
++	    (q->elevator && nr > MAX_SCHED_RQ) ||
++	    (!q->elevator && nr > q->tag_set->queue_depth)) {
++		ret = -EINVAL;
++		goto unlock;
++	}
++
+ 	err = blk_mq_update_nr_requests(disk->queue, nr);
+ 	if (err)
+ 		ret = err;
++
++unlock:
+ 	mutex_unlock(&q->elevator_lock);
+ 	blk_mq_unfreeze_queue(q, memflags);
+ 	return ret;
 -- 
 2.39.2
 
