@@ -1,98 +1,102 @@
-Return-Path: <linux-block+bounces-27173-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27177-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9E8DB52346
-	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 23:08:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20BC7B52388
+	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 23:35:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB17E5E3991
-	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 21:08:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D29A217EFEE
+	for <lists+linux-block@lfdr.de>; Wed, 10 Sep 2025 21:35:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE7C3081A3;
-	Wed, 10 Sep 2025 21:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255643112D9;
+	Wed, 10 Sep 2025 21:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEM+++Vb"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="YHa6yxSU"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A119B307AD1;
-	Wed, 10 Sep 2025 21:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814ED2DCC1C;
+	Wed, 10 Sep 2025 21:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757538447; cv=none; b=bsUvDzW20sd3CWQi6m+fms+4FYUVa5thLaCWfE+rrYsJH8Z9caUR2d8lVIaJNRi8rmUaEGuRXZJ+b60eZZlSdyF+e0TI2gu5KIYGq7l9xMFBDicY7aY+eGra1iT/53MqObScVbSQfAWSwcrlPFzSbXwTTHwKBPSLfub97ayG9hQ=
+	t=1757540120; cv=none; b=LqArvH4cMF8w4Rh52Cws+PxkisYdVkHCmvfSJi7TA+BWP2RLmMhNT6uR2DAZPBYH4oPfMEct8n5M1kTXOGMO2Lath1RSju6is31aTh267JaVo+pi5YM1dW5mtRimtaBtAweKsSjpoGjrc0lKHXQ1UCgb2ii0GgNIbhT+fTkRUKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757538447; c=relaxed/simple;
-	bh=2YPPXjuAHf0vHmGEGykxAK2OhwuGpfXNUwM3XuYu9G4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tDk9O0YkJkmFKlQ2DOuZpxhdjO9+i5dXsASU5l2uLp34fyaqdv1AT0O3YpDTZFH54H2Gl+Iy8KW2DDeFkt1dOBfPJMRw4/GgfM3Hy92+MfV+giSooY0ehT9451zP7AXINV6oo6sU2BfCR6+r7o1dV3Yre/zgIgbi6oWX5+SAvdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEM+++Vb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9DC9C4CEEB;
-	Wed, 10 Sep 2025 21:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757538447;
-	bh=2YPPXjuAHf0vHmGEGykxAK2OhwuGpfXNUwM3XuYu9G4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bEM+++VbIe7sTzERp//BoGoRM5iEcmtMN49JoP0Cgmc7zSUV4tcF8xuMPDwlYKMmj
-	 PZ79vJAcj8RO5Nl+OUHuZtmiZQpLLC91WNfI16tWdBKIoLpwx+NM4YMmm/syrR4HKx
-	 nJXCs9mAzNYYF7j3qUOqqUlI/527ifodyPnbCmQ/SepFZG8fw6qCHrFugpOsjNysTX
-	 O71YlIZyqgY7tvXn8BhGhBoQvObiSaablU1y/czIrkVvtLSIIO9sy3uDTmgHntqMsy
-	 rXWNsfAqQ2oQRzIZLJp47BGs3pt985N8nTBsxpgGPbtPPIuoMWTjKFtD3fqbh7+9CR
-	 efXvTYSsIIGBg==
-Date: Wed, 10 Sep 2025 17:07:25 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>,
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 14/32] net: use ns_common_init()
-Message-ID: <aMHoje4qJsao2wkU@laps>
-References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
- <20250910-work-namespace-v1-14-4dd56e7359d8@kernel.org>
+	s=arc-20240116; t=1757540120; c=relaxed/simple;
+	bh=GM38qfjlcSli+F+tk9eNSatF1+DiLwvDttpGCfPl3WY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AzSOytplWx48jgWV1Q5BpjuffHGHA6S8mRf6tK6b6FCXjJDFLLX6AtvdXwc7E/a5tHexkQOv2nBAckNg5I61bLYBAyx6ZgnpIXhqKHQdIGIr72jcYVg2rtLVK+hJSVlRNLtcG1PWL6lRM+E82AN63oizd7IyIO12Wgpqvq8Vit8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=YHa6yxSU; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4cMYny5Wljzm174L;
+	Wed, 10 Sep 2025 21:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from:received:received; s=mr01; t=
+	1757539989; x=1760131990; bh=yTPwXLiXWS2l7qOP+m2/ID68Lp+8TedPOm3
+	HugbZR38=; b=YHa6yxSUu+AZIhl4vY3d9CD7Hhjen33cayO+gHgXAnI1H7CW8UZ
+	3hPTlPHMGdpdKxF9mPWHFDRQDlTZ3KhEptyBoTG6NeTel/SABQRF+/tBuOTU6hlv
+	Ys2CoO7DA+zCA0K9NRdYG32gPG8trtp/yt1DAKVIvyu3gIVTbihB1TCrXqeevo/h
+	8dtrobAqq3212PWum/UAOSc8Rpg3nj3Xa4enF+ddXrFGxubrHnV0cDGnYSRmkz8y
+	jmd7x+TvsVArVLdKe6sMcba1CbYHJX03Z1SVCvsxvOCL69rfUyffDwZWEOI0dseh
+	7MVvnnbi5VnF+IQTAIx5pC8C0YujPawSR7Q==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id msweF8L1cTiH; Wed, 10 Sep 2025 21:33:09 +0000 (UTC)
+Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4cMYnv1YPpzm0ySg;
+	Wed, 10 Sep 2025 21:33:05 +0000 (UTC)
+From: Bart Van Assche <bvanassche@acm.org>
+To: "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH 0/3] Improve host-wide tag IOPS
+Date: Wed, 10 Sep 2025 14:32:48 -0700
+Message-ID: <20250910213254.1215318-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250910-work-namespace-v1-14-4dd56e7359d8@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 10, 2025 at 04:36:59PM +0200, Christian Brauner wrote:
->@@ -573,6 +588,7 @@ struct net *copy_net_ns(unsigned long flags,
->
-> 	if (rv < 0) {
-> put_userns:
->+		ns_free_inum(&net->ns);
+Hi Martin,
 
-I've ended up looking at this patch because of Jan's earlier comment about a
-different issue in this patch.
+The more UFS device IOPS increase, the more SCSI budget management become=
+s a
+bottleneck. Hence this patch series that disables SCSI budget management =
+for
+host drivers that don't need it. Please consider this patch series for th=
+e next
+merge window.
 
-Aren't we double-freeing net->ns here if setup_net() failed?
-
-setup_net() can call ops_undo_list() on failure, which will
-ns_free_inum(&net->ns) once, and then we do it again in the put_userns error
-handling label.
-
--- 
 Thanks,
-Sasha
+
+Bart.
+
+Bart Van Assche (3):
+  block: Export blk_mq_all_tag_iter()
+  ufs: core: Use scsi_device_busy()
+  scsi: core: Improve IOPS in case of host-wide tags
+
+ block/blk-mq-tag.c         |  1 +
+ block/blk-mq.h             |  2 --
+ drivers/scsi/scsi.c        |  7 ++++-
+ drivers/scsi/scsi_lib.c    | 60 +++++++++++++++++++++++++++++++++-----
+ drivers/scsi/scsi_scan.c   | 11 ++++++-
+ drivers/ufs/core/ufshcd.c  |  4 +--
+ include/linux/blk-mq.h     |  2 ++
+ include/scsi/scsi_device.h |  5 +---
+ 8 files changed, 75 insertions(+), 17 deletions(-)
 
