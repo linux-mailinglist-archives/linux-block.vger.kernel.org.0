@@ -1,111 +1,80 @@
-Return-Path: <linux-block+bounces-27243-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27383-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4574BB5457F
-	for <lists+linux-block@lfdr.de>; Fri, 12 Sep 2025 10:33:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F05AB56FCA
+	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 07:48:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E89C217371A
-	for <lists+linux-block@lfdr.de>; Fri, 12 Sep 2025 08:33:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27C611772F3
+	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 05:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91851286D5D;
-	Fri, 12 Sep 2025 08:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A273F26E16A;
+	Mon, 15 Sep 2025 05:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzGZs2Va";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IJRvEf8M";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzGZs2Va";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IJRvEf8M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY4R44OP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E826F2BF
-	for <linux-block@vger.kernel.org>; Fri, 12 Sep 2025 08:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425619DF4F;
+	Mon, 15 Sep 2025 05:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757665971; cv=none; b=NSfnMTiybXbz3oocZCl/8D2/eB7jWNNTbPmqXCi4JOfPeKTH1XscfRZokOeXHTOcFNW+OwRo4tTZW1ny27NjLeoLIVFmmlPxM+IshimyqSfrKIHzLvvpyPMUionWEed3igIcNhQLkehA3F87mVJEPiupV10p/OA3QzPCTFGv4Dc=
+	t=1757915303; cv=none; b=NnQiUxY2wFuIognBsaawOoG2kQ1evvRAqaUwDAYR0xJbKI4ehdO0qwvNwPNkUD22XcyUxB2X0an7G86ttbOnMMSCitqoe+5YULxGJQQuyOaB+FpT2mAcFJTtz5jQ1ucsFx7u1eQRZC8B0aQCt2PT28b1QJO7Ui+pU55BZ8OiwuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757665971; c=relaxed/simple;
-	bh=LipYxOUh3mZhOquz2ghmpDRHwnWmjxQ7Y1qMaDoBYyY=;
+	s=arc-20240116; t=1757915303; c=relaxed/simple;
+	bh=QmA1uWtopyZKqYFa3aB5R38vcRhwp6UNA5QEhCCpxlY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jiZd+Z7RyHWgWPVMZa0w5yWEUWogcraWGOqo1/waaMuOurQll1JdjZqkT15DYlL1jF5doaRkheal2ZgjKJjsJG+2FPPKxC8zoDJ2mpEmEySB/kbblbPmDPCTnseacVOrsh3wC0YA+QzyGCB2K/Xa57aXzUjaohF6XUl33tHZaoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzGZs2Va; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IJRvEf8M; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzGZs2Va; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IJRvEf8M; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 46C8C20706;
-	Fri, 12 Sep 2025 08:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1757665967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/CSSfN43nuBpCmvlSQv0g4m2YsMRqWgQtvSodhnH28=;
-	b=NzGZs2VaUva7nAB6VbcEuZSvhBSVlcW4blbtBY6HNBMWWAXbae08r9qYs3v5z+GdRFYgY/
-	VbeEpqO4pA7jByje53TP/rNV4Elzxv+SZjUQ0OFLzzAAZ+Kr/L3Bym88W7Dx4Ul2nVvL3l
-	TyT0M91a3S/Kr9Dj+CvBgTFiBddEJYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1757665967;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/CSSfN43nuBpCmvlSQv0g4m2YsMRqWgQtvSodhnH28=;
-	b=IJRvEf8MaAIKPa9ZL8mK7o1+fIpbj5bi9eT0ydLdxT6d/IYDCbkKoZdlcbLdgnxuO7SBlJ
-	gjmRz1UNrH/tLXCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1757665967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/CSSfN43nuBpCmvlSQv0g4m2YsMRqWgQtvSodhnH28=;
-	b=NzGZs2VaUva7nAB6VbcEuZSvhBSVlcW4blbtBY6HNBMWWAXbae08r9qYs3v5z+GdRFYgY/
-	VbeEpqO4pA7jByje53TP/rNV4Elzxv+SZjUQ0OFLzzAAZ+Kr/L3Bym88W7Dx4Ul2nVvL3l
-	TyT0M91a3S/Kr9Dj+CvBgTFiBddEJYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1757665967;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/CSSfN43nuBpCmvlSQv0g4m2YsMRqWgQtvSodhnH28=;
-	b=IJRvEf8MaAIKPa9ZL8mK7o1+fIpbj5bi9eT0ydLdxT6d/IYDCbkKoZdlcbLdgnxuO7SBlJ
-	gjmRz1UNrH/tLXCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 33B4113869;
-	Fri, 12 Sep 2025 08:32:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YkOaDK/aw2hKLgAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 12 Sep 2025 08:32:47 +0000
-Date: Fri, 12 Sep 2025 10:32:38 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Hannes Reinecke <hare@suse.de>, Daniel Wagner <wagi@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Aaron Tomlin <atomlin@atomlin.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v8 10/12] blk-mq: use hk cpus only when isolcpus=io_queue
- is enabled
-Message-ID: <bc5ebdea-7091-4999-a021-ec2a65573aa0@flourine.local>
-References: <20250905-isolcpus-io-queues-v8-0-885984c5daca@kernel.org>
- <20250905-isolcpus-io-queues-v8-10-885984c5daca@kernel.org>
- <ff66801c-f261-411d-bbbf-b386e013d096@suse.de>
- <d11a0c60-1b75-49ec-a2f8-7df402c4adf2@flourine.local>
- <87ms72u3at.ffs@tglx>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EmIRlyKdzm0hyWCwrNXqF55utMwmqArkWgLr0xxkZi0sRopwMt+PkX42NnEzgPFDoV5Davve/fS9s7/eHt61ICZh6poB2Ph4ckH/Xy8iKC7yLQ2o9sadbtWN41w+PTbNOyzjqaLoo/7XijgSHqmhRdpwsghXHU2tAesJEdv/CEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LY4R44OP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1FCDC4CEF1;
+	Mon, 15 Sep 2025 05:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757915302;
+	bh=QmA1uWtopyZKqYFa3aB5R38vcRhwp6UNA5QEhCCpxlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LY4R44OPNzL3Qer2vVNQup9uUTcNx43gZqh5FwLU0Oh1PdFVX0Y/KMu9Uvifa32bq
+	 LKQg8b7U2pc5ik4+PxHv4Vxaw4OOg+vsmxh8TnpYqhx/pMCEM27S4kfw09R8Z3+SrS
+	 WOCH3NphTYB7cis3wXHahmF9XEuFQFnTdwnEgrsxicfvxKQHyvsgH5+RBeSZZNlt+1
+	 jN5OeNDI/I13LeozFgh3Z/w6y7Zqmf8gbZ1coqUma25WZo+AQ3j6hF69NbTonbiUow
+	 a8r0c3Mzdr4L7umKhPtyml+GICc0Iz7CXrXjBFFY5PAmWMihDcJf2V0TWoeJPC1g6V
+	 RKkFNq598mfYQ==
+Date: Fri, 12 Sep 2025 12:03:27 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
+	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
+	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
+	Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
+ API
+Message-ID: <20250912090327.GU341237@unreal>
+References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
+ <cover.1757423202.git.leonro@nvidia.com>
+ <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -114,113 +83,117 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ms72u3at.ffs@tglx>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL67935bhfdkbndpbo95z3ogoo)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+In-Reply-To: <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
 
-On Wed, Sep 10, 2025 at 10:20:26AM +0200, Thomas Gleixner wrote:
-> On Mon, Sep 08 2025 at 09:26, Daniel Wagner wrote:
-> > On Mon, Sep 08, 2025 at 08:13:31AM +0200, Hannes Reinecke wrote:
-> >> >   const struct cpumask *blk_mq_online_queue_affinity(void)
-> >> >   {
-> >> > +	if (housekeeping_enabled(HK_TYPE_IO_QUEUE)) {
-> >> > +		cpumask_and(&blk_hk_online_mask, cpu_online_mask,
-> >> > +			    housekeeping_cpumask(HK_TYPE_IO_QUEUE));
-> >> > +		return &blk_hk_online_mask;
-> >> 
-> >> Can you explain the use of 'blk_hk_online_mask'?
-> >> Why is a static variable?
+On Fri, Sep 12, 2025 at 12:25:38AM +0200, Marek Szyprowski wrote:
+> On 09.09.2025 15:27, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
 > >
-> > The blk_mq_*_queue_affinity helpers return a const struct cpumask *, the
-> > caller doesn't need to free the return value. Because cpumask_and needs
-> > store its result somewhere, I opted for the global static variable.
+> > Changelog:
+> > v6:
+> >   * Based on "dma-debug: don't enforce dma mapping check on noncoherent
+> >     allocations" patch.
+> >   * Removed some unused variables from kmsan conversion.
+> >   * Fixed missed ! in dma check.
+> > v5: https://lore.kernel.org/all/cover.1756822782.git.leon@kernel.org
+> >   * Added Jason's and Keith's Reviewed-by tags
+> >   * Fixed DMA_ATTR_MMIO check in dma_direct_map_phys
+> >   * Jason's cleanup suggestions
+> > v4: https://lore.kernel.org/all/cover.1755624249.git.leon@kernel.org/
+> >   * Fixed kbuild error with mismatch in kmsan function declaration due to
+> >     rebase error.
+> > v3: https://lore.kernel.org/all/cover.1755193625.git.leon@kernel.org
+> >   * Fixed typo in "cacheable" word
+> >   * Simplified kmsan patch a lot to be simple argument refactoring
+> > v2: https://lore.kernel.org/all/cover.1755153054.git.leon@kernel.org
+> >   * Used commit messages and cover letter from Jason
+> >   * Moved setting IOMMU_MMIO flag to dma_info_to_prot function
+> >   * Micro-optimized the code
+> >   * Rebased code on v6.17-rc1
+> > v1: https://lore.kernel.org/all/cover.1754292567.git.leon@kernel.org
+> >   * Added new DMA_ATTR_MMIO attribute to indicate
+> >     PCI_P2PDMA_MAP_THRU_HOST_BRIDGE path.
+> >   * Rewrote dma_map_* functions to use thus new attribute
+> > v0: https://lore.kernel.org/all/cover.1750854543.git.leon@kernel.org/
+> > ------------------------------------------------------------------------
 > >
-> >> To my untrained eye it's being recalculated every time one calls
-> >> this function. And only the first invocation run on an empty mask,
-> >> all subsequent ones see a populated mask.
+> > This series refactors the DMA mapping to use physical addresses
+> > as the primary interface instead of page+offset parameters. This
+> > change aligns the DMA API with the underlying hardware reality where
+> > DMA operations work with physical addresses, not page structures.
 > >
-> > The cpu_online_mask might change over time, it's not a static bitmap.
-> > Thus it's necessary to update the blk_hk_online_mask. Doing some sort of
-> > caching is certainly possible. Given that we have plenty of cpumask
-> > logic operation in the cpu_group_evenly code path later, I am not so
-> > sure this really makes a huge difference.
+> > The series maintains export symbol backward compatibility by keeping
+> > the old page-based API as wrapper functions around the new physical
+> > address-based implementations.
+> >
+> > This series refactors the DMA mapping API to provide a phys_addr_t
+> > based, and struct-page free, external API that can handle all the
+> > mapping cases we want in modern systems:
+> >
+> >   - struct page based cacheable DRAM
+> >   - struct page MEMORY_DEVICE_PCI_P2PDMA PCI peer to peer non-cacheable
+> >     MMIO
+> >   - struct page-less PCI peer to peer non-cacheable MMIO
+> >   - struct page-less "resource" MMIO
+> >
+> > Overall this gets much closer to Matthew's long term wish for
+> > struct-pageless IO to cacheable DRAM. The remaining primary work would
+> > be in the mm side to allow kmap_local_pfn()/phys_to_virt() to work on
+> > phys_addr_t without a struct page.
+> >
+> > The general design is to remove struct page usage entirely from the
+> > DMA API inner layers. For flows that need to have a KVA for the
+> > physical address they can use kmap_local_pfn() or phys_to_virt(). This
+> > isolates the struct page requirements to MM code only. Long term all
+> > removals of struct page usage are supporting Matthew's memdesc
+> > project which seeks to substantially transform how struct page works.
+> >
+> > Instead make the DMA API internals work on phys_addr_t. Internally
+> > there are still dedicated 'page' and 'resource' flows, except they are
+> > now distinguished by a new DMA_ATTR_MMIO instead of by callchain. Both
+> > flows use the same phys_addr_t.
+> >
+> > When DMA_ATTR_MMIO is specified things work similar to the existing
+> > 'resource' flow. kmap_local_pfn(), phys_to_virt(), phys_to_page(),
+> > pfn_valid(), etc are never called on the phys_addr_t. This requires
+> > rejecting any configuration that would need swiotlb. CPU cache
+> > flushing is not required, and avoided, as ATTR_MMIO also indicates the
+> > address have no cacheable mappings. This effectively removes any
+> > DMA API side requirement to have struct page when DMA_ATTR_MMIO is
+> > used.
+> >
+> > In the !DMA_ATTR_MMIO mode things work similarly to the 'page' flow,
+> > except on the common path of no cache flush, no swiotlb it never
+> > touches a struct page. When cache flushing or swiotlb copying
+> > kmap_local_pfn()/phys_to_virt() are used to get a KVA for CPU
+> > usage. This was already the case on the unmap side, now the map side
+> > is symmetric.
+> >
+> > Callers are adjusted to set DMA_ATTR_MMIO. Existing 'resource' users
+> > must set it. The existing struct page based MEMORY_DEVICE_PCI_P2PDMA
+> > path must also set it. This corrects some existing bugs where iommu
+> > mappings for P2P MMIO were improperly marked IOMMU_CACHE.
+> >
+> > Since ATTR_MMIO is made to work with all the existing DMA map entry
+> > points, particularly dma_iova_link(), this finally allows a way to use
+> > the new DMA API to map PCI P2P MMIO without creating struct page. The
+> > VFIO DMABUF series demonstrates how this works. This is intended to
+> > replace the incorrect driver use of dma_map_resource() on PCI BAR
+> > addresses.
+> >
+> > This series does the core code and modern flows. A followup series
+> > will give the same treatment to the legacy dma_ops implementation.
 > 
-> Sure,  but none of this is serialized against CPU hotplug operations. So
-> the resulting mask, which is handed into the spreading code can be
-> concurrently modified. IOW it's not as const as the code claims.
+> Applied patches 1-13 into dma-mapping-for-next branch. Let's check if it 
+> works fine in linux-next.
 
-Thanks for explaining.
+Thanks a lot.
 
-In group_cpu_evenly:
-
-	/*
-	 * Make a local cache of 'cpu_present_mask', so the two stages
-	 * spread can observe consistent 'cpu_present_mask' without holding
-	 * cpu hotplug lock, then we can reduce deadlock risk with cpu
-	 * hotplug code.
-	 *
-	 * Here CPU hotplug may happen when reading `cpu_present_mask`, and
-	 * we can live with the case because it only affects that hotplug
-	 * CPU is handled in the 1st or 2nd stage, and either way is correct
-	 * from API user viewpoint since 2-stage spread is sort of
-	 * optimization.
-	 */
-	cpumask_copy(npresmsk, data_race(cpu_present_mask));
-
-
-0263f92fadbb ("lib/group_cpus.c: avoid acquiring cpu hotplug lock in
-group_cpus_evenly"):
-
-  group_cpus_evenly() could be part of storage driver's error handler, such
-  as nvme driver, when may happen during CPU hotplug, in which storage queue
-  has to drain its pending IOs because all CPUs associated with the queue
-  are offline and the queue is becoming inactive.  And handling IO needs
-  error handler to provide forward progress.
-
-  Then deadlock is caused:
-
-  1) inside CPU hotplug handler, CPU hotplug lock is held, and blk-mq's
-     handler is waiting for inflight IO
-
-  2) error handler is waiting for CPU hotplug lock
-
-  3) inflight IO can't be completed in blk-mq's CPU hotplug handler
-     because error handling can't provide forward progress.
-
-  Solve the deadlock by not holding CPU hotplug lock in group_cpus_evenly(),
-  in which two stage spreads are taken: 1) the 1st stage is over all present
-  CPUs; 2) the end stage is over all other CPUs.
-
-  Turns out the two stage spread just needs consistent 'cpu_present_mask',
-  and remove the CPU hotplug lock by storing it into one local cache.  This
-  way doesn't change correctness, because all CPUs are still covered.
-
-This sounds like I should do something similar with cpu_online_mask.
-Anyway, I'll work on this.
-
-> How is this even remotely correct?
-
-It isn't :( I did hotplug tests but obviously these were not really up
-to the task. The kernel test bot gave me a pointer how I should test.
+> 
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+> 
+> 
 
