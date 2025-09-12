@@ -1,199 +1,202 @@
-Return-Path: <linux-block+bounces-27383-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27244-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F05AB56FCA
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 07:48:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4476AB5468B
+	for <lists+linux-block@lfdr.de>; Fri, 12 Sep 2025 11:12:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27C611772F3
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 05:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 521C61BC17A2
+	for <lists+linux-block@lfdr.de>; Fri, 12 Sep 2025 09:12:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A273F26E16A;
-	Mon, 15 Sep 2025 05:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00972765E6;
+	Fri, 12 Sep 2025 09:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY4R44OP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aploMs7w"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425619DF4F;
-	Mon, 15 Sep 2025 05:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D876E274FD1
+	for <linux-block@vger.kernel.org>; Fri, 12 Sep 2025 09:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757915303; cv=none; b=NnQiUxY2wFuIognBsaawOoG2kQ1evvRAqaUwDAYR0xJbKI4ehdO0qwvNwPNkUD22XcyUxB2X0an7G86ttbOnMMSCitqoe+5YULxGJQQuyOaB+FpT2mAcFJTtz5jQ1ucsFx7u1eQRZC8B0aQCt2PT28b1QJO7Ui+pU55BZ8OiwuY=
+	t=1757668344; cv=none; b=mCwQeOmL079xWMMi0HkTCKfV2Or+Grjj8696GnyuXcqLUYivK7RnSR0juuJisgkfA5zJI5AoEQiTClOhLjU9hXUSrx0Z3SaZJW81A0hhQPk9c4Nux2deo8zyyxuroXFmgVwDNC/knEOnKDo1lAizSFbOpUEdffNj4zxWOk9DYaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757915303; c=relaxed/simple;
-	bh=QmA1uWtopyZKqYFa3aB5R38vcRhwp6UNA5QEhCCpxlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EmIRlyKdzm0hyWCwrNXqF55utMwmqArkWgLr0xxkZi0sRopwMt+PkX42NnEzgPFDoV5Davve/fS9s7/eHt61ICZh6poB2Ph4ckH/Xy8iKC7yLQ2o9sadbtWN41w+PTbNOyzjqaLoo/7XijgSHqmhRdpwsghXHU2tAesJEdv/CEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LY4R44OP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1FCDC4CEF1;
-	Mon, 15 Sep 2025 05:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757915302;
-	bh=QmA1uWtopyZKqYFa3aB5R38vcRhwp6UNA5QEhCCpxlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LY4R44OPNzL3Qer2vVNQup9uUTcNx43gZqh5FwLU0Oh1PdFVX0Y/KMu9Uvifa32bq
-	 LKQg8b7U2pc5ik4+PxHv4Vxaw4OOg+vsmxh8TnpYqhx/pMCEM27S4kfw09R8Z3+SrS
-	 WOCH3NphTYB7cis3wXHahmF9XEuFQFnTdwnEgrsxicfvxKQHyvsgH5+RBeSZZNlt+1
-	 jN5OeNDI/I13LeozFgh3Z/w6y7Zqmf8gbZ1coqUma25WZo+AQ3j6hF69NbTonbiUow
-	 a8r0c3Mzdr4L7umKhPtyml+GICc0Iz7CXrXjBFFY5PAmWMihDcJf2V0TWoeJPC1g6V
-	 RKkFNq598mfYQ==
-Date: Fri, 12 Sep 2025 12:03:27 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <20250912090327.GU341237@unreal>
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
- <cover.1757423202.git.leonro@nvidia.com>
- <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
+	s=arc-20240116; t=1757668344; c=relaxed/simple;
+	bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FO3PUiGAIFdfPzxEx3TyIpJVDAP9BjgDwnav4G7Uu5qQxzKK+Fa07gZHJ67hbAb7Y89T2VzhYy4OMeRtmLGDqPxYQKPTCtU25FupqjC9xJOSs9GUosydG04pf0Q3JfPXIA7p7WBq8nOGwm2SajaXrIswHvJAf2r3C1C5UC5PqQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aploMs7w; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aff0775410eso468128066b.0
+        for <linux-block@vger.kernel.org>; Fri, 12 Sep 2025 02:12:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757668341; x=1758273141; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+        b=aploMs7whY/LgaXCAuOUQbkHlH9PozV3z9HFoHHh4tp/dJFhM6pt21fAvHgYgjlN8M
+         rmpVcHSueNagemUBdQowpA6BdoN7gqqaLplS1v3ScHX+yKhTwev5VBs4Bed/9bkH4dLN
+         4rfLLpcIvHJONxgYVXSLM7qEor3rn+MmXCTKDCzXypEm5HHBP38sGD0OFUOjAm326bQ+
+         1r2w7gh4g7621FkXF6rJzjHEIMZg4g13DDPyWgPK4mWuR3T6PMXO71Jvdha7GKG/r6lh
+         avbJhFNvPx4G+gPZm0XJKYAQwKp/BQENGe5DK6uHxVZst/QOlcM6CwamdS6qIfXycNC8
+         TKgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757668341; x=1758273141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+        b=bICXcrKbdvgvjs/cvMpoWlVNh1O5SSVmS49o0dKdLPNp7Ma3G3NpaR87uGDlDiC/aI
+         9Mnt0Fu0BzyVM4N0ucXwLXHwpUzbUX8Hp7u2VWsbBzCtRkrRBlN5puavCuJYsTloLlqv
+         gZe/YpU6wCzJek+IdRkJubgJVCWTHZgLS2fju06hccy0LneUC66P2Lrw3fpHLNRU1Rrm
+         00EDh1T9dZa8Xj4oMw9pZ3i+zeSN1OarnhDTeQqA8bB9I31duvhZmMPzCCcS6QLLhs4m
+         1Yd0hva7nctVpUx0B+lnOP4l7sMR1rRnaWdRUvppp1wFsfFUJrg7CGO6YF+6VlEk5xj0
+         bn3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXnuGFU4WvSvxlOSji0FteZlWA8JAuZkptk5bH809KMVdwTWJrIQt2kTTq4jbxLnNBX9XvrtYElZgmbYg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzDuBo82w9qxhmjxdaCSQUCelA2dxIjFL+jUX+R29F9j/m8iNE
+	fp3CBz6sHxaWnADDBwKoYVJTfXMxtZrkhLcAHUTmozwJ+syevE4wQiFcxVAHErMzu0FEDgaqlky
+	xk//qrQeDFx21dbD+clnjE+q66Xd2hOY=
+X-Gm-Gg: ASbGncuqU20jlZTNp7sHbm83Z70zSkyUxYxQg5GJnTb8MR//rLL4pz2K084q2mGlt6t
+	8U4DHbMegCBE9pF0VjkeyZznBpYZLDs3DNOJ3qIRQ7zRzGT7nUmgnm0aWkCO/E1Cwt5EE4UXpEQ
+	Z/4WD52DErKa/ZRwqhdzr31kvPVyprrGGl2PxGxGkStxel8CYFjTo6zheQ9LZBonvp94vgbQRoR
+	LCSMNU=
+X-Google-Smtp-Source: AGHT+IECQ2FSxCpELdyt8w8+Ta17OX81olY1L21qGnLXRiiNiAsbzwmD/JJZPTQJsBBXBb5BWfCf5Q2bF6gDjvOJbJk=
+X-Received: by 2002:a17:907:3e9f:b0:b04:3402:391c with SMTP id
+ a640c23a62f3a-b07a68bddd8mr590036766b.24.1757668340932; Fri, 12 Sep 2025
+ 02:12:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org> <CAOQ4uxgtQQa-jzsnTBxgUTPzgtCiAaH8X6ffMqd+1Y5Jjy0dmQ@mail.gmail.com>
+ <20250911-werken-raubzug-64735473739c@brauner> <CAOQ4uxgMgzOjz4E-4kJFJAz3Dpd=Q6vXoGrhz9F0=mb=4XKZqA@mail.gmail.com>
+ <20250912-wirsing-karibus-7f6a98621dd1@brauner>
+In-Reply-To: <20250912-wirsing-karibus-7f6a98621dd1@brauner>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 12 Sep 2025 11:12:09 +0200
+X-Gm-Features: Ac12FXzXlVrWyNxThzcVLm8bWdnJouio3PTW50wsmgaWY6Ne9FaEF2yc3iNy4og
+Message-ID: <CAOQ4uxgGpdQ42d-QRuHbvdrvZWrS9qz9=A2GRa2Bq-sMcK6w4w@mail.gmail.com>
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 12, 2025 at 12:25:38AM +0200, Marek Szyprowski wrote:
-> On 09.09.2025 15:27, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
+On Fri, Sep 12, 2025 at 10:20=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+>
+> On Thu, Sep 11, 2025 at 01:36:28PM +0200, Amir Goldstein wrote:
+> > On Thu, Sep 11, 2025 at 11:31=E2=80=AFAM Christian Brauner <brauner@ker=
+nel.org> wrote:
+> > >
+> > > On Wed, Sep 10, 2025 at 07:21:22PM +0200, Amir Goldstein wrote:
+> > > > On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@=
+kernel.org> wrote:
+> > > > >
+> > > > > A while ago we added support for file handles to pidfs so pidfds =
+can be
+> > > > > encoded and decoded as file handles. Userspace has adopted this q=
+uickly
+> > > > > and it's proven very useful.
+> > > >
+> > > > > Pidfd file handles are exhaustive meaning
+> > > > > they don't require a handle on another pidfd to pass to
+> > > > > open_by_handle_at() so it can derive the filesystem to decode in.
+> > > > >
+> > > > > Implement the exhaustive file handles for namespaces as well.
+> > > >
+> > > > I think you decide to split the "exhaustive" part to another patch,
+> > > > so better drop this paragraph?
+> > >
+> > > Yes, good point. I've dont that.
+> > >
+> > > > I am missing an explanation about the permissions for
+> > > > opening these file handles.
+> > > >
+> > > > My understanding of the code is that the opener needs to meet one o=
+f
+> > > > the conditions:
+> > > > 1. user has CAP_SYS_ADMIN in the userns owning the opened namespace
+> > > > 2. current task is in the opened namespace
+> > >
+> > > Yes.
+> > >
+> > > >
+> > > > But I do not fully understand the rationale behind the 2nd conditio=
+n,
+> > > > that is, when is it useful?
+> > >
+> > > A caller is always able to open a file descriptor to it's own set of
+> > > namespaces. File handles will behave the same way.
+> > >
 > >
-> > Changelog:
-> > v6:
-> >   * Based on "dma-debug: don't enforce dma mapping check on noncoherent
-> >     allocations" patch.
-> >   * Removed some unused variables from kmsan conversion.
-> >   * Fixed missed ! in dma check.
-> > v5: https://lore.kernel.org/all/cover.1756822782.git.leon@kernel.org
-> >   * Added Jason's and Keith's Reviewed-by tags
-> >   * Fixed DMA_ATTR_MMIO check in dma_direct_map_phys
-> >   * Jason's cleanup suggestions
-> > v4: https://lore.kernel.org/all/cover.1755624249.git.leon@kernel.org/
-> >   * Fixed kbuild error with mismatch in kmsan function declaration due to
-> >     rebase error.
-> > v3: https://lore.kernel.org/all/cover.1755193625.git.leon@kernel.org
-> >   * Fixed typo in "cacheable" word
-> >   * Simplified kmsan patch a lot to be simple argument refactoring
-> > v2: https://lore.kernel.org/all/cover.1755153054.git.leon@kernel.org
-> >   * Used commit messages and cover letter from Jason
-> >   * Moved setting IOMMU_MMIO flag to dma_info_to_prot function
-> >   * Micro-optimized the code
-> >   * Rebased code on v6.17-rc1
-> > v1: https://lore.kernel.org/all/cover.1754292567.git.leon@kernel.org
-> >   * Added new DMA_ATTR_MMIO attribute to indicate
-> >     PCI_P2PDMA_MAP_THRU_HOST_BRIDGE path.
-> >   * Rewrote dma_map_* functions to use thus new attribute
-> > v0: https://lore.kernel.org/all/cover.1750854543.git.leon@kernel.org/
-> > ------------------------------------------------------------------------
+> > I understand why it's safe, and I do not object to it at all,
+> > I just feel that I do not fully understand the use case of how ns file =
+handles
+> > are expected to be used.
+> > A process can always open /proc/self/ns/mnt
+> > What's the use case where a process may need to open its own ns by hand=
+le?
 > >
-> > This series refactors the DMA mapping to use physical addresses
-> > as the primary interface instead of page+offset parameters. This
-> > change aligns the DMA API with the underlying hardware reality where
-> > DMA operations work with physical addresses, not page structures.
+> > I will explain. For CAP_SYS_ADMIN I can see why keeping handles that
+> > do not keep an elevated refcount of ns object could be useful in the sa=
+me
+> > way that an NFS client keeps file handles without keeping the file obje=
+ct alive.
 > >
-> > The series maintains export symbol backward compatibility by keeping
-> > the old page-based API as wrapper functions around the new physical
-> > address-based implementations.
-> >
-> > This series refactors the DMA mapping API to provide a phys_addr_t
-> > based, and struct-page free, external API that can handle all the
-> > mapping cases we want in modern systems:
-> >
-> >   - struct page based cacheable DRAM
-> >   - struct page MEMORY_DEVICE_PCI_P2PDMA PCI peer to peer non-cacheable
-> >     MMIO
-> >   - struct page-less PCI peer to peer non-cacheable MMIO
-> >   - struct page-less "resource" MMIO
-> >
-> > Overall this gets much closer to Matthew's long term wish for
-> > struct-pageless IO to cacheable DRAM. The remaining primary work would
-> > be in the mm side to allow kmap_local_pfn()/phys_to_virt() to work on
-> > phys_addr_t without a struct page.
-> >
-> > The general design is to remove struct page usage entirely from the
-> > DMA API inner layers. For flows that need to have a KVA for the
-> > physical address they can use kmap_local_pfn() or phys_to_virt(). This
-> > isolates the struct page requirements to MM code only. Long term all
-> > removals of struct page usage are supporting Matthew's memdesc
-> > project which seeks to substantially transform how struct page works.
-> >
-> > Instead make the DMA API internals work on phys_addr_t. Internally
-> > there are still dedicated 'page' and 'resource' flows, except they are
-> > now distinguished by a new DMA_ATTR_MMIO instead of by callchain. Both
-> > flows use the same phys_addr_t.
-> >
-> > When DMA_ATTR_MMIO is specified things work similar to the existing
-> > 'resource' flow. kmap_local_pfn(), phys_to_virt(), phys_to_page(),
-> > pfn_valid(), etc are never called on the phys_addr_t. This requires
-> > rejecting any configuration that would need swiotlb. CPU cache
-> > flushing is not required, and avoided, as ATTR_MMIO also indicates the
-> > address have no cacheable mappings. This effectively removes any
-> > DMA API side requirement to have struct page when DMA_ATTR_MMIO is
-> > used.
-> >
-> > In the !DMA_ATTR_MMIO mode things work similarly to the 'page' flow,
-> > except on the common path of no cache flush, no swiotlb it never
-> > touches a struct page. When cache flushing or swiotlb copying
-> > kmap_local_pfn()/phys_to_virt() are used to get a KVA for CPU
-> > usage. This was already the case on the unmap side, now the map side
-> > is symmetric.
-> >
-> > Callers are adjusted to set DMA_ATTR_MMIO. Existing 'resource' users
-> > must set it. The existing struct page based MEMORY_DEVICE_PCI_P2PDMA
-> > path must also set it. This corrects some existing bugs where iommu
-> > mappings for P2P MMIO were improperly marked IOMMU_CACHE.
-> >
-> > Since ATTR_MMIO is made to work with all the existing DMA map entry
-> > points, particularly dma_iova_link(), this finally allows a way to use
-> > the new DMA API to map PCI P2P MMIO without creating struct page. The
-> > VFIO DMABUF series demonstrates how this works. This is intended to
-> > replace the incorrect driver use of dma_map_resource() on PCI BAR
-> > addresses.
-> >
-> > This series does the core code and modern flows. A followup series
-> > will give the same treatment to the legacy dma_ops implementation.
-> 
-> Applied patches 1-13 into dma-mapping-for-next branch. Let's check if it 
-> works fine in linux-next.
+> > But if you do not have CAP_SYS_ADMIN and can only open your own ns
+> > by handle, what is the application that could make use of this?
+> > and what's the benefit of such application keeping a file handle instea=
+d of
+> > ns fd?
+>
+> A process is not always able to open /proc/self/ns/. That requires
+> procfs to be mounted and for /proc/self/ or /proc/self/ns/ to not be
+> overmounted. However, they can derive a namespace fd from their own
+> pidfd. And that also always works if it's their own namespace.
+>
+> There's no need to introduce unnecessary behavioral differences between
+> /proc/self/ns/, pidfd-derived namespace fs, and file-handle-derived
+> namespace fds. That's just going to be confusing.
+>
+> The other thing is that there are legitimate use-case for encoding your
+> own namespace. For example, you might store file handles to your set of
+> namespaces in a file on-disk so you can verify when you get rexeced that
+> they're still valid and so on. This is akin to the pidfd use-case.
+>
+> Or just plainly for namespace comparison reasons where you keep a file
+> handle to your own namespaces and can then easily check against others.
 
-Thanks a lot.
+OK. As I said no objections I was just curious about this use case.
 
-> 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
-> 
+FWIW, comparing current ns to a stored file handle does not really require
+permission to open_by_handle_at(). name_to_handle_at() the current ns
+and binary compare to the stored file handle should be a viable option.
+
+This was exactly the reason for introducing AT_HANDLE_FID, so that fanotify
+unprivileged watcher with no permission to open_by_handle_at() could compar=
+e
+an fid reported in an event with another fid they obtained earlier with
+name_to_handle_at() and kept in a map.
+
+Thanks for the explanation!
+Amir.
 
