@@ -1,118 +1,168 @@
-Return-Path: <linux-block+bounces-27384-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27345-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04B78B56FD6
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 07:49:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25FA1B56493
+	for <lists+linux-block@lfdr.de>; Sun, 14 Sep 2025 05:43:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03AAD177674
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 05:49:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB885420A11
+	for <lists+linux-block@lfdr.de>; Sun, 14 Sep 2025 03:43:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F03C52798F8;
-	Mon, 15 Sep 2025 05:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47939265CA2;
+	Sun, 14 Sep 2025 03:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHe7Ty6+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Meuoho8s"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2C626F2AB;
-	Mon, 15 Sep 2025 05:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5808263F32
+	for <linux-block@vger.kernel.org>; Sun, 14 Sep 2025 03:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757915310; cv=none; b=jBC9Sa18I1JnUSQojO5FPucKvWHEvzQlSSuamCNg+FoWMzXIigqxM6NtOKkENADFcSzeFrvEKEn6WidQ2OyNjNlXAfB/JX/Opmalkv6OU0G6OPb8LkM8QWnRe+ByQQWlW39roJLyIc+SBlfIbhPRdL+CDBM9R8tKhkT8omRt0ck=
+	t=1757821427; cv=none; b=pzw4CbHNnWpFi7qpvITynczqDFS7F99jsznX8O2Df1QMpeEVcoXuqo3cek4ReW3l5AQoDLUWJ5GnKmOhaZM6WC1JtN1bqECSokiK8kbG1450AVkdC/awTmuImOmGUEfppj6iMgDmuoFHRB8iB581rMWauxaxqiy3CXYoxqCBZC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757915310; c=relaxed/simple;
-	bh=pNhpXvcF7LKn5UVncvyxPjpBkffgzOi8e5YEIYnOU1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WQO1WxIcjcXexOBbXkXYd/q/9ClYEreE6eR77lKTJArsRAbzdwHjzwAtfiw8Kubd0qRX+CbnN2lfL1al7aw8/yXwNgmS+yi+2q0WA0yDHz9e6MqvzP2hMCuO5JcJosbRk87voRU1vxX4iwCdBfRoHc3C5tAN0hwfxiClHwna1wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHe7Ty6+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9696EC4CEF1;
-	Mon, 15 Sep 2025 05:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757915310;
-	bh=pNhpXvcF7LKn5UVncvyxPjpBkffgzOi8e5YEIYnOU1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nHe7Ty6+c/JGvDY+UydwDMZNts0Mvoe5CmZXEM3wRbXlJQZsiKQbiHX1dqED8BM6L
-	 jhMyqCWP4HV33158JPyukMw9azmtNrGpkymRgEWzH8txAsk0rOblpfGqGH9ecTIJff
-	 SsLxSOkvzP5SEsR+y+RlPv8/wUQ9v3p6CHq91exxQSTUKjsxYQ6lnV1GyfIF3fLnn7
-	 aD6U1ucW6cOBHuGB2utJFKkQvvAjc/DWH2//axsYKrHMDRKhgk/Ut1ZqFbNUGkItPt
-	 mky2sisAv2UghibJpCApHoRxj04wcBuUhqn0dWEmz2sHkq/6x1znCKDKs3Y1Qa1pZc
-	 pNH0C9osgWH6A==
-Date: Sat, 13 Sep 2025 13:19:33 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Alex Mastro <amastro@fb.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
+	s=arc-20240116; t=1757821427; c=relaxed/simple;
+	bh=Rey/ebl7WFu2BHJpZO0tlGb9Yvux/yHNtNSpgXJUf3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YC6JZeQBDKQW75LKnp82kGV52M+PmZw0iiVQy+JC9W/PnJwn+6VqDv1/PL+9E6aartdu5gTG45+7ZvoyrrWNM4PCFtvi3v95pVp7hcrBkg7aMMYuVY7a/2StmEUKqf6izkxWiJrbxWvzxq58txd3Aj0SAFzUTiuMdjE3h8EzrSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Meuoho8s; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b07c38680b3so313488966b.1
+        for <linux-block@vger.kernel.org>; Sat, 13 Sep 2025 20:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757821422; x=1758426222; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Edp+OfqM1e00xcpSWGvAGWC/LGQGu+BMiq7TC0KqX/w=;
+        b=Meuoho8stdCgQ03Hoq6UgAr03TaN96IypV+PgLqP/nGA44yo2zt6U929mjRx+HCq13
+         FPWIoc3jiMY7qBRlszyNQbvaQVxYynf3mcVS4ZUqM9DXZXSglG7vOuDf+9BPpKpwhOE5
+         esyrIr1LmwK1sh8FW8bsMCVhqfrrjJWn3/4I8UakoSU28KzFPHuQL9W0/2J7g0A8nZ1O
+         T5RsV+SSGzPKnwo1gUBPlfDSkMXh66xIdqSXJL7EHd2oWfyzikGuiq7xGrG+i6kSggsO
+         7dLhiHDpmeMEhTiC4sxGkbT4o1wUK7rDi6kWKBKQROziCBkBfVzJywQs93poRxb5DR22
+         ZxIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757821422; x=1758426222;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Edp+OfqM1e00xcpSWGvAGWC/LGQGu+BMiq7TC0KqX/w=;
+        b=vMhG10wqmyd9caGOzHLgr+Cf3s+TvpFrkrqQYZsahl4Tr/dSc7JzENV9uooZU3REE2
+         32hbFZH+IGWjMTNI6WCAOBapOfSp9p5eeqzGivAYO4ZdYqwOfqnRStinf3cisYWh7mZW
+         8uXW3BenSsucknwP6QZ7SfgR0v47aJ4D4cff7fEgoCN316Ro4DA6yJ+QFYP/ggYK6lgq
+         3cVFBYSIlPDYrFXYX5sn3oA2Uvi5fivpNVg3cjGZzqduQVBu3+xYwb7uiIwrPJeyDuwG
+         cm5LdDY18oBDQMDiuRP47T1l1coSpLNuAS4eJLkIGgmL4vDwGicGdUmAsjMJu+xZsmKy
+         US+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXtxOzOZr77R9K2ONTGjFzu2beZsmf1gY9RrXGQHPvpDeTEnzwrZ3FTm544/4R371uvdf3IMWA/nXsK1Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YybRzbe+DymFo/vcbUXFVSF863dVXirq2pUWwuDyKdUxRm7YDJW
+	VbwwIcOA/Ylw/NyiPhYPwU3ERAGyTmsRLnEPg17R3717q4qDvDCmiQSu
+X-Gm-Gg: ASbGncvS4DDxFCkVV7CsnsCtuRaw3DzpIAWrKLe0hCMvhic3iObqCKRRLlOGMbIWvRk
+	oAEDU667b4jej8i+AkztnWRPTO0/uB/6/P1NuG7niTtfzI5OPyj7CUmY9uQoSZ+HwMnjzFw6WUu
+	ZMmI9YZ7KuNGM6pVMURNZcBU0yK4RhIboMvKDt3v/igcsH2Ip3XfpPV5y23R2hYZeB8JDbjW7E9
+	PoBQNpozF4jt6J4aFJAL24TT9RPRf6ybtlhtSDDfvEi+2QRmzNQnHC/piS3O/NG1jEqAOabCO7T
+	fe2EiIc4QDnTbYlhVQn81ag/mFPnsfQ3FdKkM7GPAfDojlszP3mDBUPg4IJu0c2+vEo+jORgfaq
+	HwKRzz7YgxPbGJDZZE/I=
+X-Google-Smtp-Source: AGHT+IET6lw3qY9XyvNvb3pybcnRN4nnQ2bci5TeiF0EBvfDGIL/USbY9x3ZkIUotRlW6z+hFZZ7Dw==
+X-Received: by 2002:a17:907:72c9:b0:af9:6bfb:58b7 with SMTP id a640c23a62f3a-b07c354e9b4mr721980466b.5.1757821422077;
+        Sat, 13 Sep 2025 20:43:42 -0700 (PDT)
+Received: from localhost ([212.73.77.104])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b07d2870da1sm345137366b.13.2025.09.13.20.43.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Sep 2025 20:43:40 -0700 (PDT)
+From: Askar Safin <safinaskar@gmail.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Aleksa Sarai <cyphar@cyphar.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Julian Stecklina <julian.stecklina@cyberus-technology.de>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Art Nikpal <email2tema@gmail.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Christoph Hellwig <hch@lst.de>, dri-devel@lists.freedesktop.org,
-	iommu@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v1 10/10] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20250913101933.GW341237@unreal>
-References: <cover.1754311439.git.leon@kernel.org>
- <5e043d8b95627441db6156e7f15e6e1658e9d537.1754311439.git.leon@kernel.org>
- <aMRsoUx/NH/Dspm9@devgpu015.cco6.facebook.com>
+	Eric Curtin <ecurtin@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Rob Landley <rob@landley.net>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	linux-arch@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	x86@kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	linux-block@vger.kernel.org,
+	initramfs@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	"Theodore Y . Ts'o" <tytso@mit.edu>,
+	linux-acpi@vger.kernel.org,
+	Michal Simek <monstr@monstr.eu>,
+	devicetree@vger.kernel.org,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	patches@lists.linux.dev
+Subject: [PATCH RESEND 37/62] init: remove root_mountflags from init/do_mounts.h
+Date: Sun, 14 Sep 2025 06:43:35 +0300
+Message-ID: <20250914034335.3506706-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
+References: <20250913003842.41944-1-safinaskar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aMRsoUx/NH/Dspm9@devgpu015.cco6.facebook.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 12, 2025 at 11:55:29AM -0700, Alex Mastro wrote:
-> On Mon, Aug 04, 2025 at 04:00:45PM +0300, Leon Romanovsky wrote:
-> > +static void dma_ranges_to_p2p_phys(struct vfio_pci_dma_buf *priv,
-> > +				   struct vfio_device_feature_dma_buf *dma_buf,
-> > +				   struct vfio_region_dma_range *dma_ranges)
-> > +{
-> > +	struct pci_dev *pdev = priv->vdev->pdev;
-> > +	phys_addr_t pci_start;
-> > +	int i;
-> > +
-> > +	pci_start = pci_resource_start(pdev, dma_buf->region_index);
-> > +	for (i = 0; i < dma_buf->nr_ranges; i++) {
-> > +		priv->phys_vec[i].len = dma_ranges[i].length;
-> > +		priv->phys_vec[i].paddr += pci_start + dma_ranges[i].offset;
-> 
-> Is the intent really to += paddr? I would have expected a plain assignment.
+It is already declared in include/linux/kernel.h
 
-In this specific case, there is no difference, because phys_vec is
-initialized to 0, but It needs to be "=" and not "+=".
+Signed-off-by: Askar Safin <safinaskar@gmail.com>
+---
+ init/do_mounts.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-> 
-> > +		priv->size += priv->phys_vec[i].len;
-> > +	}
-> > +	priv->nr_ranges = dma_buf->nr_ranges;
-> > +}
-> 
-> ...
-> 
-> > +	priv->phys_vec = kcalloc(get_dma_buf.nr_ranges, sizeof(*priv->phys_vec),
-> > +				 GFP_KERNEL);
-> > +	if (!priv->phys_vec) {
-> > +		ret = -ENOMEM;
-> > +		goto err_free_priv;
-> > +	}
-> > +
-> > +	priv->vdev = vdev;
-> > +	dma_ranges_to_p2p_phys(priv, &get_dma_buf, dma_ranges);
-> 
+diff --git a/init/do_mounts.h b/init/do_mounts.h
+index 90422fb07c02..e225d594dd06 100644
+--- a/init/do_mounts.h
++++ b/init/do_mounts.h
+@@ -12,8 +12,6 @@
+ #include <linux/task_work.h>
+ #include <linux/file.h>
+ 
+-extern int root_mountflags;
+-
+ /* Ensure that async file closing finished to prevent spurious errors. */
+ static inline void init_flush_fput(void)
+ {
+-- 
+2.47.2
+
 
