@@ -1,193 +1,117 @@
-Return-Path: <linux-block+bounces-27398-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27393-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C694B57938
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 13:52:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1367BB578C1
+	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 13:44:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0176A44826F
-	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 11:51:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCB8A170492
+	for <lists+linux-block@lfdr.de>; Mon, 15 Sep 2025 11:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26B673043C3;
-	Mon, 15 Sep 2025 11:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C64A3002A8;
+	Mon, 15 Sep 2025 11:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Reb/9G62"
 X-Original-To: linux-block@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00737303C85;
-	Mon, 15 Sep 2025 11:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A957A2FFDE2;
+	Mon, 15 Sep 2025 11:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757937043; cv=none; b=aa8dUsVkyLk8h3wVPjjk5cooFKC4Fe9p4DxP32g6azDk/HUHVc/gJORUTF3q+RKzD4Mp4v6TAuA1aYKLiFGQzpft0IVS1xQnvwzyPTfW/o7fRuvLSRZnCeDDv0mm24cJRpoOMkE6PxU3ZKW3GCsvjsuULOvr0n6xTP1JPcyfR7w=
+	t=1757936532; cv=none; b=a8T65ZeIflYHZhAslTScTazCEPU1wVDcE9jL1ad8olChKhBa21UJIFoMfNY0a0Brt8rNKgRA9wdNzdwsn2j+G7y2YZ7EwtYSy4IWW1adAtYmufHbsqTF9dknSi7shtKt6nNOj1nphPXa7Q4j5mv9iVXMkOThccqMP/HbYNXQ8aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757937043; c=relaxed/simple;
-	bh=slLaPaXqm4+66dpacFCrcqHE+39qtJjBzOocuF1xi6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tMkXIyr8U+cvwfYT1x2g5NFoBTKDeKwWWa4Roj6ofZxvi7nYxWjWcIRkCwOIazM0h6qjU1wkmdbpdkBVf7fZNN1kfC0QisjXmAUTRYpD++DvZJjIGsg7QFVYiwnXttH0YWdDDl3b05z92HnI+MJmx5XKrh2TctCxpctd+DlvJrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cQMxX3w10z9sxn;
-	Mon, 15 Sep 2025 13:19:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lsQzt4OAL5QC; Mon, 15 Sep 2025 13:19:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cQMxW2nkYz9sxl;
-	Mon, 15 Sep 2025 13:19:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 27EFC8B766;
-	Mon, 15 Sep 2025 13:19:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id niL9xnZy0o5E; Mon, 15 Sep 2025 13:19:27 +0200 (CEST)
-Received: from [10.25.207.160] (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6E3148B763;
-	Mon, 15 Sep 2025 13:19:26 +0200 (CEST)
-Message-ID: <c52c2589-9d7b-4ac7-a61f-68fa9ba18308@csgroup.eu>
-Date: Mon, 15 Sep 2025 13:19:26 +0200
+	s=arc-20240116; t=1757936532; c=relaxed/simple;
+	bh=f9AZ6ETGhgOlD9k/ZxuW8BeYMmQM+TaA/I74h6msMzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWVYR4tWISQTz77GPLWM1U/kArOET4F2YA6NPoDHdvzF4Hna3gZSCvve9YjM8Npri7vQ5dYziqJ86Cpivy4/eHW7JtvDyq8/gSoMqY2GyrHygA84y0zQ8VHSEZTMXmGq4lFQxiPzWY1yfedQuthwhkmoVaZZFTxlhzFiN/cYUg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Reb/9G62; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78DFC4CEF7;
+	Mon, 15 Sep 2025 11:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757936532;
+	bh=f9AZ6ETGhgOlD9k/ZxuW8BeYMmQM+TaA/I74h6msMzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Reb/9G62tOG8PU9Hb/xKDN5bmyg9zz54YcvMN7a02rfgSnhhxEV3y/LtUpEuSdUSj
+	 U2NTxTTz060S1kFl1Y9Xs/8TdgF3YwjgbXiZHUXTCNilcmk0ut8c7Zgm3wfRtfFqcN
+	 JZb7W+l6ij0bIU623xhg3SQxrj6E2Tv0oHsQ8oIZgE6etlpdrqE6Bi+cIIx/6+Xi4k
+	 X2PdlRNFTE2pDgcQI242ZHch/vrP/LP/o5Y4510Up9rIfEmUpl/GQd3tS7hBcoDwxn
+	 iX+3+p9RiKdr+gcztuYgoZiK1taRoLvmk5yj1r8l2vkxLbvcRv7BSElyeQEflG7csp
+	 YQ7jPBRUIaJIw==
+Date: Mon, 15 Sep 2025 13:42:04 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2 11/33] net: use ns_common_init()
+Message-ID: <20250915-ungeduldig-erlegen-f3d3770f15d3@brauner>
+References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
+ <20250912-work-namespace-v2-11-1a247645cef5@kernel.org>
+ <ucldl3baqsuuiwzmubrkloblxfjvcecfhjd2nyvl6boccc3qlh@bumwo2wjyvgr>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 03/62] init: sh, sparc, x86: remove unused
- constants RAMDISK_PROMPT_FLAG and RAMDISK_LOAD_FLAG
-To: Askar Safin <safinaskar@gmail.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
- Jens Axboe <axboe@kernel.dk>, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Aleksa Sarai <cyphar@cyphar.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Julian Stecklina <julian.stecklina@cyberus-technology.de>,
- Gao Xiang <hsiangkao@linux.alibaba.com>, Art Nikpal <email2tema@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Eric Curtin <ecurtin@redhat.com>,
- Alexander Graf <graf@amazon.com>, Rob Landley <rob@landley.net>,
- Lennart Poettering <mzxreary@0pointer.de>, linux-arch@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org,
- Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
- initramfs@vger.kernel.org, linux-api@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-ext4@vger.kernel.org, "Theodore Y . Ts'o" <tytso@mit.edu>,
- linux-acpi@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
- devicetree@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>, Thorsten Blum <thorsten.blum@linux.dev>,
- Heiko Carstens <hca@linux.ibm.com>, patches@lists.linux.dev,
- stable+noautosel@kernel.org
-References: <20250913003842.41944-1-safinaskar@gmail.com>
- <20250913003842.41944-4-safinaskar@gmail.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250913003842.41944-4-safinaskar@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ucldl3baqsuuiwzmubrkloblxfjvcecfhjd2nyvl6boccc3qlh@bumwo2wjyvgr>
 
+On Mon, Sep 15, 2025 at 01:07:06PM +0200, Jan Kara wrote:
+> On Fri 12-09-25 13:52:34, Christian Brauner wrote:
+> > Don't cargo-cult the same thing over and over.
+> > 
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> 
+> ...
+> 
+> > @@ -559,7 +572,9 @@ struct net *copy_net_ns(unsigned long flags,
+> >  		goto dec_ucounts;
+> >  	}
+> >  
+> > -	preinit_net(net, user_ns);
+> > +	rv = preinit_net(net, user_ns);
+> > +	if (rv < 0)
+> > +		goto dec_ucounts;
+> 
+> Umm, this seems to be leaking 'net' on error exit.
 
+Sorry about this:
 
-Le 13/09/2025 à 02:37, Askar Safin a écrit :
-> [Vous ne recevez pas souvent de courriers de safinaskar@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> They were used for initrd before c8376994c86.
-> 
-> c8376994c86c made them unused and forgot to remove them
-> 
-> Fixes: c8376994c86c ("initrd: remove support for multiple floppies")
-> Cc: <stable+noautosel@kernel.org> # because changes uapi headers
-> Signed-off-by: Askar Safin <safinaskar@gmail.com>
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 5fb7bd8ac45a..466de530c495 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -572,12 +572,13 @@ struct net *copy_net_ns(unsigned long flags,
+                goto dec_ucounts;
+        }
 
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+-       rv = preinit_net(net, user_ns);
+-       if (rv < 0)
+-               goto dec_ucounts;
+        net->ucounts = ucounts;
+        get_user_ns(user_ns);
 
-> ---
->   arch/sh/kernel/setup.c                | 2 --
->   arch/sparc/kernel/setup_32.c          | 2 --
->   arch/sparc/kernel/setup_64.c          | 2 --
->   arch/x86/include/uapi/asm/bootparam.h | 2 --
->   arch/x86/kernel/setup.c               | 2 --
->   5 files changed, 10 deletions(-)
-> 
-> diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-> index 039a51291002..d66f098e9e9f 100644
-> --- a/arch/sh/kernel/setup.c
-> +++ b/arch/sh/kernel/setup.c
-> @@ -71,8 +71,6 @@ EXPORT_SYMBOL(sh_mv);
->   extern int root_mountflags;
-> 
->   #define RAMDISK_IMAGE_START_MASK       0x07FF
-> -#define RAMDISK_PROMPT_FLAG            0x8000
-> -#define RAMDISK_LOAD_FLAG              0x4000
-> 
->   static char __initdata command_line[COMMAND_LINE_SIZE] = { 0, };
-> 
-> diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-> index 704375c061e7..eb60be31127f 100644
-> --- a/arch/sparc/kernel/setup_32.c
-> +++ b/arch/sparc/kernel/setup_32.c
-> @@ -172,8 +172,6 @@ extern unsigned short root_flags;
->   extern unsigned short root_dev;
->   extern unsigned short ram_flags;
->   #define RAMDISK_IMAGE_START_MASK       0x07FF
-> -#define RAMDISK_PROMPT_FLAG            0x8000
-> -#define RAMDISK_LOAD_FLAG              0x4000
-> 
->   extern int root_mountflags;
-> 
-> diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-> index 63615f5c99b4..f728f1b00aca 100644
-> --- a/arch/sparc/kernel/setup_64.c
-> +++ b/arch/sparc/kernel/setup_64.c
-> @@ -145,8 +145,6 @@ extern unsigned short root_flags;
->   extern unsigned short root_dev;
->   extern unsigned short ram_flags;
->   #define RAMDISK_IMAGE_START_MASK       0x07FF
-> -#define RAMDISK_PROMPT_FLAG            0x8000
-> -#define RAMDISK_LOAD_FLAG              0x4000
-> 
->   extern int root_mountflags;
-> 
-> diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-> index dafbf581c515..f53dd3f319ba 100644
-> --- a/arch/x86/include/uapi/asm/bootparam.h
-> +++ b/arch/x86/include/uapi/asm/bootparam.h
-> @@ -6,8 +6,6 @@
-> 
->   /* ram_size flags */
->   #define RAMDISK_IMAGE_START_MASK       0x07FF
-> -#define RAMDISK_PROMPT_FLAG            0x8000
-> -#define RAMDISK_LOAD_FLAG              0x4000
-> 
->   /* loadflags */
->   #define LOADED_HIGH    (1<<0)
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 1b2edd07a3e1..6409e766fb17 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -223,8 +223,6 @@ extern int root_mountflags;
->   unsigned long saved_video_mode;
-> 
->   #define RAMDISK_IMAGE_START_MASK       0x07FF
-> -#define RAMDISK_PROMPT_FLAG            0x8000
-> -#define RAMDISK_LOAD_FLAG              0x4000
-> 
->   static char __initdata command_line[COMMAND_LINE_SIZE];
->   #ifdef CONFIG_CMDLINE_BOOL
-> --
-> 2.47.2
-> 
-> 
++       rv = preinit_net(net, user_ns);
++       if (rv < 0)
++               goto put_userns;
++
+        rv = down_read_killable(&pernet_ops_rwsem);
+        if (rv < 0)
+                goto put_userns;
 
+Thanks for noticing! Fixed in-tree.
 
