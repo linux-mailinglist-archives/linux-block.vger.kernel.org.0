@@ -1,116 +1,137 @@
-Return-Path: <linux-block+bounces-27441-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27443-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02603B58AEF
-	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 03:17:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8538B58B75
+	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 03:49:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28E8F7B1A6A
-	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 01:15:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8AE7A460C73
+	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 01:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1BF13B293;
-	Tue, 16 Sep 2025 01:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED75230D1E;
+	Tue, 16 Sep 2025 01:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3SI0fwi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JGzWjT6J"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5378570808
-	for <linux-block@vger.kernel.org>; Tue, 16 Sep 2025 01:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5942212548
+	for <linux-block@vger.kernel.org>; Tue, 16 Sep 2025 01:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757985439; cv=none; b=JUSW3VI3+OtLRvr6o7d1uyzS6B2V+V0iY5FkLqXRriq632j0LpxTMEAPxrkbQtvUsl8YEOaj/e52xSMVOxfIN6Mx/oXe6PAmKe3vgqcDbUZkz4yBDx1/7ECJ4DbHYAKFDPojsYtEvQRssYzqZKeWIsBo5RwvMD+5wmv1GPCl61M=
+	t=1757987337; cv=none; b=YdDMF2Xu+imPZiGkQxqTZ0xhuYcIPFQqxZPPxLRt5XR3iHnz8qlR9tHIGDzd2AlAiAcxgCMHTV64ITx48vFWe8pwWhBy9xQ2JE53iWlAVqJnNrwV0VJ9cX1rIK+wAkV6DYHhOhP+WlJofflWReZuENelwQXnqbvkek7NolbiWTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757985439; c=relaxed/simple;
-	bh=PyJB0ENIMUDRtIURvvD1XkQGW4XedUBpE0oQUvJrBQM=;
+	s=arc-20240116; t=1757987337; c=relaxed/simple;
+	bh=ixp1vRoqVO/aQuZyYy6zFP7jfZFHYTqyHd5Z6tSU/S0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uVZrOSPRKEENDxw9ms7wKKndAUO2fS3VolqhWwdVO4xgxfv2cnF9kr6VUzbL8+Zb2oVNjwTDbZwnO/4pPrhwERMq1vx2xST5JTI3fVoiQNsOqZQlZXmPFHal+ozre3YdesVA5aXGG7hUfKyVFivAJzB2HWGcmTTYQ56lTIhrfCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3SI0fwi; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-32e74ae0306so1036429a91.1
-        for <linux-block@vger.kernel.org>; Mon, 15 Sep 2025 18:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757985437; x=1758590237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PyJB0ENIMUDRtIURvvD1XkQGW4XedUBpE0oQUvJrBQM=;
-        b=V3SI0fwiPw6AyxvQNoI2VAu6DyVN3eMKaJCRmCdHyCErbL5r4lJtz6j4l3g0ba9tcl
-         hIdLcJfwZRaIUEaZw75RUgW+0MZCpVpJSkDkD8wJv7LRreNc5xmdZkDOzWRr6zJFslHs
-         nXQjlCxIXBJyGaUND7lzj7lll4T7H4Ng03/6gUP2uOy+j6vZVVok7Xr/q+WjvHOlpV06
-         vxUkfQumWyrsxj7FAVAXhL/sjK7AjCigFVZZ2m+yK0MLWn8+1AYuur6gu4CaM9cwhBdo
-         IZd8EPNFD36auBpJAq/9P8PbNTaP7rGDwoD29nHYmPTDwA1c0lqJ009BOAeaa29hA2fE
-         4fIw==
+	 To:Cc:Content-Type; b=KdWDJiuy4aNUf7QGzrOxRcSOhvftyVTMvnbc1MSaJ24FXE6ir+9n34TwgMO95xJbAtK8gVSoldVtSQFpZIpDTr7N7glpFSlw+qvDQFLz8ZsWRmeFd1JTnLGQf9HXmYGGzZ84Psx0aDJH9fIgJeaG+zLyJWQWTmqi3BfXkr16lJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JGzWjT6J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757987333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UM/63QbNRNL2CWSzKhJPtVEvJogEqqs3VcsifJT7nZg=;
+	b=JGzWjT6JFY44F9HuG73zfC+XVXSpyEZnpQCAqiavnVJaex4OmR07wPNEUXLEBK3aPPNASb
+	DTaTB1gZFE+DJer/o51vsb0HNic3DYvivGyJhMpU+pMvEA5BzK1/RIXnL5VmsY2pUK7A4X
+	JJbm37DGkbr6iy5wEYEwqu+Km41BUrY=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-511-xcQN5G4iOSK2sJQjXHkS9A-1; Mon, 15 Sep 2025 21:48:51 -0400
+X-MC-Unique: xcQN5G4iOSK2sJQjXHkS9A-1
+X-Mimecast-MFC-AGG-ID: xcQN5G4iOSK2sJQjXHkS9A_1757987330
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5717bd64621so2091473e87.0
+        for <linux-block@vger.kernel.org>; Mon, 15 Sep 2025 18:48:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757985437; x=1758590237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PyJB0ENIMUDRtIURvvD1XkQGW4XedUBpE0oQUvJrBQM=;
-        b=fY2+m3+xqO5TLucQjik/v/+qfPpsMXW9MN84fMtB7iRwgV2b4uQOSFmljWOneggnHU
-         8jmR+cMNUZAMe7YFVj8rCWtAqVh4Rd6hnMjmhM3Efb288s7P0xchGs5NgiUhgsDjqzzD
-         6GjRHUrBCZLJRe4j2tM+0+lSyiDD81r/dCPSqY0EZ5bsldWijz7db2wCRudCn2hL6Qmv
-         9/vwPUTCidTQ4DENN7f50GXlDCpZ31tY2GO5oUq6ia/0hUUTV0x35EkSVHUB/d3RWvya
-         CT2ZUZxtyhkMs4KJ0JMDGUuQY29einFxelhxktTKRt2uWKQHUgVfynV6faByR7nKfnFz
-         YRhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWz4EgY8Z2Xuc72CJkT5V9VxgqF1ke49Hm9rcYIYO8+rdkpICDi15HLqsUxZROqi4TA0OPqYpPVQBqjAg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSgh+OUrHBfcLfbLZJ8xDIMd69yIum6kbhka5j/rd+foryktSg
-	6ZbHSmzv+VA25sZxMegkauu96SnYhcXzPtfu44kf+gImRzSVKsDf1B9l6zhzRl4Z90L+sdoGm7G
-	LmKNkjXqbDDn340JgpP0UxFLbKcI9+/0=
-X-Gm-Gg: ASbGncvJydjb51YKhGu5TL1ui502yNlNbOz9mJIdJXcveQLiCZPWIcyMzh7J+8QAhli
-	1Uigvn0K/e7STou9ZP/OPgDgSg7w6jQbF7tM1dfNM4h49LNsiK48pHvRupBhgRTkJQW8pkzJ0+4
-	FKQG+MJ44DNmvZBI2eoP4ZaxFfOBlqKt5kXzLzjhI4xIcrk5DVuYQKGwGQw6GcNQyuhXmXLi0ZT
-	N13L08T4Q==
-X-Google-Smtp-Source: AGHT+IGSiIkfYJ59AMKEF3SSALX/as6soLj0t8TIeO3YT4o0IJDiCKHFjMlLYaTp3IlNzB9lzvDnIffcwlkjKK1oicE=
-X-Received: by 2002:a17:90b:4ad2:b0:32e:7340:a7fe with SMTP id
- 98e67ed59e1d1-32ea63043f5mr611572a91.12.1757985437480; Mon, 15 Sep 2025
- 18:17:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757987330; x=1758592130;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UM/63QbNRNL2CWSzKhJPtVEvJogEqqs3VcsifJT7nZg=;
+        b=WP9walY4ypHqomupH8mfOzrE6Nr6mz6stGf6WGUgGfbb0afK72VOit5b0yqkSKx4Yw
+         jHyC3CYPs0cOWFqHkVewRYN2J2+krEDKNr8xg/djGzJvRIVgj9zqph6bQYUO9odLus0B
+         /gH7FJPK3s0yzrCMKyA5JGd7/Z/qOwI1W5/7mCztFf4O0HoYQpMDuAPeVFNGL1v0MaaJ
+         2sz4AR8ATmiMKJZPGTku026Et3xOunlt/PCxmK2cte3rzt0uAiQ0nFhnTJhGOIA//flE
+         7EecBiifyKX3k4Q6DcwSLFj7QiBKBHkdZD0lG0VoaYMiKXhXaofTzEycf3Wvl+sOvNcm
+         eAEg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3bPQr4/7KH52eYJKRALUA5qV6ULzClAl/RHhLEve1MX/m5U5oUG6G7S5OYCNSW9Y81tD8lFaO/t1g5Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/rce9Zr94cqJvCKDICWt5WIbgmiAc3afAR17ImvrSKXMlcqXD
+	gRVevdcizyQGMivS4TElYzFgfypM841PcygMOml1ygSKtzkdxY5D8aZRzTXNd0vonweN80lyu+v
+	ZBFS5aJrY7U5RZtHFO8vej/LWmJPEqY6ggm744D8JnidTHve07dTNn7u8UX0C0GJla8GPRRKg4z
+	NvTdevdArHrYQQs0xWfZyefkaa6kN8EeaL6L9t3EI=
+X-Gm-Gg: ASbGncvNmRRNZbGnxI9xoFXkPn0tlADFfmh88o3s9dvKQ6WS00ZbOaUC8+Hbo9Ly40W
+	BXU1wV3YPCx2aLYUE8XJT09oxal2cRyhOACWEiY1lAbIBI2oqD3GLGFEsFuRCWX3RSeivXYqXgB
+	D4HxyV/Db06m3Mitx5z8A9/A==
+X-Received: by 2002:a05:6512:3f21:b0:563:d896:2d14 with SMTP id 2adb3069b0e04-5704f7a3535mr4252944e87.36.1757987330043;
+        Mon, 15 Sep 2025 18:48:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGi0qyrJSXhatUAjAN5GaSbgChEfkulnz/zBRoEI09ayrVbCpTRhDlFRFU2ScIQdlOHU/dANXpgiKsiuT/Fm5k=
+X-Received: by 2002:a05:6512:3f21:b0:563:d896:2d14 with SMTP id
+ 2adb3069b0e04-5704f7a3535mr4252904e87.36.1757987329545; Mon, 15 Sep 2025
+ 18:48:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250915130606.97949-1-pilgrimtao@gmail.com> <41ff57c2-19d4-495b-ae51-f30e555a74b4@acm.org>
-In-Reply-To: <41ff57c2-19d4-495b-ae51-f30e555a74b4@acm.org>
-From: Tao pilgrim <pilgrimtao@gmail.com>
-Date: Tue, 16 Sep 2025 09:17:05 +0800
-X-Gm-Features: AS18NWDEBZP93btmwWYHEn7-NuuwXh2fW45dap0sZybJORI2jvMNz_YOASUEO7A
-Message-ID: <CAAWJmAahdw_nprJXni_2L-WgfVK=6pR-F7hW7Hj1fwhsi4p6mA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] block/mq-deadline: Replace DD_PRIO_MAX with DD_PRIO_COUNT
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chengkaitao <chengkaitao@kylinos.cn>
+References: <20250912223937.3735076-1-safinaskar@zohomail.com>
+In-Reply-To: <20250912223937.3735076-1-safinaskar@zohomail.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Tue, 16 Sep 2025 09:48:40 +0800
+X-Gm-Features: AS18NWBkCHbtMZDfiuZiXnfW8KzozFHrUJlGejiASEzNumvZVB8NmHoE7UrrQwg
+Message-ID: <CALu+AoRt5wEgx-=S263CReDf8FmLWwjs8dF9cX4_jFcMUkuujQ@mail.gmail.com>
+Subject: Re: [PATCH 00/62] initrd: remove classic initrd support
+To: Askar Safin <safinaskar@zohomail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Brauner <brauner@kernel.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>, 
+	Jens Axboe <axboe@kernel.dk>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Julian Stecklina <julian.stecklina@cyberus-technology.de>, 
+	Gao Xiang <hsiangkao@linux.alibaba.com>, Art Nikpal <email2tema@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Eric Curtin <ecurtin@redhat.com>, 
+	Alexander Graf <graf@amazon.com>, Rob Landley <rob@landley.net>, 
+	Lennart Poettering <mzxreary@0pointer.de>, linux-arch@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org, initramfs@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	"Theodore Y . Ts'o" <tytso@mit.edu>, linux-acpi@vger.kernel.org, Michal Simek <monstr@monstr.eu>, 
+	devicetree@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Thorsten Blum <thorsten.blum@linux.dev>, Heiko Carstens <hca@linux.ibm.com>, patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 15, 2025 at 11:59=E2=80=AFPM Bart Van Assche <bvanassche@acm.or=
-g> wrote:
->
-> On 9/15/25 6:06 AM, chengkaitao wrote:
-> > Remove redundant DD_PRIO_MAX and enum types, Move DD_PRIO_COUNT
-> > into enum dd_prio{}, and similarly for DD_DIR_COUNT.
->
-> Why has this patch been reposted? Last time it was posted I explained in
-> detail that in my opinion all changes in this patch makes the code worse
-> instead of better. Additionally, when a new version of a patch is
-> posted, it should include a changelog. I don't see a changelog in this
-> patch. Please drop this patch.
->
-Regarding your comments on the previous patch, I have also provided a
-detailed response. However, since I did not receive a reply for an extended
-period, I am resubmitting it in hopes of continuing the discussion. This
-patch is simply a repost with no substantial updates. The link to my previo=
-us
-response is as follows.
-https://lore.kernel.org/all/CAAWJmAbumBHVo-8neC+b8WqJzzLbWqARpc3vkBsgs9j08w=
-h3kA@mail.gmail.com/
+Hi,
 
---=20
-Yours,
-Kaitao Cheng
+On Sat, 13 Sept 2025 at 06:42, Askar Safin <safinaskar@zohomail.com> wrote:
+>
+> Intro
+> ====
+> This patchset removes classic initrd (initial RAM disk) support,
+> which was deprecated in 2020.
+> Initramfs still stays, and RAM disk itself (brd) still stays, too.
+
+There is one initrd use case in my mind, it can be extended to co-work
+with overlayfs as a kernel built-in solution for initrd(compressed fs
+image)+overlayfs.   Currently we can use compressed fs images
+(squashfs or erofs) within initramfs,  and kernel loop mount together
+with overlayfs, this works fine but extra pre-mount phase is needed.
+
+Thanks
+Dave
+
 
