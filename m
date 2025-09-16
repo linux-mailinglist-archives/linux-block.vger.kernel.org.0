@@ -1,111 +1,125 @@
-Return-Path: <linux-block+bounces-27473-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27476-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27111B5A364
-	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 22:41:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FA44B5BEFC
+	for <lists+linux-block@lfdr.de>; Wed, 17 Sep 2025 00:06:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 168914E12C2
-	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 20:41:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C6E1324927
+	for <lists+linux-block@lfdr.de>; Tue, 16 Sep 2025 22:06:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C0631BCB8;
-	Tue, 16 Sep 2025 20:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF992C0270;
+	Tue, 16 Sep 2025 22:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="P2mjbZY8"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="A8q7tEap"
 X-Original-To: linux-block@vger.kernel.org
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f228.google.com (mail-vk1-f228.google.com [209.85.221.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BB731BCA0
-	for <linux-block@vger.kernel.org>; Tue, 16 Sep 2025 20:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AB4285077
+	for <linux-block@vger.kernel.org>; Tue, 16 Sep 2025 22:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758055270; cv=none; b=nt+c72xFMwUZj53L6YV3iOn+qKBvDSYVXtYljk7z8owIXJmj9jFwxClY7xzQo717jjkus3UIftxCh5bEROQ3BsLLO5mZCHSbRlYQpDv2hgW9XePI6d4wY7INwWcymgHj/mt5YQx2WZS4iY/f6yTlJ6fHLa/seZqP0sJ9th8IrOo=
+	t=1758060373; cv=none; b=Fu68faNe3wqntXYqjPg35jnthRIhUeLYdEUkqXHD9Q6DWF5EIcBX+zE6SczAPw8QjPUNswhoCClWw7q8AIslYATPk6S2s+ZmA4KUHAlJbvhqF1d9X+I4EF9axg8Es6RqbXxpgQjY4f4xvllQL44aO2qLrTwYC15CkpNPepqStcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758055270; c=relaxed/simple;
-	bh=ayGtxgYDKhrxxmde7KprFHdY0i1h8h6cBdCBUSZ30zY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eDrUhQx9DSzc01762FP9ii3rkh3YIBAPvxdj21gPEzsWUca85y0HRU2PHNHH6bNfcZxTeyT9FjVkcEATWON6CUilNykxHK+IxskV8+fQRvGMyCWhwpRV+MpK2l9R8jSJmUF86yqv8ogeRwTcBK+FN2x4qQAWVym15UwlVzzthT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=P2mjbZY8; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4cRDM222pNzlscjM;
-	Tue, 16 Sep 2025 20:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from:received:received; s=mr01; t=
-	1758055260; x=1760647261; bh=WCX9tXwzFDkyGVim3BS2EcdnRRfHgvCkMuH
-	Ree8NrlY=; b=P2mjbZY820/IWlaK/w0R4bw9WHxjalZkGILBrco6MlpS8QaxCzP
-	oHBybiJFyj71x1sLQzW64nzPBF4EoORDVKuB2MxAvvAaGSehkpTI7MPGzyvhPtXW
-	D1aVy0SuE/kVIEn2RsDxyZQK1zGupVRYHJs91eC0MnWvhO7rLb3c/uiPO+7E5al2
-	8lhu7rhsCLUZsG5nTgwgWwktxTrejHVvWxTC1RcehfhodheBFT7gQQ/Oq601jduK
-	8Jhq4TkWOKHc8w48rNUW/TL8Dmo8EtkljSsneN7J1TBCOjIegSBgz+T1FrfFLDEc
-	6OgDdxCzRRjqm8JEjFDm9WUS3ceuFTKsTXA==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 5VTVvWUJqE-y; Tue, 16 Sep 2025 20:41:00 +0000 (UTC)
-Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4cRDLv4dHjzlrwfb;
-	Tue, 16 Sep 2025 20:40:54 +0000 (UTC)
-From: Bart Van Assche <bvanassche@acm.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Ming Lei <ming.lei@redhat.com>,
-	John Garry <john.g.garry@oracle.com>
-Subject: [PATCH] blk-mq: Fix the blk_mq_tagset_busy_iter() documentation
-Date: Tue, 16 Sep 2025 13:40:43 -0700
-Message-ID: <20250916204044.4095532-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
+	s=arc-20240116; t=1758060373; c=relaxed/simple;
+	bh=0T3RfCRDcnpozJXeQUuhKRw9ET2REuSg2YGW2FlpbJ0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mWO3xZQiRrBN888u3WMfZR3MYlog9wM2wky/wHPQtcIRKlPCmcdXrCTKfd03ApsJc6G0czmxx50Td5DpatEKO3KV6d8txoKgXu0mcV4tthw+fifxNyelT6PcE/RK2fX2SkVJ6xfhAaGtNgyCMrhJxkAqfNqiXa1tJJ/Iqdqj11c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=A8q7tEap; arc=none smtp.client-ip=209.85.221.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-vk1-f228.google.com with SMTP id 71dfb90a1353d-544ad727e87so4261005e0c.2
+        for <linux-block@vger.kernel.org>; Tue, 16 Sep 2025 15:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1758060370; x=1758665170; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oyhEptnkjYKvTtDaCmbO0qvaJj1u/0HzrshZ6BHXL2g=;
+        b=A8q7tEapTkZQ1Ew071AOO8E5XBAjEx6WJ2lhrI3lsktwlpFOlHH8CnF6+F+xVWW/hU
+         SD572Aw2BbHYlzptdVQd0ml3K3/+1QGxCcqtworHLXCTPY9H6l4guQqRj6eTzuXD6gHC
+         tQm3OR2zO1aZv/Y+Y7BAZNm9YzHq4K1BJmMx28IReb1hh2WFC5XHasrqXQRYzZVv3Ci2
+         yqQCdZi461OAPBAovgoI5BeAy9AuyM+F5g5awD72cRive27GwUclALcV/kHUKDUtMR5d
+         2iMos0p1GaGm0jvym6/aEShSvDQiG8H6QfYLqWZgnGRij6MXssJb99y3aUS3II4I2fcG
+         KAEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758060370; x=1758665170;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oyhEptnkjYKvTtDaCmbO0qvaJj1u/0HzrshZ6BHXL2g=;
+        b=ZxWGsgkQO4XRDIWUpyTghr7JfABmqWZWVpFazzi6Ygbo76PgBCDdiTHUB4n1ipYIq4
+         B8kbz9a3+jSRyJ18o8fTFrqhd3Ov6B6JoQcb+EMYlQrIM0szKPG4tvA8xxLH9U5+e3ZY
+         OLa73AfM70BWK51AWMKQNM8bxb5g+c4xnbZ6c82dXFWfbIs2Sj1/Cb5p5tKgGu5h9u1f
+         Q64MXmoMFPfyIIOZKExVdlppmJ/lEHihO+KyRDUCLOiMltTZSS0KSN6Jq8imErebUE2D
+         tchanhTDpVEUL/pLzir19VjpC83trEvdrouzMKxpUlp+o89iZltdoF26K62AcoUtD5Qn
+         8UVg==
+X-Gm-Message-State: AOJu0YyIKjSBesFr/Tchor4RNf887xanE0OO0quA+kmvsQ3y4hsyjnwZ
+	z2Y7tUKCOc0HzKSH8lBHuHIxCCPEMNG18zK5YKMYn5ux4E85k4li2uC7ohM/NBWPhN60SHqeIAT
+	2fKfJJFTZF2Rj1H+8VjV8IjvfA5SDGaXPt2KT
+X-Gm-Gg: ASbGncvi8TmCycTbXB4iuOkaXnLmNCCTcBk98ypQCRsvij8WFrm3pN2jiyF0/m2UCRK
+	O/Ir7aM2Ij2bFWXexHI4urDIpYbpYqJA5DQlOa02y8XQDj1m0zDB4Qshn3vD4/kSV/WWrVudMu9
+	zCZuLa6IPHxJ/17JmeBeZT5MvtD5IKX+b8ZepZRQwIFEN9wGwkHaBwGSuwR7vU3mSpdyM1wcwZM
+	g1mGiMmGJyi+Dw0aArFbxgBRP0OZtiEPnIddP+oB3exZlOLIiQk4oacRhnEiBlHFhjYexltbTIQ
+	/QrDaHr11AL8B1aFtCPyB7oYb/tJ+Pip504gSapyHkIjwTmMKh38Pjvbz5WkO+tC0KhC3yApCg=
+	=
+X-Google-Smtp-Source: AGHT+IEzFWi2OlWmB6cbeEaJlNpwq3SZVqUGZX2zuzQBFkjFOWfMIWTfg3D9KsLmzXHUiHz5L79IAjQs2mnu
+X-Received: by 2002:a05:6122:1795:b0:540:68c4:81a2 with SMTP id 71dfb90a1353d-54a60b8b059mr36111e0c.14.1758060369613;
+        Tue, 16 Sep 2025 15:06:09 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 71dfb90a1353d-54a0d1b95a0sm1704081e0c.2.2025.09.16.15.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 15:06:09 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id C61A4340853;
+	Tue, 16 Sep 2025 16:06:08 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id B6B3FE41646; Tue, 16 Sep 2025 16:06:08 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH 0/3] selftests: ublk: kublk: fix feature list
+Date: Tue, 16 Sep 2025 16:05:54 -0600
+Message-Id: <20250916-ublk_features-v1-0-52014be9cde5@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAELfyWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDS0Mz3dKknOz4tNTEktKi1GJdA/PENJNUYyPDVNNEJaCegqLUtMwKsHn
+ RsbW1ANaEpHJfAAAA
+X-Change-ID: 20250916-ublk_features-07af4e321e5a
+To: Caleb Sander Mateos <csander@purestorage.com>, 
+ Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-Commit 2dd6532e9591 ("blk-mq: Drop 'reserved' arg of busy_tag_iter_fn")
-removed the 'reserved' argument from tag iteration callback functions.
-Bring the blk_mq_tagset_busy_iter() documentation in sync with that
-change.
+This patch simplifies kublk's implementation of the feature list
+command, fixes a bug where a feature was missing, and adds a test to
+ensure that similar bugs do not happen in the future.
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 ---
- block/blk-mq-tag.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Uday Shankar (3):
+      selftests: ublk: kublk: simplify feat_map definition
+      selftests: ublk: kublk: add UBLK_F_BUF_REG_OFF_DAEMON to feat_map
+      selftests: ublk: add test to verify that feat_map is complete
 
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index a63d21a4aab4..0602ca7f1e37 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -424,10 +424,9 @@ void blk_mq_all_tag_iter(struct blk_mq_tags *tags, b=
-usy_tag_iter_fn *fn,
-  * blk_mq_tagset_busy_iter - iterate over all started requests in a tag =
-set
-  * @tagset:	Tag set to iterate over.
-  * @fn:		Pointer to the function that will be called for each started
-- *		request. @fn will be called as follows: @fn(rq, @priv,
-- *		reserved) where rq is a pointer to a request. 'reserved'
-- *		indicates whether or not @rq is a reserved request. Return
-- *		true to continue iterating tags, false to stop.
-+ *		request. @fn will be called as follows: @fn(rq, @priv) where
-+ *		rq is a pointer to a request. Return true to continue iterating
-+ *		tags, false to stop.
-  * @priv:	Will be passed as second argument to @fn.
-  *
-  * We grab one request reference before calling @fn and release it after
+ tools/testing/selftests/ublk/Makefile           |  1 +
+ tools/testing/selftests/ublk/kublk.c            | 32 +++++++++++++------------
+ tools/testing/selftests/ublk/test_generic_13.sh | 16 +++++++++++++
+ 3 files changed, 34 insertions(+), 15 deletions(-)
+---
+base-commit: da7b97ba0d219a14a83e9cc93f98b53939f12944
+change-id: 20250916-ublk_features-07af4e321e5a
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
 
