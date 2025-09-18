@@ -1,228 +1,201 @@
-Return-Path: <linux-block+bounces-27548-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27551-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6810FB82921
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 03:52:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EEA5B82C62
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 05:40:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECF451BC8CA7
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 01:52:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D6303B0C91
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 03:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41D82550D4;
-	Thu, 18 Sep 2025 01:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A407923B62C;
+	Thu, 18 Sep 2025 03:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="KERz78NH"
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="big4Eoc6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729FE2236E1
-	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 01:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF6D14B06C;
+	Thu, 18 Sep 2025 03:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758160243; cv=none; b=P/oGEuNe0A4t6i1+etCr7tUyiEPC1DobQGszTQRj7rt3HE2AcsmjxoD9MPE8hK84BA4wYGP03z4OrMUiQa259ReHMOlbhH+cRC+N1Fy2fVZ8pNcs7OaPR4Ur7hd84ASRn7MXgToHh5DcyPjkQ88SJzqwGEtxIMitnj42zcv+m6U=
+	t=1758166853; cv=none; b=uCgAExDAX9vpLT3+miNlZz5xqFPooFFnt2a77YtT8slrBZr9yY2bpauZ9TfVI/F6T045pYEKNikYA2yNEQadTkK25k6k5QNaWEV+ZFD+OC7mTOIBDM1XjdUQGwfgPZXky7ICgZytQOsnpnLAUsdyKmAy+dGuKOhiNy3S29eHp/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758160243; c=relaxed/simple;
-	bh=DlDgj6eQ2EJT7r8ICH2mTMh6q5NNv2cREX+Wo9B+YWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HJvpYFsWYr0wyJrg0PxPVCt9U/pi+GsIvEFuppYDNTxodCcK0zlh8lpYUe8vzn40q1Apmrhh6Jv2qaj2FE+Lx3iItmlgYrvaNcaslvPJCHn0f6cq72o7UWeeLniSPdKX0jcD4kIv899Pgxufv+k32HlTazk34y/mGogW5C5yf8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=KERz78NH; arc=none smtp.client-ip=209.85.214.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-267fad019d4so794685ad.3
-        for <linux-block@vger.kernel.org>; Wed, 17 Sep 2025 18:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1758160241; x=1758765041; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gbcWxaY4vl/Q4W3/rZm6xbJSq4ZIWjy+imubsiA0GUQ=;
-        b=KERz78NHAwj/HZ65fN2dDof7/KV4WoZNGCG8/7xjbuJiz3iBoONwVd2siHYlwqUUzL
-         roR4SNNz6AtwP2R9DwWP9tocnsAzzRP94g9Pm2uN53qSXHOj5yD75E9ugzv48miUNau7
-         Rd0savGw0LG039/hxUp3smoDJ3fcYT8agTAYMDVlMVVv0tTqqW53yAzUPqONKqhCnyOk
-         F3O8YH1tSOQp6teLqwaDsafqIcozJA7CQhcQSdmriwxLwEcenwLxEvsqMhvB6QgTrYzx
-         y51k+zswsvO3XtZWdA1HpVBKdg6zbuXHuPXfDwQZ/W4E76WIyYlADWdM8fP9QnljkyOb
-         he1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758160241; x=1758765041;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gbcWxaY4vl/Q4W3/rZm6xbJSq4ZIWjy+imubsiA0GUQ=;
-        b=EgGOSaXJuCWNnlxOdkhHsIkLvXy6cWEDiymnKheXo3aUErgt82QDUAXozxtSyBwXPB
-         qfRpIm9fFPRWimBDxPRdtWxPhpdO24qTuITgoLbFIdBxUGgoLBJpqdKjJ9GGNKEzVUKy
-         7no3TavikBofoDHCFlTX3wp6pwbJZAypcKDlYmZio9NnYxwTbMT2k2xU+9zMh3J11q1G
-         lrMwubuL+RrYROC13QYRYIC74pOxZDnh5ph+uAmvlO/wXKyPNzyDhL6vDBFTL74z2hFt
-         3GZiu+MZbkoP9hjV2+jV4c0yvztxld56c7qWUwDdHUO/heuEv+E1V93wM3fG9gQIkr9g
-         /U3Q==
-X-Gm-Message-State: AOJu0YwduwMQWSoST+SuRHH28so3TQTB92FKHN7Ex3lwYu2SmmnfEvjq
-	uWrwRCBhNyatEUCtt3BcmrFsSInKDs248ArVaqX7DjUMNjVQjEQZU7QE4zpl5k482/uGS2nWBVT
-	Xcv1k4ec7OvbPDn5mH1BdfO7r/QKakO4DMlD3JrF6+v7FPdA8R1+w
-X-Gm-Gg: ASbGncuGlGc0YFIXYncr2anXrxyJW3MG7XbrxVm2dRTYZlTcRKXWqI2MQH+2+J3NLvf
-	YJ1Uzi2eHpaj1IBG4n3kK+MXyYN9RhsMAdrppbziQvCvFJ30G8zEvy/3KX7Nd+PDC4NZSZI3iIy
-	vIzrqBEfHAa/Bm93FUfiQkl/ecr+5MEfw5ZcmDxlVKnwaJfNNjNZObOIWaoP6q3jW4VMqjr8G5B
-	MOz8CZRXmIquX6AovZQoUhIr6rAG7DvZAf/OyZI8NNLVAxyFf5iMVlutzJR0QpQzRFMTeobobCz
-	D4qI6Uwq6fQuIgAasvVuVEktPG1czlsAb34KbAvfIKsA3ex0hzUasmzxIA==
-X-Google-Smtp-Source: AGHT+IHptDo3d5jV+E6losHoXv1hOTO1W8T3gN+lg8n40CzHrfVfO2OTCR2VUJInQKlrX02lFQirrnIrtek1
-X-Received: by 2002:a05:6a21:6da8:b0:24c:a32b:3257 with SMTP id adf61e73a8af0-27a736353fdmr3197417637.0.1758160240742;
-        Wed, 17 Sep 2025 18:50:40 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-77cfbe620b3sm86273b3a.1.2025.09.17.18.50.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Sep 2025 18:50:40 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 1D358341A3D;
-	Wed, 17 Sep 2025 19:50:40 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 1AF7FE41B42; Wed, 17 Sep 2025 19:50:40 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 17/17] ublk: don't access ublk_queue in ublk_unmap_io()
-Date: Wed, 17 Sep 2025 19:49:53 -0600
-Message-ID: <20250918014953.297897-18-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250918014953.297897-1-csander@purestorage.com>
-References: <20250918014953.297897-1-csander@purestorage.com>
+	s=arc-20240116; t=1758166853; c=relaxed/simple;
+	bh=yT3K8uBlaTZ4oRUfArIJX6RgDQSVHzMNclhTow/TmcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKYHvAaaWn7oaIhitT7y6Uor4Icp/GYYmJibIkfA64qXXcPRno5aE6RMe/i4jQe9aBlLuPNujtdgp3TA63kXIDjGJLY26+3Rg5HeM6REjPpkztvqguwZDP+qSnXsNP5spj07E1Sos5UAbt6roWaUULikQB8TMSn7VyulgzQ3Cyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=big4Eoc6; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4cS1cm4XT6z9slX;
+	Thu, 18 Sep 2025 05:40:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1758166840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yT3K8uBlaTZ4oRUfArIJX6RgDQSVHzMNclhTow/TmcE=;
+	b=big4Eoc6bqe9q6T1qfJlYA+OdrIwGvvsbDSKl3AuavBpgBdtZE80XTg558Tgu7XEEM8GOu
+	4HUYEXX3fg4YSlTHkbhSzBpl4q+It3vCwD8MPvGv+yvT3h/qqjzlnM6zyF0rYqbmgws1wp
+	izbsOl3m35zhbv9k5i+H5sufoIWJ5Zx22JTz5VfKjy2MPYp0thT/hpGB6m5bKMiCSc4vxo
+	fup1hwDmgk7OLk1BJPCqqYzVpItRsxz5QsfkOyTs5OQi0OIBGdsZDEkui+UTHKBiwFi8J2
+	7Jl+u7/uXJro9unpSw3pyztLb2ULxy77hNAqJxuLy2ZwfGguHTyBWmYb5gA+oA==
+Date: Thu, 18 Sep 2025 13:40:20 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+Message-ID: <2025-09-18-onyx-sunny-pleats-turbans-lW2ejZ@cyphar.com>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org>
+ <CAOQ4uxgtQQa-jzsnTBxgUTPzgtCiAaH8X6ffMqd+1Y5Jjy0dmQ@mail.gmail.com>
+ <20250911-werken-raubzug-64735473739c@brauner>
+ <CAOQ4uxgMgzOjz4E-4kJFJAz3Dpd=Q6vXoGrhz9F0=mb=4XKZqA@mail.gmail.com>
+ <20250912-wirsing-karibus-7f6a98621dd1@brauner>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="d2xgw3mufvo5akdl"
+Content-Disposition: inline
+In-Reply-To: <20250912-wirsing-karibus-7f6a98621dd1@brauner>
 
-For ublk servers with many ublk queues, accessing the ublk_queue in
-ublk_unmap_io() is a frequent cache miss. Pass to __ublk_complete_rq()
-whether the ublk server's data buffer needs to be copied to the request.
-In the callers __ublk_fail_req() and ublk_ch_uring_cmd_local(), get the
-flags from the ublk_device instead, as its flags have just been read.
-In ublk_put_req_ref(), pass false since all the features that require
-reference counting disable copying of the data buffer upon completion.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- drivers/block/ublk_drv.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+--d2xgw3mufvo5akdl
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+MIME-Version: 1.0
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index a677eca1ee86..5ab7ff5f03f4 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -527,11 +527,12 @@ static blk_status_t ublk_setup_iod_zoned(struct ublk_queue *ubq,
- 	return BLK_STS_NOTSUPP;
- }
- 
- #endif
- 
--static inline void __ublk_complete_rq(struct request *req, struct ublk_io *io);
-+static inline void __ublk_complete_rq(struct request *req, struct ublk_io *io,
-+				      bool need_map);
- 
- static dev_t ublk_chr_devt;
- static const struct class ublk_chr_class = {
- 	.name = "ublk-char",
- };
-@@ -735,12 +736,15 @@ static inline bool ublk_get_req_ref(struct ublk_io *io)
- 	return refcount_inc_not_zero(&io->ref);
- }
- 
- static inline void ublk_put_req_ref(struct ublk_io *io, struct request *req)
- {
--	if (refcount_dec_and_test(&io->ref))
--		__ublk_complete_rq(req, io);
-+	if (!refcount_dec_and_test(&io->ref))
-+		return;
-+
-+	/* ublk_need_map_io() and ublk_need_req_ref() are mutually exclusive */
-+	__ublk_complete_rq(req, io, false);
- }
- 
- static inline bool ublk_sub_req_ref(struct ublk_io *io)
- {
- 	unsigned sub_refs = UBLK_REFCOUNT_INIT - io->task_registered_buffers;
-@@ -1046,17 +1050,17 @@ static int ublk_map_io(const struct ublk_queue *ubq, const struct request *req,
- 		return ublk_copy_user_pages(req, 0, &iter, dir);
- 	}
- 	return rq_bytes;
- }
- 
--static int ublk_unmap_io(const struct ublk_queue *ubq,
-+static int ublk_unmap_io(bool need_map,
- 		const struct request *req,
- 		const struct ublk_io *io)
- {
- 	const unsigned int rq_bytes = blk_rq_bytes(req);
- 
--	if (!ublk_need_map_io(ubq))
-+	if (!need_map)
- 		return rq_bytes;
- 
- 	if (ublk_need_unmap_req(req)) {
- 		struct iov_iter iter;
- 		const int dir = ITER_SOURCE;
-@@ -1144,13 +1148,13 @@ static inline struct ublk_uring_cmd_pdu *ublk_get_uring_cmd_pdu(
- {
- 	return io_uring_cmd_to_pdu(ioucmd, struct ublk_uring_cmd_pdu);
- }
- 
- /* todo: handle partial completion */
--static inline void __ublk_complete_rq(struct request *req, struct ublk_io *io)
-+static inline void __ublk_complete_rq(struct request *req, struct ublk_io *io,
-+				      bool need_map)
- {
--	struct ublk_queue *ubq = req->mq_hctx->driver_data;
- 	unsigned int unmapped_bytes;
- 	blk_status_t res = BLK_STS_OK;
- 
- 	/* failed read IO if nothing is read */
- 	if (!io->res && req_op(req) == REQ_OP_READ)
-@@ -1170,11 +1174,11 @@ static inline void __ublk_complete_rq(struct request *req, struct ublk_io *io)
- 	if (req_op(req) != REQ_OP_READ && req_op(req) != REQ_OP_WRITE &&
- 	    req_op(req) != REQ_OP_DRV_IN)
- 		goto exit;
- 
- 	/* for READ request, writing data in iod->addr to rq buffers */
--	unmapped_bytes = ublk_unmap_io(ubq, req, io);
-+	unmapped_bytes = ublk_unmap_io(need_map, req, io);
- 
- 	/*
- 	 * Extremely impossible since we got data filled in just before
- 	 *
- 	 * Re-read simply for this unlikely case.
-@@ -1747,11 +1751,11 @@ static void __ublk_fail_req(struct ublk_device *ub, struct ublk_io *io,
- 
- 	if (ublk_nosrv_should_reissue_outstanding(ub))
- 		blk_mq_requeue_request(req, false);
- 	else {
- 		io->res = -EIO;
--		__ublk_complete_rq(req, io);
-+		__ublk_complete_rq(req, io, ublk_dev_need_map_io(ub));
- 	}
- }
- 
- /*
-  * Called from ublk char device release handler, when any uring_cmd is
-@@ -2392,11 +2396,11 @@ static int ublk_ch_uring_cmd_local(struct io_uring_cmd *cmd,
- 		if (buf_idx != UBLK_INVALID_BUF_IDX)
- 			io_buffer_unregister_bvec(cmd, buf_idx, issue_flags);
- 		if (req_op(req) == REQ_OP_ZONE_APPEND)
- 			req->__sector = addr;
- 		if (compl)
--			__ublk_complete_rq(req, io);
-+			__ublk_complete_rq(req, io, ublk_dev_need_map_io(ub));
- 
- 		if (ret)
- 			goto out;
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
--- 
-2.45.2
+On 2025-09-12, Christian Brauner <brauner@kernel.org> wrote:
+> On Thu, Sep 11, 2025 at 01:36:28PM +0200, Amir Goldstein wrote:
+> > On Thu, Sep 11, 2025 at 11:31=E2=80=AFAM Christian Brauner <brauner@ker=
+nel.org> wrote:
+> > >
+> > > On Wed, Sep 10, 2025 at 07:21:22PM +0200, Amir Goldstein wrote:
+> > > > On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@=
+kernel.org> wrote:
+> > > > >
+> > > > > A while ago we added support for file handles to pidfs so pidfds =
+can be
+> > > > > encoded and decoded as file handles. Userspace has adopted this q=
+uickly
+> > > > > and it's proven very useful.
+> > > >
+> > > > > Pidfd file handles are exhaustive meaning
+> > > > > they don't require a handle on another pidfd to pass to
+> > > > > open_by_handle_at() so it can derive the filesystem to decode in.
+> > > > >
+> > > > > Implement the exhaustive file handles for namespaces as well.
+> > > >
+> > > > I think you decide to split the "exhaustive" part to another patch,
+> > > > so better drop this paragraph?
+> > >
+> > > Yes, good point. I've dont that.
+> > >
+> > > > I am missing an explanation about the permissions for
+> > > > opening these file handles.
+> > > >
+> > > > My understanding of the code is that the opener needs to meet one of
+> > > > the conditions:
+> > > > 1. user has CAP_SYS_ADMIN in the userns owning the opened namespace
+> > > > 2. current task is in the opened namespace
+> > >
+> > > Yes.
+> > >
+> > > >
+> > > > But I do not fully understand the rationale behind the 2nd conditio=
+n,
+> > > > that is, when is it useful?
+> > >
+> > > A caller is always able to open a file descriptor to it's own set of
+> > > namespaces. File handles will behave the same way.
+> > >
+> >=20
+> > I understand why it's safe, and I do not object to it at all,
+> > I just feel that I do not fully understand the use case of how ns file =
+handles
+> > are expected to be used.
+> > A process can always open /proc/self/ns/mnt
+> > What's the use case where a process may need to open its own ns by hand=
+le?
+> >=20
+> > I will explain. For CAP_SYS_ADMIN I can see why keeping handles that
+> > do not keep an elevated refcount of ns object could be useful in the sa=
+me
+> > way that an NFS client keeps file handles without keeping the file obje=
+ct alive.
+> >=20
+> > But if you do not have CAP_SYS_ADMIN and can only open your own ns
+> > by handle, what is the application that could make use of this?
+> > and what's the benefit of such application keeping a file handle instea=
+d of
+> > ns fd?
+>=20
+> A process is not always able to open /proc/self/ns/. That requires
+> procfs to be mounted and for /proc/self/ or /proc/self/ns/ to not be
+> overmounted. However, they can derive a namespace fd from their own
+> pidfd. And that also always works if it's their own namespace.
 
+It's also important to note that if /proc/self and /proc/thread-self are
+overmounted, you can get into scenarios where /proc/$pid will refer to
+the wrong process (container runtimes run into this scenario a lot --
+when configuring a container there is a point where we are in a new
+pidns but still see the host /proc, which leads to lots of fun bugs).
+
+> There's no need to introduce unnecessary behavioral differences between
+> /proc/self/ns/, pidfd-derived namespace fs, and file-handle-derived
+> namespace fds. That's just going to be confusing.
+>=20
+> The other thing is that there are legitimate use-case for encoding your
+> own namespace. For example, you might store file handles to your set of
+> namespaces in a file on-disk so you can verify when you get rexeced that
+> they're still valid and so on. This is akin to the pidfd use-case.
+>=20
+> Or just plainly for namespace comparison reasons where you keep a file
+> handle to your own namespaces and can then easily check against others.
+
+I agree wholeheartedly.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+https://www.cyphar.com/
+
+--d2xgw3mufvo5akdl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCaMt/JBsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQKJf60rfpRG+0QwEAy14crLGqBanw8F+iJGyg
+Ufib+dDPLnlaRH2JgIDOdJgBANhW3e6kOOLSuP7Zb/NhMzS6y+B/qnF8mUByEN7m
+bhII
+=NYA2
+-----END PGP SIGNATURE-----
+
+--d2xgw3mufvo5akdl--
 
