@@ -1,85 +1,87 @@
-Return-Path: <linux-block+bounces-27573-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27575-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A84A3B86B2E
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 21:34:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6050B86B38
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 21:34:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4A327C6CB7
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 19:34:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CDE31CC0598
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 19:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA942DA762;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4802DAFDA;
 	Thu, 18 Sep 2025 19:34:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="TDHRu4t6"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ZL6YDe3Y"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f97.google.com (mail-io1-f97.google.com [209.85.166.97])
+Received: from mail-il1-f228.google.com (mail-il1-f228.google.com [209.85.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877512D7DEB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876D72D6E4E
 	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 19:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758224056; cv=none; b=RQ1DJeh+z1nM3pPll7O+UBQrOrGlxwh09RjCjKKdsm4NrzYDC6StT+vLMZycENdwfQZiq4K7RVGBNgaYNQWL1OTE3CadkqEIPGtMU/qwTpQKh6+ag9pClRo0A8zwNZKqcvdLJWbx7O78FTg9Gq9oxq7eTcv4GpP6x215P92Y2kU=
+	t=1758224056; cv=none; b=sf44sM0S1sFgR8bVhqRBqcrzEDsDP3DiGVQCN5EQC9YqLOELy81qQFs63C15au8SLHexPNv5/xuAkFXfwrkngbkpaGG4k6ys2qHzHwTyUStReart4MnElpg+fCPCNABmh1BzsaHwhAzDNu33+hyz0QLT0Adkf3FUEuNFU5zHlyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758224056; c=relaxed/simple;
-	bh=sbBFmEbCI91GGT3v21kazP+Hml2+1L3pYFT4t/iXCGs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YnLjm2GesaeGPqSO/mSCiD1i3NANaFL+mrVUA0eZLlq8ffubA4zkntjpXU/NklYsurZGgXwySin//g97wc+UqOe4eHgAFqlcZmN69mcclzKCyiesu5Y1dbVh/bZQPQzSBX8Ng0twxoFLZsWMgpnwXBKLZQA7cxyO4vwPpnuEFos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=TDHRu4t6; arc=none smtp.client-ip=209.85.166.97
+	bh=I1SvgDPbViudLFOaGAb6f8a3G0PYsCRpE1vM8Gvi1dc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WzT11FUU9zmCbluB6ybsSWl+HZoU2Wv0h2AcTvCjRsyjFZKfCJMqwqcxt1GxiaS9/KJKp1qYbSczmgvY839bB/XrO5mvWqD5hm1D5gONyqNGKQ3F6v8YLlOfYCqXR40wCFg/dccjSkN3c7f7OclvKThSqzIHAXBd1GxJpupaQqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ZL6YDe3Y; arc=none smtp.client-ip=209.85.166.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-io1-f97.google.com with SMTP id ca18e2360f4ac-893661db432so48333039f.1
+Received: by mail-il1-f228.google.com with SMTP id e9e14a558f8ab-4247cfc66a3so4670915ab.2
         for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 12:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1758224053; x=1758828853; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sOBwRz3GaH1eMWrUN/iKniZd7P9/BH19U7AxNISMrY8=;
-        b=TDHRu4t6ZRs7QcsPy5HsBPNAtVxOSVWCZCQAMlihYSpl3DJXpw1Ax2XNV+gbD/G6BA
-         RGfjRJTjRfkZQqZSIX4CXXSmSysv0yIFa6BJX2+J6wfw5+SiF3oAmpswVh/e5vODKDq/
-         jlVqe6r0A3MSUk21IKOGRRlV78ELeXlhvb2wbmlqEF3J7Rbjy/kqF9K7aJfQWBls8Udz
-         CyjVAY3AHFCVckHAhswWF2hvFiVoF2mw00UY/6U+wY3zd8dux2qGUit4HCJ236Fxp9qM
-         EkvqI1yHa+L58SArfuOQ9HZOjZjjkZGfLhLo1agsLZjMJxtPgQ1kBxljmx7QZ0sP2zRO
-         9yKg==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yGgcbSkc4b3TEAlty1vI9MIlV1K03L2tgLefNKM4ZS4=;
+        b=ZL6YDe3YckrDXAaaWbx3/TfDA6hxeiGENu7eH4biMVW4KdBXwbLCb8NJArqML6vjLK
+         HyYQPQlofeDAz0U7N+KgCLc34SFLacpWeLfBNsMXAWtcmnuhsBW3mtFWxGODNPYm33aG
+         3+59jvrmf8FrglWW1Li+nkpC22+XB1WNTEYg1E2n/MpjxgislggAQE6EDlB//514H/4w
+         R4rf7pj4rqPYKBTq+vkS4pJx/QC3AsrscD05IP4iepSY+B/94Cb/I50n9gYEr1aoiZVW
+         hmpkVRxkWazwtPLOsYiEYAvVVAuPwDnWoUKpZQ+Zstf/Iu5ng+FEzC33B/tZOExZ/tuz
+         WsXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1758224053; x=1758828853;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sOBwRz3GaH1eMWrUN/iKniZd7P9/BH19U7AxNISMrY8=;
-        b=kBH126cM6L5fQCx+3eT5nEAcP0aj08Npqtgj1Q06taAMoNb3fIE7teASepsX3tM9B8
-         KObWxFZEP/rdT/ecsqw6AN9GYQTOojp75xZ/tSWg1YVzvNWsNUHVDMk9SqVtQ81alQA9
-         2+TOYzcpT+xsE2xxDab8sbLgvIJyAIHtJMMpeA5LPOQIKBrLh7E3RRicMyLt6oQNlAoS
-         zZdLWpBYC1Wn9F+n6v3+bOlkwrANrYimudo7vS/abn6sGhJo1d/g9srA6nxZRXzgC5hL
-         kU89B3OGLlJJxZVlTJ8mboi2bAPFv8fLD/iZce3kM7oaLbG1CyOVQ9BFu/uV+QtS9BuI
-         /hAQ==
-X-Gm-Message-State: AOJu0YwcrpnNI7YVymlpuFUufDEwHd9zApPac2jTGJViapsQ2HX+lIFx
-	qExilzgYixMnk7YiyZ+asCNX807CFh8aPW/vctx6gR7iTkWxcwhkw9x/JNwi0mRq0iTJrzTMpYs
-	bT0Pxa1tvKXWofdp35zVBOuWlGJMxC9335BYjfUY4J/w6SeVPM6X3
-X-Gm-Gg: ASbGncun6x/zc6i9qhzU54lPo+7VoFxO9syjSF1pYhYOXtnFHBXXyHGrdhXiEbIQQTu
-	SLLV+ZrKDQFiuFluksuA9Vt1jj/H5Q/H9Xd5ysMO3EC0mmHCoeadYKSiwMa8WCNnn0NHvjlFhOB
-	Agcswm53Dn0f6qCsQK/XtnuDSr1D+byKtA64Oc5YAb3hdNCplO7eR2eIs/jwRc+dzLv0QFmnqJL
-	hYqU+XXWAuNa6SgjxLeh567D32BqOM/6bexDyFjGssiTA6c7kKy+s1s5s/VgPJqrw90KynWTzfZ
-	ao1rOMSV9VpNPA4UGjCgFdO5alDeeMhOM+TedMVPs/pL1XavlAlikboJ6r4=
-X-Google-Smtp-Source: AGHT+IGX1LUa+89FnJFZOHh/KHneHBukRt9x+vWGpsegi63eqsXXAjtX/M3kZSJSv56LCLKXci5rMTAPLk5V
-X-Received: by 2002:a05:6e02:1c09:b0:424:6c8e:6185 with SMTP id e9e14a558f8ab-42481903866mr10677075ab.7.1758224052618;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yGgcbSkc4b3TEAlty1vI9MIlV1K03L2tgLefNKM4ZS4=;
+        b=gX/RvKeA675SPnyH0s78wqJ/e5o6amLq5zKIUTJweSsGO5psJNTQztXchYclHl8EHm
+         /jRVPwnp7/RY+g+E8FLRTZr+EUUrorInZvb3gHZFxNRGO8CFpNJI9FJ+Hlkk35NzuMh1
+         wJQqS9mOFRkiJT2OOht7O1Z/B9i7DZSTmpX0WYOGde5rN5hbIZ2iCUDmrTVj1EusRb2M
+         9YGVMKJCZrF6xbngB7IgqGQE+XX+Bs++qzwT8MPIF1raxxjQYUoOaGgjqqy8o69ub7J9
+         Q829GR04h029W3AKgSfGkbjdZk7JJMCQBxOHxnUFLcW4ikq+Wmjx4X14Mrc7hBHoRzAE
+         /IpQ==
+X-Gm-Message-State: AOJu0Yw7I8vp9QeWZsq71AG2Axw4c9vYHSB6s88l5eJgSRgk4MHmM9rp
+	JFugSPNoC/5cWeBxp+W8R+oOlMrILhQUf2hR7X/L/SmTtqlBu0/sKGGz4E6rsMm5F9Mwu+9SB4t
+	PUPKLPwiGOjXLaHmU2sdTepdlPBurXEzhAvK0hRq3f4J9N4kViwoF
+X-Gm-Gg: ASbGncsV0zjUufAjLoGEtQ3gSMsyY2pfJva4FdJSE3HzAyCiLEFnCT6zb1qXPBwPHzj
+	Frg+ej/rAxhjM5+F8Cq+A63FDI7JRDxD9XSAMLplztfwoZTqBn0U448l3fN4gZRJg+Njg/RzoA4
+	ekGYYKrq1yd/BIn55+AwchCW61uOBt4OuvYX0p5UTYgXxCQd3AlKxQAZuFsVpJsX9a2jo7x5/WW
+	KFR4iJFDO4OS5JRmVbpKCXS0QdPRv04BK0A53PsSzTJULbPwSpytYjrfGHPE0v8hCSeBA1xU4d/
+	PQcjIqHIqEkAuzqTXAJrBzRll7dgFBJdQjUpGRnLJhZ2djKBKgcz3uXBlvg=
+X-Google-Smtp-Source: AGHT+IHFBuXdBHcUoocU29bhImj7n4wo7JMQqdfOvZ3xQYknkYkVo1GnnTsv5mYjprk2aGCiMz9ql+ezl0L1
+X-Received: by 2002:a05:6e02:2293:b0:423:fce3:9255 with SMTP id e9e14a558f8ab-4248197c39fmr12210055ab.23.1758224052653;
         Thu, 18 Sep 2025 12:34:12 -0700 (PDT)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-53d39a17a51sm221217173.10.2025.09.18.12.34.12
+        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-53d56e41e6bsm198876173.44.2025.09.18.12.34.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 18 Sep 2025 12:34:12 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 3278E340325;
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 35A05340853;
 	Thu, 18 Sep 2025 13:34:12 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id EE141E53938; Thu, 18 Sep 2025 13:34:11 -0600 (MDT)
+	id F2C33E40696; Thu, 18 Sep 2025 13:34:11 -0600 (MDT)
 From: Uday Shankar <ushankar@purestorage.com>
-Subject: [PATCH v2 0/3] selftests: ublk: kublk: fix feature list
-Date: Thu, 18 Sep 2025 13:34:06 -0600
-Message-Id: <20250918-ublk_features-v2-0-77d2a3064c15@purestorage.com>
+Date: Thu, 18 Sep 2025 13:34:07 -0600
+Subject: [PATCH v2 1/3] selftests: ublk: kublk: simplify feat_map
+ definition
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -88,44 +90,102 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAK5ezGgC/3WM0Q6CIBhGX8X919GApGZXvUdzDfFDWSUO1NUc7
- x563+U52zkrRQSHSNdipYDFReeHDPJQkOn10IG5NjNJLhWvxJnNzev5sNDTHBAZv2hb4iQFlKb
- cjAHWffbfvc7cuzj58N33i9jsv9MiGGdKclE2qEwLdRs3n2vd4Wj8m+qU0g9C9LaEsAAAAA==
-X-Change-ID: 20250916-ublk_features-07af4e321e5a
+Message-Id: <20250918-ublk_features-v2-1-77d2a3064c15@purestorage.com>
+References: <20250918-ublk_features-v2-0-77d2a3064c15@purestorage.com>
+In-Reply-To: <20250918-ublk_features-v2-0-77d2a3064c15@purestorage.com>
 To: Caleb Sander Mateos <csander@purestorage.com>, 
  Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
 Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
 X-Mailer: b4 0.14.2
 
-This patch simplifies kublk's implementation of the feature list
-command, fixes a bug where a feature was missing, and adds a test to
-ensure that similar bugs do not happen in the future.
+Simplify the definition of feat_map by introducing a helper macro
+FEAT_NAME to avoid having to type the feature name twice. As a side
+effect, this changes the names in the feature list to be the full macro
+name instead of the abbreviated names that were used before, but this is
+a good change for clarity.
+
+Using the full feature macro names ruins the alignment of the output, so
+change the output format to put each feature's hex value before its
+name, as this is easier to align nicely. The output now looks as
+follows:
+
+root# ./kublk features
+ublk_drv features: 0x7fff
+0x1               : UBLK_F_SUPPORT_ZERO_COPY
+0x2               : UBLK_F_URING_CMD_COMP_IN_TASK
+0x4               : UBLK_F_NEED_GET_DATA
+0x8               : UBLK_F_USER_RECOVERY
+0x10              : UBLK_F_USER_RECOVERY_REISSUE
+0x20              : UBLK_F_UNPRIVILEGED_DEV
+0x40              : UBLK_F_CMD_IOCTL_ENCODE
+0x80              : UBLK_F_USER_COPY
+0x100             : UBLK_F_ZONED
+0x200             : UBLK_F_USER_RECOVERY_FAIL_IO
+0x400             : UBLK_F_UPDATE_SIZE
+0x800             : UBLK_F_AUTO_BUF_REG
+0x1000            : UBLK_F_QUIESCE
+0x2000            : UBLK_F_PER_IO_DAEMON
+0x4000            : unknown
 
 Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
-Changes in v2:
-- Add log lines to new test in failure case, to tell the user how to fix
-  the test, and to indicate that the failure is expected when running
-  an old test suite against a new kernel (Ming Lei)
-- Link to v1: https://lore.kernel.org/r/20250916-ublk_features-v1-0-52014be9cde5@purestorage.com
+ tools/testing/selftests/ublk/kublk.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
----
-Uday Shankar (3):
-      selftests: ublk: kublk: simplify feat_map definition
-      selftests: ublk: kublk: add UBLK_F_BUF_REG_OFF_DAEMON to feat_map
-      selftests: ublk: add test to verify that feat_map is complete
+diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
+index 6512dfbdbce3a82f1202de17319ea593337427e6..4e5d82f2a14a01d9e56d31126eae2e26ec718b6c 100644
+--- a/tools/testing/selftests/ublk/kublk.c
++++ b/tools/testing/selftests/ublk/kublk.c
+@@ -1363,21 +1363,22 @@ static int cmd_dev_list(struct dev_ctx *ctx)
+ static int cmd_dev_get_features(void)
+ {
+ #define const_ilog2(x) (63 - __builtin_clzll(x))
++#define FEAT_NAME(f) [const_ilog2(f)] = #f
+ 	static const char *feat_map[] = {
+-		[const_ilog2(UBLK_F_SUPPORT_ZERO_COPY)] = "ZERO_COPY",
+-		[const_ilog2(UBLK_F_URING_CMD_COMP_IN_TASK)] = "COMP_IN_TASK",
+-		[const_ilog2(UBLK_F_NEED_GET_DATA)] = "GET_DATA",
+-		[const_ilog2(UBLK_F_USER_RECOVERY)] = "USER_RECOVERY",
+-		[const_ilog2(UBLK_F_USER_RECOVERY_REISSUE)] = "RECOVERY_REISSUE",
+-		[const_ilog2(UBLK_F_UNPRIVILEGED_DEV)] = "UNPRIVILEGED_DEV",
+-		[const_ilog2(UBLK_F_CMD_IOCTL_ENCODE)] = "CMD_IOCTL_ENCODE",
+-		[const_ilog2(UBLK_F_USER_COPY)] = "USER_COPY",
+-		[const_ilog2(UBLK_F_ZONED)] = "ZONED",
+-		[const_ilog2(UBLK_F_USER_RECOVERY_FAIL_IO)] = "RECOVERY_FAIL_IO",
+-		[const_ilog2(UBLK_F_UPDATE_SIZE)] = "UPDATE_SIZE",
+-		[const_ilog2(UBLK_F_AUTO_BUF_REG)] = "AUTO_BUF_REG",
+-		[const_ilog2(UBLK_F_QUIESCE)] = "QUIESCE",
+-		[const_ilog2(UBLK_F_PER_IO_DAEMON)] = "PER_IO_DAEMON",
++		FEAT_NAME(UBLK_F_SUPPORT_ZERO_COPY),
++		FEAT_NAME(UBLK_F_URING_CMD_COMP_IN_TASK),
++		FEAT_NAME(UBLK_F_NEED_GET_DATA),
++		FEAT_NAME(UBLK_F_USER_RECOVERY),
++		FEAT_NAME(UBLK_F_USER_RECOVERY_REISSUE),
++		FEAT_NAME(UBLK_F_UNPRIVILEGED_DEV),
++		FEAT_NAME(UBLK_F_CMD_IOCTL_ENCODE),
++		FEAT_NAME(UBLK_F_USER_COPY),
++		FEAT_NAME(UBLK_F_ZONED),
++		FEAT_NAME(UBLK_F_USER_RECOVERY_FAIL_IO),
++		FEAT_NAME(UBLK_F_UPDATE_SIZE),
++		FEAT_NAME(UBLK_F_AUTO_BUF_REG),
++		FEAT_NAME(UBLK_F_QUIESCE),
++		FEAT_NAME(UBLK_F_PER_IO_DAEMON),
+ 	};
+ 	struct ublk_dev *dev;
+ 	__u64 features = 0;
+@@ -1404,7 +1405,7 @@ static int cmd_dev_get_features(void)
+ 				feat = feat_map[i];
+ 			else
+ 				feat = "unknown";
+-			printf("\t%-20s: 0x%llx\n", feat, 1ULL << i);
++			printf("0x%-16llx: %s\n", 1ULL << i, feat);
+ 		}
+ 	}
+ 
 
- tools/testing/selftests/ublk/Makefile           |  1 +
- tools/testing/selftests/ublk/kublk.c            | 32 +++++++++++++------------
- tools/testing/selftests/ublk/test_generic_13.sh | 20 ++++++++++++++++
- 3 files changed, 38 insertions(+), 15 deletions(-)
----
-base-commit: da7b97ba0d219a14a83e9cc93f98b53939f12944
-change-id: 20250916-ublk_features-07af4e321e5a
-
-Best regards,
 -- 
-Uday Shankar <ushankar@purestorage.com>
+2.34.1
 
 
