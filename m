@@ -1,169 +1,111 @@
-Return-Path: <linux-block+bounces-27563-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27561-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9073FB83ADF
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 11:04:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48D46B83A2E
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 10:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B487272234F
-	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 09:03:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 163CC1B2741C
+	for <lists+linux-block@lfdr.de>; Thu, 18 Sep 2025 08:59:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E6E2F60DB;
-	Thu, 18 Sep 2025 09:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C0C12F7ABD;
+	Thu, 18 Sep 2025 08:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Mmz+ItoE"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42242F9D82
-	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 09:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94152E7635
+	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 08:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758186227; cv=none; b=Or2wIqf1BHbmM9C8fFpEXzZbaMGKC1zht2tfpHWOPD0/fpCyKf0N1sQvWm8PihTKyi8kpRu9MxSqYho1xMsWVtM0S/tinn5/+IxMzH4KoOP6/ryTHxOY015MaRzeY+1M97Q24jAU9ZjUNO3kH8o3LYQOVj2f8JRgKoA9jzvXgW0=
+	t=1758185959; cv=none; b=gpcK0wygbFZW4ddklulsreR1VIHCMtgp9Ue+kEUTK1XCkGOy8WtmJJbZmUJugEMMPOoEF0cX7jSOEjNzSz/93gziy1Y4XpV6cg5XEokxVMJOdW3guwcdXEZ+NGq5hwKNyEXQ7JfBWFAgYMf6/nt6sv1Z8LUq5CD8Q4QzyEzyw+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758186227; c=relaxed/simple;
-	bh=fTJssQnlSSJNWyy0sV2yJqcoEcAf8tzHqQ3BpQfqWnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JhKAKYUbXBcZfnfa7YsJ/RQDyx5XBm/hHDLz6CLyUodqcobsLP2mQcl3RNawjc/qzePfxIjlbhIJelLjS7NNL+CUi/pJJEyRka8SwqsLDRBQ5vX9aH2kcvhhb+SJALAQpl1v9OVu79xCld4e6TyqjfrdBigeO+Lr2aCYJRbmJQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cS8nQ2J77zYQtvJ
-	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 17:03:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EAB2A1A0F2B
-	for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 17:03:36 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDXIY7mystofFCkCw--.4335S5;
-	Thu, 18 Sep 2025 17:03:36 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: linux-block@vger.kernel.org,
-	shinichiro.kawasaki@wdc.com
-Cc: nilay@linux.ibm.com,
-	ming.lei@redhat.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH 1/1] tests/throtl/004: add scsi_debug for test device
-Date: Thu, 18 Sep 2025 16:53:41 +0800
-Message-Id: <20250918085341.3686939-2-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250918085341.3686939-1-yukuai1@huaweicloud.com>
-References: <20250918085341.3686939-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1758185959; c=relaxed/simple;
+	bh=unL9Ce+kEywQKcq5iWYa3vbSFUfdn9EBm190tWDHYvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IjVm9WVR9BR/q4aRVYj6wCoKURLTW8wol696H/RkfNCDj4ViG4I8I9iIf5R/CuRBL5rC8tKETWqkk6Lhf7mtdEp8H3XdlOx2r5vh94bvtJRviqAxgAWW9Zt7uZY2eo+sSyB0YTVbpdlNDFyvxk4l+IBM2jqB69B8lK84sDiOpfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Mmz+ItoE; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-33c9efd65eeso6237811fa.3
+        for <linux-block@vger.kernel.org>; Thu, 18 Sep 2025 01:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1758185954; x=1758790754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZmPfoqG0iiG2NY0syO47mgLNSYwy8f5A2cvO3evi8k=;
+        b=Mmz+ItoEJ8Z5FZjMt2jY/aSr7oj7aThqxij0DZGgtkpV51YMDfs+oOc9pN7riJusai
+         008GZweo55Nm685yDy89CgCNv9YeDOKh+QxA5J18FyL18fVpVMpf0hr84bY9bkv0QdXe
+         jjk4S4w4u6AfRVBW7q3oYYHG1kTCA1RWpnXQBY/i+Gj3LC/M4fQ8I5eA0o6zDg9qOyya
+         q88vhmkHR/nb5sXWLjHy35L4KKFutVNJuW1f48ojOQByMKnT/6ArYiu2YP+fF/KGIaYL
+         MyGPQYCycEFTZ1m7wzspDMSqLBtc90IJsbX8WtVlT/2JJrqCFRa5Oxw925bubOrqktIW
+         /tFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758185954; x=1758790754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZmPfoqG0iiG2NY0syO47mgLNSYwy8f5A2cvO3evi8k=;
+        b=REQ5ga5MBt1O5MHuylGyr7JeutQ4xwzgataJUbBMTjrO9+ui7jk0LMysSlEnlVFQUn
+         urteisrv4JkY3PpVbAkraV/dznHt3ydTSn1UOTpkOjGQa2uKGvKxAVC7oxi1t0Bf/F9l
+         cZ8HNO7pyEWP0wEM4mwoOftVqQ2WuNA9PCwtiowBqbaw+9FrDBggj7Udc5ao+YIiEq8X
+         F4m2bEa7KwwBdBU4Th/HXrgFlkuHFM6vG7UR81TXvXlLid6crnhos58BmzFJC97vvBAG
+         769kOxb9qXEdKVxg1WXgAn9OKVejEOsI8WXm7jMLqrh16o0rKi9JgmoNByJrFEYSLBPf
+         76HA==
+X-Forwarded-Encrypted: i=1; AJvYcCU89ZrhMOBTsg6z2yxnNCfZXKP3Lg90SPyrrSMV1pZmOCieL7hkY/Mk761S2ERCzGrC9e4F+oPj0P2GoA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2yzPqZQbiqsBx/cPM5kMfCJg0VG880ddyvbShanaJAnvPxwIn
+	h7mtQtLPB/jmawMVQp51kq+3HmayX9tu5DJoLiZgXBZXJ8ULqf1v/5jQ+M8PA6d496kDtlU/YpS
+	ih7GD6K8y/gls1Z5fMytvvoWnt6yKFm64YMMsePH1AA==
+X-Gm-Gg: ASbGncvlsV44lAFuxA+ylNWTz+JIiNcM+LqstShKdSC82JzK0hESOXdWCjkF1gYnsEy
+	p+9s8oNylz44NeiKHlYUSAgi9TY4LIYAMyP0/hq3I+Z/PQuKadzQGQT1Gtw8sbA5nF1yJjNg7eO
+	pY2dOKzBAvKOjhPO+kd+Pow1T38//6EuJoZkI/Nf0wXQF4YfhuVOeWCdlsYaN0xr4W7ioIgDKGx
+	N7LMs+bxijRwJ5TJPO1/4Xc3GRMoqVN524ktAt2/B3JUhKP4nBEerDDxQo=
+X-Google-Smtp-Source: AGHT+IE82AqZgCsTk+PY/JWZbreeNfzQ9NGfzRX+YkofNIG1aunevV+FhkpoCPJrFrn6mDCYgSk9k8Ijxcn1IEQSyeI=
+X-Received: by 2002:a05:651c:19a9:b0:362:75fc:4681 with SMTP id
+ 38308e7fff4ca-36275fc4983mr4139801fa.29.1758185953688; Thu, 18 Sep 2025
+ 01:59:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXIY7mystofFCkCw--.4335S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7CrW3ArWxZw13CrWxKr4UArb_yoW8uFWUpF
-	W5Ga1rKr4rCFnrAr1ayanrGFW3Xa1kJrW3C3y7A390yr1DXrW7G3ZFkrWUXFWrCF9xXFWx
-	uFW8XFWrK3WUZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Kb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7qjgUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20250905085141.93357-1-marco.crivellari@suse.com> <175743072839.109608.9014903338772554601.b4-ty@kernel.dk>
+In-Reply-To: <175743072839.109608.9014903338772554601.b4-ty@kernel.dk>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Thu, 18 Sep 2025 10:59:02 +0200
+X-Gm-Features: AS18NWDpfZjLQbuUq82kSpsqAhb5CTGCYTAr0k0mPYelJg4h9GAlfvANjno1wMM
+Message-ID: <CAAofZF4ysVOA05j3NeieeyPgXjJ_43SEKD=mHPrCz6eF4qXhTw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] block: replace wq users and add WQ_PERCPU to
+ alloc_workqueue() users
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Tue, Sep 9, 2025 at 5:12=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
+> Applied, thanks!
+>
+> [1/3] drivers/block: replace use of system_wq with system_percpu_wq
+>       commit: 51723bf92679427bba09a76fc13e1b0a93b680bc
+> [2/3] drivers/block: replace use of system_unbound_wq with system_dfl_wq
+>       commit: 456cefcb312d90d12dbcf7eaf6b3f7cfae6f622b
+> [3/3] drivers/block: WQ_PERCPU added to alloc_workqueue users
+>       commit: d7b1cdc9108f46f47a0899597d6fa270f64dd98c
 
-While testing throtl manually, it's found there is a deadlock problem,
-add this regression test.
+Many thanks, Jens!
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- tests/throtl/004 | 20 ++++++++++++++++++++
- tests/throtl/rc  | 11 +++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
+--=20
 
-diff --git a/tests/throtl/004 b/tests/throtl/004
-index d1461b9..05a1c9d 100755
---- a/tests/throtl/004
-+++ b/tests/throtl/004
-@@ -7,6 +7,7 @@
- # commit 8f9e7b65f833 ("block: cancel all throttled bios in del_gendisk()")
- 
- . tests/throtl/rc
-+. common/scsi_debug
- 
- DESCRIPTION="delete disk while IO is throttled"
- QUICK=1
-@@ -14,7 +15,12 @@ QUICK=1
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-+	if ! _configure_scsi_debug; then
-+		return 1;
-+	fi
-+
- 	if ! _set_up_throtl; then
-+		_exit_scsi_debug
- 		return 1;
- 	fi
- 
-@@ -29,6 +35,20 @@ test() {
- 	echo 0 > "/sys/kernel/config/nullb/$THROTL_DEV/power"
- 	wait $!
- 
-+	echo "$(cat /sys/block/${SCSI_DEBUG_DEVICES[0]}/dev) wbps=$((1024 * 1024))" > \
-+			"$CGROUP2_DIR/$THROTL_DIR/io.max"
-+
-+	{
-+		echo "$BASHPID" > "$CGROUP2_DIR/$THROTL_DIR/cgroup.procs"
-+		_throtl_issue_io write 10M 1 ${SCSI_DEBUG_DEVICES[0]} &> /dev/null
-+	} &
-+
-+	sleep 0.6
-+	echo 1 > "/sys/block/${SCSI_DEBUG_DEVICES[0]}/device/delete"
-+	wait $!
-+
- 	_clean_up_throtl
-+	_exit_scsi_debug
-+
- 	echo "Test complete"
- }
-diff --git a/tests/throtl/rc b/tests/throtl/rc
-index 327084b..5f9f1d7 100644
---- a/tests/throtl/rc
-+++ b/tests/throtl/rc
-@@ -98,13 +98,20 @@ _throtl_issue_io() {
- 	local start_time
- 	local end_time
- 	local elapsed
-+	local testdev
-+
-+	if [ $# -ge 4 ]; then
-+		testdev=$4
-+	else
-+		testdev=$THROTL_DEV
-+	fi
- 
- 	start_time=$(date +%s.%N)
- 
- 	if [ "$1" == "read" ]; then
--		dd if=/dev/$THROTL_DEV of=/dev/null bs="$2" count="$3" iflag=direct status=none
-+		dd if=/dev/$testdev of=/dev/null bs="$2" count="$3" iflag=direct status=none
- 	elif [ "$1" == "write" ]; then
--		dd of=/dev/$THROTL_DEV if=/dev/zero bs="$2" count="$3" oflag=direct status=none
-+		dd of=/dev/$testdev if=/dev/zero bs="$2" count="$3" oflag=direct status=none
- 	fi
- 
- 	end_time=$(date +%s.%N)
--- 
-2.39.2
+Marco Crivellari
 
+L3 Support Engineer, Technology & Product
 
