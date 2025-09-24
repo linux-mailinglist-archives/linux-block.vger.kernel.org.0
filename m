@@ -1,93 +1,121 @@
-Return-Path: <linux-block+bounces-27734-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27736-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37A22B99A37
-	for <lists+linux-block@lfdr.de>; Wed, 24 Sep 2025 13:47:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2757B99A4D
+	for <lists+linux-block@lfdr.de>; Wed, 24 Sep 2025 13:48:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECEFA3A7BB0
-	for <lists+linux-block@lfdr.de>; Wed, 24 Sep 2025 11:47:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C6D43B8C0A
+	for <lists+linux-block@lfdr.de>; Wed, 24 Sep 2025 11:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8A4D2FE052;
-	Wed, 24 Sep 2025 11:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19E292FE567;
+	Wed, 24 Sep 2025 11:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+6ipAwb"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="20M06Zfq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813342E62C6
-	for <linux-block@vger.kernel.org>; Wed, 24 Sep 2025 11:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B7DD531
+	for <linux-block@vger.kernel.org>; Wed, 24 Sep 2025 11:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758714438; cv=none; b=p1jS3AvJFLcZUTUg5NPRpmhYCa5NYmgWbdgApBzyhao4NFsW4pVFaiiH/cN1HDTios1vSQ6dSSHwu4z08iYwAMtEXxtOSeCTrDMOYm3QzEPaWydbopi+ced/6f2/iCbeH39FLxoSabhKi3ZXqYr3ClHa3LfFH/QgnM6ivOWLyRY=
+	t=1758714524; cv=none; b=KK97gKKGI8P8ocokwgRmURvr3OSo4IBQBOrIBixN5TQQFTtjpcAfK/7+neBfetYmvVccn1PwvxBvVFaaL8Z4qJnGZA7sPaIEmj4E3y1ML29IMyPsqv8hLtnVl5XR7Q51S3MIVkQld4aFH1cQOzaMHbPjGbvcTwhtbFpKXKUjq5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758714438; c=relaxed/simple;
-	bh=CpcTn/LkkmKOCPxdKBtvW/X03DJ7EbwCgKqtNEMFm9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UibPYRmCqBGCOJaOr5GrCXsX3FO5q2fDv1kIPZQlpbsfaKOJkidbyyIiISYWNDMF+3Zt8w+uV7qqL6h59613mLagCTQucwfz5rW2CtuZbFIwSMWM2auR1xGJEsTaiALhuPKs6oOGOAijO9eXtpYpY1AdxBnKjp8nvlDfRHm+Od0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e+6ipAwb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758714432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U49N+r+zxSJi1zFY3gjdcUdjVBkpVbT2zJacgwMW37A=;
-	b=e+6ipAwbXevl1R7CFvAlQ9I2t9yE7rvh7I/Z7Ya+z5wUMAXzc9vl/8LLE1pzeyHdZBUfZ7
-	cbPLL0AjwXZH+bCZzlNohgFFKy5SAqCoa+Td3iYaQI2OhTp3bGHh9PcQiy2QJImLfK2R2g
-	0uU96fWn/UTSb5Dfl4bnhbcZ2BBfKA8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-ZHnt4TrjPOS_6u8ZCD-IDA-1; Wed,
- 24 Sep 2025 07:47:09 -0400
-X-MC-Unique: ZHnt4TrjPOS_6u8ZCD-IDA-1
-X-Mimecast-MFC-AGG-ID: ZHnt4TrjPOS_6u8ZCD-IDA_1758714428
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C06AA1955D58;
-	Wed, 24 Sep 2025 11:47:07 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.20])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4512819560B8;
-	Wed, 24 Sep 2025 11:47:02 +0000 (UTC)
-Date: Wed, 24 Sep 2025 19:46:57 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: remove redundant zone op check in ublk_setup_iod()
-Message-ID: <aNPaMVxUR-Q4haGX@fedora>
-References: <20250923155249.2891305-1-csander@purestorage.com>
+	s=arc-20240116; t=1758714524; c=relaxed/simple;
+	bh=8wa1ZLHn+cg8S8nHQAlXq2ZdFV4bDju8o007GcFQZ8A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=OH+abDwj5ciVohLMs3OR7BnD5EDG1/mGfQnryB0nIu1Q0I99kLSzjF48dY+ewl5j5NYHPkSf1boBK/OzIjFWlmbMdE8aLT60w40YNQLIcjNDCE72NejGZN9laG+WkwMy5WEv7VYAPLJpyaRT7RaG/PD6hoqVLrHK6U+7WQwHBLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=20M06Zfq; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-46e1bc8ffa1so22223905e9.0
+        for <linux-block@vger.kernel.org>; Wed, 24 Sep 2025 04:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1758714516; x=1759319316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XL3pj95EhDFRWDVYUB7ZgnLiAqsYtgD7zX9Xu/MZ1Ag=;
+        b=20M06ZfqgyBotXhZ6peh6krIclXZM+lwqOSZMMIqse4Z+jGqxOmURdUf23+vuHYSF6
+         FHIF6GMXOrktUf1oRDC+fC4B54o2NQnn/CJ6az1n7SuyurgM3N82xv4a1qnTQF1H6QrE
+         D0YfRnC0AmAanJXSK/jHnlHaRRpTUynaWlSfGi89PTEENzdnBsZSYicQlrSW65jdra8u
+         g13MF1Ol5yWHPAeHZuQp+tE5LBSW3A5Rf6EzNVg7CwOMKnaiaB11BVOSW26bniS3J4fv
+         XeEqLc4y0iRGs/V1o3JlEcZ9x4py8PgcZoFQ/yJoM1ms1qgX47cja4a4JV2hk5J7U+5G
+         +QAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758714516; x=1759319316;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XL3pj95EhDFRWDVYUB7ZgnLiAqsYtgD7zX9Xu/MZ1Ag=;
+        b=gFmwheqyDxoXGPryWT6Zucz/GCPSG9Rjf/fwNp1brhQhd9cKK0MzC2nW91nwHOAEzu
+         EE05IcpobMxl874h7vieYf3+Yq7J3USE70G8p6caRE67t/2llfKINx4qNRGphooqivpJ
+         1eSFcb3D/dGa5ShiKqIjwmaIJcC1+LjI7TcNuv/oYCZmrhJr2DqgIiS8KfpWsUgJLiGH
+         0G2icm0/n6GMtHXpY8XFMSs7xFvbduOySaMjDwP5wnWjnWRHWflpHEe85iKMT+RkPK4K
+         mkzphRqecQB7Uwcf9mZMNRE+QKU6Eai7MIMk80xNr6HUDLehRY2rilWsfZ9nfy39oHdJ
+         bCsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURcRqsgRVJ5taLvmIjdjmiocdZ8k2lj8ylvLgTdjQDuHC3hmtwQqbVepchvDmErZdxZrtQAdD8Yky6pg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIYndTsVOdoOcZrjtwRWPoLfjV5j4MjmO/JensFza05NsCgls2
+	dbCWNnMBAqHH3CrLn9evGHThwGxL7LMzbv0WLnJ7azDrJqBTZjfqnRwewz/PUHuQmDc=
+X-Gm-Gg: ASbGncu8nl6vzF/ujbszdfSYZ9pwYMJ+I2Ng0tdFzGOg6V0UqeioaBBRhscv1GffNCk
+	Iv1JAYDEoKgqWzlKlVv9HHXt1xQoKwo+3v+PKXtf8wf24aH2f5RxDAI5swNzwlqzHhmenAtzygA
+	OeJYnpQOmyk/ojWNRVYIC2nfiQKz3K4jffwhzQtIHy1fj93ET1J1bpFkP8YUqecFx8yg1INcuQV
+	TjlyW2V8jU7YdCMid/k0VP43oihisCxW+mqJwK3v9uRTEAxGo5/Nqh4gwFmj4q0a+v/laknM3TJ
+	iK/gnWbx+rb51jVV6sQk+UZDghQHh5Pwh0vjdlGC1OtWeicXpuCuKGZqotxBsIn8YMdpBeRXdG/
+	oE77pKimVJlrwlK4KXA==
+X-Google-Smtp-Source: AGHT+IEltzN+Phzm/vgIDV/CDKiL0LHpsqh9NTpeatvcZoFTuaa8yQ5OZWw1bFDTJZAr7bLrkq2aNA==
+X-Received: by 2002:a05:600c:4454:b0:45b:9a46:69e9 with SMTP id 5b1f17b1804b1-46e1dabfdb7mr67404585e9.31.1758714516165;
+        Wed, 24 Sep 2025 04:48:36 -0700 (PDT)
+Received: from [127.0.0.1] ([178.208.16.192])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2ab31bdesm28162185e9.11.2025.09.24.04.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Sep 2025 04:48:35 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: nilay@linux.ibm.com, tj@kernel.org, josef@toxicpanda.com, 
+ Yu Kuai <yukuai1@huaweicloud.com>
+Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, 
+ yangerkun@huawei.com, johnny.chenyi@huawei.com
+In-Reply-To: <20250923075520.3746244-1-yukuai1@huaweicloud.com>
+References: <20250923075520.3746244-1-yukuai1@huaweicloud.com>
+Subject: Re: (subset) [PATCH for-6.18/block 0/2] blk-cgroup: fix possible
+ deadlock
+Message-Id: <175871451525.316144.5136709409891330252.b4-ty@kernel.dk>
+Date: Wed, 24 Sep 2025 05:48:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923155249.2891305-1-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-2ce6c
 
-On Tue, Sep 23, 2025 at 09:52:48AM -0600, Caleb Sander Mateos wrote:
-> ublk_setup_iod() checks first whether the request is a zoned operation
-> issued to a device without zoned support and returns BLK_STS_IOERR if
-> so. However, such a request would already hit the default case in the
-> subsequent switch statement and fail the ublk_queue_is_zoned() check,
-> which also results in a return of BLK_STS_IOERR. So remove the redundant
-> early check for unsupported zone ops.
+
+On Tue, 23 Sep 2025 15:55:18 +0800, Yu Kuai wrote:
+> Yu Kuai (2):
+>   blk-cgroup: allocate policy data with GFP_NOIO in
+>     blkcg_activate_policy()
+>   blk-cgroup: fix possible deadlock while configuring policy
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> block/blk-cgroup.c | 27 ++++++++++-----------------
+>  1 file changed, 10 insertions(+), 17 deletions(-)
+> 
+> [...]
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Applied, thanks!
 
-Thanks,
-Ming
+[2/2] blk-cgroup: fix possible deadlock while configuring policy
+      commit: 5d726c4dbeeddef612e6bed27edd29733f4d13af
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
 
