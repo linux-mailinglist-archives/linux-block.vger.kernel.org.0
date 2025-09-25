@@ -1,139 +1,125 @@
-Return-Path: <linux-block+bounces-27744-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27750-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B7A2B9DBEB
-	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 09:03:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C215B9E0AE
+	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 10:27:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63EA52E7B2A
-	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 07:03:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B7A2162FF5
+	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 08:27:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9C32E8E04;
-	Thu, 25 Sep 2025 07:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHutfg7p"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CED2EA744;
+	Thu, 25 Sep 2025 08:25:57 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEC1CAA92;
-	Thu, 25 Sep 2025 07:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452CB2E9ECF;
+	Thu, 25 Sep 2025 08:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758783801; cv=none; b=EhpeZ4N09Bs/KRSdMLJJRB5DSIOypRUcgIdRXhybTs8Id8LrUcnu2BzK3jbkixQpjK1wloVpE7z1eC91yWEQEXTIXYqIfa/nmg8DHm/BG8W7l9bjPSyo8SMLsGWQZR2INcYYY0uOMYK8XpFS1ITUYf13z4GAGclmBNUw1nNBwSc=
+	t=1758788757; cv=none; b=bjCOjYwryKpqhBYrQvZLGUTiJDz7vb+uD87HRDrsYlM7z0MiFtyEusJtHb7N3qVMKjn+tZcuJEuYZOsLCO2Co6SRfKg9+gYuy5ET6WbhNlr+0yisHAaPrBqQURs7RoM6K9RSapQ03F04RawbyWzoEvzwG/ssnF3RXGysre88l/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758783801; c=relaxed/simple;
-	bh=IfFjt1sIn89xjUeeoV2zJsvE3bTjSj86lJ2QWvNYz8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uT4W4PHEa0T9K2MMhqmpmAcD0+HhmD6HfR60fW77tc5ycyxSNKO4N4exspj2qU2YgjWIOwTnteK3TzHsWOg1fceWB5WZG+LTeGr8ERHp2lTCGi8YNaE0Y8OzBkvzyroKbFODJeFg/zxWWeunTBwYKdC6xT3gJyKcERtFjogIYPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHutfg7p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476E0C4CEF4;
-	Thu, 25 Sep 2025 07:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758783799;
-	bh=IfFjt1sIn89xjUeeoV2zJsvE3bTjSj86lJ2QWvNYz8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHutfg7p0MJiJzKdbXS/d6R3kdEqDhdXcGmgxvkwI4AM6XuKyeIpgR1GSCsEqIGVB
-	 9ZrAilO0Zj59EMAXR1lQlcpWEMA28nquUz1IKkduHGuS4dyD2OJmp5f3UxncKmQ8+I
-	 Dp30uxy2wGUYE3Hja5f4XS00BFzuj+WaXq60qYIzodUdV2tvE04uI5a85RPL6mAqR7
-	 MWKPSQplfkMcH9/nRS03UG60TJBwCq9ZQRhoS60sk8FdhiE0kifJqWTjrMUqN9REZV
-	 kUzpbXtt2XKNZVaDT/F1inIn9vj+we8Gfm9meFs0BUoq+pahNKDPioVkPIFajbcBnM
-	 waHnKaEouWGfQ==
-Date: Thu, 25 Sep 2025 10:03:14 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
- functionality from memory allocation
-Message-ID: <20250925070314.GA12165@unreal>
-References: <cover.1757589589.git.leon@kernel.org>
- <1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
- <20250922150032.3e3da410.alex.williamson@redhat.com>
- <20250923150414.GA2608121@nvidia.com>
- <20250923113041.38bee711.alex.williamson@redhat.com>
- <20250923174333.GE2608121@nvidia.com>
- <20250923120932.47df57b2.alex.williamson@redhat.com>
+	s=arc-20240116; t=1758788757; c=relaxed/simple;
+	bh=6hKjv7hJAGzo5d3GJA8MetP/AmZUT7an+Knm0jSkuCU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a7wYXoDJ26PgwsywEXq68MY8Sgthbaud7s2zqZ3UcsIUKCjKOx52b5HaPXVsIE4QaqpgHDo0a7R0hz3QPaEFRTdmiF9sqTbK55FYLDZPJa+MDOJiD2QRRZCd+jH4GB6r0k4Wb8r5Z/J2RLRD26A/Dmhlm/gKw63mQOkgSxdlMgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cXRcK2H40zYQvXc;
+	Thu, 25 Sep 2025 16:25:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 46CD91A1796;
+	Thu, 25 Sep 2025 16:25:46 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCna2OH_NRodTcIAw--.12615S4;
+	Thu, 25 Sep 2025 16:25:45 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: tj@kernel.org,
+	ming.lei@redhat.com,
+	nilay@linux.ibm.com,
+	hch@lst.de,
+	josef@toxicpanda.com,
+	axboe@kernel.dk,
+	akpm@linux-foundation.org,
+	vgoyal@redhat.com
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH 00/10] blk-cgroup: don't use queue_lock for protection and fix deadlock
+Date: Thu, 25 Sep 2025 16:15:15 +0800
+Message-Id: <20250925081525.700639-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923120932.47df57b2.alex.williamson@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCna2OH_NRodTcIAw--.12615S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww45GF4UXr4UCw47Gr4kZwb_yoW8Gr1kpF
+	9Iqr1agw12vFn7Zr1ag3W2gF1rG3yxGrWDJwnIqr4rCF17Zry8ZF18Zw4kuFWSqF92yan8
+	tr18AryIkF1j9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Sep 23, 2025 at 12:09:32PM -0600, Alex Williamson wrote:
-> On Tue, 23 Sep 2025 14:43:33 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
-> 
-> > On Tue, Sep 23, 2025 at 11:30:41AM -0600, Alex Williamson wrote:
-> > > On Tue, 23 Sep 2025 12:04:14 -0300
-> > > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >   
-> > > > On Mon, Sep 22, 2025 at 03:00:32PM -0600, Alex Williamson wrote:  
-> > > > > But then later in patch 8/ and again in 10/ why exactly do we cache
-> > > > > the provider on the vfio_pci_core_device rather than ask for it on
-> > > > > demand from the p2pdma?    
-> > > > 
-> > > > It makes the most sense if the P2P is activated once during probe(),
-> > > > it is just a cheap memory allocation, so no reason not to.
-> > > > 
-> > > > If you try to do it on-demand then it will require more locking.  
-> > > 
-> > > I'm only wondering about splitting to an "initialize/setup" function
-> > > where providers for each BAR are setup, and a "get provider" interface,
-> > > which doesn't really seem to be a hot path anyway.  Batching could
-> > > still be done to setup all BAR providers at once.  
-> > 
-> > I agree it is a weird interface, but it is close to the existing weird
-> > interface :\
-> 
-> Seems like it would help if we just positioned it as a "get provider
-> for BAR" function that happens to initialize all the providers on the
-> first call, rather than an "enable" function with some strange BAR
-> argument and provider return.  pcim_p2pdma_provider(pdev, bar)?
-> 
-> It would at least make sense to me then to store the provider on the
-> vfio_pci_dma_buf object at the time of the get feature call rather than
-> vfio_pci_core_init_dev() though.  That would eliminate patch 08/ and
-> the inline #ifdefs.
+From: Yu Kuai <yukuai3@huawei.com>
 
-I'll change it now. If "enable" function goes to be "get" function, we
-won't need to store anything in vfio_pci_dma_buf too. At the end, we
-have exactly two lines "provider = priv->vdev->provider[priv->bar];",
-which can easily be changed to be "provider = pcim_p2pdma_provider(priv->vdev->pdev, priv->bar)"
+patch 1-6 is prep patches to make sure queue_lock is not nested under
+rcu and other spinlocks in blk-cgroup;
+patch 7 convert blk-cgroup to use blkcg_mutex to protect blkgs;
+patch 8-9 are follow cleanups;
+patch 10 fix deadlock in blk-throttle;
 
-> 
-> > > However, the setup isn't really once per probe(), even in the case of a
-> > > new driver probing we re-use the previously setup providers.    
-> > 
-> > It uses devm to call pci_p2pdma_release() which NULL's pdev->p2pdma.
-> 
-> Ah, right.  So the /* PCI device was "rebound" to the driver */ comment
-> is further misleading, a new probe would do a new setup.  Thanks,
+BTW, with this set, we can unify blkg_conf_prep() and other related
+helpers.
 
-I will fix the comment.
+Yu Kuai (10):
+  blk-cgroup: use cgroup lock and rcu to protect iterating blkcg blkgs
+  blk-cgroup: don't nest queue_lock under rcu in blkg_lookup_create()
+  blk-cgroup: don't nest queu_lock under rcu in bio_associate_blkg()
+  blk-cgroup: don't nest queue_lock under blkcg->lock in
+    blkcg_destroy_blkgs()
+  mm/page_io: don't nest queue_lock under rcu in
+    bio_associate_blkg_from_page()
+  block, bfq: don't grab queue_lock to initialize bfq
+  blk-cgroup: convert to protect blkgs with blkcg_mutex
+  blk-cgroup: remove radix_tree_preload()
+  blk-cgroup: remove preallocate blkg for blkg_create()
+  blk-throttle: fix possible deadlock due to queue_lock in timer
 
-Thanks
+ block/bfq-cgroup.c        |   6 +-
+ block/bfq-iosched.c       |  13 +-
+ block/blk-cgroup-rwstat.c |   2 -
+ block/blk-cgroup.c        | 329 ++++++++++++++++----------------------
+ block/blk-cgroup.h        |   6 +-
+ block/blk-throttle.c      |  31 ++--
+ mm/page_io.c              |   7 +-
+ 7 files changed, 163 insertions(+), 231 deletions(-)
 
-> 
-> Alex
-> 
+-- 
+2.39.2
+
 
