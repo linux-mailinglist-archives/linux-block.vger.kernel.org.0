@@ -1,86 +1,84 @@
-Return-Path: <linux-block+bounces-27837-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-27840-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A473BA0356
-	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 17:18:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69021BA06CA
+	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 17:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 929D017D786
-	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 15:13:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AF431BC5ACE
+	for <lists+linux-block@lfdr.de>; Thu, 25 Sep 2025 15:47:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D115731D756;
-	Thu, 25 Sep 2025 15:06:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30FF7270EA3;
+	Thu, 25 Sep 2025 15:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WzL+p2sR"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AkmpsCVO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A9531DD99;
-	Thu, 25 Sep 2025 15:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ECF2FFFBE;
+	Thu, 25 Sep 2025 15:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758812768; cv=none; b=OwX4kllyrSsPo4JCansv1oGtl4M7HXHmf7cprAQx6LzcDsKFLyJggGBIddPR6U6LcZTtGtVMHJRLuS2VlkQLFNz9E0Js5ydX4mP7GzM5W7/FJo/YpmHnr3EZWjnjp7DhErkH2HmIVPYgmIkA2ZMV17aQfkS9Xel0YwXtqj5xMx4=
+	t=1758815244; cv=none; b=XpaLYR//+qJBg6OW6Pu6iSRHmbjakX7ZS6wkPOHnZfA3JV8f4Mpdt5pFOztEzpDDsE4Uun+EJiByPmLns8PWTdxZu37iIfWerWLMhH9Idze8Ddpi9JNcfd7ujVaV3/ugZg632vkf2g+2LmO9OPYVTnv2cbWfBhQtnZeRFKHBpRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758812768; c=relaxed/simple;
-	bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F/frVVJf47H22ywWmWeMoIdQXLM2CkmLh7l9jaJ9GzS/7ouee/pd/xpjsKkzpvxxV9ZFJ9f11svLZx74hYTWmxqeMtm/npC454qOkCtiiXx9zEsO83FevnIlOZsDXyjiLauRetZxiyWlGNJAnYBPEXh4airOIAammH/RV4Zp0DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WzL+p2sR; arc=none smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1758812767; x=1790348767;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-  b=WzL+p2sRSKbELmihQXapu6wGuUSsSFN2EkmDN2C5MrAhcuK7wna05CzA
-   9mqXZTuZqNTiXSssq6VDb8kSHQgxjEFq6JsLg4iAPOd1QX0Ivh9zWTC3p
-   Z5A9kWflk0avWx0ck1UNlGNhioLwE3xJAUADX0rdnG5GuMqBmQpOKRWQY
-   ytwbhky7fctbblCphLJC0/zmZQYjF+TTGSzHybWqDPVfXMQAdrkl9yO/C
-   bJsx7FoMr+r84MQe9PcwRjJ9ddawE9bxlqVw0MywnEkVGeX1Or5mOKuX7
-   IG+WlHUPA0+1mtg53V48Hdx6LVwfdfSG2TnPfl4A7HJlvXaPpXo4J8KEh
-   Q==;
-X-CSE-ConnectionGUID: kPlDyPBgSxS3jNNW0YtWoQ==
-X-CSE-MsgGUID: fX20N8MbTqqQKwHDl2CF5w==
-X-IronPort-AV: E=Sophos;i="6.18,292,1751212800"; 
-   d="scan'208";a="130349707"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Sep 2025 23:06:06 +0800
-IronPort-SDR: 68d55a5e_T8gB1/PsG4vK6nAR6phwO6tux+LG7PvNIOKDOk29HwqCV8L
- nBbhamMsd8x0J0nuEiADMLDE1xSqPnpttNfkLqg==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Sep 2025 08:06:07 -0700
-WDCIronportException: Internal
-Received: from c02g55f6ml85.ad.shared (HELO C02G55F6ML85.wdc.com) ([10.224.183.46])
-  by uls-op-cesaip02.wdc.com with ESMTP; 25 Sep 2025 08:06:04 -0700
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+	s=arc-20240116; t=1758815244; c=relaxed/simple;
+	bh=bd+uMg5CaeWo8Ubscw80715wocX436eQRMwazxCTxvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F/m9XX4SfamMpkKwhG/xpGxDMwhc9gGDpLgJnocBccrDSyJwrU3o0HAYqgwPfJF8q3Rh17SNY9OJ7yfaO6/vx75hdOChEI6n9Cx3iLuGr3od1IW56Y5boI68LpaBGyBbWRsjzusbDqR16VSL4yu0hOl7CTyLdFSza20aMCcf9+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AkmpsCVO; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58P6XCxM013794;
+	Thu, 25 Sep 2025 15:47:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=9uwFreGYvHrCa/01Rf9omYlVpFNBnvnNcetyGvFaQ
+	Ek=; b=AkmpsCVOlrqQkvEYmp0NpR+EzDGSwXaWe4QNZdZsDSnW1kQCogQgY0LCS
+	VtmWWKrlLxxxg2NVEhfNYOCcm9WmGE2zDqnJfJx4g/mxHm4vtdWuqhnLxaj9hvIT
+	8mO+RJWIygFohefBZd/lESwxJnF40rGvUeiXhc50tMTmVifx38D6uymT9fjU+J4R
+	VWBFGRA+24Ixt4PP3f0HzZQtUYcJOeFjW4/OpnTV5TyxU+zEI6uvWIbc6FdR3arI
+	RYURjbxaJIeQpexmIL+iJnGlpSMcUlfTP5PJ69/TaQdOMRf/Ivr+8qNDbdTFa/gY
+	de3oPkeIrb5vukPWpoavtTXKgnbow==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499jpkp1y4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Sep 2025 15:47:20 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58PDYOJ8019709;
+	Thu, 25 Sep 2025 15:47:15 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a83kem2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Sep 2025 15:47:14 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58PFl9YY35062060
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Sep 2025 15:47:09 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0929820043;
+	Thu, 25 Sep 2025 15:47:09 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED0A620040;
+	Thu, 25 Sep 2025 15:47:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 25 Sep 2025 15:47:08 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+	id AE35FE1645; Thu, 25 Sep 2025 17:47:08 +0200 (CEST)
+From: Stefan Haberland <sth@linux.ibm.com>
 To: Jens Axboe <axboe@kernel.dk>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-btrace@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH blktrace v2 22/22] blktrace: call BLKTRACESETUP2 ioctl per default to setup a trace
-Date: Thu, 25 Sep 2025 17:04:27 +0200
-Message-ID: <20250925150427.67394-23-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250925150427.67394-1-johannes.thumshirn@wdc.com>
-References: <20250925150427.67394-1-johannes.thumshirn@wdc.com>
+Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jaehoon Kim <jhkim@linux.ibm.com>
+Subject: [PATCH 0/2] s390/dasd: fix buffer alignment validation
+Date: Thu, 25 Sep 2025 17:47:06 +0200
+Message-ID: <20250925154708.644575-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -88,81 +86,44 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=L50dQ/T8 c=1 sm=1 tr=0 ts=68d56408 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=yJojWOMRYYMA:10 a=u30P7ByRb8RLwmXF1lgA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAxMCBTYWx0ZWRfX3S+HmAU29qcq
+ OZdP/i8jLS0tRoe4lT1rctnTRHtc8UVbt7HmxJMXqow49hrD+sD6sZpRVzRWxzsOqIJzm/+UBwJ
+ FUT50OcYLEy8CtMq+7WYlQAylNOB/ySVkzs9kaTSRb7HbKgD2/nbXJfgcdfkFohQeKPuWKxdSl7
+ dAjYW25YJXzdEhcZyRAUfC6Zz4DRg2xNAFbEe0B4FsQmHb9WQxSWmLKFAqNJ2Fos+vHq6FvFr2l
+ 3xnkeBDnpu5fFwnucgR+eBoysh59ivsuLIakc/YFnCjtPB6CtFxM9G3JuLpKGiKkxs/dGj6nJJg
+ FUmvYpE3umdhAGW0u+mbinLiaDU9IV5wKiXv2qMOAfshN2wPw1cysOxzLJLmmUwUmHRSdm7zV/p
+ OXYaOv2p
+X-Proofpoint-ORIG-GUID: TCC8j2qGdgoVILbczv1VaQv2x_FSJor4
+X-Proofpoint-GUID: TCC8j2qGdgoVILbczv1VaQv2x_FSJor4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-25_01,2025-09-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200010
 
-Call BLKTRACESETUP2 ioctl per default and if the kernel does not support
-this ioctl because it is too old, fall back to calling BLKTRACESETUP.
+Hi Jens,
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- blktrace.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+please apply the following two patches that fix buffer alignment
+handling in the DASD driver.
+The first patch corrects the error mapping for misaligned requests,
+and the second enforces proper alignment validation in the block layer.
 
-diff --git a/blktrace.c b/blktrace.c
-index 038b2cb..72562fd 100644
---- a/blktrace.c
-+++ b/blktrace.c
-@@ -279,7 +279,7 @@ static int max_cpus;
- static int ncpus;
- static cpu_set_t *online_cpus;
- static int pagesize;
--static int act_mask = ~0U;
-+static unsigned long long act_mask = ~0U;
- static int kill_running_trace;
- static int stop_watch;
- static int piped_output;
-@@ -1067,6 +1067,36 @@ static void close_client_connections(void)
- 	}
- }
- 
-+static int setup_buts2(void)
-+{
-+	struct list_head *p;
-+	int ret = 0;
-+
-+	__list_for_each(p, &devpaths) {
-+		struct blk_user_trace_setup2 buts2;
-+		struct devpath *dpp = list_entry(p, struct devpath, head);
-+
-+		memset(&buts2, 0, sizeof(buts2));
-+		buts2.buf_size = buf_size;
-+		buts2.buf_nr = buf_nr;
-+		buts2.act_mask = act_mask;
-+
-+		if (ioctl(dpp->fd, BLKTRACESETUP2, &buts2) >= 0) {
-+			dpp->ncpus = max_cpus;
-+			dpp->buts_name = strdup(buts2.name);
-+			dpp->setup_done = 1;
-+			if (dpp->stats)
-+				free(dpp->stats);
-+			dpp->stats = calloc(dpp->ncpus, sizeof(*dpp->stats));
-+			memset(dpp->stats, 0, dpp->ncpus * sizeof(*dpp->stats));
-+		} else {
-+			ret++;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int setup_buts(void)
- {
- 	struct list_head *p;
-@@ -2684,9 +2714,11 @@ static int run_tracers(void)
- 	if (net_mode == Net_client)
- 		printf("blktrace: connecting to %s\n", hostname);
- 
--	if (setup_buts()) {
--		done = 1;
--		return 1;
-+	if (setup_buts2()) {
-+		if (setup_buts()) {
-+			done = 1;
-+			return 1;
-+		}
- 	}
- 
- 	if (use_tracer_devpaths()) {
+
+Jaehoon Kim (2):
+  s390/dasd: Return BLK_STS_INVAL for EINVAL from do_dasd_request
+  s390/dasd: enforce dma_alignment to ensure proper buffer validation
+
+ drivers/s390/block/dasd.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
 -- 
-2.51.0
+2.48.1
 
 
