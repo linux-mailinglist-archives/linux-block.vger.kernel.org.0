@@ -1,60 +1,54 @@
-Return-Path: <linux-block+bounces-28078-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28082-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 093CFBB6220
-	for <lists+linux-block@lfdr.de>; Fri, 03 Oct 2025 09:06:51 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4B36BB62E4
+	for <lists+linux-block@lfdr.de>; Fri, 03 Oct 2025 09:34:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB35A4824D9
-	for <lists+linux-block@lfdr.de>; Fri,  3 Oct 2025 07:06:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 949CF4E783C
+	for <lists+linux-block@lfdr.de>; Fri,  3 Oct 2025 07:34:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D5322759C;
-	Fri,  3 Oct 2025 07:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gBdh5iDH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E198B24679E;
+	Fri,  3 Oct 2025 07:34:31 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0513212572;
-	Fri,  3 Oct 2025 07:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8636823D7E4;
+	Fri,  3 Oct 2025 07:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759475207; cv=none; b=S3X8UY0X76ooLLmz1lq46oDcP/HVLo1265P3xgDX5cQfA4Q4xhiE7mPcT4R+MxiVlRvWx3ug7CAAEw56rgDjsz3+MNKf58PM4PlGJxy4iSmdfulUGwoZL3tNjeTm6ldgxRZ1RSMSPjInUxlqVHxQKpL6hNOGrQ/5JHL384vukX8=
+	t=1759476871; cv=none; b=MEvM/ABfsW3XUrRgwmuL0MTi3DyFPC77/ZXsIrgtf0pd7NFaaJ2lHQOqgRBHbsxnvscgtodEkMWvcvmqGEabWa4/MUY4A97+GNQfymfRJVk8JFtP+gvKvfPkYYgB5jUoJyYr8nAIRH71Slb1LX0ZxoYbaTGlLAFDC/aC14Ql11o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759475207; c=relaxed/simple;
-	bh=os3rKQ2WuQcD1FARsrp7dqkTOHG0az9xBxuDqD0SXH4=;
+	s=arc-20240116; t=1759476871; c=relaxed/simple;
+	bh=wiRbWWPoccuzvAkr6r3pQqRCKqdskqnouKGdtWYbgbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RS+m15RpPzgjiHZBeRCMLOKekeLWnyPjli85a1ReCn85Kp3FOYhrSryiSvpRl23WUvA67dj3uRVgjgd0socXoYIt0hRvEBDyxHKCLqHWiGm7B6MjfNG1bWp8q2b3XPCJAKqk8AZ0/jvJ0B3vzvK1ljdCgpsftVZZuk1610bxBI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gBdh5iDH; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=os3rKQ2WuQcD1FARsrp7dqkTOHG0az9xBxuDqD0SXH4=; b=gBdh5iDHd8gW9zlFw9o0EcNzjo
-	X7i0PGAoW/Psmt0nxLoKgFCj3GEvGO3uKicUfiTbSeKyBCc8ooP4HaQZJL3PzGyxpVjvQBHAikynR
-	5VcOteHyLMqvqgoGb5E2SG7ToU3sGq0O78KxbvFZYhsEsn8ANMLD8Jc9xZjUy+QfxIoNTrqzND21d
-	dmtzKegq77CP+RTXjh3jtqOpQ/w9bWlbJxRCi+Ouoh6Fv+RDfxV2UjIGcQwgkHzfIo/40My0mws0C
-	SM7jGQdzuSDbcuyY+eq9ctBKUbzUvKcHFSscjLjzFfmU/fLbP3BrIsLJLQlT3Dso+JpFkCeJdiZPE
-	/8g1cRaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v4ZsK-0000000Bn3W-2x6P;
-	Fri, 03 Oct 2025 07:06:44 +0000
-Date: Fri, 3 Oct 2025 00:06:44 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-	Dave Chinner <dchinner@redhat.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 6/6] loop: add hint for handling aio via IOCB_NOWAIT
-Message-ID: <aN92BCY1GQZr9YB-@infradead.org>
-References: <20250928132927.3672537-1-ming.lei@redhat.com>
- <20250928132927.3672537-7-ming.lei@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aoRb9ouLz2oqIm3mDzWMQm6VzuRf9j1S5CGzLzo0CRI+Rk7D46aSzgEe/f1iO5mwxkPexozS/O4WQXo5/oRuiI60xxmEjk3boa1HnfiFzG/pUk++0QULUEzVJubNEKhcUGHvymdbbR53UJbCxWqiHuYIWk3+b9Zgyg4N2VSNaNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 599FD227AAC; Fri,  3 Oct 2025 09:27:52 +0200 (CEST)
+Date: Fri, 3 Oct 2025 09:27:52 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-btrace@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>,
+	Hannes Reinecke <hare@suse.de>, Damien Le Moal <dlemoal@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Naohiro Aota <naohiro.aota@wdc.com>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v2 06/15] blktrace: split do_blk_trace_setup into two
+ functions
+Message-ID: <20251003072752.GB12624@lst.de>
+References: <20250925150231.67342-1-johannes.thumshirn@wdc.com> <20250925150231.67342-7-johannes.thumshirn@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -63,14 +57,18 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250928132927.3672537-7-ming.lei@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250925150231.67342-7-johannes.thumshirn@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Sun, Sep 28, 2025 at 09:29:25PM +0800, Ming Lei wrote:
-> - there isn't any queued blocking async WRITEs, because NOWAIT won't cause
-> contention with blocking WRITE, which often implies exclusive lock
+On Thu, Sep 25, 2025 at 05:02:22PM +0200, Johannes Thumshirn wrote:
+> Split do_blk_trace_setup into two functions, this is done to prepare for
+> an incoming new BLKTRACESETUP2 ioctl(2) which can receive extended
+> parameters form user-space.
+> 
+> Also move the size verification logic to the callers.
 
-Isn't this a generic thing we should be doing in core code so that
-it applies to io_uring I/O as well?
+Can you add a why for that move?
+
+Otherwise this looks sane.
 
 
