@@ -1,54 +1,48 @@
-Return-Path: <linux-block+bounces-28081-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28083-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46732BB62C6
-	for <lists+linux-block@lfdr.de>; Fri, 03 Oct 2025 09:33:06 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D604ABB62F9
+	for <lists+linux-block@lfdr.de>; Fri, 03 Oct 2025 09:37:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D076E1AE094B
-	for <lists+linux-block@lfdr.de>; Fri,  3 Oct 2025 07:33:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 731334E9EBF
+	for <lists+linux-block@lfdr.de>; Fri,  3 Oct 2025 07:37:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5256D2459FE;
-	Fri,  3 Oct 2025 07:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39EF2472BC;
+	Fri,  3 Oct 2025 07:37:30 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984623CE;
-	Fri,  3 Oct 2025 07:33:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747A81487F6;
+	Fri,  3 Oct 2025 07:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759476784; cv=none; b=XhS1ZcFvvH9AkIilF2URlmiaenVLpAp+0kIT3i4w/KZo4w1c8JN+klG2fD7TvZriq5mYNDtWZoVoFhzemlR0Tiahp8YDH5+a/mgZRF2rOFaOwYbOncl49sGmXYfqtc21D/JKjpd1IekwS97UxGn1kqcHnI1441TjBH+sXyi8tvc=
+	t=1759477050; cv=none; b=CdMILLXnvVVdIfhqFROTfb7S/N8k2VWjPpNbHvzSNETvWcSK/ahi21NckHsQHimOF6R5ithG1OelU4k46NPzpPIFlGMokFeZK00OBIqk7je4DIL5BZR+VoSWErvqT5TLoLntzn8iUltWsFrj7Ap6XMlj8vWbK3N36ihdFFW+4r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759476784; c=relaxed/simple;
-	bh=MJvD+K3ZXIUT//34aWAh28eSQpuVBCKAdoGGE8pze9w=;
+	s=arc-20240116; t=1759477050; c=relaxed/simple;
+	bh=8oMk1tTNDdnAc4sOlWr73sowsuiT1oXGCOPgrarjzjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lummWGSsRKlhcSAYz9zC6bjGP+aV/MQtHxV0j+zbBOChMS0IB86e2UOYNWI5KI4M/Fwg/sbMZ9H7v0zHmyyMCF2m+abuBGn6u0+VlZmm6KuX39M2fp6FZXwvV6OCGAs1QITM5vrOOz3+abByWoUlnmSAYWoG3tUqoiAAEsUDFlU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBoH2NS3RJCeJm1pVtTHnEMHnpyyU/AWKiqqdsJlm64GGdGnH72zo75Wc2xmVMmZoB7tG4K1InP4PCyRSHXdmBJuyHMyJ6sWiPMVTE7VuPs3eteQp4O1Kf3+4sTtmfk84XEGKKpKKdMAJ2eLw3A7bMHjdK9duG0ROZ4Gjj3tImc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9B7BE227AB2; Fri,  3 Oct 2025 09:32:57 +0200 (CEST)
-Date: Fri, 3 Oct 2025 09:32:57 +0200
+	id EAF2C227AAC; Fri,  3 Oct 2025 09:37:24 +0200 (CEST)
+Date: Fri, 3 Oct 2025 09:37:24 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: tj@kernel.org, ming.lei@redhat.com, nilay@linux.ibm.com, hch@lst.de,
+	josef@toxicpanda.com, axboe@kernel.dk, akpm@linux-foundation.org,
+	vgoyal@redhat.com, cgroups@vger.kernel.org,
 	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-btrace@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>,
-	Hannes Reinecke <hare@suse.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Naohiro Aota <naohiro.aota@wdc.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 11/15] blktrace: add block trace commands for zone
- operations
-Message-ID: <20251003073257.GE12624@lst.de>
-References: <20250925150231.67342-1-johannes.thumshirn@wdc.com> <20250925150231.67342-12-johannes.thumshirn@wdc.com>
+	linux-mm@kvack.org, yukuai3@huawei.com, yi.zhang@huawei.com,
+	yangerkun@huawei.com, johnny.chenyi@huawei.com
+Subject: Re: [PATCH 08/10] blk-cgroup: remove radix_tree_preload()
+Message-ID: <20251003073724.GA12933@lst.de>
+References: <20250925081525.700639-1-yukuai1@huaweicloud.com> <20250925081525.700639-9-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -57,20 +51,16 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250925150231.67342-12-johannes.thumshirn@wdc.com>
+In-Reply-To: <20250925081525.700639-9-yukuai1@huaweicloud.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Sep 25, 2025 at 05:02:27PM +0200, Johannes Thumshirn wrote:
-> Add block trace commands for zone operations. These are added as a
-> separate set of 'block trace commands' shifted by 32bit so that they do
-> not interfere with the old 16bit wide trace command field in 'struct
-> blk_io_trace' action.
+On Thu, Sep 25, 2025 at 04:15:23PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Now that blkcg_mutex is used to protect blkgs, memory allocation no
+> longer need to be non-blocking, this is not needed.
 
-Can you explain how the commands are handled for old/new here?
-
-Because I'd still much prefer to sort things out so that they make
-sense for the new code if possible.  i.e. have a 32-bit command
-and 32 bit flags, and use sensible encoding for the new one, and
-remap the supported once to the old organically grown one.
+Btw, this might also be a good time to convert from the old radix tree
+to an xarray.
 
 
