@@ -1,123 +1,162 @@
-Return-Path: <linux-block+bounces-28135-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28138-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB5BFBC1A39
-	for <lists+linux-block@lfdr.de>; Tue, 07 Oct 2025 16:06:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45DFEBC24DE
+	for <lists+linux-block@lfdr.de>; Tue, 07 Oct 2025 19:53:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 721BF34F7CF
-	for <lists+linux-block@lfdr.de>; Tue,  7 Oct 2025 14:06:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD3FE3A70C2
+	for <lists+linux-block@lfdr.de>; Tue,  7 Oct 2025 17:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578681CF96;
-	Tue,  7 Oct 2025 14:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE152DFF0D;
+	Tue,  7 Oct 2025 17:53:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="VNCtT4pG"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Sw1e+Gl5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE582E228C
-	for <linux-block@vger.kernel.org>; Tue,  7 Oct 2025 14:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C362E889C
+	for <linux-block@vger.kernel.org>; Tue,  7 Oct 2025 17:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759845977; cv=none; b=J//6a8vd0Tu4W0gCPXuB1u6/o8kVqEoUnLfFKffrExYY+A8wZ72J9Nxws7y2iA9ExlN5Y3KTJyKh+Je2DtmkzSPACy3YB7Zb0AcCE2y7+K3vtD+UHqM0t0vQbNF8Fuak65qLfG0uECTVsuMVwn1azh+o77+8Q+G47HPACzJ4W/E=
+	t=1759859606; cv=none; b=f2DSEOATH3kGC41mwCXSacKWWgFuO1TzWw6aXUQXn+Cht+o/VNS6A1i0t/qH603uu1X2zhp3cwUgXrmbM3j77HAIm8vJ8l8Iib3272fNw0hZWqeLlG3coH84AD7vuIp+zznd8x6wwsHuT2uej4448+nK/6WcumTf/eREquPMenM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759845977; c=relaxed/simple;
-	bh=fjdxuOZIIKTBFnGbt8BiSYL43s3W7LOHRhTmhdZPtoc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gtoCvoL1WixskLZ1+uXKiVIDFUknFlFjZXvXHlGKCYkhTL2kNQlzaSsK2LTWDXdeK5RajgkXxDJ2mrY/msrEYR9knxhMj+GvEgt5xgK+jGN85+cjdD5LYH5KPeKWvhklEUL2IhIoV0+Kq2/1y6afq4C3GjStha9V6XzHC8+aOW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=VNCtT4pG; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-42d8b15548eso28907815ab.2
-        for <linux-block@vger.kernel.org>; Tue, 07 Oct 2025 07:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1759845975; x=1760450775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nYE/CUIQBS5jsZUtrSi2N8ZQe5xNsIdhpklh9KQF4U8=;
-        b=VNCtT4pGNwHD35EBtJzmsd1iFtMXeINN+5O03dQCZXgnZbUnt91nlGGT0ES3Kc8PAk
-         TTTgicCCuZb+ZuKczkSv1a2EsCZsaVfd2xuvgqCozNzPNjBUKv0uvsptUNcAbhLF422E
-         RcdMYmWLJXzRLfLbaLPS4Bq5+h7IR4VvQwD5/VPbjmP/jGxxw9U0BZwUBwRk6GEw/+xd
-         opxD52McxjqGvUcVCrjRlmLFYFVgAvLAKNcXGAONI9pj8ydEMkmox+WR/JmaB3EG+q0V
-         iYb24uWnsddjqeZ29n/q1j7X6TciHNoz2tXKZwFJA0oTlsTjiJSEkCeZUktFgfZEYtiu
-         Taqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759845975; x=1760450775;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nYE/CUIQBS5jsZUtrSi2N8ZQe5xNsIdhpklh9KQF4U8=;
-        b=qU8sIsC1N/KaI7b2iwLrsUgK65Rc7Wc/r+dwAO3pS3Xiifm/Xh7XzNaEtGZrMoGMsE
-         LHkmpMQPZzX1XgEexnUJcS9ErNc5wPcdgFARKWoZ5RHprHa2FOoEY8ooKrRAVZMyB1hp
-         XalONsjvSBGuO/rRjsjxfP6GomJ52rL86wvkPtK7M0uUS9Wq+PF0OoJow4iu8/BQPZFp
-         qNi3wXJwCYIzDr2ql2YMSIduAX3PeT8pIHhFVPH6Y7jsMuzuPTopNjFTUbIcreX8GQXj
-         Ge/ZrM5SuIX13nukg64fdZ8USwIiYH9sT9MqVtxRDX+yzVFxhX06vVwE4A7ZPG+WDhyY
-         3kHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIj1U+5MuTyGv0mhFmpeyly1uS8HV1YgKOqXzX84gS178UAOfI+ZRJxoP53cxYeOab2kEE+1BB4Vb1og==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+4BtrZs5/h8T2i86KkCP4HMco/RWJgBNnIXbEHaePxeurtcdK
-	uawjF0G01fGJ3jCeeo4kgetDz1RAuAaxWhwhgCHx4NMebYT1TaizVfrOscdbxKyzC8o=
-X-Gm-Gg: ASbGncu81wKXKE/us1LDEvVf4vrt783hmSd4sL6q5OpnSAdQfgYQPdssCyzDAKKhzMa
-	zWUp0q5eJOiHV2LhcjeFX6OL+HfWwrF2EdhV1HYAWDKuETKmnuHGWkuWEeHVrjeXwrdEu79B7wZ
-	DrV1QKDhot+1E3G/QTKESqwJn17i/u8KPi/xaA8FDlTu57TWGr1aCZ03mwGa4L2BsuHvCdkq1GY
-	5ye/ZgSP0271j4yCPUzQTKwqO8YoKyGFTqcl0Ib+YhiGvxcNLK/OGf70GBCWf/SMc2VG+2wJxCR
-	nEFfNvDJfTWu+eJljh7MauQGBwGy6M9EtETwBQVu8MZBBdko0ni84+bsn0zbgEVk8VacPHwapRN
-	Gyt9BXPaChNErIz042Coy6EOKOyHwt7bbHiq/4Mk=
-X-Google-Smtp-Source: AGHT+IGTaxS2obF6DcRXirMiDHelPrK7itEjy38RGBMWS7xHKp5jOZJcVBQvzLTNYmGnYeGRxMUAUQ==
-X-Received: by 2002:a05:6e02:148b:b0:426:7dd6:decd with SMTP id e9e14a558f8ab-42e7ad83f76mr237542175ab.28.1759845974471;
-        Tue, 07 Oct 2025 07:06:14 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ebc840bsm5970425173.38.2025.10.07.07.06.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Oct 2025 07:06:14 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, Keith Busch <kbusch@kernel.org>, 
- linux-block@vger.kernel.org
-In-Reply-To: <20251007090642.3251548-1-hch@lst.de>
-References: <20251007090642.3251548-1-hch@lst.de>
-Subject: Re: cleanup for the recent bio_iov_iter_get_pages changes
-Message-Id: <175984597382.1934957.12416846170615404120.b4-ty@kernel.dk>
-Date: Tue, 07 Oct 2025 08:06:13 -0600
+	s=arc-20240116; t=1759859606; c=relaxed/simple;
+	bh=qyQ69O9FPIQ/2fLg1OdSIlU4qOEFRUveC46KPIyPHgw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZXTH2E8TAzSME7lYzrL3MCDJA5EIBS8BR8CQlhOZeehtc1Usgw98BIZ0WoQgdF2P3ZVpmboOtWrdGRFA9gBNryIoqNdwz5kBmZ47WwURs8yrK/sL+iuJzm4ms7XtEiEIp2zKnSRx6xvTAMJiaP2yvzr2CEyzGOPdbMyGX1rLwws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Sw1e+Gl5; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 597FSQcG3665456
+	for <linux-block@vger.kernel.org>; Tue, 7 Oct 2025 10:53:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=N+hNHTQnK6A8zF0Brm
+	JylzXaFw/77S9mJ3a2IKnV200=; b=Sw1e+Gl5jE2har88tADSYc6lnl6Q2g/kAH
+	f8MUgavWrAHpX9XfJGNrz+qkwgpXG7GmHBfnONaCut4/QjdE/trtP9rJ0yw/0BEh
+	JJ93Uar58W24vP+c9mDOrLFLJJbldOttsMneuxBBaB+roZ/5fsNDwCe72nVMd8FO
+	aaGS0TEFqb6AOiZeiOMCr83qd5Zwl63fSDRKM3VG9QtwIqcyja4BkfWAex4ozS2f
+	VdTaCrymUXH7jcT/1lWdoqMAe1pa1l0TYUubO/ib+F5dfwt5OXqRViMEuJc7Lgfu
+	ILP9yHF4uRIsAjrXRjZFdDhOs7K25qXL9sNXTQGo/0vOal8MGwSA==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 49mwg6ms78-16
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 07 Oct 2025 10:53:23 -0700 (PDT)
+Received: from twshared25257.02.ash9.facebook.com (2620:10d:c0a8:fe::f072) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.20; Tue, 7 Oct 2025 17:53:03 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 0AE26278193A; Tue,  7 Oct 2025 10:52:47 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>
+CC: <hch@lst.de>, <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv4 0/2] block+nvme: removing virtual boundary mask reliance
+Date: Tue, 7 Oct 2025 10:52:43 -0700
+Message-ID: <20251007175245.3898972-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: RqFGQHw-IM2j3lJ9dO0lMLV_xg1dBe09
+X-Proofpoint-ORIG-GUID: RqFGQHw-IM2j3lJ9dO0lMLV_xg1dBe09
+X-Authority-Analysis: v=2.4 cv=PsSergM3 c=1 sm=1 tr=0 ts=68e55393 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=VabnemYjAAAA:8 a=D3lQaUfW4OkPWDUkTUkA:9
+ a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA3MDE0MSBTYWx0ZWRfX+h9H1FGfjp8r
+ 13Jy333YIuzP6Y1kCQpshpfodcAbv7Ba4p8h1mgjncxkCX0+duhU9RYjNyhyguRC+RWWA/AuznC
+ isjl0wDNWuqH2NI7uyC2e4hajo/rgQqHWvuCAdZ+ua7Yo2vFffThCGJrnh6HMBwMzuLpjCQN9eB
+ FHCgrN8xAblbByFd2uE7VoJHpExh3gbUYLtcBFVbLSplo9c8AFmd+4LAeDveMzXEke9EcGw7CC/
+ 4gBfKBL0eSzgmHKnWw0mYorVT7R4ZWcxPYoJed3aqNghI+FSNzKBYpQczxafv4H6S6WfXFB8Ckg
+ 2y4CFwpLDwZ/RV1+GRZ87hfgSGgk994q8KVyf4IDzBLTeB6yjGJSAweQVnlr3nhgCPg1Uve3ied
+ h/GuN84Ty6wu+UagR62V5/ilHjDCBA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-07_02,2025-10-06_01,2025-03-28_01
 
+From: Keith Busch <kbusch@kernel.org>
 
-On Tue, 07 Oct 2025 11:06:24 +0200, Christoph Hellwig wrote:
-> while looking over the bio splitting issue reported by Qu, I noticed
-> that some of the recent changes to bio_iov_iter_get_pages lead to
-> more indirections than really needed, especially with the bcachefs
-> abuse now removed in 6.18-rc.  This small series cleans this up
-> an prepares for the file system block size splitting needed by
-> btrfs bs > PAGE_SIZE support.
-> 
-> [...]
+Previous version here:
 
-Applied, thanks!
+  https://lore.kernel.org/linux-nvme/20250821204420.2267923-1-kbusch@meta=
+.com/
 
-[1/4] block: remove bio_iov_iter_get_pages
-      commit: 1ed06c83506ecaaf1836ddeb7c65772ff86d8d53
-[2/4] block: rename bio_iov_iter_get_pages_aligned to bio_iov_iter_get_pages
-      commit: 82dd5d763c9b718e2d655b9565e0a06a91bb83dc
-[3/4] iomap: open code bio_iov_iter_get_bdev_pages
-      commit: cb6d51a4115781fd9de6108932e866a332e38406
-[4/4] block: move bio_iov_iter_get_bdev_pages to block/fops.c
-      commit: 506aa235f6e0baa00bf792df82a5e9f618b7a5d8
+The purpose is to allow optimization decisions to happen per IO, and
+flexibility to utilize unaligned buffers for hardware that supports it.
 
-Best regards,
--- 
-Jens Axboe
+The virtual boundary that NVMe uses provides specific guarantees about
+the data alignment, but that might not be large enough for some CPU
+architectures to take advantage of even if an applications uses aligned
+data buffers that could use it.
 
+At the same time, the virtual boundary prevents the driver from directly
+using memory in ways the hardware may be capable of accessing. This
+creates unnecessary needs on applications to double buffer their data
+into a more restrictive virtually contiguous format.
 
+This patch series provides an efficient way to track segment  boundary
+gaps per-IO so that the optimizations can be decided per-IO. This
+provides flexibility to use all hardware to their abilities beyond what
+the virtual boundary mask can provide.
+
+Note, abuse of this capability may result in worse performance compared
+to the bounce buffer solutions. Sending a bunch of tiny vectors for one
+IO incurs significant protocol overhead, so while this patch set allows
+you to do that, I recommend that you don't. We can't enforce a minimum
+size though because vectors may straddle pages with only a few words in
+the first and/or last pages, which we do need to support.
+
+Changes from v3:
+
+ - More comments explaining what the new fields are for
+
+ - A bit of refactoring to reuse the bvec gap code
+
+ - Also count gaps for passthrough commands, as it's possible to send
+   vectored IO through that interface too.
+
+ - The nvme side has all the transport ops specify a callback to get the
+   desired virtual boundary. PCI supports no boundary for SGL capable
+   devices, while TCP and FC never needed it. RDMA and Apple continue to
+   use current virtual boundary mask as it's not clear if its safe to
+   remove it for those.
+
+Keith Busch (2):
+  block: accumulate memory segment gaps per bio
+  nvme: remove virtual boundary for sgl capable devices
+
+ block/bio.c                 |  1 +
+ block/blk-map.c             |  3 +++
+ block/blk-merge.c           | 39 ++++++++++++++++++++++++++++++++++---
+ block/blk-mq-dma.c          |  3 +--
+ block/blk-mq.c              | 10 ++++++++++
+ block/blk.h                 |  9 +++++++--
+ drivers/nvme/host/apple.c   |  1 +
+ drivers/nvme/host/core.c    | 10 +++++-----
+ drivers/nvme/host/fabrics.h |  6 ++++++
+ drivers/nvme/host/fc.c      |  1 +
+ drivers/nvme/host/nvme.h    |  7 +++++++
+ drivers/nvme/host/pci.c     | 28 +++++++++++++++++++++++---
+ drivers/nvme/host/rdma.c    |  1 +
+ drivers/nvme/host/tcp.c     |  1 +
+ drivers/nvme/target/loop.c  |  1 +
+ include/linux/bio.h         |  2 ++
+ include/linux/blk-mq.h      |  8 ++++++++
+ include/linux/blk_types.h   | 12 ++++++++++++
+ 18 files changed, 128 insertions(+), 15 deletions(-)
+
+--=20
+2.47.3
 
 
