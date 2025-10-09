@@ -1,42 +1,42 @@
-Return-Path: <linux-block+bounces-28152-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28154-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 509ECBC7CCC
-	for <lists+linux-block@lfdr.de>; Thu, 09 Oct 2025 09:53:24 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C42EBBC7CE1
+	for <lists+linux-block@lfdr.de>; Thu, 09 Oct 2025 09:53:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58F8F1883ED0
-	for <lists+linux-block@lfdr.de>; Thu,  9 Oct 2025 07:53:47 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5A3314F62B8
+	for <lists+linux-block@lfdr.de>; Thu,  9 Oct 2025 07:53:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB932D0C85;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC04A2D191C;
 	Thu,  9 Oct 2025 07:53:19 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97CC2BE7A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CC32D0622;
 	Thu,  9 Oct 2025 07:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759996399; cv=none; b=j/dBaLgk5wj0LbVjRaxAVYEIwhxE4j486gssdIc6c6SCWimPHhYFhbsdurSEAl4xHf+tseks7shRbBdFT+cDz7DfKcyHk4NOCUsvrChJg2sgxgn3GPTAmZdDypFCKmwGsSTMph4mgWS6z3C6Z7QFDF/p0/wPqAWXlFFBKyNBnd8=
+	t=1759996399; cv=none; b=JhbKsrIcfmEzdzJB7ZWqNr598FiaUKKM50QKURu47VoS+HUx5Oe6iBisOXkpt2Qq55hhFHIEI2Eytg7BPZ+UuTET7zlOIaV8jnBPPJuENT6ay0Joyouh6fD8pSv0HpXUyxOPbDli2b590vmgPmwHU21Ftn+UFqRjWIM5EcmS6G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1759996399; c=relaxed/simple;
-	bh=pShsPeEatvHZFuhIAcSWyBsd9RsPSh7tRfyoC+bSQQs=;
+	bh=+8Bb4r0vXbWygYr4lRD1U07jQnTJxwykTh36et+XRMI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UH4yfWoVif2G+YvokI9HHq2pNpf3uqhsuwCqGysQ9bKE/ecRroDwGTypkByn+I1Y3/n5qKWJkZyqkj8gAb5tL3gyD4RJ+IfU+sG+9+rkgFyvJhXCv2gd4toWpE/Ytbw94nR6me0KHIGrETCGhnX9I8BTJms+GNqXfwn3oMYQlN8=
+	 MIME-Version; b=G5UytlZJwW2UGG2BYwalI2nx/JXHBbzB5x31WtYuf6DSspZoptBJM4nNVr9F62T3n7AKdcG6KKEaIJQJOgWeGmy4AbxwRY75pRoJkCoqAcuZ8YDBGPO75Z3+pJNme71DXhzGW/w4XwP3tVa28AgcD9ftEai8Yu/8TJKj5lLKJIM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cj2Cz32BxzKHMM6;
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cj2Cz3KzdzKHMgq;
 	Thu,  9 Oct 2025 15:52:47 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EE00B1A084D;
-	Thu,  9 Oct 2025 15:53:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 033751A12F1;
+	Thu,  9 Oct 2025 15:53:16 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.159.234])
-	by APP4 (Coremail) with SMTP id gCh0CgA3+mHqaedo7Fo7CQ--.38248S5;
+	by APP4 (Coremail) with SMTP id gCh0CgA3+mHqaedo7Fo7CQ--.38248S6;
 	Thu, 09 Oct 2025 15:53:15 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
@@ -51,9 +51,9 @@ Cc: linux-block@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [patch v2 1/7] block: convert nr_requests to unsigned int
-Date: Thu,  9 Oct 2025 15:46:28 +0800
-Message-Id: <20251009074634.527661-2-yukuai1@huaweicloud.com>
+Subject: [patch v2 2/7] blk-mq-sched: unify elevators checking for async requests
+Date: Thu,  9 Oct 2025 15:46:29 +0800
+Message-Id: <20251009074634.527661-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251009074634.527661-1-yukuai1@huaweicloud.com>
 References: <20251009074634.527661-1-yukuai1@huaweicloud.com>
@@ -64,51 +64,99 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgA3+mHqaedo7Fo7CQ--.38248S5
-X-Coremail-Antispam: 1UD129KBjvdXoWrZw4DJFW7Cw18ur17CrWxJFb_yoWfJFgEka
-	yqkFs7Wr4fJF1xXw4UtF4IqF1qgwn3JFZ7u3Z5JF1jqan8Wan5ta1kGF9F9F42ganrCF97
-	Xan3WrsYvr1Y9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbkxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7VUjrHUDUUUUU==
+X-CM-TRANSID:gCh0CgA3+mHqaedo7Fo7CQ--.38248S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw4kKry8Aw48Jw45ZryrWFg_yoW5Xw15pr
+	ZxXFW5GryjgFs7uFWrZ3W7Xw18J3ZxWry7Cr45Jw1rtF9F9FsF9F4rtr48XFWSvrWfArW7
+	ur1qq343XFnY9rJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x0JUQXo7UUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-This value represents the number of requests for elevator tags, or drivers
-tags if elevator is none. The max value for elevator tags is 2048, and
-in drivers at most 16 bits is used for tag.
+bfq and mq-deadline consider sync writes as async requests and only
+resver tags for sync reads by async_depth, however, kyber doesn't
+consider sync writes as async requests for now.
+
+Consider the case there are lots of dirty pages, and user use fsync to
+flush dirty pages. In this case sched_tags can be exhausted by sync writes
+and sync reads can stuck waiting for tag. Hence let kyber follow what
+mq-deadline and bfq did, and unify async requests checking for all
+elevators.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
 ---
- include/linux/blkdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c   | 2 +-
+ block/blk-mq-sched.h  | 5 +++++
+ block/kyber-iosched.c | 2 +-
+ block/mq-deadline.c   | 2 +-
+ 4 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 066e5309bd45..02c006fb94c5 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -541,7 +541,7 @@ struct request_queue {
- 	/*
- 	 * queue settings
- 	 */
--	unsigned long		nr_requests;	/* Max # of requests */
-+	unsigned int		nr_requests;	/* Max # of requests */
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 4a8d3d96bfe4..63452e791f98 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -697,7 +697,7 @@ static void bfq_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	unsigned int limit, act_idx;
  
- #ifdef CONFIG_BLK_INLINE_ENCRYPTION
- 	struct blk_crypto_profile *crypto_profile;
+ 	/* Sync reads have full depth available */
+-	if (op_is_sync(opf) && !op_is_write(opf))
++	if (blk_mq_sched_sync_request(opf))
+ 		limit = data->q->nr_requests;
+ 	else
+ 		limit = bfqd->async_depths[!!bfqd->wr_busy_queues][op_is_sync(opf)];
+diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+index 8e21a6b1415d..ae747f9053c7 100644
+--- a/block/blk-mq-sched.h
++++ b/block/blk-mq-sched.h
+@@ -103,4 +103,9 @@ static inline void blk_mq_set_min_shallow_depth(struct request_queue *q,
+ 						depth);
+ }
+ 
++static inline bool blk_mq_sched_sync_request(blk_opf_t opf)
++{
++	return op_is_sync(opf) && !op_is_write(opf);
++}
++
+ #endif
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 18efd6ef2a2b..cf243a457175 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -544,7 +544,7 @@ static void kyber_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	 * We use the scheduler tags as per-hardware queue queueing tokens.
+ 	 * Async requests can be limited at this stage.
+ 	 */
+-	if (!op_is_sync(opf)) {
++	if (!blk_mq_sched_sync_request(opf)) {
+ 		struct kyber_queue_data *kqd = data->q->elevator->elevator_data;
+ 
+ 		data->shallow_depth = kqd->async_depth;
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index 3e741d33142d..592dd853f6e5 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -492,7 +492,7 @@ static void dd_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	struct deadline_data *dd = data->q->elevator->elevator_data;
+ 
+ 	/* Do not throttle synchronous reads. */
+-	if (op_is_sync(opf) && !op_is_write(opf))
++	if (blk_mq_sched_sync_request(opf))
+ 		return;
+ 
+ 	/*
 -- 
 2.39.2
 
