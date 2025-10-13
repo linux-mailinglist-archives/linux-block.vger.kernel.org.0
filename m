@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-28334-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28333-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C37F5BD45BE
-	for <lists+linux-block@lfdr.de>; Mon, 13 Oct 2025 17:38:46 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4B74BD412F
+	for <lists+linux-block@lfdr.de>; Mon, 13 Oct 2025 17:22:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A50A918857EF
-	for <lists+linux-block@lfdr.de>; Mon, 13 Oct 2025 15:37:14 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5E16F341EDD
+	for <lists+linux-block@lfdr.de>; Mon, 13 Oct 2025 15:22:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37703112C6;
-	Mon, 13 Oct 2025 15:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CCC311582;
+	Mon, 13 Oct 2025 15:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Os6/gFKU"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aJxKLbA0"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D073112B4;
-	Mon, 13 Oct 2025 15:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7D03093C9;
+	Mon, 13 Oct 2025 15:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760369058; cv=none; b=dryrSIgOWtQV2H9eEZm8awwgWsdLFplNjERM/YtYtzbvp02BK7KGvkflU2V+IuwCJl00o3Uue4pe0K0UDd7kdl+wCgzTePE7aYTyNCSSomFjt5rfJG8+NVvFUO0ISW5JaiLZkDoiXiK0kVb5ZK4J6mCW4bxjmU6EzKnE1f7pzoA=
+	t=1760368127; cv=none; b=m3/xZ0hULEBw5FQneaM3480NOXfVuvaIIcjEd0a2de4RPIipvlOTsx8h4pYo8Qni8Sh85TZ+KDDHhV4OhMe0ZU3/ZaKf2k18jLQaXmf1VRYodctsAOAHX+74KCwqDcf7fl1Z7D9L4sdLMWwfTY/5UxdaQC/cYDsmHVNBEb6rWjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760369058; c=relaxed/simple;
-	bh=s/03muLX84TLkR0AqENV0+EaulM58z/rfNsu6M2LL1Y=;
+	s=arc-20240116; t=1760368127; c=relaxed/simple;
+	bh=c52cp2Mq362xHgpMzwKWS5joqtAlHPq8sZ/xvOXwK24=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X0sRk+w6eJQeODZogy4vYxeh9omnoOKCVMzS9iqyklrLQ5iAoCapFCsqaf3WgSonL715XjhbC9DNjdPsg4Un3XszMgBHuvwY71fNDi4Oi5lUl9TJtpG3eVnnRij8tRMMyF6cL99iwZbiaFIOvjIhsdhwURW23+LyO+lYRrC8EGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Os6/gFKU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1821FC4CEFE;
-	Mon, 13 Oct 2025 15:24:17 +0000 (UTC)
+	 MIME-Version; b=RgCEBUfcok3cpQCSYxCitzteNqQzitle8NzzdXCcYGShhpS2kA+B/JSLxT702diY4M6iV5zy/U/SJ8j7wirI+PL1+wInwX5PSkhiKh4Ie1Rd3xVYIPlmEgZ+ThTmQ52Kmgx/YwLxTMrVI0oplaFoYK0Y2k9xRWd2wXd879T4p0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aJxKLbA0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E984AC4CEE7;
+	Mon, 13 Oct 2025 15:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760369058;
-	bh=s/03muLX84TLkR0AqENV0+EaulM58z/rfNsu6M2LL1Y=;
+	s=korg; t=1760368127;
+	bh=c52cp2Mq362xHgpMzwKWS5joqtAlHPq8sZ/xvOXwK24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Os6/gFKUs93jZPTKOHpunX+6RoINl3P4beaa1O98PObuyaQ+BWotR7ZqINdGcxiB2
-	 e5QaGaT0hiTKFoQ6AZbJfzYqbnk4+gJIvr4vLfLXQKxo2oUZ6n32MFH39vghmYOj/W
-	 zCyvwuR6i2dgPDy3d//esWNCQHYXjTQzyyOzqZ20=
+	b=aJxKLbA0nWhBNpVz99PKT3emcCD1IRwFkbkumzSCbivaqleU6SVLi1yxySlleW2ck
+	 k80O2909vWIlR3zTwU8VBB6iVWNv3fvnldKsLyuFtKt/pNrOhtEzPrMwcHRniXvlyJ
+	 a/o40+blZ1pSwEREqTzpuJB7f5A6SnmFvo8zXmLk=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,12 +51,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-block@vger.kernel.org,
 	nbd@other.debian.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.17 113/563] nbd: restrict sockets to TCP and UDP
-Date: Mon, 13 Oct 2025 16:39:34 +0200
-Message-ID: <20251013144415.389676652@linuxfoundation.org>
+Subject: [PATCH 6.12 053/262] nbd: restrict sockets to TCP and UDP
+Date: Mon, 13 Oct 2025 16:43:15 +0200
+Message-ID: <20251013144328.039218970@linuxfoundation.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251013144411.274874080@linuxfoundation.org>
-References: <20251013144411.274874080@linuxfoundation.org>
+In-Reply-To: <20251013144326.116493600@linuxfoundation.org>
+References: <20251013144326.116493600@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.17-stable review patch.  If anyone has any objections, please let me know.
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -100,10 +100,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 6463d0e8d0cef..87b0b78249da3 100644
+index c705acc4d6f4b..de692eed98740 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -1217,6 +1217,14 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
+@@ -1156,6 +1156,14 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
  	if (!sock)
  		return NULL;
  
