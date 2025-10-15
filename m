@@ -1,62 +1,62 @@
-Return-Path: <linux-block+bounces-28505-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28507-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D97DBBDE1FC
-	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 12:57:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 699CABDE1D5
+	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 12:56:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B0E83C10B6
-	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 10:56:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA52818931AF
+	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 10:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388DE31D39D;
-	Wed, 15 Oct 2025 10:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F1031E10D;
+	Wed, 15 Oct 2025 10:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cn89P+f9"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Z04XSSFK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027FA31BCB0;
-	Wed, 15 Oct 2025 10:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B692931E0F7;
+	Wed, 15 Oct 2025 10:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760525737; cv=none; b=fPM3Qj/E1wnJJpr7ZoGcxcq7NL4qBoJdPiaAFwCHFdg7dQJOIVqhKQ4J4f0KS5o32YdsLc3rq+vJXsmky8RfrdUYE4VekjYYZzgXatsKS43IlQiCo48g+eQ8tuivehhAj5wyBvQp/TKIBBuxpHJ3NaAReTRpmv/xb0m6WJJU3YY=
+	t=1760525741; cv=none; b=e6qVsqB+oWlCYtk1J97MhdYIEwTJTKHlZgkqofXauIsoFjeaWzTqXL1E5yiPDKwFW0mdbQ1J1dO+juwYdg1pYqprlyQXND8Qo1mPTJgnjkcAmMzI/gNwXUgjS+l+naSPFvCqJdwTguZgf8Vj+zYDF1DnQ2UqsKNP++BP/gVrc5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760525737; c=relaxed/simple;
-	bh=eDwoupc6QWZlcgoUS9oBxojZ1uzI64mwjU6J2kmlWK8=;
+	s=arc-20240116; t=1760525741; c=relaxed/simple;
+	bh=RO+2yCpb40QjzkLafpQDfbLu3NGrWhJ+S2FUBqNx35Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QOjQK/XqznduPCPysu+AKD1TuDGRprI/lExI+YuPXdXrUNGIztxbA+VPu3vU4Nhx13s3ff7KD7AozlBDRBlg7bMkz2m3+4qNohHrIc3lwKK3Zc1M93i++MRdda1kfZn7/3upulNXxDNjCy31rAXQrCM2tYZ2PcEa1RFMj+gUT7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=cn89P+f9; arc=none smtp.client-ip=216.71.153.141
+	 MIME-Version; b=SYCM0bjtDvPcQUpU4ki/tVslFVg9GxV/ixjabDtbjKdmMLKGLNhuNLQRnDQQTY3lFUXKaj+v+y7NFJEyZiBpEUkHaxR4cFA3QmQmA5MdR7P9TB04+d2S7q0N0rvN6T54KAv37rlb8Ur9tYSoAK37SjfK4gEegrikD9WZMR3FPkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=Z04XSSFK; arc=none smtp.client-ip=216.71.153.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1760525734; x=1792061734;
+  t=1760525739; x=1792061739;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eDwoupc6QWZlcgoUS9oBxojZ1uzI64mwjU6J2kmlWK8=;
-  b=cn89P+f9KTRft/89Wf1qs+pO7oCMK6UIWa/F1LaUO2kdeu1ioxwEbTCz
-   E+PYnYpmHGkQTWWcTVWhgFhA7tO2ShzCKYlT6aqe9d+br8Gjlv1s4DN5Z
-   McooRyTjNHM7oR7ZGBpfRzDnzWMlv2rfV+Ug818NpEX6+batOpchghBx9
-   Mg7pTbA+kTu65ADNFcqX7AtKtPiPRmYAn25Fz/BZ4BREm1whycD4dpF6O
-   1gHRYuF47iTt/MCBrdj2USE490ZibBMWAuNsM7YouIDEQXylwTrKxdHcY
-   2xPtSoEIowcnQreEDmE8VomNiApYs8oG9JXlru+g0gu8cNQPqgOJBOdws
-   g==;
-X-CSE-ConnectionGUID: q3g6JzekSbOamRsRfNm/Zg==
-X-CSE-MsgGUID: 5QCkrsKdTB63fXnI/rwbzg==
+  bh=RO+2yCpb40QjzkLafpQDfbLu3NGrWhJ+S2FUBqNx35Q=;
+  b=Z04XSSFKQc2eL2KV10N8WpA49FfAR1s5HdAEP0zOvcD+ny4z3fi+/I7v
+   2GXYX2GcjWckFdCqkgy9J+pU95cjX4KO6/ZrrRMAUceAGhsLnkue9P29y
+   3y8+vEIRsFdYhfgkKW/s9zPWc5sCrGdXVXfLO5REO2WBkFgOdGTpgI31/
+   ++DF4bkauzO5Q/nhav8/TsKJttqu+FJKMTFwb+dmALXcek1tKAaMCjaA0
+   VyPoOxdY2KXtLID0iX8BK1QTAScR76qSKlcyiQoc8UTuO4RgapA+p69Jr
+   Fi1PTdOGuS+YjF8H8tDWwQLUAUjyfhv+BDlkOlOHjqWAG1neqJjYnTSVX
+   Q==;
+X-CSE-ConnectionGUID: sPxZOnseR3S5spM4fhB3tg==
+X-CSE-MsgGUID: Lm/h3Wt2Tn6hwHMN3M3Flg==
 X-IronPort-AV: E=Sophos;i="6.19,231,1754928000"; 
-   d="scan'208";a="134197665"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep03.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Oct 2025 18:55:33 +0800
-IronPort-SDR: 68ef7da5_sHDFxwKJGHCRGKeSm1OwKWZX4mstq11FDB9iY2y4lLuEhZw
- 3NMZ6lFw7VubZ1fo6fnjdgKZQGEFMCdx/dGMfbA==
+   d="scan'208";a="133262076"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep03.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Oct 2025 18:55:37 +0800
+IronPort-SDR: 68ef7da9_HXVhFuy2eKF2YXlU2xhvi7OUurajdNmJ+tLvN85kuyzq8yK
+ XngcfQ/kYHC+0z9296XVrYOdPcO5PM1i9jLujWg==
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep03.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Oct 2025 03:55:33 -0700
+  by uls-op-cesaep03.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Oct 2025 03:55:38 -0700
 WDCIronportException: Internal
 Received: from unknown (HELO neo.fritz.box) ([10.224.28.35])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Oct 2025 03:55:29 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 15 Oct 2025 03:55:34 -0700
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 To: axboe@kernel.dk
 Cc: chaitanyak@nvidia.com,
@@ -75,9 +75,9 @@ Cc: chaitanyak@nvidia.com,
 	rostedt@goodmis.org,
 	shinichiro.kawasaki@wdc.com,
 	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v3 09/16] blktrace: add definitions for struct blk_io_trace2
-Date: Wed, 15 Oct 2025 12:54:28 +0200
-Message-ID: <20251015105435.527088-10-johannes.thumshirn@wdc.com>
+Subject: [PATCH v3 10/16] blktrace: differentiate between blk_io_trace versions
+Date: Wed, 15 Oct 2025 12:54:29 +0200
+Message-ID: <20251015105435.527088-11-johannes.thumshirn@wdc.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251015105435.527088-1-johannes.thumshirn@wdc.com>
 References: <20251015105435.527088-1-johannes.thumshirn@wdc.com>
@@ -89,61 +89,103 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add definitions for the extended version of the blktrace protocol using a
-wider action type to be able to record new actions in the kernel.
+Differentiate between blk_io_trace and blk_io_trace2 when relaying to
+user-space depending on which version has been requested by the blktrace
+utility.
 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- include/uapi/linux/blktrace_api.h | 16 ++++++++++++++++
- kernel/trace/blktrace.c           |  1 +
- 2 files changed, 17 insertions(+)
+ kernel/trace/blktrace.c | 62 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 59 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/blktrace_api.h b/include/uapi/linux/blktrace_api.h
-index a6958708d477..3a771b9802aa 100644
---- a/include/uapi/linux/blktrace_api.h
-+++ b/include/uapi/linux/blktrace_api.h
-@@ -94,6 +94,7 @@ enum blktrace_notify {
- 
- #define BLK_IO_TRACE_MAGIC	0x65617400
- #define BLK_IO_TRACE_VERSION	0x07
-+#define BLK_IO_TRACE2_VERSION	0x08
- 
- /*
-  * The trace itself
-@@ -113,6 +114,21 @@ struct blk_io_trace {
- 	/* cgroup id will be stored here if exists */
- };
- 
-+struct blk_io_trace2 {
-+	__u32 magic;		/* MAGIC << 8 | BLK_IO_TRACE2_VERSION */
-+	__u32 sequence;		/* event number */
-+	__u64 time;		/* in nanoseconds */
-+	__u64 sector;		/* disk offset */
-+	__u32 bytes;		/* transfer length */
-+	__u32 pid;		/* who did it */
-+	__u64 action;		/* what happened */
-+	__u32 device;		/* device number */
-+	__u32 cpu;		/* on what cpu did it happen */
-+	__u16 error;		/* completion error */
-+	__u16 pdu_len;		/* length of data after this trace */
-+	__u8 pad[12];
-+	/* cgroup id will be stored here if exists */
-+};
- /*
-  * The remap event
-  */
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d1532df84cc8..185f19c9f772 100644
+index 185f19c9f772..074a7d77158c 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
-@@ -1616,6 +1616,7 @@ static int __init init_blk_tracer(void)
- 
- 	BUILD_BUG_ON(__alignof__(struct blk_user_trace_setup2) %
- 		     __alignof__(long));
-+	BUILD_BUG_ON(__alignof__(struct blk_io_trace2) % __alignof__(long));
- 
- 	return 0;
+@@ -91,7 +91,29 @@ static void record_blktrace_event(struct blk_io_trace *t, pid_t pid, int cpu,
+ 		memcpy((void *)t + sizeof(*t) + cgid_len, pdu_data, pdu_len);
  }
+ 
+-static void relay_blktrace_event(struct blk_trace *bt, unsigned long sequence,
++static void record_blktrace_event2(struct blk_io_trace2 *t2, pid_t pid, int cpu,
++				   sector_t sector, int bytes, u64 what,
++				   dev_t dev, int error, u64 cgid,
++				   ssize_t cgid_len, void *pdu_data,
++				   int pdu_len)
++{
++	t2->pid = pid;
++	t2->cpu = cpu;
++
++	t2->sector = sector;
++	t2->bytes = bytes;
++	t2->action = what;
++	t2->device = dev;
++	t2->error = error;
++	t2->pdu_len = pdu_len + cgid_len;
++
++	if (cgid_len)
++		memcpy((void *)t2 + sizeof(*t2), &cgid, cgid_len);
++	if (pdu_len)
++		memcpy((void *)t2 + sizeof(*t2) + cgid_len, pdu_data, pdu_len);
++}
++
++static void relay_blktrace_event1(struct blk_trace *bt, unsigned long sequence,
+ 				 pid_t pid, int cpu, sector_t sector, int bytes,
+ 				 u64 what, int error, u64 cgid,
+ 				 ssize_t cgid_len, void *pdu_data, int pdu_len)
+@@ -111,6 +133,40 @@ static void relay_blktrace_event(struct blk_trace *bt, unsigned long sequence,
+ 			      cgid, cgid_len, pdu_data, pdu_len);
+ }
+ 
++static void relay_blktrace_event2(struct blk_trace *bt, unsigned long sequence,
++				  pid_t pid, int cpu, sector_t sector,
++				  int bytes, u64 what, int error, u64 cgid,
++				  ssize_t cgid_len, void *pdu_data, int pdu_len)
++{
++	struct blk_io_trace2 *t;
++	size_t trace_len = sizeof(struct blk_io_trace2) + pdu_len + cgid_len;
++
++	t = relay_reserve(bt->rchan, trace_len);
++	if (!t)
++		return;
++
++	t->magic = BLK_IO_TRACE_MAGIC | BLK_IO_TRACE2_VERSION;
++	t->sequence = sequence;
++	t->time = ktime_to_ns(ktime_get());
++
++	record_blktrace_event2(t, pid, cpu, sector, bytes, what, bt->dev, error,
++			       cgid, cgid_len, pdu_data, pdu_len);
++}
++
++static void relay_blktrace_event(struct blk_trace *bt, unsigned long sequence,
++				 pid_t pid, int cpu, sector_t sector, int bytes,
++				 u64 what, int error, u64 cgid,
++				 ssize_t cgid_len, void *pdu_data, int pdu_len)
++{
++	if (bt->version == 2)
++		return relay_blktrace_event2(bt, sequence, pid, cpu, sector,
++					     bytes, what, error, cgid, cgid_len,
++					     pdu_data, pdu_len);
++	return relay_blktrace_event1(bt, sequence, pid, cpu, sector, bytes,
++				     lower_32_bits(what), error, cgid, cgid_len,
++				     pdu_data, pdu_len);
++}
++
+ /*
+  * Send out a notify message.
+  */
+@@ -146,8 +202,8 @@ static void trace_note(struct blk_trace *bt, pid_t pid, u64 action,
+ 	if (!bt->rchan)
+ 		return;
+ 
+-	relay_blktrace_event(bt, 0, pid, cpu, 0, 0, action, 0, cgid,
+-			     cgid_len, (void *)data, len);
++	relay_blktrace_event(bt, 0, pid, cpu, 0, 0, action, 0, cgid, cgid_len,
++			     (void *)data, len);
+ }
+ 
+ /*
 -- 
 2.51.0
 
