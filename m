@@ -1,86 +1,72 @@
-Return-Path: <linux-block+bounces-28534-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28536-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01907BDE308
-	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 13:07:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E46DDBDE380
+	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 13:11:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3ED13C566E
-	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 11:01:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B9933B500C
+	for <lists+linux-block@lfdr.de>; Wed, 15 Oct 2025 11:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976EF3233EB;
-	Wed, 15 Oct 2025 10:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B6231CA4A;
+	Wed, 15 Oct 2025 11:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rCG6bhFc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbgrB6fJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DD3233E8;
-	Wed, 15 Oct 2025 10:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF61831A560
+	for <linux-block@vger.kernel.org>; Wed, 15 Oct 2025 11:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760525919; cv=none; b=Xf5qSdcaHRUsl3NrmbMGZG1Vyu8Sq9hZOX/ExQ2LPNi+LuWIh+PvUvcVWuB4Gdu36M00rRDpFdYk9CGJba9QlaMed2cOIsHtI7z2oJNGMiGkGTfVU32H9L9z0qap6dGshLKD57/KKsfRKXCM1CU6n29BFSTRMkpjGoYQNc+Mlno=
+	t=1760526476; cv=none; b=ZgVvdn3qFtye8c4Tz4+UQlGtIkwwK1oG3JIE691IMNDgfF9ffnOC1SXhewmFZ5s+3rwwmJjB8v3ojqk1i9zP1A3w1I6kz9t+GJvTGoEI1+3hNzRl7khEQEiXMxdQu2Uc4+cZC3XTQusYacL7DArBfTZNxhw7KTUnru2Wz9UtLxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760525919; c=relaxed/simple;
-	bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EP50M9vqCNOPIJQOnUlJKjwdyulw87DwUPP2qZ1DMGnQJ/s96t+8lfaxNNbHoU4ZqL7mO/2Kg4wVjFWezuMCQdV25XDif3hMhygef6CMqX5icJqYFRmQgO1xeSJN6CXkwWkgGX5wIGlKz0sCKq0BIrSSoEiZ3CKvHJ0tedzsN88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=rCG6bhFc; arc=none smtp.client-ip=216.71.154.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1760525917; x=1792061917;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-  b=rCG6bhFcA7DW2cU/gAFQy7+iMMLBlaSrpcOzE4l3pVWb/ATVP1szFxXP
-   DmJh+OQRz/xNNoOgmjh7E0B6D7JlmGEwXBePUS7aMGwdJo8TLHgDVwzGu
-   Z/to9Adf7gnGQ3K4PeXY32dZ/5J+siy5PIowW+vPXXx/VeCUtfTNGcH9S
-   HtXeCmnyek4VErsHisfnauVyWROZf+NdKQ9W8R1NNrDqHkuEhx3TH+g8S
-   gU2ujxWOHo5OTITF7bG7ara70dUjX/FdEGuTwMy1Jy87EKyEWXYsjMHJm
-   PvR6s7uq6fBqu721yI5RWGp2i3VaaEwYru6kncadyL11DWTbLgc0qHAev
-   g==;
-X-CSE-ConnectionGUID: FAeD6Hi4Rae0JDcgS6++AQ==
-X-CSE-MsgGUID: OKXP52c2RkqiqSkjqx2xkA==
-X-IronPort-AV: E=Sophos;i="6.19,231,1754928000"; 
-   d="scan'208";a="132935428"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Oct 2025 18:58:37 +0800
-IronPort-SDR: 68ef7e5d_v4mgOAv+euj3JcQIQsuWloXTgmJUG2dtPDUj8kf4Co1Madu
- 9FujGPt8xkSR1Mv5pe6+YIfyO8Zo8HA2S9WQY/g==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Oct 2025 03:58:37 -0700
-WDCIronportException: Internal
-Received: from unknown (HELO neo.fritz.box) ([10.224.28.35])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Oct 2025 03:58:34 -0700
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-To: axboe@kernel.dk
-Cc: chaitanyak@nvidia.com,
-	dlemoal@kernel.org,
-	hare@suse.de,
-	hch@lst.de,
-	john.g.garry@oracle.com,
-	linux-block@vger.kernel.org,
-	linux-btrace@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.petersen@oracle.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	naohiro.aota@wdc.com,
-	rostedt@goodmis.org,
-	shinichiro.kawasaki@wdc.com,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH blktrace v3 20/20] blktrace: call BLKTRACESETUP2 ioctl per default to setup a trace
-Date: Wed, 15 Oct 2025 12:56:58 +0200
-Message-ID: <20251015105658.527262-21-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251015105658.527262-1-johannes.thumshirn@wdc.com>
-References: <20251015105658.527262-1-johannes.thumshirn@wdc.com>
+	s=arc-20240116; t=1760526476; c=relaxed/simple;
+	bh=T+VNlnck5F7X5yaKW6OrUk2vghLT0TALE4TLmSh0Eu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qbGAIT49QaBqGheR+0P1iNKi+izdjd58XRBq7tX/I6CmSS19eaY2wFhW/RByfTeapJG1GjEV/1ASZlbFf5EPpksnq74JW2r7GHIBZQXIXkwqxQ//i/MoNLjHAOUn1ke+3hntU09mBg7tC+wa45/DtKQ3UhnAoBhzMmlj+iK2g8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dbgrB6fJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760526471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=G7tb8jol5niMEwylV1QaVwlR13998kvgQeJ5R3Qpej4=;
+	b=dbgrB6fJ5HT89uv3PfAu3OqJ59SJ6VZsUsrLGWapqkoQFbrVJlP0faReleJ2GSCa+RhIWB
+	C8Lzoy51geEkTG7ItaRcKYEKaHRAjt8faf+5WyjrLGjLa6mKWeacro+65UUgjbmsD1vMbZ
+	JxoliednYlteQPf1lfWGLNVkIcfEY6Y=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-twHOLN-EMmK_SFNEFcKG0w-1; Wed,
+ 15 Oct 2025 07:07:48 -0400
+X-MC-Unique: twHOLN-EMmK_SFNEFcKG0w-1
+X-Mimecast-MFC-AGG-ID: twHOLN-EMmK_SFNEFcKG0w_1760526466
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B4025180120B;
+	Wed, 15 Oct 2025 11:07:45 +0000 (UTC)
+Received: from localhost (unknown [10.72.120.29])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8717919560AD;
+	Wed, 15 Oct 2025 11:07:43 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Mikulas Patocka <mpatocka@redhat.com>,
+	Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+	Dave Chinner <dchinner@redhat.com>,
+	linux-fsdevel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V5 0/6] loop: improve loop aio perf by IOCB_NOWAIT
+Date: Wed, 15 Oct 2025 19:07:25 +0800
+Message-ID: <20251015110735.1361261-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -88,81 +74,57 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Call BLKTRACESETUP2 ioctl per default and if the kernel does not support
-this ioctl because it is too old, fall back to calling BLKTRACESETUP.
+Hello Jens,
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- blktrace.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+This patchset improves loop aio perf by using IOCB_NOWAIT for avoiding to queue aio
+command to workqueue context, meantime refactor lo_rw_aio() a bit.
 
-diff --git a/blktrace.c b/blktrace.c
-index 038b2cb..72562fd 100644
---- a/blktrace.c
-+++ b/blktrace.c
-@@ -279,7 +279,7 @@ static int max_cpus;
- static int ncpus;
- static cpu_set_t *online_cpus;
- static int pagesize;
--static int act_mask = ~0U;
-+static unsigned long long act_mask = ~0U;
- static int kill_running_trace;
- static int stop_watch;
- static int piped_output;
-@@ -1067,6 +1067,36 @@ static void close_client_connections(void)
- 	}
- }
- 
-+static int setup_buts2(void)
-+{
-+	struct list_head *p;
-+	int ret = 0;
-+
-+	__list_for_each(p, &devpaths) {
-+		struct blk_user_trace_setup2 buts2;
-+		struct devpath *dpp = list_entry(p, struct devpath, head);
-+
-+		memset(&buts2, 0, sizeof(buts2));
-+		buts2.buf_size = buf_size;
-+		buts2.buf_nr = buf_nr;
-+		buts2.act_mask = act_mask;
-+
-+		if (ioctl(dpp->fd, BLKTRACESETUP2, &buts2) >= 0) {
-+			dpp->ncpus = max_cpus;
-+			dpp->buts_name = strdup(buts2.name);
-+			dpp->setup_done = 1;
-+			if (dpp->stats)
-+				free(dpp->stats);
-+			dpp->stats = calloc(dpp->ncpus, sizeof(*dpp->stats));
-+			memset(dpp->stats, 0, dpp->ncpus * sizeof(*dpp->stats));
-+		} else {
-+			ret++;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int setup_buts(void)
- {
- 	struct list_head *p;
-@@ -2684,9 +2714,11 @@ static int run_tracers(void)
- 	if (net_mode == Net_client)
- 		printf("blktrace: connecting to %s\n", hostname);
- 
--	if (setup_buts()) {
--		done = 1;
--		return 1;
-+	if (setup_buts2()) {
-+		if (setup_buts()) {
-+			done = 1;
-+			return 1;
-+		}
- 	}
- 
- 	if (use_tracer_devpaths()) {
+In my test VM, loop disk perf becomes very close to perf of the backing block
+device(nvme/mq virtio-scsi).
+
+And Mikulas verified that this way can improve 12jobs sequential readwrite io by
+~5X, and basically solve the reported problem together with loop MQ change.
+
+https://lore.kernel.org/linux-block/a8e5c76a-231f-07d1-a394-847de930f638@redhat.com/
+
+Zhaoyang Huang also mentioned it may fix their performance issue on Android
+use case.
+
+The loop MQ change will be posted as standalone patch, because it needs
+UAPI change.
+
+V5:
+	- only try nowait in case that backing file supports it (Yu Kuai)
+	- fix one lockdep assert (syzbot) 
+	- improve comment log (Christoph)
+
+V4:
+	- rebase
+	- re-organize and make it more readable 
+
+V3:
+	- add reviewed-by tag
+	- rename variable & improve commit log & comment on 5/5(Christoph)
+
+V2:
+	- patch style fix & cleanup (Christoph)
+	- fix randwrite perf regression on sparse backing file
+	- drop MQ change
+
+Ming Lei (6):
+  loop: add helper lo_cmd_nr_bvec()
+  loop: add helper lo_rw_aio_prep()
+  loop: add lo_submit_rw_aio()
+  loop: move command blkcg/memcg initialization into loop_queue_work
+  loop: try to handle loop aio command via NOWAIT IO first
+  loop: add hint for handling aio via IOCB_NOWAIT
+
+ drivers/block/loop.c | 233 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 194 insertions(+), 39 deletions(-)
+
 -- 
-2.51.0
+2.47.0
 
 
