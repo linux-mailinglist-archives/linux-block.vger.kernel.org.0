@@ -1,160 +1,96 @@
-Return-Path: <linux-block+bounces-28629-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28641-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18A50BE80F5
-	for <lists+linux-block@lfdr.de>; Fri, 17 Oct 2025 12:26:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8243BE844A
+	for <lists+linux-block@lfdr.de>; Fri, 17 Oct 2025 13:13:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D70A23ADDEA
-	for <lists+linux-block@lfdr.de>; Fri, 17 Oct 2025 10:26:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6032A1AA3387
+	for <lists+linux-block@lfdr.de>; Fri, 17 Oct 2025 11:14:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A3130F556;
-	Fri, 17 Oct 2025 10:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED66C340D8D;
+	Fri, 17 Oct 2025 11:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="BmbRbiKl"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eQ3K2gKB"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46572D6E71
-	for <linux-block@vger.kernel.org>; Fri, 17 Oct 2025 10:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25966340D9C
+	for <linux-block@vger.kernel.org>; Fri, 17 Oct 2025 11:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760696789; cv=none; b=bVoe8H4Jy8ys1X8ykDY8gGi08J6jMZ2outqsylRvc9WDU8FzTnqzDq10bUaDVc+Jj4pl9BrqXXD8j9kMBzfbaxNfmDhqXVPfFzBHyGy4faM+ZLF9d3rzUoYoKJp5zBtzCF2TgtNzWz11YVAnwh5nvGNevzqSKDQy/saIYO0inAY=
+	t=1760699616; cv=none; b=T5zszaZwGU1/kjys7X6VA4KgNwddTXkDvG7kDaS1glYXVqH9++AsOsDFk7h4dEmLsaF1teT5g8NiK+zHqnQbu4jZ4FSh/H2/accX7M9JVFMmM4R1GijpSN9Sj1jv0bpmOsulnmqqeYVgr6oKttblaELsjrgBbZFxone3Zg2LZ2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760696789; c=relaxed/simple;
-	bh=qOjqUlcWXkeuTXUcJJoKz+DAqhADXdI8AExdrTIoxh4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=OdUkYaJxyNSVjvno2lJ5HwFiyEgLxOUER62fwsus1kO0+ZuI8DUpBFfvx9mF5+oJ+mdqct317AS5Fns9w0IeuHRC9e59zo/ThQAzO0V9ZLNCSzuQdXG14HGZGy+L4q0R8b47DLoTSXABS0rRpzTtS8KXzFk4kRgqfWGFsDj5ks8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=BmbRbiKl; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-87c1a760df5so32322016d6.1
-        for <linux-block@vger.kernel.org>; Fri, 17 Oct 2025 03:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1760696785; x=1761301585; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6TgMafxjRq0oy0uUU6fp3ywn8H1fr7KuB4B6zdZk4M0=;
-        b=BmbRbiKlMUo3Ay4hkR7QYK7Nc03UjzIIVstLiazU1Si7YBTqCnx3eyUFFzeWSUISzC
-         ghMZxbjlVeaJN1vHcYxvvv7Scw/RmM7yUvcmudeSxiAMvq1JNyIX29SJQIIjig+0cBGv
-         oVdeXgBu58sndDs17y1vE+Ys5JDyJgL/3LyjRx5i9uwyH3c8NYRvEZ6nr04eOiJaO+o/
-         ox00p4o2psA6aKbL/kfpKOFnQ4EXj/j0h5SQl/ubiv9mceKSJdt+hFwCTPwCqhI96l7E
-         MORh3JBxJ0F/3j+JdJyfcn5m1BtJoCQrK4ltrGCiklkyJ9aczTBRcbdKi/Me50UrtPqM
-         02Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760696785; x=1761301585;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6TgMafxjRq0oy0uUU6fp3ywn8H1fr7KuB4B6zdZk4M0=;
-        b=Tmu9R6R5NCfHOokJWMklM3c5gHyTIG9efAbxskt2SM8buBHl/cGAxgvilM+pMkbuSY
-         bTVZ0NwFW6vZ82sftyyguHuuDUeXO5JKf4VpP40Hh0WOCDTwW9qC6zNHGB8ZEmJ+qVLQ
-         xTsmlv+DT9ty2ixe2YTM+GNw2PwSxXcn3a3e7Ov66RWAJDwkbHkA3X3h+1zG8nXR8e+q
-         mKU2lrI9XYjETux9oRZ5jufcfo0s+qa9mDLLQ50wd+bWcZWf5reREZcHg+YyKQdQs9kY
-         l8UdzZpINAJjm3EDyRp6MkOWCjf0mV0E2+fYNJx2grLRkYSaKl8tJQHbEPu2SXisx1Dq
-         dYYQ==
-X-Gm-Message-State: AOJu0YxUutM+V4+GiTuefYpjsFmex7JROkVL02P1M/BdZIxpKD3prUXO
-	4lGi/6ZZ8v1PwPL/HrEdsHZUct1NOHUqRh0/rheXeSZJr9v30x0RMSCX3w8hgUHdtfjXf7vu95d
-	7JV1cASc=
-X-Gm-Gg: ASbGncte4YphdD4UgEJKJ51Bvl57NTghXoBGhKoCN7M5RSxujlPr9KCaJExyuud8TPO
-	2vGVzy1bH5Sw16F3wICKKQTbwagOBNRw3E93UKAQQHOIBJ8YW+nDDUYT966+ebdNF0pWgb6BLlG
-	5nvkak65FW/vstkFbaWTaBLH0eY2qweREUeNY/Rh2v/xCijHzQTpAXpcfEmyHy5gL7JJutZsCDC
-	KFg3YG/4tUbezHrz5LnqO3wQ9gVtCMgYuEidoNKSdRW+sw3n53gtI+bgc42Od8iygkcumbnxkO4
-	Y0Obao2gWoc1Wwktnz8Z+decs85HuTclFIHeFY6s0S1AgovifUtTVYno78aKqijtNXYDSAxKOyw
-	NKRq4j1ReXnsx8nkaBSmADT61CcYxaygB+aVQb5cCJ4S+ikjzd2vy+xVmHi3zK+tUMYEYcduNlR
-	VRxxFO+rkyrV0b2LRJ+3B61UxCeB/Rq4IyuswaC40=
-X-Google-Smtp-Source: AGHT+IHA9kQHmr8gJBb2GLqlPQFDpIDA1LLoN7mYIThsRF6DphvfH2JelROn1knvhdIIVeFY3qHIvg==
-X-Received: by 2002:a05:6214:8006:b0:87c:20f5:84db with SMTP id 6a1803df08f44-87c20f586d4mr34748296d6.15.1760696785543;
-        Fri, 17 Oct 2025 03:26:25 -0700 (PDT)
-Received: from [192.168.158.66] (syn-024-169-078-030.biz.spectrum.com. [24.169.78.30])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87c0121c0adsm61037626d6.18.2025.10.17.03.26.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Oct 2025 03:26:24 -0700 (PDT)
-Message-ID: <f771a6b5-c524-4b69-ad07-bcb77cb3e334@kernel.dk>
-Date: Fri, 17 Oct 2025 04:26:24 -0600
+	s=arc-20240116; t=1760699616; c=relaxed/simple;
+	bh=+WJ/9OJPmc+hPEHm8wSsTYnPF3JXQKHX+ZFF9M2Xe1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOuLHJdm5vGla5T+uAEoJPuLXD0YvlJmexaOH5d8BIgnzhkDbJXJw3HPQAhCc996fp1AXaMfOYU/ZNx1Pb4PXWBLhVoBgln+rC98Fd5PU/zlEr81fyugFAWOvhWGZUnDFwj/vUNmeCNXDK2jsUQi0+MhaAqqZaPxKh2Ek//t1nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eQ3K2gKB; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=22VuUOveu5Gg+2TfY24/26ZiEUCfRQ0vbQQnEdzRkQE=; b=eQ3K2gKBQeqP2cU6xvK8KTXXcC
+	nxL+xswCC5KeVmMvE6GTTC0gi0iKVBtHd8RZufI+LcGptue6KifRcJc9HH0YAiV+zUyiDzqLhNTdU
+	xJbZPO94nh3jKrnRE1FqBuH3Tr8HBHpf6iDXODGls++R9vP1NWNJ2PmObiJrHu3b1EW+pmqk2uNwg
+	1LOuP3ssnaTrQeft7g92Gsi3r/xbLWwtmKfRBljc9KB0jWf0SEVi6WJTOFMxL2QmEANBG63fWwooB
+	B0xmeDYMWr/dl84A/HckvR3ORME5EQzPyYMJ32Ri17B4sNsKXlxIFK3IqVENVh4JyTPCJwcmifxIs
+	nvICtvlg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v9iOq-00000007dqc-1VEj;
+	Fri, 17 Oct 2025 11:13:32 +0000
+Date: Fri, 17 Oct 2025 04:13:32 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-block@vger.kernel.org, shinichiro.kawasaki@wdc.com,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH blktests] create a test for direct io offsets
+Message-ID: <aPIk3Ng8JXs-3Pye@infradead.org>
+References: <20251014205420.941424-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] Block fixes for 6.18-rc2
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014205420.941424-1-kbusch@meta.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Linus,
+> +static void init_kernel_version()
+> +{
+> +	struct utsname buffer;
+> +	char *major_version_str;
+> +	char *minor_version_str;
+> +	if (uname(&buffer) != 0)
+> +		err(errno, "uname");
+> +
+> +	major_version_str = strtok(buffer.release, ".");
+> +	minor_version_str = strtok(NULL, ".");
+> +
+> +	kernel_major = strtol(major_version_str, NULL, 0);
+> +	kernel_minor = strtol(minor_version_str, NULL, 0);
+> +}
 
-Set of fixes for block that should go into the 6.18 kernel release. This
-pull request contains:
+Testing for specific kernel versions is probably going to fall
+flat when this stuff gets backported..  I just realize that maybe
+we just need a statx / fsxattr flag to report that this is supported
+to make everyones life easier?  statx probably won't make Christian
+happy, but now that the fsxattr stuff is in common code that seems
+like an easy enough option to rush into 6.18 still.
 
-- NVMe pull request via Keith
-	- iostats accounting fixed on multipath retries (Amit)
-	- secure concatenation response fixup (Martin)
-	- tls partial record fixup (Wilfred)
-
-- Fix for a lockdep reported issue with the elevator lock and blk group
-  frozen operations.
-
-- Fix for a regression in this merge window, where updating
-  'nr_requests' would not do the right thing for queues with shared
-  tags.
-
-Please pull!
-
-
-The following changes since commit 455281c0ef4e2cabdfe2e8b83fa6010d5210811c:
-
-  loop: remove redundant __GFP_NOWARN flag (2025-10-08 06:27:53 -0600)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux.git tags/block-6.18-20251016
-
-for you to fetch changes up to f0624c6646435c1b56652193cce3e34062d50e3f:
-
-  Merge tag 'nvme-6.18-2025-10-16' of git://git.infradead.org/nvme into block-6.18 (2025-10-16 13:25:40 -0600)
-
-----------------------------------------------------------------
-block-6.18-20251016
-
-----------------------------------------------------------------
-Amit Chaudhary (1):
-      nvme-multipath: Skip nr_active increments in RETRY disposition
-
-Jens Axboe (1):
-      Merge tag 'nvme-6.18-2025-10-16' of git://git.infradead.org/nvme into block-6.18
-
-Martin George (1):
-      nvme-auth: update sc_c in host response
-
-Ming Lei (1):
-      block: Remove elevator_lock usage from blkg_conf frozen operations
-
-Wilfred Mallawa (1):
-      nvme/tcp: handle tls partially sent records in write_space()
-
-Yu Kuai (1):
-      blk-mq: fix stale tag depth for shared sched tags in blk_mq_update_nr_requests()
-
- block/blk-cgroup.c            | 13 ++++---------
- block/blk-mq-sched.c          |  2 +-
- block/blk-mq-tag.c            |  5 +++--
- block/blk-mq.c                |  2 +-
- block/blk-mq.h                |  3 ++-
- drivers/nvme/host/auth.c      |  6 +++++-
- drivers/nvme/host/multipath.c |  6 ++++--
- drivers/nvme/host/tcp.c       |  3 +++
- 8 files changed, 23 insertions(+), 17 deletions(-)
-
--- 
-Jens Axboe
+I.e., we should find a way to remove all the need to find the kernel
+version, mount point and bdev from mountpoint.  Especially as the
+latter won't work for multi-device configurations like btrfs or
+the XFS rtdev.  My rule of thumb for new I/O path features is that
+the application should be able to discover everything it needs just
+using the FD used for I/O as that is a huge differenciator for
+usability.
 
 
