@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-28827-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-28828-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3C6BF8D4F
-	for <lists+linux-block@lfdr.de>; Tue, 21 Oct 2025 22:55:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A5BDBF8D61
+	for <lists+linux-block@lfdr.de>; Tue, 21 Oct 2025 22:56:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1224E354FAD
-	for <lists+linux-block@lfdr.de>; Tue, 21 Oct 2025 20:55:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3723C462BE6
+	for <lists+linux-block@lfdr.de>; Tue, 21 Oct 2025 20:56:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C5928314C;
-	Tue, 21 Oct 2025 20:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD73F285CA7;
+	Tue, 21 Oct 2025 20:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2uDPgXy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzXXXVdx"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49A0280025;
-	Tue, 21 Oct 2025 20:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0F1285C8B;
+	Tue, 21 Oct 2025 20:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761080118; cv=none; b=c/ENWkJXQCCTQB/avG0bGSCLPIbp8b87OHF3q6RCPOUoy5t7fIXSSP2zTkpx3v3hhY67Eh83/4x0XOPQ9QR0PYjzICz5rgdTGzaAisGA/IB4ye+KvmuLZ7jwOkUbLyfGpO1nBVENeTBGxyVjw1zOeMHgIIzt8Dg9boEsuUUymxA=
+	t=1761080156; cv=none; b=S0FhHsHwu0b5jwH39+OO/ELKHxKQKR0vgA5EN0Aqq23lMyXaPdIbmp5k4hfH84fukG0h+/pY6LEdpLAJq4mtpIskgjavn+lvvweGehLEul/cuyb8/F6kwJJbwmitov6N6vhWdR/Wns77SYMi7Txz77BLPI4r9ghJmVWLrAamWkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761080118; c=relaxed/simple;
-	bh=KvcJ8v+MYQpRSJRhDd6jVTSkhViBZso+Ry1H57i33cQ=;
+	s=arc-20240116; t=1761080156; c=relaxed/simple;
+	bh=vOJ4YS726KatTpilkNqPrOLB8Qzw2RYPt1jTcs28P5o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1g2tj29KlkKqSyasE7rRbNLZbCbzsTB6SB4T6yB8bW8vT8QbLE1FbbwzTQsnXFMsHw3f1TFTRh7TdgVITzlt7AqE8VNkgCToGYWaKjvT4SiAB7roLpVS5ljEqXXs4ikLjJe988wBpeDTsSOjk3Xr+scAN4BmnSKvsvo37xeyeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2uDPgXy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F93BC4CEF1;
-	Tue, 21 Oct 2025 20:55:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Z4lKzOBy02L6PJoAr/TCyEaDTHMjIQA3yj1n8uP/ifGhNCAUteyJxPzXt+OKyV724rnIUBRzkJjxCC29eoTUYZN0OqlS488KKnvYGjeuq8cjRvJi1gyEjunM5iuydmRuynAsh8vYs0RFF3cheGakkkwIXpdh9slX20+zlR4ocOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzXXXVdx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE65C116C6;
+	Tue, 21 Oct 2025 20:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761080117;
-	bh=KvcJ8v+MYQpRSJRhDd6jVTSkhViBZso+Ry1H57i33cQ=;
+	s=k20201202; t=1761080156;
+	bh=vOJ4YS726KatTpilkNqPrOLB8Qzw2RYPt1jTcs28P5o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L2uDPgXyFWbtaMbbAljIdhnQqAsbjfnHaQd+5LVLVpoGoCeJ8uCxFdJ3Coi3pWPh3
-	 fXY2Mqy7+6Ttzc+CQQ/yWpZ4gn2uVLh+nuFXXkLdVcrdUgoCjoqUz2LtT3TVYD8sCB
-	 C/+Nital56t7n9WfNlGXUWHnsWNba8oAU2hGFZdxeH2Cj6bMK6x6wMH5ayLWdrtgyq
-	 fC6e/tESzn3mJgl2qZDUeZmJoXJURc1f17B4Hr5YdEqLXnaJ1OFq+t1rhES61V1Kpy
-	 TqICw7TXVevPzufNkueVhnMsVrSZC4C6TR+VM8477f6sKCbxNL6qJGVtULuk39vrak
-	 fANM7XoECG6Yw==
-Message-ID: <bf2b9e08-aa5c-42f1-8c02-8f5a1b3f3e63@kernel.org>
-Date: Wed, 22 Oct 2025 05:55:16 +0900
+	b=uzXXXVdxQHAjd7ctEw6bHYi5uxG4v3QofpV/8kN5x+UyvTsZS4a11tnneXJ52O8Qs
+	 5i71S0rD1iQJG8YePUnr6Xlyg3PquTqM+bZkVps9kRsKAugp1jnZePjRxUey90WuUs
+	 5XEIJ6hIK2Z2zW28ydkn3VqCT+95rK2o40W1FbGw71vJzRYPXnlkoA/BrRA4+/Mv5p
+	 aXEMJCJHjNk0/NLxPJnrrWW5jdM7tC/g/d1fAUyx8TC/9/ES5hTPt3+MBGFZOutz6Q
+	 LDI2E0CU9VEjFl0ToXmkrdfW3Do4/KFiZhi2wdSE49RZBz+qlln7LMUtO5Gj+1R2kw
+	 B6wQSSU3IdseQ==
+Message-ID: <0c583ebf-5529-40a4-9383-042ff5413bdf@kernel.org>
+Date: Wed, 22 Oct 2025 05:55:54 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 11/16] blktrace: move trace_note to blk_io_trace2
+Subject: Re: [PATCH v4 12/16] blktrace: move ftrace blk_io_tracer to
+ blk_io_trace2
 To: Johannes Thumshirn <johannes.thumshirn@wdc.com>, axboe@kernel.dk
 Cc: chaitanyak@nvidia.com, hare@suse.de, hch@lst.de, john.g.garry@oracle.com,
  linux-block@vger.kernel.org, linux-btrace@vger.kernel.org,
@@ -59,22 +60,21 @@ Cc: chaitanyak@nvidia.com, hare@suse.de, hch@lst.de, john.g.garry@oracle.com,
  mhiramat@kernel.org, naohiro.aota@wdc.com, rostedt@goodmis.org,
  shinichiro.kawasaki@wdc.com
 References: <20251020134123.119058-1-johannes.thumshirn@wdc.com>
- <20251020134123.119058-12-johannes.thumshirn@wdc.com>
+ <20251020134123.119058-13-johannes.thumshirn@wdc.com>
 From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <20251020134123.119058-12-johannes.thumshirn@wdc.com>
+In-Reply-To: <20251020134123.119058-13-johannes.thumshirn@wdc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/20/25 22:41, Johannes Thumshirn wrote:
-> Move trace_note() to the new blk_io_trace2 infrastructure.
+> Move ftrace's blk_io_tracer to the new blk_io_trace2 infrastructure.
 > 
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-
 
 -- 
 Damien Le Moal
