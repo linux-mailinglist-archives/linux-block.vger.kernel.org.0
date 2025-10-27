@@ -1,111 +1,194 @@
-Return-Path: <linux-block+bounces-29070-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29072-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19EC3C0FA27
-	for <lists+linux-block@lfdr.de>; Mon, 27 Oct 2025 18:29:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23872C0FB23
+	for <lists+linux-block@lfdr.de>; Mon, 27 Oct 2025 18:37:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BA31F34FA1B
-	for <lists+linux-block@lfdr.de>; Mon, 27 Oct 2025 17:29:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D42DF3B4C41
+	for <lists+linux-block@lfdr.de>; Mon, 27 Oct 2025 17:37:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AAEB2DA777;
-	Mon, 27 Oct 2025 17:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD7243168F7;
+	Mon, 27 Oct 2025 17:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iCrUOTis"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nuV7PZgd"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D11B2836A6
-	for <linux-block@vger.kernel.org>; Mon, 27 Oct 2025 17:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1815C2E1F08
+	for <linux-block@vger.kernel.org>; Mon, 27 Oct 2025 17:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761586158; cv=none; b=Ga9NhGSIEPwH1SZRP/zfJBte/t68SVLNREExX0HBu91Ur4fYkCFNOvudnwtbRa3D4dH5yu9HCWr+ffr+/hkF2XixrD8OS0JfFLTsG7AWoQYByq46LO91MsoA5zYHyebmNtQarZgkvceVa93ktm3Ofrv762UkqXXBUXxehnQhaKs=
+	t=1761586620; cv=none; b=WchX6QcCRXqBmnTRN5VtFO4f+PbdqvJl81BnFQdHixTFdnKVxwXtMiTxduZ12KB6QYI6NuEs0XwhfL1Iyg9MrSS586rAJKjkzbYUwDc/J5WhT2kbReGUaswgga6TKFtdPhc8df2wxbXXOoFI/02aNuifKhHoavQ7aPmHIE0NP7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761586158; c=relaxed/simple;
-	bh=t8Di+fcs9Ip6O8f1bPMb7LPCPEQDcc2NLemRSEhkSzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1rihxnuqlXyIx7nr3K3iOYZG28DhpGgZ1NuyZ8/7beZCdzKhq1OFUa2m/2oE/tHTd0Crmh5ih6uY6WH1R+BrGnBAfmAZsiP0j8doSDXbknhjuj9oPaAy4Xc0nCI9A66JhsxJtMtXsISuN7sKRkPzLcWTzezuQKrbFFG6YXZoRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iCrUOTis; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Mon, 27 Oct 2025 10:29:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761586154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hkk/4jH6EBlfw+AjqDX/N89lF3rHfzq/zegSXixlTQg=;
-	b=iCrUOTisVmn0Gyrl01InGTa2hzUTpre3WhDeV4nG+iN68gBLiKGojyC5U0wmDX0tmxfP8z
-	yQJdQfCm8TAAg8+SpB/IJ2zMuTZ+0wMy+kGHMIsY7qgpVRe8LNBWf9cwZImH4btrtwfuDw
-	NENplaCH8pXB94SRHmPauHF+yap+3C8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: jinji zhong <jinji.z.zhong@gmail.com>
-Cc: minchan@kernel.org, senozhatsky@chromium.org, 
-	philipp.reisner@linbit.com, lars.ellenberg@linbit.com, christoph.boehmwalder@linbit.com, 
-	corbet@lwn.net, tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
-	axboe@kernel.dk, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	akpm@linux-foundation.org, terrelln@fb.com, dsterba@suse.com, muchun.song@linux.dev, 
-	linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com, linux-doc@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-block@vger.kernel.org, linux-mm@kvack.org, 
-	zhongjinji@honor.com, liulu.liu@honor.com, feng.han@honor.com
-Subject: Re: [RFC PATCH 0/3] Introduce per-cgroup compression priority
-Message-ID: <k6jwua5rlkds7dxomwvxotwtjq4hauyevvyoxd5hjz733k7kk5@mmezlradxhpu>
-References: <cover.1761439133.git.jinji.z.zhong@gmail.com>
+	s=arc-20240116; t=1761586620; c=relaxed/simple;
+	bh=1Q7N60CTiOubRmF6Krr1m8NDfQyultk6hUANYrtVduc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DmGrTssFcSluQ9GDaLfGtOrW1xfdeWM01VSD/KsRX/PtDyEBNXSiejeY0A6HdLsvYN4ReJx1x9EbzDxhcguLIyRCD7f648Ihlu0Tay5Ey8glzOGjbfA4WM9Jpkmk43+c6ZlfHL2PgO3/qpoQcPJtPEzU5CZC3cLSlDCqBceCj4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nuV7PZgd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59RDpIwV019017;
+	Mon, 27 Oct 2025 17:36:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=INkd+nWqqXd9kN10uA3PAgu28q1z
+	GRfd/jRZLei/pIk=; b=nuV7PZgdnjWlM6An5855+S3X5o6tRm3pDPaZ1rwD0RpU
+	9gb75dXjJrFMs5JqGYg2M7xDoiyFxOkBdCgo/3dc0hZV5aul+4PcG9AQQFTZt7H3
+	xRqtT1nBHQXMEds8ZXpVO6iUCC0J2EwkGD+6eqCNPnw4Mcj5bO+/V/ReXWqKQiky
+	Wkh3jOiaN+89ZX91vys1PZIP3Nugb0YhYYcl74b+nPELz8Sie5sN9y1xjLFvF82U
+	ncxFheMq6QpV5youelC2APQQLXjVuV0uPp3zhh4dgmCbLKVjAE5wazPujO95YzIg
+	z435fbserMRmPU4KBVMv7PV9okNPzLKjzjKVSUab0Q==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a0p71yyb9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Oct 2025 17:36:41 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59RF2HTg030179;
+	Mon, 27 Oct 2025 17:36:41 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a19vmet3p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Oct 2025 17:36:41 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59RHad3S25625190
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Oct 2025 17:36:39 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 19FEE2004B;
+	Mon, 27 Oct 2025 17:36:39 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E6A5B20043;
+	Mon, 27 Oct 2025 17:36:34 +0000 (GMT)
+Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.61.186.32])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 27 Oct 2025 17:36:34 +0000 (GMT)
+From: Nilay Shroff <nilay@linux.ibm.com>
+To: linux-block@vger.kernel.org
+Cc: ming.lei@redhat.com, hch@lst.de, yukuai1@huaweicloud.com, axboe@kernel.dk,
+        yi.zhang@redhat.com, czhong@redhat.com, gjoyce@ibm.com
+Subject: [PATCHv2 0/4] block: restructure elevator switch path and fix a lockdep splat
+Date: Mon, 27 Oct 2025 23:05:55 +0530
+Message-ID: <20251027173631.1081005-1-nilay@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1761439133.git.jinji.z.zhong@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RrIS2USo4SIrwDYEuNCwyLh28sLkLu5R
+X-Proofpoint-ORIG-GUID: RrIS2USo4SIrwDYEuNCwyLh28sLkLu5R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI1MDAyNCBTYWx0ZWRfXxOWGh/jEYwoW
+ Lax72O/Ngoc/dZkT8c6vLtFTh/ouLOrSWBK14hbQM1RXUN/YBgLrWxVn2O36a1PssPlqoVTk/Mt
+ rXTL0KESZmVQAJOyR/4CVWmM/A8qJEgWkAxxt5TEuUkLnU9q0ImyOeo9f+W4NAWK2LYFJFhjs2d
+ GZd/h6MYqeOFOK5gpFDonbZMr7qWMaVzKe4nOVSIGJqacwnEGXr/XQYqz5laK9jXpkS2t23LZX6
+ w+d3GYo2Pc1ONh4vXe65zd/dXUm4epqE8DAVjTpdlXZ0uJtL/bPWEVpzWSw46/58oHWAzIYIOyr
+ zZX0kr1sVBFTHNXo/w8tJyLI3cNgqYlD91gWVNdLhfZhzp+lJ6d1+6RhYKBVaX6FtVQ8fXLJRQk
+ 6f/lACbZJm5UzTCwqPRuIKSBY+0xig==
+X-Authority-Analysis: v=2.4 cv=G/gR0tk5 c=1 sm=1 tr=0 ts=68ffada9 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=yNWxtuLgjR4ficX-EogA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=HhbK4dLum7pmb74im6QT:22
+ a=cPQSjfK2_nFv0Q5t_7PE:22 a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-27_07,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ spamscore=0 priorityscore=1501 malwarescore=0 suspectscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510250024
 
-Hi Jinji,
+Hi,
 
-On Sun, Oct 26, 2025 at 01:05:07AM +0000, jinji zhong wrote:
-> Hello everyone,
-> 
-> On Android, different applications have varying tolerance for
-> decompression latency. Applications with higher tolerance for
-> decompression latency are better suited for algorithms like ZSTD,
-> which provides high compression ratio but slower decompression
-> speed. Conversely, applications with lower tolerance for
-> decompression latency can use algorithms like LZ4 or LZO that
-> offer faster decompression but lower compression ratios. For example,
-> lightweight applications (with few anonymous pages) or applications
-> without foreground UI typically have higher tolerance for decompression
-> latency.
-> 
-> Similarly, in memory allocation slow paths or under high CPU
-> pressure, using algorithms with faster compression speeds might
-> be more appropriate.
-> 
-> This patch introduces a per-cgroup compression priority mechanism,
-> where different compression priorities map to different algorithms.
-> This allows administrators to select appropriate compression
-> algorithms on a per-cgroup basis.
-> 
-> Currently, this patch is experimental and we would greatly
-> appreciate community feedback. I'm uncertain whether obtaining
-> compression priority via get_cgroup_comp_priority in zram is the
-> best approach. While this implementation is convenient, it seems
-> somewhat unusual. Perhaps the next step should be to pass
-> compression priority through page->private.
-> 
+This patchset reorganizes the elevator switch path used during both
+nr_hw_queues update and elv_iosched_store() operations to address a
+recently reported lockdep splat [1].
 
-Setting aside the issues in the implementation (like changing
-compression algorithm of a cgroup while it already has some memory
-compressed using older algo), I don't think memcg interface is the right
-way to go about it. We usually add interfaces to memcg that have
-hierarchical semantics.
+The warning highlights a locking dependency between ->freeze_lock and
+->elevator_lock on pcpu_alloc_mutex, triggered when the Kyber scheduler
+dynamically allocates its private scheduling data. The fix is to ensure
+that such allocations occur outside the locked sections, thus eliminating
+the dependency chain.
 
-Anyways if you want to have this feature, I think BPF might be the way
-to get this flexibility without introducing any stable API and then you
-can experiment and evaluate if this really helps.
+While working on this, it also became evident that the nr_hw_queue update
+code maintains two disjoint xarrays—one for elevator tags and another
+for elevator type—both serving the same purpose. Unifying these into a
+single elv_change_ctx structure improves clarity and maintainability.
+
+This series therefore implements four patches:
+The first perparatory patch unifies elevator tags and type xarrays. It
+combines both xarrays into a single struct elv_change_ctx, simplifying
+per-queue elevator state management.
+
+The second patch is aimed to group together all elevator-related 
+resources that share the same lifetime and as a first step we move the
+elevator tags pointer from struct elv_change_ctx into the newly
+inroduced struct elevator_resources. The subsequent patch extends the 
+struct elevator_resources to include other elevator-related data.
+
+The third patch introduce ->alloc_sched_data and ->free_sched_data
+elevator ops to safely allocate and free scheduler data before acquiring
+->freeze_lock and ->elevator_lock, preventing the dependency on pcpu_
+alloc_mutex. In this patch we add elevator-data into the struct 
+elevator_resources, which is introduced in the previous patch.
+
+The fourth patch converts Kyber scheduler to use the new methods
+inroduced in the previous patch. It hooks Kyber’s scheduler data
+allocation and teardown logic from ->init_sched and ->exit_sched into
+the new methods, ensuring memory operations are performed outside
+locked sections.
+
+Together, these changes simplify the elevator switch logic and prevent
+the reported lockdep splat.
+
+As always, feedback and suggestions are very welcome!
+
+[1] https://lore.kernel.org/all/CAGVVp+VNW4M-5DZMNoADp6o2VKFhi7KxWpTDkcnVyjO0=-D5+A@mail.gmail.com/
+
+Thanks,
+--Nilay
+
+changes from v1:
+  - Keep blk_mq_free_sched_ctx_batch() and blk_mq_alloc_sched_ctx_batch()
+    together in the same file (Ming Lei)
+  - Since the ctx pointer is stored in xarray after it's dynamically
+    allocated, if blk_mq_alloc_sched_ctx_batch() fails to allocate or
+    insert ctx pointer in xarray then unwinding the allocation is not
+    necessary. Instead looping over the xarray to retrieve the inserted
+    ctx pointer and freeing it should be sufficibet. So invoke blk_mq_
+    free_sched_ctx_batch() from the blk_mq_alloc_sched_ctx_batch()
+    callsite on failure (Ming Lei)
+  - As both elevator tags and elevator data shares the same lifetime
+    and allocation constraints, abstract both into a new structure
+    (Ming Lei)
+
+Link to v1: https://lore.kernel.org/all/20251016053057.3457663-1-nilay@linux.ibm.com/
+
+Nilay Shroff (4):
+  block: unify elevator tags and type xarrays into struct elv_change_ctx
+  block: move elevator tags into struct elevator_resources
+  block: introduce alloc_sched_data and free_sched_data elevator methods
+  block: define alloc_sched_data and free_sched_data methods for kyber
+
+ block/blk-mq-sched.c  | 122 ++++++++++++++++++++++++++++++++++++++----
+ block/blk-mq-sched.h  |  26 ++++++++-
+ block/blk-mq.c        |  55 +++++++++++--------
+ block/blk.h           |   7 ++-
+ block/elevator.c      |  81 +++++++++++++++-------------
+ block/elevator.h      |  28 +++++++++-
+ block/kyber-iosched.c |  30 ++++++++---
+ 7 files changed, 269 insertions(+), 80 deletions(-)
+
+-- 
+2.51.0
+
 
