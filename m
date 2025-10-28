@@ -1,71 +1,71 @@
-Return-Path: <linux-block+bounces-29101-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29100-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C774C13AB9
-	for <lists+linux-block@lfdr.de>; Tue, 28 Oct 2025 10:02:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E23C13A8B
+	for <lists+linux-block@lfdr.de>; Tue, 28 Oct 2025 09:59:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8460A508909
-	for <lists+linux-block@lfdr.de>; Tue, 28 Oct 2025 08:57:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8D67188D7FB
+	for <lists+linux-block@lfdr.de>; Tue, 28 Oct 2025 08:57:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0858F2D7DF9;
-	Tue, 28 Oct 2025 08:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A7629B799;
+	Tue, 28 Oct 2025 08:57:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwtpduqT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXBjAleI"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534422D5C61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDACB2BDC13
 	for <linux-block@vger.kernel.org>; Tue, 28 Oct 2025 08:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761641827; cv=none; b=WZJksDl4ew2PihdBWaE6B/9jEJ3t6Nv/q4T94dPlYlr+8ySZNIjyZP4WtU3BooN5zpWKFqPJeZRyqzAtKLBPqNywzQbP7gKEvymmF4Y+r7UtyJLBNTn+cVIH6jnHNbw4gvyOiTQcRjdkZajJ0N6cm/beCIVtSezY3FbGOR2Y0LI=
+	t=1761641827; cv=none; b=Uqcznisd/Llaxd/I6RFS5n9fejKMWXCYBRjMmDBe6/CjKEUsjw49Nl3DcVjSEKRiio+wnJAFqmQE6+nV9pmabUQU9baibk2fR/ClaHaGTAmAm5wP6eFENpVpERaWxm5vl7VF7AHmtOx8UgkKWtp17L7fWDYYUZrLcqfDU9T5yMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761641827; c=relaxed/simple;
-	bh=+XsoY/2XolODBt+42r7lUR75Q1/Vxkp9DjTMXy6oIqg=;
+	bh=4hpwktsqT+NrcnmoweOTYtsYynOyBuPdV1XmIITfpXw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OXkrC9lfYRiPTrD9MYF9k0BsFx/O5QbEm/9lyilcbcv2lneV2bXn8mLv5uNNzzZoVAVJQxE7pYRHPuLh8nkzC4E74WcNb4IchekUH+Rid7HHLHDeDWCofvmJ8PLVaBeVJdKmv5TXOsIyYZDc8i55ylKHb27t+EiC9nq+jvK3Yts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GwtpduqT; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=nvQkmNSo7gmT+3u+Qk6NzPpLGr4fxLETjXomo2bg5jMAZ6C3CQ6aZ5vitUc7YoHPlRjGGmggY7iATtFEfnel2NTEto8NoIpvys4YbcItlblQiFlLxMDDxAqI5LPloBwRgnrX6emHfPWk/yLuuHnP74kaOqgOyt0cPmYWZNR6j6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WXBjAleI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761641825;
+	s=mimecast20190719; t=1761641824;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/esdmGqzd/pFOeulx3/8IU5FKS0gldoST/MQnEzuTYE=;
-	b=GwtpduqTOpL6+A8MhzsgemXoXqT5hbQx1nZ4ndHas6HOTgJwL952xXx0jYufNdEiIq/LqV
-	3fbiiH1o3EhgA4uH3B8JZYnix9qhBKVbAzaYyVMVXCOzthk5MYWCO3oMlTSRlZjhInadv8
-	cPf//LJxAJc6OPc/mX3uUMBD8Bv5QeI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=Te6jXPipCN5v2x3plHjD+WJeCbymeagDI6T0+cYRx2E=;
+	b=WXBjAleIsEAhalSMMQxAWFBdD0EMi7sfUDgac3azostONVkRPdAgK/uMAuxBQArr5c8Inp
+	CTFFjD4NJp9qlJ7RagQy+KmT0UWjSsQrEr7g1p6YI8tYYvndLwwUxc6Et86BKYeN0+US31
+	sBNUQMf42TEm82ViHrLDDhbcCM5QgBo=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-jurD_1xyPva8u0Lx2TcumQ-1; Tue,
- 28 Oct 2025 04:56:59 -0400
-X-MC-Unique: jurD_1xyPva8u0Lx2TcumQ-1
-X-Mimecast-MFC-AGG-ID: jurD_1xyPva8u0Lx2TcumQ_1761641818
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-596-7tjhi-TZM2iVT8GJxBqb0w-1; Tue,
+ 28 Oct 2025 04:57:03 -0400
+X-MC-Unique: 7tjhi-TZM2iVT8GJxBqb0w-1
+X-Mimecast-MFC-AGG-ID: 7tjhi-TZM2iVT8GJxBqb0w_1761641822
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E867818001E3;
-	Tue, 28 Oct 2025 08:56:57 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29D0B19541BD;
+	Tue, 28 Oct 2025 08:57:02 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.23])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCED419560AD;
-	Tue, 28 Oct 2025 08:56:56 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 248461800451;
+	Tue, 28 Oct 2025 08:57:00 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
 Cc: Uday Shankar <ushankar@purestorage.com>,
 	Caleb Sander Mateos <csander@purestorage.com>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 3/5] ublk: use flexible array for ublk_queue.ios
-Date: Tue, 28 Oct 2025 16:56:32 +0800
-Message-ID: <20251028085636.185714-4-ming.lei@redhat.com>
+Subject: [PATCH V2 4/5] selftests: ublk: set CPU affinity before thread initialization
+Date: Tue, 28 Oct 2025 16:56:33 +0800
+Message-ID: <20251028085636.185714-5-ming.lei@redhat.com>
 In-Reply-To: <20251028085636.185714-1-ming.lei@redhat.com>
 References: <20251028085636.185714-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -75,61 +75,61 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Convert ublk_queue to use DECLARE_FLEX_ARRAY for the ios field and
-use struct_size() for allocation, following kernel best practices.
+Move ublk_thread_set_sched_affinity() call before ublk_thread_init()
+to ensure memory allocations during thread initialization occur on
+the correct NUMA node. This leverages Linux's first-touch memory
+policy for better NUMA locality.
 
-Changes in this commit:
-
-1. Convert ios field from "struct ublk_io ios[]" to use
-   DECLARE_FLEX_ARRAY(struct ublk_io, ios) for consistency with
-   modern kernel style.
-
-2. Update ublk_init_queue() to use struct_size(ubq, ios, depth)
-   instead of manual size calculation (sizeof(struct ublk_queue) +
-   depth * sizeof(struct ublk_io)).
-
-This provides better type safety and makes the code more maintainable
-by using standard kernel macros for flexible array handling.
+Also convert ublk_thread_set_sched_affinity() to use
+pthread_setaffinity_np() instead of sched_setaffinity(), as the
+pthread API is the proper interface for setting thread affinity in
+multithreaded programs.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/testing/selftests/ublk/kublk.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 394e9b5f512f..cef9cfa94feb 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -203,7 +203,8 @@ struct ublk_queue {
- 	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
- 	spinlock_t		cancel_lock;
- 	struct ublk_device *dev;
--	struct ublk_io ios[];
-+
-+	DECLARE_FLEX_ARRAY(struct ublk_io, ios);
- };
- 
- struct ublk_device {
-@@ -2700,7 +2701,6 @@ static int ublk_get_queue_numa_node(struct ublk_device *ub, int q_id)
- static int ublk_init_queue(struct ublk_device *ub, int q_id)
+diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
+index 6b8123c12a7a..062537ab8976 100644
+--- a/tools/testing/selftests/ublk/kublk.c
++++ b/tools/testing/selftests/ublk/kublk.c
+@@ -839,7 +839,7 @@ static int ublk_process_io(struct ublk_thread *t)
+ static void ublk_thread_set_sched_affinity(const struct ublk_thread *t,
+ 		cpu_set_t *cpuset)
  {
- 	int depth = ub->dev_info.queue_depth;
--	int ubq_size = sizeof(struct ublk_queue) + depth * sizeof(struct ublk_io);
- 	gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO;
- 	struct ublk_queue *ubq;
- 	struct page *page;
-@@ -2711,7 +2711,8 @@ static int ublk_init_queue(struct ublk_device *ub, int q_id)
- 	numa_node = ublk_get_queue_numa_node(ub, q_id);
+-        if (sched_setaffinity(0, sizeof(*cpuset), cpuset) < 0)
++	if (pthread_setaffinity_np(pthread_self(), sizeof(*cpuset), cpuset) < 0)
+ 		ublk_err("ublk dev %u thread %u set affinity failed",
+ 				t->dev->dev_info.dev_id, t->idx);
+ }
+@@ -862,15 +862,21 @@ static void *ublk_io_handler_fn(void *data)
+ 	t->dev = info->dev;
+ 	t->idx = info->idx;
  
- 	/* Allocate queue structure on local NUMA node */
--	ubq = kvzalloc_node(ubq_size, GFP_KERNEL, numa_node);
-+	ubq = kvzalloc_node(struct_size(ubq, ios, depth), GFP_KERNEL,
-+			    numa_node);
- 	if (!ubq)
- 		return -ENOMEM;
++	/*
++	 * IO perf is sensitive with queue pthread affinity on NUMA machine
++	 *
++	 * Set sched_affinity at beginning, so following allocated memory/pages
++	 * could be CPU/NUMA aware.
++	 */
++	if (info->affinity)
++		ublk_thread_set_sched_affinity(t, info->affinity);
++
+ 	ret = ublk_thread_init(t, info->extra_flags);
+ 	if (ret) {
+ 		ublk_err("ublk dev %d thread %u init failed\n",
+ 				dev_id, t->idx);
+ 		return NULL;
+ 	}
+-	/* IO perf is sensitive with queue pthread affinity on NUMA machine*/
+-	if (info->affinity)
+-		ublk_thread_set_sched_affinity(t, info->affinity);
+ 	sem_post(info->ready);
  
+ 	ublk_dbg(UBLK_DBG_THREAD, "tid %d: ublk dev %d thread %u started\n",
 -- 
 2.47.0
 
