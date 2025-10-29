@@ -1,328 +1,174 @@
-Return-Path: <linux-block+bounces-29160-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29163-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCD37C1BE92
-	for <lists+linux-block@lfdr.de>; Wed, 29 Oct 2025 17:04:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2D4C1BEC5
+	for <lists+linux-block@lfdr.de>; Wed, 29 Oct 2025 17:06:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 964FB1895715
-	for <lists+linux-block@lfdr.de>; Wed, 29 Oct 2025 16:03:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EB5D19C1812
+	for <lists+linux-block@lfdr.de>; Wed, 29 Oct 2025 16:04:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945AC350A39;
-	Wed, 29 Oct 2025 16:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14ED354703;
+	Wed, 29 Oct 2025 16:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="PpMlbWl/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elq99ej+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8050B34AB1C
-	for <linux-block@vger.kernel.org>; Wed, 29 Oct 2025 16:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78D35470D;
+	Wed, 29 Oct 2025 16:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761753628; cv=none; b=RuyrHlGi49lv14PL5HRanlv4CV9uPxbQjjeW1pMQTu6z+xWttR5syEo2TfMjIsfZ54quuwUXfiZ7DzERSSk/gN/n2A6v6SSgFmaSs97dbtkGSRTzhtPGpoauHR7Mq9PsswPftmzHykLoWYYu1rPS3QVzP5qv47xwOw+9u/swpAw=
+	t=1761753673; cv=none; b=TVoSfyP4Lfy1MQ0wCxqSY73W/UBvPfoBxgSmvYeEx4A31twib38ag7uvUp1Em7sbv2SlFrngq/iEixZtycX9DqxXjJdeEphq0Suc+Itjs96oXm+hoRWLjwKi2qBogkUy39/Nac5NB52X1B4EVAldHn6WwkNWn8Lb/1aqU3tgVd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761753628; c=relaxed/simple;
-	bh=Fr7U5baYRN8HfbdSjE7ZI3OSi+lUhCiRsDDJhQiI/uQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yv+87PbeSM5JrZLI81x8o1P8mhgoTTv2Cn6gENQ6DvJZ8Wss83s1FDlTHzkHLcsdEHxD2jLdkr55TyehI0Lo7ColxYGRE1cRw4/VHiKaYSMUmSvBdkV5Ea5huIvtYkqMuEX/K45wUof3v7/rqSeW/Z9THMYmdMBCDKoY4nVwuV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=PpMlbWl/; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-27eca7297a7so8328125ad.1
-        for <linux-block@vger.kernel.org>; Wed, 29 Oct 2025 09:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1761753626; x=1762358426; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O3tYa5A7MyefjzRhEXSfNpMUwfO4ju4wXaq3vjxUkHo=;
-        b=PpMlbWl/tZ+YsJjH3aG3qjve4f119fQjVjwOvzohZWydJkpJnkIayaZLh8Pul9IAeR
-         SBEhI7xs6AaDnB6YP0xHvA+5PR+IQZav5/azCIeVsL6mKSvIM0oqg7adB8R4XsQ7K3lp
-         kDA6lqq3+OYRWPO/ahgijX0FmV6ahvOmP8oroKpqEDfptw/nHc7y4j3HrB1H7d9uqZGE
-         2TwPfD/4g9Im60mGecP6Vye5zaZBrC1UKDyfEyxEa19F4pkNiPVg/8bKZI+bZ9E3JS/9
-         KlJ/5b/W/ZDYOZ4bRdwOSc5fh5tGBS22EX1EZ3E9uQbbiViuDCoYuUE8OjSxvmDv6rG7
-         g9uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761753626; x=1762358426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O3tYa5A7MyefjzRhEXSfNpMUwfO4ju4wXaq3vjxUkHo=;
-        b=NWLlC8JGE1FCOzd7xwUiliI6E83jImQJ4zZ0ZgUMy1uw7PI0nO65OrGfksgNbKqSVk
-         AGUllRr0gI4RLnArzlIT994jdBvKJ4Ht9m/VTH+DjtCDH3j5Yu7kQwEugpw5w2CRIYrI
-         L7JYnuo+bVTfG/0ZCbLoO868zMrgVQGAso6I9L2v96i+/wIzG89LQP1OI/ib/OHMMb/F
-         7yUqDG6hhw8T5LRCoYz7HMmqOEgpKoWWofpOFgEiMeWlPmvE19tLxKOblrTqyPnOJve5
-         se/ig76Fz3DfZaEyZ/f63iD6j5IZvb3A6FtLjdpdJOEFsGo14tuBUJDdGvmzYlPgSTCZ
-         5guw==
-X-Forwarded-Encrypted: i=1; AJvYcCUezME2USCZw+Z5f6pgCm9O914Wnab6QSg7ZlvmsAPUbe7QsszRkcIyA4UMkqMFEY4szRU+pS7m8aXQlA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yycx7DTpf6K5cGJp15N08gqoEF2AhGc0ZGmXpUUAEAUT/lq5wlg
-	qMrgVhwob+SWdJK++Qok9Hb9DqbYMBFJQuedJmMp1YsTdYAbpOibT4PjQrPEVL7aNmtbelQGFZW
-	vsias2swHBRx+lIvcLGtcCVW3DWHnYqlkl9SWeg1rztFjq3zZApUgK6te2g==
-X-Gm-Gg: ASbGnctpKXaz/lpGBp3HWSjvMX53kAULCg7EMFVHSTQgK2aTgygANHRVG9/KFPXEG0a
-	+okrTHEmf+1rQwJ2kLr4IkX3GrJ2iut0Ww8zyIGAbKO06dGO57128/6867H1Kgh/ceG0pAfFXwm
-	tNQ6Va8GQLnJr1LL5g+6iRroE1wU8jVgHjptVf8Kk+4P+DY32YJfw4+pb4Ui83uv+b8Wy+Znv6x
-	IQaDumsn4NjE0uGUpyCDORiESMwgvu6ilXz9bJ4uhPDbWpWb/WFrrs4xPn7e0H5omLyvaLOvvp2
-	pQAflCEXi55JzTssig==
-X-Google-Smtp-Source: AGHT+IEoCRbEb52RtTy5icslCFqy278IzbjfHRANIbzt8mqyds2SX41wVt/1NyVR99WCRavejHBhvuXeWSeJvRjWL7I=
-X-Received: by 2002:a17:903:2445:b0:257:3283:b859 with SMTP id
- d9443c01a7336-294deee3548mr18277985ad.9.1761753625487; Wed, 29 Oct 2025
- 09:00:25 -0700 (PDT)
+	s=arc-20240116; t=1761753673; c=relaxed/simple;
+	bh=3vuvuxbp2D3rSBsSe0LIAeWtEdZFTpQ44jA3h2ArYZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ni2WGkaQUtyHKF3CxriPPTZEdjWbRtOueHg7swx69AvbK3YAHhlDj2Rs+4dK15qQWW6yn0LXCyUzlOJt13dRXNz+u6zDZLuS/kOHYV5+oEryYbtD6nGI/JE+kQCQ8DIScUgTEcqzwhalNJo4D+ff4KyedKYD12PVG7Vvm997r94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elq99ej+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC0CAC4CEF7;
+	Wed, 29 Oct 2025 16:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761753673;
+	bh=3vuvuxbp2D3rSBsSe0LIAeWtEdZFTpQ44jA3h2ArYZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=elq99ej+LrJrNzw+yNeRp9JwUpl9kOKeYZdOHyS4MCk+1ApYNm3v0nmcNABe0P1Je
+	 hgISnmXUt5RsUAJdGnpWMCVPVKeP8SjDLgogM6InzUMx9udIoPoLRTBBiuLHQcSj4/
+	 hh4mP2hY7LniKki/cnmMy8pc+9Jl6g2XB3YCFNSBWrFBRGeKbvH9Glu/8N9ONVb6/Q
+	 yky4SIkV15hgCX/00m7g3PleET0IsRzELoOrWC1YIBf+CrCCuGUn9E7D0o1YMD0X1B
+	 F0JGUQMUqqnxOFVKPz2uZjJ31rbQzvTn+FS6+/8XV77C+h0r8ZIkfgBA4UyEAYPq5Z
+	 vkPjSCxwa+YoQ==
+Date: Wed, 29 Oct 2025 09:01:12 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Carlos Maiolino <cem@kernel.org>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/4] fs: replace FOP_DIO_PARALLEL_WRITE with a fmode bits
+Message-ID: <20251029160112.GF3356773@frogsfrogsfrogs>
+References: <20251029071537.1127397-1-hch@lst.de>
+ <20251029071537.1127397-2-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251029031035.258766-1-ming.lei@redhat.com> <20251029031035.258766-3-ming.lei@redhat.com>
-In-Reply-To: <20251029031035.258766-3-ming.lei@redhat.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 29 Oct 2025 09:00:12 -0700
-X-Gm-Features: AWmQ_bmN7W1ZzrfnfgX5e28iMzDRDfX64ZaHKIVvQARSNuu_kYcPSPnhtgSJEVE
-Message-ID: <CADUfDZpBhBO8cppa2phmhkaCSJW1Yzk1aLzoF4zH3Cgu+D9Pcg@mail.gmail.com>
-Subject: Re: [PATCH V3 2/5] ublk: implement NUMA-aware memory allocation
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	Uday Shankar <ushankar@purestorage.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251029071537.1127397-2-hch@lst.de>
 
-On Tue, Oct 28, 2025 at 8:11=E2=80=AFPM Ming Lei <ming.lei@redhat.com> wrot=
-e:
->
-> Implement NUMA-friendly memory allocation for ublk driver to improve
-> performance on multi-socket systems.
->
-> This commit includes the following changes:
->
-> 1. Convert struct ublk_device to use a flexible array member for the
->    queues field instead of a separate pointer array allocation. This
->    eliminates one level of indirection and simplifies memory management.
->    The queues array is now allocated as part of struct ublk_device using
->    struct_size().
+On Wed, Oct 29, 2025 at 08:15:02AM +0100, Christoph Hellwig wrote:
+> To properly handle the direct to buffered I/O fallback for devices that
+> require stable writes, we need to be able to set the DIO_PARALLEL_WRITE
+> on a per-file basis and no statically for a given file_operations
+> instance.
+> 
+> This effectively reverts a part of 210a03c9d51a ("fs: claw back a few
+> FMODE_* bits").
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Technically it ends up being the same number of indirections as
-before, since changing queues from a single allocation to an array of
-separate allocations adds another indirection.
+Looks ok,
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
->
-> 2. Rename __queues to queues, dropping the __ prefix since the field is
->    now accessed directly throughout the codebase rather than only through
->    the ublk_get_queue() helper.
->
-> 3. Remove the queue_size field from struct ublk_device as it is no longer
->    needed.
->
-> 4. Move queue allocation and deallocation into ublk_init_queue() and
->    ublk_deinit_queue() respectively, improving encapsulation. This
->    simplifies ublk_init_queues() and ublk_deinit_queues() to just
->    iterate and call the per-queue functions.
->
-> 5. Add ublk_get_queue_numa_node() helper function to determine the
->    appropriate NUMA node for a queue by finding the first CPU mapped
->    to that queue via tag_set.map[HCTX_TYPE_DEFAULT].mq_map[] and
->    converting it to a NUMA node using cpu_to_node(). This function is
->    called internally by ublk_init_queue() to determine the allocation
->    node.
->
-> 6. Allocate each queue structure on its local NUMA node using
->    kvzalloc_node() in ublk_init_queue().
->
-> 7. Allocate the I/O command buffer on the same NUMA node using
->    alloc_pages_node().
->
-> This reduces memory access latency on multi-socket NUMA systems by
-> ensuring each queue's data structures are local to the CPUs that
-> access them.
->
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+--D
+
 > ---
->  drivers/block/ublk_drv.c | 84 +++++++++++++++++++++++++---------------
->  1 file changed, 53 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 2569566bf5e6..ed77b4527b33 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -209,9 +209,6 @@ struct ublk_queue {
->  struct ublk_device {
->         struct gendisk          *ub_disk;
->
-> -       char    *__queues;
-> -
-> -       unsigned int    queue_size;
->         struct ublksrv_ctrl_dev_info    dev_info;
->
->         struct blk_mq_tag_set   tag_set;
-> @@ -239,6 +236,8 @@ struct ublk_device {
->         bool canceling;
->         pid_t   ublksrv_tgid;
->         struct delayed_work     exit_work;
-> +
-> +       struct ublk_queue       *queues[] __counted_by(dev_info.nr_hw_que=
-ues);
+>  fs/ext4/file.c      | 2 +-
+>  fs/xfs/xfs_file.c   | 4 ++--
+>  include/linux/fs.h  | 7 ++-----
+>  io_uring/io_uring.c | 2 +-
+>  4 files changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> index 7a8b30932189..b484e98b9c78 100644
+> --- a/fs/ext4/file.c
+> +++ b/fs/ext4/file.c
+> @@ -924,6 +924,7 @@ static int ext4_file_open(struct inode *inode, struct file *filp)
+>  		filp->f_mode |= FMODE_CAN_ATOMIC_WRITE;
+>  
+>  	filp->f_mode |= FMODE_NOWAIT | FMODE_CAN_ODIRECT;
+> +	filp->f_mode |= FMODE_DIO_PARALLEL_WRITE;
+>  	return dquot_file_open(inode, filp);
+>  }
+>  
+> @@ -978,7 +979,6 @@ const struct file_operations ext4_file_operations = {
+>  	.splice_write	= iter_file_splice_write,
+>  	.fallocate	= ext4_fallocate,
+>  	.fop_flags	= FOP_MMAP_SYNC | FOP_BUFFER_RASYNC |
+> -			  FOP_DIO_PARALLEL_WRITE |
+>  			  FOP_DONTCACHE,
 >  };
->
->  /* header of ublk_params */
-> @@ -781,7 +780,7 @@ static noinline void ublk_put_device(struct ublk_devi=
-ce *ub)
->  static inline struct ublk_queue *ublk_get_queue(struct ublk_device *dev,
->                 int qid)
->  {
-> -       return (struct ublk_queue *)&(dev->__queues[qid * dev->queue_size=
-]);
-> +       return dev->queues[qid];
->  }
->
->  static inline bool ublk_rq_has_data(const struct request *rq)
-> @@ -2662,9 +2661,13 @@ static const struct file_operations ublk_ch_fops =
-=3D {
->
->  static void ublk_deinit_queue(struct ublk_device *ub, int q_id)
->  {
-> -       int size =3D ublk_queue_cmd_buf_size(ub);
-> -       struct ublk_queue *ubq =3D ublk_get_queue(ub, q_id);
-> -       int i;
-> +       struct ublk_queue *ubq =3D ub->queues[q_id];
-> +       int size, i;
-> +
-> +       if (!ubq)
-> +               return;
-> +
-> +       size =3D ublk_queue_cmd_buf_size(ub);
->
->         for (i =3D 0; i < ubq->q_depth; i++) {
->                 struct ublk_io *io =3D &ubq->ios[i];
-> @@ -2676,57 +2679,76 @@ static void ublk_deinit_queue(struct ublk_device =
-*ub, int q_id)
->
->         if (ubq->io_cmd_buf)
->                 free_pages((unsigned long)ubq->io_cmd_buf, get_order(size=
-));
-> +
-> +       kvfree(ubq);
-> +       ub->queues[q_id] =3D NULL;
-> +}
-> +
-> +static int ublk_get_queue_numa_node(struct ublk_device *ub, int q_id)
-> +{
-> +       unsigned int cpu;
-> +
-> +       /* Find first CPU mapped to this queue */
-> +       for_each_possible_cpu(cpu) {
-> +               if (ub->tag_set.map[HCTX_TYPE_DEFAULT].mq_map[cpu] =3D=3D=
- q_id)
-> +                       return cpu_to_node(cpu);
-> +       }
-
-I think you could avoid this quadratic lookup by using blk_mq_hw_ctx's
-numa_node field. The initialization code would probably have to move
-to ublk_init_hctx() in order to have access to the blk_mq_hw_ctx. But
-may not be worth the effort just to save some time at ublk creation
-time. What you have seems fine.
-
-Best,
-Caleb
-
-> +
-> +       return NUMA_NO_NODE;
->  }
->
->  static int ublk_init_queue(struct ublk_device *ub, int q_id)
->  {
-> -       struct ublk_queue *ubq =3D ublk_get_queue(ub, q_id);
-> +       int depth =3D ub->dev_info.queue_depth;
-> +       int ubq_size =3D sizeof(struct ublk_queue) + depth * sizeof(struc=
-t ublk_io);
->         gfp_t gfp_flags =3D GFP_KERNEL | __GFP_ZERO;
-> -       void *ptr;
-> +       struct ublk_queue *ubq;
-> +       struct page *page;
-> +       int numa_node;
->         int size;
->
-> +       /* Determine NUMA node based on queue's CPU affinity */
-> +       numa_node =3D ublk_get_queue_numa_node(ub, q_id);
-> +
-> +       /* Allocate queue structure on local NUMA node */
-> +       ubq =3D kvzalloc_node(ubq_size, GFP_KERNEL, numa_node);
-> +       if (!ubq)
-> +               return -ENOMEM;
-> +
->         spin_lock_init(&ubq->cancel_lock);
->         ubq->flags =3D ub->dev_info.flags;
->         ubq->q_id =3D q_id;
-> -       ubq->q_depth =3D ub->dev_info.queue_depth;
-> +       ubq->q_depth =3D depth;
->         size =3D ublk_queue_cmd_buf_size(ub);
->
-> -       ptr =3D (void *) __get_free_pages(gfp_flags, get_order(size));
-> -       if (!ptr)
-> +       /* Allocate I/O command buffer on local NUMA node */
-> +       page =3D alloc_pages_node(numa_node, gfp_flags, get_order(size));
-> +       if (!page) {
-> +               kvfree(ubq);
->                 return -ENOMEM;
-> +       }
-> +       ubq->io_cmd_buf =3D page_address(page);
->
-> -       ubq->io_cmd_buf =3D ptr;
-> +       ub->queues[q_id] =3D ubq;
->         ubq->dev =3D ub;
->         return 0;
->  }
->
->  static void ublk_deinit_queues(struct ublk_device *ub)
->  {
-> -       int nr_queues =3D ub->dev_info.nr_hw_queues;
->         int i;
->
-> -       if (!ub->__queues)
-> -               return;
+>  
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 2702fef2c90c..5703b6681b1d 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1553,6 +1553,7 @@ xfs_file_open(
+>  	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
+>  		return -EIO;
+>  	file->f_mode |= FMODE_NOWAIT | FMODE_CAN_ODIRECT;
+> +	file->f_mode |= FMODE_DIO_PARALLEL_WRITE;
+>  	if (xfs_get_atomic_write_min(XFS_I(inode)) > 0)
+>  		file->f_mode |= FMODE_CAN_ATOMIC_WRITE;
+>  	return generic_file_open(inode, file);
+> @@ -1951,8 +1952,7 @@ const struct file_operations xfs_file_operations = {
+>  	.fadvise	= xfs_file_fadvise,
+>  	.remap_file_range = xfs_file_remap_range,
+>  	.fop_flags	= FOP_MMAP_SYNC | FOP_BUFFER_RASYNC |
+> -			  FOP_BUFFER_WASYNC | FOP_DIO_PARALLEL_WRITE |
+> -			  FOP_DONTCACHE,
+> +			  FOP_BUFFER_WASYNC | FOP_DONTCACHE,
+>  };
+>  
+>  const struct file_operations xfs_dir_file_operations = {
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c895146c1444..09b47effc55e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -128,9 +128,8 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+>  #define FMODE_WRITE_RESTRICTED	((__force fmode_t)(1 << 6))
+>  /* File supports atomic writes */
+>  #define FMODE_CAN_ATOMIC_WRITE	((__force fmode_t)(1 << 7))
 > -
-> -       for (i =3D 0; i < nr_queues; i++)
-> +       for (i =3D 0; i < ub->dev_info.nr_hw_queues; i++)
->                 ublk_deinit_queue(ub, i);
-> -       kvfree(ub->__queues);
->  }
->
->  static int ublk_init_queues(struct ublk_device *ub)
->  {
-> -       int nr_queues =3D ub->dev_info.nr_hw_queues;
-> -       int depth =3D ub->dev_info.queue_depth;
-> -       int ubq_size =3D sizeof(struct ublk_queue) + depth * sizeof(struc=
-t ublk_io);
-> -       int i, ret =3D -ENOMEM;
-> +       int i, ret;
->
-> -       ub->queue_size =3D ubq_size;
-> -       ub->__queues =3D kvcalloc(nr_queues, ubq_size, GFP_KERNEL);
-> -       if (!ub->__queues)
-> -               return ret;
+> -/* FMODE_* bit 8 */
 > -
-> -       for (i =3D 0; i < nr_queues; i++) {
-> -               if (ublk_init_queue(ub, i))
-> +       for (i =3D 0; i < ub->dev_info.nr_hw_queues; i++) {
-> +               ret =3D ublk_init_queue(ub, i);
-> +               if (ret)
->                         goto fail;
->         }
->
-> @@ -3128,7 +3150,7 @@ static int ublk_ctrl_add_dev(const struct ublksrv_c=
-trl_cmd *header)
->                 goto out_unlock;
->
->         ret =3D -ENOMEM;
-> -       ub =3D kzalloc(sizeof(*ub), GFP_KERNEL);
-> +       ub =3D kzalloc(struct_size(ub, queues, info.nr_hw_queues), GFP_KE=
-RNEL);
->         if (!ub)
->                 goto out_unlock;
->         mutex_init(&ub->mutex);
-> --
-> 2.47.0
->
+> +/* Supports non-exclusive O_DIRECT writes from multiple threads */
+> +#define FMODE_DIO_PARALLEL_WRITE ((__force fmode_t)(1 << 8))
+>  /* 32bit hashes as llseek() offset (for directories) */
+>  #define FMODE_32BITHASH         ((__force fmode_t)(1 << 9))
+>  /* 64bit hashes as llseek() offset (for directories) */
+> @@ -2317,8 +2316,6 @@ struct file_operations {
+>  #define FOP_BUFFER_WASYNC	((__force fop_flags_t)(1 << 1))
+>  /* Supports synchronous page faults for mappings */
+>  #define FOP_MMAP_SYNC		((__force fop_flags_t)(1 << 2))
+> -/* Supports non-exclusive O_DIRECT writes from multiple threads */
+> -#define FOP_DIO_PARALLEL_WRITE	((__force fop_flags_t)(1 << 3))
+>  /* Contains huge pages */
+>  #define FOP_HUGE_PAGES		((__force fop_flags_t)(1 << 4))
+>  /* Treat loff_t as unsigned (e.g., /dev/mem) */
+> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+> index 296667ba712c..668937da27e8 100644
+> --- a/io_uring/io_uring.c
+> +++ b/io_uring/io_uring.c
+> @@ -469,7 +469,7 @@ static void io_prep_async_work(struct io_kiocb *req)
+>  
+>  		/* don't serialize this request if the fs doesn't need it */
+>  		if (should_hash && (req->file->f_flags & O_DIRECT) &&
+> -		    (req->file->f_op->fop_flags & FOP_DIO_PARALLEL_WRITE))
+> +		    (req->file->f_mode & FMODE_DIO_PARALLEL_WRITE))
+>  			should_hash = false;
+>  		if (should_hash || (ctx->flags & IORING_SETUP_IOPOLL))
+>  			io_wq_hash_work(&req->work, file_inode(req->file));
+> -- 
+> 2.47.3
+> 
+> 
 
