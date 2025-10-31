@@ -1,69 +1,75 @@
-Return-Path: <linux-block+bounces-29288-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29285-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7C49C24338
-	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 10:37:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92106C24373
+	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 10:40:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 94CE14F2CE0
-	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 09:36:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEB68426359
+	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 09:36:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F146329E64;
-	Fri, 31 Oct 2025 09:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6219C329E74;
+	Fri, 31 Oct 2025 09:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cR8gyRvi"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DZPTwvK5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B355331B116;
-	Fri, 31 Oct 2025 09:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF52329E64
+	for <linux-block@vger.kernel.org>; Fri, 31 Oct 2025 09:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761903372; cv=none; b=PTcsv8Hy+L+/uSe32lkf2rGizNCc1VIQbWRhU+ZLx1KZ2AQof6CanPVpnLqO02Pk3LVBoy8M/sopEMK772Q1tx4AwJD1ea6Caowt9QoV0nT8FWlILsl3IbRF5puRxUXg8qMRBf7DVXsrKqN61dM3c+RxoQLi/YECqyxtIlFb3Y0=
+	t=1761903361; cv=none; b=U1jIM9qYVo0ShnK7O+R6dJpPupQNzgJD+/tNba8G+R/nwyA7wRzaRiJAdKsyXQgcoCb1DkxgxHggFJIPZlkj99Hn4kk+0jHzUr5CuJ08jFNwPJjfHRN/dMUqoCy9nojD+UFsNMQEAmZ+gl298VeAoQ3PJWCiU+SQLjhi9Hipv30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761903372; c=relaxed/simple;
-	bh=3VtwKXYw6rGGIpLcHovkjlsw/+Gggv6WoWb7yAUCwPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IlE8gdbP4D3XcVyPfbMwE12i/29MSQiM/Z62oV5FBPyKp1Uq4zgeu4snRdYog/eOzTn3xBeIPlg9SPIr3OXjMPhMkR0rKLMAjTjrZ7y1OADZ9YATvuN9gxc8CYtNEtvohgm8fu7/ugNmdwRE28FfQwKVgD3nccUJHc67oVObkDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cR8gyRvi; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=wAylb0D6cMRFiTtOtljfzXlqGrVPob/jf/2jDFIsOSQ=; b=cR8gyRvic/ui/DEy2j6JZJjgqb
-	koZlP+rhGEHVJw278pizwXCpDr0qxKxM/N+B2BWiChuTizldoR4I7iaqaN2pPpGphC0il3ZekmM4e
-	WjZMM/GJad4al3Vxmi6ou6JDhPqXiJqEK/15u6LOyxrepYe36kQzWikRTVCKlE17fb7SwsZvwE9Ua
-	wBQ9oBOwOQ/ym95wjQd+KV5yVF3BRww1k9+GwcqtL6Jx8VCZomqWz7e2wVsKi453wCrKay9zxWdoF
-	6z4ywdyIkdg/sNTO62addxh0ClAirhABJALDs1JPnx2xUComewurIVbR1OAcijTlIjiNVVncnrr1B
-	GWwfQI4A==;
-Received: from [2001:4bb8:2dc:1001:a959:25cf:98e9:329b] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vElYG-00000005ou9-1GlQ;
-	Fri, 31 Oct 2025 09:36:08 +0000
-From: Christoph Hellwig <hch@lst.de>
+	s=arc-20240116; t=1761903361; c=relaxed/simple;
+	bh=axLiaAY5+w7Dletd+wQX1BHJcWPqi4LziJ21WSkAwik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qvGSF9medjLzFv3rB1XfSujzo2ddmzBfZfant1w6MLNvvfJuddR9zUT8ORk7y4mxYTDB5T/mVQhwIo7oOujsUxkV+sak3kKgGqAeKCV3KsMAP0gY/y4CK/xJmKD+Mf8FPZSa9ql+/MaVtD1TgJZIWlC4eeqzpCow8I/PTtx9qwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=DZPTwvK5; arc=none smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1761903360; x=1793439360;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=axLiaAY5+w7Dletd+wQX1BHJcWPqi4LziJ21WSkAwik=;
+  b=DZPTwvK5o+tTXWMQfh5uRPYPwpl2W3vnGw42R76BvXjtZ2eY5BGhMKw9
+   8MsLLycgWHHeEMagQvZNf2M9ryxAx0jVs5S+u6pFfVswvC/axskG4AxGo
+   olqsxGisRTi1RPdcX90WoPJRJri+M9zQVBehq/ERMQsa56WIxPM5hZHoe
+   v1wEWs8Fl4Pk0YNWo46f1uQtHYcU2BT+aS8vwST9r3HdQ8Rg57c+uOQp7
+   BOWOoq9BX1Muvi1y3TcyHuuAGZzvUTqUAsawa1eBIcYqPJcFaviHIzkuU
+   3aAia4O6iztybY9SIbcVijErtNApi5vTXu4/FnTbnEltDb7IPL66S7RHZ
+   g==;
+X-CSE-ConnectionGUID: pkXZ+RVdTiaK3SvBs4g9+w==
+X-CSE-MsgGUID: NNL80SRBRLO8TPElzpm0gw==
+X-IronPort-AV: E=Sophos;i="6.19,269,1754928000"; 
+   d="scan'208";a="133904006"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 31 Oct 2025 17:35:53 +0800
+IronPort-SDR: 690482f8_9ZGUljlAkujpCc1cT8YVCpjLf52f/CFXRWov2GRzisV5WT1
+ /1IX4QPlXUVhdIIYvhE2P4NQNVJZ9UAJ3yLxGLw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 31 Oct 2025 02:35:53 -0700
+WDCIronportException: Internal
+Received: from wdap-nazonkp1b2.ad.shared (HELO gcv.wdc.com) ([10.224.178.8])
+  by uls-op-cesaip02.wdc.com with ESMTP; 31 Oct 2025 02:35:49 -0700
+From: Hans Holmberg <hans.holmberg@wdc.com>
 To: Jens Axboe <axboe@kernel.dk>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 9/9] blk-crypto: use mempool_alloc_bulk for encrypted bio page allocation
-Date: Fri, 31 Oct 2025 10:34:39 +0100
-Message-ID: <20251031093517.1603379-10-hch@lst.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251031093517.1603379-1-hch@lst.de>
-References: <20251031093517.1603379-1-hch@lst.de>
+	linux-block@vger.kernel.org
+Cc: Keith Busch <kbusch@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Hans Holmberg <hans.holmberg@wdc.com>
+Subject: [PATCH v3] null_blk: set dma alignment to logical block size
+Date: Fri, 31 Oct 2025 10:35:46 +0100
+Message-ID: <20251031093546.134229-1-hans.holmberg@wdc.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -71,126 +77,51 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Calling mempool_alloc in a lot is not safe unless the maximum allocation
-size times the maximum number of threads using it is less than the
-minimum pool size.  Use the new mempool_alloc_bulk helper to allocate
-all missing elements in one pass to remove this deadlock risk.  This
-also means that non-pool allocations now use alloc_pages_bulk which can
-be significantly faster than a loop over individual page allocations.
+This driver assumes that bio vectors are memory aligned to the logical
+block size, so set the queue limit to reflect that.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Unless we set up the limit based on the logical block size, we will go
+out of page bounds in copy_to_nullb / copy_from_nullb.
+
+Apparently this wasn't noticed so far because none of the tests generate
+such buffers, but since commit 851c4c96db00 ("xfs: implement
+XFS_IOC_DIOINFO in terms of vfs_getattr") xfstests generates unaligned
+I/O, which now lead to memory corruption when using null_blk devices
+with 4k block size.
+
+Fixes: bf8d08532bc1 ("iomap: add support for dma aligned direct-io")
+Fixes: b1a000d3b8ec ("block: relax direct io memory alignment")
+Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
 ---
- block/blk-crypto-fallback.c | 54 ++++++++++++++++++++++++++++++-------
- 1 file changed, 45 insertions(+), 9 deletions(-)
 
-diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
-index 33aa7b26ed37..2f78027f0cce 100644
---- a/block/blk-crypto-fallback.c
-+++ b/block/blk-crypto-fallback.c
-@@ -22,7 +22,7 @@
- #include "blk-cgroup.h"
- #include "blk-crypto-internal.h"
+Changes in v3:
+* Improved the commit message, providing more background and hilighting
+  the severty of the issue (as suggested by Christoph, thanks!)
+
+Changes in v2:
+* Added fixes tags from Christoph
+* Added reviewed-bys from Keith and Christoph
+
+v1: https://lore.kernel.org/all/20251029133956.19554-1-hans.holmberg@wdc.com/
+
+
+ drivers/block/null_blk/main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index f982027e8c85..0ee55f889cfd 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -1949,6 +1949,7 @@ static int null_add_dev(struct nullb_device *dev)
+ 		.logical_block_size	= dev->blocksize,
+ 		.physical_block_size	= dev->blocksize,
+ 		.max_hw_sectors		= dev->max_sectors,
++		.dma_alignment		= dev->blocksize - 1,
+ 	};
  
--static unsigned int num_prealloc_bounce_pg = 32;
-+static unsigned int num_prealloc_bounce_pg = BIO_MAX_VECS;
- module_param(num_prealloc_bounce_pg, uint, 0);
- MODULE_PARM_DESC(num_prealloc_bounce_pg,
- 		 "Number of preallocated bounce pages for the blk-crypto crypto API fallback");
-@@ -164,11 +164,21 @@ static bool blk_crypto_fallback_bio_valid(struct bio *bio)
- static void blk_crypto_fallback_encrypt_endio(struct bio *enc_bio)
- {
- 	struct bio *src_bio = enc_bio->bi_private;
--	int i;
-+	struct page **pages = (struct page **)enc_bio->bi_io_vec;
-+	struct bio_vec *bv;
-+	unsigned int i;
- 
--	for (i = 0; i < enc_bio->bi_vcnt; i++)
--		mempool_free(enc_bio->bi_io_vec[i].bv_page,
--			     blk_crypto_bounce_page_pool);
-+	/*
-+	 * Use the same trick as the alloc side to avoid the need for an extra
-+	 * pages array.
-+	 */
-+	bio_for_each_bvec_all(bv, enc_bio, i)
-+		pages[i] = bv->bv_page;
-+
-+	i = mempool_free_bulk(blk_crypto_bounce_page_pool, (void **)pages,
-+			enc_bio->bi_vcnt);
-+	if (i < enc_bio->bi_vcnt)
-+		release_pages(pages + i, enc_bio->bi_vcnt - i);
- 
- 	src_bio->bi_status = enc_bio->bi_status;
- 
-@@ -176,9 +186,12 @@ static void blk_crypto_fallback_encrypt_endio(struct bio *enc_bio)
- 	bio_endio(src_bio);
- }
- 
-+#define PAGE_PTRS_PER_BVEC     (sizeof(struct bio_vec) / sizeof(struct page *))
-+
- static struct bio *blk_crypto_alloc_enc_bio(struct bio *bio_src,
--		unsigned int nr_segs)
-+		unsigned int nr_segs, struct page ***pages_ret)
- {
-+	struct page **pages;
- 	struct bio *bio;
- 
- 	bio = bio_alloc_bioset(bio_src->bi_bdev, nr_segs, bio_src->bi_opf,
-@@ -192,6 +205,29 @@ static struct bio *blk_crypto_alloc_enc_bio(struct bio *bio_src,
- 	bio->bi_write_stream	= bio_src->bi_write_stream;
- 	bio->bi_iter.bi_sector	= bio_src->bi_iter.bi_sector;
- 	bio_clone_blkg_association(bio, bio_src);
-+
-+	/*
-+	 * Move page array up in the allocated memory for the bio vecs as far as
-+	 * possible so that we can start filling biovecs from the beginning
-+	 * without overwriting the temporary page array.
-+	 */
-+	static_assert(PAGE_PTRS_PER_BVEC > 1);
-+	pages = (struct page **)bio->bi_io_vec;
-+	pages += nr_segs * (PAGE_PTRS_PER_BVEC - 1);
-+
-+	/*
-+	 * Try a bulk allocation first.  This could leave random pages in the
-+	 * array unallocated, but we'll fix that up later in mempool_alloc_bulk.
-+	 *
-+	 * Note: alloc_pages_bulk needs the array to be zeroed, as it assumes
-+	 * any non-zero slot already contains a valid allocation.
-+	 */
-+	memset(pages, 0, sizeof(struct page *) * nr_segs);
-+	if (alloc_pages_bulk(GFP_NOFS, nr_segs, pages) < nr_segs) {
-+		mempool_alloc_bulk(blk_crypto_bounce_page_pool, (void **)pages,
-+				nr_segs, GFP_NOIO);
-+	}
-+	*pages_ret = pages;
- 	return bio;
- }
- 
-@@ -234,6 +270,7 @@ static blk_status_t __blk_crypto_fallback_encrypt_bio(struct bio *src_bio,
- 	struct scatterlist src, dst;
- 	union blk_crypto_iv iv;
- 	struct bio *enc_bio = NULL;
-+	struct page **enc_pages;
- 	unsigned int nr_segs;
- 	unsigned int enc_idx = 0;
- 	unsigned int j;
-@@ -259,11 +296,10 @@ static blk_status_t __blk_crypto_fallback_encrypt_bio(struct bio *src_bio,
- 
- 		if (!enc_bio) {
- 			enc_bio = blk_crypto_alloc_enc_bio(src_bio,
--					min(nr_segs, BIO_MAX_VECS));
-+					min(nr_segs, BIO_MAX_VECS), &enc_pages);
- 		}
- 
--		enc_page = mempool_alloc(blk_crypto_bounce_page_pool,
--				GFP_NOIO);
-+		enc_page = enc_pages[enc_idx];
- 		__bio_add_page(enc_bio, enc_page, src_bv.bv_len,
- 				src_bv.bv_offset);
- 
+ 	struct nullb *nullb;
 -- 
-2.47.3
+2.34.1
 
 
