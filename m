@@ -1,127 +1,79 @@
-Return-Path: <linux-block+bounces-29285-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29289-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92106C24373
-	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 10:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EB87C2438F
+	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 10:43:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEB68426359
-	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 09:36:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EB813BF150
+	for <lists+linux-block@lfdr.de>; Fri, 31 Oct 2025 09:36:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6219C329E74;
-	Fri, 31 Oct 2025 09:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DZPTwvK5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F0D2D9797;
+	Fri, 31 Oct 2025 09:36:37 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF52329E64
-	for <linux-block@vger.kernel.org>; Fri, 31 Oct 2025 09:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714E71F75A6
+	for <linux-block@vger.kernel.org>; Fri, 31 Oct 2025 09:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761903361; cv=none; b=U1jIM9qYVo0ShnK7O+R6dJpPupQNzgJD+/tNba8G+R/nwyA7wRzaRiJAdKsyXQgcoCb1DkxgxHggFJIPZlkj99Hn4kk+0jHzUr5CuJ08jFNwPJjfHRN/dMUqoCy9nojD+UFsNMQEAmZ+gl298VeAoQ3PJWCiU+SQLjhi9Hipv30=
+	t=1761903397; cv=none; b=A9+m+E+oy2YovIggJCqhSfV6P9XMU/DAvE0GAVtkmH/ykxXLxIof43UEOUaVGZvI3SRXGz6CD07hBrinUDEb2HVix/abUJr0WuPehipDGa1FTEk/OEKeQlMl6hbojFJnrb8y2fg0xb8o8656htphgXSP1Mc+m7p1gc7RAHn5Hbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761903361; c=relaxed/simple;
-	bh=axLiaAY5+w7Dletd+wQX1BHJcWPqi4LziJ21WSkAwik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qvGSF9medjLzFv3rB1XfSujzo2ddmzBfZfant1w6MLNvvfJuddR9zUT8ORk7y4mxYTDB5T/mVQhwIo7oOujsUxkV+sak3kKgGqAeKCV3KsMAP0gY/y4CK/xJmKD+Mf8FPZSa9ql+/MaVtD1TgJZIWlC4eeqzpCow8I/PTtx9qwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=DZPTwvK5; arc=none smtp.client-ip=216.71.154.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1761903360; x=1793439360;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=axLiaAY5+w7Dletd+wQX1BHJcWPqi4LziJ21WSkAwik=;
-  b=DZPTwvK5o+tTXWMQfh5uRPYPwpl2W3vnGw42R76BvXjtZ2eY5BGhMKw9
-   8MsLLycgWHHeEMagQvZNf2M9ryxAx0jVs5S+u6pFfVswvC/axskG4AxGo
-   olqsxGisRTi1RPdcX90WoPJRJri+M9zQVBehq/ERMQsa56WIxPM5hZHoe
-   v1wEWs8Fl4Pk0YNWo46f1uQtHYcU2BT+aS8vwST9r3HdQ8Rg57c+uOQp7
-   BOWOoq9BX1Muvi1y3TcyHuuAGZzvUTqUAsawa1eBIcYqPJcFaviHIzkuU
-   3aAia4O6iztybY9SIbcVijErtNApi5vTXu4/FnTbnEltDb7IPL66S7RHZ
-   g==;
-X-CSE-ConnectionGUID: pkXZ+RVdTiaK3SvBs4g9+w==
-X-CSE-MsgGUID: NNL80SRBRLO8TPElzpm0gw==
-X-IronPort-AV: E=Sophos;i="6.19,269,1754928000"; 
-   d="scan'208";a="133904006"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Oct 2025 17:35:53 +0800
-IronPort-SDR: 690482f8_9ZGUljlAkujpCc1cT8YVCpjLf52f/CFXRWov2GRzisV5WT1
- /1IX4QPlXUVhdIIYvhE2P4NQNVJZ9UAJ3yLxGLw==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 31 Oct 2025 02:35:53 -0700
-WDCIronportException: Internal
-Received: from wdap-nazonkp1b2.ad.shared (HELO gcv.wdc.com) ([10.224.178.8])
-  by uls-op-cesaip02.wdc.com with ESMTP; 31 Oct 2025 02:35:49 -0700
-From: Hans Holmberg <hans.holmberg@wdc.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Cc: Keith Busch <kbusch@kernel.org>,
+	s=arc-20240116; t=1761903397; c=relaxed/simple;
+	bh=PQgIlECVSRfTU3b67YwWxRQtT3s7QeB4p4Iu88ZXffc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3nr9grODbgmCXxv4imw4M4VRJTFY0rBWx82y83A8W26gpd5lvOIWEwq+uolPegr4N0TEBxLyU+HW8xH4eN2ETAlrUQBw6wVd5ayH2CEg0hdOu1mwGb/FW6qhyb0gf2WBwR++8iwRDGz2VBVQInfXf1t9Gc3rpXJzSd2N72jFJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 25826227A88; Fri, 31 Oct 2025 10:36:31 +0100 (CET)
+Date: Fri, 31 Oct 2025 10:36:30 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Hans Holmberg <hans.holmberg@wdc.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	Keith Busch <kbusch@kernel.org>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Hans Holmberg <hans.holmberg@wdc.com>
-Subject: [PATCH v3] null_blk: set dma alignment to logical block size
-Date: Fri, 31 Oct 2025 10:35:46 +0100
-Message-ID: <20251031093546.134229-1-hans.holmberg@wdc.com>
-X-Mailer: git-send-email 2.51.0
+	Andreas Hindborg <a.hindborg@kernel.org>
+Subject: Re: [PATCH v3] null_blk: set dma alignment to logical block size
+Message-ID: <20251031093630.GA9957@lst.de>
+References: <20251031093546.134229-1-hans.holmberg@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251031093546.134229-1-hans.holmberg@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-This driver assumes that bio vectors are memory aligned to the logical
-block size, so set the queue limit to reflect that.
+On Fri, Oct 31, 2025 at 10:35:46AM +0100, Hans Holmberg wrote:
+> This driver assumes that bio vectors are memory aligned to the logical
+> block size, so set the queue limit to reflect that.
+> 
+> Unless we set up the limit based on the logical block size, we will go
+> out of page bounds in copy_to_nullb / copy_from_nullb.
+> 
+> Apparently this wasn't noticed so far because none of the tests generate
+> such buffers, but since commit 851c4c96db00 ("xfs: implement
+> XFS_IOC_DIOINFO in terms of vfs_getattr") xfstests generates unaligned
+> I/O, which now lead to memory corruption when using null_blk devices
+> with 4k block size.
+> 
+> Fixes: bf8d08532bc1 ("iomap: add support for dma aligned direct-io")
+> Fixes: b1a000d3b8ec ("block: relax direct io memory alignment")
+> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
 
-Unless we set up the limit based on the logical block size, we will go
-out of page bounds in copy_to_nullb / copy_from_nullb.
+Still no reviewed-by tag seen.  But just for the record:
 
-Apparently this wasn't noticed so far because none of the tests generate
-such buffers, but since commit 851c4c96db00 ("xfs: implement
-XFS_IOC_DIOINFO in terms of vfs_getattr") xfstests generates unaligned
-I/O, which now lead to memory corruption when using null_blk devices
-with 4k block size.
-
-Fixes: bf8d08532bc1 ("iomap: add support for dma aligned direct-io")
-Fixes: b1a000d3b8ec ("block: relax direct io memory alignment")
-Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
----
-
-Changes in v3:
-* Improved the commit message, providing more background and hilighting
-  the severty of the issue (as suggested by Christoph, thanks!)
-
-Changes in v2:
-* Added fixes tags from Christoph
-* Added reviewed-bys from Keith and Christoph
-
-v1: https://lore.kernel.org/all/20251029133956.19554-1-hans.holmberg@wdc.com/
-
-
- drivers/block/null_blk/main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index f982027e8c85..0ee55f889cfd 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1949,6 +1949,7 @@ static int null_add_dev(struct nullb_device *dev)
- 		.logical_block_size	= dev->blocksize,
- 		.physical_block_size	= dev->blocksize,
- 		.max_hw_sectors		= dev->max_sectors,
-+		.dma_alignment		= dev->blocksize - 1,
- 	};
- 
- 	struct nullb *nullb;
--- 
-2.34.1
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
