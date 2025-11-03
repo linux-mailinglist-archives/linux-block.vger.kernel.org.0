@@ -1,288 +1,239 @@
-Return-Path: <linux-block+bounces-29405-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29407-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 704C1C2A397
-	for <lists+linux-block@lfdr.de>; Mon, 03 Nov 2025 07:45:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A45C2A3C1
+	for <lists+linux-block@lfdr.de>; Mon, 03 Nov 2025 07:55:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A561F3B1C69
-	for <lists+linux-block@lfdr.de>; Mon,  3 Nov 2025 06:45:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 567043B1C27
+	for <lists+linux-block@lfdr.de>; Mon,  3 Nov 2025 06:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92EA9299937;
-	Mon,  3 Nov 2025 06:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEAA4235BE2;
+	Mon,  3 Nov 2025 06:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WVNO7Vl1"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UC8TVTd1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8158E29992A
-	for <linux-block@vger.kernel.org>; Mon,  3 Nov 2025 06:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D3BC8FE
+	for <linux-block@vger.kernel.org>; Mon,  3 Nov 2025 06:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762152307; cv=none; b=hYwA/n1TCKTaSFxH6CHHfX6yh9fsbDK+E/0P5gPYikM8v4rqKgtMRTcP1td1BO5NX7OBCb/DDSsa+1F84D6THG8Womj1YiAf2i3+i9rhYZm3/c8+ppay3WGy0Eb79pjPuX9lidKmYYrH/pvB/Niiarola44kjzjzK005/9M6vOA=
+	t=1762152916; cv=none; b=LVocXtI30w9JQRCIb2MJcC0nf039+IZ0m8PX8n7bEnyRcmDGNCG0gblPp3d61JRphGZ+zhu+gdsexOjHVgi+RuvtTUSfK2X6GPstlypsQvkKRvK2cFwO1jvGq8gtL4QgtYqmPRIYFhvDVXw4904wsAqkXkMClFpVnAliKmtORE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762152307; c=relaxed/simple;
-	bh=MhlBcWbLbcmhQVJFe0KtjTX0KwwyZTrGrkWJKkt1g6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uu9pP+Qjc5sh8Sbd0qtgQapclXM4xdlgkaJgNfDdDs7OicHic/x7TEErja7BtPosRYDQy2VznlTRmvitbH0NKIcUYZ9wEhfdp2xxNuO6uyQAM74y1MXgnvJ8qvnafGDPVtOAmQgrzjoy+1yvcvZBf7c/VPKAsg6nPFAKYonAGG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WVNO7Vl1; arc=none smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1762152305; x=1793688305;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MhlBcWbLbcmhQVJFe0KtjTX0KwwyZTrGrkWJKkt1g6Q=;
-  b=WVNO7Vl1IETa+QCb5QsI26pttpGGlmCgCEBywuMdrT6niVYpaUUnYPun
-   Pt5Nfk3AWu9reAZ8d3e/+wwvGunxamupPANHtEAWAxGMVsgL1rwjRtszD
-   0Krmz1lryeWWUcspnQE3a7/NLohatAB78DWRHqbPt9tcSh7dvD80y0G3j
-   zfdwDMks+0XFUrwskPNFqFOInVEQFt6qV3IEM6bDIs9nYCTClG7cwMtFZ
-   X9MLAK+UB5jQlJD2glKRihOGzCsfHqRashM5o2kXO+wjdRAWG7gSlH5Z/
-   g7EO7sGaGnNXqTJrUOl6aCEzI/yGu5D/fPh4+UsBWisq9mvwIP5vj99Cr
-   g==;
-X-CSE-ConnectionGUID: ol196fTXRHe9vPebekqUtw==
-X-CSE-MsgGUID: g+nUVoXsQTuYPPh7xtzidQ==
-X-IronPort-AV: E=Sophos;i="6.19,275,1754928000"; 
-   d="scan'208";a="134391242"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep03.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Nov 2025 14:45:00 +0800
-IronPort-SDR: 69084f6c_VBW69VKo6VGKLChRg21wWZSLrhhdzsTyRQz8z5q0yTmAVl+
- WlGf22t6c4O4qRKAspvCMiTBuAugn3lIYFsVl3w==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep03.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Nov 2025 22:45:00 -0800
-WDCIronportException: Internal
-Received: from wdap-zcgq2z60ds.ad.shared (HELO shinmob.flets-east.jp) ([10.224.109.249])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Nov 2025 22:44:59 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: linux-block@vger.kernel.org,
-	Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests v2 5/5] throtl: support test with both null_blk and scsi_debug in a single run
-Date: Mon,  3 Nov 2025 15:44:54 +0900
-Message-ID: <20251103064454.724084-6-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251103064454.724084-1-shinichiro.kawasaki@wdc.com>
-References: <20251103064454.724084-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1762152916; c=relaxed/simple;
+	bh=p8yxp5/+EJSTMAUXo1GLbkETyfhQIavskwBEODWjoiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=guFuxj3iLlkVS1819+VDv+YUBu54NYNFAHfPXLxuhFt930QDPOm8HWjWujdlqyxjn8makd01UoczgPwlrY/JSgFOmOzUnRbVIHXeWFqkG19SaL7651rUKUdMYTQTaW2WAqwanHMzN/3JB2f2OfZ59HM8qxBrXER21CDHG/IE9i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UC8TVTd1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A2Hlc7h021158;
+	Mon, 3 Nov 2025 06:55:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=eMWuHB
+	XdDI7s+zR5WL9VSb14k5vTeSZT38EQVr4mWTo=; b=UC8TVTd1Peq9wz3EY6Rw9d
+	YesJS0wmKxG+L+5vYh3bNzmisDRLl7gV1PlpJVA2VIs3sB2D99GezFVV5+e29rE0
+	U7aBajMlJYDZNWe1FegiW0I2L+KTY3IarJqxyCiLeif9p4kbhJjFMkTbe2uA+kPG
+	e0a7WFOQKavvRo8CgJzup1jSWXkG1QHjNiWpdDCwoBexWLzSEt+Kc5r7C28EDxCZ
+	j6/VnyEOErneZt9i0UMZ8Ousby837UHYSWurt7dGuRoIKbx9mnSrAuk3u7eF2j4r
+	7P0iC6VXrqMHW/hXN7LnVVwYaYdAIE/+jHDH7wAdg2AE7loofhYHgyKcNpt/TD+w
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a58mknafh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 06:55:08 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A32i24p018659;
+	Mon, 3 Nov 2025 06:55:08 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5whn48cr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 06:55:08 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A36t7pW22807256
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Nov 2025 06:55:07 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 79F0958062;
+	Mon,  3 Nov 2025 06:55:07 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2F46058052;
+	Mon,  3 Nov 2025 06:55:05 +0000 (GMT)
+Received: from [9.61.101.239] (unknown [9.61.101.239])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Nov 2025 06:55:04 +0000 (GMT)
+Message-ID: <512a4b9d-ca74-4465-8945-ae2d958611a3@linux.ibm.com>
+Date: Mon, 3 Nov 2025 12:25:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv3 3/4] block: introduce alloc_sched_data and
+ free_sched_data elevator methods
+To: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, hch@lst.de, axboe@kernel.dk,
+        yi.zhang@redhat.com, czhong@redhat.com, gjoyce@ibm.com
+References: <20251029103622.205607-1-nilay@linux.ibm.com>
+ <20251029103622.205607-4-nilay@linux.ibm.com> <aQgqw-DX1A3R3wuN@fedora>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <aQgqw-DX1A3R3wuN@fedora>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ZHmaC6saNvT9B2W_8s29V9ij9nBnnF2A
+X-Proofpoint-GUID: ZHmaC6saNvT9B2W_8s29V9ij9nBnnF2A
+X-Authority-Analysis: v=2.4 cv=SqidKfO0 c=1 sm=1 tr=0 ts=690851cc cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Ph5sbopXde0_WqADPKQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAwOSBTYWx0ZWRfX7VyZcClAp+SE
+ cYabtMLAbfb7K5A8wNnN9T3dhhNlEdkfieQArwA4+zsjWOsuhN1cgINiLzhMNL81xARiOT3EdhM
+ Q1LTl6+ExHC+bVXQbjlvhXnrxscI9hhWgN0rZEEHeN27+rWJfBTbYaeaRAi/XttxVbB6DSctef/
+ H4rDNn0lBpFrPjH2URpmexhiRYh3e1mugmIfS6/zP+qH+TEsfbBKI/3BspyNWMFZkRBfXskv54p
+ QWCX73FNUxJzBKhNOQADz22eONm0As9zfICxhwnGsayCXt+nBRCgfoP0YUa4qxJUzT9lMqAQeo3
+ pOS+OBhdG22GlcrrKIQC6ewDKF9brBSsVGlYJg1KrmvShV56XR/WZACZCgDXw2vA1TCmf7afbvI
+ WqKL7enGDzctOWjpKjbZw3QB+FzJ/g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-02_02,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010009
 
-The previous commit introduced the global variable throtl_blkdev_type to
-specify the type of block device for the throtl group. However, users
-need to run tests twice modifying the variable's value each time to test
-against both device types null_blk and scsi_debug. This workflow is
-cumbersome.
 
-To run the throtl group for both null_blk and scsi_debug in a single
-run, introduce the global variable THROTL_BLKDEV_TYPES instead of
-throtl_blkdev_type. When THROTL_BLKDEV_TYPES is set to 'nullb sdebug',
-the blktests framework executes each test case in the throtl group for
-both null_blk and scsi_debug sequentially. For this purpose, introduce
-the helper function _set_throtl_blkdev_type() and call it in
-set_conditions() hooks of the test cases.
+>>  
+>> -int blk_mq_alloc_sched_res(struct elevator_resources *res,
+>> -		struct blk_mq_tag_set *set, unsigned int nr_hw_queues)
+>> +int blk_mq_alloc_sched_res(struct request_queue *q,
+>> +		struct elevator_type *type,
+>> +		struct elevator_resources *res,
+>> +		struct blk_mq_tag_set *set,
+>> +		unsigned int nr_hw_queues)
+>>  {
+>> +	int ret;
+>> +
+>>  	res->et = blk_mq_alloc_sched_tags(set, nr_hw_queues,
+>>  			blk_mq_default_nr_requests(set));
+>>  	if (!res->et)
+>>  		return -ENOMEM;
+>>  
+>> -	return 0;
+>> +	ret = blk_mq_alloc_sched_data(q, type, &res->data);
+>> +	if (ret)
+>> +		kfree(res->et);
+> 
+> use blk_mq_free_sched_res() instead of kfree() for avoiding memleak.
+> 
+Yeah will do.
 
-Each of the two command lines below runs the throtl group with both
-null_blk and scsi_debug. Please note that the default value of
-THROTL_BLKDEV_TYPES is 'nullb sdebug'.
+>> @@ -681,11 +686,15 @@ static int elevator_change(struct request_queue *q, struct elv_change_ctx *ctx)
+>>  	blk_mq_unfreeze_queue(q, memflags);
+>>  	if (!ret)
+>>  		ret = elevator_change_done(q, ctx);
+>> +
+>> +	if (ctx->new) /* switching to new elevator is successful */
+>> +		return ret;
+>> +
+> 
+> Not necessary.
+> 
+Agreed...
 
-  $ sudo bash -c "./check throtl/"
-  $ sudo bash -c "THROTL_BLKDEV_TYPES='nullb sdebug' ./check throtl/"
+>> @@ -711,11 +720,14 @@ void elv_update_nr_hw_queues(struct request_queue *q,
+>>  	blk_mq_unfreeze_queue_nomemrestore(q);
+>>  	if (!ret)
+>>  		WARN_ON_ONCE(elevator_change_done(q, ctx));
+>> +
+>> +	if (ctx->new) /* switching to new elevator is successful */
+>> +		return;
+> 
+> Not necessary.
+Agreed...> 
+>>  	/*
+>>  	 * Free sched resource if it's allocated but we couldn't switch elevator.
+>>  	 */
+>>  	if (!ctx->new)
+>> -		blk_mq_free_sched_res(&ctx->res, set);
+>> +		blk_mq_free_sched_res(&ctx->res, ctx->type, set);
+>>  }
+>>  
+>>  /*
+>> @@ -729,7 +741,6 @@ void elevator_set_default(struct request_queue *q)
+>>  		.no_uevent = true,
+>>  	};
+>>  	int err;
+>> -	struct elevator_type *e;
+>>  
+>>  	/* now we allow to switch elevator */
+>>  	blk_queue_flag_clear(QUEUE_FLAG_NO_ELV_SWITCH, q);
+>> @@ -742,8 +753,8 @@ void elevator_set_default(struct request_queue *q)
+>>  	 * have multiple queues or mq-deadline is not available, default
+>>  	 * to "none".
+>>  	 */
+>> -	e = elevator_find_get(ctx.name);
+>> -	if (!e)
+>> +	ctx.type = elevator_find_get(ctx.name);
+>> +	if (!ctx.type)
+>>  		return;
+>>  
+>>  	if ((q->nr_hw_queues == 1 ||
+>> @@ -753,7 +764,7 @@ void elevator_set_default(struct request_queue *q)
+>>  			pr_warn("\"%s\" elevator initialization, failed %d, falling back to \"none\"\n",
+>>  					ctx.name, err);
+>>  	}
+>> -	elevator_put(e);
+>> +	elevator_put(ctx.type);
+>>  }
+>>  
+>>  void elevator_set_none(struct request_queue *q)
+>> @@ -802,6 +813,7 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
+>>  	ctx.name = strstrip(elevator_name);
+>>  
+>>  	elv_iosched_load_module(ctx.name);
+>> +	ctx.type = elevator_find_get(ctx.name);
+>>  
+>>  	down_read(&set->update_nr_hwq_lock);
+>>  	if (!blk_queue_no_elv_switch(q)) {
+>> @@ -812,6 +824,9 @@ ssize_t elv_iosched_store(struct gendisk *disk, const char *buf,
+>>  		ret = -ENOENT;
+>>  	}
+>>  	up_read(&set->update_nr_hwq_lock);
+>> +
+>> +	if (ctx.type)
+>> +		elevator_put(ctx.type);
+>>  	return ret;
+> 
+> The above change can be unified into elevator_change() by one standalone
+> patch, so elv_iosched_store() can be covered too.
+> 
 
-Each of the command lines below runs the throtl group only for null_blk
-or scsi_debug, respectively.
+Hmm, I think it’s not possible to create a standalone patch here, because this
+change modifies the prototypes of blk_mq_alloc_sched_res() and blk_mq_free_sched_res().
+As a result, both the nr_hw_queues update path and the elevator_change() code paths
+need to be updated in the same patch. That said, it might still be possible to split
+this work into two patches:
+Patch 1: Introduce the new ->alloc_sched_data and ->free_sched_data methods in 
+         struct elevator_mq_ops, and add the helper functions blk_mq_alloc_sched_data()
+         and blk_mq_free_sched_data().
+Patch 2: Update the nr_hw_queues update path and the elevator switch code paths to make
+         use of these new methods.
 
-  $ sudo bash -c "THROTL_BLKDEV_TYPES='nullb' ./check throtl/"
-  $ sudo bash -c "THROTL_BLKDEV_TYPES='sdebug' ./check throtl/"
+Let me know what you think about this approach.
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- Documentation/running-tests.md | 17 +++++++++++++++++
- tests/throtl/001               |  4 ++++
- tests/throtl/002               |  4 ++++
- tests/throtl/003               |  4 ++++
- tests/throtl/004               |  4 ++++
- tests/throtl/005               |  4 ++++
- tests/throtl/006               |  4 ++++
- tests/throtl/007               |  4 ++++
- tests/throtl/rc                | 16 ++++++++++++++++
- 9 files changed, 61 insertions(+)
-
-diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-index 8ccd739..4cf1a3a 100644
---- a/Documentation/running-tests.md
-+++ b/Documentation/running-tests.md
-@@ -167,6 +167,23 @@ USE_RXE=1 ./check srp/
- 'USE_RXE' had the old name 'use_rxe'. The old name is still usable but not
- recommended.
- 
-+### Blk-throttle tests
-+
-+The blk-throttle tests has one environment variable below:
-+
-+- THROTL_BLKDEV_TYPES: 'nullb' 'sdebug'
-+  Set up test target block device based on this environment variable value. To
-+  test with null_blk, set 'nullb'. To test with scsi_debug, set 'sdebug'. To
-+  test with both, set 'nullb sdebug'. Default value is 'nullb sdebug'.
-+
-+```sh
-+To run with scsi_debug:
-+THROTL_BLKDEV_TYPES="sdebug" ./check throtl/
-+
-+To run with both null_blk and scsi_debug:
-+THROTL_BLKDEV_TYPES="nullb sdebug" ./check throtl/
-+```
-+
- ### Normal user
- 
- To run test cases which require normal user privilege, prepare a user and
-diff --git a/tests/throtl/001 b/tests/throtl/001
-index 835cac2..89a5892 100755
---- a/tests/throtl/001
-+++ b/tests/throtl/001
-@@ -9,6 +9,10 @@
- DESCRIPTION="basic functionality"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/002 b/tests/throtl/002
-index 87b9f91..08e685f 100755
---- a/tests/throtl/002
-+++ b/tests/throtl/002
-@@ -10,6 +10,10 @@
- DESCRIPTION="iops limit over IO split"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/003 b/tests/throtl/003
-index d76a0d5..700e9e6 100755
---- a/tests/throtl/003
-+++ b/tests/throtl/003
-@@ -10,6 +10,10 @@
- DESCRIPTION="bps limit over IO split"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/004 b/tests/throtl/004
-index 777afcf..b1f6110 100755
---- a/tests/throtl/004
-+++ b/tests/throtl/004
-@@ -11,6 +11,10 @@
- DESCRIPTION="delete disk while IO is throttled"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/005 b/tests/throtl/005
-index 86e52b3..7691ad1 100755
---- a/tests/throtl/005
-+++ b/tests/throtl/005
-@@ -10,6 +10,10 @@
- DESCRIPTION="change config with throttled IO"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/006 b/tests/throtl/006
-index 263415f..2dcf3a3 100755
---- a/tests/throtl/006
-+++ b/tests/throtl/006
-@@ -15,6 +15,10 @@ requires() {
- 	_have_driver ext4
- }
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test_meta_io() {
- 	local path="$1"
- 	local start_time
-diff --git a/tests/throtl/007 b/tests/throtl/007
-index 83d8dc7..97dece6 100755
---- a/tests/throtl/007
-+++ b/tests/throtl/007
-@@ -11,6 +11,10 @@
- DESCRIPTION="bps limit with iops limit over io split"
- QUICK=1
- 
-+set_conditions() {
-+	_set_throtl_blkdev_type "$@"
-+}
-+
- test() {
- 	echo "Running ${TEST_NAME}"
- 
-diff --git a/tests/throtl/rc b/tests/throtl/rc
-index f5eb84e..d1afefd 100644
---- a/tests/throtl/rc
-+++ b/tests/throtl/rc
-@@ -10,6 +10,7 @@
- . common/cgroup
- 
- THROTL_DIR=$(echo "$TEST_NAME" | tr '/' '_')
-+THROTL_BLKDEV_TYPES=${THROTL_BLKDEV_TYPES:-"nullb sdebug"}
- throtl_blkdev_type=${throtl_blkdev_type:-"nullb"}
- THROTL_NULL_DEV=dev_nullb
- declare THROTL_DEV
-@@ -25,6 +26,21 @@ group_requires() {
- 	_have_program bc
- }
- 
-+_set_throtl_blkdev_type() {
-+	local index=$1
-+	local -a types
-+
-+	read -r -a types <<< "${THROTL_BLKDEV_TYPES[@]}"
-+
-+	if [[ -z $index ]]; then
-+		echo ${#types[@]}
-+		return
-+	fi
-+
-+	throtl_blkdev_type=${types[index]}
-+	COND_DESC="${throtl_blkdev_type}"
-+}
-+
- # Prepare null_blk or scsi_debug device to test, based on throtl_blkdev_type.
- _configure_throtl_blkdev() {
- 	local sector_size=0 memory_backed=0
--- 
-2.51.0
+Thanks,
+--Nilay
 
 
