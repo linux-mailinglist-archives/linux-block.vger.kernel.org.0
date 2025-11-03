@@ -1,126 +1,134 @@
-Return-Path: <linux-block+bounces-29480-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29482-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEAC5C2CEAC
-	for <lists+linux-block@lfdr.de>; Mon, 03 Nov 2025 16:54:34 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 047BDC2CE1B
+	for <lists+linux-block@lfdr.de>; Mon, 03 Nov 2025 16:48:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C01646827F
-	for <lists+linux-block@lfdr.de>; Mon,  3 Nov 2025 15:40:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 988D0342C34
+	for <lists+linux-block@lfdr.de>; Mon,  3 Nov 2025 15:48:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C4F2820A4;
-	Mon,  3 Nov 2025 15:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D38930BF63;
+	Mon,  3 Nov 2025 15:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="SpGVeMXI"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="niOvdd5+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245953112BC
-	for <linux-block@vger.kernel.org>; Mon,  3 Nov 2025 15:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5430CDBA
+	for <linux-block@vger.kernel.org>; Mon,  3 Nov 2025 15:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762184117; cv=none; b=u17gcUNYwySXVTrKAHxh47DxLs3aWK94UkDh8A31PqmyNoBzJV5SYIslN0YW/DgDNE/so9PJvtd8Bz7hn9MNjNOyKcVyMpXGvHtwfFnJD8uAvrBGgtY3vTfTZRgbp5yCl54Fkvp5xuwBnUyW6qONLvDiICjan1e2DN4+cSJE+IE=
+	t=1762184934; cv=none; b=kcbbtZ5TwH6HmVGvJmrsPj1YaEHa/gx/ME97EPsf2mvPkuoaOOyeph1295RDVkpiFrd8CjH7NkoYjQOGakolBDKIIJj9rvIPJT8KB9/EqPJHP6seGqYcXapv8CD7GqwMLcBCMCm+xrHnzw8Syq2lC5zLF8vT0LeT4VbUf/8HHM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762184117; c=relaxed/simple;
-	bh=Q/7KSfCt9B8YNSUdE+mhLVwRE6bImpKQOHCd3aRxcmQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E3+waRrBYD9b7xo1nSd6wdD8KsEd1gTFXLvL2L8p+4KLDsYSNcZacruDAEnSv9IZw5dW5GjFW3GNPnRWgGlNIVtM5BVg/Jr+QZmYoqWejA2btWSS28VGKgVvkqF9oYUW0kLf6+boU5B/lauueIytrAc1g2RM3X3ua7vR5sqkVtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=SpGVeMXI; arc=none smtp.client-ip=209.85.166.182
+	s=arc-20240116; t=1762184934; c=relaxed/simple;
+	bh=r1Wj+lLEz6iDZYuUxloSqb4KwY7pVPQYWPbwvvKYG9s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dQO0MyYcNX5EKtTvM3PxYBlxpwqbc7LCRndADneWwVASEQaZHKA6qL96q9RA5tBLcsnZU00hxfOKKTSFPaIXfTHstW1uL1IV1l/918y4K8JhVYI3wsLMaI5GOMt8E5XCOCW6srhl+xgWv0O5CU03oMtRgOxGxPUuP3cVZ+iO2EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=niOvdd5+; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-4331e9cb748so6502495ab.1
-        for <linux-block@vger.kernel.org>; Mon, 03 Nov 2025 07:35:14 -0800 (PST)
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-4330e3080bfso14271845ab.2
+        for <linux-block@vger.kernel.org>; Mon, 03 Nov 2025 07:48:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1762184114; x=1762788914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UTjdEFNLv9QOO30a19cBVfIB/VrJFuCp5x6+pJ4o2kw=;
-        b=SpGVeMXIYeYmL8MSopYMNxPXfW1aqEwF5Jjk5nHfEmX6bA0fk0AWPjhhAGOHsv3FFY
-         F2x/u7nyXTF8HlV3Bb/Do5T3ZGwPE87MWhDVdx7YBla3RSzs21PeKbOTcXK377MMubOY
-         TIMVC+IA2Yem3bcWQIOeeFXvE0+q2cTGUHTF2Ur/I8viq4brW/sI5Y+iDik0/UmEVyJT
-         /IXJ0VGsBbevpllhAM8YbcT7iQEbF0+Q5sEzhTo53Z9OvzahWbva7IcGNIGmeHubqoAY
-         S4a/scG5Ihvpt3Uk6D85Lg0QvEUDAeIOh028rYn/NN3nhW1YX1yNi0Dmj7+GOSOu4LFX
-         Sg8A==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1762184931; x=1762789731; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=u0ZGfty/8mAewXn9BC6HcMe0Ne+1EAPTjktFM+rAXUU=;
+        b=niOvdd5+yCHGkH7Gd5SlEV9xVrbtZQDwjTItLbobAyZLw3hOFeOq9DESRfE4S7Aqtz
+         r/aAElkAl4RwqtGk86qqNvthPI7O1+RLldNHryxm/4lEiGg08KBEa9whzA3aHw5bHhIr
+         PGhUvziteYBqkx8pE2qlfHrh95oBoUrguua6OmNyOpFRYETVvEQ1kYNnwY97JWbap6SL
+         YU/ZX2rxDoHlDuYJoiKnRQV+QNeP1HT3i5hQWKm5bVCqL3ioXGdxZkUT+76Cj3gPFxbJ
+         XdNyTfUTB9Rl2FSqV4D6Fke4ONfVKh5M5otsXPU4N9UIRipAQEFBtJ9W4WqhRjVC4VRj
+         89fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762184114; x=1762788914;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UTjdEFNLv9QOO30a19cBVfIB/VrJFuCp5x6+pJ4o2kw=;
-        b=Bfyc/MAdEYqbz3gFfLoIBS8wDUVtFy3ArAvUormfKq0uyb9qmxsknoBKRfcuKgZzAA
-         nsZp9/0785/s4eE2/Kyv1CPCzKEPb5gaWKDVni65LH6XZmOaFb4GVh+Ng2wp1CbTUq5r
-         aF62abLtvOSKscMqsvzoHqchgjEmbJp5Dwkb2E/nIWsclbxAE9Xuco41kiTy0sYXj3WB
-         Ckr3u3Uao+jgyxXFVHeBg4UZ1Saw1Guj2GUtIqtxVyBz6vagIGgEH82kBajwFGeIJ8Xu
-         NUot9tLExev+5esOPKH/48sxVW3fOo+Ir3rdRBmnAvtlZzS6f1UHzVURw+sMtIviiZWU
-         wHbA==
-X-Gm-Message-State: AOJu0YygoTPU0gQFGPiUctimhIhAljQNX60FlHUSj/Yew/yWtBbb147a
-	vIFxCc1/De3uuX1h7737ipxqUUqwQQ/XjaSF9L1L6HjeCCpYBL8VRknC+zDdxq85qlYD4DlT7KT
-	2orei
-X-Gm-Gg: ASbGncuIBZyNJibeFqDQ6gxYN1u/yxTAKKOvVyEMKvvJc126cU3N01d9SQSo60MtYsf
-	9NXrMj3t1B3exz05k22bt7iJQM2Ckz5X2HAUrx2AnOQRIdKmHToxGXFBrpuzwz4i2HF3Gmp5x5y
-	sfignNKUdbG2gUsp0r6hdTyhSBPwApsbbJWOdKencw9x7Q0uXPE1DWQXYZ0GnwzanEMt2PLbIAv
-	ZaMmOBde+SiNznfCQDfF8DoTkDhZ9hsThSptM05CKMV3xnvE57pPBF0NymF9J5EJ/dlUlepqEKJ
-	epHRSAvev7jvccNfJFxgwxNvwGNZPA9NkOJG2aSH0gIknq1a4ngDeR7nd6n/vDXChYAgZGygUk3
-	OGCmaiJishYJLuheS17oyGh9ysPkMAw5j5B58miyPHlKdMJcJYgWmQcP7q8Iys8u+wZk=
-X-Google-Smtp-Source: AGHT+IEfPaeBhc08yzORBGRG7GQgaoHwaYnzIH7k9NhCnoJt8LuQEqKDdWCFpLF03Ie0eOApb8BB1A==
-X-Received: by 2002:a05:6e02:221c:b0:433:2dcb:db41 with SMTP id e9e14a558f8ab-4332dcbde8fmr61244285ab.10.1762184114106;
-        Mon, 03 Nov 2025 07:35:14 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-43335a9e6f1sm2798375ab.9.2025.11.03.07.35.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 07:35:13 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-Cc: Uday Shankar <ushankar@purestorage.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-In-Reply-To: <20251101133123.670052-1-ming.lei@redhat.com>
-References: <20251101133123.670052-1-ming.lei@redhat.com>
-Subject: Re: [PATCH V4 0/5] ublk: NUMA-aware memory allocation
-Message-Id: <176218411310.7436.8916433606322971771.b4-ty@kernel.dk>
-Date: Mon, 03 Nov 2025 08:35:13 -0700
+        d=1e100.net; s=20230601; t=1762184931; x=1762789731;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u0ZGfty/8mAewXn9BC6HcMe0Ne+1EAPTjktFM+rAXUU=;
+        b=cL+DQ5/ik7v4xqv5SOUZpCuab3gj2/rbUPsSC5P3uoteLYHFT81uTaVi6LYT3b6yxN
+         Amzw5IRqihOgOYmmf6aPF4N2xFBeBbjXx0RJRk2Ac65zD4npYcy4FDDKTxtmpPwAKi+m
+         PpIch9VUO9X8F6GKdD+AYSC644kypIPQTpFPkKPqQyigzgklzo3NmR8BBBnkceo1RraM
+         7Jn8vQLPQyOtInu5O0eluJMPcRSw/2XHwFHCIDrjRm27vSMSS8BoOa6Ern/E1Hgp/6WO
+         FTP0sxmzJQ/p9jAgCYC9hCBO5zq+HzytE8VzNrnXqIitc5IdYSgCgBhn/Zbx0C2Nx4xN
+         zXXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHm5GaxEO4E8qHC9qbUDQNf4gpyxIamjp/kMk6gcxrQvBa7WSpwhWLZTKhk90Yr3xY+B/0Jgr8wDf0jA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0XB2F//zco3pJhmr3JH661WOLSJFRpy/nn+rXmZdTTUaPOGC5
+	IeyUL8M57vyQ+og8Ofz8uzwXMTDiap/wMIZ11LyF+MHh4UCPoZg/4oesvaFEBnWk3myDkupWZdi
+	mp6Mj
+X-Gm-Gg: ASbGncsHYr+FUEwBkhM2gPxSZ241gDM5pl+h7uSeLgPMLNf3twLej4cA8zbXo1qH31m
+	CR2RJQj+i+ZvjlLoK8YMM1LGxtLXi+hZG9teZ9Pnn8bT7mX7ddtrzDvVYThArnn5aqLYi0mW9/h
+	QaUTBjy26q1p37MaGQwPicmNrRtQRtdIeFnJ86SAWLNQZEu+PrFBpAZzf8Krrvv9nFBeuwFmIl3
+	our4oxnqidnVLkpxNcyEJjLv5sujZgfG/V30fAGH5oTGDJ6JQAHRI+ynhRiyWSYfWwg3bMqnkBA
+	nE9TyVERj+1zPdFkIjJ6cuTXMbtdeUhcNjDGWdtfr5x1FgLdT41jRvakf8o4vn/sEjs3bCxK9ei
+	j1hhWfnwTksYv5c7o35PmiD968c9uGOjvIi+r2tw0fe34wVYB5AgoK3ybXjLe4vSw4cCMGzm8
+X-Google-Smtp-Source: AGHT+IGACTiQJ9Apk97yY4E++YRKeGU+wmTLYORniFjM7Gl+FdBCmn3XAqtJmv2392D7kGtuUUfyvg==
+X-Received: by 2002:a05:6e02:1805:b0:432:10f9:5e0a with SMTP id e9e14a558f8ab-4330d207238mr173707945ab.19.1762184930736;
+        Mon, 03 Nov 2025 07:48:50 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-43335b48575sm2821245ab.27.2025.11.03.07.48.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Nov 2025 07:48:49 -0800 (PST)
+Message-ID: <d83a6bdd-e445-446d-9a89-5eb517893776@kernel.dk>
+Date: Mon, 3 Nov 2025 08:48:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: update io_uring and block tree git trees
+To: John Garry <john.g.garry@oracle.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <4d23b2b2-c723-461f-94a8-a90c60982bcc@kernel.dk>
+ <ed992ce6-5224-4bf3-8bb3-91fb112c9287@oracle.com>
+ <b083caaa-5dec-41dc-8885-8ebb34cd1781@kernel.dk>
+ <2b53f0c9-3151-4f00-821e-ddae5c2c2135@oracle.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <2b53f0c9-3151-4f00-821e-ddae5c2c2135@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-On Sat, 01 Nov 2025 21:31:15 +0800, Ming Lei wrote:
-> The 1st two patches implement ublk driver NUMA aware memory allocation.
+On 11/3/25 8:29 AM, John Garry wrote:
+> On 03/11/2025 15:11, Jens Axboe wrote:
+>>> Were you also supposed to update the tree for "BLOCK LAYER"? I think
+>> Yep, as per subject, "update io_uring and block git trees"
+>>
+>>> that previously it was
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+>>> (as that it what my .git/configs entries have), and now it seems to be
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux.git
+>> linux-block is somewhat of a relic, since io_uring was managed in the
+>> same tree. That's why the block part was dropped, as both block and
+>> io_uring have development and fixes branches in that same tree.
 > 
-> The last two patches implement it for ublk selftest utility.
+> ok, so then I would expect that this further change is required:
 > 
-> `taskset -c 0-31 ~/git/fio/t/io_uring -p0 -n16 -r 40 /dev/ublkb0` shows
-> 5%~10% IOPS improvement on one AMD zen4 dual socket machine when creating
-> ublk/null with 16 queues and AUTO_BUF_REG(zero copy).
-> 
-> [...]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 545a4776795e..0f7c7388bd62 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4393,7 +4393,7 @@ BLOCK LAYER
+> M:     Jens Axboe <axboe@kernel.dk>
+> L:     linux-block@vger.kernel.org
+> S:     Maintained
+> -T:     git git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+> +T:     git git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux.git
+> F:     Documentation/ABI/stable/sysfs-block
+> F:     Documentation/block/
+> F:     block/
 
-Applied, thanks!
+Indeed, looks like that one was missed, as it already used a kernel.org git
+location.
 
-[1/5] ublk: reorder tag_set initialization before queue allocation
-      commit: 011af85ccd871526df36988c7ff20ca375fb804d
-[2/5] ublk: implement NUMA-aware memory allocation
-      commit: 529d4d6327880e5c60f4e0def39b3faaa7954e54
-[3/5] ublk: use struct_size() for allocation
-      commit: c28ba6b6c51d090103800eb1c7679c32f6501dbc
-[4/5] selftests: ublk: set CPU affinity before thread initialization
-      commit: 0123bb91f464487cc1bbdcc515757dc723496a39
-[5/5] selftests: ublk: make ublk_thread thread-local variable
-      commit: 3f5b1169d2ab20ed14271654799121232b9eb9d7
-
-Best regards,
 -- 
 Jens Axboe
-
-
 
 
