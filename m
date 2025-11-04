@@ -1,248 +1,268 @@
-Return-Path: <linux-block+bounces-29518-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29520-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FBFAC2E80F
-	for <lists+linux-block@lfdr.de>; Tue, 04 Nov 2025 01:02:24 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40CB9C2E82E
+	for <lists+linux-block@lfdr.de>; Tue, 04 Nov 2025 01:06:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67A383A065D
-	for <lists+linux-block@lfdr.de>; Tue,  4 Nov 2025 00:01:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1AA084E8A76
+	for <lists+linux-block@lfdr.de>; Tue,  4 Nov 2025 00:06:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B429B34D396;
-	Tue,  4 Nov 2025 00:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45D2827470;
+	Tue,  4 Nov 2025 00:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsqyZcHh"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NWnzXUX1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264ED41C71
-	for <linux-block@vger.kernel.org>; Tue,  4 Nov 2025 00:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26969DF49
+	for <linux-block@vger.kernel.org>; Tue,  4 Nov 2025 00:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762214516; cv=none; b=nlZI89beaJxNGmlUBa0Q7hK39ZqhWZtLLbT9+SyNTynjDAqUOwhsBVdXt+UHGpzpNgUzYk6QrGwI0ZCf5MVTrHyYdsR+BztlKbEDXBp6IDg8fNhtOWdNElN1Y+zy3+dOpo016EmciefB3N8lMV2U+d76XMxFaa7HZs6pvosoGCI=
+	t=1762214784; cv=none; b=Ss+YDZXXQRX7diKjBIXNMIl/vJ4b1quMBTpjtiofvwNobyQGgNrNfK9xqrzBdV7SxjY151MT+ViUJw+RpKaD5OEJzlD8Zjw8zpGNc4HEaRI0sM0k5HLOWoalDs80LgVwaFbSFAX7r/J1jkH6SEViERKZgiIQOecPelgGjwTNqEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762214516; c=relaxed/simple;
-	bh=GDKEU+PoQXSpHdfwWqyi+XWQsw8Kwpd+8PJiPtAjJO8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IeHS8V2MmahWFNzOWDDeRdysMqaJ1RBKJRU3HJ23SEx5PpSyqMkUzEaQ/9wpVJxAMn5VnlhkqxGhO0ADawDgtE5DEWoIptL+hMYx2sqXILn2M56HXPhyPPKmoMV5RG9h6ULuOsIrb0ndRBvzYOwgkV5OBvOdlWxe5K0Fjl2TgV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsqyZcHh; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-292fd52d527so50529705ad.2
-        for <linux-block@vger.kernel.org>; Mon, 03 Nov 2025 16:01:54 -0800 (PST)
+	s=arc-20240116; t=1762214784; c=relaxed/simple;
+	bh=64FaqhTpKtgrI6Gs/Bdk6B1sd1M3Ri6MbXFvGYn46WM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j+K6fcvgWIUFsSxbvopXSYavHej2xKaJoCrl3Jq72rXLvOIqToDkkvXoQB7VZipJZfA5FT0OQUGzq/McOFPh7Kkr3a1LwfnZPv3R6+EtULplVN1kJF2ggKddbGc5TWg0xo2bDPJsjmaSQAlTGHjFiJwRfY/2HhrchNkT9ZA3OS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=NWnzXUX1; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-87a092251eeso79541756d6.0
+        for <linux-block@vger.kernel.org>; Mon, 03 Nov 2025 16:06:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762214514; x=1762819314; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5glpTSlk1p4oQcFGetB2ISPZGnYdEIOBRqieuINbsA=;
-        b=RsqyZcHh1w8X1zE3Tq5e5PUH1x304ix8o+p9VFHBzq05r9RHcAiDiXhwlH1Z/ZFRQj
-         FytuUw7sv4hh/UO1bePgOmhQjlNVloSg5yhFbATYNexF3Hkw/nrwYGlUo9R6NB1pRMC8
-         tLViK7O9UHFeTQ5xwQVekJ6yQeDfbXNI4t6/E88oNbq+xFp+bgghye4qFKe0RHuM1jy3
-         dTbYNnIEn8W1MDwU0d1087MH8cBNt+Md3aMfDBCsinw36TfA3SUeyhKVPYv+2h+anMaB
-         w+1Aa1Mz7KY0hHrzGunXf8iP833YvMfTpRGnefbSij8EaKjNj/SG8pxkZ6aPqYQBwUTl
-         m5ig==
+        d=ziepe.ca; s=google; t=1762214781; x=1762819581; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7OiTJylN5oi1hTg8WqhFTipXs7uLO/TT2JZJ2yqlyQ=;
+        b=NWnzXUX1hk49UJaLbG2SqXegov/uwDQbmjbqzv/W/LpczLFDjCaWNgtOn6gLOZ57gw
+         ie/+3MSlss7KIhGF5RlvdPHmS5IlfJSbJTduPNddlZUBHT3Zh3aOBwo7CobAcJivKmze
+         30efnR14s4FPpMuRSqpkBQ3GxsR/+xcmmdJD+C2iQxP0yhbEeY6JITguDRiG1WxiwjCt
+         bRjNRs5IyR+hrkzrqFcV1vhefYWQ9y/Ni/B4ifAbN3kpzK+vbYbuvwGd7YZjzdAyXd1v
+         ObFPv1B5+kAU5MQczokwWEiwODyjI/H913VXZSV3NWcb2bQYKnemWJGEJ4a3EPrOEBap
+         5lPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762214514; x=1762819314;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5glpTSlk1p4oQcFGetB2ISPZGnYdEIOBRqieuINbsA=;
-        b=iX2kn9oNK4NwFOOTQZ/CehR1PeoSrPJLZLZ1F6yieLXaYS64y91ry+7Qmwt/qJEIdf
-         ArbZHSMXynPKeIo+5FTJDtCYwt4K1gvDWkTysdEFx7aLrc2zuU2DiRXucawvPVUU+p06
-         N0nAyqJd0EtBRnuZoy+BePB6MmqfWpfZ36S/1XkxRJGWvLV/z6nc23SpYeLb+9eBw0tB
-         fdEn7S0p6/s9GRUiEauxsres7UedKHve80mJ4Vwu6yjsNy0UQkWRL2KpgDZ+CaychUxz
-         DtQRbRy218IMb+fuIO4K8KtuG6GVC+Ip26TtSIOL5tiTgBXiCWXpLrOLQc1H3UULu+DY
-         vkVA==
-X-Gm-Message-State: AOJu0Yy+SIcrUp3Vf4qAINBUBWSKpeRPCtIgYf15nTgDYDjJ8Q2UVIRg
-	HUP/O5a4oGZNd138HGs/UJtav0cTLF9RP5qI6QQTDXhMb/s+xwFBBNUzt/3iFw==
-X-Gm-Gg: ASbGncunvHdW6MydylGHlNHHLEsbBjxTie6udWbWyWg7FI/2fTHpa3cKCkJUzHWvqJB
-	5pqU+q5Qb6iwG5q1+A6kGywY6Ap1kQcBWyMKvxVwOGZukuP8oJa2ATTWOLKmZ0y5C3rF9V4NtS4
-	qt/fDnXzHx8/O2Mg9CptR5YaRgUMu3WYubiuHJ3wKaoqz2CBSAU1czx3wogH9slAEOXIbRQwp9P
-	CweHWUoTcodB4QxxdAdCNxjoj3D2aWUEEy8UpCD8Q25Rybs0lSlrF6aBu6E49dXIOST4RXu8ZtC
-	6f1rllfNWGXLQnVH1f8jsiN/kkh763WMR253quKAElR/El/B2UHj5iKcxGAa2tFrzl5PxNbpGNa
-	ofimHMQJmrtEDsKn1wez7b6iUxn0EWBstpDgQuNffAk0hvDjI/4cz0XGYde4z8Jli5X3ESx5Txh
-	W+Zs7uW0tqM4YcnkqcCef+sHXv9DsJYdSBAA71sc5v5NzOwt8ys8JbeZ/KFg==
-X-Google-Smtp-Source: AGHT+IGnqBrQ4nCwt4SmysdsBjRmLrJyj17LCp+UEKl3qYHGopxdx5rPmO5ZA5VL7UN7dIKs2I4iwQ==
-X-Received: by 2002:a17:902:cece:b0:295:5668:2f1d with SMTP id d9443c01a7336-2955668304fmr127295665ad.41.1762214514075;
-        Mon, 03 Nov 2025 16:01:54 -0800 (PST)
-Received: from localhost (ip70-175-132-216.oc.oc.cox.net. [70.175.132.216])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-296018a4d94sm4311765ad.0.2025.11.03.16.01.53
+        d=1e100.net; s=20230601; t=1762214781; x=1762819581;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q7OiTJylN5oi1hTg8WqhFTipXs7uLO/TT2JZJ2yqlyQ=;
+        b=ZQ3N04aMeQc7M9O6b8btNX876TSocVN1C+5sAukqDDkQLQ2nCMyORZBVvai2CiXkeS
+         rd74wiP7/yWcyzBgfHpzew87ZOa+9pE6OkHXRBQmcuzXxuIq18/QOc3DQvrA4ocbRwGb
+         9xu6wWpo8VnM2guJ5MgOR/mr/Zj7uKywraicLTfNVKF4mbuMuUXaYi2Umfx9hhDqQYiN
+         CFS0S0lQjTJlsTrI/rpVFSP0swMDYw406wkn8T1w88n6dCDpx5M6+GuF3MnfJKVL7I2O
+         B4Nond8GgV7WckTcLq2BqOgg1Bmusk9Yh/kiL5utwCCGZgJgup3wzco8mWgV3iOB04ep
+         gqWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrJrTjtIuPWx+99wrtQrDYbxbLBE2pxR4xGAzkYGUKLSUatpbGh8IfOKfYOXwEsKMFETPcOxcMm2Dmuw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfNUSSu8ZdAhyw7FmcfFUPm9Ksz+CNRbZOqesdWq/9IPnorVd8
+	Um5wPx6K/8lc9QrHZcypLfilGwMct+yZLVjiZnvh5L1sM9poQt25kOGtiLV7gS1lyH4=
+X-Gm-Gg: ASbGncv00l51bf5ahrTgAY1z0ghrkPuR+opD/6NNIfE6pP4ZKK62xj0L67axIEp7jAf
+	ywAAFQUuIkoAoL0jntH45pVOmOcnf66VSrg5QrUMB3Ct1yQsLHkwhmySq4bylT3YIjeDWM2Yf2+
+	XgAwye5+0aa5r3eRac0JfsY/7yfb/RUfymzV0zyT7yQXmC7LytqjfF1XV7wh2yjtr/CJ8teWGUa
+	gmhlLDlFnz89S9qJnHiV6rSAEosZozgkDlB4Mu8LpmeHn17kxtJm+OF5MRuDOAdLj1Tj6+rQxN2
+	rw4izWcaTGhhtjgM95XBz/Ro0uJpp8EU4rmstKsnPlDDlGPspbG26I4H3NZYawQBZEbT5np1XX5
+	Ncgw4FKtKdb2C87t4V2Kqqvc7YIB7DTmS2v2L1ugiTEYH1/vWoHhgUZfaOP9sOPZ0zKCDCUwVKy
+	4GV6bpWQhvSR/TdMCbAeMfM/F8kbKdJpcBccTxOxPi9m05ZCQZrbf7pRdG
+X-Google-Smtp-Source: AGHT+IHFK/K4+Si4Ey1hcSvTZvkQdBHi3cl9Mtxmbm7oCurYD+QrPfezppoNLd/K4DVB+Xp/dYAQ0Q==
+X-Received: by 2002:a05:6214:f22:b0:87c:270b:aadb with SMTP id 6a1803df08f44-880623a4a0emr16632746d6.16.1762214780972;
+        Mon, 03 Nov 2025 16:06:20 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88060de9b44sm10817116d6.20.2025.11.03.16.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 16:01:53 -0800 (PST)
-From: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-To: Johannes.Thumshirn@wdc.com,
-	shinichiro.kawasaki@wdc.com
-Cc: linux-block@vger.kernel.org,
-	Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: [PATCH V3 2/2] blktrace: add blktrace ftrace corruption regression test
-Date: Mon,  3 Nov 2025 16:01:49 -0800
-Message-Id: <20251104000149.3212-2-ckulkarnilinux@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20251104000149.3212-1-ckulkarnilinux@gmail.com>
-References: <20251104000149.3212-1-ckulkarnilinux@gmail.com>
+        Mon, 03 Nov 2025 16:06:19 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vG4Z1-00000006cRs-0csK;
+	Mon, 03 Nov 2025 20:06:19 -0400
+Date: Mon, 3 Nov 2025 20:06:19 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alex Mastro <amastro@fb.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>
+Subject: Re: [PATCH v6 00/11] vfio/pci: Allow MMIO regions to be exported
+ through dma-buf
+Message-ID: <20251104000619.GG1204670@ziepe.ca>
+References: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
+ <aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com>
 
-Add regression test for blktrace ftrace corruption bug that occurs when
-sysfs trace is enabled followed by ftrace blk tracer.
+On Mon, Nov 03, 2025 at 12:07:12PM -0800, Alex Mastro wrote:
+> On Sun, Nov 02, 2025 at 10:00:48AM +0200, Leon Romanovsky wrote:
+> > Changelog:
+> > v6:
+> >  * Fixed wrong error check from pcim_p2pdma_init().
+> >  * Documented pcim_p2pdma_provider() function.
+> >  * Improved commit messages.
+> >  * Added VFIO DMA-BUF selftest.
+> >  * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
+> >  * Fixed error unwind when dma_buf_fd() fails.
+> >  * Document latest changes to p2pmem.
+> >  * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
+> >  * Moved DMA mapping logic to DMA-BUF.
+> >  * Removed types patch to avoid dependencies between subsystems.
+> >  * Moved vfio_pci_dma_buf_move() in err_undo block.
+> >  * Added nvgrace patch.
+> 
+> Thanks Leon. Attaching a toy program which sanity tests the dma-buf export UAPI
+> by feeding the allocated dma-buf into an dma-buf importer (libibverbs + CX-7).
 
-When /sys/block/*/trace/enable is enabled and then ftrace's blk tracer
-is activated, the trace output becomes corrupted showing "Unknown action"
-with invalid hex values instead of proper action codes.
+Oh! Here is my toy program to do the same with iommufd as the importer:
 
-The root cause is that ftrace allocates a blk_io_trace2 buffer (64 bytes)
-but calls record_blktrace_event() which writes v1 format (48 bytes),
-causing field offset mismatches and corruption.
+#define _GNU_SOURCE
+#define __user
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include "include/uapi/linux/vfio.h"
+#include "include/uapi/linux/iommufd.h"
+#include <string.h>
+#include <sys/mman.h>
+#include <errno.h>
 
-This test verifies that the trace output is correct and doesn't show
-the corruption pattern.
+int main(int argc, const char *argv[])
+{
+	int vfio_dev_fd, iommufd_fd, ret;
 
-This test confirms the fix by the kernel patch:
+	// Open the per-device VFIO file (e.g., /dev/vfio/devices/vfio3)
+	vfio_dev_fd = open("/dev/vfio/devices/vfio0", O_RDWR);
+	if (vfio_dev_fd < 0) {
+		perror("Failed to open VFIO per-device file");
+		return 1;
+	}
 
-commit e48886b9d668d80be24e37345bd0904e9138473c
-Author: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Date:   Mon Oct 27 22:50:42 2025 -0700
+	// Open /dev/iommu for iommufd
+	iommufd_fd = open("/dev/iommu", O_RDWR);
+	if (iommufd_fd < 0) {
+		perror("Failed to open /dev/iommu");
+		close(vfio_dev_fd);
+		return 1;
+	}
 
-    blktrace: for ftrace use correct trace format ver
+	// Bind device FD to iommufd
+	struct vfio_device_bind_iommufd bind = {
+		.argsz = sizeof(bind),
+		.flags = 0,
+		.iommufd = iommufd_fd,
+	};
+	ret = ioctl(vfio_dev_fd, VFIO_DEVICE_BIND_IOMMUFD, &bind);
+	if (ret < 0) {
+		perror("VFIO_DEVICE_BIND_IOMMUFD failed");
+		close(vfio_dev_fd);
+		close(iommufd_fd);
+		return 1;
+	}
 
-Link: https://lore.kernel.org/linux-block/20251028055042.2948-1-ckulkarnilinux@gmail.com/
-Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
----
-V2->V3:
-- Add kernel patch reference and Link tag to commit message
-- Replace _init_null_blk with _configure_null_blk (works with built-in)
-- Change nullb0 to nullb1 throughout test (5 locations)
-- Remove debug || true from cleanup commands (redundant with 2>/dev/null)
-- Remove debug || true from final cleanup commands
----
- tests/blktrace/002     | 97 ++++++++++++++++++++++++++++++++++++++++++
- tests/blktrace/002.out |  3 ++
- 2 files changed, 100 insertions(+)
- create mode 100755 tests/blktrace/002
- create mode 100644 tests/blktrace/002.out
+	// Allocate an IOAS (I/O address space)
+	struct iommu_ioas_alloc alloc_data = {
+		.size = sizeof(alloc_data),
+		.flags = 0,
+	};
+	ret = ioctl(iommufd_fd, IOMMU_IOAS_ALLOC, &alloc_data);
+	if (ret < 0) {
+		perror("IOMMU_IOAS_ALLOC failed");
+		close(vfio_dev_fd);
+		close(iommufd_fd);
+		return 1;
+	}
 
-diff --git a/tests/blktrace/002 b/tests/blktrace/002
-new file mode 100755
-index 0000000..ba8f6c3
---- /dev/null
-+++ b/tests/blktrace/002
-@@ -0,0 +1,97 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2025 Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-+#
-+# Regression test for blktrace ftrace corruption bug when using sysfs
-+# trace enable with ftrace blk tracer.
-+#
-+# Bug: When sysfs trace is enabled (/sys/block/*/trace/enable) and then
-+# ftrace blk tracer is enabled, the trace output becomes corrupted showing
-+# "Unknown action" with invalid hex values.
-+#
-+# Root cause: ftrace allocated blk_io_trace2 buffer (64 bytes) but called
-+# record_blktrace_event() which writes v1 format (48 bytes), causing field
-+# offset mismatches and corruption.
-+
-+. tests/blktrace/rc
-+. common/null_blk
-+
-+DESCRIPTION="blktrace ftrace corruption with sysfs trace"
-+QUICK=1
-+
-+requires() {
-+	_have_null_blk
-+	_have_tracefs
-+}
-+
-+test() {
-+	echo "Running ${TEST_NAME}"
-+
-+	local trace_dir="/sys/kernel/debug/tracing"
-+	local device
-+
-+	# Initialize null_blk with one device
-+	if ! _configure_null_blk nullb1 power=1; then
-+		return 1
-+	fi
-+
-+	device=/dev/nullb1
-+
-+	# Verify device exists
-+	if [[ ! -b "$device" ]]; then
-+		echo "Device $device not found"
-+		_exit_null_blk
-+		return 1
-+	fi
-+
-+	# Clean up any previous trace state
-+	echo 0 > "$trace_dir/tracing_on" 2>/dev/null
-+	echo > "$trace_dir/trace" 2>/dev/null
-+	echo nop > "$trace_dir/current_tracer" 2>/dev/null
-+
-+	# Enable sysfs trace for nullb1 (this triggers the bug path)
-+	if [[ -f /sys/block/nullb1/trace/enable ]]; then
-+		echo 1 > /sys/block/nullb1/trace/enable
-+	else
-+		echo "No sysfs trace support"
-+		_exit_null_blk
-+		return 1
-+	fi
-+
-+	# Enable blk ftrace tracer
-+	echo blk > "$trace_dir/current_tracer"
-+	echo 1 > "$trace_dir/tracing_on"
-+
-+	# Generate some I/O
-+	dd if="$device" of=/dev/null bs=4k count=10 iflag=direct >> "$FULL" 2>&1
-+
-+	# Stop tracing
-+	echo 0 > "$trace_dir/tracing_on"
-+
-+	# Check trace output for corruption
-+	# Get first 10 non-comment lines
-+	local trace_output
-+	trace_output=$(grep -v "^#" "$trace_dir/trace" | head -10)
-+
-+	if [[ -z "$trace_output" ]]; then
-+		echo "No trace output captured"
-+		_exit_null_blk
-+		return 1
-+	fi
-+
-+	# Check for "Unknown action" which indicates the bug
-+	if echo "$trace_output" | grep -q "Unknown action"; then
-+		echo "BUG: Trace corruption detected with 'Unknown action'"
-+		echo "$trace_output" | head -5 >> "$FULL"
-+	else
-+		echo "Trace output looks correct"
-+	fi
-+
-+	# Cleanup: disable sysfs trace
-+	echo 0 > /sys/block/nullb1/trace/enable 2>/dev/null
-+	echo nop > "$trace_dir/current_tracer" 2>/dev/null
-+
-+	_exit_null_blk
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/blktrace/002.out b/tests/blktrace/002.out
-new file mode 100644
-index 0000000..b358be9
---- /dev/null
-+++ b/tests/blktrace/002.out
-@@ -0,0 +1,3 @@
-+Running blktrace/002
-+Trace output looks correct
-+Test complete
--- 
-2.40.0
+	// Attach the device to the IOAS
+	struct vfio_device_attach_iommufd_pt attach_data = {
+		.argsz = sizeof(attach_data),
+		.flags = 0,
+		.pt_id = alloc_data.out_ioas_id,
+	};
+	ret = ioctl(vfio_dev_fd, VFIO_DEVICE_ATTACH_IOMMUFD_PT, &attach_data);
+	if (ret < 0) {
+		perror("VFIO_DEVICE_ATTACH_IOMMUFD_PT failed");
+		close(vfio_dev_fd);
+		close(iommufd_fd);
+		return 1;
+	}
 
+#if 0
+	int mapfd = memfd_create("test", MFD_CLOEXEC);
+	if (mapfd == -1) {
+		perror("memfd_create failed");
+		return 1;
+	}
+	ftruncate(mapfd, 4096);
+#else
+	struct dmabuf_arg {
+		struct vfio_device_feature hdr;
+		struct vfio_device_feature_dma_buf dma_buf;
+		struct vfio_region_dma_range range;
+	} dma_buf_feature = {
+		.hdr = { .argsz = sizeof(dma_buf_feature),
+			 .flags = VFIO_DEVICE_FEATURE_GET |
+				  VFIO_DEVICE_FEATURE_DMA_BUF },
+		.dma_buf = { .region_index = VFIO_PCI_BAR0_REGION_INDEX,
+			     .open_flags = O_CLOEXEC,
+			     .nr_ranges = 1 },
+		.range = { .length = 4096 },
+	};
+	ret = ioctl(vfio_dev_fd, VFIO_DEVICE_FEATURE, &dma_buf_feature);
+	if (ret < 0) {
+		perror("VFIO_DEVICE_FEATURE_GET failed");
+		return 1;
+	}
+	int mapfd = ret;
+#endif
+
+	struct iommu_ioas_map_file map_file = {
+		.size = sizeof(map_file),
+		.flags = IOMMU_IOAS_MAP_WRITEABLE | IOMMU_IOAS_MAP_READABLE,
+		.ioas_id = alloc_data.out_ioas_id,
+		.fd = mapfd,
+		.start = 0,
+		.length = 4096,
+	};
+	ret = ioctl(iommufd_fd, IOMMU_IOAS_MAP_FILE, &map_file);
+	if (ret < 0) {
+		perror("IOMMU_IOAS_MAP_FILE failed");
+		return 1;
+	}
+
+	printf("Successfully attached device to IOAS ID: %u\n",
+	       alloc_data.out_ioas_id);
+
+	close(vfio_dev_fd);
+	close(iommufd_fd);
+
+	return 0;
+}
 
