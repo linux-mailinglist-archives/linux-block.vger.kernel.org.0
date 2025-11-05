@@ -1,55 +1,45 @@
-Return-Path: <linux-block+bounces-29675-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29677-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72C35C36208
-	for <lists+linux-block@lfdr.de>; Wed, 05 Nov 2025 15:43:55 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E7B9C36307
+	for <lists+linux-block@lfdr.de>; Wed, 05 Nov 2025 15:58:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1E0DF341322
-	for <lists+linux-block@lfdr.de>; Wed,  5 Nov 2025 14:43:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BF1B44F3A5A
+	for <lists+linux-block@lfdr.de>; Wed,  5 Nov 2025 14:53:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A60532E157;
-	Wed,  5 Nov 2025 14:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMHHLtru"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92707239562;
+	Wed,  5 Nov 2025 14:53:15 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462E8311966
-	for <linux-block@vger.kernel.org>; Wed,  5 Nov 2025 14:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EFA2DC332
+	for <linux-block@vger.kernel.org>; Wed,  5 Nov 2025 14:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762353764; cv=none; b=rTljNBV5cOV3DGzaKelxEPq9drXkwjaWBgJdlWHTSNflrPjh3Dmsg1EcRmVPvLFCd7rUZJRzw1NhYZQDASiBm2rkhGIdOyCgRUVqUQPdGg8ht7BDXuczIjyUNeetpyuZdpWup4LNvCiJlcC6hWnTLR89HAH+RiJclPxtT5yOCnM=
+	t=1762354395; cv=none; b=cwTgoGLIspZS7wzSaFCeJibTmX2Jg5v71Ykgaub6xOLhrj/81LlRhOYZSKSmBx5+S3juaTo1A+vnKG0MdICzz9HpLO/ZmZsWsaqbbLvWlCrLZodEsV9+844uRrjHpoWQ9/8t+l37O6q1OzGlW9UCDBmXvsCsz2MWWZhqTi38pxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762353764; c=relaxed/simple;
-	bh=C+cgI2xN1H/+2EiNT628AnITTXv8PPjjM4ggBeu4wxw=;
+	s=arc-20240116; t=1762354395; c=relaxed/simple;
+	bh=nlkOGnSxulbLF2POFUoDKR9joA3LvWAMf6UXkbS5NMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJslAEkK2DB3ZlCy5fxrpjN5QBl5SERkcd2xTDUas2y1gFd4WGP4rzAHHq9f8a0+AIC64Ui8r7PH3XI7iivMR5W+8KLHv6v9Nts+HtwB04vcO9cFLxnSuGIr/d0EoG78j4qVvP5PuTf+g7P8EOqBu4Y/kxVjXfnXU0x2nIMntNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMHHLtru; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12B1C4CEF5;
-	Wed,  5 Nov 2025 14:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762353763;
-	bh=C+cgI2xN1H/+2EiNT628AnITTXv8PPjjM4ggBeu4wxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bMHHLtru0wBWa2naW3VNYf3k8r2iTksiTu9fKmNG3ePINEI5RNYv25V9hNK7RZtVL
-	 mlamFrFPW2oOBx38I0DhuPQUa+F60B9a5yian+E0FsOw9RjoyAmbIPTcRZu8SoHQSj
-	 BU/k1gM+VTlGF/YOB/r/2GOltfnoqMpYF/14WegECISpZUDn6I5QF0aRgMWzggLnYA
-	 1Nj/44oj9BtLvfWETN/B/pCcqt+r+JaxUWKCoJMaRdw1zz9SMGa7IeqFUdQ7XEe8x/
-	 56f4zE0tgiGc9qQLKRlcHFyI/46RpbNRHYx5rCyfO5LlaGiGTjoX0Bn2KSvooshCQ7
-	 hkYjBB9fVzjfg==
-Date: Wed, 5 Nov 2025 07:42:41 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
-	martin.petersen@oracle.com, axboe@kernel.dk
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgb2dAqq9zPnw9h3GHrB/0tFjl0zqSLAlSNCjQ61X240IYXwz6+DQU6cxKdUrMPxYIkXY1dsLlppw3qcPHFl/sHNhoOHpRNX7noDryHDFl4T1B26G0wTi34Ojd9bzV39Je9eR9ecm0hrrrQXNbT/EibtO23glxdFzCMBrBgsS7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 66876227AAA; Wed,  5 Nov 2025 15:53:09 +0100 (CET)
+Date: Wed, 5 Nov 2025 15:53:09 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>,
+	linux-block@vger.kernel.org, martin.petersen@oracle.com,
+	axboe@kernel.dk
 Subject: Re: [RFC PATCH] blk-integrity: support arbitrary buffer alignment
-Message-ID: <aQtiYd69E-3G_PC4@kbusch-mbp>
-References: <20251104224045.3396384-1-kbusch@meta.com>
- <20251105141504.GC22325@lst.de>
+Message-ID: <20251105145309.GA26042@lst.de>
+References: <20251104224045.3396384-1-kbusch@meta.com> <20251105141504.GC22325@lst.de> <aQtiYd69E-3G_PC4@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -58,28 +48,22 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251105141504.GC22325@lst.de>
+In-Reply-To: <aQtiYd69E-3G_PC4@kbusch-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Nov 05, 2025 at 03:15:04PM +0100, Christoph Hellwig wrote:
-> I have a hard time understanding how this actually works, mostly due to
-> "union pi_tuple".  What does that union of two pointers buy us over just
-> passing a void pointer and deriving the type we need deeper down?  Also
-> given that taking the address and the comparing it (at thbeginning of
-> blk_tuple_remap_end) how is this actually going to work?
+On Wed, Nov 05, 2025 at 07:42:41AM -0700, Keith Busch wrote:
+> This generally does pass 'void *' to contiguous protection data. If the
+> actual protection payload is spread across multiple segments, though, we
+> don't have contiguous data, so we have to bounce it through something.
+> Declaring the union on the stack provides this memory for that unusual
+> case. If the bip segment is big enough, we point the 'void *' directly
+> at it; if not, we point it to the temporary onstack allocation. Using
+> a union ensures that it's definitely big enough for any checksum type.
 
-It's a good question.
+The union contains pointers, which are always 8 bytes.  But I guess
+I can see now how this didn't blow up, assuming this was only tested
+on classic PI, as the tuples are just 8 bytes and you just used the
+pointer as storage?  I.e. these aren't supposed to be pointers, but
+values?
 
-This generally does pass 'void *' to contiguous protection data. If the
-actual protection payload is spread across multiple segments, though, we
-don't have contiguous data, so we have to bounce it through something.
-Declaring the union on the stack provides this memory for that unusual
-case. If the bip segment is big enough, we point the 'void *' directly
-at it; if not, we point it to the temporary onstack allocation. Using
-a union ensures that it's definitely big enough for any checksum type.
-
-Again, it's a weird corner case. The kernel auto-pi wouldn't allocate
-that way unless you have very weird metadata format, like with an odd
-number of bytes preceding or following the DIF (never encountered such a
-thing, but the specs allow it). User space can send weird alignemnts
-with io_uring now, too.
 
