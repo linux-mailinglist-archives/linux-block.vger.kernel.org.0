@@ -1,133 +1,120 @@
-Return-Path: <linux-block+bounces-29717-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29719-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A218C3797E
-	for <lists+linux-block@lfdr.de>; Wed, 05 Nov 2025 20:57:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1278DC37BC2
+	for <lists+linux-block@lfdr.de>; Wed, 05 Nov 2025 21:32:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 728C31A221ED
-	for <lists+linux-block@lfdr.de>; Wed,  5 Nov 2025 19:57:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 144773A81AE
+	for <lists+linux-block@lfdr.de>; Wed,  5 Nov 2025 20:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DBF1991D2;
-	Wed,  5 Nov 2025 19:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7120730CDB9;
+	Wed,  5 Nov 2025 20:28:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ilfv55hx"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="O6mjjhaF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-lf1-f99.google.com (mail-lf1-f99.google.com [209.85.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113AA344051
-	for <linux-block@vger.kernel.org>; Wed,  5 Nov 2025 19:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C688346FB7
+	for <linux-block@vger.kernel.org>; Wed,  5 Nov 2025 20:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762372628; cv=none; b=NmhMbtjNcY0askelojnvSage3mea6bEypoqWhwS1AICZ4apNfIZ681MJaKrtvfxov04pOkx0/f8vnVzNDMVux2yAht7LjfQoEzsGHTJvoRdLFc+dVl63Fyb6O+morZNzknoVJOm9KbwMcI52tqx/n9ODPBK7yVAUo9HRbfUp5Kw=
+	t=1762374517; cv=none; b=OD9X75JDau7DItUbYa2AbcmXTnK5xlmYxeXeO8kKa773df135poumljWekUq0uurD2SokYoFoEmJMAIo6pD7mJdENYYLO7HqzGcd+4wpHhRKv/uxlQ1+pnkyCDhgAWiveBJlfdWkoYak0KWysIxezGYGue6rP4HLG8E31MNLzr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762372628; c=relaxed/simple;
-	bh=0U56PzRHQuKFX1jF0EDeL3RfYgwrc6/XAQEtc7BS4Y4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dW6eFm0Ad+yJwXuvanRwNpJSST+vgA0VHShdJlzSMoFMARDXAWZX4SmwNK19YVy128uWKBGf8i/aJtVAkNOmqkcPz4hr/sguhDKddyloorcNjwKcPn1l2nYIUbkG/4Up/TPTC2ZL/qMt2lHr/HyDH4iZo2d07oO+gT9aml3Jmqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ilfv55hx; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-948284e6708so5635539f.2
-        for <linux-block@vger.kernel.org>; Wed, 05 Nov 2025 11:57:04 -0800 (PST)
+	s=arc-20240116; t=1762374517; c=relaxed/simple;
+	bh=vbqZgxt+ddV/gMkFndwkKli1Qq2AmUr3CIWnYw0YR+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MgzpdPoG7KK0NN8zgt+PQWO34YrOVHGUc8V4RVObKyp7xIxu7sEMlQ1yH2dkDUIIFlAn56ZgBIbjsr3cZBqxKFwzWBtTutMk6NCZMt8vSy5NQjwwKlIPQ0JGkWR4i8/U4hpVFQdX7N8B/m1fMU75IVMMd9REftWjqBcjZbrP6XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=O6mjjhaF; arc=none smtp.client-ip=209.85.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-lf1-f99.google.com with SMTP id 2adb3069b0e04-59425b1f713so29194e87.0
+        for <linux-block@vger.kernel.org>; Wed, 05 Nov 2025 12:28:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1762372624; x=1762977424; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gxvKuPYsV6odl/YrIY/+DvXUGSb27CaTkPJEalKMGO4=;
-        b=ilfv55hxQtwRDjfADXkhZ6pjkxVJJHVXimLyA6dqPkj03e3LcnWGJvAxr19211Enyu
-         UqYEzAuBd6E3a9fWbYPThYjOS/FIkLl34GafujLylUsdDmqOqvNYD9UQDZAe9uLlhOwH
-         t4Bl0oyfQhiYC/e8/PrS/I+nkEIMBry1DT64hZEBHkdxHLgnGMHr8D/n5uXdWOUSb0Cg
-         PJ5us3O0hoUffSvcBbHakrVW8dg7qpa4khMxXDqcoBSQGd5Jc0Y5byem+3jBClarFJnu
-         7vo2qXtemXiJRAFuczwrVpQZpWGKOoSqAgI4AJulDHgec3U5xD3f9F/jjEeIoOahLYNE
-         G7ew==
+        d=purestorage.com; s=google2022; t=1762374514; x=1762979314; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqzNF//smCH/wXecy4K5ISa7DPzn6oehsCzEe3RVrHk=;
+        b=O6mjjhaFAPe2uNPTMK4gmVhTqCVG2biPQDaboBual9Ul5aD5Umf7XGxueXtHSvq/tp
+         t4RkEZ3sxNuzB1eAEkik+hqJ9ihTSyVArUI2nhOPh/JXu9qSTBHbzkpiRwsvBl50JM7K
+         PMp92jnXkkoMVDBosrW5CGiHQ8U/P/s0PsdN9Y1RAeFx35SFdbOaeem1UZgPUMMvKbvp
+         E+DmTQPEGjyCHZH/BpuezZsTeLg5WobmToLaz+scYzFPzNxp5VVGKoPocFK0JgCu+82B
+         groMf+YartE60TX1enKVrNu74dWplA+/i40qEc3JT//gfh8x7vSBBse2OwDNPFllEnON
+         hhdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762372624; x=1762977424;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gxvKuPYsV6odl/YrIY/+DvXUGSb27CaTkPJEalKMGO4=;
-        b=SpxqoQxWChzjdTgBgLDYO1s1ZJbrwKmIv9nTNynHHMUE9rEAhmMtKZx/w8bgzgD7Zc
-         ylkSDdDeX3zv52KzSASkvKpaKLvhLZ5X+W2brnGZ1mdzeFwTSSsgW+9KRRi6mA6dmjc2
-         Uv8xxI3g6YUhmY3awnbYxbmEwlrXY/dOFLbfDrG6u2RAFf1lsKMj6garxFzZ/1wQSLF+
-         8UgUkovXKGHwWsxWY7Os2N6dV222UKHEHfD3zvGiAccPGlvS3JLwbN3ssNSKmCp3MY2R
-         wdYExTzwK3zLa6E3hbM0vuyA4nk6EYGxaRJeKAt88cYtnEY19AdlvfubrSJWt78knLi3
-         eu9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZg3/s5kopcbOgAD2of0xfMPB20xslEp2T3Leu0cPVJi8SQGUEiY1RFObL7bJkgZ7RmOXqaVQhvUGQrA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9F8V8iJSiq8lAx1uVR01jyzRwtxpAtVr3Y/kK7duGu8d6lUkI
-	+1IwDCY18LHHxdxc4DfMBUVJEeP7SDjWOtiqpnZbLL26CNCShP59SPj8U0rcbilgzgT8I6HHWhy
-	bKKMx
-X-Gm-Gg: ASbGnctDIMve48ky4ZOif1OHO/sK4urwVZsdaCd04avmyA9ssUSepvCE99EdnpMf+dd
-	7+u1eO+VD0xr60Ibf3iPlpcRc68HwBCmfYU+ZCLsgwDW+qyNmnj9rYvtp/mU9Qc7mc7Tit/XG70
-	eZEmhHrvwnWDxC+5zp3tl8S9g4r0qGDLEeoi2RpKPjNyLHoRc4bKCGMvaeEhnCZ9cc5ktQkKE+n
-	Y0zFglg/vEeFJSOeyje/pl/xdgtrdkpj5Qte2EZiAVt24j7UtAm4vPDKwqOT2/AZZ7wLF6z69GT
-	kbh4gY3B4ZBSXR348f5bqY/DmZwJYmNYuvgdzCz5Mi6nTUU5sUe6JHei3OTLjwgFSt2qEraC//p
-	mVlC9B9x/CK2XDKf6Rc0JiwKlL5KiGbOpHmsyWAuOUg==
-X-Google-Smtp-Source: AGHT+IF0ixEizkZRDJKZp6P7ZAgjBoVbviFgfl5fA93aCEGGUAMq3mEnKaX0mze/BdP8jEUYSWkovA==
-X-Received: by 2002:a05:6602:6a8e:b0:945:a7ce:646c with SMTP id ca18e2360f4ac-94869e22669mr597881839f.10.1762372623983;
-        Wed, 05 Nov 2025 11:57:03 -0800 (PST)
-Received: from [172.19.0.90] ([99.196.133.153])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7467d5a37sm53462173.7.2025.11.05.11.56.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 11:57:03 -0800 (PST)
-Message-ID: <72910b6c-6871-4f5a-b40b-0bd58329e264@kernel.dk>
-Date: Wed, 5 Nov 2025 12:56:49 -0700
+        d=1e100.net; s=20230601; t=1762374514; x=1762979314;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hqzNF//smCH/wXecy4K5ISa7DPzn6oehsCzEe3RVrHk=;
+        b=Z1bkWDrQmRTGoWzFULhZPiGSGddzmUWN4hgEYk4RWJUU5WeHB0JPbVnyChZOiS2eHK
+         MzFTHN+i6S6jnq55UjRktYa3uXVLiPy221m1Tt2I9mx6fItHPajXMLN4/bfqA7xyKBjk
+         KJ6d1AwyxD2LGIiSmB9pp2CViarumN8kOa9FIPAYZihwXWChn/b7CDuRG1vT4CW8tFnO
+         LizneJShwxyFH4Uw08H+DTnnTUYMYw6M5CoFiCDZxu5cMFJnGNzKcEwPgyrnhxyQY97k
+         DeSiZsR5LElXLX5y5FoQmtATr4UP2K38EBfuFRavStGJwRmNdht111PvuRcCe9vFLASY
+         ZDkQ==
+X-Gm-Message-State: AOJu0YyW38+J3ISr/dxe4/8+GUnHv8IqsmeY/LUF2GksYJZWESKBJL/q
+	8HpVIedQTkJ1UaKrMEOHEf1oT4VyFfvvgqv5IC8zYS0o75I1FR70hBXYe8xHmO6S8Smf/YOR9fr
+	bbwncc52Y+hwQrbIWoGSpmeg6fF0+xQk5M8Zx
+X-Gm-Gg: ASbGncsP/CbjxtgPRSXkmJ1i5WLga8OlsAf/mwOn47MmheOQ2sE1iAmz9Xlyc4abeWH
+	K07p0cEtm5uW3qC0icIG6dHQ57U0S9C71K48libyCf14DlsUSOfjYIK1zQGrvty0nA4dKp2kFXG
+	2Zn32wo8uI41xJ/ckXHFOvG45oDt/FO3InmHYBRGbiIm5G2in99tcgxzFFPcXPsvUQ6XjMwhhNg
+	pTj5MX6IoAif7bWcaDJKAkntBsz8AIk//DMMNWh3baQ2APdmGGKFJhLML/jH2HEoKZaPDTMd5Gi
+	cBBoJ9wqy6nsmy8vgik5WVNEAsH0PSKQUzvRYBs7AleulxbvSwaxyw48/dobNfHe9Rn3wggCMkS
+	dMbVUSvNbzYsHZ98evQre9SAO4EtlsfY=
+X-Google-Smtp-Source: AGHT+IF1qzknNMPR4sXhFbfjCjDnaAvrB84RmIyS+GxY4Bwmj8KbhDyluGDBr1gzppGHTLZrqh0wn4FE9H8y
+X-Received: by 2002:a05:6512:3b86:b0:594:2d0d:a3dc with SMTP id 2adb3069b0e04-5943d7c97c2mr786137e87.6.1762374513403;
+        Wed, 05 Nov 2025 12:28:33 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 2adb3069b0e04-5944a0b9327sm15740e87.41.2025.11.05.12.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 12:28:33 -0800 (PST)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id E5147340355;
+	Wed,  5 Nov 2025 13:28:29 -0700 (MST)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 036ADE413BB; Wed,  5 Nov 2025 13:28:30 -0700 (MST)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v2 0/2] ublk: simplify user copy
+Date: Wed,  5 Nov 2025 13:28:21 -0700
+Message-ID: <20251105202823.2198194-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Unexport blkdev_get_zone_info()
-To: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>,
- Johannes Thumshirn <johannes.thumshirn@wdc.com>,
- Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-References: <20251105193554.3169623-1-bvanassche@acm.org>
- <20251105194703.GC5780@lst.de>
- <f7bbb2a2-8342-4fd0-b906-7be5f5e59721@kernel.dk>
- <20251105195146.GA5998@lst.de>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20251105195146.GA5998@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/5/25 12:51 PM, Christoph Hellwig wrote:
-> On Wed, Nov 05, 2025 at 12:50:30PM -0700, Jens Axboe wrote:
->> On 11/5/25 12:47 PM, Christoph Hellwig wrote:
->>> On Wed, Nov 05, 2025 at 11:35:53AM -0800, Bart Van Assche wrote:
->>>> Unexport blkdev_get_zone_info() because it has no callers outside the
->>>> block layer.
->>>
->>> The commit log for that clearly states we're going to add them,
->>> but it'll wait a merge window to avoid cross-tree dependencies.
->>>
->>> I actually have the xfs changes ready right now, I can push them out
->>> if you care about the glory details.
->>
->> That's fair, I'll just drop it then if there are planned additions.
->> Would've been better to add without the export, but then that'd be
->> a bit of a mess if multiple folks are going to start to use it and then
->> all need the export patch.
-> 
-> I had that some discussion with Damien.  If you want to merge the patch
-> that's fine, let's just hope we don't have more than one file system
-> wanting to use it next merge window (I think it would make sense for btrfs
-> too)
+Use copy_page_{to,from}_user() and rq_for_each_bvec() to simplify the
+implementation of ublk_copy_user_pages(). Avoiding the page pinning and
+unpinning saves expensive atomic increments and decrements of the page
+reference counts. And copying via user virtual addresses avoids needing
+to split the copy at user page boundaries. Ming reports a 40% throughput
+improvement when issuing I/O to the selftests null ublk server with
+zero-copy disabled.
 
-Let's just defer if there are planned users for 6.19. Once we're in
-the middle of that release and if no users have been added, then we
-can kill it.
+v2:
+- Use rq_for_each_bvec() to further simplify the code (Ming)
+- Add performance measurements from Ming
+
+Caleb Sander Mateos (2):
+  ublk: use copy_{to,from}_iter() for user copy
+  ublk: use rq_for_each_bvec() for user copy
+
+ drivers/block/ublk_drv.c | 113 ++++++++-------------------------------
+ 1 file changed, 23 insertions(+), 90 deletions(-)
 
 -- 
-Jens Axboe
+2.45.2
 
 
