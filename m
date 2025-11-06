@@ -1,97 +1,84 @@
-Return-Path: <linux-block+bounces-29775-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29777-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70806C39167
-	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 05:23:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08AAEC39187
+	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 05:30:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 300983B2318
-	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 04:23:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A15693B9B27
+	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 04:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6313425B30D;
-	Thu,  6 Nov 2025 04:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2EA27AC4C;
+	Thu,  6 Nov 2025 04:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TQ9Xfi82"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObYaZ+/H"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE11245006
-	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 04:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470E2218596
+	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 04:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762402989; cv=none; b=OV67FfTb4PjpGSwAewbOZCKOOCg2zvlvgRrC8XYXj0wF8irfb87TGQXceEA0IbqpvtQMM68lPKczhIyqeEfG16RK9x5mmw0NFdiSvBx38jaL2OYhZcwt7dnc/UkJ/Xmltgb632RTWojuizLgMSJgkz2avg1t7HAG+N8zX8PFrZI=
+	t=1762403415; cv=none; b=qYT+y/Lw5YnBaga4HxnWlyDsSovEqXsWhQ6QQR4Z8+DjF6NTct+majoskCtqRYugZeKrZWqAohWgyOaTj8RsoZTEEFwwMIsjg3KNgV5SayCUrbbPpvTis95xu412UHhTBr2jRut4MpYEDZ4lEZEasncuHdhpBcxk9CinSXdINbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762402989; c=relaxed/simple;
-	bh=MDu/x5MjuWQmqdTJsivVkQennR0uk9XQkzjnFg+MG6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NctqRKKL2JXVeNNgfarlGz62yBLVgN8XyXKZo21EA90KWfUtDW2E7cwPMfwGWCqS3iK0BSUGvuPYyTMVOdoHlUYx01/qhJG/jYBkNVs3CO/B0wMED5RPVqb3BT4ozS7c2dgV74E6GWi42aZXRcnSl6XB9CJ64YY2A4jlMRLwQQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TQ9Xfi82; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762402986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=McWH5uoiv0Qcs12llAIn0we0DdmJGhAn3KTRWhafxfs=;
-	b=TQ9Xfi823D8isnaoIPn67Pv3oH4wFF9NrGHp94UjHYRLyVDiZtgNjEomxCK9JUFVnWrFLs
-	hgou6Ewe1My29U533uz+scje1cp6n5+gk3QbsWHXEe+QB/tcXR8s/mZBx9WNBO2pHVBR3i
-	B+mXN4qpK9A7fNWIRA6PJ+dnOqmTRvw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-_eNqBynKOEKO6sRZQ5qoTQ-1; Wed,
- 05 Nov 2025 23:23:03 -0500
-X-MC-Unique: _eNqBynKOEKO6sRZQ5qoTQ-1
-X-Mimecast-MFC-AGG-ID: _eNqBynKOEKO6sRZQ5qoTQ_1762402982
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 998B81800350;
-	Thu,  6 Nov 2025 04:23:01 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.24])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D9BC3300018D;
-	Thu,  6 Nov 2025 04:22:57 +0000 (UTC)
-Date: Thu, 6 Nov 2025 12:22:52 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ublk: use copy_{to,from}_iter() for user copy
-Message-ID: <aQwinGy55Bk0r-LU@fedora>
-References: <20251105202823.2198194-1-csander@purestorage.com>
- <20251105202823.2198194-2-csander@purestorage.com>
+	s=arc-20240116; t=1762403415; c=relaxed/simple;
+	bh=Ad1bnRlHYMdyEjV3VVVx6AVKw4rjBrMqscqnbOUE17E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uj60D/1BYvQtUsu08LfAd98CwxyglbvKvEOd57XUiuUHtAtQsgI7n8bdnNaEiqWMSQKKNDZxmGP5+caa/Vc5OUNsA1jdtPE0rzBqwywQWZge1TYbG0R2nnn+3ME3uqoLgl3w+sQVOBX95c/nF3tolegv7B/jhS0OSaaq1FUm1Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObYaZ+/H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793F5C4CEF7;
+	Thu,  6 Nov 2025 04:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762403415;
+	bh=Ad1bnRlHYMdyEjV3VVVx6AVKw4rjBrMqscqnbOUE17E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ObYaZ+/H/e6aZwjN+/ZEpnvpOkV/xXrNOedVTgKrFmcsBdKhy/z2Oon4JG1TdfwtE
+	 CPTf7oD4BWj7YsW6+/RJpTWS+07/+BeQWqxJ+4B9ceKnxAJIyThHVrJSyNnEtencI+
+	 kW0yx+J5TFHjo9SzgqswsKzq3pKNXV8Q8Ubl9b7ch0eGpBu8SbsPZtU3VY3meNIhOB
+	 5W2rVurmFeM5SQNtPuJmu3QI+5YzQEJCM9O76v2SMJDNtf3RXgOm0mWZ41DTbgy9lG
+	 djVAC0KjqdYK4k6ufMZ5CvZh0TP03wOfjQxfhMXrxOa0MRLHXYVyytb5Nc1il4mEwI
+	 Ef2Imo9aIeydA==
+Message-ID: <96bf8c44-1b29-420f-ba99-856c00606000@kernel.org>
+Date: Thu, 6 Nov 2025 13:26:21 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251105202823.2198194-2-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 3/4] null_blk: single kmap per bio segment
+To: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, hch@lst.de,
+ axboe@kernel.dk, hans.holmberg@wdc.com
+Cc: Keith Busch <kbusch@kernel.org>
+References: <20251106015447.1372926-1-kbusch@meta.com>
+ <20251106015447.1372926-4-kbusch@meta.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20251106015447.1372926-4-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 05, 2025 at 01:28:22PM -0700, Caleb Sander Mateos wrote:
-> ublk_copy_user_pages()/ublk_copy_io_pages() currently uses
-> iov_iter_get_pages2() to extract the pages from the iov_iter and
-> memcpy()s between the bvec_iter and the iov_iter's pages one at a time.
-> Switch to using copy_to_iter()/copy_from_iter() instead. This avoids the
-> user page reference count increments and decrements and needing to split
-> the memcpy() at user page boundaries. It also simplifies the code
-> considerably.
-> Ming reports a 40% throughput improvement when issuing I/O to the
-> selftests null ublk server with zero-copy disabled.
+On 11/6/25 10:54 AM, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> Rather than kmap the the request bio segment for each sector, do
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+One extra "the" above.
 
-Thanks,
-Ming
+> the mapping just once.
+> 
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
 
+Other than that, looks OK to me.
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
+-- 
+Damien Le Moal
+Western Digital Research
 
