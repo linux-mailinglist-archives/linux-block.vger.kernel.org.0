@@ -1,53 +1,53 @@
-Return-Path: <linux-block+bounces-29780-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29782-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67564C3959A
-	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 08:12:08 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A18CC3957C
+	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 08:10:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 395B04FA355
-	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 07:10:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D073C350360
+	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 07:10:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7A72DE1E6;
-	Thu,  6 Nov 2025 07:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A18B2DC771;
+	Thu,  6 Nov 2025 07:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PukBIdRL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jv0Seg1+"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4920B2DCF74
-	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 07:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260DF2DECA5
+	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 07:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762413022; cv=none; b=GzFxFeNmDeWP9bRIxlInntSVloAQiDdjfOImWND2HLX5sPHTI6I3dOFML6JzILG046uqiNX1bJktszoVRRzsanhzCNEaD+xxXzxzuPDlvg/2YW/nP1FxJ/QpENnIeNa7JUNcZxVevG7IAw12RnztXD/WwAf+5ZZMsLosCOzTgBI=
+	t=1762413023; cv=none; b=Jf9i81iHvu+rS7dKpxOsi0656OWiZkcW/waCbWyjNtMeAh4usvzH+NPwWOXY0ipHbTKdx9EGX7s1FnXjqMMBohc3EAMe7avdcV02G2sLpClrTkD45Hkeze6gQbEVwAVCY4PaaZrQ9SoTQ5NvQbw9qJPD8SK1M7mRdHFi00+wjV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762413022; c=relaxed/simple;
-	bh=M4E1+/ZXiiZoEvMsFbDjYQslMqwpGIEsRzKeYjEcEV0=;
+	s=arc-20240116; t=1762413023; c=relaxed/simple;
+	bh=/gnMmyEhQmev+J3FaEsXyIciynQVaK4UxC+nSX0+5xY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ru1W2YHMKgirgbHPcXtjNA8H84yub0DhyYR6UyVGw3tmGpcPQuQVzS1b8ndgT3osvZD0y05Gk0Xslj2+TNFmup6jxPYs2f5UwSqHp2pXKd4HZ1DY4yqVOOlp8SfKkRVX4OwgboCc4EgnrKJ9F0m07cgBjjY8kJ74Rdz6hsuoKos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PukBIdRL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3BC1C116C6;
-	Thu,  6 Nov 2025 07:10:21 +0000 (UTC)
+	 MIME-Version; b=mU8M8ns1Zdkw6llplm1n5sPleq2VggjO+0uxJFKJOLkAGMiNi4bd1aqEK+V8SzT48cbE3eJSbEG2RnnZspYhnGFaPXurk+5HOs7ITwkKqs7OhzqU9ixvZQ2P3WPTg+VLA2odlOaHJGNTH8XDWQiPX+Tp0dv6Wr5KuCbuQG1YT24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jv0Seg1+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB19C116B1;
+	Thu,  6 Nov 2025 07:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762413022;
-	bh=M4E1+/ZXiiZoEvMsFbDjYQslMqwpGIEsRzKeYjEcEV0=;
+	s=k20201202; t=1762413023;
+	bh=/gnMmyEhQmev+J3FaEsXyIciynQVaK4UxC+nSX0+5xY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PukBIdRLoFii0qaVhmhn+k9Ad6Q47tJZQ/Q0rsqyCWYu2ComPhZhRsipqI8Psfd/2
-	 XsCjYe4YTUw6OD0dS3SXhqsVye40XH7NQCoTHyjjaZj8pzi+J5DEcvpmIIoeVZRXwP
-	 TWIloIiUHiG2+Tphmd546T2ZYbW6WzFRFpm0Xs8ItQj3N50sF6gXh+LNXSWpf2a3kP
-	 /0xFBT3lNBm3XqnBlqZ1YgBx+T5jtSwObiYNnVSSJHbHrHESzPXS5QVgZ9RiPbRqGX
-	 kII40b3ARDpKjmGrmLRxIKGMVsjvy/84BjUu97jJA0R7kl8MQ8S2Mmh7slsU1bmxeK
-	 x65aD5HQWGKRQ==
+	b=jv0Seg1+5Bkrw0pH7kSFSNyYGwjdVXBrehK/zSgGCaC+wMX4Zhj/N6e9Vh4DT/lUp
+	 1YWT4qA/+GaOa13Wo/dX8KIlo6H+vi0lTQhGDdesf5HBIdohIVoJrMMTWXZ7KYwGN1
+	 TP0l2he/CX7Zqew+izmQzHG0RfcrZxDrtng9UFHhKMfXlUD7/B/qC10s4Xzv8614IE
+	 QSQIcYs6LloIqRDiODJ9c7HBLqIsDoY0FtOdsEfj8lPVvdZYs4cdru/qegGfHUv7hy
+	 t0vm4oWFQepXD1R/iO9knSxw/PeURkxckxail8yAXJpOruht3Fvc/1kfW9JYDEZap+
+	 MWmNJeJyAUjnw==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
 Cc: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 1/2] block: remove blk_zone_wp_offset()
-Date: Thu,  6 Nov 2025 16:06:26 +0900
-Message-ID: <20251106070627.96995-2-dlemoal@kernel.org>
+Subject: [PATCH 2/2] block: introduce bdev_zone_start()
+Date: Thu,  6 Nov 2025 16:06:27 +0900
+Message-ID: <20251106070627.96995-3-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251106070627.96995-1-dlemoal@kernel.org>
 References: <20251106070627.96995-1-dlemoal@kernel.org>
@@ -59,123 +59,58 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The helper function blk_zone_wp_offset() is called from
-disk_zone_wplug_sync_wp_offset(), and again called from
-blk_revalidate_seq_zone() right after the call to
-disk_zone_wplug_sync_wp_offset().
+Introduce the function bdev_zone_start() as a more explicit (and clear)
+replacement for ALIGN_DOWN() to get the start sector of a zone
+containing a particular sector of a zoned block device.
 
-Change disk_zone_wplug_sync_wp_offset() to return the wp_offset it used
-for updating the target zone write plug to avoid this double call. With
-this change, blk_zone_wp_offset() can be open coded directly in
-disk_zone_wplug_sync_wp_offset(). This open-coding introduces 2 changes:
-handle the BLK_COND_ZONE_ACTIVE case, and return UINT_MAX as the
-wp_offset for a full zone, since the write pointer of full zones is
-invalid.
-
-For the case where a zone does not have a zone write plug,
-disk_zone_wplug_sync_wp_offset() does nothing and returns 0. This in
-turn leads to blk_revalidate_seq_zone() to immediately return, which is
-exactly what we want (because there is no need to attempt removing a
-zone write plug that does not exist).
+Use this new helper in blkdev_get_zone_info() and
+blkdev_report_zones_cached().
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- block/blk-zoned.c | 64 +++++++++++++++++++++++------------------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
+ block/blk-zoned.c      | 4 ++--
+ include/linux/blkdev.h | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index c5226bcaaa94..2f4e45638601 100644
+index 2f4e45638601..e7e5542c538e 100644
 --- a/block/blk-zoned.c
 +++ b/block/blk-zoned.c
-@@ -794,46 +794,48 @@ static void disk_zone_wplug_set_wp_offset(struct gendisk *disk,
- 		disk_remove_zone_wplug(disk, zwplug);
+@@ -945,7 +945,7 @@ int blkdev_get_zone_info(struct block_device *bdev, sector_t sector,
+ 		return -EINVAL;
+ 
+ 	memset(zone, 0, sizeof(*zone));
+-	sector = ALIGN_DOWN(sector, zone_sectors);
++	sector = bdev_zone_start(bdev, sector);
+ 
+ 	if (!blkdev_has_cached_report_zones(bdev))
+ 		return blkdev_report_zone_fallback(bdev, sector, zone);
+@@ -1063,7 +1063,7 @@ int blkdev_report_zones_cached(struct block_device *bdev, sector_t sector,
+ 		return blkdev_do_report_zones(bdev, sector, nr_zones, &args);
+ 	}
+ 
+-	for (sector = ALIGN_DOWN(sector, zone_sectors);
++	for (sector = bdev_zone_start(bdev, sector);
+ 	     sector < capacity && idx < nr_zones;
+ 	     sector += zone_sectors, idx++) {
+ 		ret = blkdev_get_zone_info(bdev, sector, &zone);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 6a498aa7f7e7..2fff8a80dbd2 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1522,6 +1522,12 @@ static inline sector_t bdev_zone_sectors(struct block_device *bdev)
+ 	return q->limits.chunk_sectors;
  }
  
--static unsigned int blk_zone_wp_offset(struct blk_zone *zone)
--{
--	switch (zone->cond) {
--	case BLK_ZONE_COND_IMP_OPEN:
--	case BLK_ZONE_COND_EXP_OPEN:
--	case BLK_ZONE_COND_CLOSED:
--		return zone->wp - zone->start;
--	case BLK_ZONE_COND_FULL:
--		return zone->len;
--	case BLK_ZONE_COND_EMPTY:
--		return 0;
--	case BLK_ZONE_COND_NOT_WP:
--	case BLK_ZONE_COND_OFFLINE:
--	case BLK_ZONE_COND_READONLY:
--	default:
--		/*
--		 * Conventional, offline and read-only zones do not have a valid
--		 * write pointer.
--		 */
--		return UINT_MAX;
--	}
--}
--
--static void disk_zone_wplug_sync_wp_offset(struct gendisk *disk,
--					   struct blk_zone *zone)
-+static unsigned int disk_zone_wplug_sync_wp_offset(struct gendisk *disk,
-+						   struct blk_zone *zone)
- {
- 	struct blk_zone_wplug *zwplug;
- 	unsigned long flags;
-+	unsigned int wp_offset;
- 
- 	zwplug = disk_get_zone_wplug(disk, zone->start);
- 	if (!zwplug)
--		return;
-+		return 0;
- 
- 	spin_lock_irqsave(&zwplug->lock, flags);
--	if (zwplug->flags & BLK_ZONE_WPLUG_NEED_WP_UPDATE)
--		disk_zone_wplug_set_wp_offset(disk, zwplug,
--					      blk_zone_wp_offset(zone));
-+	if (zwplug->flags & BLK_ZONE_WPLUG_NEED_WP_UPDATE) {
-+		switch (zone->cond) {
-+		case BLK_ZONE_COND_IMP_OPEN:
-+		case BLK_ZONE_COND_EXP_OPEN:
-+		case BLK_ZONE_COND_CLOSED:
-+		case BLK_ZONE_COND_ACTIVE:
-+			wp_offset = zone->wp - zone->start;
-+			break;
-+		case BLK_ZONE_COND_EMPTY:
-+			wp_offset = 0;
-+			break;
-+		case BLK_ZONE_COND_FULL:
-+		case BLK_ZONE_COND_NOT_WP:
-+		case BLK_ZONE_COND_OFFLINE:
-+		case BLK_ZONE_COND_READONLY:
-+		default:
-+			/*
-+			 * Conventional, full, offline and read-only zones do
-+			 * not have a valid write pointer.
-+			 */
-+			wp_offset = UINT_MAX;
-+			break;
-+		}
-+		disk_zone_wplug_set_wp_offset(disk, zwplug, wp_offset);
-+	}
- 	spin_unlock_irqrestore(&zwplug->lock, flags);
- 
- 	disk_put_zone_wplug(zwplug);
++static inline sector_t bdev_zone_start(struct block_device *bdev,
++				       sector_t sector)
++{
++	return sector & ~(bdev_zone_sectors(bdev) - 1);
++}
 +
-+	return wp_offset;
- }
- 
- /**
-@@ -2095,9 +2097,7 @@ static int blk_revalidate_seq_zone(struct blk_zone *zone, unsigned int idx,
- 	if (!queue_emulates_zone_append(disk->queue) || !disk->zone_wplugs_hash)
- 		return 0;
- 
--	disk_zone_wplug_sync_wp_offset(disk, zone);
--
--	wp_offset = blk_zone_wp_offset(zone);
-+	wp_offset = disk_zone_wplug_sync_wp_offset(disk, zone);
- 	if (!wp_offset || wp_offset >= zone->capacity)
- 		return 0;
- 
+ static inline sector_t bdev_offset_from_zone_start(struct block_device *bdev,
+ 						   sector_t sector)
+ {
 -- 
 2.51.1
 
