@@ -1,154 +1,89 @@
-Return-Path: <linux-block+bounces-29776-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29778-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8B7BC3917E
-	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 05:28:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6BBDC39196
+	for <lists+linux-block@lfdr.de>; Thu, 06 Nov 2025 05:35:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B6343B6240
-	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 04:28:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8111E3B378A
+	for <lists+linux-block@lfdr.de>; Thu,  6 Nov 2025 04:35:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415CD2C11D1;
-	Thu,  6 Nov 2025 04:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0B325F984;
+	Thu,  6 Nov 2025 04:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmVMRwYn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRhxtk6g"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74543245006
-	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 04:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A815529A1
+	for <linux-block@vger.kernel.org>; Thu,  6 Nov 2025 04:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762403279; cv=none; b=NIFGf6bn6CYwux4ztwHQRQeez51+lVf6+wsW0TT2cCKEu7A35q4aJO45CTQpTXAdaxK7gZ3NZIwob1I29TavwmQG69MKOfPiSiPsz5zl9znzVqcV+JYC/zjAiZDZk/Y7WxTpTZp5hLkCzJYZB98XnjUEYbanltWdu5VEr1vWak4=
+	t=1762403718; cv=none; b=uIDKly+NV9ArO8c08FKwsvCBQxVPPdHMO7JUan81hxtlMpogPX2gA+nlchl9CofQjbX4R3OzolHU6CKYbs/K8STFCkhmV5BZKKfGufaGT7gNmC9f572UTdV8/gKKqdnCKNXOteimcyIajiLuWH7dq/HPZvD8Xqs6iVC/ED9uaxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762403279; c=relaxed/simple;
-	bh=uT2zzEe6rtu8oBGdqI7+U9ippLJiZCCOdHqn6R2mDbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SO+tilQUIsVoW8Umn5JD39BrbAUYI618lr4MP5l0wuL2YkD0SkdFW1Z7zk49xjzIDrU4EhI6egsabZQKsJ22G0NNnH3LSevU5B3+YBdOX33LcJcxZJ09XPDm1rlUmf67EyE9v329n1EiaC/e2a4IPF71ff8+qxYXDJIX1GMA70I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MmVMRwYn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762403276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x9Vfrw1KRujThrbFg2bU5JBZHEnXRsqM1wEXeXjFpQE=;
-	b=MmVMRwYn4FZQUOew3Fct8GZYZxSZuq1OqOJVJ9MqLAEjxq+7Z9NnXfKr8uwTXu+BvzFqaU
-	vsOYUHdYE1/fHHodOw8LDuhNofUgl4oVHAVUAUGmJ6Vna/j288XygX8UJbgUpsI/OWDMwx
-	RuSth1LUF9K0Z7ZCLuldb49QJAkhIB0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-nPUykFD6Mc-VsMw55TC4qg-1; Wed,
- 05 Nov 2025 23:27:53 -0500
-X-MC-Unique: nPUykFD6Mc-VsMw55TC4qg-1
-X-Mimecast-MFC-AGG-ID: nPUykFD6Mc-VsMw55TC4qg_1762403272
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D22411955F3E;
-	Thu,  6 Nov 2025 04:27:51 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.24])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25BC5180049F;
-	Thu,  6 Nov 2025 04:27:47 +0000 (UTC)
-Date: Thu, 6 Nov 2025 12:27:42 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ublk: use rq_for_each_bvec() for user copy
-Message-ID: <aQwjvu-bFZRT-8Ol@fedora>
-References: <20251105202823.2198194-1-csander@purestorage.com>
- <20251105202823.2198194-3-csander@purestorage.com>
+	s=arc-20240116; t=1762403718; c=relaxed/simple;
+	bh=0NKkoXcj12kuxL014ecN1w6NAn33C9rghjSJpEtZHOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eZz3iffGQrB7KBdHgS/aLtqQHPBhcSe0LB4jfqf+wU9ETEmgrLzjkSLqxZE3+NfoeilsXCoy43MYuq0X0WscYv7sdTdmthpMIobgNMepv+NuaWNwlc927AZxK42vfAq4Yeu6BGF+LBdvTk7T4odBke1W6PU1b9UuDfqH3h4YUvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRhxtk6g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40DB4C4CEFB;
+	Thu,  6 Nov 2025 04:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762403718;
+	bh=0NKkoXcj12kuxL014ecN1w6NAn33C9rghjSJpEtZHOQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SRhxtk6gfU1muu+tMgG1D8XEc0ewEnfV04V0exyom2RoBQhZcQOjEMqkNWSvu0Vs8
+	 peSoVNT6VYaf1COyMVHSoExN2wH66ClRS2sx4HzihyGsCagH/Cqthxev+3u+Jm/Svq
+	 wZD27M2UyZmmM+fxTAMxFSC/+NT39285Adiorm6ACfmMWtkLXbn91oKIlc/lyWchUT
+	 xKXEgr+1XNZCklVA6iRbxd5KhO/9wD1QSTIccf+9oHDNLXkSJsxgXsbvaMOBPkmtmw
+	 IYZF1cHciX2VqkKw+fgsteejQEEUy4ANlWBJoboaiZ1KcjmU86BhDmRF199gzihRKq
+	 tTYHiIXLSmlTQ==
+Message-ID: <57db9d0f-299b-4043-82ec-55d502642631@kernel.org>
+Date: Thu, 6 Nov 2025 13:31:24 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251105202823.2198194-3-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 4/4] null_blk: allow byte aligned memory offsets
+To: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org, hch@lst.de,
+ axboe@kernel.dk, hans.holmberg@wdc.com
+Cc: Keith Busch <kbusch@kernel.org>
+References: <20251106015447.1372926-1-kbusch@meta.com>
+ <20251106015447.1372926-5-kbusch@meta.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20251106015447.1372926-5-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 05, 2025 at 01:28:23PM -0700, Caleb Sander Mateos wrote:
-> ublk_advance_io_iter() and ublk_copy_io_pages() currently open-code the
-> iteration over request's bvecs. Switch to the rq_for_each_bvec() macro
-> provided by blk-mq to avoid reaching into the bio internals and simplify
-> the code. Unlike bio_iter_iovec(), rq_for_each_bvec() can return
-> multi-page bvecs. So switch from copy_{to,from}_iter() to
-> copy_page_{to,from}_iter() to map and copy each page in the bvec.
+On 11/6/25 10:54 AM, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
 > 
-> Suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> ---
->  drivers/block/ublk_drv.c | 78 ++++++++++++----------------------------
->  1 file changed, 23 insertions(+), 55 deletions(-)
+> Allowing byte aligned memory provides a nice testing ground for
+
+.dma_alignment = 1 means a minimum of 2-bytes alignment, no ?
+
+> direct-io.
 > 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 40eee3e15a4c..929d40fe0250 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -911,81 +911,49 @@ static const struct block_device_operations ub_fops = {
->  	.open =		ublk_open,
->  	.free_disk =	ublk_free_disk,
->  	.report_zones =	ublk_report_zones,
->  };
->  
-> -struct ublk_io_iter {
-> -	struct bio *bio;
-> -	struct bvec_iter iter;
-> -};
-> -
-> -/* return how many bytes are copied */
-> -static size_t ublk_copy_io_pages(struct ublk_io_iter *data,
-> -		struct iov_iter *uiter, int dir)
-> +/*
-> + * Copy data between request pages and io_iter, and 'offset'
-> + * is the start point of linear offset of request.
-> + */
-> +static size_t ublk_copy_user_pages(const struct request *req,
-> +		unsigned offset, struct iov_iter *uiter, int dir)
->  {
-> +	struct req_iterator iter;
-> +	struct bio_vec bv;
->  	size_t done = 0;
->  
-> -	for (;;) {
-> -		struct bio_vec bv = bio_iter_iovec(data->bio, data->iter);
-> -		void *bv_buf = bvec_kmap_local(&bv);
-> +	rq_for_each_bvec(bv, req, iter) {
->  		size_t copied;
->  
-> +		if (offset >= bv.bv_len) {
-> +			offset -= bv.bv_len;
-> +			continue;
-> +		}
-> +
-> +		bv.bv_offset += offset;
-> +		bv.bv_len -= offset;
-> +		bv.bv_page += bv.bv_offset / PAGE_SIZE;
-> +		bv.bv_offset %= PAGE_SIZE;
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
 
-The above two lines are not needed because copy_page_*_iter() handles
-it already.
+Looks good.
 
->  		if (dir == ITER_DEST)
-> -			copied = copy_to_iter(bv_buf, bv.bv_len, uiter);
-> +			copied = copy_page_to_iter(
-> +				bv.bv_page, bv.bv_offset, bv.bv_len, uiter);
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-WARN in page_copy_sane() is triggered because copy_page_*_iter() requires 
-all pages belong to one same compound page.
+Note: on top of this, for testing, I think it would be nice to add a config
+parameter to allow changing dma_alignment to higher values, and check requests
+when processing them against that alignment. That could allow testing corner
+cases or emulate devices with weird DMA alignment constraints.
 
-One quick fix is to replace rq_for_each_bvec() with rq_for_each_segment().
-
-thanks,
-Ming
-
+-- 
+Damien Le Moal
+Western Digital Research
 
