@@ -1,45 +1,58 @@
-Return-Path: <linux-block+bounces-30049-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30050-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D8E8C4E4E9
-	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 15:11:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09312C4E510
+	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 15:12:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4A5764E669F
-	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 14:10:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A02F2188209A
+	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 14:11:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C5930FC15;
-	Tue, 11 Nov 2025 14:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13C6631195A;
+	Tue, 11 Nov 2025 14:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C53FEejr"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B772F7ADC
-	for <linux-block@vger.kernel.org>; Tue, 11 Nov 2025 14:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949B230FC15;
+	Tue, 11 Nov 2025 14:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762870229; cv=none; b=AYF4pcY0myOBr+nW0o/5Ew5LA38kQ4gRJgC41OInIJPsR8SXzfObYXaGqixBsm/51s1u31AXf1DfuL3mS+BDk8qaJwo8CPPt7CEeH01q4WEirKnOPTsSgqRqrIV5pvkauYhEC1Jjek3504BemoKqyG/+Eq8Joz+CBAMC7SWye8Y=
+	t=1762870245; cv=none; b=cknZahS4TOPaCgUluvf4qpl0id+/X9OCFPCLcf4k2o8ySDROYJAgsB4GaDPwg69hXit2gdK4iMqxyIhXNImHQSsvqMehF/EEho96r/U9sIBzR+6Bq7Nsg3UW61wiAnSTi+FZmcrqwo9uoJseG1RPnoqobf23apaPj6iPU+13sTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762870229; c=relaxed/simple;
-	bh=u+l3T5Btg4YrMUhrTACFMal+8SZFqWLfSmFBfxxo4xo=;
+	s=arc-20240116; t=1762870245; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWoEoQlVcpyYI4ShFXZmNECurpCIx7ExWygzhRoNFu79j/cVcnFDhTZUNGYend68yMPaJ2qoDw1MAMsZjGFdcur65HeVqPAhNeY0cf/Wc9qukdn9GKoldMCn6DzDWHzWMGu5x87aUHZz/XowZXufTZTyfrSrz+9XYY0DAFJzoLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 180C1227AAA; Tue, 11 Nov 2025 15:10:22 +0100 (CET)
-Date: Tue, 11 Nov 2025 15:10:21 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-block@vger.kernel.org, axboe@kernel.dk, hch@lst.de,
-	yukuai@fnnas.com, Keith Busch <kbusch@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] block: fix merging data-less bios
-Message-ID: <20251111141021.GA3123@lst.de>
-References: <20251111140620.2606536-1-kbusch@meta.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=coVEpvvqCbVW7iA6rYUL7FylFmCEAj3z33+zGYgc2k80NvPzwnwNE8kIGn6yTOkY8WmDPq0b72jv2/l9AlnE7+MzBSkRNcUOXUiTSU4wJNPQdfmHzu61vaDBNtl8HGUiXCPVdrUeNaQoeXXEMh+EIO3gMCGtE1LxuDh5bP1jCi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C53FEejr; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=C53FEejrDrI3DTYLMmRjMqTK+v
+	dCWwRfDTfVbJKBC98Zlg7FXv2GhAxh9RINZOnVuoOFFjIgFO2+u2O7HvdUy06mdIBTe3G5femdHgX
+	fmOj2UfgyIVnyMbYNkWKMiCFiGPuFIg8MntHfxqdVcvRk/AB16YNP6yh9JLuAcrjbDV5nfPxtNSpr
+	Ll/pNmf5YHAlFIXslPU2ObG2/IILjuXcGzU+dKknFGqh2AUqSa91S/+T6qyEHUGtkyJ9R4JBf2CZ+
+	BsSGL1QF5DnEX1HJaIk++e3ea++rJBplp0srf14H2QDVx3mM9Df5pAXagzBsldA2YehOLqad6U+SB
+	CXD8dQMg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vIp51-00000007IHL-0eKD;
+	Tue, 11 Nov 2025 14:10:43 +0000
+Date: Tue, 11 Nov 2025 06:10:43 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Kriish Sharma <kriish.sharma2006@gmail.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blk-mq-dma: fix kernel-doc function name for integrity
+ DMA  iterator
+Message-ID: <aRND42us1y_uuhUm@infradead.org>
+References: <20251111115810.2320857-1-kriish.sharma2006@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -48,21 +61,10 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251111140620.2606536-1-kbusch@meta.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-
-On Tue, Nov 11, 2025 at 06:06:20AM -0800, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> The data segment gaps the block layer tracks doesn't apply to bio's that
-> don't have data. Skip calculating this to fix a NULL pointer access.
-> 
-> Fixes: 2f6b2565d43cdb5 ("block: accumulate memory segment gaps per bio")
-> Reported-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
+In-Reply-To: <20251111115810.2320857-1-kriish.sharma2006@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
 Looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-
 
