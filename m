@@ -1,82 +1,123 @@
-Return-Path: <linux-block+bounces-30052-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30054-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6B30C4E6D0
-	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 15:24:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80BD3C4EA88
+	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 16:02:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A635C188F823
-	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 14:20:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C22B34F4101
+	for <lists+linux-block@lfdr.de>; Tue, 11 Nov 2025 14:55:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B13C32DCC04;
-	Tue, 11 Nov 2025 14:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4930B305E24;
+	Tue, 11 Nov 2025 14:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="dAP5aXuL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zw4y/LOE"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-17.ptr.blmpb.com (sg-1-17.ptr.blmpb.com [118.26.132.17])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F476299928
-	for <linux-block@vger.kernel.org>; Tue, 11 Nov 2025 14:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165EF29BDB0
+	for <linux-block@vger.kernel.org>; Tue, 11 Nov 2025 14:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762870706; cv=none; b=Jol+85RgFybXZBBqOoJl+aLnmTcD8/u5tZhsyEwmAZD0Ibqbd4AnyJwOE/QtdqJ8lajmKOxJWjfEFTo8CZY6mqkfhm/xVZ0QY6dnavc1nEKNjaQhO8aULfy2e1VHn0JC6UFbXjclEskiZIDeA/sVrf/O/esgYGQYBzP7KiFQesc=
+	t=1762872909; cv=none; b=IVInF4c9g8QNyADyKxSvRFCxmmJJ+In/01vJcz1zAL/mpr1hIoKeVKAFMcbvohGTWrKAdqjpta7KLhtbLIN59cFHkLZ2HEyhUBxBXlph6Yx991kvYiNGkxUwVuXUgxp83wbjeD7pYNWy4ujnbTOTFTX6/FcOGtsPnjboxLJrW/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762870706; c=relaxed/simple;
-	bh=hte6wTXN+K2lQJ3M1CuSyBUcTWqdtWZxPAps/eNUiWI=;
-	h=Subject:References:In-Reply-To:To:Content-Type:Date:Mime-Version:
-	 Cc:From:Message-Id; b=s0vULuTTb9wl/HMmA5/cEVwOWl9URW8V7XA9I5bfHgnFzx7sZ5sL4x5diKDaP/1CCfxi2KhGl5P+MPFNqm4fmkTZQsd4SqtPgGJgx7diTgAVc/pRe6jRmLZ3U8ZumQy6io1BxndQ2Vgpp6ZDFgxv6uC29/ZzuPFm5p/mVMZPpgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=fail smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=dAP5aXuL; arc=none smtp.client-ip=118.26.132.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fnnas.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1762870697;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=jNKFeaSv7z/7xlBxzTYMq+YQ9ji/6YXaGeuLjRoCRGw=;
- b=dAP5aXuLMXO2a8/2exSayR3oLRz+lzfNz2mgCUQdc+OV/SamIPTFZiuq83yochUGJU+pKD
- Gr1rW7fFgCY4ZbzaF6HF9UpHmlcaPYAVjGKI0d1ryqW4musPpOjwzabGZAtsbWGtQxi/g5
- cOd86jwjWryJXki607KyYD8Nu0w+45QTMvpxQrf5XtzizCxE4PwXlec8fJ9XqeRZBiUSCa
- mo++QOpIsT9OmicNM4vREj5pa8CN910x9o9IAMECDbb0Rf8QCVzNgCJvUnK0HnfF7HO03a
- fJhsuRuH7/tcbe09pdrgT/6YASJE7vJ9zTMxjlCHCjBggUEiV8IX+kmasxxhIg==
-Subject: Re: [PATCH] block: fix merging data-less bios
-User-Agent: Mozilla Thunderbird
-Received: from [192.168.1.104] ([39.182.0.168]) by smtp.feishu.cn with ESMTPS; Tue, 11 Nov 2025 22:18:14 +0800
-X-Lms-Return-Path: <lba+2691345a7+42db54+vger.kernel.org+yukuai@fnnas.com>
-References: <20251111140620.2606536-1-kbusch@meta.com>
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20251111140620.2606536-1-kbusch@meta.com>
-To: "Keith Busch" <kbusch@meta.com>, <linux-block@vger.kernel.org>, 
-	<axboe@kernel.dk>, <hch@lst.de>, <yukuai@fnnas.com>
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Nov 2025 22:18:12 +0800
+	s=arc-20240116; t=1762872909; c=relaxed/simple;
+	bh=Pc086ujvScE2BI9hiMALfAHgXYz5Z656q27m00hb3To=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VjVRuV0Au8JdtpV1pOxtQSYkDrBRQdtPkXG7lRhzI5Hv6mIQ1F6/jVnEGy/EueqrVt0BF4OPCnGs5IWg7r4Yic0WAWLc6hIVlHmImqqp/P6vFXmsPgjPvBRD/4ccCZ6zwzHJoJlIishaJNPsoIcgfoBjWVA4MHePI7JioJJvRJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zw4y/LOE; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-43323851d03so16479985ab.0
+        for <linux-block@vger.kernel.org>; Tue, 11 Nov 2025 06:55:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1762872904; x=1763477704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vd60/KfMSWtIeVZjWzA7tGiHeUAva3B/1z//rOpfIQw=;
+        b=zw4y/LOE287jm6K6HVPtVkEOlEeIcCJRNRUEjwlkMdRAnc/su6+SQ/zIOK4hndN5B2
+         fb+4DGpQH7D+V3yq5dhHsZ78w5xQ38SLm/3rJ+hwfAf3pxZnuc9NmmqfFp4x/WA4G7BJ
+         Vqt9Xaa0zCkxGK+UpwHMc32hhvZteXjl6r4b7gT2mPFtY2UilHHk3gP8o17oi05ay+nF
+         sqkYR+ASvcqAn7CVJI+adySa7hHCS+S50TM+2dlno/ErCtFK+HCki0a0JpPzKpq9oG8G
+         oIew/J9HAx823uccYExYzF/JIuJV5A1PGDlkJONBmGzkmzkBXyaajvm/MC9CaxdenNxe
+         PyJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762872904; x=1763477704;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Vd60/KfMSWtIeVZjWzA7tGiHeUAva3B/1z//rOpfIQw=;
+        b=Y7gYttyNgWA86ansy8cgm4tIWVo3cwhEoNUv6P/pQN/GyYJvYdAkZYoxU4Q+grhVKE
+         MfNobSFFMUV6Dk5ji76unYkSDnKXdWLIA+u6YG1tRZXqdoomtgB3f7lODW+UZvIBZfsA
+         n6VXaGSf1L0yf6AAXN7ihKmwLbkh3VO1aogxbiHG8HYyueeny2Sqo8gFXW4rSDvo2IJX
+         AnLgnE9eP5TW49XYjMAz3sAbZLXR22LmCxA4VTqh4YmPhqcMNZIewBfd3vSasn40or2r
+         TkpeuB9zw7hPLIEUTTW/a7OXPZRjI/EoZac8+QuWpwcQvdzhY0PO4J+0tVUQ7vfSz8zA
+         7aUA==
+X-Gm-Message-State: AOJu0YzeJcw0IoxVbKtN9E2FPW7XBNxW5OmrHR7kdFFXQcgHbJnAtI1o
+	aFLr8xD0RQpVdOc7TZYbusxO16byX+Gfsqz2Vg4XpPB1hEU+tjouxPSj+pRX/i9RSEk=
+X-Gm-Gg: ASbGncu/l9OLcTy4y5tqV/J0x1X2DzggR9kq8fzdyTlgaMV8fj/N4V7p0HZZgB5mUyQ
+	vYmPOAmLhTtrOT3rvf8FBlSnPTjm2zfFsS8cWEg2l9pO0bo12QBxpPKHMvtZ3NR53g6eISgsgyJ
+	bOmL3jUH4Eq/4+3lvv9v3h3uAdBy68rgHlI3VZlUPvQvMAc7yoSnbBl+tEYiMocd2fFsuIC74dM
+	qZWeAiCKX+ByvHyU3VqgMOHgmRIjNryQug0n5DK6tRDnW9f456oU9aC6EeX0+hUdSLc1DsBHPKC
+	jLlFnFQtrD8D/pam6ADrJc/HWQdhMzuuk7wJgiPYBMQAtnlgXPgcBmoaSyDAvm1cK9s4VEKDT3X
+	jrr9Wr4zHipJ6P5xvZQUdK6UroC0Ds1mvPBdVDHOCVAD5Qroe71d06IU1tzK3UN8YwlbGPwTIsW
+	dCqp4=
+X-Google-Smtp-Source: AGHT+IFMYYVFn/FWFoI4cBgTrfFiY+nGqvc8CTHosZF05Ixu1TUPMtPgPExq2cQbx0wbLmmkWOTIQQ==
+X-Received: by 2002:a05:6e02:17ca:b0:433:5a9d:dac6 with SMTP id e9e14a558f8ab-43367e7166fmr180713905ab.27.1762872904081;
+        Tue, 11 Nov 2025 06:55:04 -0800 (PST)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-43380302872sm26311045ab.32.2025.11.11.06.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 06:55:03 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: josef@toxicpanda.com, Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: linux-block@vger.kernel.org, nbd@other.debian.org, 
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+ houtao1@huawei.com, zhengqixing@huawei.com
+In-Reply-To: <20251110124920.1333561-1-zhengqixing@huaweicloud.com>
+References: <20251110124920.1333561-1-zhengqixing@huaweicloud.com>
+Subject: Re: [PATCH] nbd: defer config unlock in nbd_genl_connect
+Message-Id: <176287290263.173215.8003110522218932458.b4-ty@kernel.dk>
+Date: Tue, 11 Nov 2025 07:55:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Cc: "Keith Busch" <kbusch@kernel.org>, 
-	"Matthew Wilcox" <willy@infradead.org>
-From: "Yu Kuai" <yukuai@fnnas.com>
-Reply-To: yukuai@fnnas.com
-Message-Id: <d9ab2932-aa4c-4e86-89ab-390a4797f982@fnnas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-=E5=9C=A8 2025/11/11 22:06, Keith Busch =E5=86=99=E9=81=93:
 
-> The data segment gaps the block layer tracks doesn't apply to bio's that
-> don't have data. Skip calculating this to fix a NULL pointer access.
->
-> Fixes: 2f6b2565d43cdb5 ("block: accumulate memory segment gaps per bio")
-> Reported-by: Matthew Wilcox<willy@infradead.org>
-> Signed-off-by: Keith Busch<kbusch@kernel.org>
-> ---
->   block/blk-merge.c | 3 +++
->   1 file changed, 3 insertions(+)
+On Mon, 10 Nov 2025 20:49:20 +0800, Zheng Qixing wrote:
+> There is one use-after-free warning when running NBD_CMD_CONNECT and
+> NBD_CLEAR_SOCK:
+> 
+> nbd_genl_connect
+>   nbd_alloc_and_init_config // config_refs=1
+>   nbd_start_device // config_refs=2
+>   set NBD_RT_HAS_CONFIG_REF			open nbd // config_refs=3
+>   recv_work done // config_refs=2
+> 						NBD_CLEAR_SOCK // config_refs=1
+> 						close nbd // config_refs=0
+>   refcount_inc -> uaf
+> 
+> [...]
 
-LGTM
-Reviewed-by: Yu Kuai <yukuai@fnnas.com>
+Applied, thanks!
+
+[1/1] nbd: defer config unlock in nbd_genl_connect
+      commit: 1649714b930f9ea6233ce0810ba885999da3b5d4
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
 
