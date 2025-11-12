@@ -1,82 +1,83 @@
-Return-Path: <linux-block+bounces-30100-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30103-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98919C509EB
-	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 06:29:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B541C50E7E
+	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 08:22:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C7A1C34A79C
-	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 05:29:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C6F83A60F5
+	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 07:16:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9847E2BD58A;
-	Wed, 12 Nov 2025 05:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38F72874ED;
+	Wed, 12 Nov 2025 07:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H6xdAqMr"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="qmwnyyFV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B072D77F6
-	for <linux-block@vger.kernel.org>; Wed, 12 Nov 2025 05:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D26192D8A;
+	Wed, 12 Nov 2025 07:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762925384; cv=none; b=kzlOmQMpKP1FRk0tS82WSUFi82GN5ynd5wkQ8PqbibIaNGI2axbBRzkPn/FbGzUzes7ZuG072wHfVSwVs9vpDS0m99N4+kTrIMU9y6t1hT2zY6muaQXrCreDVBTxVQURJofEZ0yF6sJ1qvWKbl+ER47XmwTLEuUCgi78EbRm/YA=
+	t=1762931774; cv=none; b=Dp+DxwRKcLI0vuwUNgkF29QQyRGM2axlJK2BJqZAeD2gfTVZpBOdZhkwPNqLLsjoDo3RlfFAYG9AGcTtrp8C1aJXSrrTNvXylKQZnWWOPFma55/7PsG9HWRhQ4l3fWhhvw/Uf/bmkt7bDejaqITYsNlr8Sf2fYr/ZWwPp3CK4jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762925384; c=relaxed/simple;
-	bh=P8GPKZYkr2ygSy+PWpN+18Z5dPMdk6QB7YMWgubPuJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S7byZOh/THdv1a1WITt6a4f4OT45PRPw6KIlMTjRXiQcnWFx/xXED74q1F+lpYJkkyNgJXLAp1HDB5h8sbO/ChA6sO16kQ9Ydj83ocI053UMIcQ/TL51uFPFrqCwA/qtYQiC4eSC7htyBFkbR4HBKcY/CgQYH4Tq+b0yuK0NjtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H6xdAqMr; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC37IRB008518;
-	Wed, 12 Nov 2025 05:29:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=RIeEnEASy94q/dkN3
-	bE4d+5BOCu9LWqiRCxLJDSP2LM=; b=H6xdAqMrCr79pcQVOvuq9L/iM0p22BYCO
-	+mwM59PpLh/gpEU6ihxV/A5Uxgr+1mlBf57H9DQDBnjPNL0oeuOxu9hNLjy4mltv
-	KEFCjHvVh+6jwoKuyGHZw4i0i1GJOLjhj3wrgt74rMb/Epv6Dvgtd40yXKaNrm8P
-	rV7n/Cgdo/D1luTE7l0azbaS3dJJ70JfNa+SrtNMDSrTlKoF3P5TwXcrFxkY83n7
-	/d3+BNALnRnhJgni0rDz1MCn/qTPcVKiGTE9eshkpGuBHOM0jR/aVr9B2lkAxK8m
-	8KuIQUFvcYZ7mbkl+fj/oPOBW2xczmQ3XyW2I16iDe4ESkxXOkwZQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5cj7hnx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 05:29:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC1eDP4007313;
-	Wed, 12 Nov 2025 05:29:26 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajdje9au-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 05:29:26 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AC5TPVK44368320
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Nov 2025 05:29:25 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED9412004B;
-	Wed, 12 Nov 2025 05:29:24 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B6C9320040;
-	Wed, 12 Nov 2025 05:29:20 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.ibm.com.com (unknown [9.43.41.49])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Nov 2025 05:29:20 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: linux-block@vger.kernel.org
-Cc: ming.lei@redhat.com, hch@lst.de, axboe@kernel.dk, yi.zhang@redhat.com,
-        czhong@redhat.com, yukuai@fnnas.com, gjoyce@ibm.com
-Subject: [PATCHv5 5/5] block: define alloc_sched_data and free_sched_data methods for kyber
-Date: Wed, 12 Nov 2025 10:56:06 +0530
-Message-ID: <20251112052848.1433256-6-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251112052848.1433256-1-nilay@linux.ibm.com>
-References: <20251112052848.1433256-1-nilay@linux.ibm.com>
+	s=arc-20240116; t=1762931774; c=relaxed/simple;
+	bh=Xcv2+AJm4TH1a1rjdj3gcabqSWqME7NMMLUOioPIm0c=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=guakrllMasXjKq3skS9Vl1xssWowsWU/6SEE1oVhQS6RpEi1B3gdaC+pTEtjpVpSqJXQXgFX5CvilA2mzTQgNj4VpS5AXFiUP+H2ep9iJznUiOvFoWL4mHrdBer41XJieP+chne6IPDJDkKqinO2ZL+0Vw9kXX5Tx7l4ZjuM/8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=qmwnyyFV; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1762931463;
+	bh=aI1DtojJ3uIlfMHHyo3gbCN97mQw0Es8Q9FMf59dQ/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=qmwnyyFVudo5FNg9tNff7bxheDeVYTJqfAdyFs6X9aYV4msYHJQb3eLVzlVLCluVz
+	 HTDvR29e+jHVxoMXA3wAhyPIZLB9CIyfYCW1wcgBTPms2fQCh254YnOpkUiqMygpep
+	 jfC6LdxDUAhQDqWxNnKUUi8DlqgHYvZbGeqoodoY=
+Received: from meizu-Precision-3660.meizu.com ([14.21.33.152])
+	by newxmesmtplogicsvrsza56-0.qq.com (NewEsmtp) with SMTP
+	id E6C29EB1; Wed, 12 Nov 2025 14:57:44 +0800
+X-QQ-mid: xmsmtpt1762930664t3r16dqsu
+Message-ID: <tencent_17B2F3A0BCCBAFD3AE942235EE98F1595707@qq.com>
+X-QQ-XMAILINFO: N7qqMxIPUfzlejnxzQ6ythel/a3Tm6mb1P8jrwVKo9It+HgpxUwJ7p6FhD9GwW
+	 6sBlZtFDtxdbIzunrvVRbintL1eAuUABZFf0n53X22tNuayQs9oQxTDv2W/AK/DqtfSHBbNrPo4Y
+	 6iIhsknA5vUgM+gsCHBaIS/vhyfq7Pg5KVbi60NeM8hgYDrswKYGAb3G8G1DJcEEDn/RbACj/49h
+	 ahWpe8BBeN5mxSXnNmOHInBw+1agxhJ9kxWyroctg9a7s4e1NG1Eba3fF3G2jg9c6J5ygMJxvc6L
+	 CpxtoRng7XOMwMjELhQqWlntGmfGXsb6Qnxt8tyHvYuIPRA+z4/btPyyASqe009XJqCGXPUe1lhX
+	 K4+hzj3JZqHdaD62ZSP2uUuP7jqksebAO2TdEm1ogqkUuKHNSBhIeTjpKleanyLp36y3nZMKWbbl
+	 GCbE7GiGeZTtkNL8CFJD1B2ZZhtGSQWYIj/AaLnQnmu+v/lgjUTKBUGUwKfIRMt3ERFUpggU5wYq
+	 HY765VN84IXnzkSpL9nrXooj4uc5Ii56oNPhQzmIX7jkajnI9BMpIfxRUixAGCY5bAXUbTFh2DPq
+	 bXLjZeSDOYkUunhZz/191z2XPgIeGvyJcG/sGtdoPS1GlQvLz/8bjQV/MKTBS0+UPg1aOMudWthG
+	 tiHPrq2dwEC3XbRMxLcj6sCMOLyU+aSKgTVOP/GQFaahImw768ahfc/tbTnUBFdgwOYJpLw+JcXe
+	 yKEPn9og42iS5B4GXJylvMjvt1jBkW9tFPBZjCJBab9RH2Oyyy+69/sI1cJozfWaM77sh7GQ82Cr
+	 htbvbHmUT26eD5W8HTVtSgE1xDZN1lL2qqmShYao3CRQnt+0id80CpFpR8b4FpwQ19tIa3GfFkNR
+	 odsT3BvrYGN8uvaIFmBqExAR+FG4EEsQFUUMXYUSAY/Cyhwh0nFoBIk0ZK7SA2uCQLuhOYazcGc+
+	 ZDNOa+ipxNAu1XEaXtGj1VwR1k3WsAa2t5FiEh2XHhwPzuXeKI5OQ1y0W1KC1fVZGqbr2sztBLLO
+	 ggSopnFNvrKVCJj2/wcuhybO16fLU=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Yuwen Chen <ywen.chen@foxmail.com>
+To: senozhatsky@chromium.org
+Cc: akpm@linux-foundation.org,
+	axboe@kernel.dk,
+	bgeffon@google.com,
+	licayy@outlook.com,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	liumartin@google.com,
+	minchan@kernel.org,
+	richardycc@google.com,
+	ywen.chen@foxmail.com
+Subject: Re: [PATCH v4] zram: Implement multi-page write-back
+Date: Wed, 12 Nov 2025 14:57:44 +0800
+X-OQ-MSGID: <20251112065744.3293306-1-ywen.chen@foxmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <htycvrcqbnkk7ldhpaqxesy7uhz3lssymwqm7nzkhyhnid3krm@mfju626njxvb>
+References: <htycvrcqbnkk7ldhpaqxesy7uhz3lssymwqm7nzkhyhnid3krm@mfju626njxvb>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -84,123 +85,41 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=69141b37 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=1sDiDhgU5wRd15m8xSAA:9
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfX0VGJGqWJoL2e
- SYSZf7Et8IyhYsEKQLySrcLcBmthXc5RCUOaGA90F+1/TK1LF1Ze26rZuxFGdDtLTar5G5zoOsL
- pgp3gZ3xQ0GI1+3GdvT/mnEHGeypdVzhZrNQtqgUDN7FbaR3yEYroNP/bK3Ug3sPYOazNb8NU2J
- 0MaI2Oj/gr/WKxQrxiM7BK2fwEUAR0kvdqrEOcXk0NDrhKEFeHD4ZPiaGjbcrMDGGKWNXtBjC05
- CkP7oo8VOEqCWdEudupRkDzJA+di5VJ1uILoBFLYdrie7t23XbS87DROkP08S+jUZZXMHUEitqn
- vOF9TDLLzfewi+Us8d02qWQ0lMOs6mPVgPZy1RXFN8ENQBH71gawtA3HFdbnft4kkxMcM7TCiC7
- /vR8fk1wW3AYllRd+tCQPtQiy4Wqog==
-X-Proofpoint-GUID: kZb3dkx-ygsBwDxeG3gosD_-AYXfFONX
-X-Proofpoint-ORIG-GUID: kZb3dkx-ygsBwDxeG3gosD_-AYXfFONX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-12_01,2025-11-11_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080095
 
-Currently, the Kyber elevator allocates its private data dynamically in
-->init_sched and frees it in ->exit_sched. However, since ->init_sched
-is invoked during elevator switch after acquiring both ->freeze_lock and
-->elevator_lock, it may trigger the lockdep splat [1] due to dependency
-on pcpu_alloc_mutex.
+On Wed, 12 Nov 2025 14:16:20 +0900, Sergey Senozhatsky wrote:
+> The thing that I'm curious about is why does it help for flash storage?
+> It's not a spinning disk, where seek times dominate the IO time.
 
-To resolve this, move the elevator data allocation and deallocation
-logic from ->init_sched and ->exit_sched into the newly introduced
-->alloc_sched_data and ->free_sched_data methods. These callbacks are
-invoked before acquiring ->freeze_lock and ->elevator_lock, ensuring
-that memory allocation happens safely without introducing additional
-locking dependencies.
+1. For flash-based storage devices such as UFS and NVMe, the Command Queue
+mechanism is implemented. Submitting multiple random write requests can
+fully utilize the bandwidth of their buses.
 
-This change breaks the dependency chain involving pcpu_alloc_mutex and
-prevents the reported lockdep warning.
+2. When we submit consecutive pages separately instead of submitting them
+continuously together, the write amplification problem is more likely to
+occur. This is because there is an LBA (Logical Block Addressing) table in UFS.
 
-[1] https://lore.kernel.org/all/CAGVVp+VNW4M-5DZMNoADp6o2VKFhi7KxWpTDkcnVyjO0=-D5+A@mail.gmail.com/
+3. Sequential writing has lower requirements for the bus bandwidth.
 
-Reported-by: Changhui Zhong <czhong@redhat.com>
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Closes: https://lore.kernel.org/all/CAGVVp+VNW4M-5DZMNoADp6o2VKFhi7KxWpTDkcnVyjO0=-D5+A@mail.gmail.com/
-Tested-by: Yi Zhang <yi.zhang@redhat.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
----
- block/kyber-iosched.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+> My next question is: what problem do you solve with this?  I mean,
+> do you use it production (somewhere).  If so, do you have a rough
+> number of how many MiBs you writeback and how often, and what's the
+> performance impact of this patch.  Again, if you use it in production.
 
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index 18efd6ef2a2b..c1b36ffd19ce 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -409,30 +409,42 @@ static void kyber_depth_updated(struct request_queue *q)
- 
- static int kyber_init_sched(struct request_queue *q, struct elevator_queue *eq)
- {
--	struct kyber_queue_data *kqd;
--
--	kqd = kyber_queue_data_alloc(q);
--	if (IS_ERR(kqd))
--		return PTR_ERR(kqd);
--
- 	blk_stat_enable_accounting(q);
- 
- 	blk_queue_flag_clear(QUEUE_FLAG_SQ_SCHED, q);
- 
--	eq->elevator_data = kqd;
- 	q->elevator = eq;
- 	kyber_depth_updated(q);
- 
- 	return 0;
- }
- 
-+static void *kyber_alloc_sched_data(struct request_queue *q)
-+{
-+	struct kyber_queue_data *kqd;
-+
-+	kqd = kyber_queue_data_alloc(q);
-+	if (IS_ERR(kqd))
-+		return NULL;
-+
-+	return kqd;
-+}
-+
- static void kyber_exit_sched(struct elevator_queue *e)
- {
- 	struct kyber_queue_data *kqd = e->elevator_data;
--	int i;
- 
- 	timer_shutdown_sync(&kqd->timer);
- 	blk_stat_disable_accounting(kqd->q);
-+}
-+
-+static void kyber_free_sched_data(void *elv_data)
-+{
-+	struct kyber_queue_data *kqd = elv_data;
-+	int i;
-+
-+	if (!kqd)
-+		return;
- 
- 	for (i = 0; i < KYBER_NUM_DOMAINS; i++)
- 		sbitmap_queue_free(&kqd->domain_tokens[i]);
-@@ -1004,6 +1016,8 @@ static struct elevator_type kyber_sched = {
- 		.exit_sched = kyber_exit_sched,
- 		.init_hctx = kyber_init_hctx,
- 		.exit_hctx = kyber_exit_hctx,
-+		.alloc_sched_data = kyber_alloc_sched_data,
-+		.free_sched_data = kyber_free_sched_data,
- 		.limit_depth = kyber_limit_depth,
- 		.bio_merge = kyber_bio_merge,
- 		.prepare_request = kyber_prepare_request,
--- 
-2.51.0
+We haven't deployed this commit in the product yet. We're now deploying
+it on mobile phones running the Android system. Our ideas are as follows:
+
+1. When an app switches to the background, use process_madvise to swap out
+the app's anonymous pages to zram. When the system is idle, cache the app
+to the external UFS through the writeback interface.
+
+2. When the system memory is tight and the IO load is low, use the IO load to
+improve the memory release speed.
+
+On Wed, 12 Nov 2025 14:18:01 +0900, Sergey Senozhatsky wrote:
+> Why do you do this do-while loop here?
+
+When there are no free zram_wb_request structures in the req_pool,
+zram_writeback_next_request will return NULL. In this case, you need
+to retry once to obtain a zram_wb_request.
 
 
