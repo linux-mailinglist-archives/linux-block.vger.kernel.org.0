@@ -1,163 +1,170 @@
-Return-Path: <linux-block+bounces-30148-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30150-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7D59C51DB9
-	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 12:13:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22DF0C52697
+	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 14:15:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D8C31887F3A
-	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 11:11:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3C8C3A6F4D
+	for <lists+linux-block@lfdr.de>; Wed, 12 Nov 2025 13:05:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5268030749A;
-	Wed, 12 Nov 2025 11:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DAA33043B4;
+	Wed, 12 Nov 2025 13:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pOB7QhmM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WAqEaF6O"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72072FDC3C;
-	Wed, 12 Nov 2025 11:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A91F2C1580
+	for <linux-block@vger.kernel.org>; Wed, 12 Nov 2025 13:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762945732; cv=none; b=c+wGcg0pFbZ5z1j5pqbfLjk4eq7e7BqYh+hoHg0FEUUsBkYtmSVZ1RKXBuQs021WE/OPypdca5Ka4xGE2WrC/Uw5fc916Two1nGbb313XcsCooj+Bb4HPlTMogvQCgb2XaPDXxEL5lJLmr7Hejjfl0qmfDdjYDtnufGrtnOcm4s=
+	t=1762952725; cv=none; b=R/7EYrpRooH/mufvkL2ijd/emophN2iIzx/Xg21aYXOMELy5nX92WWOLOGqGsUeF310d7ukOh6990MlXSJamzS+gwKmvx8+d5ewn+K6f0UhB0NZEK74LmuM8Hx1VEV6lVO+TexuSX7+Ut2ZfGbBm+J6m2mwAqEGDQ7Dka6pbuxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762945732; c=relaxed/simple;
-	bh=7HYb7P746kTlQ448/enNTGByoCQvc5vWYJnuJdoRvhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=relhJAN++1YU4mwqYfwvcON0EuEZuFmrxMR4MN1Z8I004J0JO5olA+x8SGhLulRUgXjC5E7Ubs7asNOi1RK7OHJ7q3l3F7Tzud+jWsSfaUvwtZC6QJmWMdbamwvkOmOi5oMgqXJrSedzvkR+DLWXgNwdBwAdlmqQqPgMnUpco6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pOB7QhmM; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1762952725; c=relaxed/simple;
+	bh=JZHRWJ0VXR7589q4YvpdkIKz3+SIFx/pa/SBbMDVTlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nJRvOf1uNh8VWfja4yItW3CzkE6RUgaaycY2ui8htQ59Oc74fb4AfELOIeh07/oh4+dM3SjYhH6ydzYKtc8kPR8CquerZz/CbJK8i0SY0+YeC1HrhUx0gbpgBbdm6MCykHhUTCWQ9JqWGPlteKj76Ide11F9grGEP1jraTFwgfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WAqEaF6O; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC6nTkG028520;
-	Wed, 12 Nov 2025 11:07:29 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC8GGFs018831;
+	Wed, 12 Nov 2025 13:05:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=lS0PV8URMxmmce+9y
-	YxA6ZwV8ssL8Pfv2N3KgoOn0Oc=; b=pOB7QhmMKumE+2Ewk0J81JPbGPU/jfzXZ
-	lQgYDaIKG+gR9FpX3LyQ1Df17NPun1GTooeAH52oDLyC3C+QHRc9BFPG+AdHTtRK
-	wd3snm2oNdwwbMjZWANEa8pjXp4UVeYb3I35p1dPa9FkbsNLzBVusbf8HneBkgCu
-	WWdXYPdOb0shtMsvVEPkhTRbJLESYAZuFF9BVGl2dVaYR7atgSYipSdQ0/6K5ITD
-	8jjuzmu7DRI6F2rDTpTwvxzmkJ38HY6rb5/MRfSy6cIMNMotYCAvL+u/xFVOKmiv
-	7lCR91WMcv+TU7Cf9jENRnTa+9o3RoEiquKFyM7RakWr9H/okbCow==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5tjymnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:29 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5ACB4SYB022695;
-	Wed, 12 Nov 2025 11:07:28 GMT
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=WK6jGg
+	FyTbO6HWDcEwyojgPTfdSb8Aeb1Xlp6pO2nhg=; b=WAqEaF6OL+P1e7lfQmBc0y
+	Acjokk54LGaUIkluewisMA4NLfm9eJbMRjFCJPCO4vgbLe6RBF4oLG9h0zXJtb9r
+	LCpxySTEGUf0UuSgRdQwRQsmGaQNkhjecdxtiLZUOaBisFNO6LGWWRLXSzm4zJ1u
+	UjFlZ60EDSLfb9jrZrHw6IRIwdxT4F0EMHK5Un7Okcr+dfGGxsTNHleb8KYYyoB0
+	aXPQnoHw+KUT5YJfjExpiWC9sHgUHsxgerDgRDRVvoSk+ibw+LuCxuOxlr7iPsq5
+	lVBSkG1WthFbSeoQokVt6un3Ump+RnSXEUlXcSoVdMmdtBQgqPgDUF0mEzgoMUEA
+	==
 Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5tjymnn-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa3m88e9n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:28 +0000 (GMT)
+	Wed, 12 Nov 2025 13:05:08 +0000 (GMT)
 Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC9QpsE014859;
-	Wed, 12 Nov 2025 11:07:28 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpk7qe4-1
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC9ghCQ014841;
+	Wed, 12 Nov 2025 13:05:08 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpk88x6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ACB7Pg551118504
+	Wed, 12 Nov 2025 13:05:08 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ACD57V532113304
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Nov 2025 11:07:26 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D83932004F;
-	Wed, 12 Nov 2025 11:07:25 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F267120043;
-	Wed, 12 Nov 2025 11:07:20 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.210.190])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Nov 2025 11:07:20 +0000 (GMT)
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-        ritesh.list@gmail.com, john.g.garry@oracle.com, tytso@mit.edu,
-        willy@infradead.org, dchinner@redhat.com, hch@lst.de
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com,
-        martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 8/8] xfs: Lift the bs == ps restriction for HW buffered atomic writes
-Date: Wed, 12 Nov 2025 16:36:11 +0530
-Message-ID: <0f1f53d6fad8c25118b0348b0cb91dc2e4ecf456.1762945505.git.ojaswin@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1762945505.git.ojaswin@linux.ibm.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+	Wed, 12 Nov 2025 13:05:07 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A545B58050;
+	Wed, 12 Nov 2025 13:05:07 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2AB4258045;
+	Wed, 12 Nov 2025 13:05:03 +0000 (GMT)
+Received: from [9.43.41.49] (unknown [9.43.41.49])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 12 Nov 2025 13:05:02 +0000 (GMT)
+Message-ID: <5dd4d03e-d988-4dfe-8c6d-d7ee18d321a4@linux.ibm.com>
+Date: Wed, 12 Nov 2025 18:35:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv5 3/5] block: introduce alloc_sched_data and
+ free_sched_data elevator methods
+To: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, hch@lst.de, axboe@kernel.dk,
+        yi.zhang@redhat.com, czhong@redhat.com, yukuai@fnnas.com,
+        gjoyce@ibm.com
+References: <20251112052848.1433256-1-nilay@linux.ibm.com>
+ <20251112052848.1433256-4-nilay@linux.ibm.com> <aRRiwBMmLzkD6bag@fedora>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <aRRiwBMmLzkD6bag@fedora>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ADQK4HD0lQecC7xUBvMAVAknMXJGVpEF
-X-Proofpoint-ORIG-GUID: iQAnc7Mvlf5AFos0tKRg3f3C_4ix3pmO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5OSBTYWx0ZWRfX52SSPqtKtk4i
- cOa+6iOjuAAo2h3dK97pN8YCSCEGsYjvxno1zsFcUvQEs8u8QFoS8EVe4pT0zpMsHpPdVwbWA1T
- 0zo5RABNZRExM0hTMZPRyOam0cl9R1euNDPgYUagq4a1jUJQXcD4MdbGR+DPYm19JsbetcQDbLp
- IQpdcmM02Hdswz10zt3coYGH2sQxqol1aaRs3Nno9T2vFNe2dBPp59Ks7j3Pe37MrPuoZmS3vVq
- +ks1ZnAEyrV5uifEEGDaPOsLzfMeDcTgtT/VBdftWRhkKkfyZsXRrAFwJW7wHSXcMsDjNIQg+am
- ejhzNtQRfiKZ7AuNzA5NnblMkDmXntu5WTp1V7TrOlqMmUnX3jgGAQAU45KJ5jLteLGR1AUaDQy
- OsFaBLrhNGF97igEbAhLryJJS6zuFA==
-X-Authority-Analysis: v=2.4 cv=V6xwEOni c=1 sm=1 tr=0 ts=69146a71 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=MtZfKmae c=1 sm=1 tr=0 ts=69148604 cx=c_pps
  a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=PLfzAVb2A4JWLM4niBMA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8
+ a=91t--V6Uq9am7j5nezsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: XptJL04Um1HsSaV_oube8ysSExq_o8lq
+X-Proofpoint-ORIG-GUID: XptJL04Um1HsSaV_oube8ysSExq_o8lq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA3OSBTYWx0ZWRfX4xP9ALsDSqlE
+ sIKSAn9ztX3ihzhqsg3bpj0aYn0JhCfmpDUzrFZval4rXwas66Mw7kuigA02BxNO7PRZppN33OK
+ WXjTQtTipLFJS2eoTWmL88hz9yidiKqRW66ns+xc00+PDmdchtMqrwFLNoYwQ4f6WPelvmIpcKS
+ oyRFghdm9PJ6xVIhGtgFz2W1StdxYp20fulP4luUha6zdyNbIt6tcv3vIClySUP77QLz/P/NEe+
+ R0ZLxQBYQUWtgu2jafTaZG+/plsmbHqwTw4lO1kQJin0TEkNYbEqID2IBVqoYsHL06+8S4L5aye
+ w3O8iqejUQlK9OzWKWjOR/OFRf+Ky1i2pCm10It5ZBApo60UcUsb60FAlZ7RaBy64VcLYG2p3UW
+ 256rKlzcPMXfZH8ZKgE1Rhg6g7/LlQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-12_03,2025-11-11_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 malwarescore=0 impostorscore=0
- suspectscore=0 priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080099
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080079
 
-Now that we support bs < ps for HW atomic writes, lift this restirction from XFS
-statx reporting
 
-Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
----
- fs/xfs/xfs_iops.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 67d370947d95..5bd31aacf514 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -622,10 +622,9 @@ xfs_get_atomic_write_min(
- 			return bs;
- 	}
- 	/*
--	 * Buffered IO only supports hw single block atomic writes and bs == ps
--	 * configurations.
-+	 * Buffered IO only supports hw single block atomic writes
- 	 */
--	if (xfs_inode_can_hw_atomic_write(ip) && bs == PAGE_SIZE)
-+	if (xfs_inode_can_hw_atomic_write(ip))
- 		return bs;
- 
- 	return 0;
-@@ -661,10 +660,9 @@ xfs_get_atomic_write_max(
- 		return XFS_FSB_TO_B(mp, mp->m_groups[XG_TYPE_AG].awu_max);
- 	}
- 	/*
--	 * Buffered IO only supports hw single block atomic writes and bs == ps
--	 * configurations.
-+	 * Buffered IO only supports hw single block atomic writes
- 	 */
--	if (xfs_inode_can_hw_atomic_write(ip) && bs == PAGE_SIZE)
-+	if (xfs_inode_can_hw_atomic_write(ip))
- 		return bs;
- 
- 	return 0;
--- 
-2.51.0
+On 11/12/25 4:04 PM, Ming Lei wrote:
+> On Wed, Nov 12, 2025 at 10:56:04AM +0530, Nilay Shroff wrote:
+>> The recent lockdep splat [1] highlights a potential deadlock risk
+>> involving ->elevator_lock and ->freeze_lock dependencies on -pcpu_alloc_
+>> mutex. The trace shows that the issue occurs when the Kyber scheduler
+>> allocates dynamic memory for its elevator data during initialization.
+>>
+>> To address this, introduce two new elevator operation callbacks:
+>> ->alloc_sched_data and ->free_sched_data. The subsequent patch would
+>> build upon these newly introduced methods to suppress lockdep splat[1].
+>>
+>> [1] https://lore.kernel.org/all/CAGVVp+VNW4M-5DZMNoADp6o2VKFhi7KxWpTDkcnVyjO0=-D5+A@mail.gmail.com/
+>>
+>> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>> Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+>> ---
+>>  block/blk-mq-sched.h | 15 +++++++++++++++
+>>  block/elevator.h     |  2 ++
+>>  2 files changed, 17 insertions(+)
+>>
+>> diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+>> index 1f8e58dd4b49..3ac64b66176a 100644
+>> --- a/block/blk-mq-sched.h
+>> +++ b/block/blk-mq-sched.h
+>> @@ -39,6 +39,21 @@ void blk_mq_free_sched_res(struct elevator_resources *res,
+>>  void blk_mq_free_sched_res_batch(struct xarray *et_table,
+>>  		struct blk_mq_tag_set *set);
+>>  
+>> +static inline void *blk_mq_alloc_sched_data(struct request_queue *q,
+>> +		struct elevator_type *e)
+>> +{
+>> +	if (e && e->ops.alloc_sched_data)
+>> +		return e->ops.alloc_sched_data(q);
+>> +
+>> +	return 0;
+> 
+> s/0/NULL
+> 
+Thanks, but it seems replacing 0 with NULL doesn’t quite work here because that
+would make the caller assume that allocation of the scheduler data has failed.
+We need to handle two cases:
+- If ->alloc_sched_data is defined, then return the value it provides.
+- If ->alloc_sched_data is not defined, we should still treat it as a success
+  case and return a sentinel pointer that the caller can interpret as “success,
+  but no allocation required.”
 
+I'll send out the above change. 
+
+Thanks,
+--Nilay
 
