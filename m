@@ -1,129 +1,135 @@
-Return-Path: <linux-block+bounces-30263-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30265-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4228C59067
-	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 18:12:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC72C59393
+	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 18:41:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFF4C4219E2
-	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 16:48:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 213A74282D0
+	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 17:19:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1A0C3624D4;
-	Thu, 13 Nov 2025 16:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3237B2264C7;
+	Thu, 13 Nov 2025 17:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="wN4D4/ma"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="GVJnbLJ6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D66534A3B1
-	for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 16:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8866E2D5C76
+	for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 17:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763051983; cv=none; b=RQInXufrI6C7ynLip6lxTWdmvNASSrQYTN2pNGNJjg4aamKvRrriZOCjlVE2vuP90Evivw/ahk5Ne6N+uCqqq+SZHCdbzZzLn6w6jJZp8HA6EncQKYifBrwDsl+AOdTf+E/fetTYGASVomotbtd+bhanP1mZNBVQmSGM0Qx93hA=
+	t=1763053966; cv=none; b=AgKBzkd5IBETsrYMifl5MsLsAti0JvJk0BqOdmSujQaMolvTMLgWUUS3/biSZkxIq1AikZHaAKgkokG29MDkStHd/wIMiLmp6wc2wSt4qLkIsf+7mG3MHIaBYNUVwl78VQYbg7uzkZ841RxgLZPtMO4gAFWQJQfIcjmIywFnxa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763051983; c=relaxed/simple;
-	bh=hW177gakDHf+Ufs3x0FyqJ++5WlmyEhFjU4hzGDlJb4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DUVN52v8i88F6tLLCQrAhhsgEsbnrQYw2AD2/VR/g0b/Fn/tWqrrDQukReOrpIh+JEyQN8YIMeFdC2gpeA01X7tg3H+cZ5xmiNsFTsWoZ5dzFj0zZsMpgBBptKqzdcKOehywfRcxWRfks5j6bHc32HDoiBSW23a0z6a5apExvOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=wN4D4/ma; arc=none smtp.client-ip=209.85.166.181
+	s=arc-20240116; t=1763053966; c=relaxed/simple;
+	bh=0VC4dmzU+Ey9Ygdim/pTVXAzfR7taHPmdRqGAxfsOcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FzCI921m3CWepDDFrAUEM7tuPYrg1KZ1EnqxwKiv39vMjROfk85L+w2IfEVaMcO8gtpDFnJosjhp13+LVWCYmseo+zlrjHZLfr3a3IvSgRw8tc9smDqG423IpFUEF5m2s165a7wMDrTBOLJm1n8BG9Wf0CgMDZeVWX/FuO8Emf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=GVJnbLJ6; arc=none smtp.client-ip=209.85.166.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-4336f492d75so6446965ab.1
-        for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 08:39:40 -0800 (PST)
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-948a50b8ea6so78088839f.1
+        for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 09:12:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763051980; x=1763656780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jwztvobeODOxhK0CvyheBFjMbfSTg5YCa6BHqK/XpGw=;
-        b=wN4D4/maZ0eKf0lMC4s1W6VsQ+Mu3CMbsitJbo3LfGzhAtM8eMldmTPkiExdj6P2Mg
-         ZtaZ+Ce7aAttBKCAMFXsa90PBrwBEGAaBqp1rJQ9VBRuXtal5I8q9jGbj5Ue/t6eedGe
-         3dKZK3sc/MnPh1pq3SYvD4hi2xDPamCCL7gpnROOfURgy6oGqsg2TFANWdsYS7N+srYu
-         /3834YsAtvCpSH/YHH0gXV6MFWPl5iWW+VCHBZW7alOtlmyCIb3+2UQSbcBb/i9GM2uf
-         impwgrbmTn2t1vbO7neNtizwPNZsCEB0gdE7u/ln9+IX0O5CXcCST53ixM9QT8jyP7M7
-         4vJQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763053963; x=1763658763; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7e3BcbCwL4WqFcaayevnA/yDxq1SWODYXV/lEdC4NZI=;
+        b=GVJnbLJ6PusS7eiRbhdFJxeW8ITF+vZSHocHDPBZsKi6NHIRKUZ1sbq40oSD5yU4ws
+         41mUMR+oTGxEHTujntURJV7tWR5XYIisjokecLjtKomCIryOXF/yWU3+ux1dgFNpSch1
+         DIg40kg1NPQcje5pYZNWcMwlGFT797NsHbUwLO2P7Ui1JOhl7s5MmjxkWqunIs+mqvUH
+         +J0+pTGeNua0GD0C+tZ82oQkd7/RdR2vVxXtbI/M12HCXz17J3+Lg6KUwpURIeEyhKr+
+         PUpczdMiqK5IKPwNuQ7O7R/cVT9MdmDB5KPVQYw2gqjRaDFtvQsnX2s6hrp5FFaOnjkw
+         akIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763051980; x=1763656780;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jwztvobeODOxhK0CvyheBFjMbfSTg5YCa6BHqK/XpGw=;
-        b=FfyMI6b6oelE00xdd3d7lbHopGryotLtDg1KYpAlTIurDICKloeDdahjQ4bfpBa6qp
-         Jh4Rt4LMcrwgn1YzdN5PXjiix3oYHhioGucIynsGqce3vCBoFM4rC4kWt/LV6KlZXup1
-         PjzDAsICSAUhPyaC37xSGQQJfTaHemlCnY+Wr/aNVKvCyXQlkM/xgt/dW3kQD5c7sbl0
-         6+omr7XwJe/hDPY8HuVJKksUjtjhg1YS84WAK6z9O29tV5Iwz9KzeD6+4wrgkJlHbMGQ
-         yTemL9U9a/Zz6WS/T9eGVlExwIrhAVrTKSEr6D9cPg293y4A3Rj6w6NhcFRzhhiR03w2
-         qYEg==
-X-Gm-Message-State: AOJu0Yz+NKQNP2zr+krwXuj0J/WqBdbhZf44VqG0R3ntacn+40fExOG9
-	GlSPqUX1KizeWZwJhB3b8AC6OuHb2aZexz/GYN5Poi0tjHETzPo11WQelfSLsgIZ6NJW5725rML
-	4gsZ6
-X-Gm-Gg: ASbGncsyXrnNJXbqB8MTwaL6jSTaW/OfBfuvc7YxRpBf4ZP81gLDXccLIEPNK2gOTEj
-	mxSvzPALFjVwDQDUylV/r2llL3hWn5strvI+SeL/jCU3xKRL2AolzFLeQjisdLW0pJxyogAN8FM
-	VoypMnkeucVlvuI93aMVqwDCCgc6zEa4PiFM+Qm03vLWrPcNZYRVjjf+MZvO/VqMKW/O47i8+pp
-	e7hd2ZAWXdrDMNEI3NOD617AUShoE3U9/Gb5zDcezeJ6II7eHNX94q+LvGu0eG2UAvnfCLXp6it
-	2j+Gw+sN7QO3l3fIvSCJxXjH8RY2h7Cj85SKlE/JhqFEDwiEeNYkmwtdBOnyTqneh2H22ak2X9a
-	S8+uigagykUhSY20qcn/dvyyVJo1OazOKGspydlivkZA09P9xGBcmObbxAJbRgGAW5xs=
-X-Google-Smtp-Source: AGHT+IF3aRufDXUXYiyExpWVx2upcPigPhDcwwEm4YNsDP+368K3AwrsMWbwCUWHU/Et4Fmh85T5ZA==
-X-Received: by 2002:a05:6e02:1fe2:b0:431:d864:366a with SMTP id e9e14a558f8ab-4348c87b440mr2388545ab.2.1763051979764;
-        Thu, 13 Nov 2025 08:39:39 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7bd35c5f4sm852672173.61.2025.11.13.08.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 08:39:39 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Nilay Shroff <nilay@linux.ibm.com>
-Cc: ming.lei@redhat.com, hch@lst.de, yi.zhang@redhat.com, czhong@redhat.com, 
- yukuai@fnnas.com, gjoyce@ibm.com
-In-Reply-To: <20251113090619.2030737-1-nilay@linux.ibm.com>
-References: <20251113090619.2030737-1-nilay@linux.ibm.com>
-Subject: Re: [PATCHv7 0/5] block: restructure elevator switch path and fix
- a lockdep splat
-Message-Id: <176305197886.133468.154479782311200841.b4-ty@kernel.dk>
-Date: Thu, 13 Nov 2025 09:39:38 -0700
+        d=1e100.net; s=20230601; t=1763053963; x=1763658763;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7e3BcbCwL4WqFcaayevnA/yDxq1SWODYXV/lEdC4NZI=;
+        b=I9+T/8PpSt7Bu/80PNv+FFUwnX6UO+/hgwYJ5UsN2+VD6jkejgnzLUiZxLxHS7OOSk
+         2FXnWIxcINsjSxblj1hoS+o1P++2XCd/5K0KjJp2OclgjBfsyzgnPnuHpXhZIZyhau4l
+         LeLw0kZBH9q57ajGqhQUsT2SS7YDaoIunATRfmwBw+e0AgRJim+/sPKS5HKeU1ZrnU2w
+         /WZHEW3VhdZLAEtpSt5ileiAhHWQ0Ziex/hoettQxzhcGssXlzjg7kk6IT8a8jQYpGtd
+         yTk3g76IaNCsRjT9hXG1vjczsikAdShtvMcLAcVoY4i34LSXMmOj3ck9Q+h8MX+MkthZ
+         OOSw==
+X-Gm-Message-State: AOJu0Yz5ngLdDRngjGdRubi+pBbmDYp+YoGz/aKI3WAlgT0EINTybIJy
+	cVl6VKvVHa6pIQmrhEuSW1SB1gCtn+cca8ZEdlkJ7b3WXoorR/bSndH98rkJDqVgzQU=
+X-Gm-Gg: ASbGnctvwdI/wQLJc1lcQfuPeT5FZqIIC6oCpaov1xRVGomuVmejOeYHMeCQJtbortb
+	t/e510lWXyVajbvh+T4K+GLcD28kMN14IS9KisjhuN9Vg5stazheHq81rwvliWTZquCxlF1WK8g
+	KJ9CJn4k46Ibjz8+cOCUiYJxt5qqpYp2YRTFeFH0UKgOcJ9A3KWaeWgRIudxsQ8fJB1PTr0HYUC
+	F4cknaoZZhzHWql9JN7T4xeynC00g64dYWSRFg07d0pxcoAk03UWvyWQBEXL0++TsAuxO6xRB2W
+	r3YryHykW1deiGgx//FRBIhkvx39CX7vr5ExrpmQHxT1wZaA5Uc5wwIBEe2O5OTT10XaTJj3wGZ
+	7K6tMFGw6jByztZPuR6tfVh6JlPpz9OwYtueoG5Ie8gkS4VNy/3kWxv6sdFG+NSdxagzbjnM+
+X-Google-Smtp-Source: AGHT+IESfdDpCl3TykV3jnebGBOgzapv9FYkIKAhNH+gAKGVBuzPG8lrd5CjZsSJSCN84KOJrH4GFQ==
+X-Received: by 2002:a05:6602:2c06:b0:948:cbd2:3b84 with SMTP id ca18e2360f4ac-948e0d87a37mr14748539f.11.1763053963524;
+        Thu, 13 Nov 2025 09:12:43 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-948d2ba690bsm82035439f.8.2025.11.13.09.12.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Nov 2025 09:12:42 -0800 (PST)
+Message-ID: <cec91b1e-a545-4799-97c3-676e3b566721@kernel.dk>
+Date: Thu, 13 Nov 2025 10:12:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] block: Enable proper MMIO memory handling for P2P
+ DMA
+From: Jens Axboe <axboe@kernel.dk>
+To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Leon Romanovsky <leon@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org
+References: <20251112-block-with-mmio-v4-0-54aeb609d28d@nvidia.com>
+ <176305197986.133468.1935881415989157155.b4-ty@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <176305197986.133468.1935881415989157155.b4-ty@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
 
-
-On Thu, 13 Nov 2025 14:28:17 +0530, Nilay Shroff wrote:
-> This patchset reorganizes the elevator switch path used during both
-> nr_hw_queues update and elv_iosched_store() operations to address a
-> recently reported lockdep splat [1].
+On 11/13/25 9:39 AM, Jens Axboe wrote:
 > 
-> The warning highlights a locking dependency between ->freeze_lock and
-> ->elevator_lock on pcpu_alloc_mutex, triggered when the Kyber scheduler
-> dynamically allocates its private scheduling data. The fix is to ensure
-> that such allocations occur outside the locked sections, thus eliminating
-> the dependency chain.
+> On Wed, 12 Nov 2025 21:48:03 +0200, Leon Romanovsky wrote:
+>> Changelog:
+>> v4:
+>>  * Changed double "if" to be "else if".
+>>  * Added missed PCI_P2PDMA_MAP_NONE case.
+>> v3: https://patch.msgid.link/20251027-block-with-mmio-v3-0-ac3370e1f7b7@nvidia.com
+>>  * Encoded p2p map type in IOD flags instead of DMA attributes.
+>>  * Removed REQ_P2PDMA flag from block layer.
+>>  * Simplified map_phys conversion patch.
+>> v2: https://lore.kernel.org/all/20251020-block-with-mmio-v2-0-147e9f93d8d4@nvidia.com/
+>>  * Added Chirstoph's Reviewed-by tag for first patch.
+>>  * Squashed patches
+>>  * Stored DMA MMIO attribute in NVMe IOD flags variable instead of block layer.
+>> v1: https://patch.msgid.link/20251017-block-with-mmio-v1-0-3f486904db5e@nvidia.com
+>>  * Reordered patches.
+>>  * Dropped patch which tried to unify unmap flow.
+>>  * Set MMIO flag separately for data and integrity payloads.
+>> v0: https://lore.kernel.org/all/cover.1760369219.git.leon@kernel.org/
+>>
+>> [...]
 > 
-> [...]
+> Applied, thanks!
+> 
+> [1/2] nvme-pci: migrate to dma_map_phys instead of map_page
+>       commit: f10000db2f7cf29d8c2ade69266bed7b51c772cb
+> [2/2] block-dma: properly take MMIO path
+>       commit: 8df2745e8b23fdbe34c5b0a24607f5aaf10ed7eb
 
-Applied, thanks!
+And now dropped again - this doesn't boot on neither my big test box
+with 33 nvme drives, nor even on my local test vm. Two different archs,
+and very different setups. Which begs the question, how on earth was
+this tested, if it doesn't boot on anything I have here?!
 
-[1/5] block: unify elevator tags and type xarrays into struct elv_change_ctx
-      commit: 232143b605387b372dee0ec7830f93b93df5f67d
-[2/5] block: move elevator tags into struct elevator_resources
-      commit: 04728ce90966c54417fd8120a3820104d18ba68d
-[3/5] block: introduce alloc_sched_data and free_sched_data elevator methods
-      commit: 61019afdf6ac17c8e8f9c42665aa1fa82f04a3e2
-[4/5] block: use {alloc|free}_sched data methods
-      commit: 0315476e78c050048e80f66334a310e5581b46bb
-[5/5] block: define alloc_sched_data and free_sched_data methods for kyber
-      commit: d4c3ef56a1618cb7d55a4be74a09cda09165745a
-
-Best regards,
 -- 
 Jens Axboe
-
-
-
 
