@@ -1,114 +1,103 @@
-Return-Path: <linux-block+bounces-30217-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30219-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E069DC55E55
-	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 07:13:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD70C55E86
+	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 07:18:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 204813AD5D8
-	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 06:11:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C70C83A5A8F
+	for <lists+linux-block@lfdr.de>; Thu, 13 Nov 2025 06:18:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D253164BE;
-	Thu, 13 Nov 2025 06:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F34C16DEB3;
+	Thu, 13 Nov 2025 06:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BWUNM/Rz"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="npwYL1Bn"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from sg-1-22.ptr.blmpb.com (sg-1-22.ptr.blmpb.com [118.26.132.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F2C26FA6E
-	for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 06:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F8124E4A1
+	for <linux-block@vger.kernel.org>; Thu, 13 Nov 2025 06:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763014286; cv=none; b=qpz5/fPsp46QZsS7fnunBAv39m3zXMRpmU36vMualb9GzDnqCVmVdXdJ7e2braKXyDNZKI58UpOpP0xF4iI650LzVlLMfJ3Z3kesZ77WBngWBSuL2KNpeIyYndxKfzmZNKm9E1MP1soBr+nO7GWjlZ24Kz9YioKB2V4uRXKdkC0=
+	t=1763014728; cv=none; b=Pzs1VuECkGmatPyDS8c+IDin8bw9f7imgkMzV/tCiQG/u/b8b4+fHkNZ26wUzManz/b9YCuz88FtwLON+am5hfj071e3ipIaqXlvxb7QJkD4JSCkCb1tZ+U4ooxvfdpp2nWr2lQQ0ZxwEbrGAACIIZDqDlYMuxmd7k0uiPh4grk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763014286; c=relaxed/simple;
-	bh=14nh6c/AcOaAhtljMvSmOFuRFWYKTbrmCYuK0tWzQ5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKhjz06D2k/2HfKLH79ShTKjexSfs59h9wEWzXL6A/zLJIzvnsoI6cQ29i70RZPIrlT070tK/zTN1Yq4//RW1NdswbsqKDrVTi+0hSCsBmIGGG6be7IqXRAedX+ctIzKVQ1Yimio+HYKMAwDOQR4f+eNEkD0CpleoS5i/sNloFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BWUNM/Rz; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2964d616df7so5392915ad.3
-        for <linux-block@vger.kernel.org>; Wed, 12 Nov 2025 22:11:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1763014284; x=1763619084; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2LqphD8tGRygLilDfD3DdZsx92tK0p16bJTr+js2PHc=;
-        b=BWUNM/RzYfVS7Wt+F9K6vRvFicJ5XkMGF9bqK1GEfzlfRaqQAGEmRvu4YsxnTTB0aL
-         nducuswDOBp+9BwBpKOPIGZg0ZB+AiV4WN2BXfZ5sDqklB/nq2iFIXZMESlhvj8uUF3R
-         UJ97gpLDjvkUi1QnT5FK5kuSROHe2rrVkwEy8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763014284; x=1763619084;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2LqphD8tGRygLilDfD3DdZsx92tK0p16bJTr+js2PHc=;
-        b=gHMZUfMbdVzBteD+qR+qQiULPOlJ4BP86HifSIvVD/+qvLty1jA32v/BmBgbckqhxg
-         eGkd+1CnOzB+lcmrg7fDOKeROfH/E+L3Li7kEzTxEf98T2Asugo8Khiq53fcytkAj6R4
-         s4VuR17o2Kk86+s38xKd0082feAwd4+y4ztZBELGqqPRkI77yPYmENYFb5lzEX6nYfbh
-         gIv276XfXevQ4ZbpZO5BqjA8kSrhDmkuws+h6pXUFmBH5vx4PsN/QMtSueVm/9faP0kx
-         /ohm8Ap/U3Z3PVLLWohAFWaP8LhXgONoI9IpiiBbyqeZ8fLeGib7PemHOhWxyg2yX949
-         8/4A==
-X-Forwarded-Encrypted: i=1; AJvYcCW867jeEyIA5Obp2oHBEFddoBPELuxABrsCfi/dgV/Gg27EU6KobcZSTNHw8CUjH4MSp1APqo27uyo0ZQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2rde8e2v9nT6yAy2Rm/FJ4LkHumU2yr/UAC668GwY7d/zR7Oe
-	teAcpz11B8hxEqi6CVJFFj5h+nAT5hsW6MSagI3/C/5bamnSxrxv49pxyubB4QpkBg==
-X-Gm-Gg: ASbGncsbgcnpYOKHLghtpqvV2p1R2ZF/GTbXM53x1D3UNqcUThE4AJg1uVYePwDujir
-	qzT/oSxrknlOFUn8F1wt788BZFibEERygzL262WDfFto+lHhUAss1XWuyNTZPVcNmPy6ohCyCab
-	v7XYaAUnHP3pF45RqnUQwaQtFtgzQMnb/2VC1vPuvQNRh5rEUwkqU6jfrU7Lh1m74oJAkp4eN/O
-	pFt5mjD/3V/21zdTFYMIbhBwnjhpbJQqo9lBEkiZ8Au69GoDmlHA+GQW7MyQniAh2chDoiAmsMi
-	89tJAP9vWHabQZhpyOrg4KLxdOPs7G8fkz9JzyHvbmBvVUwzrabKlLOq1hXbja+hy33EYhOi0s1
-	gBGDAu8PWgXGNrGDRnyQCgJgEDgvDXWEzy4HrRK/XSIhF1/SwIOfP85jumggFEPsCAfNmYL3m1G
-	7p9IqKRwGiO7LkzRo=
-X-Google-Smtp-Source: AGHT+IE7hQS37m/XPXlVQ4Foh9+BFb/rN2BBQKZCymZyiayaTIgspcciVj3iEqly3oeCkfBztppdXA==
-X-Received: by 2002:a17:902:da4b:b0:297:d6c0:90b3 with SMTP id d9443c01a7336-2984ed6c342mr74657745ad.23.1763014284214;
-        Wed, 12 Nov 2025 22:11:24 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:6d96:d8c6:55e6:2377])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2bed23sm11944775ad.87.2025.11.12.22.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 22:11:23 -0800 (PST)
-Date: Thu, 13 Nov 2025 15:11:19 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Minchan Kim <minchan@kernel.org>, Yuwen Chen <ywen.chen@foxmail.com>, 
-	Richard Chang <richardycc@google.com>, Brian Geffon <bgeffon@google.com>, 
-	Fengyu Lian <licayy@outlook.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] zram: add writeback batch size device attr
-Message-ID: <otnmm7behvnsbcqmknx45pgonsdvk4fma4o72qui3bjidwfc35@aurhln6nfyyz>
-References: <45b418277c6ae613783b9ecc714c96313ceb841d.1763013260.git.senozhatsky@chromium.org>
- <4b7b8f9c68f1a05ec6ada8aa7be9b735eae57446.1763013260.git.senozhatsky@chromium.org>
+	s=arc-20240116; t=1763014728; c=relaxed/simple;
+	bh=CyocZjHQhaswp7JoiAlKvEWE5vH8tCr4gkcp2Ph5NYM=;
+	h=References:Content-Type:To:In-Reply-To:Cc:Mime-Version:From:
+	 Subject:Date:Message-Id; b=tXId5qIF61PAJbCQZkyg+omlc9IysV+aZNTmBwtyJFHhL8sAE+zV3da957BOPpY2I7iSjQnAvOrvPOkaZRb/iQuolf2U0yZhHr7VeX9mWrSwDqtt4Sewm3h44m7aAaIPdN3WaetuwtPNFUr+yOvt7hSqxOWMieKQ5qm2pt6H0S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=fail smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=npwYL1Bn; arc=none smtp.client-ip=118.26.132.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fnnas.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763014713;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=NJZBlRCGTvLtyxwHa/+gBu7c0agULkd8t619ZjGIOCs=;
+ b=npwYL1Bn1u8TPF3127CrukqgmkN6BC4fHfDh2x9dMgG87isa0jliynjDoUmlrc4TsXkgGb
+ Drm1x6V/pakQrRGXQJq7VhI9Cn2u8eLVNKl/8Buy3kGdJoPXOZZXDAOP+e/IpLSWTJWXWW
+ JrD/Lc9tDTF3gFLjCTWvCMyCDJnENHohNy3uYRIanhB0gcvBXKt5WWH4u9aUg7mP9tmjQP
+ 8ldGRP6fSgJDZMDhtNE0ADdIk8bed2vTIcvxPdmeKpnqckja5LwV4LVoYmdW2+dgKvK4gH
+ fUA5tLdwdMlzSxqVlu2R8mqWbiNsq2MGlyEs1NoQQooxlK4NPq4yJuUvKR/+3w==
+References: <20251112132249.1791304-1-nilay@linux.ibm.com> <20251112132249.1791304-2-nilay@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Received: from [192.168.1.104] ([39.182.0.130]) by smtp.feishu.cn with ESMTPS; Thu, 13 Nov 2025 14:18:19 +0800
+To: "Nilay Shroff" <nilay@linux.ibm.com>, <linux-block@vger.kernel.org>
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+In-Reply-To: <20251112132249.1791304-2-nilay@linux.ibm.com>
+Cc: <ming.lei@redhat.com>, <hch@lst.de>, <axboe@kernel.dk>, 
+	<yi.zhang@redhat.com>, <czhong@redhat.com>, <gjoyce@ibm.com>, 
+	"Yu Kuai" <yukuai@fnnas.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b7b8f9c68f1a05ec6ada8aa7be9b735eae57446.1763013260.git.senozhatsky@chromium.org>
+Mime-Version: 1.0
+From: "Yu Kuai" <yukuai@fnnas.com>
+Subject: Re: [PATCHv6 1/5] block: unify elevator tags and type xarrays into struct elv_change_ctx
+Date: Thu, 13 Nov 2025 14:18:17 +0800
+Message-Id: <e328f6a1-a097-475a-8c67-74c01698fb8d@fnnas.com>
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+26915782c+fc974c+vger.kernel.org+yukuai@fnnas.com>
+Reply-To: yukuai@fnnas.com
 
-On (25/11/13 14:59), Sergey Senozhatsky wrote:
-> +static ssize_t writeback_batch_size_show(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	u32 val;
-> +	struct zram *zram = dev_to_zram(dev);
-> +
-> +	down_read(&zram->init_lock);
-> +	spin_lock(&zram->wb_limit_lock);
-> +	val = zram->wb_batch_size;
-> +	spin_unlock(&zram->wb_limit_lock);
-> +	up_read(&zram->init_lock);
-> +
-> +	return sysfs_emit(buf, "%u\n", val);
-> +}
+=E5=9C=A8 2025/11/12 21:22, Nilay Shroff =E5=86=99=E9=81=93:
+> Currently, the nr_hw_queues update path manages two disjoint xarrays =E2=
+=80=94
+> one for elevator tags and another for elevator type =E2=80=94 both used d=
+uring
+> elevator switching. Maintaining these two parallel structures for the
+> same purpose adds unnecessary complexity and potential for mismatched
+> state.
+>
+> This patch unifies both xarrays into a single structure, struct
+> elv_change_ctx, which holds all per-queue elevator change context. A
+> single xarray, named elv_tbl, now maps each queue (q->id) in a tagset
+> to its corresponding elv_change_ctx entry, encapsulating the elevator
+> tags, type and name references.
+>
+> This unification simplifies the code, improves maintainability, and
+> clarifies ownership of per-queue elevator state.
+>
+> Reviewed-by: Ming Lei<ming.lei@redhat.com>
+> Signed-off-by: Nilay Shroff<nilay@linux.ibm.com>
+> ---
+>   block/blk-mq-sched.c | 76 +++++++++++++++++++++++++++++++++-----------
+>   block/blk-mq-sched.h |  3 ++
+>   block/blk-mq.c       | 50 +++++++++++++++++------------
+>   block/blk.h          |  7 ++--
+>   block/elevator.c     | 31 ++++--------------
+>   block/elevator.h     | 15 +++++++++
+>   6 files changed, 115 insertions(+), 67 deletions(-)
 
-The ->wb_limit_lock is not needed here, a leftover from an earlier
-version.  Will fix in the next iteration.
+Reviewed-by: Yu Kuai <yukuai@fnnas.com>
+
+--=20
+Thanks
+Kuai
 
