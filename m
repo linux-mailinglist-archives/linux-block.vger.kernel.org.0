@@ -1,432 +1,192 @@
-Return-Path: <linux-block+bounces-30308-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30310-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9B30C5C2FB
-	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 10:13:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC466C5C46F
+	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 10:31:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E8131351830
-	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 09:07:52 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0373735B076
+	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 09:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5B8301707;
-	Fri, 14 Nov 2025 09:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E50304BB4;
+	Fri, 14 Nov 2025 09:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYv1kEkZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O23AHUJz"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F2926CE25;
-	Fri, 14 Nov 2025 09:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BA12F6164;
+	Fri, 14 Nov 2025 09:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763111253; cv=none; b=Mk2rhn+CQIEFoTnQt8ExT8hPiN+umihvAHBsupBDsfWyDQGLE+l8ejlFtPuO7p65rHASwxfLT1FZNnLC19cfh5do2U/p6V0lbc42cff7AO9Spi7YfAkiy1Bw2v3fUoOPzgSb0jjDHrrbPIXtbLvykJSTz3PiaS2mjoggvSyRxHM=
+	t=1763112074; cv=none; b=aeGOfFJiKGG+eWrcUKVS5QVPDslDuBf5ircc5/TSycO17zmrIXiuGgFD/5Yf6FTd6Lo8v7qcjvbQFGVMDuhdIrTof2C8MAufafAyU72RN+09XZD7ewS7wMOx+hiVSePmofqHvgnbeWdRGqFkR5FP/M0ajSGsxuY9uSz0gz6mnVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763111253; c=relaxed/simple;
-	bh=XAljSBhzVRXXRx7yWEGZLYeRpou4+cIza7abgYQhaJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GZ/MLg+uDgVqjs174k1BANVHg8G1MnWJjQ53nWiZLotaFZovxzQZIBHjlwui8k4F6kF4HFJmUxIyPiO+qkNQTonxlMMRmzluzP0Gi5MAYNT+eaYdrvuLg/4Zd6oN9U8ptTXKyMCrTvrSnEPF9I1vTwxgenCUum9t/hNMONOgeM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYv1kEkZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E57CC116D0;
-	Fri, 14 Nov 2025 09:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763111253;
-	bh=XAljSBhzVRXXRx7yWEGZLYeRpou4+cIza7abgYQhaJg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LYv1kEkZTQMkr4WVo4sas7uN1zWsnC4ROmPrQ4VPgVsDNv4H3IemhxcxoW6tV9IRO
-	 5Hy44c2Odj76j3xBFBbVCAkrVzr0qZp4Veqat+98mMCPDFhzKJhyExF8gSQu9MEJUT
-	 c0jFN3DE63YGbHrJ+EO7tDA+4n8dU8qf9F0RnqBil9c4kq426sf66e5L9+esqEnt/D
-	 3H3gWbieqN7+sqjwHLxB5CjsurEM5btrbwgTf0DA+/8PNiz4JrzU+KeUtyZ9TQi+XO
-	 kRrNqydWUgqmWYGbBNjYotVBWiUhlUnQO+eeqe28bhH926eqhLqRurDLsWamWpt4GF
-	 00Dbym6snqyOg==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v5 2/2] block-dma: properly take MMIO path
-Date: Fri, 14 Nov 2025 11:07:04 +0200
-Message-ID: <20251114-block-with-mmio-v5-2-69d00f73d766@nvidia.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251114-block-with-mmio-v5-0-69d00f73d766@nvidia.com>
-References: <20251114-block-with-mmio-v5-0-69d00f73d766@nvidia.com>
+	s=arc-20240116; t=1763112074; c=relaxed/simple;
+	bh=tLXs6QGR6tyfdtQa9CRonCTGW8w8q5P9WL7FJ71aNiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBFEwZ2+kZTfRviPCqAzbZ5UPp4dZMUTW73ba9kY22+vTQc5r8EIBhRE57WXzvMnHLKHxFx/mr74lJhffn1ErB/Rmk8VUIQeQTR/C8CEL0M5UvJHIh1k38Og9shvYlCqpeacwecU1eMGQ+FX5yBjV1rHUir2qGVUdPm0W6QUD78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O23AHUJz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADMlP0P000482;
+	Fri, 14 Nov 2025 09:20:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=qeHXUYMFSy8eRy5hcdz09NbECVSzhU
+	F3RPksa1OX55Y=; b=O23AHUJz7ranXNGFgaqbiPJtfqqV1CiruQIzwI/JynZgWW
+	a579AwNYFprV3BVB3XZXRk2K7mQpx4Rj77oF/JDot6EjlcIqCW2AVD2zHXyZ1FMT
+	yVHGyq+vCOUiF/TaBZ20Xism4LSu2geobF55yMydsG7EgsAMdc/1YycnUlfATfrB
+	YR2tKE2Qgbfq/qWFPGDJCUab9xCXx4A1kJ03/vwsRnqnVuGYGRgehbyHXqmnEUXl
+	gnwcWVijQ9oEgVcuqArSQlB8U6Hfe6rKUZ1xEsl6cj/EzfUm4w4ihsPrBepInGRD
+	BSIaGCr6XMAzRyXxBhwNnBmiXzI9KzjaxkqcdTcA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4adrechv90-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Nov 2025 09:20:35 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AE9CBA8001006;
+	Fri, 14 Nov 2025 09:20:35 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4adrechv8u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Nov 2025 09:20:35 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AE8tXwm011441;
+	Fri, 14 Nov 2025 09:20:34 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajw1t53e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Nov 2025 09:20:33 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AE9KWVK58327466
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Nov 2025 09:20:32 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 100F620040;
+	Fri, 14 Nov 2025 09:20:32 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9F74420043;
+	Fri, 14 Nov 2025 09:20:27 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.212.173])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 14 Nov 2025 09:20:27 +0000 (GMT)
+Date: Fri, 14 Nov 2025 14:50:25 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
+        john.g.garry@oracle.com, tytso@mit.edu, willy@infradead.org,
+        dchinner@redhat.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz,
+        nilay@linux.ibm.com, martin.petersen@oracle.com, rostedt@goodmis.org,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
+Message-ID: <aRb0WQJi4rQQ-Zmo@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+ <aRUCqA_UpRftbgce@dread.disaster.area>
+ <20251113052337.GA28533@lst.de>
+ <87frai8p46.ritesh.list@gmail.com>
+ <aRWzq_LpoJHwfYli@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-a6db3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRWzq_LpoJHwfYli@dread.disaster.area>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rsuUkEddEYzblp7K82O2A1ALKBX7yvA8
+X-Proofpoint-ORIG-GUID: Hwgk37d6V1PX3jo4iq9ZXuUVV9Bmk7Vr
+X-Authority-Analysis: v=2.4 cv=RrzI7SmK c=1 sm=1 tr=0 ts=6916f463 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=07d9gI8wAAAA:8 a=7-415B0cAAAA:8 a=wh1SXWFTCzeTCxTICb8A:9 a=CjuIK1q_8ugA:10
+ a=e2CUPOnPG4QKp8I52DXD:22 a=biEYGPWJfzWAr4FL6Ov7:22 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEzMDE3OSBTYWx0ZWRfX150420s1nCiX
+ 7qQ5hJedJunqCODNeKz66X70QQJ0LdWGXEnS/cA0XqkCNH2SP6XgX8Za4MDcxPoAWtbbtILRwcB
+ tw/ZL5uast4uLcZwLLG/LC/BW7p0HDcasm4eXCM3ZODuI6iR+lslaRCML7uH/FD39jel9jU+9FL
+ hxRGc0iBPZWU19T7ldVHN6v42CtZsIUo6FnMu9EBibki21TQwsg9b4Vq8WtHn1xtyJhuYevVf5n
+ 8N2BBPcReUx/ag+siORfb773p08hMhPx3PIMzKnbsWnTVLVvR78TAdhnbyzCV3z2QU/e/R4Vas+
+ TRC30GJfiU9nnGT4eYsKgornUKStXENev/cBPIBjMh5EVNLqnIP2VrJhouYE8IhZoU05bs+iYN3
+ NI9ZnxRP9FjDNvPYlI1m0afTz8CgOw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-14_02,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1011 malwarescore=0 priorityscore=1501 suspectscore=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511130179
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Thu, Nov 13, 2025 at 09:32:11PM +1100, Dave Chinner wrote:
+> On Thu, Nov 13, 2025 at 11:12:49AM +0530, Ritesh Harjani wrote:
+> > Christoph Hellwig <hch@lst.de> writes:
+> > 
+> > > On Thu, Nov 13, 2025 at 08:56:56AM +1100, Dave Chinner wrote:
+> > >> On Wed, Nov 12, 2025 at 04:36:03PM +0530, Ojaswin Mujoo wrote:
+> > >> > This patch adds support to perform single block RWF_ATOMIC writes for
+> > >> > iomap xfs buffered IO. This builds upon the inital RFC shared by John
+> > >> > Garry last year [1]. Most of the details are present in the respective 
+> > >> > commit messages but I'd mention some of the design points below:
+> > >> 
+> > >> What is the use case for this functionality? i.e. what is the
+> > >> reason for adding all this complexity?
+> > >
+> > > Seconded.  The atomic code has a lot of complexity, and further mixing
+> > > it with buffered I/O makes this even worse.  We'd need a really important
+> > > use case to even consider it.
+> > 
+> > I agree this should have been in the cover letter itself. 
+> > 
+> > I believe the reason for adding this functionality was also discussed at
+> > LSFMM too...  
+> > 
+> > For e.g. https://lwn.net/Articles/974578/ goes in depth and talks about
+> > Postgres folks looking for this, since PostgreSQL databases uses
+> > buffered I/O for their database writes.
+> 
+> Pointing at a discussion about how "this application has some ideas
+> on how it can maybe use it someday in the future" isn't a
+> particularly good justification. This still sounds more like a
+> research project than something a production system needs right now.
 
-In commit eadaa8b255f3 ("dma-mapping: introduce new DMA attribute to
-indicate MMIO memory"), DMA_ATTR_MMIO attribute was added to describe
-MMIO addresses, which require to avoid any memory cache flushing, as
-an outcome of the discussion pointed in Link tag below.
+Hi Dave, Christoph,
 
-In case of PCI_P2PDMA_MAP_THRU_HOST_BRIDGE transfer, blk-mq-dm logic
-treated this as regular page and relied on "struct page" DMA flow.
-That flow performs CPU cache flushing, which shouldn't be done here,
-and doesn't set IOMMU_MMIO flag in DMA-IOMMU case.
+There were some discussions around use cases for buffered atomic writes
+in the previous LSFMM covered by LWN here [1]. AFAIK, there are 
+databases that recommend/prefer buffered IO over direct IO. As mentioned
+in the article, MongoDB being one that supports both but recommends
+buffered IO. Further, many DBs support both direct IO and buffered IO
+well and it may not be fair to force them to stick to direct IO to get
+the benefits of atomic writes.
 
-As a solution, let's encode peer-to-peer transaction type in NVMe IOD
-flags variable and provide it to blk-mq-dma API.
+[1] https://lwn.net/Articles/1016015/
+> 
+> Why didn't you use the existing COW buffered write IO path to
+> implement atomic semantics for buffered writes? The XFS
+> functionality is already all there, and it doesn't require any
+> changes to the page cache or iomap to support...
 
-Link: https://lore.kernel.org/all/f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com/
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- block/blk-mq-dma.c            | 18 +++++++----
- drivers/nvme/host/pci.c       | 73 ++++++++++++++++++++++++++++++++++++++-----
- include/linux/bio-integrity.h |  1 -
- include/linux/blk-integrity.h | 14 ---------
- include/linux/blk-mq-dma.h    | 28 ++++++++---------
- include/linux/blk_types.h     |  2 --
- 6 files changed, 90 insertions(+), 46 deletions(-)
+This patch set focuses on HW accelerated single block atomic writes with
+buffered IO, to get some early reviews on the core design.
 
-diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index cebfead826ee..e9108ccaf4b0 100644
---- a/block/blk-mq-dma.c
-+++ b/block/blk-mq-dma.c
-@@ -92,8 +92,13 @@ static bool blk_dma_map_bus(struct blk_dma_iter *iter, struct phys_vec *vec)
- static bool blk_dma_map_direct(struct request *req, struct device *dma_dev,
- 		struct blk_dma_iter *iter, struct phys_vec *vec)
- {
-+	unsigned int attrs = 0;
-+
-+	if (iter->p2pdma.map == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE)
-+		attrs |= DMA_ATTR_MMIO;
-+
- 	iter->addr = dma_map_phys(dma_dev, vec->paddr, vec->len,
--			rq_dma_dir(req), 0);
-+			rq_dma_dir(req), attrs);
- 	if (dma_mapping_error(dma_dev, iter->addr)) {
- 		iter->status = BLK_STS_RESOURCE;
- 		return false;
-@@ -108,14 +113,18 @@ static bool blk_rq_dma_map_iova(struct request *req, struct device *dma_dev,
- {
- 	enum dma_data_direction dir = rq_dma_dir(req);
- 	unsigned int mapped = 0;
-+	unsigned int attrs = 0;
- 	int error;
- 
- 	iter->addr = state->addr;
- 	iter->len = dma_iova_size(state);
- 
-+	if (iter->p2pdma.map == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE)
-+		attrs |= DMA_ATTR_MMIO;
-+
- 	do {
- 		error = dma_iova_link(dma_dev, state, vec->paddr, mapped,
--				vec->len, dir, 0);
-+				vec->len, dir, attrs);
- 		if (error)
- 			break;
- 		mapped += vec->len;
-@@ -162,6 +171,7 @@ static bool blk_dma_map_iter_start(struct request *req, struct device *dma_dev,
- 
- 	memset(&iter->p2pdma, 0, sizeof(iter->p2pdma));
- 	iter->status = BLK_STS_OK;
-+	iter->p2pdma.map = PCI_P2PDMA_MAP_NONE;
- 
- 	/*
- 	 * Grab the first segment ASAP because we'll need it to check for P2P
-@@ -173,10 +183,6 @@ static bool blk_dma_map_iter_start(struct request *req, struct device *dma_dev,
- 	switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
- 				 phys_to_page(vec.paddr))) {
- 	case PCI_P2PDMA_MAP_BUS_ADDR:
--		if (iter->iter.is_integrity)
--			bio_integrity(req->bio)->bip_flags |= BIP_P2P_DMA;
--		else
--			req->cmd_flags |= REQ_P2PDMA;
- 		return blk_dma_map_bus(iter, &vec);
- 	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
- 		/*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index d0dd836ccdb9..9085bed107fd 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -260,8 +260,20 @@ enum nvme_iod_flags {
- 	/* single segment dma mapping */
- 	IOD_SINGLE_SEGMENT	= 1U << 2,
- 
-+	/* Data payload contains p2p memory */
-+	IOD_DATA_P2P		= 1U << 3,
-+
-+	/* Metadata contains p2p memory */
-+	IOD_META_P2P		= 1U << 4,
-+
-+	/* Data payload contains MMIO memory */
-+	IOD_DATA_MMIO		= 1U << 5,
-+
-+	/* Metadata contains MMIO memory */
-+	IOD_META_MMIO		= 1U << 6,
-+
- 	/* Metadata using non-coalesced MPTR */
--	IOD_SINGLE_META_SEGMENT	= 1U << 5,
-+	IOD_SINGLE_META_SEGMENT	= 1U << 7,
- };
- 
- struct nvme_dma_vec {
-@@ -733,10 +745,12 @@ static void nvme_free_sgls(struct request *req, struct nvme_sgl_desc *sge,
- static void nvme_unmap_metadata(struct request *req)
- {
- 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
-+	enum pci_p2pdma_map_type map = PCI_P2PDMA_MAP_NONE;
- 	enum dma_data_direction dir = rq_dma_dir(req);
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	struct device *dma_dev = nvmeq->dev->dev;
- 	struct nvme_sgl_desc *sge = iod->meta_descriptor;
-+	unsigned int attrs = 0;
- 
- 	if (iod->flags & IOD_SINGLE_META_SEGMENT) {
- 		dma_unmap_page(dma_dev, iod->meta_dma,
-@@ -745,13 +759,20 @@ static void nvme_unmap_metadata(struct request *req)
- 		return;
- 	}
- 
--	if (!blk_rq_integrity_dma_unmap(req, dma_dev, &iod->meta_dma_state,
--					iod->meta_total_len)) {
-+	if (iod->flags & IOD_META_P2P)
-+		map = PCI_P2PDMA_MAP_BUS_ADDR;
-+	else if (iod->flags & IOD_META_MMIO) {
-+		map = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-+		attrs |= DMA_ATTR_MMIO;
-+	}
-+
-+	if (!blk_rq_dma_unmap(req, dma_dev, &iod->meta_dma_state,
-+			      iod->meta_total_len, map)) {
- 		if (nvme_pci_cmd_use_meta_sgl(&iod->cmd))
--			nvme_free_sgls(req, sge, &sge[1], 0);
-+			nvme_free_sgls(req, sge, &sge[1], attrs);
- 		else
- 			dma_unmap_phys(dma_dev, iod->meta_dma,
--				       iod->meta_total_len, dir, 0);
-+				       iod->meta_total_len, dir, attrs);
- 	}
- 
- 	if (iod->meta_descriptor)
-@@ -761,9 +782,11 @@ static void nvme_unmap_metadata(struct request *req)
- 
- static void nvme_unmap_data(struct request *req)
- {
-+	enum pci_p2pdma_map_type map = PCI_P2PDMA_MAP_NONE;
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
- 	struct device *dma_dev = nvmeq->dev->dev;
-+	unsigned int attrs = 0;
- 
- 	if (iod->flags & IOD_SINGLE_SEGMENT) {
- 		static_assert(offsetof(union nvme_data_ptr, prp1) ==
-@@ -773,12 +796,20 @@ static void nvme_unmap_data(struct request *req)
- 		return;
- 	}
- 
--	if (!blk_rq_dma_unmap(req, dma_dev, &iod->dma_state, iod->total_len)) {
-+	if (iod->flags & IOD_DATA_P2P)
-+		map = PCI_P2PDMA_MAP_BUS_ADDR;
-+	else if (iod->flags & IOD_DATA_MMIO) {
-+		map = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-+		attrs |= DMA_ATTR_MMIO;
-+	}
-+
-+	if (!blk_rq_dma_unmap(req, dma_dev, &iod->dma_state, iod->total_len,
-+			      map)) {
- 		if (nvme_pci_cmd_use_sgl(&iod->cmd))
- 			nvme_free_sgls(req, iod->descriptors[0],
--				       &iod->cmd.common.dptr.sgl, 0);
-+				       &iod->cmd.common.dptr.sgl, attrs);
- 		else
--			nvme_free_prps(req, 0);
-+			nvme_free_prps(req, attrs);
- 	}
- 
- 	if (iod->nr_descriptors)
-@@ -1049,6 +1080,19 @@ static blk_status_t nvme_map_data(struct request *req)
- 	if (!blk_rq_dma_map_iter_start(req, dev->dev, &iod->dma_state, &iter))
- 		return iter.status;
- 
-+	switch (iter.p2pdma.map) {
-+	case PCI_P2PDMA_MAP_BUS_ADDR:
-+		iod->flags |= IOD_DATA_P2P;
-+		break;
-+	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-+		iod->flags |= IOD_DATA_MMIO;
-+		break;
-+	case PCI_P2PDMA_MAP_NONE:
-+		break;
-+	default:
-+		return BLK_STS_RESOURCE;
-+	}
-+
- 	if (use_sgl == SGL_FORCED ||
- 	    (use_sgl == SGL_SUPPORTED &&
- 	     (sgl_threshold && nvme_pci_avg_seg_size(req) >= sgl_threshold)))
-@@ -1071,6 +1115,19 @@ static blk_status_t nvme_pci_setup_meta_sgls(struct request *req)
- 						&iod->meta_dma_state, &iter))
- 		return iter.status;
- 
-+	switch (iter.p2pdma.map) {
-+	case PCI_P2PDMA_MAP_BUS_ADDR:
-+		iod->flags |= IOD_META_P2P;
-+		break;
-+	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-+		iod->flags |= IOD_META_MMIO;
-+		break;
-+	case PCI_P2PDMA_MAP_NONE:
-+		break;
-+	default:
-+		return BLK_STS_RESOURCE;
-+	}
-+
- 	if (blk_rq_dma_map_coalesce(&iod->meta_dma_state))
- 		entries = 1;
- 
-diff --git a/include/linux/bio-integrity.h b/include/linux/bio-integrity.h
-index 3d05296a5afe..21e4652dcfd2 100644
---- a/include/linux/bio-integrity.h
-+++ b/include/linux/bio-integrity.h
-@@ -13,7 +13,6 @@ enum bip_flags {
- 	BIP_CHECK_GUARD		= 1 << 5, /* guard check */
- 	BIP_CHECK_REFTAG	= 1 << 6, /* reftag check */
- 	BIP_CHECK_APPTAG	= 1 << 7, /* apptag check */
--	BIP_P2P_DMA		= 1 << 8, /* using P2P address */
- 
- 	BIP_MEMPOOL		= 1 << 15, /* buffer backed by mempool */
- };
-diff --git a/include/linux/blk-integrity.h b/include/linux/blk-integrity.h
-index c2030fd8ba0a..a6b84206eb94 100644
---- a/include/linux/blk-integrity.h
-+++ b/include/linux/blk-integrity.h
-@@ -33,14 +33,6 @@ static inline bool queue_limits_stack_integrity_bdev(struct queue_limits *t,
- #ifdef CONFIG_BLK_DEV_INTEGRITY
- int blk_rq_map_integrity_sg(struct request *, struct scatterlist *);
- 
--static inline bool blk_rq_integrity_dma_unmap(struct request *req,
--		struct device *dma_dev, struct dma_iova_state *state,
--		size_t mapped_len)
--{
--	return blk_dma_unmap(req, dma_dev, state, mapped_len,
--			bio_integrity(req->bio)->bip_flags & BIP_P2P_DMA);
--}
--
- int blk_rq_count_integrity_sg(struct request_queue *, struct bio *);
- int blk_rq_integrity_map_user(struct request *rq, void __user *ubuf,
- 			      ssize_t bytes);
-@@ -129,12 +121,6 @@ static inline int blk_rq_map_integrity_sg(struct request *q,
- {
- 	return 0;
- }
--static inline bool blk_rq_integrity_dma_unmap(struct request *req,
--		struct device *dma_dev, struct dma_iova_state *state,
--		size_t mapped_len)
--{
--	return false;
--}
- static inline int blk_rq_integrity_map_user(struct request *rq,
- 					    void __user *ubuf,
- 					    ssize_t bytes)
-diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-index 51829958d872..cb88fc791fbd 100644
---- a/include/linux/blk-mq-dma.h
-+++ b/include/linux/blk-mq-dma.h
-@@ -16,13 +16,13 @@ struct blk_dma_iter {
- 	/* Output address range for this iteration */
- 	dma_addr_t			addr;
- 	u32				len;
-+	struct pci_p2pdma_map_state	p2pdma;
- 
- 	/* Status code. Only valid when blk_rq_dma_map_iter_* returned false */
- 	blk_status_t			status;
- 
- 	/* Internal to blk_rq_dma_map_iter_* */
- 	struct blk_map_iter		iter;
--	struct pci_p2pdma_map_state	p2pdma;
- };
- 
- bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_dev,
-@@ -43,36 +43,34 @@ static inline bool blk_rq_dma_map_coalesce(struct dma_iova_state *state)
- }
- 
- /**
-- * blk_dma_unmap - try to DMA unmap a request
-+ * blk_rq_dma_unmap - try to DMA unmap a request
-  * @req:	request to unmap
-  * @dma_dev:	device to unmap from
-  * @state:	DMA IOVA state
-  * @mapped_len: number of bytes to unmap
-- * @is_p2p:	true if mapped with PCI_P2PDMA_MAP_BUS_ADDR
-+ * @map:	peer-to-peer mapping type
-  *
-  * Returns %false if the callers need to manually unmap every DMA segment
-  * mapped using @iter or %true if no work is left to be done.
-  */
--static inline bool blk_dma_unmap(struct request *req, struct device *dma_dev,
--		struct dma_iova_state *state, size_t mapped_len, bool is_p2p)
-+static inline bool blk_rq_dma_unmap(struct request *req, struct device *dma_dev,
-+		struct dma_iova_state *state, size_t mapped_len,
-+		enum pci_p2pdma_map_type map)
- {
--	if (is_p2p)
-+	if (map == PCI_P2PDMA_MAP_BUS_ADDR)
- 		return true;
- 
- 	if (dma_use_iova(state)) {
-+		unsigned int attrs = 0;
-+
-+		if (map == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE)
-+			attrs |= DMA_ATTR_MMIO;
-+
- 		dma_iova_destroy(dma_dev, state, mapped_len, rq_dma_dir(req),
--				 0);
-+				 attrs);
- 		return true;
- 	}
- 
- 	return !dma_need_unmap(dma_dev);
- }
--
--static inline bool blk_rq_dma_unmap(struct request *req, struct device *dma_dev,
--		struct dma_iova_state *state, size_t mapped_len)
--{
--	return blk_dma_unmap(req, dma_dev, state, mapped_len,
--				req->cmd_flags & REQ_P2PDMA);
--}
--
- #endif /* BLK_MQ_DMA_H */
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 53501ebb0623..d884cc1256ec 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -393,7 +393,6 @@ enum req_flag_bits {
- 	__REQ_DRV,		/* for driver use */
- 	__REQ_FS_PRIVATE,	/* for file system (submitter) use */
- 	__REQ_ATOMIC,		/* for atomic write operations */
--	__REQ_P2PDMA,		/* contains P2P DMA pages */
- 	/*
- 	 * Command specific flags, keep last:
- 	 */
-@@ -426,7 +425,6 @@ enum req_flag_bits {
- #define REQ_DRV		(__force blk_opf_t)(1ULL << __REQ_DRV)
- #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
- #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
--#define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
- 
- #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
- 
+Just like we did for direct IO atomic writes, the software fallback with
+COW and multi block support can be added eventually.
 
--- 
-2.51.1
+Regards,
+ojaswin
 
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
 
