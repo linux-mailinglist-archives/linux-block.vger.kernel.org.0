@@ -1,77 +1,77 @@
-Return-Path: <linux-block+bounces-30344-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30346-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2F3FC5FA3B
-	for <lists+linux-block@lfdr.de>; Sat, 15 Nov 2025 00:55:39 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3AECC5FA32
+	for <lists+linux-block@lfdr.de>; Sat, 15 Nov 2025 00:55:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA0C6420E97
-	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 23:55:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CE2FF4E24AD
+	for <lists+linux-block@lfdr.de>; Fri, 14 Nov 2025 23:55:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F47B30FF1E;
-	Fri, 14 Nov 2025 23:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF90F2D1936;
+	Fri, 14 Nov 2025 23:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DS9f4io7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gGLgwHAQ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F4830F541
-	for <linux-block@vger.kernel.org>; Fri, 14 Nov 2025 23:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0573530FC35
+	for <linux-block@vger.kernel.org>; Fri, 14 Nov 2025 23:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763164492; cv=none; b=IyAzqOeYfPYV18VbGg7vWdcaDnb2puVTmytLshnsDew1z2+PCDsmHrhew5jIW626gArpjvVOBV2sBMsw39bOGrB+EICrr38HL1GEvsqBvZdK7I2/TwOIvn3s8cyy/zN99IcOQlzjd7m+SLQlVACWrli9IBwgCg+Y+LZTh+yl8SU=
+	t=1763164494; cv=none; b=Yg7Oync2EF6PEw+WJG+sF4yonadS5CxO6SIBrX7TPG8Tm+/uVN2vWbo2s2EdC0TEEy0dvWZEObRIz6C0xZC1Ivngn/d4XQdjXrH8O+XYMforhAjkVzn560Y8NTWcaTMJnRgVxzgpfnIOIE6IUsLw46fcm9wyoX2fMIxPcjM7894=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763164492; c=relaxed/simple;
-	bh=3ISK3vmEmXYxkx6L/TlERdD5sr35Uw+sM1ovYwgxP0I=;
+	s=arc-20240116; t=1763164494; c=relaxed/simple;
+	bh=ZLJRDtmMTSR2hBThTLrxeqF6jTJw2BnwyDiG+k52hmQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZQAQLacAKcdLuJUi9NYumbrK65mWIGTOQPUF9mnnRETA6tOnYNBnAfV5hgHU/x2v75NLNvtC8k2bftlUOnRygt1XGWbh8OD9sBLSW6fGuIHdoAi/I6hanI/v6lLuODRf8KqwkKBhaCO4SHs98l6emgiADFlqFyJ3ZnRyYBtd8Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DS9f4io7; arc=none smtp.client-ip=209.85.215.177
+	 MIME-Version; b=ZDsTntYiokn+6rRtnDr8M6XTaKX80qXsnPSR8d2WXeYGGO7PSUiR0QjF1+dA1wLc8c9NWTT3sEVhqBqr8S5lUWbxIjGoHaxkz/e9aAW9ktmeVK0j83ChtVFWXFxr2McShxEJmIL0j5UfALHwGdCdwEE9mg+ACPhAX8MLFFoHRX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gGLgwHAQ; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-bbf2c3eccc9so2657539a12.0
-        for <linux-block@vger.kernel.org>; Fri, 14 Nov 2025 15:54:50 -0800 (PST)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-bc0e89640b9so1742112a12.1
+        for <linux-block@vger.kernel.org>; Fri, 14 Nov 2025 15:54:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1763164490; x=1763769290; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1763164491; x=1763769291; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uFdmZz4q1tuXgiwvVFEfWPnDBWXiUNf2fULwgRSPSqE=;
-        b=DS9f4io790OsIQQ1ObW/CGEvjd4Xxt1lt1eK4HNFtVr5b14K75C/8nS5J30rc6wyPD
-         0+X0bU9Wl7BC37ENdbc1ABMIu6bI7vHuJ2XrwdAzMcUfGKJeGhBx9RcGWeKEyIIcrFQw
-         9nhrtp5Lt6wdQChMsh6Ayf7vBmZzle0QYDOEc=
+        bh=2lAexgWc5Rcvg5lyc1le6j9r+USga7BCC8BjTHR1o00=;
+        b=gGLgwHAQIxSenfZSrhHYNYfQlm7im/DNkz8ns7NzzxV7WITPBCDhqJ9o4TOMg8wa0X
+         F/hWNq7cHU6ANqqY0CioBRz5S+6ygzZ0EN752UDm9HACZftOEFsUuvn45XOTRfXdfY+6
+         Fo663sT5GAqV6rD++hgkK3rMKxi1cVDCJLdVk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763164490; x=1763769290;
+        d=1e100.net; s=20230601; t=1763164491; x=1763769291;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=uFdmZz4q1tuXgiwvVFEfWPnDBWXiUNf2fULwgRSPSqE=;
-        b=vBTAzFjyT66QJ5L/YwelBskc3Rfrj0rNXUnq1EJ/52jbms2ZnI/0duZ8etb7UTCWhF
-         uQbubD6Io6Ykd4PW3GvN7uE5+gZg7Tn5VXdFYZLDi2BbCPNQM6p2cLeOGahTqpDyzIqw
-         lSH73fkisG6C2jsK1C1pPIWRvWQ2E2OQuSiMhwqopyd6/i2n/SWPCG/IDq+UYs+WiuIB
-         ztLpmwtXaNLy9qJCs/r7bC039F9wCZ1hdKw7u69ji+sRAoeF+KoqxQDSg7PeHFt7jL8m
-         rY/BkHDKO3J9e9pzX2asHwMFqH1yzM2qU68rcNad8U3zqIttMWK9Qr9eIhikW1WpzRTH
-         mr3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVYRswmoBWppTkdzNBXKW+cOc8yGjrK5fkgbotYsDz3YyuEGbFrb044zO4joMIyoEyRQ4vCnAKFj7uc+w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiHTSjrFEiiSFftXqNkmyFwY+9asmFdfPdgbicCWZZBcEIVH62
-	eLbuIUvqN+s9ckeITTqM+AUSXSuZv3iZLqHcCBpSQxWFsJevaPYktP9SugORaJeZ6Q==
-X-Gm-Gg: ASbGncsxU3PVpA6jn8RE4Gf6PYIECcVQiE3c+CAWrE9Qufw+1GqaubDpNrlb6vJUorL
-	65XTUyaNWkuwD36n+2bdeQKdoZonovwPGdS99HDc6UNMAKSLMlE6+2OOc4ZhAgFWt5YJeun1NVv
-	l7kbG8cC4uYCV5oQhY4wK5kJWRwbjof7iyAsXKu1Fu/X/fITKKvaQ5WHlzlIYd48HJyDNYgTn4B
-	VngmJ8RWF8ulOLpn8DSlZ9O78KiORvzQla/VHJoJZUfi48suDz5RfclSj6298KB0uQG7N5fivkL
-	O14FypKqEWp7VWJjmiZMAuxjLcUrYeU57mQcbxEsitU96H2mBjYTfrfRLNgADhsuM+Hom+7c+pa
-	n0pUtUVremYBQ2JpImJfLVkcjyj1yK234DslFp4ERjxR8lYCxbvDw2Hxx2Iuh3KFl5yvR5Nw30/
-	9CBppVGT7yFcxvn/SnZUwOSlpMh6T8y5SRkO8oVzqKhDLa11h/QLo0/uqY0qtEroOMgzUOhbCRi
-	lxhnJAuLDOV96VJk7MR
-X-Google-Smtp-Source: AGHT+IHedTwgJN/jlP+lN345ODfHCK52a3qWBMDHclzPe3MK3s/H5bCWbd4lV8zbwLxOjyRjOUEI3A==
-X-Received: by 2002:a05:7300:f68b:b0:2a4:3593:ccc6 with SMTP id 5a478bee46e88-2a4ab443a21mr1704630eec.13.1763164489828;
-        Fri, 14 Nov 2025 15:54:49 -0800 (PST)
+        bh=2lAexgWc5Rcvg5lyc1le6j9r+USga7BCC8BjTHR1o00=;
+        b=HUXoGwrvZoWUlY9dcAP6qhubz5YNGZuZp6kcHFWpBpKS6QsL0NdJ4qJHjQd9CP/3pt
+         OenVKcbllzBJGggz3K7MXUa+976xanO6bSolc0vlja6fLEBJnNCPGapf3lg//D7kCQgk
+         CLPc71DEVnMXuHBX42WF7UAzZVnUx4UxOZXoQD8nbC0UeEiEpUjhFSI9XC6a0wgWbTB7
+         3GkJEuluKBF6kZYk1UfbaYdNdbsGDpRwImqrE2d7f6msQfErUzVXiCOUQ81vstKHkgL+
+         ipQCraT84axbhopVl3t+d/YlFZZLUzTanMGVEydACH/BbihiJGy/XDHPw1waBuFP41FO
+         E8eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVemj2piVOCOwqQjPK++mmehWAeUNkg+4WPRPu9+qbqBMWyF57vcUhTc2sIhf5C3D/yQ8duezTJpS078g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2HKyUniSThNQBCEoyl8juSDdBv3T/5HRDZfMmdfV/Hq5TU48M
+	HamDnHUDHMSpKsYSVTsOZvMQu/XNBPSgiJEIDCBWakRSUT2Qsg7st61Fv/mKeXcIlA==
+X-Gm-Gg: ASbGncuFBQuMsOvsQPHQsJHh2QGkrWE0ZwCJxNIAqeofb2U8V4Yl5iJjbp5+3OdmMNH
+	QTpfbL6JpbDK56cYyoSecQnEydFhF6dEk/zOxK/FKBciu7O8UnUCKelPIsGETw10O+Y6K3fnqDf
+	t1w0iGNezyUP55gZU008gRgbd0CZroaSdNxc0FcqqSTC1hLh5PFTrfsTastNsovvdWydygzcY/e
+	kBrI6atSS/NMpDL2B67YzY3G4R+Jy9/gJQIdZ0escacbA169OCBhe1WqYmr432i0Cuza3Qzvw+g
+	QiBVq10gJcI4ZLwXR4YAtpzsO+oWiW6Vou+L3zkNS6MNlYLHkYhama1XO4h31CW7/CGGbLNHDdM
+	82spsr4qQo8Tt8PWoNtaAo1Pg/99UM+NHXQeY3CE6kz2I3w6IAhhlwPkoi3Imrcj+fXYtNt/Ly8
+	qt5hKvVevq/OkSnIJQio77QNAfbomvJ7puL92qNObh+TgMpE8bu2HQ1BwRANetkYiWvSmRpC3vO
+	CeXTePKEgcfolDgRcj4mxFH+8S1fy0=
+X-Google-Smtp-Source: AGHT+IENm05lp2n5p9aaZwPR6AbyHzdYiijOCfRa1baT1RHuX94T4U1gtpighni0ZWGkTrpfmPN3Aw==
+X-Received: by 2002:a05:7300:bc86:b0:2a4:3594:72d4 with SMTP id 5a478bee46e88-2a4ab88e643mr1939285eec.3.1763164491131;
+        Fri, 14 Nov 2025 15:54:51 -0800 (PST)
 Received: from khazhy-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:bb76:6725:868a:78e5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a49db7a753sm14114818eec.6.2025.11.14.15.54.48
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a49db7a753sm14114818eec.6.2025.11.14.15.54.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 15:54:49 -0800 (PST)
+        Fri, 14 Nov 2025 15:54:50 -0800 (PST)
 From: Khazhismel Kumykov <khazhy@chromium.org>
 X-Google-Original-From: Khazhismel Kumykov <khazhy@google.com>
 To: Tejun Heo <tj@kernel.org>,
@@ -83,9 +83,9 @@ Cc: cgroups@vger.kernel.org,
 	Guenter Roeck <linux@roeck-us.net>,
 	Yu Kuai <yukuai@kernel.org>,
 	Khazhismel Kumykov <khazhy@google.com>
-Subject: [PATCH v2 2/3] block/blk-throttle: drop unneeded blk_stat_enable_accounting
-Date: Fri, 14 Nov 2025 15:54:33 -0800
-Message-ID: <20251114235434.2168072-3-khazhy@google.com>
+Subject: [PATCH v2 3/3] block/blk-throttle: Remove throtl_slice from struct throtl_data
+Date: Fri, 14 Nov 2025 15:54:34 -0800
+Message-ID: <20251114235434.2168072-4-khazhy@google.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
 In-Reply-To: <20251114235434.2168072-1-khazhy@google.com>
 References: <20251114235434.2168072-1-khazhy@google.com>
@@ -99,52 +99,143 @@ Content-Transfer-Encoding: 8bit
 
 From: Guenter Roeck <linux@roeck-us.net>
 
-After the removal of CONFIG_BLK_DEV_THROTTLING_LOW, it is no longer
-necessary to enable block accounting, so remove the call to
-blk_stat_enable_accounting(). With that, the track_bio_latency variable
-is no longer used and can be deleted from struct throtl_data. Also,
-including blk-stat.h is no longer necessary.
+throtl_slice is now a constant. Remove the variable and use the constant
+directly where needed.
 
-Fixes: bf20ab538c81 ("blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW")
 Cc: Yu Kuai <yukuai@kernel.org>
 Cc: Tejun Heo <tj@kernel.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 ---
- block/blk-throttle.c | 6 ------
- 1 file changed, 6 deletions(-)
+ block/blk-throttle.c | 32 +++++++++++++-------------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
 diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index c19d052a8f2f..041bcf7b2c7c 100644
+index 041bcf7b2c7c..97188a795848 100644
 --- a/block/blk-throttle.c
 +++ b/block/blk-throttle.c
-@@ -12,7 +12,6 @@
- #include <linux/blktrace_api.h>
- #include "blk.h"
- #include "blk-cgroup-rwstat.h"
--#include "blk-stat.h"
- #include "blk-throttle.h"
+@@ -38,8 +38,6 @@ struct throtl_data
+ 	/* Total Number of queued bios on READ and WRITE lists */
+ 	unsigned int nr_queued[2];
  
- /* Max dispatch from a group in 1 round */
-@@ -43,8 +42,6 @@ struct throtl_data
- 
+-	unsigned int throtl_slice;
+-
  	/* Work for dispatching throttled bios */
  	struct work_struct dispatch_work;
--
--	bool track_bio_latency;
  };
+@@ -446,7 +444,7 @@ static void throtl_dequeue_tg(struct throtl_grp *tg)
+ static void throtl_schedule_pending_timer(struct throtl_service_queue *sq,
+ 					  unsigned long expires)
+ {
+-	unsigned long max_expire = jiffies + 8 * sq_to_td(sq)->throtl_slice;
++	unsigned long max_expire = jiffies + 8 * DFL_THROTL_SLICE;
  
- static void throtl_pending_timer_fn(struct timer_list *t);
-@@ -1340,9 +1337,6 @@ static int blk_throtl_init(struct gendisk *disk)
+ 	/*
+ 	 * Since we are adjusting the throttle limit dynamically, the sleep
+@@ -514,7 +512,7 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
+ 	if (time_after(start, tg->slice_start[rw]))
+ 		tg->slice_start[rw] = start;
+ 
+-	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
++	tg->slice_end[rw] = jiffies + DFL_THROTL_SLICE;
+ 	throtl_log(&tg->service_queue,
+ 		   "[%c] new slice with credit start=%lu end=%lu jiffies=%lu",
+ 		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
+@@ -529,7 +527,7 @@ static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw,
+ 		tg->io_disp[rw] = 0;
+ 	}
+ 	tg->slice_start[rw] = jiffies;
+-	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
++	tg->slice_end[rw] = jiffies + DFL_THROTL_SLICE;
+ 
+ 	throtl_log(&tg->service_queue,
+ 		   "[%c] new slice start=%lu end=%lu jiffies=%lu",
+@@ -540,7 +538,7 @@ static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw,
+ static inline void throtl_set_slice_end(struct throtl_grp *tg, bool rw,
+ 					unsigned long jiffy_end)
+ {
+-	tg->slice_end[rw] = roundup(jiffy_end, tg->td->throtl_slice);
++	tg->slice_end[rw] = roundup(jiffy_end, DFL_THROTL_SLICE);
+ }
+ 
+ static inline void throtl_extend_slice(struct throtl_grp *tg, bool rw,
+@@ -671,12 +669,12 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
+ 	 * sooner, then we need to reduce slice_end. A high bogus slice_end
+ 	 * is bad because it does not allow new slice to start.
+ 	 */
+-	throtl_set_slice_end(tg, rw, jiffies + tg->td->throtl_slice);
++	throtl_set_slice_end(tg, rw, jiffies + DFL_THROTL_SLICE);
+ 
+ 	time_elapsed = rounddown(jiffies - tg->slice_start[rw],
+-				 tg->td->throtl_slice);
++				 DFL_THROTL_SLICE);
+ 	/* Don't trim slice until at least 2 slices are used */
+-	if (time_elapsed < tg->td->throtl_slice * 2)
++	if (time_elapsed < DFL_THROTL_SLICE * 2)
+ 		return;
+ 
+ 	/*
+@@ -687,7 +685,7 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
+ 	 * lower rate than expected. Therefore, other than the above rounddown,
+ 	 * one extra slice is preserved for deviation.
+ 	 */
+-	time_elapsed -= tg->td->throtl_slice;
++	time_elapsed -= DFL_THROTL_SLICE;
+ 	bytes_trim = throtl_trim_bps(tg, rw, time_elapsed);
+ 	io_trim = throtl_trim_iops(tg, rw, time_elapsed);
+ 	if (!bytes_trim && !io_trim)
+@@ -697,7 +695,7 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
+ 
+ 	throtl_log(&tg->service_queue,
+ 		   "[%c] trim slice nr=%lu bytes=%lld io=%d start=%lu end=%lu jiffies=%lu",
+-		   rw == READ ? 'R' : 'W', time_elapsed / tg->td->throtl_slice,
++		   rw == READ ? 'R' : 'W', time_elapsed / DFL_THROTL_SLICE,
+ 		   bytes_trim, io_trim, tg->slice_start[rw], tg->slice_end[rw],
+ 		   jiffies);
+ }
+@@ -768,7 +766,7 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
+ 	jiffy_elapsed = jiffies - tg->slice_start[rw];
+ 
+ 	/* Round up to the next throttle slice, wait time must be nonzero */
+-	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
++	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, DFL_THROTL_SLICE);
+ 	io_allowed = calculate_io_allowed(iops_limit, jiffy_elapsed_rnd);
+ 	if (io_allowed > 0 && tg->io_disp[rw] + 1 <= io_allowed)
+ 		return 0;
+@@ -794,9 +792,9 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
+ 
+ 	/* Slice has just started. Consider one slice interval */
+ 	if (!jiffy_elapsed)
+-		jiffy_elapsed_rnd = tg->td->throtl_slice;
++		jiffy_elapsed_rnd = DFL_THROTL_SLICE;
+ 
+-	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
++	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, DFL_THROTL_SLICE);
+ 	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd);
+ 	/* Need to consider the case of bytes_allowed overflow. */
+ 	if ((bytes_allowed > 0 && tg->bytes_disp[rw] + bio_size <= bytes_allowed)
+@@ -848,7 +846,7 @@ static void tg_update_slice(struct throtl_grp *tg, bool rw)
+ 	    sq_queued(&tg->service_queue, rw) == 0)
+ 		throtl_start_new_slice(tg, rw, true);
+ 	else
+-		throtl_extend_slice(tg, rw, jiffies + tg->td->throtl_slice);
++		throtl_extend_slice(tg, rw, jiffies + DFL_THROTL_SLICE);
+ }
+ 
+ static unsigned long tg_dispatch_bps_time(struct throtl_grp *tg, struct bio *bio)
+@@ -1333,12 +1331,8 @@ static int blk_throtl_init(struct gendisk *disk)
+ 	if (ret) {
+ 		q->td = NULL;
+ 		kfree(td);
+-		goto out;
  	}
  
- 	td->throtl_slice = DFL_THROTL_SLICE;
--	td->track_bio_latency = !queue_is_mq(q);
--	if (!td->track_bio_latency)
--		blk_stat_enable_accounting(q);
- 
- out:
+-	td->throtl_slice = DFL_THROTL_SLICE;
+-
+-out:
  	blk_mq_unquiesce_queue(disk->queue);
+ 	blk_mq_unfreeze_queue(disk->queue, memflags);
+ 
 -- 
 2.52.0.rc1.455.g30608eb744-goog
 
