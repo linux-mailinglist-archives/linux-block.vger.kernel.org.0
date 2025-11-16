@@ -1,196 +1,189 @@
-Return-Path: <linux-block+bounces-30386-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30388-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16980C60F34
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:44:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EFC0C60F4E
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:53:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9714B356E90
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:42:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 630A43AE22E
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EB223EA89;
-	Sun, 16 Nov 2025 02:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E992F1DE2A7;
+	Sun, 16 Nov 2025 02:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="FdK/utRD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWypahLe"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-12.ptr.blmpb.com (sg-1-12.ptr.blmpb.com [118.26.132.12])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BB2231A23
-	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFA786331
+	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763260926; cv=none; b=DRQY/F1C+VXnqxYK1/3jIDPH4/n5JFHijmXvcmlSmEcSdVXso2HVLnxleO/VyZFZ9sJCAnODb4lbS+ghcHQGjAs+jIKcu1AARYck2pDmVqSp9O4ypjlbtefh88B+gzS+vF1UXAAnNOb0nyAht4dt4gU6bPJdcOd9TbMMnid3//0=
+	t=1763261556; cv=none; b=AoUU+C87nyl27W/cx4Z2VSP0Txdr2nJvqj5iXxCI54IUxyOCPVDIvjvYwvR0CrYvy+iWrjJNj/JEBJUf5AEUfEKhzg9SWMKRkEb0apNCX/4tQMpQ2KpsujLAEaYcAPMylF6WULYhe69b9PFbpyHPPEAUa29x/KE3EJVDeNhSYKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763260926; c=relaxed/simple;
-	bh=bp2OCGjuLR9VSuQ6uIMPbUSycqO5C4T7uB7lILXZWMs=;
-	h=Content-Type:To:Subject:Message-Id:Cc:From:Date:Mime-Version; b=f8DwkKgStLYAcTZ1m0VhHkrf78J8lxKRGMnFaZiMcDVOhI3dLoOctEtrZcfZxAm4FJrs0emZGsZmM3Yi2osBIhxayuyWTPyPtEBkXQHhHHLYgbBXu9qbwRpMD+oS6hovU/hDVaSehAhqrsksxzr3ePwH/p2Q9V17iL/CrsoGyfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=FdK/utRD; arc=none smtp.client-ip=118.26.132.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763260918;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=4G57tjAMn6RZr+xrcoTIUbR3Zx93nRpRrw23LdyOeR0=;
- b=FdK/utRD01IjQ4E2icqCbNR1Z3pLKN98Mq8kg3V1jGw2DZnfaaM6N7TXlyjY2W7AityXmP
- 7QtZJTfbrxRaaQ2HXfXxWampOq2vLqDaIA4ympyOGVzKMSOYhoFyYMGqvtjHm00/uA4fB0
- iCf64zrV5wygByMYC+n6u8JpsMHDErRfqvSF2wxOQZ6oep00l3xFvs5FkEwgwTtqVsS/mS
- ZMnl4bR8FwGFZ/4o4NjRY97eWYeCaaTR/ve/pHfI62SqAUoh2dJJEaDe94i1t4tj1JzJp6
- h0Wy7++rSbV6KvM4AzRzs2F5xeA+ZlYNHSuwGx/N4yx84Ir/XHkoQEQursOzbw==
-Content-Type: text/plain; charset=UTF-8
-To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
-	<ming.lei@redhat.com>
-Subject: [PATCH 5/5] block/blk-rq-qos: cleanup rq_qos_add()
-Message-Id: <20251116024134.115685-6-yukuai@fnnas.com>
-X-Lms-Return-Path: <lba+2691939f4+1d33b4+vger.kernel.org+yukuai@fnnas.com>
-X-Mailer: git-send-email 2.51.0
-Cc: <yukuai@fnnas.com>
-From: "Yu Kuai" <yukuai@fnnas.com>
-Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 10:41:55 +0800
-Content-Transfer-Encoding: 7bit
-Date: Sun, 16 Nov 2025 10:41:34 +0800
+	s=arc-20240116; t=1763261556; c=relaxed/simple;
+	bh=zSyuJQybiCCJq9vJXociC8iWz2WpqebRM2coqMQXreM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j2s9YjhxX4bmD6cYCAdAM2JVSnA2RejUUdC04SlJwtyY9R6rU6KBGd7ckbNTIZAQFvofYxteoeQgqti//iFoGPfKI41tfWAxQh+iX7ruHYzJ5pVUdI4SN65GZHduvNuR9D07pj5Y8wLvxceISjXUbrfk4wEIbN3KI4yzG9VT2A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bWypahLe; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b89c1ce9easo3095078b3a.2
+        for <linux-block@vger.kernel.org>; Sat, 15 Nov 2025 18:52:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763261554; x=1763866354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fynmkibx81oHPVZlsDjAwfjnWrDW9I9yhZr9t2s34D4=;
+        b=bWypahLeqU8XVhY7WrJrGKNOq75mOh0EUcbARqiR7cp8IpJMWFXZM2bVN25O6CBXKG
+         VepMX7Wcicankhc8rb1J3CiE0bVexHB6NlHVC3X3T1FGrDIx/rH4IGzGyKSdSKapjEEH
+         QN9b0VLKOKH8idRgb7Z1cC3RQ7BjHGE5aF+QbS395WBmJVk9nTZFp26JPwaaRkXmO7+o
+         cchfbYBcb3BI8OQCXCDB8wJSUx7TPq2D7dc4jmKiI/aCjqXLDOrgK1dT+khYowRHkcFk
+         JeRTh5G/fWZyd4oPYwDqF2lfZl+wXiL7TxhXNQwmvkAddNQ6wtwSnG88+g1Kd0JeuYR8
+         jZ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763261554; x=1763866354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fynmkibx81oHPVZlsDjAwfjnWrDW9I9yhZr9t2s34D4=;
+        b=Qet9QAC2v9how9HfAXxHhTrqAidK5Qwpp1/h3TvOfu9dA1QaySMW4pawBNfvSfzuZO
+         k4z8wHKzaVIbL38lWG8oe04boEE2ZCKOrr3fS+9SPLCi9aS5CZLyZaz9qqOhYeIPYPYG
+         MzPcStT6MOMWKQmcnl/9x5JH/30zKlb92jBy7nZwi6HW4TO7cTkZIlO2jI7o2t/a6Gt0
+         lgS+C/lhNYUSxqW4SXjeqNhLBrsBmS3+RgHWjhvqyHFsmg4JpxfcnLqQF5Gi67bgeFTU
+         Egl8DpmTGgD+aB05Ast474oQ0JqowCTknHNp4dGn2NYB7sKpWY59d3sGfdU8merJgyYb
+         QU1g==
+X-Gm-Message-State: AOJu0YxUYfBcPwk0drspd/1MgdvBcLJq+kFX+aNKEyvDbtMXOlc7pX/O
+	Gye7qMnlt8Po4ntSnczx0iX4DC7VhTHYeBHZFkAuqXvsEObLaQ19s5NsI+xzhg==
+X-Gm-Gg: ASbGncvhYNKeiGcDzzESSI3FIJOVSlXEb9NhFn0ZJUDbIktTdAihb1yzNdb3tZu1i70
+	P0Uf2GiOgpG9SZpYlVFvwLsQAglpsxHWt7ZVICikLfoLHSc0zI7DdsrdRl5GV3cCJGur0GIf/9N
+	mXiK0QOWHerlDpgsb5S7NOEYnD25Ox1LeBJAz0p6Kc3uzyY04FGPPrY2+5GaDPHgmrRU2eboze6
+	iwXaPuxc8IcRLd3lsYZbx+hnBuWbp5u0R1ghWEIw6q7+8VRbYPR8RDzPIajM2hmIMFGuVMJ9uUM
+	u94rMlmrlnztGJqYNk9cS79Rv2UzKVZ5TAFLr+2Wvt3/q6y2bbxrYGvZUkrU3ZY5hDga60QOac8
+	WFWvmPkRgj2yj3fATmyKIsevMg9/CRNh6SYCb0zedemtcMSA8Wr0MaATo6Wb9Vd74kS1J6CXpwI
+	5e88uXdx6/npQL1wmFNFXH6JAXCVmCUi0/XMnWNjWqHdvYXpvzfbwsDG16Tw==
+X-Google-Smtp-Source: AGHT+IGuxCNPGqqDfinwkgjDYRdhsyZ3bAuSi+UqlLLpWa2IXW55TBZS0THPWyrGlc6chAtpNbV6Sw==
+X-Received: by 2002:a05:7022:e0a:b0:11b:bf3f:5251 with SMTP id a92af1059eb24-11bbf3f5610mr1080629c88.16.1763261554225;
+        Sat, 15 Nov 2025 18:52:34 -0800 (PST)
+Received: from localhost (ip70-175-132-216.oc.oc.cox.net. [70.175.132.216])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b86afe12esm18537183c88.6.2025.11.15.18.52.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Nov 2025 18:52:33 -0800 (PST)
+From: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+To: linux-block@vger.kernel.org
+Cc: axboe@kernel.dk,
+	hch@lst.de,
+	kch@nvidia.com,
+	dlemoal@kernel.org,
+	Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Subject: [PATCH 1/2] loop: respect REQ_NOWAIT for memory allocation
+Date: Sat, 15 Nov 2025 18:52:28 -0800
+Message-Id: <20251116025229.29136-1-ckulkarnilinux@gmail.com>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Now that there is no caller of rq_qos_add(), remove it, and also rename
-rq_qos_add_freezed() back to rq_qos_add().
+loop advertises REQ_NOWAIT support via BLK_FEAT_NOWAIT (set by
+default for all blk-mq devices), but violates REQ_NOWAIT semantics
+by using GFP_NOIO allocations which can block.
 
-Signed-off-by: Yu Kuai <yukuai@fnnas.com>
+BLK_FEAT_NOWAIT is advertised through this call chain:
+  loop_add()
+   blk_mq_alloc_disk(&lim, ...)
+    __blk_mq_alloc_disk()
+     blk_mq_alloc_queue()
+      lim->features |= BLK_FEAT_NOWAIT <-- Set by default for blk-mq
+
+However, the REQ_NOWAIT I/O path violates this contract. For io_uring
+inline submissions, the call chain is:
+
+  1. Userspace (io_uring setup):
+   io_uring_setup(entries, &params)
+   fd = io_uring_register(IORING_REGISTER_FILES, &zloop_fd, 1)
+
+  2. Userspace (submit I/O with NOWAIT):
+   sqe = io_uring_get_sqe(ring)
+   io_uring_prep_write(sqe, zloop_fd, buf, len, offset)
+   io_uring_submit(ring)  <-- inline submission
+
+  3. io_uring core (inline path):
+   io_submit_sqes()
+    io_submit_sqe()
+     io_queue_sqe()
+      issue_flags = IO_URING_F_NONBLOCK <-- Sets inline/nowait mode
+      io_issue_sqe()
+       io_write()
+        if (force_nonblock)  <-- true for inline submission
+         kiocb->ki_flags |= IOCB_NOWAIT
+
+  4. VFS layer:
+   call_write_iter()
+    blkdev_write_iter()
+     -> propagates IOCB_NOWAIT to REQ_NOWAIT on bio
+     __blkdev_direct_IO_simple() OR
+     __blkdev_direct_IO()        OR
+     __blkdev_direct_IO_async()
+
+  5. Block layer:
+   blk_mq_submit_bio()
+    blk_mq_get_new_requests()
+     __blk_mq_alloc_requests()
+      blk_mq_rq_ctx_init()
+       -> propagates REQ_NOWAIT to request->cmd_flags
+    __blk_mq_try_issue_directly() OR blk_mq_sched_insert_request()
+     blk_mq_run_hw_queue()
+      __blk_mq_delay_run_hw_queue()
+       __blk_mq_run_hw_queue()
+        blk_mq_sched_dispatch_requests()
+
+  6. Loop driver:
+   loop_queue_rq()
+    lo_rw_aio()
+     kmalloc_array(..., GFP_NOIO) <-- BLOCKS (REQ_NOWAIT violation)
+      -> Should use GFP_NOWAIT when rq->cmd_flags & REQ_NOWAIT
+
+Fix by using GFP_NOWAIT when REQ_NOWAIT is set, and return -EAGAIN
+instead of -ENOMEM when NOWAIT allocation fails, allowing io_uring
+to retry the operation with blocking allowed.
+
+Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
 ---
- block/blk-iocost.c    |  2 +-
- block/blk-iolatency.c |  4 ++--
- block/blk-rq-qos.c    | 42 ++----------------------------------------
- block/blk-rq-qos.h    |  6 ++----
- block/blk-wbt.c       |  2 +-
- 5 files changed, 8 insertions(+), 48 deletions(-)
+ drivers/block/loop.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 233c9749bfc9..0948f628386f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2927,7 +2927,7 @@ static int blk_iocost_init(struct gendisk *disk)
- 	 * called before policy activation completion, can't assume that the
- 	 * target bio has an iocg associated and need to test for NULL iocg.
- 	 */
--	ret = rq_qos_add_freezed(&ioc->rqos, disk, RQ_QOS_COST, &ioc_rqos_ops);
-+	ret = rq_qos_add(&ioc->rqos, disk, RQ_QOS_COST, &ioc_rqos_ops);
- 	if (ret)
- 		goto err_free_ioc;
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 13ce229d450c..bad61f41df34 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -350,6 +350,8 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+ 	unsigned int offset;
+ 	int nr_bvec = 0;
+ 	int ret;
++	bool nowait = rq->cmd_flags & REQ_NOWAIT;
++	gfp_t alloc_flags = nowait ? GFP_NOWAIT : GFP_NOIO;
  
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 1565352b176d..5b18125e21c9 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -764,8 +764,8 @@ static int blk_iolatency_init(struct gendisk *disk)
- 	if (!blkiolat)
- 		return -ENOMEM;
+ 	rq_for_each_bvec(tmp, rq, rq_iter)
+ 		nr_bvec++;
+@@ -357,9 +359,9 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+ 	if (rq->bio != rq->biotail) {
  
--	ret = rq_qos_add_freezed(&blkiolat->rqos, disk, RQ_QOS_LATENCY,
--				 &blkcg_iolatency_ops);
-+	ret = rq_qos_add(&blkiolat->rqos, disk, RQ_QOS_LATENCY,
-+			 &blkcg_iolatency_ops);
- 	if (ret)
- 		goto err_free;
- 	ret = blkcg_activate_policy(disk, &blkcg_policy_iolatency);
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 353397d7e126..3a49af00b738 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -322,8 +322,8 @@ void rq_qos_exit(struct request_queue *q)
- 	mutex_unlock(&q->rq_qos_mutex);
- }
+ 		bvec = kmalloc_array(nr_bvec, sizeof(struct bio_vec),
+-				     GFP_NOIO);
++				     alloc_flags);
+ 		if (!bvec)
+-			return -EIO;
++			return nowait ? -EAGAIN : -ENOMEM;
+ 		cmd->bvec = bvec;
  
--int rq_qos_add_freezed(struct rq_qos *rqos, struct gendisk *disk,
--		       enum rq_qos_id id, const struct rq_qos_ops *ops)
-+int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk,
-+	       enum rq_qos_id id, const struct rq_qos_ops *ops)
- {
- 	struct request_queue *q = disk->queue;
- 
-@@ -349,44 +349,6 @@ int rq_qos_add_freezed(struct rq_qos *rqos, struct gendisk *disk,
- 	return 0;
- }
- 
--int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
--		const struct rq_qos_ops *ops)
--{
--	struct request_queue *q = disk->queue;
--	unsigned int memflags;
--
--	lockdep_assert_held(&q->rq_qos_mutex);
--
--	rqos->disk = disk;
--	rqos->id = id;
--	rqos->ops = ops;
--
--	/*
--	 * No IO can be in-flight when adding rqos, so freeze queue, which
--	 * is fine since we only support rq_qos for blk-mq queue.
--	 */
--	memflags = blk_mq_freeze_queue(q);
--
--	if (rq_qos_id(q, rqos->id))
--		goto ebusy;
--	rqos->next = q->rq_qos;
--	q->rq_qos = rqos;
--	blk_queue_flag_set(QUEUE_FLAG_QOS_ENABLED, q);
--
--	blk_mq_unfreeze_queue(q, memflags);
--
--	if (rqos->ops->debugfs_attrs) {
--		mutex_lock(&q->debugfs_mutex);
--		blk_mq_debugfs_register_rqos(rqos);
--		mutex_unlock(&q->debugfs_mutex);
--	}
--
--	return 0;
--ebusy:
--	blk_mq_unfreeze_queue(q, memflags);
--	return -EBUSY;
--}
--
- void rq_qos_del(struct rq_qos *rqos)
- {
- 	struct request_queue *q = rqos->disk->queue;
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 4a7fec01600b..8bbf178c16b0 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -85,10 +85,8 @@ static inline void rq_wait_init(struct rq_wait *rq_wait)
- 	init_waitqueue_head(&rq_wait->wait);
- }
- 
--int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
--		const struct rq_qos_ops *ops);
--int rq_qos_add_freezed(struct rq_qos *rqos, struct gendisk *disk,
--		       enum rq_qos_id id, const struct rq_qos_ops *ops);
-+int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk,
-+	       enum rq_qos_id id, const struct rq_qos_ops *ops);
- void rq_qos_del(struct rq_qos *rqos);
- 
- typedef bool (acquire_inflight_cb_t)(struct rq_wait *rqw, void *private_data);
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index a784f6d338b4..d7f1e6ba1790 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -926,7 +926,7 @@ int wbt_init(struct gendisk *disk)
- 	 * Assign rwb and add the stats callback.
- 	 */
- 	mutex_lock(&q->rq_qos_mutex);
--	ret = rq_qos_add_freezed(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
-+	ret = rq_qos_add(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
- 	mutex_unlock(&q->rq_qos_mutex);
- 	if (ret)
- 		goto err_free;
+ 		/*
 -- 
-2.51.0
+2.40.0
+
 
