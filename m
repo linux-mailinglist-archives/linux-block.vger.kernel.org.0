@@ -1,129 +1,113 @@
-Return-Path: <linux-block+bounces-30383-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30387-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E16C60F24
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:42:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E571C60F3F
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E6F3B4E923C
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:42:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 909323B500B
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:42:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4A521A453;
-	Sun, 16 Nov 2025 02:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F87A2405ED;
+	Sun, 16 Nov 2025 02:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="r0ORlw8Y"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="fdan1kug"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-13.ptr.blmpb.com (sg-1-13.ptr.blmpb.com [118.26.132.13])
+Received: from sg-1-17.ptr.blmpb.com (sg-1-17.ptr.blmpb.com [118.26.132.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9966822370A
-	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C269F239E81
+	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763260920; cv=none; b=c1iUZcrnjDFOlD9Zz3z642X0fMf/NkkRh899pXnuRz4RZvVEs278EKeARfmFP+6XAJqn3urUzmQj02M9SYgHKnsPxwqBWUIQHx8Wnd8rSwZcHdexyrPK7TaYYWbE4XG26LEWKr2L20eyyoppoyU8V6oQepic8shAehNwX/1rjjc=
+	t=1763260926; cv=none; b=pHUSm9LhInBvwjXK9wPxonjvEj0Ezq2AL+E434ujnghAm1o3WtasNeUKVWAfHUNlA5Dkdms6vVssl5x4sFMpGfLGtkx8nMSzfxRqOHzvmgecax00Hggaw3V0a/fovsiBJZtyto7aCrwOoF8PEp3wtoGZQZwiC3uG9N+y5rB//EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763260920; c=relaxed/simple;
-	bh=oHU5WUeUHVeJ43U86ohqtdr2k0bq20DXDgHXaMlKoLo=;
-	h=Cc:Content-Type:To:Date:Mime-Version:From:Subject:Message-Id; b=t5byJeok8vYdc6dDazm3kN8prjFO7mNWy+A4SpoFTjOtELymUXqiVwyhfrpDQushhwpGKkLvy/V9UVZ4qOuvaPejb0oVsn4dpbTKQJGXmkz8ThuBkrYdf1uMy+B3hdUnN2N1l2GUHfk1azVe1BaqO/ku0s1M/Nh0zq9mOSvM5hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=r0ORlw8Y; arc=none smtp.client-ip=118.26.132.13
+	s=arc-20240116; t=1763260926; c=relaxed/simple;
+	bh=Z7O94oijY3strRk71JNZPL0gx2vdpAvUplzCS8521UU=;
+	h=Mime-Version:Content-Type:From:Message-Id:Date:To:Subject:Cc; b=lBI1XGv4jh85MSgAwodqzE24+3BKj5pCWEBDIZPyO2TCtPeVUbVKBJmvebG0+lOYC7bJi4ddZ9Eg3ZjkC0ELXDl2NBRZR/a2fO2+AybBxDC4r22rkVM2SWkjEYpIbuhaJMm716aja52dBokbfSe4Xj/Ua2JM0MwzLP94jQCG3QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=fdan1kug; arc=none smtp.client-ip=118.26.132.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763260912;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763260913;
   h=from:subject:mime-version:from:date:message-id:subject:to:cc:
  reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=MOFiFxRWDeWl7oGKAd0yMxZwEVTKVFOPgfE7nuxPBdQ=;
- b=r0ORlw8YajzDvPc14xJW9p04BGmTtyoNR2D6FhrBevoYUFzMS+A2M6+KaZN21JoRk0wyOe
- V8G9KrESKmzwFskjP9uNSXfq2hK+y66tYUw04M4L1rRXwiNjK38FeqL+wZvKpof3/Qlf3X
- Nn1kbFVsMOVx/BIiM0NhxpJhBleJFsNeV+b6EdJ9Bw8FDC4cImQebrQkI8GzkFAgsX8pgj
- wpB/JMwNt6bosH3dj5+tNCGdd9x002DW0V1fQi8XL6mJUCU76G1fiiAFOHyrUqUpI41Ocq
- BDHHlKTm1QhT0AK7eXv0DIYkKF7Ri4uMsyUkwzVvhidVDxJDvrvmPAPiaFnTmw==
-Cc: <yukuai@fnnas.com>
-Content-Transfer-Encoding: 7bit
-X-Mailer: git-send-email 2.51.0
-Content-Type: text/plain; charset=UTF-8
-To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
-	<ming.lei@redhat.com>
-Date: Sun, 16 Nov 2025 10:41:30 +0800
+ bh=eS9mut2o83UP0P4D/dZojWoRTZN8xQ/HzH88AZpecm8=;
+ b=fdan1kug8M3oEWX4R27iBAnqviCE99WQUgangqVVRRjIuua1eVjKa8pMyMyTbkyq26/wRH
+ zuFywzpCWJeF5te0T7INcG3Jc2TlyYGyepckU4eMwJBuFKHI3q/Ee6/O8wXPxxr73KqFpi
+ JVFj1rRTVkHpj8ryUZFO9ClYMT/UV/lduaEIHMCiZF/zK6el+0LXxGZdObI+uawpXD2sws
+ 0FU/94seVnKgZxypYn+C9+9/8pxXPB+jOVyPFCngtSRpb3DnqkiiXQFmQFT6/ZnwPEjLqg
+ jPHL6j5kpB9BgOVt8OPs+yOrdxYDWRX4c6qnx3+Pwl/yEdSdG2wcc7Urf0K2KA==
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Lms-Return-Path: <lba+2691939ee+27bb7c+vger.kernel.org+yukuai@fnnas.com>
-From: "Yu Kuai" <yukuai@fnnas.com>
-Subject: [PATCH 1/5] block/blk-rq-qos: add a new helper rq_qos_add_freezed()
 X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Message-Id: <20251116024134.115685-2-yukuai@fnnas.com>
-Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 10:41:49 +0800
+Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 10:41:51 +0800
+Content-Type: text/plain; charset=UTF-8
+From: "Yu Kuai" <yukuai@fnnas.com>
+Message-Id: <20251116024134.115685-3-yukuai@fnnas.com>
+X-Lms-Return-Path: <lba+2691939ef+0d2bf5+vger.kernel.org+yukuai@fnnas.com>
+Date: Sun, 16 Nov 2025 10:41:31 +0800
+Content-Transfer-Encoding: 7bit
+To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
+	<ming.lei@redhat.com>
+Subject: [PATCH 2/5] blk-wbt: fix incorrect lock order for rq_qos_mutex and freeze queue
+X-Mailer: git-send-email 2.51.0
+Cc: <yukuai@fnnas.com>
 
-queue should not be freezed under rq_qos_mutex, see example index
-commit 9730763f4756 ("block: correct locking order for protecting blk-wbt
-parameters"), which means current implementation of rq_qos_add() is
-problematic. Add a new helper and prepare to fix this problem in
-following patches.
+wbt_init() can be called from sysfs attribute and wbt_enable_default(),
+however the lock order are inversely.
 
+- queue_wb_lat_store() freeze queue first, and then wbt_init() hold
+  rq_qos_mutex. In this case queue will be freezed again inside
+  rq_qos_add(), however, in this case freeze queue recursivly is
+  inoperative;
+- wbt_enable_default() from elevator switch will hold rq_qos_mutex
+  first, and then rq_qos_add() will freeze queue;
+
+Fix this problem by converting to use new helper rq_qos_add_freezed() in
+wbt_init(), and for wbt_enable_default(), freeze queue before calling
+wbt_init().
+
+Fixes: a13bd91be223 ("block/rq_qos: protect rq_qos apis with a new lock")
 Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 ---
- block/blk-rq-qos.c | 27 +++++++++++++++++++++++++++
- block/blk-rq-qos.h |  2 ++
- 2 files changed, 29 insertions(+)
+ block/blk-wbt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 654478dfbc20..353397d7e126 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -322,6 +322,33 @@ void rq_qos_exit(struct request_queue *q)
- 	mutex_unlock(&q->rq_qos_mutex);
- }
+diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+index eb8037bae0bd..a784f6d338b4 100644
+--- a/block/blk-wbt.c
++++ b/block/blk-wbt.c
+@@ -724,8 +724,12 @@ void wbt_enable_default(struct gendisk *disk)
+ 	if (!blk_queue_registered(q))
+ 		return;
  
-+int rq_qos_add_freezed(struct rq_qos *rqos, struct gendisk *disk,
-+		       enum rq_qos_id id, const struct rq_qos_ops *ops)
-+{
-+	struct request_queue *q = disk->queue;
+-	if (queue_is_mq(q) && enable)
++	if (queue_is_mq(q) && enable) {
++		unsigned int memflags = blk_mq_freeze_queue(q);
 +
-+	WARN_ON_ONCE(q->mq_freeze_depth == 0);
-+	lockdep_assert_held(&q->rq_qos_mutex);
-+
-+	if (rq_qos_id(q, id))
-+		return -EBUSY;
-+
-+	rqos->disk = disk;
-+	rqos->id = id;
-+	rqos->ops = ops;
-+	rqos->next = q->rq_qos;
-+	q->rq_qos = rqos;
-+	blk_queue_flag_set(QUEUE_FLAG_QOS_ENABLED, q);
-+
-+	if (rqos->ops->debugfs_attrs) {
-+		mutex_lock(&q->debugfs_mutex);
-+		blk_mq_debugfs_register_rqos(rqos);
-+		mutex_unlock(&q->debugfs_mutex);
+ 		wbt_init(disk);
++		blk_mq_unfreeze_queue(q, memflags);
 +	}
-+
-+	return 0;
-+}
-+
- int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
- 		const struct rq_qos_ops *ops)
- {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index b538f2c0febc..4a7fec01600b 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -87,6 +87,8 @@ static inline void rq_wait_init(struct rq_wait *rq_wait)
+ }
+ EXPORT_SYMBOL_GPL(wbt_enable_default);
  
- int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
- 		const struct rq_qos_ops *ops);
-+int rq_qos_add_freezed(struct rq_qos *rqos, struct gendisk *disk,
-+		       enum rq_qos_id id, const struct rq_qos_ops *ops);
- void rq_qos_del(struct rq_qos *rqos);
- 
- typedef bool (acquire_inflight_cb_t)(struct rq_wait *rqw, void *private_data);
+@@ -922,7 +926,7 @@ int wbt_init(struct gendisk *disk)
+ 	 * Assign rwb and add the stats callback.
+ 	 */
+ 	mutex_lock(&q->rq_qos_mutex);
+-	ret = rq_qos_add(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
++	ret = rq_qos_add_freezed(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
+ 	mutex_unlock(&q->rq_qos_mutex);
+ 	if (ret)
+ 		goto err_free;
 -- 
 2.51.0
 
