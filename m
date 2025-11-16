@@ -1,113 +1,148 @@
-Return-Path: <linux-block+bounces-30387-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30384-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E571C60F3F
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:45:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBFAC60F30
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:44:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 909323B500B
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:42:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F7643ADB40
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 02:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F87A2405ED;
-	Sun, 16 Nov 2025 02:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7A8227563;
+	Sun, 16 Nov 2025 02:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="fdan1kug"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="LPI7MpHf"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-17.ptr.blmpb.com (sg-1-17.ptr.blmpb.com [118.26.132.17])
+Received: from sg-1-13.ptr.blmpb.com (sg-1-13.ptr.blmpb.com [118.26.132.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C269F239E81
-	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813D3224B05
+	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 02:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763260926; cv=none; b=pHUSm9LhInBvwjXK9wPxonjvEj0Ezq2AL+E434ujnghAm1o3WtasNeUKVWAfHUNlA5Dkdms6vVssl5x4sFMpGfLGtkx8nMSzfxRqOHzvmgecax00Hggaw3V0a/fovsiBJZtyto7aCrwOoF8PEp3wtoGZQZwiC3uG9N+y5rB//EE=
+	t=1763260922; cv=none; b=uFg3suskFkoE0Dlscm9ilYCZThLqKo8UnGSRKcqMCZx9LkclU4aZFtLkwJOl81yiSTzTT9lgq42jS9mhMlTfD0hMxoZHbT7dpI/EAkTpWITwHmR3JZIz9MqDf1101xRdAOTRXdTtBsoxsnmK68nc7fdm/YKejYlYxqqJMMDcGOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763260926; c=relaxed/simple;
-	bh=Z7O94oijY3strRk71JNZPL0gx2vdpAvUplzCS8521UU=;
-	h=Mime-Version:Content-Type:From:Message-Id:Date:To:Subject:Cc; b=lBI1XGv4jh85MSgAwodqzE24+3BKj5pCWEBDIZPyO2TCtPeVUbVKBJmvebG0+lOYC7bJi4ddZ9Eg3ZjkC0ELXDl2NBRZR/a2fO2+AybBxDC4r22rkVM2SWkjEYpIbuhaJMm716aja52dBokbfSe4Xj/Ua2JM0MwzLP94jQCG3QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=fdan1kug; arc=none smtp.client-ip=118.26.132.17
+	s=arc-20240116; t=1763260922; c=relaxed/simple;
+	bh=HLjPqFaoHIFiWPXiwwXVxhO02rNyp3qzfkPNjGwUDxI=;
+	h=Mime-Version:Subject:Content-Type:To:Message-Id:Cc:From:Date; b=f1tS2cxyKP2JsmlX42m+dC/481PXsIJwXKRI5CqNf2KYzob8c9qVLOkQ/UC31kSw8wQeFtU9GSzKwjCYxJ8vHgjPHEOQz+3NGuvHFcyFEdCCaaDFNj3zZO5bCCM1oZnvPIWuhEY6iMEluD+xiJ+B1GxLnD/EmJrjGCNefEmhwcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=LPI7MpHf; arc=none smtp.client-ip=118.26.132.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763260913;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763260915;
   h=from:subject:mime-version:from:date:message-id:subject:to:cc:
  reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=eS9mut2o83UP0P4D/dZojWoRTZN8xQ/HzH88AZpecm8=;
- b=fdan1kug8M3oEWX4R27iBAnqviCE99WQUgangqVVRRjIuua1eVjKa8pMyMyTbkyq26/wRH
- zuFywzpCWJeF5te0T7INcG3Jc2TlyYGyepckU4eMwJBuFKHI3q/Ee6/O8wXPxxr73KqFpi
- JVFj1rRTVkHpj8ryUZFO9ClYMT/UV/lduaEIHMCiZF/zK6el+0LXxGZdObI+uawpXD2sws
- 0FU/94seVnKgZxypYn+C9+9/8pxXPB+jOVyPFCngtSRpb3DnqkiiXQFmQFT6/ZnwPEjLqg
- jPHL6j5kpB9BgOVt8OPs+yOrdxYDWRX4c6qnx3+Pwl/yEdSdG2wcc7Urf0K2KA==
+ bh=Y6zcxxSDkCGi74MCT9K0qutBP57MyuiyeywsRqy1TGU=;
+ b=LPI7MpHfR5IbkAJBmJr6pxCai8iPQXK/yNslOs7uSoSuEcvX7qGvQBOV7TrZ56x9jkmOo3
+ t5Ct9Umun/7k8H31wV1c7Yaju+Sw/91q4upTANpA4goY6yYyphhuA+YVwBPS3yKOvf0dIy
+ mQXQ88/wShqED3Ap46Peb7hSXmwQzRo2DHtGjWFdgscSm+FoEE/3JDZeLXXngQBzOsy0oi
+ R1iRz0eFb/zH36iuzBBIUz/h3z4VfV0vXJw8tBPmDT99/5Kqj8UXdwGpwzhQDg7GkPVzyO
+ MxucXODtumr4j1OpSlNR08tLdryWtghDHk955lj/O8ZE2xL69QrvzUnjYtoAjA==
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 10:41:51 +0800
-Content-Type: text/plain; charset=UTF-8
-From: "Yu Kuai" <yukuai@fnnas.com>
-Message-Id: <20251116024134.115685-3-yukuai@fnnas.com>
-X-Lms-Return-Path: <lba+2691939ef+0d2bf5+vger.kernel.org+yukuai@fnnas.com>
-Date: Sun, 16 Nov 2025 10:41:31 +0800
 Content-Transfer-Encoding: 7bit
+Subject: [PATCH 3/5] blk-iocost: fix incorrect lock order for rq_qos_mutex and freeze queue
+Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 10:41:52 +0800
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+Content-Type: text/plain; charset=UTF-8
 To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
 	<linux-kernel@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
 	<ming.lei@redhat.com>
-Subject: [PATCH 2/5] blk-wbt: fix incorrect lock order for rq_qos_mutex and freeze queue
+Message-Id: <20251116024134.115685-4-yukuai@fnnas.com>
 X-Mailer: git-send-email 2.51.0
 Cc: <yukuai@fnnas.com>
+From: "Yu Kuai" <yukuai@fnnas.com>
+Date: Sun, 16 Nov 2025 10:41:32 +0800
+X-Lms-Return-Path: <lba+2691939f1+65929b+vger.kernel.org+yukuai@fnnas.com>
 
-wbt_init() can be called from sysfs attribute and wbt_enable_default(),
-however the lock order are inversely.
+Like wbt, rq_qos_add() can be called from two path and the lock order
+are inversely:
 
-- queue_wb_lat_store() freeze queue first, and then wbt_init() hold
-  rq_qos_mutex. In this case queue will be freezed again inside
-  rq_qos_add(), however, in this case freeze queue recursivly is
-  inoperative;
-- wbt_enable_default() from elevator switch will hold rq_qos_mutex
-  first, and then rq_qos_add() will freeze queue;
+- From ioc_qos_write(), queue is already freezed before rq_qos_add();
+- From ioc_cost_model_write(), rq_qos_add() is called directly;
 
-Fix this problem by converting to use new helper rq_qos_add_freezed() in
-wbt_init(), and for wbt_enable_default(), freeze queue before calling
-wbt_init().
+Fix this problem by converting to use blkg_conf_open_bdev_frozen()
+from ioc_cost_model_write(), then since all rq_qos_add() callers
+already freeze queue, convert to use rq_qos_add_freezed().
 
-Fixes: a13bd91be223 ("block/rq_qos: protect rq_qos apis with a new lock")
 Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 ---
- block/blk-wbt.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ block/blk-iocost.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index eb8037bae0bd..a784f6d338b4 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -724,8 +724,12 @@ void wbt_enable_default(struct gendisk *disk)
- 	if (!blk_queue_registered(q))
- 		return;
- 
--	if (queue_is_mq(q) && enable)
-+	if (queue_is_mq(q) && enable) {
-+		unsigned int memflags = blk_mq_freeze_queue(q);
-+
- 		wbt_init(disk);
-+		blk_mq_unfreeze_queue(q, memflags);
-+	}
- }
- EXPORT_SYMBOL_GPL(wbt_enable_default);
- 
-@@ -922,7 +926,7 @@ int wbt_init(struct gendisk *disk)
- 	 * Assign rwb and add the stats callback.
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 5bfd70311359..233c9749bfc9 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -2927,7 +2927,7 @@ static int blk_iocost_init(struct gendisk *disk)
+ 	 * called before policy activation completion, can't assume that the
+ 	 * target bio has an iocg associated and need to test for NULL iocg.
  	 */
- 	mutex_lock(&q->rq_qos_mutex);
--	ret = rq_qos_add(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
-+	ret = rq_qos_add_freezed(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
- 	mutex_unlock(&q->rq_qos_mutex);
+-	ret = rq_qos_add(&ioc->rqos, disk, RQ_QOS_COST, &ioc_rqos_ops);
++	ret = rq_qos_add_freezed(&ioc->rqos, disk, RQ_QOS_COST, &ioc_rqos_ops);
  	if (ret)
- 		goto err_free;
+ 		goto err_free_ioc;
+ 
+@@ -3410,7 +3410,7 @@ static ssize_t ioc_cost_model_write(struct kernfs_open_file *of, char *input,
+ {
+ 	struct blkg_conf_ctx ctx;
+ 	struct request_queue *q;
+-	unsigned int memflags;
++	unsigned long memflags;
+ 	struct ioc *ioc;
+ 	u64 u[NR_I_LCOEFS];
+ 	bool user;
+@@ -3419,9 +3419,11 @@ static ssize_t ioc_cost_model_write(struct kernfs_open_file *of, char *input,
+ 
+ 	blkg_conf_init(&ctx, input);
+ 
+-	ret = blkg_conf_open_bdev(&ctx);
+-	if (ret)
++	memflags = blkg_conf_open_bdev_frozen(&ctx);
++	if (IS_ERR_VALUE(memflags)) {
++		ret = memflags;
+ 		goto err;
++	}
+ 
+ 	body = ctx.body;
+ 	q = bdev_get_queue(ctx.bdev);
+@@ -3438,7 +3440,6 @@ static ssize_t ioc_cost_model_write(struct kernfs_open_file *of, char *input,
+ 		ioc = q_to_ioc(q);
+ 	}
+ 
+-	memflags = blk_mq_freeze_queue(q);
+ 	blk_mq_quiesce_queue(q);
+ 
+ 	spin_lock_irq(&ioc->lock);
+@@ -3490,20 +3491,18 @@ static ssize_t ioc_cost_model_write(struct kernfs_open_file *of, char *input,
+ 	spin_unlock_irq(&ioc->lock);
+ 
+ 	blk_mq_unquiesce_queue(q);
+-	blk_mq_unfreeze_queue(q, memflags);
+ 
+-	blkg_conf_exit(&ctx);
++	blkg_conf_exit_frozen(&ctx, memflags);
+ 	return nbytes;
+ 
+ einval:
+ 	spin_unlock_irq(&ioc->lock);
+ 
+ 	blk_mq_unquiesce_queue(q);
+-	blk_mq_unfreeze_queue(q, memflags);
+ 
+ 	ret = -EINVAL;
+ err:
+-	blkg_conf_exit(&ctx);
++	blkg_conf_exit_frozen(&ctx, memflags);
+ 	return ret;
+ }
+ 
 -- 
 2.51.0
 
