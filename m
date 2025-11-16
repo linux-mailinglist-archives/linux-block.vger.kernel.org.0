@@ -1,88 +1,137 @@
-Return-Path: <linux-block+bounces-30391-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30393-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC0BCC60F65
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 04:21:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB005C60F7D
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 04:24:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 67B27361B98
-	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:21:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CA88A4EBAA6
+	for <lists+linux-block@lfdr.de>; Sun, 16 Nov 2025 03:21:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359D822424E;
-	Sun, 16 Nov 2025 03:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28FB2239E7F;
+	Sun, 16 Nov 2025 03:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="j2Suhsat"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="xHyjbF3a"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-19.ptr.blmpb.com (sg-1-19.ptr.blmpb.com [118.26.132.19])
+Received: from sg-1-23.ptr.blmpb.com (sg-1-23.ptr.blmpb.com [118.26.132.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5AC1DB125
-	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 03:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69E3226D1F
+	for <linux-block@vger.kernel.org>; Sun, 16 Nov 2025 03:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763263265; cv=none; b=a+6PY39LkFFi+Nd7qBUJaTQ9AY4dE46YZONkoLw4mOtiUb/v0jwfWY06b/GASMUlwU4haklY+JctbamDAdimlixwaT9j4bf76BuRnDl2XMJvDH2l2rCO7kf3WVi+9aHZB9K+8YGM/lp0JMRnHP6bfbAgJllIZy3Q7A1KPvS42Po=
+	t=1763263268; cv=none; b=thq7zM/v8Axgf6SGFEY0Lg+yRgFNlbPG5m4fcJe6hHr6abL8JZPPjU7bVsKp3KI+ISJyK+p0lzJuqaWN9GwdYUD8+JaJ1dw5r8owIAtu6TZ1bQjwbTDKA82d4N/0bCDc81JLBX4N+nlBHmrgjx1PAKPMjWCyMi/Vl30tsJXZGnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763263265; c=relaxed/simple;
-	bh=hh1bIV/4NJvdi+LJD71lmjTfw9FGPr7RlXla8j+ZY4U=;
-	h=Message-Id:Cc:Subject:Date:Mime-Version:To:Content-Type:From; b=GMZ2KkSmdD0+pSj+DK7eY8GuSQvEA9pzeRw1IxQq+UpL3igJ3pckt8+OSKTTHT5udI2M1wRshSC3/WOvzXChT+Jio7sAI9jcVgIhEgLY70GkXj4kw1l2nT2xwywK/P4BwbbWij0bDapenOar50yDtOxnNdbrQpbvQu+d4lSx5pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=j2Suhsat; arc=none smtp.client-ip=118.26.132.19
+	s=arc-20240116; t=1763263268; c=relaxed/simple;
+	bh=RMl+bpZY8STQtEjCpuMjIEBsLfx+SnACPoEuGzH2zdM=;
+	h=From:Message-Id:To:Subject:Mime-Version:Content-Type:Cc:Date; b=SIuYosH6YU33FYOGM8fE8aZ3dtlkqUXdMq7ewnKT2vsiWrWDE6JNb7i9kx7FUnXSSSd3QUXhRynU8Sks7fZ4mG+zyqUpAr4PqluU4BwA1us9sDQGxfr7/B7owN9hJbQv/ji6QwwfI9qM+PJpxLG2d7dhfhIwZFnc7WH+lJl8Mpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=xHyjbF3a; arc=none smtp.client-ip=118.26.132.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763263257;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763263259;
   h=from:subject:mime-version:from:date:message-id:subject:to:cc:
  reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=kiWLPRK//gF7CQNeGuB/NkfObgOVqylMsxLOgKSLaj4=;
- b=j2SuhsatndCKkAXZIVHmdCB1kqfG38Z1VCFda0GFII9epBs8ZC3JoaBqkz5ilpjoS62lFO
- gs05Rq2ORlPU+s2O70gghpWyNc+5/F3RJ+TKuqkBoBbYLKy3/26ROdsPBOxAplbSqUnxW2
- SZs/HgozO6ijVCWoMHwpd2DvDKsm/a4C6AyCctJxxKIya8FbXwdqiIjOi8v8WVvX0Atw96
- rvSOK0VSewvD3Hz/ncByaL5ad5tqwhHizq2c2QhWXrpt05VZT1FID/Ez8gunnEtpGh7d6e
- G5upv99dQEn5Cyt3S4Qtz53Ov4zKk7uB6HCiB0TxEivZQ9zwqeNlOPmbSqnhng==
-Message-Id: <20251116032044.118664-2-yukuai@fnnas.com>
-Content-Transfer-Encoding: 7bit
-X-Lms-Return-Path: <lba+269194318+ea4df6+vger.kernel.org+yukuai@fnnas.com>
-Cc: <yukuai@fnnas.com>, <nilay@linux.ibm.com>, <bvanassche@acm.org>
-Subject: [PATCH RESEND v4 1/7] block: convert nr_requests to unsigned int
-Date: Sun, 16 Nov 2025 11:20:35 +0800
+ bh=Q+IOxo4l6kTKykmJS8eiXfUCMNlhCagu+jDYl1pBhrk=;
+ b=xHyjbF3a9kab7LLE94SL+uRg6t/v0O5OIKd+/zDgiqVKe7wGCo7KTu/vdz2csj/IdZJTCI
+ gxNUarGbxc4smIoNC3xJ2GtVgnpsVJBvN21nTYnuhxV5T+fumi4G+yeC81YpwXDkHI8aEI
+ RCMBCJU/KwswR0rsFga7wQ5D1HjMHdM/as+bEGunO9NCeGNZ8clFqnfB0zST0Iq7r9dw5C
+ qZx/0dGeo6CkdY9XZkxhSIZmAOANekbcR8E2akPXaNqx2XAQzq0aB+wvd00FNarU4g25+3
+ 6WVkwzOQ64kMgh21WKoX9YBf0JEJ1sKXmJsKvesMirj5Lvxejtb09XjwMF0kjA==
+From: "Yu Kuai" <yukuai@fnnas.com>
+X-Mailer: git-send-email 2.51.0
+Message-Id: <20251116032044.118664-3-yukuai@fnnas.com>
+X-Lms-Return-Path: <lba+269194319+8824eb+vger.kernel.org+yukuai@fnnas.com>
+Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 11:20:56 +0800
+To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND v4 2/7] blk-mq-sched: unify elevators checking for async requests
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.0
-Received: from localhost.localdomain ([39.182.0.135]) by smtp.feishu.cn with ESMTPS; Sun, 16 Nov 2025 11:20:55 +0800
-To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>
 X-Original-From: Yu Kuai <yukuai@fnnas.com>
 Content-Type: text/plain; charset=UTF-8
-From: "Yu Kuai" <yukuai@fnnas.com>
+Cc: <yukuai@fnnas.com>, <nilay@linux.ibm.com>, <bvanassche@acm.org>
+Date: Sun, 16 Nov 2025 11:20:36 +0800
+Content-Transfer-Encoding: 7bit
 
-This value represents the number of requests for elevator tags, or drivers
-tags if elevator is none. The max value for elevator tags is 2048, and
-in drivers at most 16 bits is used for tag.
+bfq and mq-deadline consider sync writes as async requests and only
+resver tags for sync reads by async_depth, however, kyber doesn't
+consider sync writes as async requests for now.
+
+Consider the case there are lots of dirty pages, and user use fsync to
+flush dirty pages. In this case sched_tags can be exhausted by sync writes
+and sync reads can stuck waiting for tag. Hence let kyber follow what
+mq-deadline and bfq did, and unify async requests checking for all
+elevators.
 
 Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
 ---
- include/linux/blkdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c   | 2 +-
+ block/blk-mq-sched.h  | 5 +++++
+ block/kyber-iosched.c | 2 +-
+ block/mq-deadline.c   | 2 +-
+ 4 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 2fff8a80dbd2..bedcaa59feec 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -551,7 +551,7 @@ struct request_queue {
- 	/*
- 	 * queue settings
- 	 */
--	unsigned long		nr_requests;	/* Max # of requests */
-+	unsigned int		nr_requests;	/* Max # of requests */
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 4a8d3d96bfe4..63452e791f98 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -697,7 +697,7 @@ static void bfq_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	unsigned int limit, act_idx;
  
- #ifdef CONFIG_BLK_INLINE_ENCRYPTION
- 	struct blk_crypto_profile *crypto_profile;
+ 	/* Sync reads have full depth available */
+-	if (op_is_sync(opf) && !op_is_write(opf))
++	if (blk_mq_sched_sync_request(opf))
+ 		limit = data->q->nr_requests;
+ 	else
+ 		limit = bfqd->async_depths[!!bfqd->wr_busy_queues][op_is_sync(opf)];
+diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+index 8e21a6b1415d..ae747f9053c7 100644
+--- a/block/blk-mq-sched.h
++++ b/block/blk-mq-sched.h
+@@ -103,4 +103,9 @@ static inline void blk_mq_set_min_shallow_depth(struct request_queue *q,
+ 						depth);
+ }
+ 
++static inline bool blk_mq_sched_sync_request(blk_opf_t opf)
++{
++	return op_is_sync(opf) && !op_is_write(opf);
++}
++
+ #endif
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 18efd6ef2a2b..cf243a457175 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -544,7 +544,7 @@ static void kyber_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	 * We use the scheduler tags as per-hardware queue queueing tokens.
+ 	 * Async requests can be limited at this stage.
+ 	 */
+-	if (!op_is_sync(opf)) {
++	if (!blk_mq_sched_sync_request(opf)) {
+ 		struct kyber_queue_data *kqd = data->q->elevator->elevator_data;
+ 
+ 		data->shallow_depth = kqd->async_depth;
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index 3e3719093aec..1aef6ce2e78e 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -495,7 +495,7 @@ static void dd_limit_depth(blk_opf_t opf, struct blk_mq_alloc_data *data)
+ 	struct deadline_data *dd = data->q->elevator->elevator_data;
+ 
+ 	/* Do not throttle synchronous reads. */
+-	if (op_is_sync(opf) && !op_is_write(opf))
++	if (blk_mq_sched_sync_request(opf))
+ 		return;
+ 
+ 	/*
 -- 
 2.51.0
 
