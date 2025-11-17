@@ -1,220 +1,102 @@
-Return-Path: <linux-block+bounces-30443-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30517-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AEAFC63896
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 11:27:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B65DC674BD
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 05:52:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EAF9935847C
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 10:21:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 890FC4EEED9
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 04:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADA2131E11C;
-	Mon, 17 Nov 2025 10:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C38E62BE05B;
+	Tue, 18 Nov 2025 04:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPl2iTZR"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eSuX+vq8"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5203246F7
-	for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 10:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86D0267386
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 04:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763374808; cv=none; b=EDRYc8lmVCx/N4qH/Uy7EAvQFr35zn82lfBn8S0prEm4Ka6LrrOSbwdnRVfI3yEYiFs5i4lctlgsoz0ZS677EX0CRkoOg5WCpdLAVXaGNcov6xwgDIU1Gce67lRTYsUO6jnKp7U4zxVSV11BKuhncSUpILweXxzlU9lNGAa2LBo=
+	t=1763441472; cv=none; b=JvJfV/SKdKeE7NfLXXgcwqSk3xHUMZx26UWcl34G3PA9VkMDKVU9Ojn3Vit3TMJ1pc5U0LRYeDuhRLmXnTogTeTAO8lghtmt4x8CEbmM8MQhcDTXrwdNEPzDrqC+q+9l259oChKAFzbw0vI2RXKE1eCBuFuAy6Wo9wjXEKim+Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763374808; c=relaxed/simple;
-	bh=bwibJvJLkyc6FQip7uiNg567UrLP3BL61zUuGv4aF0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4nY+oqnC30qxeoD9RPYAB9+eoV+TGBKgaons9ebGAQZ8DE5TgKZ2OeO5ctW11gR9WZfcv3Hq47TNl2mfCH9kp2bHewdsMPQNOtWXjxcczCSGTrW55uyRzbQVQQo0VhGuRGFfvGZ//bzBZEDEkYefuYnbCSRi5BeI4GMaGEe/rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bPl2iTZR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763374805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jWSFS1b8eCV2LAK4lG/dUgCUlWq07WRAkz4T4C61+JM=;
-	b=bPl2iTZRJBG4GKDKzeZ/mFn4KvYICD+RW6O8ZqRIb/LR6D0LnhHCF3VvcrkDskWHtdA2m9
-	in98o1wFiUwOEfzol+L0QAKNYusBbaAtQbZNnPZdw0HOW0kDabbRTj9cZ8o4+qGqZ2U5kc
-	yfyjhC37ISkZSTIt9oF0iIBzds6ZZHk=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-355-fhPPRLYKNc6d9pzkQZVHnA-1; Mon,
- 17 Nov 2025 05:20:01 -0500
-X-MC-Unique: fhPPRLYKNc6d9pzkQZVHnA-1
-X-Mimecast-MFC-AGG-ID: fhPPRLYKNc6d9pzkQZVHnA_1763374800
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3D771956095;
-	Mon, 17 Nov 2025 10:19:59 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.42])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2CC16180049F;
-	Mon, 17 Nov 2025 10:19:55 +0000 (UTC)
-Date: Mon, 17 Nov 2025 18:19:51 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Xue He <xue01.he@samsung.com>
+	s=arc-20240116; t=1763441472; c=relaxed/simple;
+	bh=8XT70j/AkA8v08lr4RtF1ct4UfyfN7/KEgk4d3sKMds=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=Rg6Ja/14P8xk1aVHKPI7JYcPzaM/0ikgQgLLG/QQzZFd3FMPV2BkGdlq1ybDigOXR8WNqQX2NzlvaAxS+1j89zoiKWnCELdO7ClyH3m+E+fauQ88YAeCd41pm4I7W8Z4Tdmsy6eVoGQLuNTiJodL3f/CfuE3CAYYfosHBkpPqh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eSuX+vq8; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20251118045107epoutp03a14b5348999ba7d31e0ec76732afe0c6~5AKvvH0aY1238612386epoutp03Z
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 04:51:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20251118045107epoutp03a14b5348999ba7d31e0ec76732afe0c6~5AKvvH0aY1238612386epoutp03Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1763441467;
+	bh=8XT70j/AkA8v08lr4RtF1ct4UfyfN7/KEgk4d3sKMds=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eSuX+vq85od0QRYT3WyYp7VVGjMQjJ4GBwZZ8gQ49M9BoIhsOmxWexunZbThwBA66
+	 R9KH8ePCsiMoR9gH+pNhj8roCKRFp03H2N5fglxLSBF9sHPLCVRfezR4egV7JPN6Gi
+	 Nw0V7SR02bKpeWv3NPyYXgONLvaTdakUo55nuxkY=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20251118045107epcas5p206cd4d5e9be181079a9c1d7508ef4545~5AKvejpNI2325423254epcas5p2O;
+	Tue, 18 Nov 2025 04:51:07 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4d9XHt2LC1z6B9m6; Tue, 18 Nov
+	2025 04:51:06 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20251117102659epcas5p404ff3e462dcda573338ef47beadd2cc7~4xGth613i1408114081epcas5p4Y;
+	Mon, 17 Nov 2025 10:26:59 +0000 (GMT)
+Received: from node122.. (unknown [109.105.118.122]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251117102659epsmtip242285a4f13392568ecd631f2914658da~4xGs-Ybu50148501485epsmtip2D;
+	Mon, 17 Nov 2025 10:26:58 +0000 (GMT)
+From: Xue He <xue01.he@samsung.com>
+To: ming.lei@redhat.com
 Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai@fnnas.com
+	linux-kernel@vger.kernel.org, xue01.he@samsung.com, yukuai@fnnas.com
 Subject: Re: [PATCH v6] block: plug attempts to batch allocate tags multiple
  times
-Message-ID: <aRr2x89ShJa08jNk@fedora>
-References: <CGME20251117085321epcas5p3de0647f01a818db024bea32870f223f4@epcas5p3.samsung.com>
- <20251117084845.254680-1-xue01.he@samsung.com>
+Date: Mon, 17 Nov 2025 10:22:25 +0000
+Message-Id: <20251117102225.255504-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aRr2x89ShJa08jNk@fedora>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117084845.254680-1-xue01.he@samsung.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251117102659epcas5p404ff3e462dcda573338ef47beadd2cc7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251117102659epcas5p404ff3e462dcda573338ef47beadd2cc7
+References: <aRr2x89ShJa08jNk@fedora>
+	<CGME20251117102659epcas5p404ff3e462dcda573338ef47beadd2cc7@epcas5p4.samsung.com>
 
-On Mon, Nov 17, 2025 at 08:48:45AM +0000, Xue He wrote:
-> This patch aims to enable batch allocation of sufficient tags after
-> batch IO submission with plug mechanism, thereby avoiding the need for
-> frequent individual requests when the initial allocation is
-> insufficient.
-> -----------------------------------------------------------
-> HW:
-> 16 CPUs/16 poll queues
-> Disk: Samsung PM9A3 Gen4 3.84T
-> 
-> CMD:
-> [global]
-> ioengine=io_uring
-> group_reporting=1
-> time_based=1
-> runtime=1m
-> refill_buffers=1
-> norandommap=1
-> randrepeat=0
-> fixedbufs=1
-> registerfiles=1
-> rw=randread
-> iodepth=128
-> iodepth_batch_submit=32
-> iodepth_batch_complete_min=32
-> iodepth_batch_complete_max=128
-> iodepth_low=32
-> bs=4k
-> numjobs=1
-> direct=1
-> hipri=1
-> 
-> [job1]
-> filename=/dev/nvme0n1
-> name=batch_test
-> ------------------------------------------------------------
-> Perf:
-> base code: __blk_mq_alloc_requests() 1.47%
-> patch: __blk_mq_alloc_requests() 0.78%
-> ------------------------------------------------------------
-> 
-> ---
-> changes since v1:
-> - Modify multiple batch registrations into a single loop to achieve
->   the batch quantity
-> 
-> changes since v2:
-> - Modify the call location of remainder handling
-> - Refactoring sbitmap cleanup time
-> 
-> changes since v3:
-> - Add handle operation in loop
-> - Add helper sbitmap_find_bits_in_word
-> 
-> changes since v4:
-> - Split blk-mq.c changes from sbitmap
-> 
-> changes since v5:
-> - Add workload with perf
-> - Modify over-counting bug
-> 
-> Signed-off-by: hexue <xue01.he@samsung.com>
-> ---
->  block/blk-mq.c | 39 ++++++++++++++++++++++-----------------
->  1 file changed, 22 insertions(+), 17 deletions(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index d626d32f6e57..9e6fca1b5fb7 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -467,26 +467,31 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_data *data)
->  	unsigned long tag_mask;
->  	int i, nr = 0;
->  
-> -	tag_mask = blk_mq_get_tags(data, data->nr_tags, &tag_offset);
-> -	if (unlikely(!tag_mask))
-> -		return NULL;
-> +	do {
-> +		tag_mask = blk_mq_get_tags(data, data->nr_tags, &tag_offset);
+>The above two lines can be kept in original position, then the change
+>outside loop can be avoided.
+>
+>With above update, feel free to add:
+>
+>Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>
+>Thanks,
+>Ming
 
-You may keep the original batch update on `data->nr_tags` by passing
-`data->nr_tags - nr`.
-
-> +		if (unlikely(!tag_mask)) {
-> +			if (nr == 0)
-> +				return NULL;
-> +			break;
-> +		}
-> +		tags = blk_mq_tags_from_data(data);
-> +		for (i = 0; tag_mask; i++) {
-> +			if (!(tag_mask & (1UL << i)))
-> +				continue;
-> +			tag = tag_offset + i;
-> +			prefetch(tags->static_rqs[tag]);
-> +			tag_mask &= ~(1UL << i);
-> +			rq = blk_mq_rq_ctx_init(data, tags, tag);
-> +			rq_list_add_head(data->cached_rqs, rq);
-> +			data->nr_tags--;
-
-data->nr_tags-- can be killed.
-
-> +			nr++;
-> +		}
-> +	} while (data->nr_tags);
-
-Replace the above check with `data->nr_tags > nr`
-
->  
-> -	tags = blk_mq_tags_from_data(data);
-> -	for (i = 0; tag_mask; i++) {
-> -		if (!(tag_mask & (1UL << i)))
-> -			continue;
-> -		tag = tag_offset + i;
-> -		prefetch(tags->static_rqs[tag]);
-> -		tag_mask &= ~(1UL << i);
-> -		rq = blk_mq_rq_ctx_init(data, tags, tag);
-> -		rq_list_add_head(data->cached_rqs, rq);
-> -		nr++;
-> -	}
-> -	if (!(data->rq_flags & RQF_SCHED_TAGS))
-> -		blk_mq_add_active_requests(data->hctx, nr);
->  	/* caller already holds a reference, add for remainder */
->  	percpu_ref_get_many(&data->q->q_usage_counter, nr - 1);
-> -	data->nr_tags -= nr;
-
-The above line needs to keep.
-
-> +	if (!(data->rq_flags & RQF_SCHED_TAGS))
-> +		blk_mq_add_active_requests(data->hctx, nr);
-
-The above two lines can be kept in original position, then the change
-outside loop can be avoided.
-
-With above update, feel free to add:
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Thanks for review, I'll update and add this, then resubmit v7.
 
 Thanks,
-Ming
-
+Xue He
 
