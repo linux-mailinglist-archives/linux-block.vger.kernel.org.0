@@ -1,160 +1,107 @@
-Return-Path: <linux-block+bounces-30430-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30432-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25E28C6306D
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 10:02:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D57EC6365F
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 11:03:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 326164E6088
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 09:02:18 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 352874EDD77
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 09:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9574319860;
-	Mon, 17 Nov 2025 09:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152412D3733;
+	Mon, 17 Nov 2025 09:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sPGXfE9D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b="wiO0/Ebk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from exactco.de (exactco.de [176.9.10.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2850431BC8D;
-	Mon, 17 Nov 2025 09:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840A93246E6
+	for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 09:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.10.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763370134; cv=none; b=YZ7uQml5WESyJmamta9Poq/aC/oOu5Uu3AAxQEyjnIB16C61AQ8NFrZMpPPdsnPJnjkCBwZ+ImInWpHWiSGe+99bFvpTUQrFRzEmMQk3RN7xv++9RJo7tCgkBmXSmnWiOIyPyyTQJ92dmtI6wTrZlMBurIDvqVZ8EC3B8bINQf8=
+	t=1763373407; cv=none; b=eebZvJbneC/8NBgoVNow23KjJbQopWVs3pnGo2tBxzvWxfcCcG5WuFmL61xNDyGUgKCS+DH2fsGb06ERd1F68pAhCRgPJ3UYc6aDW/SnGCnxjcx+AAsXK09ezxkLJ3bMOPr9y34DErYlnwNFNSBZmzZ1oMNlaLoAUrzQPL0vcOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763370134; c=relaxed/simple;
-	bh=dg7CXevlIsnuqPReLm3SerOjBmC0kT4dd1RNc42zAMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SlPTVv/yXS2QEWL8ZfWGzC3OfZLbgtwOLg5Shhl4jMW4c8nLNA4lYKlifzkTT0M82q1nKmVba0fUFt6MgmvXvRsAqxZhKfsyhy6Ptt570Q1fFd3BA2bEYcWVoOwLwGfmX+NHjuFQ+Fi9WSyWl/tP3l+N9s05Ha5m7s/bVXoRcsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sPGXfE9D; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AGMrSMT031300;
-	Mon, 17 Nov 2025 09:01:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=PwflT1
-	I/Uph07lr+p8RbFYFfClGoEtJaI0hycQ6We+o=; b=sPGXfE9DJ77vo2dOlbZonD
-	2yiFBM54o+40QddlXUxUmN8yK//INEEZ/k+mGxMOwm7Oa/jwU9YnM6ldeqhRIBMr
-	1HjeV5Q83xrEomnwoAR1Etr0gJOPSRdBCH7HbTxNs8AZdNf/gUBmrBZak6J/PpQj
-	3W4JCJRknOdHgF845v28dNJB4snl3DqMFRtzTqusLVSTWpV+qY1SHxHFQuZRpVIr
-	7pTfoaUgtQWk/j0htba/aN+Qz6bf5s0oTYjDcWDovIuJbLaVn9YDRn7KZXrkakUj
-	zTHs1f+1Pm50JmnNHlhy1w1Amoqm64LDKTNoygzJ+diCpjaQu6rg9tDrIzaOCgqw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejjvwaem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Nov 2025 09:01:54 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AH8nirG017317;
-	Mon, 17 Nov 2025 09:01:53 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j1cma5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Nov 2025 09:01:53 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AH91qu330540486
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Nov 2025 09:01:52 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 353435805A;
-	Mon, 17 Nov 2025 09:01:52 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CBE655803F;
-	Mon, 17 Nov 2025 09:01:47 +0000 (GMT)
-Received: from [9.61.140.236] (unknown [9.61.140.236])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Nov 2025 09:01:47 +0000 (GMT)
-Message-ID: <542de632-aace-4ff4-940e-55b57142b496@linux.ibm.com>
-Date: Mon, 17 Nov 2025 14:31:46 +0530
+	s=arc-20240116; t=1763373407; c=relaxed/simple;
+	bh=u7U/U9/cUI3hshOC5lSKy+eUpS0XJRL/yT8+ajeFbfw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mIB9aBkunFbLb8uAN1XUZrUt118jmyLNAqohX37FFpU5lRiW7+IpyHmGcqkqLz6v/BRwyJRF+N5BSruhCbT2MCyTUbR1BF697zQG3p2u3BjdqOafr09sYaG8ud1e+YqSrBfhM66mxSRPjPWpAlOnYWya69atANAVS6DI+pmeZt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de; spf=pass smtp.mailfrom=exactco.de; dkim=pass (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b=wiO0/Ebk; arc=none smtp.client-ip=176.9.10.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exactco.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de;
+	s=x; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:In-Reply-To
+	:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=k2f3j71BNrxJPRPjOJNmgb3Ao7lLQB6cOVK5xMoEYsU=; b=wiO0/Ebk4YFhyF7YJ6Fo5mMFCk
+	dNCU75YCuCED70S+Dbjb/EIYcBBYLCxiWp2bawVpScC8xo7NyOzIn1jUX8HsN+dEQgbbz+OSMlrsi
+	Eth5v/CnHEHoqN4vHC5XuefAfqPrbSnk4SoZwes5eYYOLcOFJLaijhy34HBGgYJ5M9VVrp9zOy5nj
+	+mboaTSr1mq8XgC4uRl3SvRmy5pFgh2JeLr+l+rpUK9TDilT7dFoR8Ge6Xj/OgQjifXFQXh8UpOHI
+	eZj41Jg35GJyifW1WbWH0jY6w/me9i1mw8akAw/RC1cVaSV+OK8++u2WS9DscOy9liH/8VodERhni
+	fVH3xecA==;
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] block: Remove queue freezing from several sysfs
- store callbacks
-To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Martin Wilck <mwilck@suse.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>, stable@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>, Damien Le Moal <dlemoal@kernel.org>,
-        Chaitanya Kulkarni <kch@nvidia.com>
-References: <20251114210409.3123309-1-bvanassche@acm.org>
- <20251114210409.3123309-3-bvanassche@acm.org>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20251114210409.3123309-3-bvanassche@acm.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=BanVE7t2 c=1 sm=1 tr=0 ts=691ae482 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=IPLMIk6eJIHjdk74lYUA:9 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX9s8WqisTafGS
- XxK4Ht0nQJRu6bAh/Vl+PT93UGRzw7aVWYGIHYmwfMmNp2e1v4RqdZcxEbCw+yD3372iDz9M2WJ
- ZZ60TlMftDL2EudPwzOp9DxRHvPoZO4Dc5+RX8d/LD6NWxnMP+dQ1Z5QY5aPni9QnSCx2C0DAsL
- Y8YRmHEFY3mlgWD+WISpdekc5M/LASTXE/7WPsQG9N8UG7q+JdwcD5Or6ak7d8HvmjTR7q5VQtq
- f4NvLYJKTS7ycnzD/I/hpUP8M1VQfJOmi/khqGSToMzNP0wOK7wzD9Seqy50o36ZqH2n+QlqlDd
- ZblQddHQyArEUuWu3s3dqhbymLnX788bzRA8jMZswy7XUeTMtQoZTHE1qawKiUb02hfJnT+xeI9
- gYSlQM7J5HKLVf4L5VwNymqjQcP5ww==
-X-Proofpoint-GUID: xxppZQWA0lbZxB0SZgZJdBBCYOANrdZM
-X-Proofpoint-ORIG-GUID: xxppZQWA0lbZxB0SZgZJdBBCYOANrdZM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-17_02,2025-11-13_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH] fix floppy for PAGE_SIZE != 4KB
+From: =?utf-8?Q?Ren=C3=A9_Rebe?= <rene@exactco.de>
+In-Reply-To: <20251114.192119.1776060250519701367.rene@exactco.de>
+Date: Mon, 17 Nov 2025 10:56:39 +0100
+Cc: linux-block@vger.kernel.org,
+ efremov@linux.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <708B7962-86CD-489B-AC33-4B929F2902B6@exactco.de>
+References: <b1e17016-3d4d-4fac-b5b0-97db357d0749@kernel.dk>
+ <20251114.172543.20704181754788128.rene@exactco.de>
+ <fec67c88-53f5-4482-aeef-86e1213d187e@kernel.dk>
+ <20251114.192119.1776060250519701367.rene@exactco.de>
+To: axboe@kernel.dk
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-Hi Bart,
+Hi,
 
-On 11/15/25 2:34 AM, Bart Van Assche wrote:
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 2fff8a80dbd2..cb4ba09959ee 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -495,7 +495,7 @@ struct request_queue {
->  	 */
->  	unsigned long		queue_flags;
->  
-> -	unsigned int		rq_timeout;
-> +	unsigned int __data_racy rq_timeout;
->  
->  	unsigned int		queue_depth;
+>> 64k is 4% of a floppy disk! But I hear you, works for you.
+>=20
+> Again, still only 8k or 16k for most of such remaining workstation
+> floppy users.
+>=20
+>>> But if someone wants to refactor this code some more, ... I'm happy =
+to
+>>> test it, too ;-)
+>>=20
+>> I don't think refactoring would be required here, it's probably just
+>> capping that probe read to something constant irrespective of =
+hardware
+>> page sizes.
+>=20
+> Well, the floppy.c __floppy_read_block_0 does:
+>        bio_init(&bio, bdev, &bio_vec, 1, REQ_OP_READ);
+>        __bio_add_page(&bio, page, block_size(bdev), 0);
+>=20
+> Is there an easy way to limit that to less than a page without
+> refactoring it too much? Otherwise we could just apply this hotfix for
+> now.
 
-This change look good to me however as I mentioned earlier, 
-introducing __data_racy would break the kernel build. So 
-are you going to raise a separate bug report to fix it? 
 
-  AS      .tmp_vmlinux2.kallsyms.o
-  LD      vmlinux.unstripped
-  BTFIDS  vmlinux.unstripped
-WARN: multiple IDs found for 'task_struct': 116, 10183 - using 116
-WARN: multiple IDs found for 'module': 190, 10190 - using 190
-WARN: multiple IDs found for 'vm_area_struct': 324, 10227 - using 324
-WARN: multiple IDs found for 'inode': 956, 10314 - using 956
-WARN: multiple IDs found for 'path': 989, 10344 - using 989
-WARN: multiple IDs found for 'file': 765, 10375 - using 765
-WARN: multiple IDs found for 'cgroup': 1030, 10409 - using 1030
-WARN: multiple IDs found for 'seq_file': 1358, 10593 - using 1358
-WARN: multiple IDs found for 'bpf_prog': 2054, 10984 - using 2054
-WARN: multiple IDs found for 'bpf_map': 2134, 11012 - using 2134
-[...]
-[...]
-make[2]: *** [scripts/Makefile.vmlinux:72: vmlinux.unstripped] Error 255
-make[2]: *** Deleting file 'vmlinux.unstripped'
-make[1]: *** [/home/src/linux/Makefile:1242: vmlinux] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Any chance we can get my initial one liner constant PAGE_SIZE fix
+for this over a decade old bug in? I currently don=E2=80=99t have a =
+budget
+to refactor the floppy driver probing for efficiency on bigger PAGE_SIZE
+configs I=E2=80=99m not even having a floppy controller on.
 
-Thanks,
---Nilay
+Thanks!
+
+	Ren=C3=A9
+
+--=20
+ Ren=C3=A9 Rebe, ExactCODE GmbH, Lietzenburger Str. 42, DE-10789 Berlin
+ https://exactco.de | https://t2linux.com | https://rene.rebe.de=
 
