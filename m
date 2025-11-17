@@ -1,127 +1,169 @@
-Return-Path: <linux-block+bounces-30459-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30462-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11C05C65378
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 17:43:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A584C65408
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 17:51:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 3678B2922F
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 16:42:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id B53D728C2C
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 16:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31AE92DCF74;
-	Mon, 17 Nov 2025 16:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dOoJikVp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B522FB62A;
+	Mon, 17 Nov 2025 16:50:46 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D8C2DF714
-	for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 16:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B17502FD7CD;
+	Mon, 17 Nov 2025 16:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763397757; cv=none; b=JMmAXmFhcOL1fYrBuCWIYYxxbVMOZz6s/LQPnDZ0YiffQ1PKsyABXkxkDeVUVg5Vod63l5LsVQ7xHlxro7JJV0HQ+T1qhcmrkSM1mBOQ/+twqMxXapCFzl/Rx5pY839o0/gXMxa2PU110g5kldpOJqW25K4uryAUiCaElA/PwMM=
+	t=1763398246; cv=none; b=PTD/yEJhO6CmIhhBHIWqPduWIcMOktt3eKZyOumIsX2JeT512qvfCAhr3tkj+T30DoC/cOyEHs6ZmFizCPgoai0u/PpiiVV/NNbCxNYtupxhY0ecbhcFdQP6XQk4BwPrXJunuT1wXRdfFnsLkafmQeKGfvB4H8JadbekSKh4bWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763397757; c=relaxed/simple;
-	bh=N557UI/PpmRz2VImJUy9zanLU3/nIBnFH+IwXpBLq24=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=u02uO1hHHbTH6eKGSuSkMc6EtDP9mw9hnK0B/SGLOIXiLSbqqLRrpMyNcCKmoJSQnEFUlQVbe/B4YPPzz8lJbq7IGRgLiXqpDKOywSrTBSgFmmuXF1RWJDZ9UA2gTGwIrZuCvPp2GR5h/vbS/LgjICthRT6cypmRpEznmc8IIv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=dOoJikVp; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-4336f492d75so23321185ab.1
-        for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 08:42:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763397754; x=1764002554; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x5Wp953EEHU7o1P9grFgRm3cDfisCBXs9FZ8SRXhEq0=;
-        b=dOoJikVpqD4YIaVouvsFRfxFOkmfq2bWZ/xL9V1rNKOs5PuOqSRrTp/Pflz2dOd7LE
-         heZnHCzGgX1/2VKcDp3h1eGmYTOTPfq81MfCzbnxBNIxnko/eA+hxLIOajfo7xNOedWt
-         fiaQxiEzuC3EvIVIMrR7grBm65FJ1+XXFL7F6m4cFaOllReYMEwpYZhgz+vyFGhWN0JF
-         1ZuCJPL6O5rjTBJuPhXkvP+V1wLKO1XetcsJG8zm1/TwerTAN1xdZObFwMgbTF9hnbwl
-         3p4FzeS8by41bth4mSvMF86nCPTUXgJz92Hprb/KkapXs78k03ysA6TPO76sK4o6Q2Xj
-         3d/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763397754; x=1764002554;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x5Wp953EEHU7o1P9grFgRm3cDfisCBXs9FZ8SRXhEq0=;
-        b=IKof6HU0jlLCrbR+l1W5d9ND9muwaAasPpaBe63QdrW4DxS7Ld63Q3ywmAev6T+hd7
-         Hp3NvxSTGXj39H1Y6+nP43kXj6P/oxMsVPPzSSnnHiw7UQcFxQdLecL7UQpedZsSlk7z
-         dAr2wsy7BhMX0BURbNXNSySkO66Odcodmeu9BdL+FxzXhD1+nuX1bWAJkAiI6uIx4/2r
-         LFnu9+SAL84GaDtf8fgDY5MYP0OgS4dBCt2TPR0hw93jzPaCYGfWGUmmIBjmjxbkKxrF
-         jFXtz6+Uiqnb8ysY3LLNclISI2QpHpdyUzAP342JpvFrwZ10sTfa3+oYLbNxnCdbl+Xh
-         byWg==
-X-Gm-Message-State: AOJu0YzMUx7bWoHkt+Jsjuu0ck9ajaH2j0aYAH1ciEJ2AZ4pN3BmtbEj
-	kSaVR+NRkXg3Q2UTe0ECe6XEGqckwpZVSHvNTXfLT7KV/8sd4IAykTFz6rM0uEBWOI0=
-X-Gm-Gg: ASbGncuxqlZTIHfhOcj6qmtN07dVbtcRMGryRjwk7CU0+CCZcVMrWVIoXA8rst7ixCH
-	ZUbmtLSwOBU4P5BJQR4VbO+xYEutn6vFXmh0P8LDhpnbR4kxGWhV4NYSn0USC5FOPIOyl06ARQK
-	+nC6yXyU11zgHk9trQ0yE/FJDK0fz598b8TxlC0Y0ffAc7xY1tE5M+Xw1KJUkjkRLaAPo4ORaKY
-	XBvHM6xxVlY7O9gLp3LBhAYkdfg2K096lWZPNOxmd/0jmxMhrnaIePZIEEPg1nrQpyI3wM/VY7F
-	4HfZetBAXbquJttHfVTtiWgOTPtvdwZUmJjk6Mu2BoESlzV2bHELHVGKLmgmRqf1gSe3L9n18aI
-	ccrwjR+yqVUt1jXb3mn2v0Z449ZbvcrmFczHXdd84gqOm8H1VDt/0Xy1aPMgQD4YI5Dg=
-X-Google-Smtp-Source: AGHT+IHu9aboOqf5hOvEFQ87DG1B4ADMs0vMRE1oOnbZnpMmMZ3i5Td8ti6aRpG9/oPaddtIEODHpw==
-X-Received: by 2002:a05:6e02:1d91:b0:434:96ea:ff51 with SMTP id e9e14a558f8ab-43496eb0168mr143282845ab.34.1763397754484;
-        Mon, 17 Nov 2025 08:42:34 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7bd26e131sm4924100173.20.2025.11.17.08.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 08:42:33 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-In-Reply-To: <20251115121556.196104-1-dlemoal@kernel.org>
-References: <20251115121556.196104-1-dlemoal@kernel.org>
-Subject: Re: [PATCH 0/6] zloop fixes and improvements
-Message-Id: <176339775341.116629.7410659905760396568.b4-ty@kernel.dk>
-Date: Mon, 17 Nov 2025 09:42:33 -0700
+	s=arc-20240116; t=1763398246; c=relaxed/simple;
+	bh=WGqKFA3mz9XHJ6cj5G5VuhtGqL7z2AHwH/JWwrDAKcU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h4bzKaTle3EF/aEIHzTlaqClA/fKrNlMjpASwAq58HeKNhaVeN1gEisCtUr8qqe7qwHVHsmoIxUC8w5UEAEy0YwL9LTkl85vsmrJ0sWSTkEXfHbZWr2MzeK4FF1M3QvtxlS+O17Req3Mo47f7cKjPbH7j3Mk/DzA562QcJu8O88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4d9D953HZVz9sSK;
+	Mon, 17 Nov 2025 17:44:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id iWUAGZWJZEEK; Mon, 17 Nov 2025 17:44:09 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4d9D952NXHz9sS8;
+	Mon, 17 Nov 2025 17:44:09 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3CC7E8B769;
+	Mon, 17 Nov 2025 17:44:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id TzQbKMy7QXZa; Mon, 17 Nov 2025 17:44:09 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C93EF8B763;
+	Mon, 17 Nov 2025 17:44:07 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Ingo Molnar <mingo@redhat.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Andre Almeida" <andrealmeid@igalia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nichlas Piggin <npiggin@gmail.com>,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v5 0/4] uaccess: Prepare for masked user access on powerpc
+Date: Mon, 17 Nov 2025 17:43:40 +0100
+Message-ID: <cover.1763396724.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3522; i=christophe.leroy@csgroup.eu; h=from:subject:message-id; bh=WGqKFA3mz9XHJ6cj5G5VuhtGqL7z2AHwH/JWwrDAKcU=; b=owGbwMvMwCV2d0KB2p7V54MZT6slMWRKB+x//GA1v1ClgdYODW2ZTXLbzU/ZRjV/eKQu6mewe ZpfUUFuRykLgxgXg6yYIsvx/9y7ZnR9Sc2fuksfZg4rE8gQBi5OAZjIrP2MDE+3/HiwSHXz054e sW9T6m8y2UyYrVbctHBZQWh6hr3ILzlGhs8i3SbnnRO3ckQYW04rkjo930th+7PFh0R8ehe170m JYAEA
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=openpgp; fpr=10FFE6F8B390DE17ACC2632368A92FEB01B8DD78
+Content-Transfer-Encoding: 8bit
 
+This is v5 of the series "powerpc: Implement masked user access". This
+version only includes the preparatory patches to enable merging of
+powerpc architecture patches that depend on them on next cycle.
 
-On Sat, 15 Nov 2025 21:15:50 +0900, Damien Le Moal wrote:
-> Jens,
-> 
-> The first 2 patches are simple fixes for the zloop driver. The third
-> patch is a simple refactoring. Finally, patch 4 and 5 introduce new
-> configuration parameters that are very useful for testing the block
-> layer zone append emulation done as part of zone write plugging (patch
-> 4) and to test file systems that use zone append (XFS and btrfs) by
-> changing the processing behavior of zone append operations in zloop.
-> 
-> [...]
+It applies on top of commit 6ec821f050e2 (tag: core-scoped-uaccess)
+from tip tree.
 
-Applied, thanks!
+Thomas, Peter, could you please take those preparatory patches
+in tip tree for v6.19, then Maddy will take powerpc patches
+into powerpc-next for v6.20.
 
-[1/6] zloop: make the write pointer of full zones invalid
-      commit: 866d65745b635927c3d1343ab67e6fd4a99d116d
-[2/6] zloop: fail zone append operations that are targeting full zones
-      commit: cf28f6f923cb1dd2765b5c3d7697bb4dcf2096a0
-[3/6] zloop: simplify checks for writes to sequential zones
-      commit: e3a96ca90462f80d9f58a1236514823334deef39
-[4/6] zloop: introduce the zone_append configuration parameter
-      commit: 9236c5fdd5a8bec2445e834e7e1bbefb2eb62f67
-[5/6] zloop: introduce the ordered_zone_append configuration parameter
-      commit: fcc6eaa3a03a0e94f6f1d0ac455209b520ef8024
-[6/6] Documentation: admin-guide: blockdev: update zloop parameters
-      commit: ade260ca858627b21be87711b1e12a7bf80c0261
+Masked user access avoids the address/size verification by access_ok().
+Allthough its main purpose is to skip the speculation in the
+verification of user address and size hence avoid the need of spec
+mitigation, it also has the advantage to reduce the amount of
+instructions needed so it also benefits to platforms that don't
+need speculation mitigation, especially when the size of the copy is
+not know at build time.
 
-Best regards,
+Patches 1 and 2 are preparing to clean-up some redundant barrier_nospec()
+introduced by commit 74e19ef0ff80 ("uaccess: Add speculation barrier
+to copy_from_user()"). To do that, a speculation barrier is added to
+copy_from_user_iter() so that the barrier in powerpc raw_copy_from_user()
+which is redundant with the one in copy_from_user() can be removed. To
+avoid impacting x86, copy_from_user_iter() is first converted to using
+masked user access.
+
+Patch 3 convert put_cmsg() to scoped user access.
+
+Patch 4 replaces remaining wrong calls to masked_user_access_begin()
+with calls to masked_user_read_access_begin() and
+masked_user_write_access_begin() to match with user_read_access_end()
+and user_write_access_end().
+
+Entire series is availiable at https://git.kernel.org/pub/scm/linux/kernel/git/chleroy/linux branch masked-uaccess
+
+Changes in v5:
+- Taken comments from tglx
+- Only include core preparatory patches, powerpc patches are kept for following kernel development cycle
+- Reworded patch 1 to make it more explicit it needs to come before patch 2
+- Added patch 3 to convert put_cmsg() to scoped user access instead of just fixing the direction of the uacess
+- Renamed patch 4 as it now only handles fonctions from lib/strn*.c
+
+Changes in v4:
+- Rebased on top of commit 6ec821f050e2 (tag: core-scoped-uaccess) from tip tree
+- Patch 3: Simplified as masked_user_read_access_begin() and masked_user_write_access_begin() are already there.
+- Patch 10: Simplified mask_user_address_simple() as suggested by Gabriel.
+
+Changes in v3:
+- Rebased on top of v6.18-rc1
+- Patch 3: Impact on recently modified net/core/scm.c
+- Patch 10: Rewrite mask_user_address_simple() for a smaller result on powerpc64, suggested by Gabriel
+
+Changes in v2:
+- Converted copy_from_user_iter() to using masked user access.
+- Cleaned up powerpc uaccess function to minimise code duplication
+when adding masked user access
+- Automated TASK_SIZE calculation to minimise use of BUILD_BUG_ON()
+- Tried to make some commit messages more clean based on feedback from
+version 1 of the series.
+
+Christophe Leroy (4):
+  iov_iter: Convert copy_from_user_iter() to masked user access
+  iov_iter: Add missing speculation barrier to copy_from_user_iter()
+  scm: Convert put_cmsg() to scoped user access
+  lib/strn*,uaccess: Use masked_user_{read/write}_access_begin when
+    required
+
+ lib/iov_iter.c          | 22 +++++++++++++++++-----
+ lib/strncpy_from_user.c |  2 +-
+ lib/strnlen_user.c      |  2 +-
+ net/core/scm.c          | 20 +++++++-------------
+ 4 files changed, 26 insertions(+), 20 deletions(-)
+
 -- 
-Jens Axboe
-
-
+2.49.0
 
 
