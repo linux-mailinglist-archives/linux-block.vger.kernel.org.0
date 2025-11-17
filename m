@@ -1,126 +1,81 @@
-Return-Path: <linux-block+bounces-30472-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30474-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38289C65F62
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 20:28:41 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DADC65FC5
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 20:35:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4380D34BB25
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 19:23:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D88AB4E615C
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 19:35:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED7903314BB;
-	Mon, 17 Nov 2025 19:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94DE313530;
+	Mon, 17 Nov 2025 19:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHaJYLMJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxXuRDPH"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C7D27B4EB;
-	Mon, 17 Nov 2025 19:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F36830DD32;
+	Mon, 17 Nov 2025 19:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763407379; cv=none; b=cQRz4jKvqyLREAWahy3FXHPjBI0/fVoPXfmRiabRZXtu0r7S/aA9sJG4/xpydPjdn5ZGuQ1MOh6Al5i5entwYef4SxRErPBFefNb/6jS5g+86I/XxN2A9VPbgk6xGvIRVr87Owb9fMUMUPZG1TVTyLipfd+IYIktTQvmwWm19NY=
+	t=1763408144; cv=none; b=EpwKAQFE/ZnLvXF7oBIqP7oOhwDgQSqOUMwxKIi5c8uxT+89oVgZz+bTzorO3eEF99HVi5B6Crv6f1vL3yYbeq9As4XeWWkgtvTSp7SvvQ7CzNzTUdS8IFf69Tw044kcLdptgzSiIGKYs+U8lNOfHDimEWvD39tkLyTecriSCVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763407379; c=relaxed/simple;
-	bh=EEyesgsiG54ob2krMXcOxgW1MQE8gG2p/1YYRAn3wos=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hf2MJazrgW2xVyX5qx0Rb7oJcA7mWI/NWw1c8LmIkHNHMhHmklXA1Td+OwtZ6KcHgvieiIl1SHRAvriyILjXF9EKgW5rVh5vGLoQ3GL5ipN9ODUUYS/16V/Lw5ow6ERzetp4mRJPDlreWe74xkxY0wmRvCMKeLk1UmS5wQ6sA0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHaJYLMJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF9EC2BCB0;
-	Mon, 17 Nov 2025 19:22:58 +0000 (UTC)
+	s=arc-20240116; t=1763408144; c=relaxed/simple;
+	bh=aYstDzOU6itMkIGh7zOf1T4EpGAvHxMXBR+DR3zss+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJc26zu1RgkuDLubzSfwpAanleS4LOt7F5Cv40C94s+yKgcEjNxyRDRGwj6iIpClbiTL9YJ8OppzN2HT+DSDCbqCaBxPpBFCepixrw3uUFXF4uaCp2S/Kpr5D9B2qI99rmY4l59AeO7P8ekGxhzogXfsa0Q2XIkY8TdB/9rpDOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxXuRDPH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7C1C2BC9E;
+	Mon, 17 Nov 2025 19:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763407379;
-	bh=EEyesgsiG54ob2krMXcOxgW1MQE8gG2p/1YYRAn3wos=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RHaJYLMJuXsq90w4WM5RT+iGeIz56hG81clfHld9xfs6uIP9Gfo/ua133vNPaoc81
-	 7o5t5aMJK9AFuI4urLjefRYGSXgZWJ/Aj5MjDF69M33fGLWX3jhJTcqhcQztlwtQfa
-	 eSNSx/KFZRYZDOjUO3sDPHT+EMvzuk8HUsnRro5eZqTHeAQkxTPReCCU9JUBeCbXEn
-	 4XX7u2knu/jo8KTUkDRN5mZujmUTauLVbb+e94OiOca51bbYqOb12nqWShSK2I6GnV
-	 z0DgTcaL+kpNwZtbkHkZly8KLDcPaFrN6Duu0y3N0MlN+L2lVZsLWl4GWDIuqxRFId
-	 LvNlhCdx6w8XQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
+	s=k20201202; t=1763408143;
+	bh=aYstDzOU6itMkIGh7zOf1T4EpGAvHxMXBR+DR3zss+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mxXuRDPH0D9B/KbZiIuHuQ90VpbgFEGi+j7EmYkBgrLdjQ0tdi4xnvc7+/fiE/xnZ
+	 2448UK7VlgSbw/az7lrSnq53ofNmRRismckpxSt/N3DUsNWQF1yi0P4ezfcAnnHeIb
+	 PEHLrbJ7h3YTopCfSpv2i44PySDZMfrE73DqngCweLzgcahOGdFQo6sVJPraa7kK3K
+	 Zt9B5/oKP1abb2ch2Q9Gjy0vgQHN0FTaWGiiYwelsltU37ZKkmKDyViFV/gtI9HhEE
+	 CmH6BWHIFB1SRrBQpZxtMmWB2lZtmZTqqF2F+Hyk1cTOqDguWPC006IUZ8agTS5PrW
+	 ioFNAADxoIkYQ==
+Date: Mon, 17 Nov 2025 12:35:40 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
 	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v2 2/2] types: move phys_vec definition to common header
-Date: Mon, 17 Nov 2025 21:22:44 +0200
-Message-ID: <20251117-nvme-phys-types-v2-2-c75a60a2c468@nvidia.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251117-nvme-phys-types-v2-0-c75a60a2c468@nvidia.com>
+Subject: Re: [PATCH v2 1/2] nvme-pci: Use size_t for length fields to handle
+ larger sizes
+Message-ID: <aRt5DPnMwzDw8_dF@kbusch-mbp>
 References: <20251117-nvme-phys-types-v2-0-c75a60a2c468@nvidia.com>
+ <20251117-nvme-phys-types-v2-1-c75a60a2c468@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-a6db3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251117-nvme-phys-types-v2-1-c75a60a2c468@nvidia.com>
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Mon, Nov 17, 2025 at 09:22:43PM +0200, Leon Romanovsky wrote:
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index e5ca8301bb8b..b61ec62b0ec6 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -290,14 +290,14 @@ struct nvme_iod {
+>  	u8 flags;
+>  	u8 nr_descriptors;
+>  
+> -	unsigned int total_len;
+> +	size_t total_len;
 
-Move the struct phys_vec definition from block/blk-mq-dma.c to
-include/linux/types.h to make it available for use across the kernel.
-
-The phys_vec structure represents a physical address range with a
-length, which is used by the new physical address-based DMA mapping
-API. This structure is already used by the block layer and will be
-needed for DMA phys API users.
-
-Moving this definition to types.h provides a centralized location
-for this common data structure and eliminates code duplication
-across subsystems that need to work with physical address ranges.
-
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
----
- block/blk-mq-dma.c    | 5 -----
- include/linux/types.h | 5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index e7d9b54c3eed..be2ccf224f9c 100644
---- a/block/blk-mq-dma.c
-+++ b/block/blk-mq-dma.c
-@@ -6,11 +6,6 @@
- #include <linux/blk-mq-dma.h>
- #include "blk.h"
- 
--struct phys_vec {
--	phys_addr_t	paddr;
--	size_t		len;
--};
--
- static bool __blk_map_iter_next(struct blk_map_iter *iter)
- {
- 	if (iter->iter.bi_size)
-diff --git a/include/linux/types.h b/include/linux/types.h
-index 6dfdb8e8e4c3..6cc2d7cba9b3 100644
---- a/include/linux/types.h
-+++ b/include/linux/types.h
-@@ -170,6 +170,11 @@ typedef u64 phys_addr_t;
- typedef u32 phys_addr_t;
- #endif
- 
-+struct phys_vec {
-+	phys_addr_t	paddr;
-+	size_t		len;
-+};
-+
- typedef phys_addr_t resource_size_t;
- 
- /*
-
--- 
-2.51.1
-
+Changing the generic phys_vec sounds fine, but the nvme driver has a 8MB
+limitation on how large an IO can be, so I don't think the driver's
+length needs to match the phys_vec type.
 
