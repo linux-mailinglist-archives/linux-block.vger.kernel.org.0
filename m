@@ -1,108 +1,207 @@
-Return-Path: <linux-block+bounces-30429-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30431-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D773C62AC9
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 08:11:26 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5ADFC632B7
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 10:29:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id F043234CB78
-	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 07:11:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 568E84EDAB4
+	for <lists+linux-block@lfdr.de>; Mon, 17 Nov 2025 09:24:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B08A331770B;
-	Mon, 17 Nov 2025 07:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342A431AF07;
+	Mon, 17 Nov 2025 09:23:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsfQNHX4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PvRo0BOK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8250D316909;
-	Mon, 17 Nov 2025 07:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF08326D6D
+	for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 09:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763363478; cv=none; b=EnG8EjoAq3+1f5YGySY1V4ZUeV18mVh4+ftQH2MmHlc7fytqQnJejRDSLInXtPsFeHOkUne0E8cD3EKwhQXadLfX7ERz6Yd1RvS9hweh8DJMZmhvLK7F45+PyHeMRynUSY2Gbfa3CAo+nSUaA5T3TAONq3GJjXAaa/TZJQSxC8s=
+	t=1763371418; cv=none; b=Lt1RtI8vPs0Np4fPQhRE3JVc0W/Ab0jf+9evYhFxI5YilY59gyKIfUTJmUPtixdsmvhbqIQTLpKwa8AQ1BHH9ouNDdOh+Ua6D2HgHAw+zHkr1ehTuqZmYBYQ99VBzxLnMSZEW1iOB8aTzfcji1ylBGuRgmbLU1Lq0EkvafzNPHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763363478; c=relaxed/simple;
-	bh=n/Lorf00oIeL8NcXXfKtNjzNM8fzyT8fT3D731d/Zfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZ00IuCvuAWA9HDjVp6EOUbRXohenGvVGa7otddcNwDSlmfw6HEcoS3z1TVVz4vnffpWA/TkVWGGmujvgrYm9URmoocw7wCy73ytCjhl8Q29dOiE9mZbZAZ4Ozz27vC3a/0fDgvWxO6oufSIfXiXm09N95+7GWQtCXUzEJMUOPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsfQNHX4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CB7C4CEF1;
-	Mon, 17 Nov 2025 07:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763363478;
-	bh=n/Lorf00oIeL8NcXXfKtNjzNM8fzyT8fT3D731d/Zfg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DsfQNHX4yHKMEuQNzivLmPSvNg1GT14FSWM8cLhfJduQojTUVNLgOs8iq/0syOojh
-	 WuGuaPAGYKsQdP/DTSQDb9+unoP5KJ0tkl6le5fgCvcevJvCeiN2D95pWt0LwJP735
-	 ZRKVcx3qQ2zWb+seVPgj7YbVDiWyFqhO5+ePRYpWWGZeufxCZ665RjJd9ewM4tNyON
-	 ip5+0Cpbucoq/0HGmYoAtYsApisjo0N6ae+W9VbkZP/HwJhrARilXWfQH4AykjNS+t
-	 5ZdX7Yoj0rZio3OoCbYdkDqfe9H07IfcFHZWl5/1biRvZIH/VBh4qBvczCi+LqtEEJ
-	 rKmC312gtIFWQ==
-Message-ID: <4758205a-14ae-498e-8dcd-6770787ddb3f@kernel.org>
-Date: Mon, 17 Nov 2025 08:11:11 +0100
+	s=arc-20240116; t=1763371418; c=relaxed/simple;
+	bh=5Le79+xZo0pnPqRtJoLbHkAQdzsDca6tpNt/0CwyC9M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=IMiC//+gbpTJlj3K6+PQJ+fmkq3hnoGzQzNyf5n2O3dDTqqT5ewX3r8WOcALO60o0/ay7NQjoEP19EAR0bn1mksOnzg2s1UD6uB6uF0TkKThUW39etY7CSBzPsALH6xsYZUOByg1c6p+BOA4a3JBN02uH8v4ESAILkIqloxB8zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PvRo0BOK; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251117092333epoutp02e76e40bd948821ed343a77d4bc291e86~4wPUdkQLK0976409764epoutp028
+	for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 09:23:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251117092333epoutp02e76e40bd948821ed343a77d4bc291e86~4wPUdkQLK0976409764epoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1763371413;
+	bh=0izvina2OzYAXBqg81C+fhf6rBfcPmphJHfa/0+bf+o=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=PvRo0BOKpu8hQOll56tqkoCsuKa6X0jfD8A+tUJqG0pLWgW5yxxauT3xhAHxJr/Zw
+	 vTJeDaXavhHDegg+LEhUtNHq/HhrIELuwk39pRa7LBYTG+Do/9J5yoyAtTCTwHxgQK
+	 N219RaE9m65FzCJQraQwJVpaBDiMj2iPb3JH44P8=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20251117092332epcas5p2da3b920c56548b8c08c218a2181e1cd4~4wPUEt-bR0872708727epcas5p2o;
+	Mon, 17 Nov 2025 09:23:32 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.91]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4d92Ng4vRkz2SSKX; Mon, 17 Nov
+	2025 09:23:31 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251117085321epcas5p3de0647f01a818db024bea32870f223f4~4v089sQ8o2847328473epcas5p3a;
+	Mon, 17 Nov 2025 08:53:21 +0000 (GMT)
+Received: from node122.. (unknown [109.105.118.122]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251117085320epsmtip2650ae9842d13f4a70f4eb8a284f4787c~4v08SduAF1001810018epsmtip2c;
+	Mon, 17 Nov 2025 08:53:20 +0000 (GMT)
+From: Xue He <xue01.he@samsung.com>
+To: axboe@kernel.dk, ming.lei@redhat.com
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai@fnnas.com, hexue <xue01.he@samsung.com>
+Subject: [PATCH v6] block: plug attempts to batch allocate tags multiple
+ times
+Date: Mon, 17 Nov 2025 08:48:45 +0000
+Message-Id: <20251117084845.254680-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/10] uaccess: Use
- masked_user_{read/write}_access_begin when required
-To: Thomas Gleixner <tglx@linutronix.de>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Andre Almeida <andrealmeid@igalia.com>,
- Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet
- <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>
-Cc: linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org
-References: <cover.1762427933.git.christophe.leroy@csgroup.eu>
- <5effda898b110d413dc84a53c5664d4c9d11c1bf.1762427933.git.christophe.leroy@csgroup.eu>
- <87h5uv9ts5.ffs@tglx>
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Content-Language: fr-FR
-In-Reply-To: <87h5uv9ts5.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251117085321epcas5p3de0647f01a818db024bea32870f223f4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251117085321epcas5p3de0647f01a818db024bea32870f223f4
+References: <CGME20251117085321epcas5p3de0647f01a818db024bea32870f223f4@epcas5p3.samsung.com>
 
+This patch aims to enable batch allocation of sufficient tags after
+batch IO submission with plug mechanism, thereby avoiding the need for
+frequent individual requests when the initial allocation is
+insufficient.
+-----------------------------------------------------------
+HW:
+16 CPUs/16 poll queues
+Disk: Samsung PM9A3 Gen4 3.84T
 
+CMD:
+[global]
+ioengine=io_uring
+group_reporting=1
+time_based=1
+runtime=1m
+refill_buffers=1
+norandommap=1
+randrepeat=0
+fixedbufs=1
+registerfiles=1
+rw=randread
+iodepth=128
+iodepth_batch_submit=32
+iodepth_batch_complete_min=32
+iodepth_batch_complete_max=128
+iodepth_low=32
+bs=4k
+numjobs=1
+direct=1
+hipri=1
 
-Le 15/11/2025 à 16:53, Thomas Gleixner a écrit :
-> On Thu, Nov 06 2025 at 12:31, Christophe Leroy wrote:
->> diff --git a/net/core/scm.c b/net/core/scm.c
->> index 66eaee783e8be..4a65f9baa87e7 100644
->> --- a/net/core/scm.c
->> +++ b/net/core/scm.c
->> @@ -274,7 +274,7 @@ int put_cmsg(struct msghdr * msg, int level, int type, int len, void *data)
->>   		check_object_size(data, cmlen - sizeof(*cm), true);
->>   
->>   		if (can_do_masked_user_access())
->> -			cm = masked_user_access_begin(cm);
->> +			cm = masked_user_write_access_begin(cm);
->>   		else if (!user_write_access_begin(cm, cmlen))
->>   			goto efault;
-> 
-> Shouldn't this be converted to scoped_....() ?
+[job1]
+filename=/dev/nvme0n1
+name=batch_test
+------------------------------------------------------------
+Perf:
+base code: __blk_mq_alloc_requests() 1.47%
+patch: __blk_mq_alloc_requests() 0.78%
+------------------------------------------------------------
 
-Sure. I made the same comment to you when reviewing your series, see [1]
+---
+changes since v1:
+- Modify multiple batch registrations into a single loop to achieve
+  the batch quantity
 
-[1] 
-https://lore.kernel.org/all/e0795f90-1030-4954-aefc-be137e9db49e@csgroup.eu/
+changes since v2:
+- Modify the call location of remainder handling
+- Refactoring sbitmap cleanup time
 
-Do you prefer me to do it as part of my series ?
+changes since v3:
+- Add handle operation in loop
+- Add helper sbitmap_find_bits_in_word
 
-Christophe
+changes since v4:
+- Split blk-mq.c changes from sbitmap
+
+changes since v5:
+- Add workload with perf
+- Modify over-counting bug
+
+Signed-off-by: hexue <xue01.he@samsung.com>
+---
+ block/blk-mq.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d626d32f6e57..9e6fca1b5fb7 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -467,26 +467,31 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_data *data)
+ 	unsigned long tag_mask;
+ 	int i, nr = 0;
+ 
+-	tag_mask = blk_mq_get_tags(data, data->nr_tags, &tag_offset);
+-	if (unlikely(!tag_mask))
+-		return NULL;
++	do {
++		tag_mask = blk_mq_get_tags(data, data->nr_tags, &tag_offset);
++		if (unlikely(!tag_mask)) {
++			if (nr == 0)
++				return NULL;
++			break;
++		}
++		tags = blk_mq_tags_from_data(data);
++		for (i = 0; tag_mask; i++) {
++			if (!(tag_mask & (1UL << i)))
++				continue;
++			tag = tag_offset + i;
++			prefetch(tags->static_rqs[tag]);
++			tag_mask &= ~(1UL << i);
++			rq = blk_mq_rq_ctx_init(data, tags, tag);
++			rq_list_add_head(data->cached_rqs, rq);
++			data->nr_tags--;
++			nr++;
++		}
++	} while (data->nr_tags);
+ 
+-	tags = blk_mq_tags_from_data(data);
+-	for (i = 0; tag_mask; i++) {
+-		if (!(tag_mask & (1UL << i)))
+-			continue;
+-		tag = tag_offset + i;
+-		prefetch(tags->static_rqs[tag]);
+-		tag_mask &= ~(1UL << i);
+-		rq = blk_mq_rq_ctx_init(data, tags, tag);
+-		rq_list_add_head(data->cached_rqs, rq);
+-		nr++;
+-	}
+-	if (!(data->rq_flags & RQF_SCHED_TAGS))
+-		blk_mq_add_active_requests(data->hctx, nr);
+ 	/* caller already holds a reference, add for remainder */
+ 	percpu_ref_get_many(&data->q->q_usage_counter, nr - 1);
+-	data->nr_tags -= nr;
++	if (!(data->rq_flags & RQF_SCHED_TAGS))
++		blk_mq_add_active_requests(data->hctx, nr);
+ 
+ 	return rq_list_pop(data->cached_rqs);
+ }
+-- 
+2.34.1
+
 
