@@ -1,93 +1,71 @@
-Return-Path: <linux-block+bounces-30548-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30551-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 848C4C67FF0
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 08:37:53 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 441B2C68035
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 08:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 277E04F7E5B
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 07:31:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id D8A6A2AA1A
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 07:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1413E305E0D;
-	Tue, 18 Nov 2025 07:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C07305948;
+	Tue, 18 Nov 2025 07:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLhmx3tl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MZDdfZsK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5553054D6
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 07:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3303054C8
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 07:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763451031; cv=none; b=oRu6faLpepJfx2JUlZ2MMQkD+ptyHGVya/I2ImtXzerv6qgEkLxjntG6ySbIAheIrN9OrYTSAXK83j3bzgBDkRVHExxfcUhHiYrxnJHarCFq1ssh0S8QwyrAApKSkZOX8VdcNVDJy6VbmdyBHCQMI13UHWZKvbea36hiNfHbwUo=
+	t=1763451457; cv=none; b=JCupCQvMNEL7z32uN7QgTFMONi/U25rzyoY2hxrXgV2KZ8m7J7fQxi3ErRh6bUKJCjfholduJJValPNR1P7kdvdP/Y7wllHJN+ziV3H0NTvrfLA4FA4oe36fxsqgUBBsMSGLrWu/OZcBqs9HzdGHdBSkZROokbYiWOqczZ3Jb1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763451031; c=relaxed/simple;
-	bh=83Tb0fnS8qFAanAr2oHDxC3ExyzkwPCMehzRY3O07yw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=deKixkRV+JH+IrotO+bA3k7A7REz3SP5ldPFZ9aUK6t9LJ3YfsQZzV1IYsYiBX9XHQNsaUc1xA9YkjFDlZUL1ag30BxmuSYJawmguaL7x0O8HsbhTHzfxYB6hLBlA4Tj+MUwKKzUbsI8CCO+LINREBghA0WqllTFxWMd5tt0zF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLhmx3tl; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2980d9b7df5so54373985ad.3
-        for <linux-block@vger.kernel.org>; Mon, 17 Nov 2025 23:30:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1763451030; x=1764055830; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=spTZ0mW8CsK7UvPfRSf8MeqzEHevliS4YgLZ2IGrH9o=;
-        b=QLhmx3tlk+Ugapp+9raLzh8dW82alag814+KEwq10D/r7kel7p+0ghoRvjiIddv3rg
-         t68W7Z3SSbAFeI8oiI0sovUSBzOycA2KCNDhoWJnwUieOmxdjEM+abJlii1xXKSYs734
-         +b5uVCSAUkqNSbgBxoGlB6A9PTEbng4kOQbos=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763451030; x=1764055830;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=spTZ0mW8CsK7UvPfRSf8MeqzEHevliS4YgLZ2IGrH9o=;
-        b=jTVLn/vcFfo1r5UMU0ROvJG6/ySgSG7UDTjkgdy6TM1uq1MRrNvralGTcQ2p6iuOHL
-         KTivyux0w0Z41b1pCozw7MR5wuCiS145yGKh9FLcMQasixwCw5R+sVN54N7dgIXnZLe/
-         M5qdQ5HTlmeOOqC0NKLyt7SjHRIzWB5A6lOFW/pUkGKtLesVpHspdg4YhYNF4cb9lBZW
-         EAAil3WdAEyKd0E5CQ4ApaO1/+H5Bv7fpMAGl75jcCfaSdlOU2GLHseUNsk2/tK+3ZJJ
-         yrKX75ul+jB08Q1QHRMgT5qDsEIMRJIvTqQqRX/N3+qpyzOWoLqULIk7yP201eg5IySM
-         iQkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhdoxWZ7cDw9yR9IS7M/0DmrYeQxs3n/cXfRumXjgxVorV4n3w3Jdw9H4AEJq7I5M5wBFaoN6KhXkq+w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrUV/1zzDfY13nvI2RijgbxBFk7KjG+acPOnFMTj/Yq/ZzWYwY
-	NPQifexPHwxXCw99wGyjkFsANw9HtfrLwVZREKw49x3+e/rUzrv5sUte3LiZlupqxg==
-X-Gm-Gg: ASbGncvrWCDT2wsKgh4p4zHkweC4x97L1Hl8AuugLLy+MTlx6qAI13RdekOQVf/VKTm
-	7/f+TVyZxioui/gjWVpJ205np6ofia9m/tHypvVuRivCtcV/LePO9toOvjAYgZEhSfi0u+jLq1s
-	04pGqp2JAmiM5eAEwRWmRXmBzfyxNLlw4f6BsNoG855zm/lKUnych1i5ugAfHcr213QefWwpM3i
-	4sb4OdpokON3HmjI30NUm3Dn1WmTTz0VcVzM/jjYBlbZr5m/PdZ4wSVFVxtnNTc8Bjejrq4OXWs
-	4U4t+Sl3gGV4Q1TqdClptMv02JxGJ+p8lSm0IuSkKPMwbutju+QEsVvlA+otGsZCHm2/LbY9NMc
-	CJymDw7+F+UWF/QxN+UjRBBPi74HpmYqiw4uZsEE94nKmpjBV5xH9o8uZ/3DjsDFtr9c12Mmud2
-	1YLnXbnvWR4ZdoT8FF0ZFqYG3ke6kZ7njn4SnkTw==
-X-Google-Smtp-Source: AGHT+IHfTiRsjOnMwAynan9LOvPqDmjC2nm6QOrpvZK/BiOoKhMq5MVjGe3vyD/jJGgU5d35MZnMsQ==
-X-Received: by 2002:a17:903:19c3:b0:295:551b:4654 with SMTP id d9443c01a7336-2986a6ec988mr179562065ad.23.1763451029659;
-        Mon, 17 Nov 2025 23:30:29 -0800 (PST)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:beba:22fc:d89b:ce14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2568ccsm163926215ad.50.2025.11.17.23.30.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 23:30:29 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>,
-	Yuwen Chen <ywen.chen@foxmail.com>,
-	Richard Chang <richardycc@google.com>,
-	Brian Geffon <bgeffon@google.com>,
-	Fengyu Lian <licayy@outlook.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv4 6/6] zram: read slot block idx under slot lock
-Date: Tue, 18 Nov 2025 16:30:00 +0900
-Message-ID: <20251118073000.1928107-7-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-In-Reply-To: <20251118073000.1928107-1-senozhatsky@chromium.org>
-References: <20251118073000.1928107-1-senozhatsky@chromium.org>
+	s=arc-20240116; t=1763451457; c=relaxed/simple;
+	bh=XOOlkN0aL+OoJdRPCT5xyLVacHRYC1wT1iuJsoUkXBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=sxEFKJ7otw8cJH29oXWLUU7E6eAhQq4CoUktfe43Xr8XubcO7S60tW4fMcjWjY5JbckA2nd4C4y1reNNthcTnWGOcDjVwBrM0OpA6sJoOSpmn53hoPW4MnzHqIoil+Ek9s4/V1hpGBZU7oKi0UIABqC9lmBcjF5PZtiEtPACkpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MZDdfZsK; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20251118073727epoutp015df97f6f75807026161c1211ca1f0f5a~5Cb937vHC2095320953epoutp01H
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 07:37:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20251118073727epoutp015df97f6f75807026161c1211ca1f0f5a~5Cb937vHC2095320953epoutp01H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1763451447;
+	bh=BHaUIBoD00HUcf0qQiEBwUpSb7I9GehLZfnyc20IQeY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=MZDdfZsKLgKAO+/avpc9dlQDlgSHm/PqnQp6ms5ASeQDL5wf4Sb2kM7jfaXx9qo1Z
+	 vt9eE/tXUGygUUu59sqiFh9CoiXZMYtSlcZgfwlon2uwv1F7/s4f6pHqFDHQUTwUSP
+	 JzHaC0ZUrTZN4ISaVwM1FzEAh6GUDlvXUCU8dQl8=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20251118073726epcas5p281a7d55af3b1f3a5c9963d838ffc9138~5Cb9cQ6i72821028210epcas5p2E;
+	Tue, 18 Nov 2025 07:37:26 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.95]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4d9bzn3flmz6B9mY; Tue, 18 Nov
+	2025 07:37:25 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251118073708epcas5p141bfdb82151031d41cc4c6c5e606a90f~5CbscGup92808228082epcas5p1g;
+	Tue, 18 Nov 2025 07:37:08 +0000 (GMT)
+Received: from node122.. (unknown [109.105.118.122]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251118073707epsmtip298ad79e250cc38692bf1805ded76e91b~5Cbr0uHvf2316923169epsmtip2I;
+	Tue, 18 Nov 2025 07:37:07 +0000 (GMT)
+From: Xue He <xue01.he@samsung.com>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hexue
+	<xue01.he@samsung.com>, Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH v7 RESEND] block: plug attempts to batch allocate tags
+ multiple times
+Date: Tue, 18 Nov 2025 07:32:30 +0000
+Message-Id: <20251118073230.261693-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -95,42 +73,131 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251118073708epcas5p141bfdb82151031d41cc4c6c5e606a90f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251118073708epcas5p141bfdb82151031d41cc4c6c5e606a90f
+References: <CGME20251118073708epcas5p141bfdb82151031d41cc4c6c5e606a90f@epcas5p1.samsung.com>
 
-Read slot's block id under slot-lock.  We release the
-slot-lock for bdev read so, technically, slot still can
-get freed in the meantime, but at least we will read
-bdev block (page) that holds previous know slot data,
-not from slot->handle bdev block, which can be anything
-at that point.
+This patch aims to enable batch allocation of sufficient tags after
+batch IO submission with plug mechanism, thereby avoiding the need for
+frequent individual requests when the initial allocation is
+insufficient.
+-----------------------------------------------------------
+HW:
+16 CPUs/16 poll queues
+Disk: Samsung PM9A3 Gen4 3.84T
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+CMD:
+[global]
+ioengine=io_uring
+group_reporting=1
+time_based=1
+runtime=1m
+refill_buffers=1
+norandommap=1
+randrepeat=0
+fixedbufs=1
+registerfiles=1
+rw=randread
+iodepth=128
+iodepth_batch_submit=32
+iodepth_batch_complete_min=32
+iodepth_batch_complete_max=128
+iodepth_low=32
+bs=4k
+numjobs=1
+direct=1
+hipri=1
+
+[job1]
+filename=/dev/nvme0n1
+name=batch_test
+------------------------------------------------------------
+Perf:
+base code: __blk_mq_alloc_requests() 1.47%
+patch: __blk_mq_alloc_requests() 0.75%
+------------------------------------------------------------
+
 ---
- drivers/block/zram/zram_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+changes since v1:
+- Modify multiple batch registrations into a single loop to achieve
+  the batch quantity
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 93365811781b..77d0e636e053 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1980,14 +1980,14 @@ static int zram_read_page(struct zram *zram, struct page *page, u32 index,
- 		ret = zram_read_from_zspool(zram, page, index);
- 		zram_slot_unlock(zram, index);
- 	} else {
-+		unsigned long blk_idx = zram_get_handle(zram, index);
-+
- 		/*
- 		 * The slot should be unlocked before reading from the backing
- 		 * device.
- 		 */
- 		zram_slot_unlock(zram, index);
--
--		ret = read_from_bdev(zram, page, zram_get_handle(zram, index),
--				     parent);
-+		ret = read_from_bdev(zram, page, blk_idx, parent);
- 	}
+changes since v2:
+- Modify the call location of remainder handling
+- Refactoring sbitmap cleanup time
+
+changes since v3:
+- Add handle operation in loop
+- Add helper sbitmap_find_bits_in_word
+
+changes since v4:
+- Split blk-mq.c changes from sbitmap
+
+changes since v5:
+- Add workload with perf
+- Modify over-counting bug
+
+changes since v6:
+- Modify parameters
+
+Signed-off-by: hexue <xue01.he@samsung.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+ block/blk-mq.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d626d32f6e57..6b22c2c4eb4e 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -467,21 +467,26 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_data *data)
+ 	unsigned long tag_mask;
+ 	int i, nr = 0;
  
- 	/* Should NEVER happen. Return bio error if it does. */
+-	tag_mask = blk_mq_get_tags(data, data->nr_tags, &tag_offset);
+-	if (unlikely(!tag_mask))
+-		return NULL;
++	do {
++		tag_mask = blk_mq_get_tags(data, data->nr_tags - nr, &tag_offset);
++		if (unlikely(!tag_mask)) {
++			if (nr == 0)
++				return NULL;
++			break;
++		}
++		tags = blk_mq_tags_from_data(data);
++		for (i = 0; tag_mask; i++) {
++			if (!(tag_mask & (1UL << i)))
++				continue;
++			tag = tag_offset + i;
++			prefetch(tags->static_rqs[tag]);
++			tag_mask &= ~(1UL << i);
++			rq = blk_mq_rq_ctx_init(data, tags, tag);
++			rq_list_add_head(data->cached_rqs, rq);
++			nr++;
++		}
++	} while (data->nr_tags > nr);
+ 
+-	tags = blk_mq_tags_from_data(data);
+-	for (i = 0; tag_mask; i++) {
+-		if (!(tag_mask & (1UL << i)))
+-			continue;
+-		tag = tag_offset + i;
+-		prefetch(tags->static_rqs[tag]);
+-		tag_mask &= ~(1UL << i);
+-		rq = blk_mq_rq_ctx_init(data, tags, tag);
+-		rq_list_add_head(data->cached_rqs, rq);
+-		nr++;
+-	}
+ 	if (!(data->rq_flags & RQF_SCHED_TAGS))
+ 		blk_mq_add_active_requests(data->hctx, nr);
+ 	/* caller already holds a reference, add for remainder */
 -- 
-2.52.0.rc1.455.g30608eb744-goog
+2.34.1
 
 
