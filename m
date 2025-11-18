@@ -1,91 +1,66 @@
-Return-Path: <linux-block+bounces-30523-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30521-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3057BC678DF
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 06:28:37 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B66AC6787E
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 06:26:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CB47035F9C3
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 05:26:57 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9AB3434DF28
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 05:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6C02D4B71;
-	Tue, 18 Nov 2025 05:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EuTtQvZJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02382C0266;
+	Tue, 18 Nov 2025 05:18:31 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105B2DAFA7
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 05:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2EC2D3EFC;
+	Tue, 18 Nov 2025 05:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763443372; cv=none; b=uzr/Wl/sswWXQbTI68CZpGXms9D/NFfKX5iZMRz/FtedYLTZi+0o/ZIiEYFVwWyjkCcgtJdhjxwW2mpcE72znmS+8xPQ+bhe5V84XQCs6QpxQEoKBij6EuYcAKS9z8ir1zxSQL0Mau2mYEdhCk97wRDC9ei0SSuGoGUVCaJX3Gc=
+	t=1763443111; cv=none; b=n2kywN2aGI7N6x7S8WJBxa8n8KAXe+pc3bX2gmiojYRBBt/KbhTqrZvnUrUq81oPlAWoNgy+XpNIepATGS/RIu8bAg8KwKa0N7bffHWR2EwEHa+dY036DZsADJ0H/QOU2ajq4P78HKg6KJUSAADIbCWMwm79MGIqxzA+lS+xMz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763443372; c=relaxed/simple;
-	bh=4Q48GvKGVTbBdZAVXAqb/DKb6mVp+XlqjRaPiSr97JI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=VpqRhkKpL0wK4CNnTdYWLVm/0vuOXefqSpwK7jonhWNQ8y2HfrYPYXnLw5Dee8GXOjrdQnt4pJp3PyR52/T/TguZnM6j9WwCjBsnpvnL3isdHX8WzF9Zxwkz9m2WV8zbXjRN0uaNfC5tVnXzCw5GfCgQc8W9dLRlGKW1XfiDHDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EuTtQvZJ; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251118052247epoutp04b2074ce53558e7a6bbe7fbdfc4432991~5AmZNbjec0188501885epoutp04M
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 05:22:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251118052247epoutp04b2074ce53558e7a6bbe7fbdfc4432991~5AmZNbjec0188501885epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1763443367;
-	bh=4Q48GvKGVTbBdZAVXAqb/DKb6mVp+XlqjRaPiSr97JI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EuTtQvZJmEPkHFliJ19jBSxHcolEp2O4myZPCBLHaS6hUispy4thb2i3tC5PYpA0C
-	 qd6roaf6elo4hztzGJgWgUCkCHZEhUNx+kj2skKfugZxh2btiTvLkqr+La1635ZsGc
-	 oxuV5ymyNHL6fLU6YaLQYZyN87lEzEoAyZapzzHw=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20251118052246epcas5p1cb391f7ef1147a130ddcb76d2b89e89a~5AmYK806s2236822368epcas5p1I;
-	Tue, 18 Nov 2025 05:22:46 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.87]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4d9Y0P2RZmz6B9mG; Tue, 18 Nov
-	2025 05:22:45 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20251118052223epcas5p17eb1f4c8af3965b28ae89eae33998777~5AmCZHgCf0550305503epcas5p19;
-	Tue, 18 Nov 2025 05:22:23 +0000 (GMT)
-Received: from node122.. (unknown [109.105.118.122]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20251118052222epsmtip130d5a9b29ca730745aeb64c7b00495f2~5AmB0kwab3148531485epsmtip1i;
-	Tue, 18 Nov 2025 05:22:22 +0000 (GMT)
-From: Xue He <xue01.he@samsung.com>
-To: xue01.he@samsung.com
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ming.lei@redhat.com, yukuai@fnnas.com
-Subject: Re: [PATCH v7] block: plug attempts to batch allocate tags multiple
- times
-Date: Tue, 18 Nov 2025 05:17:47 +0000
-Message-Id: <20251118051747.260560-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251117124229.255796-1-xue01.he@samsung.com>
+	s=arc-20240116; t=1763443111; c=relaxed/simple;
+	bh=kTWW7uFhN7v1xGLsN05JUtJhQtK3pjAf1f5BzgYNWZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1l305pWMEDJD1U/Qt96fwo5Y+l8BMJ18JjLhGiwkH2URl++Fxorx+FJlkklodm4xV6xorFAwsfbMF50tExMAJ7BkzSDhpYmAwq4sKGXROANWqGX8oGh2Q0ppBd8BFdc3rnQn3X33q4qMqc+naCDpP3/7LJbcHKcVQPooXzLck4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 40E486732A; Tue, 18 Nov 2025 06:18:24 +0100 (CET)
+Date: Tue, 18 Nov 2025 06:18:23 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org, Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v2 1/2] nvme-pci: Use size_t for length fields to
+ handle larger sizes
+Message-ID: <20251118051823.GA21858@lst.de>
+References: <20251117-nvme-phys-types-v2-0-c75a60a2c468@nvidia.com> <20251117-nvme-phys-types-v2-1-c75a60a2c468@nvidia.com> <aRt5DPnMwzDw8_dF@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251118052223epcas5p17eb1f4c8af3965b28ae89eae33998777
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-505,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251118052223epcas5p17eb1f4c8af3965b28ae89eae33998777
-References: <20251117124229.255796-1-xue01.he@samsung.com>
-	<CGME20251118052223epcas5p17eb1f4c8af3965b28ae89eae33998777@epcas5p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRt5DPnMwzDw8_dF@kbusch-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-sorry, here was some misunderstanding, please ignore this, I will resend v7 patch.
+On Mon, Nov 17, 2025 at 12:35:40PM -0700, Keith Busch wrote:
+> > +	size_t total_len;
+> 
+> Changing the generic phys_vec sounds fine, but the nvme driver has a 8MB
+> limitation on how large an IO can be, so I don't think the driver's
+> length needs to match the phys_vec type.
 
-Xue He
+With the new dma mapping interface we could lift that limits for
+SGL-based controllers as we basically only have a nr_segments limit now.
+Not that I'm trying to argue for multi-GB I/O..
 
