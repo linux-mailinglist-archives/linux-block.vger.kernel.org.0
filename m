@@ -1,82 +1,71 @@
-Return-Path: <linux-block+bounces-30560-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30563-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A654C682F7
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 09:24:16 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCFC0C687BD
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 10:20:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 90446346FDD
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 08:22:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id C54892A6A3
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 09:20:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C31F2FFFB3;
-	Tue, 18 Nov 2025 08:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 692562F9DAF;
+	Tue, 18 Nov 2025 09:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="lDJcrCbG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y8nUOZMz"
 X-Original-To: linux-block@vger.kernel.org
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.50])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EDD2741A6;
-	Tue, 18 Nov 2025 08:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01432313530
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763454121; cv=none; b=Qvw2RJpwO7WiES0KM3TLIqJJQkMyExdLgnhTyVvQOogIED5ZOOLfQ5zfU98L2N5pMtkorqXk6ZwFbh+jHr7JwMp6S/1bHvOeXmGAipT/3K64UleK1/4kRhXx7vhCNvbabr79zfQjZFxbwQYmCbV5HsCThmzFiCp68ZWgh7Ni/xM=
+	t=1763457620; cv=none; b=eZz4xKQwsq+jqemVz3H7CZwNoUGqtVpnlUs+stu9A1eUPBYnDDvVxVNUlTAw+UlkRvJvMqmKnSTHOYyKJyG12NBcaogSvpXW9SoY20oPvhTh9eL5VkAmLG00xwXrzqT8eUb9N7tFZ9WW9hyp03ET+k9H/GFFhgd5fOUSWMXPrHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763454121; c=relaxed/simple;
-	bh=D7DPGFKVy0s48PVy6E1rMZw7G6d6Aqidjr0SNy6c4rg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=M/3b0tcH8WgY5FKM66sLtdJAybDbU9+DosrPgdVImSTalYFd5HnDDN8TRikY+PoRMhJV6GAuyOYfSCSWlW3A4yH/uqu6OCEctNojdaEEmmL0bdX75eomGSHsjkijLCRSyCjbnp9ITY+DJnFkPCiuMn1KecJJwObcpNR0BUJWFG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=lDJcrCbG; arc=none smtp.client-ip=43.163.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1763454111;
-	bh=D7DPGFKVy0s48PVy6E1rMZw7G6d6Aqidjr0SNy6c4rg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lDJcrCbGDutEvKP0OiWcrR82AoANoNRq6lwhx93tbn72Yw18s4at9aUs8muSDR3Cj
-	 a0hK+a7an92X+eNM5kJT8kFYxBgJO6iifM7PFVbuu0NdbVpICmhw+llx2BjCbW6ntK
-	 h26kMM02Pc1xx3YpTuBsI0BAOK9Bs6vQDDCikCB0=
-Received: from meizu-Precision-3660.meizu.com ([14.21.33.152])
-	by newxmesmtplogicsvrszb42-0.qq.com (NewEsmtp) with SMTP
-	id 57003039; Tue, 18 Nov 2025 16:21:48 +0800
-X-QQ-mid: xmsmtpt1763454108thf7bnbho
-Message-ID: <tencent_C4669CD835EF1C2ACFE58BB30BA60886BB05@qq.com>
-X-QQ-XMAILINFO: MwSgv9IoJFr1DNKAPmLPPGkCSjO832gac+Nkob40cHLFFVFi6viG110AHX/lJk
-	 MR9qQ2zKu7uIFRMc0T2nSW+57D3Xe9ulEwPrRvi2gv5kXyOgECUdJZMP6ZFF4dd4F0l4HiQwiRKe
-	 DEjO+5Kq4SRUfaM99XGjI6gBcOhYjnfJ28Alr++Rb/wQPQdcmA0MZXEK4V5CKM7+Rh9TLsLEOi8w
-	 CSj3lokmibcIMtWKnYaEkT9pDVj2hACBQJS+XhSoa9qnmhE0tWOoz1IPXyKUlXZgCcnPVRkcMi6B
-	 P4f1OgVdTiRqfxUzfjAfmYhWBsyNNjY/k6OTMZUVoLgB7+XKC3f4EqkwAjQdQHQ6Hcj4G/1cmSn/
-	 jXmuM2D8gELGqM+BoRv/RzhM2hQMX3Z9kOuTMsWVBpimU8T9BjAikA+UibiSG3VjZsDkvaVs6qTF
-	 l/LBgYw9bnZ+D9LmrEP3kp9Ryv5SZyMvPZiQevfFPCT+Gs1Vlq/Kv0NxdgRUZuZn/+P3ZR5z+DFr
-	 m5SJFlyCfLOfov6ubPg0pZwmpU7/s0Mqc/KEg5lEWXtafAw7zCBOLK8fn3LI8yEpc/COCBSA2Gf8
-	 VQJ1hetHYzQodeBFtOdu/TbWi0JZ17Jfh/owuCMAAvl/gGZDlbZtE0nJma+jjBgoxL5OrQ6Uerd2
-	 W7Tp62zENKbTQyhmkbxHB47XkK7dlmLfxmWD90aIa8NkwxpUH3+pCKwxeaHNOCL1HsX6TcBXUxOd
-	 Z1fhagpZzP48TMF+8Uk0OuFY2TA7OZAn075dA7PKgnEO9nB5laVJTllbXne5INMGGwiO0EqECSBG
-	 T45OrFcPAmuOzP2LSGkXuJrjq6JJyC0Ia0N+LknC3nRjexvrnPxGMTQnIi3b2OYiRdoKqC1PqbX3
-	 XXW6k1K11kHfw5XS0C9YcKZYdC2ihpP5N8FA//xG6HHbX6MlPB6sCp82Q64e5UI4pCSYTH+fboEt
-	 GMZJZR36Wy73ZU0FtKn+Li+/PbHZwWnOw5T6PjoZ4WzIz9zEEW8ZwMXiWDP402DsbRP4oITO/ynS
-	 9UtWqZBjwN+45cspLEDMXV/jQM3iEoZy6XjAyNxqrcedUqEsEyAnwSp+X1tpaFHXaB2eVlo1y07i
-	 pKFvll
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yuwen Chen <ywen.chen@foxmail.com>
-To: senozhatsky@chromium.org
-Cc: akpm@linux-foundation.org,
-	bgeffon@google.com,
-	licayy@outlook.com,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	minchan@kernel.org,
-	richardycc@google.com,
-	ywen.chen@foxmail.com
-Subject: Re: [PATCH] zram: Fix the issue that the write - back limits might overflow
-Date: Tue, 18 Nov 2025 16:21:47 +0800
-X-OQ-MSGID: <20251118082147.2809308-1-ywen.chen@foxmail.com>
+	s=arc-20240116; t=1763457620; c=relaxed/simple;
+	bh=C0Q7qF9E1LpKOgGd7xBp3qMorrebg2wkrsHauplX3Nk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=mOVm8SREYbkOuVP4DjO6Cip82kwr5puMrfiFsCgGDNC01oauER6Cs3Ap/EuxQS/UzqXtanNxn9Rod0JfsEhq31mfIDc35VOh5pYmJ/wHOX+kglT6ZN9OLlFeVlfkvV2WAgLcSL2nfQz3jWzG0TDb9ugW+CtRO+7lMfGvuZfoKok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Y8nUOZMz; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251118092014epoutp04d9992896a4f12046cca85a940cb3c6b3~5D1tyYkpJ1969619696epoutp04V
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:20:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251118092014epoutp04d9992896a4f12046cca85a940cb3c6b3~5D1tyYkpJ1969619696epoutp04V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1763457614;
+	bh=C0Q7qF9E1LpKOgGd7xBp3qMorrebg2wkrsHauplX3Nk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y8nUOZMzaalxLC1/euc4VPj1R75QCRprLbkj31A2N8kMv73aWLJmdIGKuTiCOkm38
+	 WzuZIWWgUYfV01BFVcjpPSgvH8kue4GlspMm+LeKPqlzLEucua4gh+dGKM5skbjTJj
+	 XDXkYU9hLWmhFoq/YLDti0GGqADC7Q+cccKjJlI8=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20251118092014epcas5p420878cbfe5f956002da64d80d8d94dc7~5D1tYgfGs1716017160epcas5p4B;
+	Tue, 18 Nov 2025 09:20:14 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4d9fGP4x85z3hhT3; Tue, 18 Nov
+	2025 09:20:13 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc~5DWaEYTTR0588205882epcas5p3U;
+	Tue, 18 Nov 2025 08:44:23 +0000 (GMT)
+Received: from node122.. (unknown [109.105.118.122]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251118084422epsmtip2c72c88944df9a4e273d874f9df3bdc0a~5DWZbZsxV3227032270epsmtip2j;
+	Tue, 18 Nov 2025 08:44:22 +0000 (GMT)
+From: Xue He <xue01.he@samsung.com>
+To: akpm@linux-foundation.org, axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai@fnnas.com
+Subject: Re: [PATCH] lib/sbitmap: add an helper of sbitmap_find_bits_in_word
+Date: Tue, 18 Nov 2025 08:39:46 +0000
+Message-Id: <20251118083946.262032-1-xue01.he@samsung.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <bo4g7erropsvl7vulufdsjqlkkbjycaounh2vv4a6urttxvubr@f22z5wlgntox>
-References: <bo4g7erropsvl7vulufdsjqlkkbjycaounh2vv4a6urttxvubr@f22z5wlgntox>
+In-Reply-To: <20251107054243.42628-1-xue01.he@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -84,16 +73,16 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc
+References: <20251107054243.42628-1-xue01.he@samsung.com>
+	<CGME20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc@epcas5p3.samsung.com>
 
-On (25/11/18 15:39), Sergey Senozhatsky wrote:
-> I really wish we could just change wb code to use PAGE_SIZE not 4K
-> units [1], unfortunately it's probably too late to change that now.
->
-> [1] https://lore.kernel.org/linux-kernel/20251110052741.92031-1-senozhatsky@chromium.org
-
-I've taken a look at the patch you submitted before. This is indeed
-a very frustrating thing. I'm not sure if we can make the change. If
-we can change it to use PAGE_SIZE, it will reduce a lot of unnecessary
-logic.
-
+Hi, any comments here...?
 
