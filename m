@@ -1,107 +1,93 @@
-Return-Path: <linux-block+bounces-30586-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30584-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9F9C6B1A1
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 19:07:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 436FFC6B12F
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 19:00:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CC25F4E13C9
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 18:06:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 788664E222A
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 17:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E99931ED6B;
-	Tue, 18 Nov 2025 18:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A3631ED86;
+	Tue, 18 Nov 2025 17:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="MH7Enokq"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="tkcpWsQ6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E882D876F;
-	Tue, 18 Nov 2025 18:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DE5339B20;
+	Tue, 18 Nov 2025 17:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763489169; cv=none; b=ePOFkL6YiDvOG92kl8JrrKewKf52aJjUf4grUm3pecFDBg3E5dtlvrUy0l8biNtYn5++8EQ20t9j8J/8sWWACZCZ1V+L3hkjrVnno4+ljvfavJ4SQUVY+nLP4Sgqye8f3Tcr76LptXQcYiUiTDSgv5x2XzgCBAi26Prgc+yee4M=
+	t=1763488704; cv=none; b=O1Z1fEjJX14yOfp7hWl7U5ep4LNtGPw0wJyqRnEfmPT/JUKy0l71Khww0Bp79r8H2yPinrsyj15BeTml34AGMOUqeP2kEZHVUNvTzhbpiHmmGJfjLZhmhCZjlpm7N81VkzwlF6h7mwcCDLqk0aSghzH0V7nkDfdbIW0hmBRin1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763489169; c=relaxed/simple;
-	bh=7k7sv/IgF0IVHrWcT/mvhIV0fNBMwMFgPnNI42cYxj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CfB0qSBHIK02ZPCpGhgeExldSL1cL+tn0tKdqfDtXeC9ZlPnJs4SEPgmiF0ehJ0yEu0rV8BIzEDiB+2r5+Mq9o9oUYqh23kV/ArpfYQQMDIV0jJNxYhr1cfEsF2HIOXIeVeDWtiseXZClsqfVJH72xnwh0E2tvJtI1Z/EMOamd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=MH7Enokq; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id F07181C008F; Tue, 18 Nov 2025 18:56:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1763488596;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B60GSdZ3ZLwb5RwYNK/6Y5TS9j/ssMyxcD+Zg0X+hcU=;
-	b=MH7EnokquyyfGAXphMgN/Lf+iik76ecs1OcyItQ/M/IZNygyROV13ScCkDIrq2mAuBC93D
-	AOItBqWS9ZKj8iWtIrZ7AD3cCOzH3uQG49erotfHR/N5F8UTpQavtMWhD/7/9XbuUUf4un
-	cwVcIdqh0AmD76zrXoWN7+SYDY2ZnUc=
-Date: Tue, 18 Nov 2025 18:56:33 +0100
-From: Pavel Machek <pavel@ucw.cz>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-	linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-	Eric Dumazet <eric.dumazet@gmail.com>,
-	syzbot+e1cd6bd8493060bd701d@syzkaller.appspotmail.com,
-	Mike Christie <mchristi@redhat.com>,
-	"Richard W.M. Jones" <rjones@redhat.com>,
-	Yu Kuai <yukuai1@huaweicloud.com>, linux-block@vger.kernel.org,
-	nbd@other.debian.org
-Subject: Re: [PATCH] nbd: restrict sockets to TCP and UDP
-Message-ID: <aRyzUc/WndKJBAz0@duo.ucw.cz>
-References: <20250909132243.1327024-1-edumazet@google.com>
+	s=arc-20240116; t=1763488704; c=relaxed/simple;
+	bh=gXLYFoI5HKY7XzkdKe3wBPCOcpuojDRXTSnfYbyW4Do=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YiF6XKfYMEPzXlLSobYGM9kDrXKg26h+hS3KN7J9be8sJjU2x025m1DKzUxbghgudYJaXqI1tRK/SYJ6i7Y7ld3186Yz1IX3B/fMOc91o852j1mjkOl9l3uE0CqBFk+yE4b3orF/18IxBOlj4Byu8jTJFbwvg0Ln/HhecewoV3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=tkcpWsQ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDAEC19424;
+	Tue, 18 Nov 2025 17:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1763488704;
+	bh=gXLYFoI5HKY7XzkdKe3wBPCOcpuojDRXTSnfYbyW4Do=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tkcpWsQ6wQ6ft+VT1F4eerpYqic8MpMrWBidA6eNKsiaEuYYzbOBCnXiIjI9MPngY
+	 Bc3J4n5aYkUOXdje5HtrVyQQr5TJpUzkCy1vIM9+bsCW5JR8cDh8dsMoanlYWpLMo9
+	 cBdJ/a/HvkXNNfhHF3kURONhqZwQq8HcSotl9qsI=
+Date: Tue, 18 Nov 2025 09:58:21 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuwen Chen <ywen.chen@foxmail.com>
+Cc: senozhatsky@chromium.org, bgeffon@google.com, licayy@outlook.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, minchan@kernel.org, richardycc@google.com
+Subject: Re: [PATCH v2] zram: Fix the issue that the write - back limits
+ might overflow
+Message-Id: <20251118095821.ebea2deea23aea6921866aa8@linux-foundation.org>
+In-Reply-To: <tencent_2FEBA8888C5B7C3CC495E17C29EFE76BA805@qq.com>
+References: <tencent_2FEBA8888C5B7C3CC495E17C29EFE76BA805@qq.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="K4L5bQUTPLUWipwC"
-Content-Disposition: inline
-In-Reply-To: <20250909132243.1327024-1-edumazet@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 18 Nov 2025 16:15:50 +0800 Yuwen Chen <ywen.chen@foxmail.com> wrote:
 
---K4L5bQUTPLUWipwC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Since the value of bd_wb_limit is an unsigned number, when the
+> page size is larger than 4 KB, it may cause an out-of-bounds situation.
 
-Hi!
+Please update the changelog to fully describe this out-of-bounds
+situation.  Where does it occur, why, how, with what effects?
 
-> Recently, syzbot started to abuse NBD with all kinds of sockets.
->=20
-> Commit cf1b2326b734 ("nbd: verify socket is supported during setup")
-> made sure the socket supported a shutdown() method.
->=20
-> Explicitely accept TCP and UNIX stream sockets.
+> This patch fixes the issue by limiting bd_wb_limit to be an
+> integer multiple of PAGE_SIZE / 4096.
 
-Note that running nbd server and client on same machine is not safe in
-read-write mode. It may deadlock under low memory conditions.
+I don't see at all how clearing the lower 11 bits is related to "page
+size is larger than 4 KB".
 
-Thus I'm not sure if we should accept UNIX sockets.
+All quite confusing!
 
-Best regards,
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, Netanyahu and Musk!
+> --- a/drivers/block/zram/zram_drv.c
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -579,6 +579,7 @@ static ssize_t writeback_limit_store(struct device *dev,
+>  	if (kstrtoull(buf, 10, &val))
+>  		return ret;
+>  
+> +	val = val & (~((1UL << (PAGE_SHIFT - 12)) - 1));
 
---K4L5bQUTPLUWipwC
-Content-Type: application/pgp-signature; name="signature.asc"
+Needs a little comment, I suggest.
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaRyzUQAKCRAw5/Bqldv6
-8tyOAKCF3uzSNUZFstOM2a3oNq/GuSt5dACgvt2eK+xctfVYARwjKgQ5MLSpl+U=
-=Jlm+
------END PGP SIGNATURE-----
-
---K4L5bQUTPLUWipwC--
+>  	down_write(&zram->init_lock);
+>  	zram->bd_wb_limit = val;
+>  	up_write(&zram->init_lock);
+> -- 
+> 2.34.1
 
