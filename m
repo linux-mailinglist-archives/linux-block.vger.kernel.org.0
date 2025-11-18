@@ -1,110 +1,128 @@
-Return-Path: <linux-block+bounces-30562-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30564-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CEAC6871A
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 10:12:32 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9935C68E9A
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 11:51:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1F85D358587
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 09:09:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 83A232450E
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 10:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFA4B2D97A0;
-	Tue, 18 Nov 2025 09:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279F929346F;
+	Tue, 18 Nov 2025 10:51:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PK9Dwd3Y"
+	dkim=pass (2048-bit key) header.d=linbit-com.20230601.gappssmtp.com header.i=@linbit-com.20230601.gappssmtp.com header.b="w4RlXiKJ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0262F8BC8
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65452EF66E
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 10:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763456982; cv=none; b=UW1SAh73BGbs+MDFtSwLUA4zWpgc3/MO7WptTaP2hW1/CY3tjzhQlb8EyAI0GsNRpu4p1i/xxOEog2wcrGduHhq4VaqymciEBEFegk5Z63pLFe8DxLOL3xY9B9fTbaKm8sOYiVcypzyAyKVaT1TpxIycoO5QB/pppXwfacgsDxc=
+	t=1763463069; cv=none; b=oLqd4VZE28grey3VvCfIsIWpNQXxv1Bl2pMCPmA5oW6SIpueizDmxSzRc1rlMRKhSC1fFikxWYyet5SzTv0aIP0MI0wcw1GDzV1Ibd0r5JCtA0j1gYKGd5tge406KCvMzVZZNUPjjGyyMF6TAifoQ6dUe/Dq9lgu39Tiu6xvYC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763456982; c=relaxed/simple;
-	bh=YoHE8hp2i1KX2JI1FOp1afYS6Cs1Km7WJ0bcBoqu2UE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q3SFBlYAhjQlDwvjFVW3pnl2v3PZyvTLU0UmZj4H6QNnOfq4OXk1nI+ESXNDzdfMyVay3ZyDwGvZ3W6loNkzSEUddAL1QYdnrrhudKUo/RWgqCqsbMQZh2ovgzisbouVus+lf2L7cyi7yyP5hsMrbQwwgwbsqOxim6jJ3dLCceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PK9Dwd3Y; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5957e017378so6078118e87.3
-        for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 01:09:40 -0800 (PST)
+	s=arc-20240116; t=1763463069; c=relaxed/simple;
+	bh=6shwcW6vxfbPyUO+4LON7yqfRMppLSv3cCqoWlpmI1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mGJAARLX6SJ0j1Iddz7lHw2K10emGQBTge9/kgm585eCnpmHGMUyMPSUqXNHUp+NjIeuSgmQ2Te0zA01Rp6GIHcwTNIRAd+uzoFsZu7ou7E4GOoc629KBqE0jAJokn32GvBezx9QVgH3E1FuLEGCHhFC+Um7820r/0XtLfvL8lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linbit.com; spf=pass smtp.mailfrom=linbit.com; dkim=pass (2048-bit key) header.d=linbit-com.20230601.gappssmtp.com header.i=@linbit-com.20230601.gappssmtp.com header.b=w4RlXiKJ; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linbit.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640b0639dabso9375907a12.3
+        for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 02:51:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763456979; x=1764061779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YoHE8hp2i1KX2JI1FOp1afYS6Cs1Km7WJ0bcBoqu2UE=;
-        b=PK9Dwd3YCAyrqYCvMXH4j5AORZfF8eH5QlgPh7t/U5KzcFyRALvRH0JJRXQJ5CxM+c
-         SntCkhUQmeJzLZ+UF2g1l9EF+Y5sseW61C+Q8zaw1MyRkUz1B/CHN5cKduwPaW9uqr0I
-         rOsDgYUQWlImqzrWEtqZzx3/odr4E1qOJzTX0d+bMrvaoGjTS39hbzHD0xIboLuUv7m3
-         4qOEhL1x+qCFm24YIPTNg3ckjI7C4BrdNNJb6fXa1HPdn+OHQEdyRichA75UsurJS9t5
-         g6U7wnhsT6Vf5zTw/aQWhBeAyLClC6siLTuACYcClrXIK60wiwZ66omsUrho1uWN8/cr
-         /xkw==
+        d=linbit-com.20230601.gappssmtp.com; s=20230601; t=1763463064; x=1764067864; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jGdM1wJoXGQz7bm128xRbuaPqwpiMtIqZbrUwM7E1+I=;
+        b=w4RlXiKJCD0yuZX9nkOseE2b155WLu7SHExaqQL6pG3JT4+3fpUrmFSRaQMmh0/qIT
+         mxqFfuvIdLoRBq7D5Aj+ZKGfFXHGPX+DqSQznQUXr9eyGX1XB0fm8jhrFGJDOWOayvmZ
+         eW+Y2oAOL3sW0xebXqp2miXhu5cqCf8qSHvD/SVjxzXmSshtzcdYd3CW0ifeuDi+t/HZ
+         qqx1RAuFRAqRYE2S4Het35T5qLvHSvrnVEr/k0NJQz4MZ2juVpPPSUtm9DXxlhp4ovyr
+         HyFTAbLiAIM127ipxSQK2zYR8rfb+Iwrri0dDkMVn7CZyeqzeTDlCPcSxNGZJu7S2493
+         CgVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763456979; x=1764061779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YoHE8hp2i1KX2JI1FOp1afYS6Cs1Km7WJ0bcBoqu2UE=;
-        b=JCLhT7/t4I/C1n0b3nG69GK1k5U4b1DUawpZtYKoM0vUhq2QvT4fYZT/QyCIDyrVjh
-         TdW5PwqURsjNGnWHz2rB9h/xVipOKPjlULOqRrrui1fk8R7mEZPChPxbM/1OlEzkH1kN
-         5bjHcDgzjtM97D2X9OF6+i5vdfJ+hq7fQuD4P8k9VQEcj0yNbRMqVvVkXqHRzGXfoHyz
-         JjWrHsjNtTXterPOfM9ZpJMWXkZ7Eeh0oRlNjAFiib7+baS4YG+bbe5vt290PX0QoOL2
-         Kwuz5bMy2btriDni1aZhK7uQX358WGGhSgkdgdUPznF8J56S893As+3JWhlT0kGoPhx4
-         X1Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0wxnaroIYNKTMWUkeV1PzEivP0tKsT4EnUIvbWa8WbuMxcUZm35V1BHvM7vhbvL9lWlUtxYFptbKYTA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMxsRDgvQn4OIdLb6nunned23jGjoIi3yf7n23vWEO6CcuwvSo
-	Jf+05dpu0OFre1ryAfgWQ3MoJIOtI/1DwqToToKoW1EipTtkJEoOt2FaJooeHg2Fokde9DSsVoW
-	HziIY4n0yGYQ3SH1BGVqzyZ9aQHkm0NU=
-X-Gm-Gg: ASbGncsHvSkykI7D5Cme9GCoQkUUifWCzG/QpdVdC7cFKwxN8OJJVfGd62v6wHsK1u4
-	C/GB8+iL0jZfqQjIwnPH21Nzh6MxLkUNK7jn5Yp87HC6OzoLu922fM3JncXgBDm9sgDdXJMG9lg
-	bc1psSWcIysNzOHUQKo108MG7pCUyNygYWTffIOwUVN3JY2p078GZ1Qrup1T7is8i5gfFkeBLTA
-	1HrhCvppt8NfjieK8qvyG0KxKnGLkSNylvRG800eRcakoi7zNNe+EC5TVUsU8Q32lJiTyCT9/J7
-	lbKFVVzgx0+1zj012nAQ9rUCgmMLow0vpI4o1lA=
-X-Google-Smtp-Source: AGHT+IE/uU2RhskqEwCPV5Xh65lsa6xSHbo8Buss+DjCMC8KyUkuat+m6Bi999yJJzhXnwmrobG75Ra704tETyHlW38=
-X-Received: by 2002:a05:6512:3b0d:b0:594:5685:94ce with SMTP id
- 2adb3069b0e04-59584213a5dmr5447072e87.48.1763456978696; Tue, 18 Nov 2025
- 01:09:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763463064; x=1764067864;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGdM1wJoXGQz7bm128xRbuaPqwpiMtIqZbrUwM7E1+I=;
+        b=raOQWuU98emHMOddvQgr0Xrkt7YASgVyO1dsYPC+uPm8TkkDKA2VZxDUNnMBW2cNon
+         p4Bn4WKcfGzhXMd9jd9tHobjjPhxXOZs7eAsm2vcQD6o95JjGqA/4pluGtgtz7uVheg0
+         dazJVBKojkLUIA1BWf3PXhTKu+4amj8xtZXlXu5bT8DlOGRE7tbWB4ArFmAlFdzCio7C
+         LnczYv2tQ+UtGZov691W3OTBzwMAPBvWT3tFa52eip9ZyaopHQriSMFqI4900fnYmmj8
+         4yb8Fjcpckuhhro6CqTXhWuA9RQ5CN+lmIIkpuME2ZU4mfG5cq9sBiebmaxuOn01XDHk
+         LY3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUemEHkBQjWQzuwqlLDibMhKmsOIOseJC1dznAXWIzBsiXKOcf3Bb66Jjzuj2wFbOHoyoioi3viP9kEVg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmoMXDCLtk6i7oxXKO63Uyj0O1CMB9H/jDPmhKKq78RajrL+CL
+	W7rCedypkO1NKY89rd5i+NGBIYfKwUl/R5VKR0Msw0SqkFB1k5YaxTsdGg0oqleQa4Q=
+X-Gm-Gg: ASbGncureC3Kj1jaKDm0WjDfeat2MQ5VtS92a/dLvJ7g8OZraHT9qg19oG8l9XkyFBZ
+	r5+EmqIHXj4iw39uQfY/Bx0xuWLJEHk+wgqdeT9C4kl77RZwCeOF0EaFypXCFfjhufS1L50vBDY
+	1HDLXodGCbCwW4Ob/2VUh7zjpor5cauJqqOs9Mxxa3or7RzlVL3+an5SPBO9irIbKjTTTzqIpLr
+	dMnQcEmIVqfBUojnOHcugZE9xOmS3VBVe1bOOYb0zyiStZVNb6bpELvgJbTpg76WKJ5cZ6uKkEN
+	1plLO3I13kl3y7IN6MGKiDuAafGLlUFmUX7yVM0aPbLCsyL5gBdIxIRJqt6r29NmI75NVdFm/y5
+	aVG/Fm1UcbjjTkhZq7rSOVA0/kt9+lomUA7D8pkZqnHyeGi9sT4sTafWqNiP6oyJxRBPBE2wyei
+	0uRmHlp2IFQPdTOeQe/gFY8pS0HNU25O6DN1CUBkwHkIuoDvWTSZFxuBPYRAda1eMZGTqg95Yjp
+	KUfXmMvIe0eEw==
+X-Google-Smtp-Source: AGHT+IEWZK62eDgqge0iEYvyjOKSQ1p48XfRz0kdjUFIlAsN6sWTmoc4BYjlcjTS9bPeI5jtRT4qFw==
+X-Received: by 2002:a17:907:3d52:b0:b72:d9f1:75e5 with SMTP id a640c23a62f3a-b73678d9a41mr1737837266b.20.1763463063991;
+        Tue, 18 Nov 2025 02:51:03 -0800 (PST)
+Received: from [192.168.178.55] (h082218028181.host.wavenet.at. [82.218.28.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fad456bsm1351037766b.21.2025.11.18.02.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Nov 2025 02:51:03 -0800 (PST)
+Message-ID: <11f8aaaa-b5de-44dc-9263-5bdb506923ac@linbit.com>
+Date: Tue, 18 Nov 2025 11:51:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251117172557.355797-1-hsukrut3@gmail.com> <aRwNfiIWUVl5G0eX@infradead.org>
-In-Reply-To: <aRwNfiIWUVl5G0eX@infradead.org>
-From: sukrut heroorkar <hsukrut3@gmail.com>
-Date: Tue, 18 Nov 2025 14:39:26 +0530
-X-Gm-Features: AWmQ_bmSzlm8tpSKHFvMtfS5Kpi5L2PYKuN0eQgo0wyXv88tq_m9EqbpBxWv0QQ
-Message-ID: <CAHCkknrzdT1NkD1EGMPBGkamrg8fJY7Xu1GX6WjjPhquCyGQrg@mail.gmail.com>
-Subject: Re: [PATCH] drbd: add missing kernel-doc for peer_device parameter
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>, Lars Ellenberg <lars.ellenberg@linbit.com>, 
-	=?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>, 
-	Jens Axboe <axboe@kernel.dk>, "open list:DRBD DRIVER" <drbd-dev@lists.linbit.com>, 
-	"open list:BLOCK LAYER" <linux-block@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	shuah@kernel.org, david.hunter.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drbd: turn bitmap I/O comments into regular block
+ comments
+To: Sukrut Heroorkar <hsukrut3@gmail.com>,
+ Philipp Reisner <philipp.reisner@linbit.com>,
+ Lars Ellenberg <lars.ellenberg@linbit.com>, Jens Axboe <axboe@kernel.dk>,
+ "open list:DRBD DRIVER" <drbd-dev@lists.linbit.com>,
+ "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+Cc: shuah@kernel.org, david.hunter.linux@gmail.com
+References: <20251118090753.390818-1-hsukrut3@gmail.com>
+From: =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>
+Content-Language: en-US
+In-Reply-To: <20251118090753.390818-1-hsukrut3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 18, 2025 at 11:39=E2=80=AFAM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Mon, Nov 17, 2025 at 10:55:56PM +0530, Sukrut Heroorkar wrote:
-> > W=3D1 build warns that peer_device is undocumented in the bitmap I/O
-> > handlers. This parameter was introduced in commit 8164dd6c8ae1
-> > ("drbd: Add peer device parameter to whole-bitmap I/O handlers"), but
-> > the kernel-doc was not updated.
-> >
-> > Add the missing @peer_device entry.
->
-> Or just make it a non-kerneldoc comment as it doesn't document an
-> external API to start with.
->
-Thank you. I have sent another patch adhering to this suggestion.
+Am 18.11.25 um 10:07 schrieb Sukrut Heroorkar:
+> W=1 build warns because the bitmap I/O comments use '/**', which
+> marks them as kernel-doc comments even though these functions do not
+> document an external API.
+> 
+> Convert these comments to regular block comments so kernel-doc no
+> longer parses them.
+> 
+> Signed-off-by: Sukrut Heroorkar <hsukrut3@gmail.com>
+> ---
+> See: https://lore.kernel.org/all/20251117172557.355797-1-hsukrut3@gmail.com/t/
+> 
+>  drivers/block/drbd/drbd_bitmap.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+
+Thanks.
+
+Acked-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+
+-- 
+Christoph Böhmwalder
+LINBIT | Keeping the Digital World Running
+DRBD HA —  Disaster Recovery — Software defined Storage
+
 
