@@ -1,71 +1,92 @@
-Return-Path: <linux-block+bounces-30563-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30561-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCFC0C687BD
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 10:20:24 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5017C68708
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 10:11:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id C54892A6A3
-	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 09:20:23 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1ADDE348707
+	for <lists+linux-block@lfdr.de>; Tue, 18 Nov 2025 09:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 692562F9DAF;
-	Tue, 18 Nov 2025 09:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E74613016FB;
+	Tue, 18 Nov 2025 09:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y8nUOZMz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGdjJAjs"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01432313530
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66027308F2C
+	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763457620; cv=none; b=eZz4xKQwsq+jqemVz3H7CZwNoUGqtVpnlUs+stu9A1eUPBYnDDvVxVNUlTAw+UlkRvJvMqmKnSTHOYyKJyG12NBcaogSvpXW9SoY20oPvhTh9eL5VkAmLG00xwXrzqT8eUb9N7tFZ9WW9hyp03ET+k9H/GFFhgd5fOUSWMXPrHU=
+	t=1763456901; cv=none; b=fY2g1mOryL3oQ9K6H37nyuVEA+SOujG2pHWruFfNV4j/lce1DVBIl7dLrAX4KxlfTd0ULgGNW/saMFxrUbF9sQN0SbSMjFI7X8ns5RjsKZc6aeZUO2hm+nJ8Qb1VCWxlIEL1cIi1qLBBVF+MAG4cuOPHFyveoCmbF8ijbWx1eWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763457620; c=relaxed/simple;
-	bh=C0Q7qF9E1LpKOgGd7xBp3qMorrebg2wkrsHauplX3Nk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=mOVm8SREYbkOuVP4DjO6Cip82kwr5puMrfiFsCgGDNC01oauER6Cs3Ap/EuxQS/UzqXtanNxn9Rod0JfsEhq31mfIDc35VOh5pYmJ/wHOX+kglT6ZN9OLlFeVlfkvV2WAgLcSL2nfQz3jWzG0TDb9ugW+CtRO+7lMfGvuZfoKok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Y8nUOZMz; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251118092014epoutp04d9992896a4f12046cca85a940cb3c6b3~5D1tyYkpJ1969619696epoutp04V
-	for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 09:20:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251118092014epoutp04d9992896a4f12046cca85a940cb3c6b3~5D1tyYkpJ1969619696epoutp04V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1763457614;
-	bh=C0Q7qF9E1LpKOgGd7xBp3qMorrebg2wkrsHauplX3Nk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y8nUOZMzaalxLC1/euc4VPj1R75QCRprLbkj31A2N8kMv73aWLJmdIGKuTiCOkm38
-	 WzuZIWWgUYfV01BFVcjpPSgvH8kue4GlspMm+LeKPqlzLEucua4gh+dGKM5skbjTJj
-	 XDXkYU9hLWmhFoq/YLDti0GGqADC7Q+cccKjJlI8=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20251118092014epcas5p420878cbfe5f956002da64d80d8d94dc7~5D1tYgfGs1716017160epcas5p4B;
-	Tue, 18 Nov 2025 09:20:14 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.89]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4d9fGP4x85z3hhT3; Tue, 18 Nov
-	2025 09:20:13 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc~5DWaEYTTR0588205882epcas5p3U;
-	Tue, 18 Nov 2025 08:44:23 +0000 (GMT)
-Received: from node122.. (unknown [109.105.118.122]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20251118084422epsmtip2c72c88944df9a4e273d874f9df3bdc0a~5DWZbZsxV3227032270epsmtip2j;
-	Tue, 18 Nov 2025 08:44:22 +0000 (GMT)
-From: Xue He <xue01.he@samsung.com>
-To: akpm@linux-foundation.org, axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yukuai@fnnas.com
-Subject: Re: [PATCH] lib/sbitmap: add an helper of sbitmap_find_bits_in_word
-Date: Tue, 18 Nov 2025 08:39:46 +0000
-Message-Id: <20251118083946.262032-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251107054243.42628-1-xue01.he@samsung.com>
+	s=arc-20240116; t=1763456901; c=relaxed/simple;
+	bh=vkQlFPq8ocqHKInH2zJe6fSLDmytFJtiXmmnPZIRwpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qRpAvLrWtSjO81BH4Wrw1Ed0vVNdL5heJObDCDyZPhRlSB9KtiH12SUVJkPM4wMKTUnos78uxhE93BTFJlN338ROt8Bpx0BuQWDMMlDSl1wa4BZ7AxLY1mxFIMvxq/YT7bqsAW5FLP2+Id52uFS4xoc0kaZFepSVJ3kor76YyAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGdjJAjs; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2957850c63bso54346445ad.0
+        for <linux-block@vger.kernel.org>; Tue, 18 Nov 2025 01:08:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763456900; x=1764061700; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtXQT/OdWgiT+1HPVergpURbuzBj46MXXs88yjk/ACU=;
+        b=AGdjJAjswwYOdBcf0XAIY+5AQYQrOiwHfJvS4bM2ePrzNw6SV+Iim3NaCOUvBT5tG3
+         AGvHD/udhc3JVVstPQ3I6bjqM6CbIaKVNeEUDggVK05vtcCAr/lAnSvAImr1qSq960Xh
+         omSaqMwNKdeqWWMUdUlEEQzIB23nrEHNUhdwWo2dTKhjZr/b5v66oOfZj8LUBKDeGJs5
+         NsVE7kxYusoWXt3vC2MReT1dKW5Z25NB4ig4A5nno/FuK0Y/AryqtDG3umJkA7Mj01se
+         k7v8m94Aeqf3rf6DrYgrTPlAn4+SxvnVX8BJYaD0H4Q+tNdXaQ6Sx6rxlrmPQUCU1km2
+         7hEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763456900; x=1764061700;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wtXQT/OdWgiT+1HPVergpURbuzBj46MXXs88yjk/ACU=;
+        b=bOOS+B61nv/qGdZe0qqaObT38x9PFKQJZRk26UMFDVHorrAW6J5TnEizkd2eUxtlnI
+         WZwt9rOJc126+8grViKc6iRQBohmNfDVALyQbXURCBNpNa/ZPPZbECYfuvJycpQyfVAV
+         mGIAozilWVNjgnbTmzMms3e7b2jBfsv8mnXqLTl5CzxD4iE48ns0U8cOFda36QDSEAN8
+         YEaau9m2tPXdW60PQ2qcUn7jZGiuxm42GhdHFkmT6dk6N5Ol8yWn7+Dx1ZCajIAqkM7i
+         bMVtAlKQvYYwyEf7t5FuOdvnZVjZVdsYUdTDnt7MSwCHYqs2feODC9lE1DvrDFh0f/du
+         raiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUd68PfbnSrfzv8p7rIRKD5yhtmD8Z2buEBbA+pXEyrfCDbmd4nYF9plBHMaEctx+ISMYwJXqqvdL6xw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfZ9uwrA3X8S7ueGKp8YX5K9Eeiz2TTlRlq97B2GVNNntjIGJ9
+	EerRwJsY62saXTSQ0KjNOznNjcMVeeMS0HW1Sr8q1RYZm+SXLXLRoOsT
+X-Gm-Gg: ASbGnctHSR2x52E2mNPwgIvFyxaVtsue5NhwGz4fxO6/acl+Depz5V7ljejvvbrBYxI
+	4+g2nnMnYElkX2RgZuCcvC5gKHmKEg9zz3nGBqg8/UWsY6gjlXRJQyNO5LrzwqgwXxg5651gta0
+	Vb+c1s1wuwGrV37HwK+dNOXiAOTdyZu6NAYteZtIGH0j/dOAPaf5tUz4NWwj1wkhpmXoxGPtHcg
+	k4unSn30Re7pECUdyb1KX5lrwwezkbOoTQAiPGHT2pSyiNj/LdqIxL8SeLifGQBAYRIl/EyPxa2
+	oW9aawChzrUNheSb4LxM+2IGzemVhHhTM8Z68VgXGJGkNc+9Ejc6az35PD0/k5rcyIhed5mKcrc
+	fqpZvgDcwRSCWPRQKp3sallYuxIRwXOqmDN7N9MtVjnDtJ5NrunqjhnRFcVWPeJSE7N2r/JCce1
+	qx4nVoeEQcwruwjR4QtA==
+X-Google-Smtp-Source: AGHT+IFONSoGa0+pxHK7JiJvE0ZXp2Dp4GaKslWjRMI6qlRuZ4eG/9s+0oW21KZbEJFdUWjrjcUxMQ==
+X-Received: by 2002:a17:903:fab:b0:297:e6ca:c053 with SMTP id d9443c01a7336-299f55b8dffmr32294565ad.28.1763456899674;
+        Tue, 18 Nov 2025 01:08:19 -0800 (PST)
+Received: from hsukr3.. ([2405:201:d019:4042:80a6:7dd7:b597:d951])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0c9dsm166669745ad.67.2025.11.18.01.08.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 01:08:18 -0800 (PST)
+From: Sukrut Heroorkar <hsukrut3@gmail.com>
+To: Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	drbd-dev@lists.linbit.com (open list:DRBD DRIVER),
+	linux-block@vger.kernel.org (open list:BLOCK LAYER),
+	linux-kernel@vger.kernel.org (open list)
+Cc: shuah@kernel.org,
+	david.hunter.linux@gmail.com,
+	Sukrut Heroorkar <hsukrut3@gmail.com>
+Subject: [PATCH] drbd: turn bitmap I/O comments into regular block comments
+Date: Tue, 18 Nov 2025 14:37:53 +0530
+Message-ID: <20251118090753.390818-1-hsukrut3@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -73,16 +94,71 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-505,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc
-References: <20251107054243.42628-1-xue01.he@samsung.com>
-	<CGME20251118084423epcas5p30acae09ecb0f5d6baea59f2a866abdbc@epcas5p3.samsung.com>
 
-Hi, any comments here...?
+W=1 build warns because the bitmap I/O comments use '/**', which
+marks them as kernel-doc comments even though these functions do not
+document an external API.
+
+Convert these comments to regular block comments so kernel-doc no
+longer parses them.
+
+Signed-off-by: Sukrut Heroorkar <hsukrut3@gmail.com>
+---
+See: https://lore.kernel.org/all/20251117172557.355797-1-hsukrut3@gmail.com/t/
+
+ drivers/block/drbd/drbd_bitmap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/block/drbd/drbd_bitmap.c b/drivers/block/drbd/drbd_bitmap.c
+index 85ca000a0564..d90fa3e7f4cf 100644
+--- a/drivers/block/drbd/drbd_bitmap.c
++++ b/drivers/block/drbd/drbd_bitmap.c
+@@ -1210,7 +1210,7 @@ static int bm_rw(struct drbd_device *device, const unsigned int flags, unsigned
+ 	return err;
+ }
+ 
+-/**
++/*
+  * drbd_bm_read() - Read the whole bitmap from its on disk location.
+  * @device:	DRBD device.
+  */
+@@ -1221,7 +1221,7 @@ int drbd_bm_read(struct drbd_device *device,
+ 	return bm_rw(device, BM_AIO_READ, 0);
+ }
+ 
+-/**
++/*
+  * drbd_bm_write() - Write the whole bitmap to its on disk location.
+  * @device:	DRBD device.
+  *
+@@ -1233,7 +1233,7 @@ int drbd_bm_write(struct drbd_device *device,
+ 	return bm_rw(device, 0, 0);
+ }
+ 
+-/**
++/*
+  * drbd_bm_write_all() - Write the whole bitmap to its on disk location.
+  * @device:	DRBD device.
+  *
+@@ -1255,7 +1255,7 @@ int drbd_bm_write_lazy(struct drbd_device *device, unsigned upper_idx) __must_ho
+ 	return bm_rw(device, BM_AIO_COPY_PAGES, upper_idx);
+ }
+ 
+-/**
++/*
+  * drbd_bm_write_copy_pages() - Write the whole bitmap to its on disk location.
+  * @device:	DRBD device.
+  *
+@@ -1272,7 +1272,7 @@ int drbd_bm_write_copy_pages(struct drbd_device *device,
+ 	return bm_rw(device, BM_AIO_COPY_PAGES, 0);
+ }
+ 
+-/**
++/*
+  * drbd_bm_write_hinted() - Write bitmap pages with "hint" marks, if they have changed.
+  * @device:	DRBD device.
+  */
+-- 
+2.43.0
+
 
