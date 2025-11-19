@@ -1,143 +1,148 @@
-Return-Path: <linux-block+bounces-30648-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30644-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EE5C6DC97
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 10:42:18 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 361DDC6DCD6
+	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 10:45:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id F1EF12E1F7
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 09:40:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4F6B04FC519
+	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 09:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A374033DEF7;
-	Wed, 19 Nov 2025 09:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98DE34320C;
+	Wed, 19 Nov 2025 09:39:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VJCLTLmK"
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="DLC4/x2n"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7737D248891
-	for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 09:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AE334164B
+	for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 09:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763545181; cv=none; b=i+1VH+bUb0p0paEk5nfIAaw+p2VWkaKMwziWRiEboqVn8wUX57Okp8C6hX6kt051qtpM1YczyAhuUSbsQnGtAJG81vRGALWYCKlffWMLTg1E/F7zmdPEEuTL4btOseXqaPB86uhcDKQpiwoyTnY0EuzSqsOne2x8SeqaJBQZ/Sw=
+	t=1763545170; cv=none; b=tCgrejzqNZlP4fU5NRh/cG4QVUrPkIp3Ib1CnnP6YNDcfE4K1hOpPDPU1wzYa0LWYnAMm5utUxGupVkidl384SiJINdWqGfrwcWjZ5f3O3ymnjsP7lURHWx5Z9KPAypR/pvhWAfaWIAVYow+rVxAptfdmJ1zqLXk3/uGFbG18aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763545181; c=relaxed/simple;
-	bh=pJGRdc/yidzgt+J1ItkoWkHLZH4yZ6cs2A81oZjy6cY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1O4pa/fsdMNhYJd3rYrTUO1ShU6fMfbZTt8PNy7t1uq7vxBjhtTTvnIwhGphopFRDwoPxg015xxZLzlXW7GabfJOS6WpkKfw/8PAuoGm+iZYdBq5F2Wh3vwSJd9i/gUg8alfcHRvePiddKRSkDigWqkOVQOSpC1Ye74WN4ehIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VJCLTLmK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763545178;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eGpYKdce/STz11xOFdKbTNhd7IWLHhV+9HmVc9QSEjY=;
-	b=VJCLTLmKk+c6f3KPqr0XeriXciXrDgFK4qsA8OfD6+n5w6osgMmerzFJp9jjAUZTdB/Xfi
-	RLyNtaacSwXFmNpDUe0ww3ePRSSKnedwPZYpmnEZz8FeQPZml2Dci8ebRdQgrEb+fEz/Fm
-	tM25fzsz1qvtIs/5YF9u+JUE0cxxD+U=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-woRfCEENObmqWsFuil0UEg-1; Wed,
- 19 Nov 2025 04:39:37 -0500
-X-MC-Unique: woRfCEENObmqWsFuil0UEg-1
-X-Mimecast-MFC-AGG-ID: woRfCEENObmqWsFuil0UEg_1763545176
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1844518D95D1;
-	Wed, 19 Nov 2025 09:39:36 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.74])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1EA08300A88D;
-	Wed, 19 Nov 2025 09:39:34 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 3/3] loop: disable writeback throttling and fix nowait support
-Date: Wed, 19 Nov 2025 17:38:53 +0800
-Message-ID: <20251119093855.3405421-4-ming.lei@redhat.com>
-In-Reply-To: <20251119093855.3405421-1-ming.lei@redhat.com>
-References: <20251119093855.3405421-1-ming.lei@redhat.com>
+	s=arc-20240116; t=1763545170; c=relaxed/simple;
+	bh=828wriRukm1Hscc/LN/b8y2buq2ikPiwc62EzahKk4M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rgNwalaO7HBmwIceNuvqO/nuxg4BDLcw0sarXKvSfynCKJhJOickvtRthqScbSBtyjSdSYUNBbWiBD765A83aeSviG1FqsxbSLxWkbWe8yhBo8wjh6zoN0meTI23dk8XHgOWkdCxlyxFuUoa+eDRUq8kJiHJ4jP817ZjW7l8zz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=DLC4/x2n; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=L1lb9SIBvAoXaP5z2fRMc4ltZB6rjV+5yohY+QhUbZw=; t=1763545166;
+	x=1764149966; b=DLC4/x2nFw5ec3XQT/RuB7kOiywXu0ENP/wPMgmHwarcMuBcgGSDYReT60qPT
+	X3mVbkDIfKuHkOuM/HDIIi0GuWVQiE37cwd0vA355vRAfU7DBOyFyjnPIVYFY7SbMowwgy8dJMRsy
+	9f64fd1kFKCixDcFVMauHEKIIj4iQ6JSwcrCQf3ARKXLYMDqYr1GMbnVDJwhUU77FlIMbyVfOARcN
+	q1cOpF5+tle+eOK5d4mHcBR6YqdZTqDs6t9o+9XO+A8Ao5e+qzwnzi0sdyPnB+x3aEPlZ3e1uY5QL
+	OzLZWv322DH1GxpFyyBV+LjvVqiTbhy8/utoAMhDXZJ8ydC16w==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1vLeeq-00000001jqW-2ryU; Wed, 19 Nov 2025 10:39:24 +0100
+Received: from tmo-084-142.customers.d1-online.com ([80.187.84.142] helo=[172.20.10.2])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1vLeeq-00000001fmi-1rVr; Wed, 19 Nov 2025 10:39:24 +0100
+Message-ID: <792a2d8cc1204c5b3fee76826ab24569c1fa152e.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] fix floppy for PAGE_SIZE != 4KB
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: =?ISO-8859-1?Q?Ren=E9?= Rebe <rene@exactco.de>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	efremov@linux.com, Nick Bowler <nbowler@draconx.ca>
+Date: Wed, 19 Nov 2025 10:39:23 +0100
+In-Reply-To: <1E5D751F-0DCE-4AE2-9DC5-4D9EF0D8FA8E@exactco.de>
+References: <b1e17016-3d4d-4fac-b5b0-97db357d0749@kernel.dk>
+	 <20251114.172543.20704181754788128.rene@exactco.de>
+	 <fec67c88-53f5-4482-aeef-86e1213d187e@kernel.dk>
+	 <20251114.192119.1776060250519701367.rene@exactco.de>
+	 <708B7962-86CD-489B-AC33-4B929F2902B6@exactco.de>
+	 <c8cbccc1-964c-43ce-a992-624d2efcfd4a@kernel.dk>
+	 <57be21424d0e23142ea67ca9de3ca4ca033e1ee7.camel@physik.fu-berlin.de>
+	 <900D7C37-DF73-49D5-950D-81D84D6DA9CD@exactco.de>
+	 <4d3482372549a7746c639299c50319bad6b4b6c7.camel@physik.fu-berlin.de>
+	 <1E5D751F-0DCE-4AE2-9DC5-4D9EF0D8FA8E@exactco.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Disable writeback throttling by default for loop devices to avoid deadlock
-scenarios when RQOS features are enabled. This way is fine for loop
-because the backing device covers writeback throttle too.
+Hi,
 
-Update lo_backfile_support_nowait() to check both backing file's
-FMODE_NOWAIT support and the queue's QOS enablement status. This prevents
-deadlocks in submit_bio() code path when RQOS takes online wait and blocks
-backing file IOs.
+On Wed, 2025-11-19 at 10:24 +0100, Ren=C3=A9 Rebe wrote:
+> Hi,
+>=20
+> > On 19. Nov 2025, at 10:22, John Paul Adrian Glaubitz <glaubitz@physik.f=
+u-berlin.de> wrote:
+> >=20
+> > On Wed, 2025-11-19 at 10:12 +0100, Ren=C3=A9 Rebe wrote:
+> > > > > Yep we can do that. It'd be great if we could augment the change =
+with
+> > > > > what commit broke it, so it can get backported to stable kernels =
+as
+> > > > > well. Was it:
+> > > > >=20
+> > > > > commit fe4ec12e1865a2114056b799e4869bf4c30e47df
+> > > > > Author: Christoph Hellwig <hch@lst.de>
+> > > > > Date:   Fri Jun 26 10:01:52 2020 +0200
+> > > > >=20
+> > > > >   floppy: use block_size
+> > > >=20
+> > > > Yes, Nick Bowler (CC'ed) bisected it to this commit in [1].
+> > >=20
+> > > Nice, thanks!
+> > >=20
+> > > Carefully, it appears to be another commit though:
+> > >=20
+> > > > I bisected the failure to this old commit:
+> > > >=20
+> > > >  commit 74d46992e0d9dee7f1f376de0d56d31614c8a17a
+> > > >  Author: Christoph Hellwig <hch@lst.de>
+> > > >  Date:   Wed Aug 23 19:10:32 2017 +0200
+> > > >        block: replace bi_bdev with a gendisk pointer and partitions=
+ index
+> >=20
+> > Yes, you're right. I was briefly distracted when writing this mail.
+>=20
+> No worries, just checking. Should I send a new patch with the Fixes:
+> or can Jens just add it?
 
-Fixes: 0ba93a906dda ("loop: try to handle loop aio command via NOWAIT IO first")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/block/loop.c   | 13 ++++++++++++-
- include/linux/blkdev.h |  2 ++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+Jens picked the patch up for his block tree already [1], but he could still=
+ take
+a version 2 from you and force-push the new patch to his tree.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 705373b9668d..107760085ac5 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -443,9 +443,18 @@ static int lo_submit_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	return ret;
- }
- 
-+/*
-+ * Allow NOWAIT only if the backing file supports it, and loop disk's
-+ * RQOS feature isn't enabled.
-+ *
-+ * RQOS takes online wait in submit_bio() code path, and IOs to backing
-+ * file may be blocked, then deadlock is caused, see
-+ * submit_bio_noacct_nocheck().
-+ */
- static bool lo_backfile_support_nowait(const struct loop_device *lo)
- {
--	return lo->lo_backing_file->f_mode & FMODE_NOWAIT;
-+	return (lo->lo_backing_file->f_mode & FMODE_NOWAIT) &&
-+		!test_bit(QUEUE_FLAG_QOS_ENABLED, &lo->lo_queue->queue_flags);
- }
- 
- static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
-@@ -2250,6 +2259,8 @@ static int loop_add(int i)
- 	lo->idr_visible = true;
- 	mutex_unlock(&loop_ctl_mutex);
- 
-+	wbt_disable_default(disk);
-+
- 	return i;
- 
- out_cleanup_disk:
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index cb4ba09959ee..4ed2248c19ea 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -449,6 +449,8 @@ int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
- 		sector_t sectors, sector_t nr_sectors);
- int blk_revalidate_disk_zones(struct gendisk *disk);
- 
-+void wbt_disable_default(struct gendisk *disk);
-+
- /*
-  * Independent access ranges: struct blk_independent_access_range describes
-  * a range of contiguous sectors that can be accessed using device command
--- 
-2.47.0
+The proper tag would be:
 
+Fixes: 74d46992e0d9 ("block: replace bi_bdev with a gendisk pointer and par=
+titions index")
+
+It's up to Jens in any case.
+
+Adrian
+
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux.git/commi=
+t/?h=3Dfor-6.19/block&id=3D82d20481024cbae2ea87fe8b86d12961bfda7169
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
 
