@@ -1,119 +1,92 @@
-Return-Path: <linux-block+bounces-30643-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30645-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95E53C6DB7A
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 10:29:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CB7DC6DCE5
+	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 10:45:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9D8CE3A148C
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 09:24:31 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 85BAA349F4B
+	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 09:40:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A21130101A;
-	Wed, 19 Nov 2025 09:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0998340DB0;
+	Wed, 19 Nov 2025 09:39:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b="o63Xk2O8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C9UF+1im"
 X-Original-To: linux-block@vger.kernel.org
-Received: from exactco.de (exactco.de [176.9.10.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B002F5332
-	for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 09:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.10.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D3031A04F
+	for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 09:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763544267; cv=none; b=PF7xp7EmCtGQda+PUcxXE3EalfoMs4ugcchsbh1zNx52I4ZU/eA5mfS8deydbkWR6da7OE+0yKggWnAVmRtoUXgd5YFih5+5zzPEdC+pro/n71MSgkke15DFar6KrRXGLv/581smYBBqkwpnH3K7pQhI/daum5DVmETaMF18XHU=
+	t=1763545172; cv=none; b=SOUBg7Y4i047F4azaCrVZJtGYDYOU0epc6FO8DEFAejROzh4J0V8uLDl71/KxdFSrUOT0+p2Xkfrk17NsIoE3XK1AbyN3DTEtK2oJX+o5/HPwvzpHjq6UCs9ASW/22/jRNMtFQBbfzv27l6SpG82htr3GX+Oy7DQHHEtkt6u50Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763544267; c=relaxed/simple;
-	bh=A/YbrX7Nece/aQqAAYJa8NW35ANT3RkEPTuMGrcXrxE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=eRPYo42HB8DURhus/qvBnzUwmYZBuef60/KFvV246Ici/UJYuCoH+mXkgc/oifTUEQDTIb+q0BdVOBumU4D/k3eU+6xZK2Lt7tVOvCwaMTp60cNNgfiKtSWIEM+qUNFURUomSjxp+3HL0LmOrwOKYIhfxE1Le0A5Yfqt33TcQZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de; spf=pass smtp.mailfrom=exactco.de; dkim=pass (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b=o63Xk2O8; arc=none smtp.client-ip=176.9.10.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exactco.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de;
-	s=x; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:In-Reply-To
-	:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=2MPa91mXMDwUky2x4JD3NQGE7KuFbGDdg5+CBd03CaM=; b=o63Xk2O8rVtlZUBx48PwjZm9ze
-	bG2uWcEa1JE6I7jfyBK0mg5RamkNv4J3VPLGAD/2fkN7Zq+cdx47A+7ZWLofhIFzgx2OCzCJ1XjX2
-	dBQk0/zmhLnnQKnEYYFf6TpocUpw6JYkbrpnm8nGjbDXyPwb9Kza61g+Qcaj02gI9VIjH6TANpH3n
-	pFC39aR4VP9HEmenk+wxtI/0/q+vBP3mRGsZFf+JFUzcz/EN/YKfKncXIKyzZ7+XKz0j9dlpZGDe8
-	fjhGRVC+WYDpVQZcFDh1Pc9EFEQ/v6LhxNvRwaz+ZtU8UmUpiB96ltzNw+52Glr/f1tFugM5vuVWn
-	3+IuUD4g==;
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1763545172; c=relaxed/simple;
+	bh=cAS8lCtPGNRFvrZQDrTc7RJpXnTFg4KcJPnAozu5ikU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LQ9cXggOSYNFJz1/fyYZJCHuFCHhwfdb0rX8h27QM+fGNWnm2oNDhBptxo0NaymNHMkZ/tDNFbljEhEITpQv2qKVB6nFxKq81m24JDTomKA3sJzkTajPBZiMCBhJQTpFdzTMlbXju0GzyuJPpXCVYYXs05lnHphpqbF9YrS5SXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C9UF+1im; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763545169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RMLjuVDerl17Qc3cdWKDeKkxWcGgFF26t/CKy2Xmky8=;
+	b=C9UF+1imirpShqtZf6vHNinNEJfLiCn3QNb2Su5Yt3SjstI1YxushaZGJA2geqUhh4GjM0
+	hzNinKFBOwszDyS1CzfydIRg86EViuV0ikn23D0/GI/puh1zgoC5rjTuAVadBmjRSG0l1L
+	2TmpiVrHoRdbZRHcEnoDVarY8KvmDPk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-93--eSX4E1SNyS3FzY5Rb2npA-1; Wed,
+ 19 Nov 2025 04:39:21 -0500
+X-MC-Unique: -eSX4E1SNyS3FzY5Rb2npA-1
+X-Mimecast-MFC-AGG-ID: -eSX4E1SNyS3FzY5Rb2npA_1763545161
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC5E9180122B;
+	Wed, 19 Nov 2025 09:39:20 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.74])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BBC6E300ABB0;
+	Wed, 19 Nov 2025 09:39:18 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/3] loop: nowait aio bug fixes
+Date: Wed, 19 Nov 2025 17:38:50 +0800
+Message-ID: <20251119093855.3405421-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH] fix floppy for PAGE_SIZE != 4KB
-From: =?utf-8?Q?Ren=C3=A9_Rebe?= <rene@exactco.de>
-In-Reply-To: <4d3482372549a7746c639299c50319bad6b4b6c7.camel@physik.fu-berlin.de>
-Date: Wed, 19 Nov 2025 10:24:20 +0100
-Cc: Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org,
- efremov@linux.com,
- Nick Bowler <nbowler@draconx.ca>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1E5D751F-0DCE-4AE2-9DC5-4D9EF0D8FA8E@exactco.de>
-References: <b1e17016-3d4d-4fac-b5b0-97db357d0749@kernel.dk>
- <20251114.172543.20704181754788128.rene@exactco.de>
- <fec67c88-53f5-4482-aeef-86e1213d187e@kernel.dk>
- <20251114.192119.1776060250519701367.rene@exactco.de>
- <708B7962-86CD-489B-AC33-4B929F2902B6@exactco.de>
- <c8cbccc1-964c-43ce-a992-624d2efcfd4a@kernel.dk>
- <57be21424d0e23142ea67ca9de3ca4ca033e1ee7.camel@physik.fu-berlin.de>
- <900D7C37-DF73-49D5-950D-81D84D6DA9CD@exactco.de>
- <4d3482372549a7746c639299c50319bad6b4b6c7.camel@physik.fu-berlin.de>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi,
+Hi Jens,
 
-> On 19. Nov 2025, at 10:22, John Paul Adrian Glaubitz =
-<glaubitz@physik.fu-berlin.de> wrote:
->=20
-> On Wed, 2025-11-19 at 10:12 +0100, Ren=C3=A9 Rebe wrote:
->>>> Yep we can do that. It'd be great if we could augment the change =
-with
->>>> what commit broke it, so it can get backported to stable kernels as
->>>> well. Was it:
->>>>=20
->>>> commit fe4ec12e1865a2114056b799e4869bf4c30e47df
->>>> Author: Christoph Hellwig <hch@lst.de>
->>>> Date:   Fri Jun 26 10:01:52 2020 +0200
->>>>=20
->>>>   floppy: use block_size
->>>=20
->>> Yes, Nick Bowler (CC'ed) bisected it to this commit in [1].
->>=20
->> Nice, thanks!
->>=20
->> Carefully, it appears to be another commit though:
->>=20
->>> I bisected the failure to this old commit:
->>>=20
->>>  commit 74d46992e0d9dee7f1f376de0d56d31614c8a17a
->>>  Author: Christoph Hellwig <hch@lst.de>
->>>  Date:   Wed Aug 23 19:10:32 2017 +0200
->>>        block: replace bi_bdev with a gendisk pointer and partitions =
-index
->=20
-> Yes, you're right. I was briefly distracted when writing this mail.
+The 1st two patches fix error handling code paths for nowait aio.
 
-No worries, just checking. Should I send a new patch with the Fixes:
-or can Jens just add it?
+The last patch fixes IO hang issue because of writeback throttle.
 
-Thanks,
-	Ren=C3=A9
+Ming Lei (3):
+  loop: move kiocb_start_write to aio prep phase
+  loop: fix error handling in aio functions
+  loop: disable writeback throttling and fix nowait support
 
---=20
-https://exactco.de =E2=80=A2 https://t2linux.com =E2=80=A2 =
-https://patreon.com/renerebe
+ drivers/block/loop.c   | 28 +++++++++++++++++++---------
+ include/linux/blkdev.h |  2 ++
+ 2 files changed, 21 insertions(+), 9 deletions(-)
+
+-- 
+2.47.0
 
 
