@@ -1,73 +1,86 @@
-Return-Path: <linux-block+bounces-30708-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30710-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B83EC71537
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 23:45:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52B76C71706
+	for <lists+linux-block@lfdr.de>; Thu, 20 Nov 2025 00:22:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id 4F97C2F806
-	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 22:45:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0DDDD4E04C3
+	for <lists+linux-block@lfdr.de>; Wed, 19 Nov 2025 23:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6104F332EAB;
-	Wed, 19 Nov 2025 22:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87A827A130;
+	Wed, 19 Nov 2025 23:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="GkUoEl0B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR4jSj4L"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6E2330B14;
-	Wed, 19 Nov 2025 22:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AF141AAC
+	for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 23:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763592171; cv=none; b=rpTVZHUugwAWTSZydNYyjPtD5yanw93Z3aDSftD5wz9H8Y4BcXPZNZXDQJJrAsMGRopFS69zUnw7kTzlUATt1n2hJzWRmmNlE3McTVdiZRjzcUcVokImjowlugNx3REljSXBX6vhuVtDa2hMQlroZZPP9qu1gHFibvgHxg0wCNQ=
+	t=1763594561; cv=none; b=q4YsHLMQy9bjZxhBkV6pUDzaE1tbiamIxnG2tWoN0fYq9P64OlBsgKtlLrnsk6rjegxtCJkFOkfjm/fod4AXc/Qh1NoztOJVBhYv2TyfzAru7yAsYVSFG1cvCH++Ur3lsq2e2pwJH0ex4XfhPnABccYRvseFYg1xc2mjvZegQzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763592171; c=relaxed/simple;
-	bh=ZZNNuTRuiX53llVmFMgKwGGhIW58g3kFCa2xIK5PUCc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T0t7jY0T/rfF1FRueCZ8ZlJOzV4HTFTUawUbteJ/pjagJuTKHfpY7qt1ckTkctFLzRz6OOoUjho8wZn5F4COJ21WHRaitzHKEcx9wK/+ramk8ew+OtjBe2BZ2BCA0b3WfwDyZFjS9F9s4r9QkCzvQUEMTkMw7Y/IzHeqeyOnv9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=GkUoEl0B; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vLqsw-006kvx-LU; Wed, 19 Nov 2025 23:42:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
-	:Message-Id:Date:Subject:Cc:To:From;
-	bh=Vhn8/vbnFTBTrLe40in1hyrWt+hwUetOS1daXHrGJRI=; b=GkUoEl0BxUcro5HrumgEhz6q7S
-	ABk1zCOGPsPuJyp1ZRIagRRuwzkOCh0X4FJqoA+gb+WH43yS/9/fELw+4L+cMrKm286TWzaluczUD
-	kmvzWGSBWmdHpO3mEp3toCKbeQ86UNgVPKKUiwQwfOpMaXOExV5xSOVtSklsVRJBUezKxOfJMeT5C
-	Sy5jmu2eU1AXBMVmKlNkEb7n13V9qpNc3vRdyP0HdznRtS/x6QzaRGq2rxSzIN9g297yPBdk2jDtM
-	WqrenPTlhBjHV2g2szbJ7y0zTVdf/yAXs98gfKaSlJ8/75ShkB42ktGPXLIyvMDkVFbRCGxyhEJ0O
-	faXr9lTA==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vLqsw-00085q-81; Wed, 19 Nov 2025 23:42:46 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vLqsa-00Fos6-9U; Wed, 19 Nov 2025 23:42:24 +0100
-From: david.laight.linux@gmail.com
-To: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Tejun Heo <tj@kernel.org>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH 12/44] block: use min() instead of min_t()
-Date: Wed, 19 Nov 2025 22:41:08 +0000
-Message-Id: <20251119224140.8616-13-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+	s=arc-20240116; t=1763594561; c=relaxed/simple;
+	bh=QjugR5of39jyv4CYlRDPb9mvII2SNe3SzE1+UVNXefI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cdqh/AmjNcJiT9/mJk5SXKzjziek3RcZ9a7PueqlNqp7gL1k6hV24yeDweTYYOg9FWDTIvUnfn/IUabxBKm3wVRHXD++Mkx2S3VrCc3iUNOXdmye9n22QafLW9/gk1Y/DH5UuqvD10IBqjNYthUTz8buzCnGLRm1a5D0hfwcqmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dR4jSj4L; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b9a5b5b47bfso201818a12.1
+        for <linux-block@vger.kernel.org>; Wed, 19 Nov 2025 15:22:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763594560; x=1764199360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKxf4jmktf31j02xupmRKH5dO3VmWiI7NlK/tcxwOro=;
+        b=dR4jSj4L0zTP4EwcfDXfFArMRNFC/JOcD5+OItjdp/i2O+CxGbt4vswtgZrZ0QIksj
+         SS+FAul/+tu306JYJBQzvr0BTF2dKn3jVMs2D+daFGjWsDw2p60B/K+QzCwVqVYUR+4T
+         Sm7lWSidZb1Oee3nDdOSpZWQKTVaR9geZIbzlhMHHLBHAvtBQO6FeMTC0K3M8WzSh7yI
+         CtLPsSFH5DPar/a03z8f4XMnQbXyn0jdNLJUcg7PM4h0lFDK4VYB3ZYzpykMBxBskhcH
+         iF6/odPyhd5rTQO2jPhEm+vwG5Ad1fOVq3puVa157xPVuRZjnXmDhh9igreelhpGH4cR
+         NKVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763594560; x=1764199360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mKxf4jmktf31j02xupmRKH5dO3VmWiI7NlK/tcxwOro=;
+        b=LML7OILMgFyqimL1JyECiiJAvFP7xBqqsxq3RQRLhoJIPYxITITLTeHWZLrVXLr2Xu
+         p+OLujFYXNcb27LbAwaTfpP3OflkEKI0Ul63wKZj442MU+SGZBEI9cvX+pu4Yqd3NSFi
+         7JJq18XLKpnFCxBEw4TPmegZkZxSzmjNGmfzGzJvl5Tyx+CyhQOQkLdGfN7TsDg+0Lju
+         cNOYtNFH2Z/8xABGPX7C2J0rdgdlqIAx59oO2XkeQQ7IydITye40Vxp3on65WIoMqATx
+         p71KicGUTkhtPaT1rbYlTtJW1K2YUk5qs1GS8xrLEtKIRRi8iJAo6agrl8bxX7yj7Qsm
+         0HAw==
+X-Gm-Message-State: AOJu0Yy8eGzZTbVJXjoMaN8KWEDMYnqw3Wqden/tqWUzkM3Wihb3kdpK
+	QA8IRzjuq2T5euasQRgvFRar5hQsAH4mDB2zovsiRNJksQxH6ntvn92b
+X-Gm-Gg: ASbGncukk8Vgj/7dQftF4+OCMJ/XqX+xBF/B18pfRjmQ8XhW5YO2qVnYadvc8ByOeEU
+	7XQuQqQ7HVMC9a7vS1HBZDI6MvFZY41ow1/gVr2ijuYLrxh52JeghJPsFIWgGhiwBHdXxMtbZ9h
+	uWK4BksAeFBC+syz6IstK8f+dRTkGvLqhtL63A+PI+U+yl2u0nmoHrLWKQEFEpNVHKjbXtI+a05
+	J/FL4kCfS2F1BJaKBOeOkVdn7VEXg3TuTL3MJNNzsOp71pScy8NKo9G05e2+GKir/b2TU2judy2
+	QlzSlJFXNk2TimDdcM4rikS+/vf/quIB/H5fTi29+h4yoI+XlHCiPbtAp2OLwdzatX+Mr8OO5Dl
+	hVuHCzO13MwYp99hguUZw0zuuYUpvs9C4zq1Ea4FEsAhro/OtPcZORn7o19Yg33c8aMA3im0bud
+	vDMgEDP88et5Dqs+ywiPOdpVnTSqqosHIO8wrYZCfBRodwj5E=
+X-Google-Smtp-Source: AGHT+IEu9NS43G5dTpzF29TFKFJjzLvlEqhCkgDpeD2wjKV1j+aJmZWCmxn+NXLDTVlQ4pp1Qgzlig==
+X-Received: by 2002:a05:693c:4085:b0:2a4:3594:d552 with SMTP id 5a478bee46e88-2a6fd17de07mr337854eec.31.1763594559435;
+        Wed, 19 Nov 2025 15:22:39 -0800 (PST)
+Received: from localhost (ip70-175-132-216.oc.oc.cox.net. [70.175.132.216])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a6fc5e3750sm2550279eec.6.2025.11.19.15.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 15:22:39 -0800 (PST)
+From: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+To: axboe@kernel.dk,
+	dlemoal@kernel.org,
+	hch@lst.de
+Cc: linux-block@vger.kernel.org,
+	Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Subject: [PATCH V2 1/2] loop: clear nowait flag in workqueue context
+Date: Wed, 19 Nov 2025 15:22:33 -0800
+Message-Id: <20251119232234.9969-1-ckulkarnilinux@gmail.com>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -76,71 +89,57 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Laight <david.laight.linux@gmail.com>
+The loop driver advertises REQ_NOWAIT support through BLK_FEAT_NOWAIT
+(enabled by default for all blk-mq devices), and honors the nowait
+behavior throughout loop_queue_rq().
 
-min_t(unsigned int, a, b) casts an 'unsigned long' to 'unsigned int'.
-Use min(a, b) instead as it promotes any 'unsigned int' to 'unsigned long'
-and so cannot discard significant bits.
+However, actual I/O to the backing file is performed in a workqueue,
+where blocking is allowed.
 
-In this case the 'unsigned long' value is small enough that the result
-is ok.
+To avoid imposing unnecessary non-blocking constraints in this blocking
+context, clear the REQ_NOWAIT flag before processing the request in the
+workqueue context.
 
-(Similarly for max_t() and clamp_t().)
-
-Detected by an extra check added to min_t().
-
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
 ---
- block/blk-iocost.c     | 6 ++----
- block/blk-settings.c   | 2 +-
- block/partitions/efi.c | 3 +--
- 3 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 5bfd70311359..a0416927d33d 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2334,10 +2334,8 @@ static void ioc_timer_fn(struct timer_list *timer)
- 			else
- 				usage_dur = max_t(u64, now.now - ioc->period_at, 1);
- 
--			usage = clamp_t(u32,
--				DIV64_U64_ROUND_UP(usage_us * WEIGHT_ONE,
--						   usage_dur),
--				1, WEIGHT_ONE);
-+			usage = clamp(DIV64_U64_ROUND_UP(usage_us * WEIGHT_ONE, usage_dur),
-+				      1, WEIGHT_ONE);
- 
- 			/*
- 			 * Already donating or accumulated enough to start.
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index d74b13ec8e54..4e0c23e68fac 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -472,7 +472,7 @@ int blk_validate_limits(struct queue_limits *lim)
- 		seg_size = lim->max_segment_size;
- 	else
- 		seg_size = lim->seg_boundary_mask + 1;
--	lim->min_segment_size = min_t(unsigned int, seg_size, PAGE_SIZE);
-+	lim->min_segment_size = min(seg_size, PAGE_SIZE);
- 
- 	/*
- 	 * We require drivers to at least do logical block aligned I/O, but
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index 7acba66eed48..638261e9f2fb 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -215,8 +215,7 @@ static int is_pmbr_valid(legacy_mbr *mbr, sector_t total_sectors)
- 		sz = le32_to_cpu(mbr->partition_record[part].size_in_lba);
- 		if (sz != (uint32_t) total_sectors - 1 && sz != 0xFFFFFFFF)
- 			pr_debug("GPT: mbr size in lba (%u) different than whole disk (%u).\n",
--				 sz, min_t(uint32_t,
--					   total_sectors - 1, 0xFFFFFFFF));
-+				 sz, (uint32_t)min(total_sectors - 1, 0xFFFFFFFF));
+v1->v2:-
+
+Unset REQ_NOWAIT at the start of the workqueue context. (Damien)
+
+HEAD:-
+
+commit 6dbcc40ec7aa17ed3dd1f798e4201e75ab7d7447 (HEAD -> for-next, origin/for-next)
+Merge: 58625d626327 ba13710ddd1f
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Wed Nov 5 18:24:17 2025 -0700
+
+    Merge branch 'for-6.19/block' into for-next
+    
+    * for-6.19/block:
+      rust: block: update ARef and AlwaysRefCounted imports from sync::aref
+
+
+---
+ drivers/block/loop.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 13ce229d450c..ebe751f39742 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1908,6 +1908,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+ 		goto failed;
  	}
- done:
- 	return ret;
+ 
++	/* We can block in this context, so ignore REQ_NOWAIT. */
++	if (rq->cmd_flags & REQ_NOWAIT)
++		rq->cmd_flags &= ~REQ_NOWAIT;
++
+ 	if (cmd_blkcg_css)
+ 		kthread_associate_blkcg(cmd_blkcg_css);
+ 	if (cmd_memcg_css)
 -- 
-2.39.5
+2.40.0
 
 
