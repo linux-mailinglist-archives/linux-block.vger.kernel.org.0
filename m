@@ -1,126 +1,94 @@
-Return-Path: <linux-block+bounces-30867-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30858-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05014C77DF2
-	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 09:23:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC636C77DCB
+	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 09:22:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 18CB23640E5
-	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 08:21:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2AEDF4E9A13
+	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 08:18:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8C7340D9D;
-	Fri, 21 Nov 2025 08:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B65B33B6C7;
+	Fri, 21 Nov 2025 08:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf5PxmMV"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="N6LLDT2L"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from sg-1-102.ptr.blmpb.com (sg-1-102.ptr.blmpb.com [118.26.132.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8FA33FE17
-	for <linux-block@vger.kernel.org>; Fri, 21 Nov 2025 08:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5D633B6D9
+	for <linux-block@vger.kernel.org>; Fri, 21 Nov 2025 08:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763713116; cv=none; b=JgvpO9mXlhz17nDxH5KoPD5ZBzm0b3/BoCoAKVeCua2jGLhye/JsMS4lmZDRZQapXXVFoPTIdre6KdG5Ngbv/dwacLGBaUCMyAPLNO8O9ZmP4IaTKgzyUVpTG4/Hb+iNYmN0dpfxhWJJQ7+PiWOnrQ55NxNlimLdVm/VWKJ1TGg=
+	t=1763713090; cv=none; b=Sp145CtkokASMydSba/uYZwDy8XMZa70STXXJCq8+GQo4aH0fLKMlQOio/i9hOGTsrP+eiiaUqq46lrQYu1GSqVdVyk5dYIdJu8LE29fuk3UsbvDRQQMswMKotwRw/gXYlhjL6NHgHajK3RmRcdcV/eIb3Q7vbFSu4H+HJCYe8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763713116; c=relaxed/simple;
-	bh=EqzE5eAUrOzw5wQ1NpDCM3tWSo+9dLaAmuNQNwJKJDw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OYP2K94VWZtrnuyacn409sAEe4j7OfgM77PTtrTOpxmH3RYMLP5HVb7zjMea7NPCDhoGEppWOn85L2mNET5O1lOPpx2sW3mJscazVle3Cn33yE+xqGlEcAGYRfQMrESxyPAYg9pRrOT9ETvDM+37gibpvYBE4Tq9sNXAPJOPkaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jf5PxmMV; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b55517e74e3so1284675a12.2
-        for <linux-block@vger.kernel.org>; Fri, 21 Nov 2025 00:18:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763713114; x=1764317914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yt1oIqGxOTrmRU0wY5Kf2stOafiOCOsnZEA0d2AzsC4=;
-        b=Jf5PxmMVKdZPIpOS27Gp2bT1edFpEnhYtoCvSiSIWYwJQ+px8/qs6G89l+VdieseNR
-         8pS4DgXx/zUR0yZ0t0Rv2pjisuK+RTrenRE1YTBaTzpYJmxlcy+D3qwNg1dWKh1ivesL
-         qE4OfiRpmf5yjkZy47enau1EGnGMtCl3o17powjA/ClXoUpn/m+j7t1hg/7T/0HIuaLE
-         N7vP5Rv5ROXaf/2U4yziUg0xI9xioRu77EIgRPbkzJEz534T8HJG/Tzns5aO8V9y5ZOi
-         Pt+MLp4E1KQ9oQa8R1GN4NondOKA426cEiBaE6zzFWvJuycXQy7dPL1VXItcXaddtwBL
-         AJsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763713114; x=1764317914;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Yt1oIqGxOTrmRU0wY5Kf2stOafiOCOsnZEA0d2AzsC4=;
-        b=sigxKXRrffqnClZNp+s4MsHm69hV+FVp2aGxwXEN5koLx7UjuSLd71geK+OhhsE5pa
-         /+kNvNfeXqhCDbACMYGnxq8cuKETd193YeaB5AIyYiFTT5botSDF6DrAHL+Dfx4gTSaw
-         Ztg1/wUPT2nuDeKqeQG8rycXLDogeWgd51WOoXGlitXTdepb/9l0TQJHpFWI/Q89QKTK
-         XFH7W37gVoP75Z9ayY3Qxh2ZNZMXAySLMcvnBKdtAEJyC5pSz4QSaGvZQQS6pUyE/6nz
-         ySlykNDHo9y/TLO9Fa528vYsMRZcbPcMTZiIbNIoi/L7s2sT4o34XGi2GFiuIg80wgPg
-         mEww==
-X-Gm-Message-State: AOJu0YxwyQnb5TURjtAdI1jPm2Ek4bzAe6t1wYg5cAzbqB+F15XeN6Ej
-	y/dNtDC4HM1F0V4PnS/abjbYhJqvIDWy58dmAfjyJ7Z6VjBlaYTD2Zc7
-X-Gm-Gg: ASbGncvzokbKsCaED+q2YyPLMuvusIPazWZbP5vWyiZ4KR/Na/6bk1v/XR+3cPS3bN8
-	GuKyHkK5zEf1NAiSl1y+zFffmiLu0bPNpIMWhf/CuUFMuLjcMSyJA2+7JpPJ9pAyZ/uri2yeIsg
-	cAXsJQ8MNsKwvgTNPFr+OEVjih/X+UeEhUUoknNO+N4sn94ILtuxN9W30DvELyXnmO1s04H0ykv
-	n4qtFFxmomLUJZAH5sisg+IokmVFm5URPB9UrUwaFPWJph6XRDxURoDd/Y168OoQLeDEpWfjEv4
-	p76XX+SmsmmX9xN6VPGiZENx96ifiHC5MQJaEoJfkmJSMz7Lj0/Iww2xfbLW8pA+ujIwfJbu96G
-	Z9MkOOZAsoaGb4MuoC7Pi2z1QHxkQO1fJd2waOtpVtCYwJc3JJXeND9neWjaBHqyapBalLoU8Hz
-	mE8JT7EzZHN9L9SuNhxCsA2PkitYB/M4qY2Y8W
-X-Google-Smtp-Source: AGHT+IGjQz6D1HhxF/O38ExwwmQdYex30Wle92q1+zy1HDlDdyzSrgD/kMDXWQtHpmE2DiVpd2L90Q==
-X-Received: by 2002:a05:7300:238e:b0:2a4:3593:c7c9 with SMTP id 5a478bee46e88-2a7194d07b7mr663198eec.9.1763713114130;
-        Fri, 21 Nov 2025 00:18:34 -0800 (PST)
-Received: from localhost.localdomain ([104.128.72.43])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11c93e55af3sm20997352c88.7.2025.11.21.00.18.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 00:18:33 -0800 (PST)
-From: zhangshida <starzhangzsd@gmail.com>
-X-Google-Original-From: zhangshida <zhangshida@kylinos.cn>
-To: linux-kernel@vger.kernel.org
-Cc: linux-block@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	virtualization@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	gfs2@lists.linux.dev,
-	ntfs3@lists.linux.dev,
-	linux-xfs@vger.kernel.org,
-	zhangshida@kylinos.cn,
-	starzhangzsd@gmail.com
-Subject: [PATCH 9/9] nvdimm: use bio_chain_and_submit for simplification
-Date: Fri, 21 Nov 2025 16:17:48 +0800
-Message-Id: <20251121081748.1443507-10-zhangshida@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251121081748.1443507-1-zhangshida@kylinos.cn>
-References: <20251121081748.1443507-1-zhangshida@kylinos.cn>
+	s=arc-20240116; t=1763713090; c=relaxed/simple;
+	bh=PH7pBCDlSwnut2+YV421LQPBN3TCyx6xDVGb6dWlZfs=;
+	h=To:From:Mime-Version:In-Reply-To:Content-Type:Date:Message-Id:Cc:
+	 Subject:References; b=Ko4KZ+3T8uLKmvUxbnYn+1PEonVRv5mOmiStTv8h4vWjhHMds+73xmVti5cdd53n+L0OYCio5T/GLAC/izaCgpOMHJD6xLDQ72+BJb2BWr4DgDUtLOa+UOmS1ubuTdowHgWLk/ryo3WVzx0FJlcpGc8PDf5M1auY+CdUapjVCjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=N6LLDT2L; arc=none smtp.client-ip=118.26.132.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1763713079; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=PH7pBCDlSwnut2+YV421LQPBN3TCyx6xDVGb6dWlZfs=;
+ b=N6LLDT2LuVq2AISCxWDxzCXduyAEIUabCzYrNxke7EiMztBCS4R2bR3ud5plAvZl1hzDLG
+ TwJe+vlBrH4GUff9KJcovaerGFlMWhMKNcaJyLz4zzPZewiJI5N1znRWCaG1ikh7XuiInM
+ RJuqcqE39ZzHkm/P4wtieslCW0/q6731248eH5xh0HwD6QQIqt5/H8fMCnhj6RcUnETxkd
+ es73/g2IysrNlAIDCmUnbFnaNjP8eG1nDwCTDhRs8IyBRl/CgiAN1BLNdSjqa0JLctPCwh
+ vKgSBtI8mqh8SLkA9Ct2fo37486Ycqzdr7dMNHtwQoEKdZumSesFwZ3pl9Ib2A==
+To: "Bart Van Assche" <bvanassche@acm.org>
+From: "changfengnan" <changfengnan@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+169202035+b059d8+vger.kernel.org+changfengnan@bytedance.com>
+In-Reply-To: <3abda215-67f5-44d8-a2a1-5562c42c0f71@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 21 Nov 2025 16:17:55 +0800
+Message-Id: <d9210bcdf73fbe1ac8b6ec132865609a3ed68688.7a8aa9c6.39da.4362.953a.fa91f529e498@bytedance.com>
+Cc: "Fengnan Chang" <fengnanchang@gmail.com>, <axboe@kernel.dk>, 
+	<linux-block@vger.kernel.org>, <ming.lei@redhat.com>, <hare@suse.de>, 
+	<hch@lst.de>, <yukuai3@huawei.com>
+Subject: Re: [PATCH 1/2] blk-mq: use array manage hctx map instead of xarray
+References: <20251120031626.92425-1-fengnanchang@gmail.com> <20251120031626.92425-2-fengnanchang@gmail.com>
+	<3abda215-67f5-44d8-a2a1-5562c42c0f71@acm.org>
 
-From: Shida Zhang <zhangshida@kylinos.cn>
 
-Signed-off-by: Shida Zhang <zhangshida@kylinos.cn>
----
- drivers/nvdimm/nd_virtio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> From: "Bart Van Assche"<bvanassche@acm.org>
+> Date:=C2=A0 Fri, Nov 21, 2025, 00:41
+> Subject:=C2=A0 Re: [PATCH 1/2] blk-mq: use array manage hctx map instead =
+of xarray
+> To: "Fengnan Chang"<fengnanchang@gmail.com>, <axboe@kernel.dk>, <linux-bl=
+ock@vger.kernel.org>, <ming.lei@redhat.com>, <hare@suse.de>, <hch@lst.de>, =
+<yukuai3@huawei.com>
+> Cc: "Fengnan Chang"<changfengnan@bytedance.com>
+> On 11/19/25 7:16 PM, Fengnan Chang wrote:
 
-diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-index c3f07be4aa2..e6ec7ceee9b 100644
---- a/drivers/nvdimm/nd_virtio.c
-+++ b/drivers/nvdimm/nd_virtio.c
-@@ -122,8 +122,7 @@ int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
- 			return -ENOMEM;
- 		bio_clone_blkg_association(child, bio);
- 		child->bi_iter.bi_sector = -1;
--		bio_chain(child, bio);
--		submit_bio(child);
-+		bio_chain_and_submit(child, bio);
- 		return 0;
- 	}
- 	if (virtio_pmem_flush(nd_region))
--- 
-2.34.1
+> > use-after-free on q->queue_hw_ctx can be fixed by use rcu to avoid in
 
+> > next patch, same as Yu Kuai did in [1],
+
+>=C2=A0
+> Does this mean that this patch triggers a use-after-free? If so, please
+
+> include the fix for the use-after-free in this patch.
+
+No, this won't tigger use-after-free,=C2=A0 just potentially risky.=C2=A0
+"The uaf problem hasn't been repoduced yet without hacking the kernel."
+
+>=C2=A0
+> Thanks,
+
+>=C2=A0
+> Bart.
+>=C2=A0
 
