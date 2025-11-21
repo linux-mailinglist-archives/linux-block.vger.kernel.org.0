@@ -1,93 +1,141 @@
-Return-Path: <linux-block+bounces-30882-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30884-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2C7AC79054
-	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 13:29:52 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35642C790C3
+	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 13:44:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 978432C8BD
-	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 12:29:09 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7396634F71D
+	for <lists+linux-block@lfdr.de>; Fri, 21 Nov 2025 12:43:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D88302160;
-	Fri, 21 Nov 2025 12:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32117314D37;
+	Fri, 21 Nov 2025 12:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="dLo0Qt11"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HvE3C/FR"
 X-Original-To: linux-block@vger.kernel.org
-Received: from sg-1-19.ptr.blmpb.com (sg-1-19.ptr.blmpb.com [118.26.132.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C073E1D5160
-	for <linux-block@vger.kernel.org>; Fri, 21 Nov 2025 12:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0339530FC3D;
+	Fri, 21 Nov 2025 12:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763728138; cv=none; b=jle3EJRiwvKc4p/AdyXRh03NvJrgxq4LkbCoAg4bSO9xJmpb6j6LjWlkbkQYxTF0VL4R5+isJip5rwnPJL5QbFqlR5VePDDqRB8A/lEQy3oHH/e5Pajzrja3qHlwEy1maxJNuSc8b5QWcVIAO5di2mdNYbu5D+89HWjLqKRiXIw=
+	t=1763729035; cv=none; b=Xr1+ku6iXnlc3wZ6ve1ouG8E4i7NZINhJa3FZmyEus5gYA1HRNTuZLXZNVRam50fReWkiI1FOO0io8Noj0KeaKKIXRMeKCrigHxvquwfZLpOJMwxmDd3ZJSD+5vB9CJumI9HqtZoYdcI7KiqCA4e72eOjzRyOB1Ifj5jCZn2U8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763728138; c=relaxed/simple;
-	bh=7+X1TkiRBs2rYXrvwnRamg0PGczo9rUONGNaLGCzprg=;
-	h=Content-Type:Subject:Message-Id:Mime-Version:In-Reply-To:
-	 References:To:From:Date; b=T1B3NOKJzs9AkieWwdjQtWaov4nlFHak5BCj8jlJhSpf1O26adPQHM22ZNBUGE/XEkyDv720uzkIUYKuO2TW9hFL0o+NeV0A4plsL0Gy9+vxnPnm554PNBqjtRTwtl4fK9rCsPhZpL2VNHpI0OZi/PhVdTPSqa7FA+EMu5pNTG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=dLo0Qt11; arc=none smtp.client-ip=118.26.132.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1763728121;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=7+X1TkiRBs2rYXrvwnRamg0PGczo9rUONGNaLGCzprg=;
- b=dLo0Qt11yBaEBJtvgUjt9t7ujnEozF31k6ZvccJPLcTCpuHrmCzclsMaSxEMDFNbERQYQf
- k4ByiHIxHGxBPpSRVBDRw4ctPvZIwi8ZcRM4LLOw0eGdpnZcEyst7b1EKWZekAR8RFU1Qd
- PDLkbSK0W2umCOn7kfCW898MgI4zwAG0wrmLoy2luXgWgVu1oidGG216lHN6oeYqAcqBCl
- NQO2NF6sNJDsweyzz0bJyGCCuEkaNe/6DGbz0SvqcJVSniSh1StGbetd2bLLPmWTnpaUcg
- m0av67iqgjlm4x8t+57M/PC+znVyyjN9oFv0h86QT4kLmuaLgKKoDyMCYIms8g==
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/8] mq-deadline: covert to use request_queue->async_depth
-Message-Id: <1c2e8761-5344-4300-a2bf-9e80b3983968@fnnas.com>
+	s=arc-20240116; t=1763729035; c=relaxed/simple;
+	bh=SseNgIZp6gPDgR2IeWAnrRjcKo5B1YeAinQknMrLT9w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Io3g+/in4IGzoRsO4AFNbs0ecFVN/TFEBDuTans37zHGZhPIHEvlLsBpRsEXdXleMG5mBrdh5+8qN3+xTLktRvFltBWfdOtRE3UcfSMVdR9rVa1GI4gmwMq+BDOm91P9nrfz+My5G52WfceIidMRQvpM/Lka1Pmo8lab1mvDdJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HvE3C/FR; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1763729027; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=UXNEr7vcm3thFtEulF8bEeGgEGO9nmCn0v+aGXpJLHk=;
+	b=HvE3C/FRH/Xk4hMHhYrsjTgfGuCHjuldYsbPVZiT9+R1HALhq9/Wci5N2DVw+ygHkzlU/TpxNLH+Rci3CW6k8VxkFqTFkD87gQKOt7VJlaqanJKma0QQzz1ol1r2f7ehf0/qPJTDNbL/uTJMTyv3yTIJW9wSsKsMKpCFNzqMI/A=
+Received: from 30.170.82.147(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wt003i5_1763729026 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Nov 2025 20:43:46 +0800
+Message-ID: <d7140963-3b21-4b51-9a9c-bcf8362bf1da@linux.alibaba.com>
+Date: Fri, 21 Nov 2025 20:43:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-In-Reply-To: <c93e88cd-ade4-4264-8d80-a6669e361c32@suse.de>
-Reply-To: yukuai@fnnas.com
-References: <20251121052901.1341976-1-yukuai@fnnas.com> <20251121052901.1341976-7-yukuai@fnnas.com> <c93e88cd-ade4-4264-8d80-a6669e361c32@suse.de>
-X-Lms-Return-Path: <lba+269205af7+7c334d+vger.kernel.org+yukuai@fnnas.com>
-To: "Hannes Reinecke" <hare@suse.de>, <axboe@kernel.dk>, 
-	<nilay@linux.ibm.com>, <bvanassche@acm.org>, 
-	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	"Yu Kuai" <yukuai@fnnas.com>
-From: "Yu Kuai" <yukuai@fnnas.com>
-Organization: fnnas
-Date: Fri, 21 Nov 2025 20:28:36 +0800
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Received: from [192.168.1.104] ([39.182.0.153]) by smtp.feishu.cn with ESMTPS; Fri, 21 Nov 2025 20:28:38 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCHv5 0/6] zram: introduce writeback bio batching
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Yuwen Chen <ywen.chen@foxmail.com>
+Cc: akpm@linux-foundation.org, bgeffon@google.com, licayy@outlook.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, minchan@kernel.org, richardycc@google.com
+References: <ts32xzxrpxmwf3okxo4bu2ynbgnfe6mehf5h6eibp7dp3r6jp7@4f7oz6tzqwxn>
+ <tencent_865DD78A73BC3C9CAFCBAEBE222B6EA5F107@qq.com>
+ <buckmtxvdfnpgo56owip3fjqbzraws2wvtomzfkywhczckoqlt@fifgyl5fjpbt>
+ <8c596737-95c1-4274-9834-1fe06558b431@linux.alibaba.com>
+In-Reply-To: <8c596737-95c1-4274-9834-1fe06558b431@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-=E5=9C=A8 2025/11/21 15:18, Hannes Reinecke =E5=86=99=E9=81=93:
-> ... and this is now the opposite. We are removing an existing attribute
-> (raising questions about userland ABI stability).
-> Wouldn't it be better to use the generic infrastructure (ie having a
-> per-request queue async_depth variable), but keep the per-elevator
-> sysfs attributes (which then just would display the per-queue variable).
->
-The problem is we can't make this api inside elevator writable as it
-used to be, and if user do use this, they will probably write it to
-limit async requests.
 
-And I feel it will be acceptable for this kind of user api compatibility,
-replace it elsewhere with the same functionality when kernel version is
-updated.
+On 2025/11/21 20:21, Gao Xiang wrote:
+> 
+> 
+> On 2025/11/21 17:12, Sergey Senozhatsky wrote:
+>> On (25/11/21 16:23), Yuwen Chen wrote:
+> 
+> ..
+> 
+> 
+>>>> I think page-fault latency of a written-back page is expected to be
+>>>> higher, that's a trade-off that we agree on.  Off the top of my head,
+>>>> I don't think we can do anything about it.
+>>>>
+>>>> Is loop device always used as for writeback targets?
+>>>
+>>> On the Android platform, currently only the loop device is supported as
+>>> the backend for writeback, possibly for security reasons. I noticed that
+>>> EROFS has implemented a CONFIG_EROFS_FS_BACKED_BY_FILE to reduce this
+>>> latency. I think ZRAM might also be able to do this.
+>>
+>> I see.  Do you use S/W or H/W compression?
+> 
+> No, I'm pretty sure it's impossible for zram to access
+> file I/Os without another thread context (e.g. workqueue),
+> especially for write I/Os, which is unlike erofs:
+> 
+> EROFS can do because EROFS is a specific filesystem, you
+> could see it's a seperate fs, and it can only read (no
+> write context) backing files in erofs and/or other fses,
+> which is much like vfs/overlayfs read_iter() directly
+> going into the backing fses without nested contexts.
+> (Even if loop is used, it will create its own thread
+> contexts with workqueues, which is safe.)
+> 
+>   In the other hand, zram/loop can act as a virtual block
+> device which is rather different, which means you could
+> format an ext4 filesystem and backing another ext4/btrfs,
+> like this:
+> 
+>    zram(ext4) -> backing ext4/btrfs
+> 
+> It's unsafe (in addition to GFP_NOIO allocation
+> restriction) since zram cannot manage those ext4/btrfs
+> existing contexts:
+> 
+>   - Take one detailed example, if the upper zram ext4
+> assigns current->journal_info = xxx, and submit_bio() to
+> zram, which will confuse the backing ext4 since it should
+> assume current->journal_info == NULL, so the virtual block
+> devices need another thread context to isolate those two
+> different uncontrolled contexts.
+> 
+> So I don't think it's feasible for block drivers to act
+> like this, especially mixing with writing to backing fses
+> operations.
 
-> That way we won't break userland and get around the awkward issue
-> of presenting a dummy attribute when no elevator is loaded.=20
+In other words, a fs claims it can do file-backed-mounts
+without a new context only if:
 
---=20
+  - Its own implementation can be safely applied to any
+    other kernel filesystem (e.g., it shouldn't change
+    current->journal_info or do context save/restore before
+    handing over, for example); and its own implementation
+    can safely mount itself with file-backed mounts.
+
+So it's filesystem-specific internals to make sure it can
+work like this (for example ext4 on erofs, ext4 still uses
+loop to mount). The virtual block device layer knows
+nothing about what the upper filesystem did before the
+execution passes through, so it's unsafe to work like this.
+
 Thanks,
-Kuai
+Gao Xiang
 
