@@ -1,116 +1,101 @@
-Return-Path: <linux-block+bounces-30913-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30915-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD5A3C7D1CA
-	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 14:44:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 558D4C7D242
+	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 15:11:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 756CE4E28CB
-	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 13:44:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 40C034E397A
+	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 14:11:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A70C22D9F7;
-	Sat, 22 Nov 2025 13:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4433523C8CD;
+	Sat, 22 Nov 2025 14:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N4fLoF6M"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mazyland.cz header.i=@mazyland.cz header.b="PDSvH6BR"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpx020.webglobe.com (smtpx020.webglobe.com [62.109.154.244])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D89224AE0
-	for <linux-block@vger.kernel.org>; Sat, 22 Nov 2025 13:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830C6257859;
+	Sat, 22 Nov 2025 14:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.109.154.244
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763819038; cv=none; b=AJsloUHx9TaXXObHWHRxDE2rcwHZvn6an5VqCs1Gz0dqelhZPfc3cEhs/BJUD3bPEk2a28iBUkoIXxP7O3LqSFQEhOgyawAMspNX/RPxEr2DRpA89R+l+JC17dMoqhGaIeefH0DnX7gFKhD7KyHMor7En9FbvlYGEaSSXt6L4xU=
+	t=1763820676; cv=none; b=k6E+A6zcucCxHmohnWgTVdJkVhwM4KciI0TU7T4Wh0wZr6bqqPC61tmR+8OTG4DtEDKM3OtDUjJhOcEkazqYLwwwmrYbXSQ+ETvQxHH0r3RvbMPYJvHS1M54kjFt4iFY4cYEP6uGOKxcvD0+0L1hiPhh33fDkbtOWKJSCa++dUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763819038; c=relaxed/simple;
-	bh=aBd+0zebpJp55IvtTmGEu2d8Ku6AwF+koShb3hRpOw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XR99snQxohuq4Hnr4ZuiKZuoIDVNr5hXoRryHG8r23fosGb7Zl4VWX/l2w+zogxR9lDg1pUi2uLN0mqQnFRy9RQBOevvshLHwCVRZCg1j/ZMiaEGF3eZ9qt3owjd6cW2fKxQ7m/N0G0ipHDso85pnJKkpXy+Xq7ZV4Xj8AR1ANg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N4fLoF6M; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34381ec9197so2646551a91.1
-        for <linux-block@vger.kernel.org>; Sat, 22 Nov 2025 05:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1763819034; x=1764423834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=skEifoSnF8Rut80XhCz/YHjVueIg7ytLGu1hExe5Elw=;
-        b=N4fLoF6MfGOtCHDtM6EQmkBtxqpwu1zUND5uVsdHDF+Fm9l9sykmun9NzAM+BZnQjY
-         6ranpQH84hTbPOVcDTWp0tv6mXI4pHMWzimuaDhXwY63eAWbU7zVRAH+WXZbJKM24wF2
-         6XYqmGGyBEhVQ6fKiSYdcBxxNwi5Kde/D7HJc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763819034; x=1764423834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=skEifoSnF8Rut80XhCz/YHjVueIg7ytLGu1hExe5Elw=;
-        b=FTZP3s+9QGW+IusJ8D7CcAPtXw+jaC+Z1/R1Iz3Es0F3dh/3HKxjIaTBt7SSN3UOJ+
-         w6h8v6OWjI5LikKzFqjQwq3X8u3In7c7Lb635paS2ga8xCYcsqDaqlKSeUGm5fNXGGlL
-         b4LeSr4q5WYLNY9HArrNwIapoGVRCw/QZhHT7Y0tNArRqqzZ8lFoOCXSdCFKOX8ar54J
-         gScM0dh9fo+wWMCpEQswI4EEfXOAVj70Q5hZZiPosMsM5QavZmTttU5sugD3zljzJDOE
-         L00sklGi+Jm2K/n0SGis65Xo1rcwzXD2O+guDWBkRPUNhRR4/wCAc/q7idIbctX3OkSI
-         QAJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUuIFKxQyBe7zt8MysN5RELi6h84RT8vFaYxfG7kye0OeRFgYicp+3pMdus51nKWgYaXbn+8QBZSzo3g==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp3Z4s5WgrfgONM4isugtYSqUJPZXM1GRYGLcsyNnoFJaZYyBl
-	M9QyUMcDbAWO+Y+O9h+NIZwXu7NW1wgFr9N6pRpmQDlYNDHsdW8OY64H1h3EOTXmwQ==
-X-Gm-Gg: ASbGnctrG9Q5rQLRBb3eFHotxoLA618DOhykF0+xA9ymi7/4I3PKFLCO0NlPs/a153N
-	RYM1IFcquol3HD3EIRf1T07xH/gi/equEz41VDxHDSAHJyAp25uPK38UthPHj4qqTwXzx9T4RRz
-	YYaR6b8v44mrepJq+5qHmuSgKDPP6CvGXjRpY61Xy5ftFj6prDaaOWLKAc7HVEfexZFiyRIoww2
-	H2WmLIB+F8vVgvfhzcn+iPxM/wxBpdqs0+hbAD+N7n7oGweXraoBYpGUh1thqRvM0j2o9a+LFld
-	QgX2scylhUFnwiqtXeh4ayOf/wvJ0jFLA09X4/sVgfDQRjoT0mxrngUMCzzM/zNkN1Hptto/fHj
-	EC0hl6Fy9T/8vE3GXUR3aJblSQMfbM52Mna+CuDfvVtvyNEXdPc2uAySuw2HPuiRlcNIvGmWtc4
-	ZxfFRDmrQ/VCiv8ZcRQzL5Be0G7RnOrqm0R+yv8zS92fAOYM/lxh4=
-X-Google-Smtp-Source: AGHT+IFEAzXxpBMN4+Cvpnq9Wz3bF/ejan4xQv2Z6/vy+0j3hfTRsuEa6ttfw6fKfrdggqzCKIk7CQ==
-X-Received: by 2002:a17:90b:4ec7:b0:341:88d5:a74e with SMTP id 98e67ed59e1d1-34733f4ac35mr5395298a91.29.1763819033721;
-        Sat, 22 Nov 2025 05:43:53 -0800 (PST)
-Received: from google.com ([2a00:79e0:2031:6:948e:149d:963b:f660])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-345b047616bsm5856992a91.9.2025.11.22.05.43.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Nov 2025 05:43:53 -0800 (PST)
-Date: Sat, 22 Nov 2025 22:43:48 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Yuwen Chen <ywen.chen@foxmail.com>, akpm@linux-foundation.org, bgeffon@google.com, 
-	licayy@outlook.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, minchan@kernel.org, richardycc@google.com
-Subject: Re: [RFC PATCHv5 0/6] zram: introduce writeback bio batching
-Message-ID: <ztqfbzq7fwa5znw5ur45qlbnupgepaptzjaw2izsftbtth6zca@db4ruyaulqab>
-References: <ts32xzxrpxmwf3okxo4bu2ynbgnfe6mehf5h6eibp7dp3r6jp7@4f7oz6tzqwxn>
- <tencent_865DD78A73BC3C9CAFCBAEBE222B6EA5F107@qq.com>
- <buckmtxvdfnpgo56owip3fjqbzraws2wvtomzfkywhczckoqlt@fifgyl5fjpbt>
- <8c596737-95c1-4274-9834-1fe06558b431@linux.alibaba.com>
- <kvgy5ms2xlkcjuzuq7xx5lmjwx3frguosve7sqbp6wh3gpih5k@kjuwfbdd2cqz>
- <853796e3-fd44-4fc2-8fd2-5810342a6ebe@linux.alibaba.com>
+	s=arc-20240116; t=1763820676; c=relaxed/simple;
+	bh=5TrXtSA0/pYdIyPAN4d16C3W2BnqeSt5EoS6fDSdu+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hnqwa1nOFWQKSxcr7CGx7gAshWBEBfNop4MoIYMPFOHEqICKYTOeAO0YKOn4JjXy4JJReJ+wrTnHD772snr3eO1JHIL5f6HyHvhKXFKdVrsWPWY6bvh3MLndCv9AcMx6o7oDfi5Wuz5QuuGK0taIC80ItINsO5KezS2J1E89ZAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mazyland.cz; spf=none smtp.mailfrom=mazyland.cz; dkim=pass (1024-bit key) header.d=mazyland.cz header.i=@mazyland.cz header.b=PDSvH6BR; arc=none smtp.client-ip=62.109.154.244
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mazyland.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mazyland.cz
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mazyland.cz
+	; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bkpfSprlu8mGib1c1nujr3uybcLVrrvCT0grlaS+iiU=; b=PDSvH6BRtX/qkR4mGWWMFMJ7Qr
+	RUcdAyXi00bDVuk74RuOjsK9cTjuuZ8+5bn2SxUaSJymq/gBTEgXgWlX3Q5gmMe4aDtygV82SZAfq
+	WXglxuheiEIXcoZyhVfDgrBS9eLX6TK9Cw0N1CDDb80mxwTBAHq6sgO1g3ayAJlllGA0=;
+Received: from [62.109.151.60] (helo=mailproxy10.webglobe.com)
+	by smtpx020.webglobe.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <milan@mazyland.cz>)
+	id 1vMo1o-0059ua-25; Sat, 22 Nov 2025 14:51:52 +0100
+Received: from 85-70-151-113.rcd.o2.cz ([85.70.151.113] helo=[192.168.2.14])
+	by mailproxy10.webglobe.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <milan@mazyland.cz>)
+	id 1vMo1o-00CJls-6Z; Sat, 22 Nov 2025 14:51:52 +0100
+Message-ID: <aa2ea539-368d-409e-afd6-f1e547497ed2@mazyland.cz>
+Date: Sat, 22 Nov 2025 14:51:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <853796e3-fd44-4fc2-8fd2-5810342a6ebe@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] pm-hibernate: flush disk cache when suspending
+To: Askar Safin <safinaskar@gmail.com>, mpatocka@redhat.com
+Cc: Dell.Client.Kernel@dell.com, agk@redhat.com, brauner@kernel.org,
+ dm-devel@lists.linux.dev, ebiggers@kernel.org, kix@kix.es,
+ linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-lvm@lists.linux.dev, linux-mm@kvack.org,
+ linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+ lvm-devel@lists.linux.dev, msnitzer@redhat.com, mzxreary@0pointer.de,
+ nphamcs@gmail.com, pavel@ucw.cz, rafael@kernel.org, ryncsn@gmail.com,
+ torvalds@linux-foundation.org
+References: <c44942f2-cf4d-04c2-908f-d16e2e60aae2@redhat.com>
+ <20251103155345.1153213-1-safinaskar@gmail.com>
+Content-Language: en-US
+From: Milan Broz <milan@mazyland.cz>
+In-Reply-To: <20251103155345.1153213-1-safinaskar@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Id: milan@mazyland.cz
+X-Mailuser-Id: 923906
 
-On (25/11/22 20:24), Gao Xiang wrote:
-> zram(ext4) means zram device itself is formated as ext4.
+On 11/3/25 4:53 PM, Askar Safin wrote:
+> Mikulas Patocka <mpatocka@redhat.com>:
+>> [PATCH 1/2] pm-hibernate: flush disk cache when suspending
+>>
+>> There was reported failure that suspend doesn't work with dm-integrity.
+>> The reason for the failure is that the suspend code doesn't issue the
+>> FLUSH bio - the data still sits in the dm-integrity cache and they are
+>> lost when poweroff happens.
 > 
-> > 
-> > > zram(ext4) -> backing ext4/btrfs
-> > 
-> > This is not a valid configuration, as far as I'm concerned.
-> > Unless I'm missing your point.
-> 
-> Why it's not valid? zram can be used as a regular virtual
-> block device, and format with any fs, and mount the zram
-> then.
+> Thank you! I hope I will test this within 2 weeks.
 
-I thought you were talking about the backing device being
-ext4/btrfs.  Sorry, I don't have enough context/knowledge
-to understand what you're getting at.  zram has been doing
-writeback for ages, I really don't know what you mean by
-"to act like this".
+Hello,
+
+Did you manage to test the patches?
+
+This issue should not be forgotten, as dm-integrity corrupts data during suspend.
+
+Thanks,
+Milan
 
