@@ -1,102 +1,142 @@
-Return-Path: <linux-block+bounces-30914-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-30916-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E167CC7D233
-	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 15:09:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 24957C7D309
+	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 15:57:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84C023AA310
-	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 14:09:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04A2C3A316A
+	for <lists+linux-block@lfdr.de>; Sat, 22 Nov 2025 14:57:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B4111FF7BC;
-	Sat, 22 Nov 2025 14:09:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5140926F2BD;
+	Sat, 22 Nov 2025 14:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e4eJ2S/a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ww+pl2V8";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="eIUpwg3T"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0405C1C5D59;
-	Sat, 22 Nov 2025 14:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807152459C9
+	for <linux-block@vger.kernel.org>; Sat, 22 Nov 2025 14:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763820563; cv=none; b=pnOPHwotEsYpbaJ3WT9tqMGRZPHJv2MN/hpBWCDj0ZGYy3/YSTKKmLH5vMEehiwanlNyfajSmMDlFBHLXZC5HB0yvFnz7YZcTC2YPRkHrxSctT5rFOLojydYaImCuTDqzZBKUlqaWz5P393H2WU8UQaD23ZS2i19sG10q2/8CqE=
+	t=1763823434; cv=none; b=LqwbwomZeNID9kh6ePDOlL6AfUFTVq8SJ5X1Un3y5YnKe9+WnW8okUEqPcyDnhETxzaK9rFAMd37wpyfUJcBes8b1rdSPypsjsRon0CaJp+vvZahGoIuBPfCNRDWGN3iE503fVh2RBoekw8r8mLWw/gkp4H4AgPvoKPT+CK86Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763820563; c=relaxed/simple;
-	bh=HqN60t5Kr9L1orycE6I/k9Pk7qJw1ucp1Rc5gEL0cWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TpdXXjjXCjdVZd2ghoGf4BxiU99PsQwHZGt/xr9aeug1Ve3YANFnxZogMAWd/10X6OGPf57CT2AKS1ZbUk4By7Au9cG/9L+dYHrIuQ198NhgXVHNgvCFsso55KjUVRndiBz/WbWDKnfLhEhW2hwAy9OMd7DIhklMsgjwoc0yHAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e4eJ2S/a; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1763820557; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=3ZDjsY2sg6rvsyUvNLcAYz1go/aL8BSTJ+KSEmWdUmM=;
-	b=e4eJ2S/aNNfPW+aDnhFZIZY/nsFKTgLYpbsQqeTQThk+plL2pqPqTNDZMKL66KXgIikZfJD6N+ejHEObQy5IihJoPqBUAFKAevOy5ibaQRIkPs44wudonee0VorqrOSShVZogC4Qa09hlo6Cr4F21yjAiKXC1JkmUfOgdz0uGF4=
-Received: from 30.170.82.147(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wt4WfL4_1763820555 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 22 Nov 2025 22:09:16 +0800
-Message-ID: <2c6906d1-132e-401f-830f-ae771fe836c5@linux.alibaba.com>
-Date: Sat, 22 Nov 2025 22:09:15 +0800
+	s=arc-20240116; t=1763823434; c=relaxed/simple;
+	bh=hFzOPcepuM2226lVzyXCQ+m40VlkuCq0KyoZ7KBoHiA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I2H4l6drgnBLtM88wJbVJ1z9AT0SLVAG2YRCUjx/8RS6m3jX2VqHwsZeRR2Bs8ns079QBrXwWtFnH4zybOp1RhDZoN2jlzS5Re1feTi7HmAbEl+7zcKAwvRqg4RLHo6d3PD8fDYXYVr2GqTDMHeJNy6ehAqZajDqHPjrIEd0zhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ww+pl2V8; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=eIUpwg3T; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763823431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AoeYwuTA2OCKqGileGsNd+ysqL+d5N6ZH/jsAbQy4b0=;
+	b=Ww+pl2V8p/Ei8G2LzFV0Deobf6rlBBVDxLzff6He1jfpnj1M04DKWVfZQ+XqvRbOlZmz8t
+	kFxRioFV+A5LnAWmYpehcfFaoxVPGIGVPu3qfIfviRNQhDPPwrdEm5NP+R5X1ZzY9CuqgT
+	8rhuzLn6Usy+xBddmA8twGr0aR66cNY=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-zJ83LoqnO2CizYHyGlB3Sw-1; Sat, 22 Nov 2025 09:57:09 -0500
+X-MC-Unique: zJ83LoqnO2CizYHyGlB3Sw-1
+X-Mimecast-MFC-AGG-ID: zJ83LoqnO2CizYHyGlB3Sw_1763823429
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-787ea29b1bbso26921147b3.1
+        for <linux-block@vger.kernel.org>; Sat, 22 Nov 2025 06:57:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1763823429; x=1764428229; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AoeYwuTA2OCKqGileGsNd+ysqL+d5N6ZH/jsAbQy4b0=;
+        b=eIUpwg3TENYqF2cj0uP3AhWKJPeVSJmQPzIP8J5oJWK+SkaEmNWigdDjlsNEXw1rfh
+         +vNENborw5BVXytVoEHHZ9bRt+nJrsnppH+ga8wtSPC8qRnXkCEZHlA9Aq0rFvB9YAd3
+         kdks1ZYh4HuVqWAoq1rct6FdVT0BuNbXpGWqeR2rqX/zSVDbj3wFQlo99cKoW+0AYl6Q
+         1yAtMWquachuYZHU33aLZByiMvWn6rw+EFL3uZ3/W9l86alVE5D6/HUSu4ByJO6Ov1Dz
+         KStmc1tutsaRz/FlYeYX/sEo3P1bJBOIE0S9syZ2ifUutAy1oEVicMQI9aHDsO0+gNOn
+         eFdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763823429; x=1764428229;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AoeYwuTA2OCKqGileGsNd+ysqL+d5N6ZH/jsAbQy4b0=;
+        b=OoQEEvdsgD6AD8AvnJgIf1vPBCmzzfYozxDTquZYs6xdwiQN1SJ+Dpb4yZAyB4c1pm
+         /+WqjuBLgeBPKVD6l06AySG3I1Pj7ONgf+Y+pv5lrBelG8+5nRd/NlydHczxckfYefPI
+         FHBUNestLyBEROakPiD6fwMXOsRZfe+syh0gke8RLo7gXpaEfiytXaJ1R9TPB0gm3xhi
+         GCE2Q2teWJLEYXjQFBTLW730jERy0sn3fbGRymfdMbHZs/wE+t8i2YXA067CC6KJOO0n
+         16hKjAgQf9ZMgd/0crybKJP61ydBokq+tFCgR5g4jG4NHh01Za/G8jRry7Wi6gNHZO3s
+         Vfmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxQ5nzn8/ut8zXUu5TC32Oy94cLPImnDUZBUSqhtBneuq4LSYUSUJ3twFd7sT75TB3JBbl7KJTBbHFhQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkDsabioN30zzvkaN5FJCHXiM/fmDTUA2H+E/ZXgyvWTAXFRIU
+	aWFOty0PWbt2yhTLJkQ38PudpZPXUxs5jbR5X4NIAGqdPz1zqFogAZ0atFjZ6cOGGQclfaiCvbn
+	9HJYq6UaqDrOIUAkl5vkMILEBv0LtfaDooEcBi1bB/Ije3CZ1GPHJ6yKRPKaBTbs2fn18XEgzrG
+	MKGsNmqe7BkE1ZadNNMLJLLEDTEAmYjMdiuoAAoaw=
+X-Gm-Gg: ASbGncs/8jOf/01WuR5u8lu2uz9+AfQLYpUToFrT8dMBTxrsUnP6NcgtemwU0SBcBhj
+	l6GxRLoOnRrk94VSxZdfBx20JwKJKQoz32E4016j099TjNgRp8AFtaQ7uhYBdOD9XLzbLFGEZH7
+	31+4NoS07GwBEuHJxANZAaD44FHwbX/ud11FAH+6zlTrvvuTPCNYWtH2Ma6lDsYd5w
+X-Received: by 2002:a05:690e:1511:b0:63f:a324:bbf3 with SMTP id 956f58d0204a3-64302ab18damr4335092d50.42.1763823429378;
+        Sat, 22 Nov 2025 06:57:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFJA7IrsaRMoz4Q/MV8XxAm6kxOszSooFbnuk2I2D2sSCVAvxGo1WW7Hp8NfZ+CGh7b65wTnbGGciN5n9h/Z58=
+X-Received: by 2002:a05:690e:1511:b0:63f:a324:bbf3 with SMTP id
+ 956f58d0204a3-64302ab18damr4335087d50.42.1763823429039; Sat, 22 Nov 2025
+ 06:57:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCHv5 0/6] zram: introduce writeback bio batching
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Yuwen Chen <ywen.chen@foxmail.com>, akpm@linux-foundation.org,
- bgeffon@google.com, licayy@outlook.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, minchan@kernel.org,
- richardycc@google.com
-References: <ts32xzxrpxmwf3okxo4bu2ynbgnfe6mehf5h6eibp7dp3r6jp7@4f7oz6tzqwxn>
- <tencent_865DD78A73BC3C9CAFCBAEBE222B6EA5F107@qq.com>
- <buckmtxvdfnpgo56owip3fjqbzraws2wvtomzfkywhczckoqlt@fifgyl5fjpbt>
- <8c596737-95c1-4274-9834-1fe06558b431@linux.alibaba.com>
- <kvgy5ms2xlkcjuzuq7xx5lmjwx3frguosve7sqbp6wh3gpih5k@kjuwfbdd2cqz>
- <853796e3-fd44-4fc2-8fd2-5810342a6ebe@linux.alibaba.com>
- <ztqfbzq7fwa5znw5ur45qlbnupgepaptzjaw2izsftbtth6zca@db4ruyaulqab>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <ztqfbzq7fwa5znw5ur45qlbnupgepaptzjaw2izsftbtth6zca@db4ruyaulqab>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20251121081748.1443507-1-zhangshida@kylinos.cn>
+ <aSEvg8z9qxSwJmZn@fedora> <CANubcdULTQo5jF7hGSWFqXw6v5DhEg=316iFNipMbsyz64aneg@mail.gmail.com>
+ <aSGmBAP0BA_2D3Po@fedora>
+In-Reply-To: <aSGmBAP0BA_2D3Po@fedora>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Sat, 22 Nov 2025 15:56:58 +0100
+X-Gm-Features: AWmQ_bkhaeO27ks2qTqUvx9zYAyPvR45fmibJyAeax_P7fjCjfN3MMivydMdvis
+Message-ID: <CAHc6FU7+riVQBX7L2uk64A355rF+DfQ6xhP425ruQ76d_SDPGA@mail.gmail.com>
+Subject: Re: Fix potential data loss and corruption due to Incorrect BIO Chain Handling
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Stephen Zhang <starzhangzsd@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, nvdimm@lists.linux.dev, 
+	virtualization@lists.linux.dev, linux-nvme@lists.infradead.org, 
+	gfs2@lists.linux.dev, ntfs3@lists.linux.dev, linux-xfs@vger.kernel.org, 
+	zhangshida@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Nov 22, 2025 at 1:07=E2=80=AFPM Ming Lei <ming.lei@redhat.com> wrot=
+e:
+> > static void bio_chain_endio(struct bio *bio)
+> > {
+> >         bio_endio(__bio_chain_endio(bio));
+> > }
+>
+> bio_chain_endio() never gets called really, which can be thought as `flag=
+`,
 
+That's probably where this stops being relevant for the problem
+reported by Stephen Zhang.
 
-On 2025/11/22 21:43, Sergey Senozhatsky wrote:
-> On (25/11/22 20:24), Gao Xiang wrote:
->> zram(ext4) means zram device itself is formated as ext4.
->>
->>>
->>>> zram(ext4) -> backing ext4/btrfs
->>>
->>> This is not a valid configuration, as far as I'm concerned.
->>> Unless I'm missing your point.
->>
->> Why it's not valid? zram can be used as a regular virtual
->> block device, and format with any fs, and mount the zram
->> then.
-> 
-> I thought you were talking about the backing device being
-> ext4/btrfs.  Sorry, I don't have enough context/knowledge
-> to understand what you're getting at.  zram has been doing
-> writeback for ages, I really don't know what you mean by
-> "to act like this".
+> and it should have been defined as `WARN_ON_ONCE(1);` for not confusing p=
+eople.
 
-I mean, if zram is formatted as ext4, and then mount it;
-and then there is a backing file which is also in another
-ext4, you'd need a workqueue to do writeback I/Os (or needs
-a loop device to transit), was that the original question
-raised by Yuwen?
+But shouldn't bio_chain_endio() still be fixed to do the right thing
+if called directly, or alternatively, just BUG()? Warning and still
+doing the wrong thing seems a bit bizarre.
 
-If it's backed by a physical device rather than a file in
-a filesystem, such potential problem doesn't exist.
+I also see direct bi_end_io calls in erofs_fileio_ki_complete(),
+erofs_fscache_bio_endio(), and erofs_fscache_submit_bio(), so those
+are at least confusing.
 
 Thanks,
-Gao Xiang
+Andreas
+
 
