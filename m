@@ -1,62 +1,53 @@
-Return-Path: <linux-block+bounces-31067-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31068-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EAF6C837A6
-	for <lists+linux-block@lfdr.de>; Tue, 25 Nov 2025 07:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67FF0C837E5
+	for <lists+linux-block@lfdr.de>; Tue, 25 Nov 2025 07:34:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1B7B3A4225
-	for <lists+linux-block@lfdr.de>; Tue, 25 Nov 2025 06:32:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B7633AF6FB
+	for <lists+linux-block@lfdr.de>; Tue, 25 Nov 2025 06:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1058128CF77;
-	Tue, 25 Nov 2025 06:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XcvZrkNu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47F8429B8D3;
+	Tue, 25 Nov 2025 06:34:10 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8894828D8F1;
-	Tue, 25 Nov 2025 06:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D465295DBD;
+	Tue, 25 Nov 2025 06:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764052331; cv=none; b=tutzagnvND7EhyP/PBCWkHIdl0dICSidJmrVyOM7toAWUNL2CtVNTLIpEkOHocz7IdzrENby+lcjGMhVtQGCd052dlH3pXbCRj8JULH3lO/UKDprwlog6VK4+Nyxrv/MRqIRpC59rG7pnKXPCiFHTM+FeOXd0QC0nUK/mzT5R8o=
+	t=1764052450; cv=none; b=cwRpkTtp9Nekdy/6N2uyngREuhvYuL9ks+my9YGmFufn9gYN4tLGIk2Zb1WRKB2oQW6S/VGZw/EslyjuW9AyryUGCUHkzklVfOzPc7Gu9UyKfGOokDDjO6xjz18Bb24PJtH9XKPUew1vbiH0FDBTKh1yWgfyHnWjaVx7FmQLDYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764052331; c=relaxed/simple;
-	bh=o5D3QieV1WPDDyxNHVYaUpvgcKnckOs8bDfkWeLbZss=;
+	s=arc-20240116; t=1764052450; c=relaxed/simple;
+	bh=ja/dybNRZjiFc4BwhelBUXC1g5mym/a7FtVQoXLnDWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F2cNPJ8m3CyQEA8TO6835br/W1c1WmQ2ZXtL+g55wLv93quLBHbw15MkkkSS45pmBC3gSL447j1Azw45eNlMZ3HmnhL8sKRYq+Prt495dk+egXj1KuI0d8Alr+wwsbLr8dpG40xC6uo1FWk5sdM4OYIUWstn04b4mx25m/YDLa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XcvZrkNu; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=o5D3QieV1WPDDyxNHVYaUpvgcKnckOs8bDfkWeLbZss=; b=XcvZrkNuIoZYcURBVitDMmv7dO
-	CV/T8Qx0Yfnqk3GjXffUB6x3fOvLVni+7yKkUGAWpDcv0Qax5YOB5ZoTsc6HpUV5Lpp98a+3kV6KJ
-	o0rqtotEQMfjAG6gyKVmmiQIY9UXzeugm/4jeP+HKs9U0jqoGLaPotAvFGQ6DT2yhqjuPOJYeiQ2d
-	5yMv8tWhZN3AmD8Fhzh21pR22hfevmrRW1v6ivW+GMKsrw2yaWusnMK5TVQiLcIPL5E0YYLIUKbcT
-	dNzuhApmfpPBZOA66ngkUXNP0Uz7ZKSMgB9rPLQfFhJscpI2W5nyNEav60gVg9A0kdLifPpiEP1tg
-	DS6ePBMg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vNmau-0000000CpOD-3gdN;
-	Tue, 25 Nov 2025 06:32:08 +0000
-Date: Mon, 24 Nov 2025 22:32:08 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>,
-	Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@infradead.org>,
-	Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v2 1/5] block: Introduce __blk_mq_tagset_iter()
-Message-ID: <aSVNaLyqg08-GAzN@infradead.org>
-References: <20251124182201.737160-1-bvanassche@acm.org>
- <20251124182201.737160-2-bvanassche@acm.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfSTO7OFJNdrGwJce2EUB3+CtrIYj6U8ttnSBQsShLlMnRUOvWtk+IkM1lNYcZjgyq+7xqMwoxLa4Qu5fszp+SbXK04N9M8ZNkMRZkWLtWaz1KqV9Dam5BePYP6gWW3fRIrSxQ7NNdyeiZJTmtLGL3petF+7niFlfQ6K97+Gd5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id BA0A868B05; Tue, 25 Nov 2025 07:33:58 +0100 (CET)
+Date: Tue, 25 Nov 2025 07:33:58 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Chao Yu <chao@kernel.org>
+Cc: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>, axboe@kernel.dk,
+	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+	song@kernel.org, yukuai@fnnas.com, hch@lst.de, sagi@grimberg.me,
+	kch@nvidia.com, jaegeuk@kernel.org, cem@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+	bpf@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: Re: [PATCH V3 5/6] f2fs: ignore discard return value
+Message-ID: <20251125063358.GA14801@lst.de>
+References: <20251124234806.75216-1-ckulkarnilinux@gmail.com> <20251124234806.75216-6-ckulkarnilinux@gmail.com> <9c8a6b5f-74c8-4e9f-ae46-24e1df5fe4e0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -65,10 +56,16 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251124182201.737160-2-bvanassche@acm.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <9c8a6b5f-74c8-4e9f-ae46-24e1df5fe4e0@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Why are you Ccing me on what appears 4 out of 5 patches, missing one
-and the cover letter?
+On Tue, Nov 25, 2025 at 09:10:00AM +0800, Chao Yu wrote:
+> Reviewed-by: Chao Yu <chao@kernel.org>
+
+Sending these all as a series might be confusing - it would be good
+if the individual patches get picked through the subsystem trees
+so that the function signature can be cleaned up after -rc1.
+
+Can we get this queued up in the f2fs tree?
 
 
