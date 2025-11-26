@@ -1,114 +1,128 @@
-Return-Path: <linux-block+bounces-31213-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31216-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FEB3C8B24F
-	for <lists+linux-block@lfdr.de>; Wed, 26 Nov 2025 18:11:19 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 499F1C8B278
+	for <lists+linux-block@lfdr.de>; Wed, 26 Nov 2025 18:14:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CC453A52D5
-	for <lists+linux-block@lfdr.de>; Wed, 26 Nov 2025 17:11:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 366F04E3091
+	for <lists+linux-block@lfdr.de>; Wed, 26 Nov 2025 17:14:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B0033A00A;
-	Wed, 26 Nov 2025 17:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C7133EAE7;
+	Wed, 26 Nov 2025 17:14:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R+UWMgGv"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="P7R6wbO0"
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1C51E231E;
-	Wed, 26 Nov 2025 17:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02D933A008
+	for <linux-block@vger.kernel.org>; Wed, 26 Nov 2025 17:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764177068; cv=none; b=cp1ifc0itN3fTSgqHjOf50rpBCXtA4sNx4KLftZ5irMOgQMZtsoLoH4eWfJ9jvvrOGTe69YtE2Yt+noKb1t90QGMAxERbNFMCEAW0XxGfvzu8/bYI2e9mz85jN45S66DpnoFpllOozmuq8tx+czMgPtEYn16oTsMHSydn8wR9kQ=
+	t=1764177278; cv=none; b=BCiB4SYfJOsklpdhrPNmjd4AAWum24Z8u8ePdhBwKWVme93dboi0mS8MNlggJ+TGfFKneofGJCthA3s06h01oZg5iiGd6SfISoYXFLPUvS/sv0vCHYLiiUiTZA+zhyt/vzCQryWJcgZL30p3XfuTjvB1lKl9uS+kbx6vIINGRrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764177068; c=relaxed/simple;
-	bh=+MziezalzLhgHTkPg5jAHvo3sHmJxoi9k7Z+XbQ9GE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EYzJY3VraeAHSddP7Dx0y+Q3B/1b5qkKb0GpaXzU2OR4EA6eJQU2e4Kd53J1QoW7A0qRpkS7g912PCyxWhqtcIcTX23XWMAGBIFI/CG+WgKwfmBUrUTR9GtoTYApBCOQXMfHpyWUg50r+wd3cJ5wIriyHZptGUTODGV/ObD0D9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R+UWMgGv; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=gHCa+irjrAJ1/TqpGbdSGXePtHe0se5Cnni6DX8TQMM=; b=R+UWMgGvazrV8k2pJB8KdaNsfK
-	9B1Fe/B+KFpFioxevAzoynD+iKyh4/g1c/595TXB1H6UjVtNOajOuhKwSPg1D/+lTVV/ip/U700Bl
-	9GeuJNMdAuSHVGvDf5Tco9c6kjbK+6867IfefRbkdykgmIi3lg+SsrX6ffOlXjsvz3QipnMNqbkN4
-	AhaP8zNXh21scMnK/2sp3oNiySeE8GIXRSQg8MIK4ZnLS4Qij78LdbvstBHZK+4Cui1vcVqPVOsHm
-	1fsREU7Pt15K7htd52FfIRUnFA6VuhE6abqXZKUEeZxRgdC8LyMsFDqsuqSrBnCVQbIL85Y+aFoc5
-	S4gEqAPw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOJ2m-0000000FNAN-1YFg;
-	Wed, 26 Nov 2025 17:11:04 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: shinichiro.kawasaki@wdc.com
-Cc: linux-block@vger.kernel.org,
-	patches@lists.linux.dev,
-	gost.dev@samsung.com,
-	sw.prabhu6@gmail.com,
-	kernel@pankajraghav.com,
-	bvanassche@acm.org,
-	mcgrof@kernel.org
-Subject: [PATCH v4 2/2] tests/srp/rc: replace module removal with patient module removal
-Date: Wed, 26 Nov 2025 09:11:02 -0800
-Message-ID: <20251126171102.3663957-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251126171102.3663957-1-mcgrof@kernel.org>
-References: <20251126171102.3663957-1-mcgrof@kernel.org>
+	s=arc-20240116; t=1764177278; c=relaxed/simple;
+	bh=uWVb7imaoBwQd084csoILb6EvrrasnUptYGTVswGUdg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=I9ilXQ7ThgTOATEaW+LcvpqPwzfxrbO3vcezlEYbEn/iwZEA7+tVfhxUjW5WSf+tgWg11bh4jGXibnXAZS2t6HxGJvbfWy9wNg2TD9OKvw5Mr7noOv98N3Q/uqM/yxzA2EggK835a4qP3n+25k+27moWdulvclSDxsybdZ2YzDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=P7R6wbO0; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-434709e7cc9so133195ab.1
+        for <linux-block@vger.kernel.org>; Wed, 26 Nov 2025 09:14:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764177275; x=1764782075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Waaw/w2j2pENd/kSDmzcSGfaP1pnvDn9JVdDG4gqLck=;
+        b=P7R6wbO0eEMFlSfHdnGGCLpHJN8Pf+J8hAPffkG6H0Is17JkabMfPoDYftvhFmrGuz
+         5CKwXv0jtlYZmoa8O6chWylRb70FOFfb7n3vpQJBshOX2OaayM1xL0PAEWJkoXKCJ8Bh
+         119v4cTgvRdRslLxRgzcWlFVpo04IcQsqpTAGDRAEpgpwiw+TszGby8zN4LBSwckGVSl
+         rLhfZdu20tSLOVkVy9i0xPvrWglrkipSeYeDpur0iD3tNv9b0MZklPd9nizzkyVCfNEB
+         bjRQxMEEXZjApH2cMSs2t5bQpv8uO+5thOs2EeZ06SRmWml3Krpt1kEVQ0hnTbIMQkfX
+         9fcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764177275; x=1764782075;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Waaw/w2j2pENd/kSDmzcSGfaP1pnvDn9JVdDG4gqLck=;
+        b=l4bK3YWV5OqJFVOf9qXz0hKtmmJk5CYlIiCeMR3V+02SOdmXnhvbDUqhVIdrvav5vL
+         oAI8iuJ7V9uiq1wAzs69eZLX98FNJ7HgQwVg1rTcGLg04zK1wvVNMTNxikeHBuDiAZIi
+         1yzGhZmLiK/KluxDtuL9aAgUDYNbgGF6nE091cQSmtX4MXqNKZoPR0h8JH+R/joyK18V
+         +mAzYaqVQWXeo6GTJsw7Wz83psozWDU7I/6sf/vqCiUDdWna6XFH6rCdb2COmOMeqjzj
+         g+fV7C6C+M8+bMiJSAR+jFzJfnF8GeXN5cT32kZcR1x1O+VQM9YTEldh7bQOMi6HuQin
+         5Wcw==
+X-Gm-Message-State: AOJu0YxYLNhmfh9NAHKfBeUsDqFJ7ndEPKlH2tnCo3YeXdgLizIjHaHp
+	ZBsPsY4PrJs7ErSqPua5+NdZqWpk/jOD3XviT3J/490aRbItPmvzlFgKTUYme4zdZg3euFfXBh4
+	qOE+B
+X-Gm-Gg: ASbGncvj0/OPG0R43LNIh+esOMTpj02QnHEFoM/qDfz+LZnsRbiLSaBRsO4hqrt3f/M
+	HteDEI4RXj8KRfHxV1tA0cQveYFRG8B2RUpwFwNGvvnjk+B+mmGfCspOBoBDp9VzCkgWsgQtxJc
+	Gi+8KupYpYXy1228jcwWs4Mac6wnL3GozqK75VGjeukeQflq3fhtPUq9ejPkfH7Em7lEcA63CAd
+	flnWYVCy+0y8d6YfijD/8WQxvPBzznr6NDGzZvPvlYSrlrGxiiu9BFI4mkf2uSTlCmWWm3ZJZj+
+	yB58WuObO00IPkvvIUADoup5B87ZscuJzzA0/qW9qDLaXHs/XOsn8pAJQs5s337U45ACW+yETbD
+	Ln5rDW9oTNYtVjOXJquEaFn25MiaweplrblDkymJ0VQ64wEhuqm31Sh2QoqevbLog91JeMrnbqC
+	TZgA==
+X-Google-Smtp-Source: AGHT+IHwHHDUwlmQFfLs1EZPhOMv9ft82AclYixifNYet0D7/yodkeU+uFnr4uBAVbfHn8ILovtdkw==
+X-Received: by 2002:a05:6e02:3e92:b0:433:5e33:d41d with SMTP id e9e14a558f8ab-435b8e7a0dcmr160640095ab.30.1764177275359;
+        Wed, 26 Nov 2025 09:14:35 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-435a90dba32sm88409755ab.28.2025.11.26.09.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 09:14:34 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Stefan Haberland <sth@linux.ibm.com>
+Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>, 
+ linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>
+In-Reply-To: <20251126160634.3446919-1-sth@linux.ibm.com>
+References: <20251126160634.3446919-1-sth@linux.ibm.com>
+Subject: Re: [PATCH 0/4] s390/dasd: Minor cleanups and copy-pair swap fix
+Message-Id: <176417727431.85325.2478471808597740699.b4-ty@kernel.dk>
+Date: Wed, 26 Nov 2025 10:14:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-Bart had put the remove_mpath_devs() call inside a loop because multipathd
-keeps running while the loop is ongoing and hence can modify paths
-while the loop is running. The races that multipathd can trigger with the
-module refcnt is precisely the sort of races which patient module
-removal is supposed to address.
 
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Rebased-by: Claude AI
----
- tests/srp/rc | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+On Wed, 26 Nov 2025 17:06:30 +0100, Stefan Haberland wrote:
+> this small series contains cleanups in the DASD driver
+> (string formatting, naming helper refactoring, debugfs simplification)
+> as well as a fix for the gendisk parent after a copy-pair swap.
+> 
+> Please apply.
+> 
+> Thanks,
+> Stefan
+> 
+> [...]
 
-diff --git a/tests/srp/rc b/tests/srp/rc
-index 8585272..2d3d615 100755
---- a/tests/srp/rc
-+++ b/tests/srp/rc
-@@ -331,19 +331,10 @@ start_srp_ini() {
- 
- # Unload the SRP initiator driver.
- stop_srp_ini() {
--	local i
--
- 	log_out
--	for ((i=40;i>=0;i--)); do
--		remove_mpath_devs || return $?
--		_unload_module ib_srp >/dev/null 2>&1 && break
--		sleep 1
--	done
--	if [ -e /sys/module/ib_srp ]; then
--		echo "Error: unloading kernel module ib_srp failed"
--		return 1
--	fi
--	_unload_module scsi_transport_srp || return $?
-+	remove_mpath_devs || return $?
-+	_patient_rmmod ib_srp || return 1
-+	_patient_rmmod scsi_transport_srp || return $?
- }
- 
- # Associate the LIO device with name $1/$2 with file $3 and SCSI serial $4.
+Applied, thanks!
+
+[1/4] s390/dasd: Fix gendisk parent after copy pair swap
+      commit: c943bfc6afb8d0e781b9b7406f36caa8bbf95cb9
+[2/4] s390/dasd: Remove unnecessary debugfs_create() return checks
+      commit: 764def9e8eaf1b1ccdcd89b8c16db4194ade775f
+[3/4] s390/dasd: Move device name formatting into separate function
+      commit: 43198756ee8cade0acc17a89f959764cd17776bb
+[4/4] s390/dasd: Use scnprintf() instead of sprintf()
+      commit: a857d99201cc4eb3cb78b9dcb6f1d027ef3ae699
+
+Best regards,
 -- 
-2.51.0
+Jens Axboe
+
+
 
 
