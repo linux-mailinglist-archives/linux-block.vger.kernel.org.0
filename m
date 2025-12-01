@@ -1,117 +1,117 @@
-Return-Path: <linux-block+bounces-31442-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31444-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCCA0C97CF1
-	for <lists+linux-block@lfdr.de>; Mon, 01 Dec 2025 15:18:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0727BC97D36
+	for <lists+linux-block@lfdr.de>; Mon, 01 Dec 2025 15:21:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80A573A357E
-	for <lists+linux-block@lfdr.de>; Mon,  1 Dec 2025 14:18:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7CD43A35A1
+	for <lists+linux-block@lfdr.de>; Mon,  1 Dec 2025 14:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3A315687D;
-	Mon,  1 Dec 2025 14:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1681B314D2F;
+	Mon,  1 Dec 2025 14:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="M8TwWvT0"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="diXO9nCS"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9974E3B186
-	for <linux-block@vger.kernel.org>; Mon,  1 Dec 2025 14:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301D91DE8BE
+	for <linux-block@vger.kernel.org>; Mon,  1 Dec 2025 14:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764598689; cv=none; b=M1r1Se3KJ4NkPtBdNLXi7cHTE+O4kvN0UAL37lnWCQPiYZjOiUFwMoU9c3ZO6/fmpMmNw7zYawDpNC8B0AzhVhPcgYfmsoLTElTlktj0j62DDxaYC5A4DWR/mRlTpoH54RgGEPkxLuhx9McVXkEh7DmEAJlU8ZSWcz4nY6XPK+Y=
+	t=1764598896; cv=none; b=Wtt5mGFbiWN5zpAYnlV7t/1KUYHW1tcc1dHisM66MetL5k4qIpQtKDw8ntHXNU6dGrHkE0f0FH+GJYMxCSrX3jOe0YH2eG8mMnAzws0+1SwrFQ4VHAW1JKrQFX8XPbooUg98R+mTB1oMOVePu55VOZY17xERx39xnCxWmMzN/U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764598689; c=relaxed/simple;
-	bh=h3rbZP3fV0IHuVr1GQKmxQeLDqhbQnnVkhaz+tvSvRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CvMxTBBzFgFAkDBscbZ77jXr7PxUAPlqg/s6cFMl7akWwl5Ybo5GhZDkW2dMtT+kX+KY4gVLu3qmuO4NpffBUuAvWp0mwnzvBwMFQi53jlBitRaVXYO/Ev/Mx3F29PGW0/aAQ9KcGwlBVGeqzgbY6znlmrB07uILTth2GIweKlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=M8TwWvT0; arc=none smtp.client-ip=209.85.166.44
+	s=arc-20240116; t=1764598896; c=relaxed/simple;
+	bh=AVkpwlE+XPpCqhMAHz/G9EgcpLoGYA3u3IJFugVwQus=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HYskuhCotISd663OtTrdeEH+KAopcf6Xv++gq2V0jMmS94fzGB7pnubs9jghQiX7aP62WaIDaYxw2mZVLV09lMeONK6V+C8WlPydIH3e45KZM/vyyyBNtlFdRBQIrW9wxCt9WtkXc9plG6URKZLbh/1Y3YrZjcgdPPq1rMW556I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=diXO9nCS; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-9486354dcb2so181924039f.3
-        for <linux-block@vger.kernel.org>; Mon, 01 Dec 2025 06:18:05 -0800 (PST)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-94880628ffaso159090339f.0
+        for <linux-block@vger.kernel.org>; Mon, 01 Dec 2025 06:21:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764598684; x=1765203484; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F/6CFxxBHG/WIoG6WEATxfC9c0gYCxW+OS9tRPY2quM=;
-        b=M8TwWvT04Cjo2FCeweu0nzG3j/SLwq+ogNeAtzdJl06AG8+YM1SscNWe1AT/wis1nw
-         XGJd6svYmojkTckTV2NcSS5Gv2MPad2NBnwNx5VkDNbR275wRa1e+xinlVLrqKGKLml9
-         DxgvRyaR7dRzXyyQdGUZIzAvXM3hoXmaId39l7e2wX52bna+8g+FsFaomfnisbhlhSUF
-         eqgb4B2NfN9MHsFMGhHJ/tXvMt85tCGeeU8C9UvAuj3qEzfEVwVkJMn6ubaxwKgNkAJh
-         8BT4pKIC6OxGqdU0sxX+peFjS6UIQK9HGlmxpDpmLLvKbDqljFgEsAbuyXkogwSm4rzR
-         lgFw==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764598893; x=1765203693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dmqefrKstVvcepMtVsZp5aB8cPGmO5tuI5VefddNQQ=;
+        b=diXO9nCSYdWgrL/GFDKNxepyks6e0kk4eURn49B4ONJimaOEvhUgGRtYuyOqfWEsC6
+         G0JjaubLdQ/YSwErfkbYjyJxI5HiVlg5HMnLllb8espGoW93/P9VgAi+v11GAYCS1HN3
+         sEmOqDs39GM6ZDP958KSe3cTichTGB8adlF18yLoTwynngFXOZCLEIXrFugcQBPtSoiF
+         3rJHIQuZiqJS+efg/C3s5DsgnLwpRcbuHDL7AFk/IfmIluVTkFGvKnsvSybdcbRRK2mV
+         srCxEoy1dBvvxOChJ8eYMhzGh47z7mVZm9Mua4kYpOlw8+mPUDIBntrZU0NR5nSOGPaZ
+         2Wjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764598684; x=1765203484;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F/6CFxxBHG/WIoG6WEATxfC9c0gYCxW+OS9tRPY2quM=;
-        b=ZVoAMHtD3OOKhG3xyuLz6aXSc/jhEw6UvH/5gul1ffSw+hKCXPMiCDJMBJNeCfAlG0
-         OTS+H2u6FL4UD0FMLrgur1bwy0ug/20/BgzbR63HdMspfZe1AtYZAvfi3hEAjHOi7dVt
-         IDzqHV+1JR26VpvoaenLClGVGebfmCnZ7CVwAWK8tBQvecloCAHJ7OLiLbgCdohUTaxJ
-         8OWOW/OwHiBFqVmwfTKeIYQV2mR8NPGj/bx6NCpDvP1ebSbVuTaj/gZvRH7xhVWvzT1Z
-         G7O1ofx5o7XD2mVSdPWuvscxCRQwDyN7a5CsWsLFFngwp0w1TDdRfTbgK6QB/zaL2z5H
-         nJjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMH1FomxVm3pe6S6Oz8pNd+gmE+YHSrFAyzQfln2uHHW7E9z4gxo56v/cLinswoQtwTpDN1axIJXRZXA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/+6EQiDbe3wDQxdcQGrvAo8+Ar7pNqqRARDvXAaldPnnNHAgP
-	pREwqHrOMxd94ZqskPDD5KCM1Y9AJESDLnx5LQAiQgwHJ6sAHI7o9oMCigOflLJdLMo=
-X-Gm-Gg: ASbGnctFUmovcCv5VJWISfsdbmtAHEuP9BjEXmCqHcCkaqMP7lTm4hpXwfxBEqDookO
-	nN75qtegAr56R7GweAcU/X/Op0kcLG8ZAy2bqXHJwKv89VEtxu6LOS3XzcDDXegzz8NSyLJTyjL
-	8JHkRTvZPkXBDTqpVwCv5n0Nz1wKaJ3E4CnfD0wYze1X2OpI46TJSmo26Dq3RzELctVp55DXC8U
-	67gkWW7phW1h/BhtChjwsjM5xMfF1YMJCFMZ/XvAK7LuWm1j5vNn44kCm5KvOSg/GmJwbgFcyJS
-	h0o4ZYRxfRlH1YfBSAmfIO9bIYvLXg7rx+48YJn8j4dSBblwyuo5YaBBb9WohZvWL1MteHTwNNj
-	tYMWvkS+yOrdqJ/DDH752k++YIHy1ghGjC6FCy3s3+G8ZB3t4MtAezJXtPHZSxuJN5/+MnVNdaZ
-	PN3/9Ysg==
-X-Google-Smtp-Source: AGHT+IF3G9KyDrcr/dsaGOdHNybcvbHc9D/O83zkxW0e7cuWx4cN9hmlcRysu39o8lsbeH4dxl9jFQ==
-X-Received: by 2002:a02:c995:0:b0:5b7:d710:662b with SMTP id 8926c6da1cb9f-5b967ac8e72mr28523100173.22.1764598684358;
-        Mon, 01 Dec 2025 06:18:04 -0800 (PST)
-Received: from [192.168.1.99] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b9bc768ae9sm5966579173.37.2025.12.01.06.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Dec 2025 06:18:03 -0800 (PST)
-Message-ID: <b5f09d4e-5e46-473a-b7e4-f4ea06793551@kernel.dk>
-Date: Mon, 1 Dec 2025 07:18:02 -0700
+        d=1e100.net; s=20230601; t=1764598893; x=1765203693;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0dmqefrKstVvcepMtVsZp5aB8cPGmO5tuI5VefddNQQ=;
+        b=AcEHT25rO/HDlDG5up/e2c/bSIaV6aioKMRP2pq7SQHOJ448sGzZpVRMUKqvK54BZ1
+         +7fo4XpNl2njKyl25++1ZqyMcAu60EnqVg97ETFH1zPsEKyiYR8FUS//bG11c57kl0Hv
+         mJ/P2Fz21efa7BosOvXEiladmRmcTEArFCxD0XsLuPs99ApNsXVM/644vi2vtbSLoKWn
+         +Vf33YrtozHFxVa/rbTE/TxqD0gyVd6gBJC86iki6EYgD5aaQYCCcJlEcg+IRwIruoNU
+         ApksfRXHZBO5TNoDZdzMmyIUnMqyzxLykcQizrXCGu16A2hVCI5WbzQcbQcD49D/AOMk
+         ZpKw==
+X-Gm-Message-State: AOJu0YzDkSDnHLze7nQlbJKCHbKufpE51ZoE5XZSgdZQqXv9GB+EgEDy
+	/wQsyVO9tO2d7YmCrx/GpD0zrQfNQqHfmjwTL4P/goK4cULejhk+545cRnX1PrXacgg=
+X-Gm-Gg: ASbGnctyr4xZlols7BTbS8tlzH8C6kjgxJ5WkXxPy1q73nEjXUtil9WI9iUfuWvIOG+
+	aEIatg+S4Y1sBhCP7v4GjPsLrhPKeqjrwUA+WI0al8g60SWhjt32GLEFyIKCW2DpbNa6KHBscUI
+	gvaWNPiInsNSU53Se9GaPS6zxD80LyaWeTIdRAfGostG0+zao68+mVYZ4xFxvuJhPxDaQUEIq9i
+	gTY4lzjZj3uao5OOsMM5Y26pyQi5c5M4YCGbvD3CgSRXDJUKo3Qtwav/vp0UDzfvEf8HZmBEJzi
+	Vp+eb3BXBhCDuwqiXFKnq1z4OkQ20kNbJXWUv8MIXZQxzv+nZ9cclt7opwHX4ErAcs836pm1ep/
+	xB/Ra91u0q3h0p6AbRM3yMNcOB9jY0pBKzziR84Kxy55j44eo3WyAouIY5eSRBO/EfdUsK2zs5c
+	vtvA==
+X-Google-Smtp-Source: AGHT+IH1RzKehQcG9R7gLk4AvlKgLKTT3BNmzHzt8guhqnCxTkTDNQGmkgxHbKX4q7nTTE1gNfsgGg==
+X-Received: by 2002:a02:a913:0:b0:5b7:11f4:232 with SMTP id 8926c6da1cb9f-5b965b1b9admr25351652173.9.1764598891594;
+        Mon, 01 Dec 2025 06:21:31 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b9bc3716e2sm5795794173.25.2025.12.01.06.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 06:21:31 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-block@vger.kernel.org, ming.lei@redhat.com, hare@suse.de, 
+ hch@lst.de, yukuai@fnnas.com, Fengnan Chang <fengnanchang@gmail.com>
+Cc: Fengnan Chang <changfengnan@bytedance.com>
+In-Reply-To: <20251201122504.64439-1-changfengnan@bytedance.com>
+References: <20251201122504.64439-1-changfengnan@bytedance.com>
+Subject: Re: [PATCH] blk-mq: use queue_hctx in blk_mq_map_queue_type
+Message-Id: <176459889072.423001.3924642755209582792.b4-ty@kernel.dk>
+Date: Mon, 01 Dec 2025 07:21:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] blk-mq: use queue_hctx in blk_mq_map_queue_type
-To: Fengnan Chang <fengnanchang@gmail.com>, linux-block@vger.kernel.org,
- ming.lei@redhat.com, hare@suse.de, hch@lst.de, yukuai@fnnas.com
-Cc: Fengnan Chang <changfengnan@bytedance.com>
-References: <20251201122504.64439-1-changfengnan@bytedance.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20251201122504.64439-1-changfengnan@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-On 12/1/25 5:25 AM, Fengnan Chang wrote:
+
+On Mon, 01 Dec 2025 20:25:04 +0800, Fengnan Chang wrote:
 > Some caller of blk_mq_map_queue_type now didn't grab
 > 'q_usage_counter', such as blk_mq_cpu_mapped_to_hctx, so we need
 > protect 'queue_hw_ctx' through rcu.
 > 
 > Also checked all other functions, no more missed cases.
 > 
-> Fixes: 89e1fb7ceffd ("blk-mq: fix potential uaf for 'queue_hw_ctx'")
-> Signed-off-by: Fengnan Chang <changfengnan@bytedance.com>
+> 
+> [...]
 
-Reported-by: Jens Axboe <axboe@kernel.dk>
+Applied, thanks!
 
-?
+[1/1] blk-mq: use queue_hctx in blk_mq_map_queue_type
+      commit: 4d0e1f2139ad452d0e209a16b3d016af2f8ef1f7
 
-I'll queue it up.
-
+Best regards,
 -- 
 Jens Axboe
+
+
 
 
