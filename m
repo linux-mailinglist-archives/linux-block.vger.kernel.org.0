@@ -1,249 +1,158 @@
-Return-Path: <linux-block+bounces-31472-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31475-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77936C99365
-	for <lists+linux-block@lfdr.de>; Mon, 01 Dec 2025 22:41:19 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1080C99386
+	for <lists+linux-block@lfdr.de>; Mon, 01 Dec 2025 22:41:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EDBC8345BC7
-	for <lists+linux-block@lfdr.de>; Mon,  1 Dec 2025 21:41:18 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5C16D4E2831
+	for <lists+linux-block@lfdr.de>; Mon,  1 Dec 2025 21:41:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9021F27C842;
-	Mon,  1 Dec 2025 21:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD86D283FD9;
+	Mon,  1 Dec 2025 21:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="V+TkjIr7"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gl92UDIj"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f226.google.com (mail-pf1-f226.google.com [209.85.210.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E841E3DED
-	for <linux-block@vger.kernel.org>; Mon,  1 Dec 2025 21:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9B12773EE
+	for <linux-block@vger.kernel.org>; Mon,  1 Dec 2025 21:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764625274; cv=none; b=qrrwfGQzR7F5Haf5Lnbbgcr7CkwzXB0YkNxf7OKvVsBWauaG5/K1Y2XKuGECDhL5Tbt49HuI4540HUfLW82RKPrFC67Z6luW7GT6wN0OptzqHfPnO7vljsEjo4hhMp80lPG/HlKKADV0Cefmdovg17BTmIbgQaSKzVW9n3RDCFw=
+	t=1764625312; cv=none; b=pFGJLnPfzRxTqN7x21CiQ8GUgTlAUPYCCS9miLQTEWBoujKvB2JKOMtWkMLNz2CiNDjIhnHXMzNkfLTkh5R7uhbj+3PcpfLdZw8q+BNwQ6YU56Yu63T/UqXzKNqOw1JeLOX3QZO40eksRBPsLamj+P7VZEiwSuxULHU/FpyUCPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764625274; c=relaxed/simple;
-	bh=T8weHn8otMphpEreUJWqv5SlzDSbz8VmMVimy7muyEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K0oIx+bPYE7c0adEiGeOVFmi5WwTd/ErNhCvEv4RBQr8G87tO4uJ/J4mGqoTwXNNo6vuL4fkkzgtt4CxArc82ZFQzNSU7K7JWcoDbriwoSGjlW+XAzU26fVtaMMVr6FIKGTel3zJXMb5cbeYrY3WNZa5td2OAwcw3htPGpFuQRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=V+TkjIr7; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 5B1LcceI2417578
-	for <linux-block@vger.kernel.org>; Mon, 1 Dec 2025 13:41:11 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=l/N0oNZdrOxC+sMk7wLBt3mzHipkA8OrRZGOO0xO1fI=; b=V+TkjIr7KWZb
-	sRdL8/VOJPGgPW2bL/cMGaS/KBRtFcoKOttu+76x4hqtNMLkdpqHKW3v+QqUPRiF
-	oxZRhhbX9SNSV9sOdtDFClD+M3F9xLwSMco23ZZlHuJZLdgrPT3PzP8q7YZ7B/AB
-	vv5ecjvYwPinfcyN3yt3PpPjff8C7qj0jRtJw/cCukmFG+jKaPh7DDuWU7V+qHJq
-	RCQ12lMGh/XVa/fVsyvBXNRteMBV8JmZ/lf6gC4ZixKOCYZ9Eghqe2qFl2qVEhx6
-	m49T5XFMtWYsR6QlXkS9EG/L+y6fwPGyORjkHssnBZQBI/IgtNh7/iPIH2vrylPR
-	I1EWs/1guw==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 4ask4480p4-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Mon, 01 Dec 2025 13:41:11 -0800 (PST)
-Received: from twshared71707.17.frc2.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Mon, 1 Dec 2025 21:41:09 +0000
-Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id AC0FF45AA8A1; Mon,  1 Dec 2025 13:40:56 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <dm-devel@lists.linux.dev>, <snitzer@kernel.org>, <hch@lst.de>,
-        <ebiggers@kernel.org>
-CC: <linux-block@vger.kernel.org>, <axboe@kernel.dk>,
-        Keith Busch
-	<kbusch@kernel.org>
-Subject: [PATCHv3 2/2] dm-crypt: dynamic scatterlist for many segments
-Date: Mon, 1 Dec 2025 13:40:52 -0800
-Message-ID: <20251201214052.1531952-3-kbusch@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251201214052.1531952-1-kbusch@meta.com>
-References: <20251201214052.1531952-1-kbusch@meta.com>
+	s=arc-20240116; t=1764625312; c=relaxed/simple;
+	bh=yFQfCz9Rtps4/E7qo/hMIjax8jZd30ye8qUXJyXi/Co=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EZinhVfh15js8sPAX4pJzmQCMJD3v/ANzNT4kz/NloXdY9oR2orFEYcnUvBZnYHMigM9G3hm7lPZYzfj3i0c0RanCgN5nAaidMLI1Usy/YXhGMX2WPH6FC9PvCtdN3DVkDoXQS2yQ0urO0fD3QWNr3kAT6TWF2aJCAjwoIJ+Cg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=gl92UDIj; arc=none smtp.client-ip=209.85.210.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pf1-f226.google.com with SMTP id d2e1a72fcca58-7a9fb70f7a9so341959b3a.1
+        for <linux-block@vger.kernel.org>; Mon, 01 Dec 2025 13:41:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1764625307; x=1765230107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EnODA/nSVnwUuGroTkDbfXfMnw+yrill5Xwwc4at+HI=;
+        b=gl92UDIjal4Vt6SyDRNGlwgaTBIDP5lpxh58zM93h2lM/DsEHWGCX0VNztT1CDK+xg
+         Nnv/SSRoF5QMzeaOqQ7kr3Uwjjaoml4lt8dch5U9FlQhrzpFB6eUZCWlkJqL/jcyNIJb
+         DhW1xiRR4RwzXC+AY8lXo9eoPgzKPMhZVS02KxqA94I6Om8eXBWng8YRQ6MrCr0MdljN
+         6N6VRgeSNpbIj+0geRTgA7kp6pqtqxd0rOakEnpdp486HmEzlniB/kNACX8gU7rSswm5
+         JfreL8TG9aCYwrI4U899eaCGRO2kfSwiiGEPQaTEHwwASjDRTolLUaudBxXSF28zOQe8
+         FPkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764625307; x=1765230107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EnODA/nSVnwUuGroTkDbfXfMnw+yrill5Xwwc4at+HI=;
+        b=grcnTJbLyPdNppUzXvbB+mHqA7k436f5QQGpSZU4Gv/4r4sH4zdORn/vp+FsswxWCT
+         /l08Hl4NfWP3sG8Ky6+I14hwJ1WVVfcd/oGZHOQcQWp0g5xf1C3pytmrfUjIqYqXej6b
+         cLJBNjH4JiWEj4TsrmM+bYPyUxtfXYb7v4plAFTw5d6RK0S1W1cLdzFOmhFGvWpOgF2+
+         Fp7czoyUrVQx9ylwW+iDOqwd+FL4i4F8Xb1YxLHPkHjFCmOzMkbePI864yIZvbY3xTxT
+         aXr1y8K7kZhr10XfDb91IEGkqNrCTVYqh4Zx1vej6i7OH7MN6/8u8C7+tjc3YaNqejD/
+         PC5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUu0WSYA38/ivClN8W03DAwgqyqZgqrmOuEVmz8KcpWHokxkw05WbUvQrIQS4r1Zfbzws9sSrSs+ARORQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVFnleyWJSEDpLP0Bsw/ytUD/hrhBgZF60/1KXRYK2eKOehm1p
+	fOaxMwFMm+xU2fD1gJgEjwcYO9DPn/H3xhRaZQ1wbF+O6NuR7Za+FxAAj4rUVQw5jgFlTPId/9V
+	kQE+zeGXoYAgF4MkiqYB/GGIc8OsTd4oDmEJPxUb0cVqB4YOg7S0z
+X-Gm-Gg: ASbGncuf0a6Q4RpGp6weNKw/jM7xALw7cW7wlTOkdR4A4rznU9dtuV1T50Y5pSzTltu
+	jHR+6ez/Za+4xlIFD3zA9MJ1x3El5tvMpkDV/r3WvqNvTj7UUK7FYYS7SztzeMfXsTHOz/BBCWC
+	9fqyWlqd13x7RnUopjMjbIh58mJ3yRBDkXxZh95gAHbGytK8CP/BW1xZrTAZn+wrE+mA9NkYgMt
+	uJBiV7gw5PHeWzhtVgnvI3ovEhDA5BzV7jsNz9YN8+KUjZWlB+K0UoRjiPATQ5wL5RbiwpSJ08K
+	poN/tD0bfgN8TSbipyvarG2qzBdardwGFqi4UKonQ6tSlCDQ+KyB/HFl3Gp8CN+UKGkwPZ8SYsR
+	V9PzLERpuvJi53xFsDtz6+ysNgy0=
+X-Google-Smtp-Source: AGHT+IGhdoJ0rWEut5PwNocj6uSZ3kC1AEB2+wuql1IwB0NPDS4GhlNgxykt52XD7wxG6IL3WwdxNqf/xGHL
+X-Received: by 2002:a05:7022:4a6:b0:11a:344f:7a74 with SMTP id a92af1059eb24-11c9d8668f8mr21469721c88.3.1764625307106;
+        Mon, 01 Dec 2025 13:41:47 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id a92af1059eb24-11dcb03f38fsm1689257c88.6.2025.12.01.13.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 13:41:47 -0800 (PST)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5C177340185;
+	Mon,  1 Dec 2025 14:41:46 -0700 (MST)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 50CCEE41ABA; Mon,  1 Dec 2025 14:41:46 -0700 (MST)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ublk: allow non-blocking ctrl cmds in IO_URING_F_NONBLOCK issue
+Date: Mon,  1 Dec 2025 14:41:44 -0700
+Message-ID: <20251201214145.3183381-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAxMDE3MyBTYWx0ZWRfX55tdIC3EvAD7
- sMoKzGUg2PaXnxNVBaoWUJ8MWLUfFlLTU4zIHhF5F8IgNmIxwAkC1KZ7b8oq2VQDtCGH6rb+N7P
- EUhpNi+eJCAUlJN417CGZrCVN9vQbogq2l1tK+QbEqEkV5bR3bfXnR4QbFMrPjNc1znbT6qInmc
- bib9NxINC8y90YliSMgrHGeF3nlRNBdZrrucLlOMJfJWVo2wyLy45goAJ2zW6HDlQHhUl0q97zK
- oJpVbV3R9ISPG/M9vRBTBQ3dP3jnwlMIiQN/WrbJw3bZAAJmCaeeFP3CAoYY62inhDA424dD6GL
- hYHMLTFAst4ImDif0D+5MFBv0iii5c8fW4IeJhcDUtPDLAagkxFnt+B9Bk+mcguRgZ261fFrWzg
- 6j01vvboElln0+5X5tiYZn2LkStXww==
-X-Authority-Analysis: v=2.4 cv=LYExKzfi c=1 sm=1 tr=0 ts=692e0b77 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8
- a=uKr_gk69WBrFS6epR-gA:9
-X-Proofpoint-GUID: QXaQBOQCEmA5buoU6Ii-tg0AgQ-cxpvu
-X-Proofpoint-ORIG-GUID: QXaQBOQCEmA5buoU6Ii-tg0AgQ-cxpvu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
+Content-Transfer-Encoding: 8bit
 
-From: Keith Busch <kbusch@kernel.org>
+Handling most of the ublksrv_ctrl_cmd opcodes require locking a mutex,
+so ublk_ctrl_uring_cmd() bails out with EAGAIN when called with the
+IO_URING_F_NONBLOCK issue flag. However, several opcodes can be handled
+without blocking:
+- UBLK_CMD_GET_QUEUE_AFFINITY
+- UBLK_CMD_GET_DEV_INFO
+- UBLK_CMD_GET_DEV_INFO2
+- UBLK_U_CMD_GET_FEATURES
 
-In the unlikely case where the base bio uses a highly fragmented vector,
-the four inline scatterlist elements may not be enough, so allocate a
-temporary scatterlist when needed.
+Handle these opcodes synchronously instead of returning EAGAIN so
+io_uring doesn't need to issue the command via the worker thread pool.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- drivers/md/dm-crypt.c | 51 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 40 insertions(+), 11 deletions(-)
+ drivers/block/ublk_drv.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 5304954b4574b..d659ea4573192 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -98,6 +98,8 @@ struct dm_crypt_request {
- 	struct scatterlist sg_in[4];
- 	struct scatterlist sg_out[4];
- 	u64 iv_sector;
-+	struct scatterlist *__sg_in;
-+	struct scatterlist *__sg_out;
- };
-=20
- struct crypt_config;
-@@ -1426,18 +1428,32 @@ static int crypt_convert_block_aead(struct crypt_=
-config *cc,
- 	return r;
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index c2250172de4c..3d6d5f568779 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -3671,19 +3671,33 @@ static int ublk_ctrl_uring_cmd_permission(struct ublk_device *ub,
+ exit:
+ 	kfree(dev_path);
+ 	return ret;
  }
-=20
--static int crypt_build_sgl(struct crypt_config *cc, struct scatterlist *=
-sg,
-+static void crypt_free_sgls(struct dm_crypt_request *dmreq)
+ 
++static bool ublk_ctrl_uring_cmd_may_sleep(u32 cmd_op)
 +{
-+	if (dmreq->__sg_in !=3D dmreq->sg_in)
-+		kfree(dmreq->__sg_in);
-+	if (dmreq->__sg_out !=3D dmreq->sg_out)
-+		kfree(dmreq->__sg_out);
-+	dmreq->__sg_in =3D NULL;
-+	dmreq->__sg_out =3D NULL;
++	switch (_IOC_NR(cmd_op)) {
++	case UBLK_CMD_GET_QUEUE_AFFINITY:
++	case UBLK_CMD_GET_DEV_INFO:
++	case UBLK_CMD_GET_DEV_INFO2:
++	case _IOC_NR(UBLK_U_CMD_GET_FEATURES):
++		return false;
++	default:
++		return true;
++	}
 +}
 +
-+static int crypt_build_sgl(struct crypt_config *cc, struct scatterlist *=
-*psg,
- 			   struct bvec_iter *iter, struct bio *bio,
- 			   int max_segs)
+ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
+ 		unsigned int issue_flags)
  {
- 	unsigned int bytes =3D cc->sector_size;
-+	struct scatterlist *sg =3D *psg;
- 	struct bvec_iter tmp =3D *iter;
- 	int segs, i =3D 0;
-=20
- 	bio_advance_iter(bio, &tmp, bytes);
- 	segs =3D tmp.bi_idx - iter->bi_idx + !!tmp.bi_bvec_done;
--	if (segs > max_segs)
--		return -EIO;
-+	if (segs > max_segs) {
-+		sg =3D kmalloc_array(segs, sizeof(struct scatterlist), GFP_NOIO);
-+		if (!sg)
-+			return -ENOMEM;
-+	}
-=20
- 	sg_init_table(sg, segs);
- 	do {
-@@ -1446,7 +1462,7 @@ static int crypt_build_sgl(struct crypt_config *cc,=
- struct scatterlist *sg,
-=20
- 		/* Reject unexpected unaligned bio. */
- 		if (unlikely((len | bv.bv_offset) & cc->io_alignment))
--			return -EIO;
-+			goto error;
-=20
- 		sg_set_page(&sg[i++], bv.bv_page, len, bv.bv_offset);
- 		bio_advance_iter_single(bio, iter, len);
-@@ -1454,8 +1470,13 @@ static int crypt_build_sgl(struct crypt_config *cc=
-, struct scatterlist *sg,
- 	} while (bytes);
-=20
- 	if (WARN_ON_ONCE(i !=3D segs))
--		return -EIO;
-+		goto error;
-+	*psg =3D sg;
- 	return 0;
-+error:
-+	if (sg !=3D *psg)
-+		kfree(sg);
-+	return -EIO;
- }
-=20
- static int crypt_convert_block_skcipher(struct crypt_config *cc,
-@@ -1484,18 +1505,21 @@ static int crypt_convert_block_skcipher(struct cr=
-ypt_config *cc,
- 	sector =3D org_sector_of_dmreq(cc, dmreq);
- 	*sector =3D cpu_to_le64(ctx->cc_sector - cc->iv_offset);
-=20
--	sg_in  =3D &dmreq->sg_in[0];
--	sg_out =3D &dmreq->sg_out[0];
-+	dmreq->__sg_in =3D &dmreq->sg_in[0];
-+	dmreq->__sg_out =3D &dmreq->sg_out[0];
-=20
--	r =3D crypt_build_sgl(cc, sg_in, &ctx->iter_in, ctx->bio_in,
-+	r =3D crypt_build_sgl(cc, &dmreq->__sg_in, &ctx->iter_in, ctx->bio_in,
- 			    ARRAY_SIZE(dmreq->sg_in));
- 	if (r < 0)
- 		return r;
-=20
--	r =3D crypt_build_sgl(cc, sg_out, &ctx->iter_out, ctx->bio_out,
-+	r =3D crypt_build_sgl(cc, &dmreq->__sg_out, &ctx->iter_out, ctx->bio_ou=
-t,
- 			    ARRAY_SIZE(dmreq->sg_out));
- 	if (r < 0)
--		return r;
-+		goto out;
-+
-+	sg_in =3D dmreq->__sg_in;
-+	sg_out =3D dmreq->__sg_out;
-=20
- 	if (cc->iv_gen_ops) {
- 		/* For READs use IV stored in integrity metadata */
-@@ -1504,7 +1528,7 @@ static int crypt_convert_block_skcipher(struct cryp=
-t_config *cc,
- 		} else {
- 			r =3D cc->iv_gen_ops->generator(cc, org_iv, dmreq);
- 			if (r < 0)
--				return r;
-+				goto out;
- 			/* Data can be already preprocessed in generator */
- 			if (test_bit(CRYPT_ENCRYPT_PREPROCESS, &cc->cipher_flags))
- 				sg_in =3D sg_out;
-@@ -1525,6 +1549,9 @@ static int crypt_convert_block_skcipher(struct cryp=
-t_config *cc,
-=20
- 	if (!r && cc->iv_gen_ops && cc->iv_gen_ops->post)
- 		r =3D cc->iv_gen_ops->post(cc, org_iv, dmreq);
-+out:
-+	if (r !=3D -EINPROGRESS && r !=3D -EBUSY)
-+		crypt_free_sgls(dmreq);
-=20
- 	return r;
- }
-@@ -1590,7 +1617,9 @@ static void crypt_free_req_skcipher(struct crypt_co=
-nfig *cc,
- 				    struct skcipher_request *req, struct bio *base_bio)
- {
- 	struct dm_crypt_io *io =3D dm_per_bio_data(base_bio, cc->per_bio_data_s=
-ize);
-+	struct dm_crypt_request *dmreq =3D dmreq_of_req(cc, req);
-=20
-+	crypt_free_sgls(dmreq);
- 	if ((struct skcipher_request *)(io + 1) !=3D req)
- 		mempool_free(req, &cc->req_pool);
- }
---=20
-2.47.3
+ 	const struct ublksrv_ctrl_cmd *header = io_uring_sqe_cmd(cmd->sqe);
+ 	struct ublk_device *ub = NULL;
+ 	u32 cmd_op = cmd->cmd_op;
+ 	int ret = -EINVAL;
+ 
+-	if (issue_flags & IO_URING_F_NONBLOCK)
++	if (ublk_ctrl_uring_cmd_may_sleep(cmd_op) &&
++	    issue_flags & IO_URING_F_NONBLOCK)
+ 		return -EAGAIN;
+ 
+ 	ublk_ctrl_cmd_dump(cmd);
+ 
+ 	if (!(issue_flags & IO_URING_F_SQE128))
+-- 
+2.45.2
 
 
