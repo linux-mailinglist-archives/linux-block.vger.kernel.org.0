@@ -1,76 +1,78 @@
-Return-Path: <linux-block+bounces-31676-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31679-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA8EACA79EA
-	for <lists+linux-block@lfdr.de>; Fri, 05 Dec 2025 13:49:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34633CA7A02
+	for <lists+linux-block@lfdr.de>; Fri, 05 Dec 2025 13:49:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6510B3087F02
-	for <lists+linux-block@lfdr.de>; Fri,  5 Dec 2025 12:47:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B1C230AF542
+	for <lists+linux-block@lfdr.de>; Fri,  5 Dec 2025 12:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05DD2330B1D;
-	Fri,  5 Dec 2025 12:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A2713314B9;
+	Fri,  5 Dec 2025 12:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Wou9w6H4"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="bKglotLG"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7252F9DB7
-	for <linux-block@vger.kernel.org>; Fri,  5 Dec 2025 12:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BA4330B3F
+	for <linux-block@vger.kernel.org>; Fri,  5 Dec 2025 12:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764938864; cv=none; b=bCbfkSKKzBG/R/h9HtitxdF+gP5VfIS4HsvWXHXGQSqmM9XChtvWGarlMUpizvskVU+wYeD4WkKiYvspg7mNY5SXkGgrIVROYd5hCYfBTFX4Gk9Y6W3eldKQMPUd2Ck+RLLWcxpfZgZibrhVqGIiSGpXQfadmhCLFfTTyeQ72mI=
+	t=1764938870; cv=none; b=WiZRQcwK2/L009hhWD5rn09oe8xiP5o9BaoWzzCufwoeTytcQThASndLkyG8qV9zyiNJzVgufnDJJbzHPsbnTRjMPk96q1k18isTWvlmyn0B/izkxrleIOT9z9JivIwB1cAII8CaD5Hy6ATT1X9RYw6JplXUyzyZWhHddYpWIZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764938864; c=relaxed/simple;
-	bh=1Jg9NmacE9LsGyXBJyfg2Ouj9aJ4YSh5Lse0xoSV6yE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uwy2GzbRlrV+0uPxxk8g8bgbDDU6i+QRnTFLOulrIRf0ypCQ8XOtfDZAWhkazoXsj7ayGMY5i6y64K0N3SPNtEmttzXF99OrZFhFvyl7ZnV0/ctZo1W58zfGCCVVvMoeMJMhxzbd/ZLVu97mT16nafR+VfU6VtKJEn3KTz7LFLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Wou9w6H4; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1764938870; c=relaxed/simple;
+	bh=i8YDnYf1ilzWlANhGaVJQ6tB9sXTRdGLnM7KngzGd6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mha+4FSgu/JVbVcPz8eebfdHFN4IQgjBsVNAJ4sU9hyc86EJyNIMCNOaieDGgt9DLrf9dig+LMediO1OEnoCv9F2BYgX1yYXRDV0LvHfVuWuLAeXjHlk6lYGp6ilWx/ZfnvIdkCKsIDm6CwnAulZJaXG8biRceVIxI78Vb3hyu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=bKglotLG; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42e2e445dbbso1055467f8f.2
-        for <linux-block@vger.kernel.org>; Fri, 05 Dec 2025 04:47:39 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42e2e40582eso1194852f8f.1
+        for <linux-block@vger.kernel.org>; Fri, 05 Dec 2025 04:47:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1764938858; x=1765543658; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v3KnzE4q/ojWtIWDJgtZqbXhEGVxWeob47PpNOMF+tY=;
-        b=Wou9w6H4b5/CXT0ZFRAuv1QKMFICpLUrVDAPC49YoJzQnMtmFPFJ+VJBBVe5XL7oTK
-         MH/7kDs3fOv2OUwguX8annSk19ghILSs09fZO4apKme2kXRsJa03zHam+vWMWR240hRU
-         wU86lfRmsZwK9UrEhWO3qdZfGg4vwa76qLiU3BzQvU1PpO7OpMHWGkRhcUWZ/f8Xs+L8
-         kxKhSoUJT7xZQUDJJuV74gt1ccld3/TzLMYc7eWnyT2TLiKRbgXUFF0ugA566g7sTIql
-         t+DrmbwO4KR9TRfwlsKRkah0pwH8D7FMeSSUHOtuTCSV+z0HcoPowLFwP5cPHXASHu8n
-         gwHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764938858; x=1765543658;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=ionos.com; s=google; t=1764938859; x=1765543659; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v3KnzE4q/ojWtIWDJgtZqbXhEGVxWeob47PpNOMF+tY=;
-        b=Y3aQ9ZvJgVrY2xCj+/q5oj/7Ze4ZcZn3PfmuKV5f7WD3TfqfxVgdCOLEGULXY81C2k
-         uprNZKnFuVzi+fuLoVq2jRO5YhivXIoSk4VxOkh6oSo23CMLQLympsHc2G9ewm/Aez9B
-         j2vsZhXvK6Y5nOqPPuDxI539VyKgqqUFM4GKE4ssQ6bYzWtGkvmJL0RO1YX61wxFj0ys
-         CrRUdinum2LAtA/31hYKteY3teKAl/G4I/jI4dewexmclZjidEMi5KL6nGtI049mndQs
-         I+cePQsbDCLd6WzuRW7guTm03tfpA2dNwpI5u4DBDMFc2YabgEnti2FY6iV4OD1sl0BM
-         w7/w==
-X-Gm-Message-State: AOJu0YxELZiflISVUuhmzdHj5mhvgxLH94UgZ+RnH+jCzaAxX4cxrOvW
-	iqmcW0usC8KmEXcCMgqPUETdRiQB8Nvvb9Nk7m3QpdZoTQ5ZWuosM8D93X3Dtaha7ZeW4jLJZEk
-	Ng+GA
-X-Gm-Gg: ASbGncsGp8qipBvsAJUmtiZif0D43kzHNZRGXRlj6O//06IQ/0VTqBSqRWxyPRuZwYn
-	mkXweWt5zKkonBrnityYCV9BX+zjHsK167DvmWTMmZHCfr5k8KsnFwqtN2QkZEbdeyOsXNbeXNP
-	XcXQG+G1s/RWOrW+bp4CO6mQn8jTd1AEAKmFkLA2H7BOfTZJgt9rptY5ejKV9SfmPLQS0cJRmww
-	CQfqoZPRI6Wfb2gAhECm90ehEtyrmrM5PqnyPqhLa/DCmAZfbFhN7NMRy+CQuOWL2zUOnxQ00H5
-	4PvJm61drKa1NaWVp4Oy15KHP8mWdCi2PECqp+8rT85rO03bTNYac4HpgfjSej1bv656dGSC3p4
-	vcBsnb44wyeRLkwla/FYV8KaSVsYBH1bR0thsFuAtY8deBNVsu2+qcT0UCOZXsrScEzqS63FCrz
-	lARg5BQYZ0mCNnGBwJub8cbDaTHUyJ5Z3609vO01W5TH7OF3/aSAVWb/pBU54r3VzUkhvKTYYve
-	CexenOxGJ40IA==
-X-Google-Smtp-Source: AGHT+IGaWxYceWXtStsm7djIS4X72O+lBE8OCsuzdG306BTsyJOfRJXcAa/pPKkYe3cDyGJq7yQA/w==
-X-Received: by 2002:a05:6000:240d:b0:429:d66b:508f with SMTP id ffacd0b85a97d-42f731a212fmr10072733f8f.30.1764938858052;
+        bh=Pf42qGwyUhFPZSXy4l4ySs4hW6+uyHiw4UyEQszC7j0=;
+        b=bKglotLGoTCM4TnJUobcFjQ3INqyCCyKrSQ2EOtCpY2TbGbOQyfCXZX7jYMAvBnvT6
+         qrISNgehSzQZGgitQEteDJ/jbuFvwnIh1q/olb8bKlsO0vmtKUon/sccFxCTrw5scPwz
+         SJCzStHHmsxpAlmvK6XcaY16azKjeyAIwa9e5u4ri9DhjeHuW3z7GWSpXee3eGIYq7pJ
+         Hw4ywlvC4oMIL1nvzdFo8KnoZb97U1RAgSNdL7Ky0Q69MpFXGr7jdFNltKqiOnPvw9df
+         9QA7DOANxKncXaXtv73c45zLy6twl+4o/71ADghzLppCHpQJpg+NyB0f6REqIhq7Hjvm
+         ToHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764938859; x=1765543659;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Pf42qGwyUhFPZSXy4l4ySs4hW6+uyHiw4UyEQszC7j0=;
+        b=ThAGjWuxU7oqzZGhHUJ2tGYgzy3bSjdARegBunNN5iSXOkZ2D3obIy5G5sZoyl5PTc
+         n6SXxX2KWQiZGwJ/EiZupDjDWrLTEe/0vweigHknwaQ1w4OkFRbBTjFR6WAqOdOkbEE5
+         kV37Vp1p+M9TjrCJ4o+SMjtCz/etY+RxGHnoLdpbFzLxs3MLJNn5UM8WXFSaY1if+CQ8
+         5PdhtyQLs0XosHGflprjkMQJABtQk3RAZBEXZIlWYoEmBK0oIohmIEHgJJiWAfh9+vEb
+         rA+waHOyYwCzpPYafODPldpDOH1c+br/LCsVTJylQNMbSxM3LPjgpHSOKyqlkk14/2li
+         Yeow==
+X-Gm-Message-State: AOJu0YyQG2s/gNW8f0c9ip0w3QSPvc5ndPJo0Hxcmyq7YEIpb/fsZcsI
+	A1+lXeUFVnYfcknCUTrOKbyi2ZjboNfqDJVALZ5tMzIAnW/hTLHQV/j96joVevFtbKA5ivuoA/Z
+	wwabi
+X-Gm-Gg: ASbGncu8B/nKUGJzn4HevvwF0xiIu+lfERDF4TxZ1uzru3uhB4wJM/2utQVCGCxxJn+
+	oWSYHw4XM2/Bgq2qG/yr6I4CWAkZV9mhhdj3+bMtABa1sWFFXL/Gc8CBNMNqyHCsD0qp/96Mqqz
+	Gq172WIOxwSlXuBu4MbhWcgvRWYsnx4Fxs45lZp/eeBEVmpG/dsUS91qUVGo46m3ZICcY6wZhrC
+	65u86lpkZYGPvvmS2HGNfGRBXnW40aK0o5UwILeQMEQS7fX1pD4NuZlvg44X4VVxLeRBUq4QYhy
+	6MpfN2QzOobZtwDuhmWmxcKOSrUtg9HkvkvH75Prg/Vd9Y18FTVGEwn5gRgatzoFgTO9AM2Dhvt
+	O/hNs7Kw4lUoSS+EVIMO+j65ULB0zzlGLwvuAy1YKiSgx0ex5O1tvcovBCh4g3G+FlsQ70bQqkG
+	TSuQWiiQbxw9rQYM6DEB6sT0KY5Ei333vYrNqGB13iozjkXDvLEtDsOj8YJ9Q4fyTwfH4H/ZCx6
+	sdMvsW6tr3Ycw==
+X-Google-Smtp-Source: AGHT+IF8UPe0gsxsFhaPg7ML4AN1cPhRCyzWXdjzOd1BA9nJaFtk5AORVDCL6YaYom6MBpIwrJW1Iw==
+X-Received: by 2002:a05:6000:22c2:b0:42f:7686:5697 with SMTP id ffacd0b85a97d-42f79851e0bmr6928468f8f.42.1764938858865;
         Fri, 05 Dec 2025 04:47:38 -0800 (PST)
 Received: from lb03189.speedport.ip (p200300f00f28af70a31ee45bb042915f.dip0.t-ipconnect.de. [2003:f0:f28:af70:a31e:e45b:b042:915f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee66sm8540037f8f.11.2025.12.05.04.47.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee66sm8540037f8f.11.2025.12.05.04.47.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 04:47:37 -0800 (PST)
+        Fri, 05 Dec 2025 04:47:38 -0800 (PST)
 From: Md Haris Iqbal <haris.iqbal@ionos.com>
 To: linux-block@vger.kernel.org
 Cc: axboe@kernel.dk,
@@ -79,11 +81,14 @@ Cc: axboe@kernel.dk,
 	bvanassche@acm.org,
 	haris.iqbal@ionos.com,
 	jinpu.wang@ionos.com,
-	grzegorz.prajsner@ionos.com
-Subject: [PATCH 0/6] Misc patches for RNBD
-Date: Fri,  5 Dec 2025 13:47:27 +0100
-Message-ID: <20251205124733.26358-1-haris.iqbal@ionos.com>
+	grzegorz.prajsner@ionos.com,
+	Florian-Ewald Mueller <florian-ewald.mueller@ionos.com>
+Subject: [PATCH 1/6] block/rnbd-proto: Handle PREFLUSH flag properly for IOs
+Date: Fri,  5 Dec 2025 13:47:28 +0100
+Message-ID: <20251205124733.26358-2-haris.iqbal@ionos.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251205124733.26358-1-haris.iqbal@ionos.com>
+References: <20251205124733.26358-1-haris.iqbal@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -92,31 +97,89 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Jens,
+In RNBD client, for a WRITE request of size 0, with only the REQ_PREFLUSH
+bit set, while converting from bio_opf to rnbd_opf, we do REQ_OP_WRITE to
+RNBD_OP_WRITE, and then check if the rq is flush through function
+op_is_flush. That function checks both REQ_PREFLUSH and REQ_FUA flag, and
+if any of them is set, the RNBD_F_FUA is set.
+On the RNBD server side, while converting the RNBD flags to req flags, if
+the RNBD_F_FUA flag is set, we just set the REQ_FUA flag. This means we
+have lost the PREFLUSH flag, and added the REQ_FUA flag in its place.
 
-Please consider to include following changes for next merge window.
+This commits adds a new RNBD_F_PREFLUSH flag, and also adds separate
+handling for REQ_PREFLUSH flag. On the server side, if the RNBD_F_PREFLUSH
+is present, the REQ_PREFLUSH is added to the bio.
 
-Florian-Ewald Mueller (1):
-  rnbd-srv: Fix server side setting of bi_size for special IOs
+Since it is a change in the wire protocol, bump the minor version of
+protocol.
+The change is backwards compatible, and does not change the functionality
+if either the client or the server is running older/newer versions.
+If the client side is running the older version, both REQ_PREFLUSH and
+REQ_FUA is converted to RNBD_F_FUA. The server running newer one would
+still add only the REQ_FUA flag which is what happens when both client and
+server is running the older version.
+If the client side is running the newer version, just like before a
+RNBD_F_FUA is added, but now a RNBD_F_PREFLUSH is also added to the
+rnbd_opf. In case the server is running the older version the
+RNBD_F_PREFLUSH is ignored, and only the RNBD_F_FUA is processed.
 
-Jack Wang (1):
-  rnbd-srv: fix the trace format for flags
+Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
+Reviewed-by: Jack Wang <jinpu.wang@ionos.com>
+Reviewed-by: Florian-Ewald Mueller <florian-ewald.mueller@ionos.com>
+Signed-off-by: Grzegorz Prajsner <grzegorz.prajsner@ionos.com>
+---
+ drivers/block/rnbd/rnbd-proto.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Md Haris Iqbal (3):
-  block/rnbd-proto: Handle PREFLUSH flag properly for IOs
-  block/rnbd-proto: Check and retain the NOUNMAP flag for requests
-  rnbd-srv: Zero the rsp buffer before using it
-
-Zhu Yanjun (1):
-  block: rnbd: add .release to rnbd_dev_ktype
-
- drivers/block/rnbd/rnbd-clt-sysfs.c |  8 +++++++
- drivers/block/rnbd/rnbd-clt.c       | 18 ++++++++-------
- drivers/block/rnbd/rnbd-proto.h     | 18 ++++++++++++++-
- drivers/block/rnbd/rnbd-srv-trace.h | 22 ++----------------
- drivers/block/rnbd/rnbd-srv.c       | 36 +++++++++++++++++++++--------
- 5 files changed, 63 insertions(+), 39 deletions(-)
-
+diff --git a/drivers/block/rnbd/rnbd-proto.h b/drivers/block/rnbd/rnbd-proto.h
+index 77360c2a6069..5e74ae86169b 100644
+--- a/drivers/block/rnbd/rnbd-proto.h
++++ b/drivers/block/rnbd/rnbd-proto.h
+@@ -18,7 +18,7 @@
+ #include <rdma/ib.h>
+ 
+ #define RNBD_PROTO_VER_MAJOR 2
+-#define RNBD_PROTO_VER_MINOR 0
++#define RNBD_PROTO_VER_MINOR 1
+ 
+ /* The default port number the RTRS server is listening on. */
+ #define RTRS_PORT 1234
+@@ -197,6 +197,7 @@ struct rnbd_msg_io {
+  *
+  * @RNBD_F_SYNC:	     request is sync (sync write or read)
+  * @RNBD_F_FUA:             forced unit access
++ * @RNBD_F_PREFLUSH:	    request for cache flush
+  */
+ enum rnbd_io_flags {
+ 
+@@ -211,6 +212,7 @@ enum rnbd_io_flags {
+ 	/* Flags */
+ 	RNBD_F_SYNC  = 1<<(RNBD_OP_BITS + 0),
+ 	RNBD_F_FUA   = 1<<(RNBD_OP_BITS + 1),
++	RNBD_F_PREFLUSH = 1<<(RNBD_OP_BITS + 2)
+ };
+ 
+ static inline u32 rnbd_op(u32 flags)
+@@ -258,6 +260,9 @@ static inline blk_opf_t rnbd_to_bio_flags(u32 rnbd_opf)
+ 	if (rnbd_opf & RNBD_F_FUA)
+ 		bio_opf |= REQ_FUA;
+ 
++	if (rnbd_opf & RNBD_F_PREFLUSH)
++		bio_opf |= REQ_PREFLUSH;
++
+ 	return bio_opf;
+ }
+ 
+@@ -297,6 +302,9 @@ static inline u32 rq_to_rnbd_flags(struct request *rq)
+ 	if (op_is_flush(rq->cmd_flags))
+ 		rnbd_opf |= RNBD_F_FUA;
+ 
++	if (rq->cmd_flags & REQ_PREFLUSH)
++		rnbd_opf |= RNBD_F_PREFLUSH;
++
+ 	return rnbd_opf;
+ }
+ 
 -- 
 2.43.0
 
