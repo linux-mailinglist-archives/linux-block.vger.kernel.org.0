@@ -1,135 +1,98 @@
-Return-Path: <linux-block+bounces-31681-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31683-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8EE9CA7A11
-	for <lists+linux-block@lfdr.de>; Fri, 05 Dec 2025 13:50:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B2C1CA7D88
+	for <lists+linux-block@lfdr.de>; Fri, 05 Dec 2025 14:54:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8CE0E30C40BF
-	for <lists+linux-block@lfdr.de>; Fri,  5 Dec 2025 12:48:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0C8E0310BAA6
+	for <lists+linux-block@lfdr.de>; Fri,  5 Dec 2025 13:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B59DA2E2DDD;
-	Fri,  5 Dec 2025 12:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="CK913crW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3474632E13E;
+	Fri,  5 Dec 2025 13:52:37 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAC333121B
-	for <linux-block@vger.kernel.org>; Fri,  5 Dec 2025 12:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF05281504
+	for <linux-block@vger.kernel.org>; Fri,  5 Dec 2025 13:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764938872; cv=none; b=j64EANW9TRu+eYet2ua/1Q2TNJgg4rFqSDZPbdOPf7y8SKV6FmLfKWLe1tEQ/5vrOSMWtnL/03mK5ob2EuDFCv1KQhp5DY0o0pa6yeSsTSdYMTfm453BgJRdn+mLhcf/hQU8eGRnMNjl9tw3ywRy2QUkax9LkJMJn7MNywRheI8=
+	t=1764942756; cv=none; b=YgprFzHstDIMkWFa4Vl0aZaPWrF/mmojNsN7dRukEvMKehF2Nd81e/Dr/C12BLU5XLmw24ZaWRaLzOk36Zzvvjt426n2zBPw9QhuMYSm87YYsR6pCKKillYnRAmXQ8FLHCls0jGq59BqI1D/eHd8FfISkC+mqlQzvYnpXU7oXPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764938872; c=relaxed/simple;
-	bh=Kk3j5wi5kjh5Cxewa5Hl8dP3E36E91kc7BaAfADs2eE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qWV18Yo5KK3BExEmRhaanviQ4GhB44J3Zq5oQWfRtQojLMDOUB4ftrvwnSV+fbkvp7uybYUzOIiuL3GHxDVsMNgFDLXp3dd6HoDwGVLycKmbLPukb3uRCYtnU3ph4tnuCVtPHlKBdEWBIuvePZBt1pXdtCvyu7PhXu1KSQoe/2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=CK913crW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42e2e6aa22fso1072160f8f.2
-        for <linux-block@vger.kernel.org>; Fri, 05 Dec 2025 04:47:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1764938863; x=1765543663; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DSPDA9RfToTwpDJtTTqEm8mN/hzTcDd0rmzkcW39oJg=;
-        b=CK913crW5T3JSHv5sby7JPXIxKoFTqBPYTex1vG9oj+rz3VR0/sbsRhQ/R5CIc5uVF
-         9Ixop1dEXyRmnVuficw7vQl79L6lAORupFJL3KjCMdNjCwcP4LMqMMgNGdAiCixakOF6
-         hagco9Y7/X7veDfcn6E6s34i9L0y41qnNpZt9Hkl6KjQSoSQj/IWQc3NpgjSw9RN3EWh
-         lCdOE3nuuHO2q7ltxaAiHtsxO2yNozFMHyCCmVt5FogMLGi5z9UieMR4ZIK5gpvhq0dW
-         d2dJDKp6TdDjZ0QxdmlnENbDsioao6lc6WRIsBcalbRrt+uCRdrJs5TypdKHv+6h/S3X
-         4jqQ==
+	s=arc-20240116; t=1764942756; c=relaxed/simple;
+	bh=LN1D7Bq91SowiKwetxukNtSVNembL/zSEfUsqynK2qc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RdI3ZrhazDEx+kthFMgewuRokanHh0kYbwefNuxE5h0TugQ1Yrm8JVzK2/O4lnVPApqaEfgWu2ptzsCBh5NZoHPA1k0IkLlHekB53xksoHceWxr/qTGFmZPZzGIpk47CPjUhPZpIhCHh2dLWBLcwRwHbm11YfRpEcD7leOt8o6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-45396d397e0so223048b6e.3
+        for <linux-block@vger.kernel.org>; Fri, 05 Dec 2025 05:52:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764938863; x=1765543663;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DSPDA9RfToTwpDJtTTqEm8mN/hzTcDd0rmzkcW39oJg=;
-        b=KSZA0DX5m1CAVVc/UiLnRzn8KI/UKhcnbWCIo8vaBXNkwPeYlmzNA975wtGclWPpkw
-         TMGv91o5P5xTSaWICUlb0uK70/SEMD/HFj8DPXFlMrTdXBpb36xInyHr01UCKbfBu9oc
-         05tNRn0MRfI2EyY5VpeM8iM7fDO48cOZzbBCEqRkc5kOCzl5xUwkaauNOQ3bmNQ7cRbU
-         +gugbqAF3O0/RACTXgWHM1hsLxm7inevUu7Sroye/IVKQaXcwoJWEVd40eKYjPmA7afC
-         HZt3sc5OV40TjZNBWH+T4rww1gmsE/hNRxLsBqd0VINxXvuwUjmKJDssw0yhNYVhsdxR
-         tUQQ==
-X-Gm-Message-State: AOJu0Yy4Bkn0I0mwGgVmlxTRDdRuGVEIapkdPluv0nIWKlz3gAfH4Bhi
-	sJWw9P7Roy3dC/JLZvysBM9NCOQswzjlrptups7RErVzCa1ipp6dUMmJjexjpVYTKGM12uiZoP2
-	j94gD
-X-Gm-Gg: ASbGncsbX3d0FadaYUj18a1XRYlAslAzyNeENrpMmb1Flvms7tlYSSVlA/4Gla6zhjm
-	eUzGg/EFx/CtUi5DMn6mcE8zqFEUWyfzL4ngjAReZ2WP5AV0H32NmAYQCYnPuWu+tqVs6QgAVBI
-	ganrhzMe4xr4SxGcPXdPQMgvv61r9a0wPWUOkic0iMwYR5uEhQUIUxuzkDJeT9ja8pGBRkiRzaP
-	fOlPBTd+q4pF+C/SbYDpfag7CJb+/3vg+mqh4MUrBrBf3B9pkfEUWUY9PE1EPX4Vwj6qAmJguZm
-	98AlbpYaxp29JlhR28elmcd/RxZCDdeuckSQctBtpdyAdu39brUdEBmmoM3XRJLuueae7bumJSH
-	zLqjyeulJ+RJQs0DstcEc2idp6DSGbgo3JSwFddIrmC+zEGkft53FlmaK9dCLUGWAiX1qA5A2IN
-	NIrJI8xk58gXQSq7YeAwCsqNd2h4UIIQOIfah8EDK+AStN30a8adfYte5XW+tuVDiXhjUGAhVqu
-	zLMX71kFLRciw==
-X-Google-Smtp-Source: AGHT+IFY2A3AhXioLuY6njlhwY/5w0L+ldtyUXu8FgGcbDRNmTBoMpKASr10FCTd98ANe37G0S7w6A==
-X-Received: by 2002:a05:6000:1886:b0:429:b751:7916 with SMTP id ffacd0b85a97d-42f7985f26amr6798490f8f.45.1764938863067;
-        Fri, 05 Dec 2025 04:47:43 -0800 (PST)
-Received: from lb03189.speedport.ip (p200300f00f28af70a31ee45bb042915f.dip0.t-ipconnect.de. [2003:f0:f28:af70:a31e:e45b:b042:915f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee66sm8540037f8f.11.2025.12.05.04.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 04:47:42 -0800 (PST)
-From: Md Haris Iqbal <haris.iqbal@ionos.com>
-To: linux-block@vger.kernel.org
-Cc: axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me,
-	bvanassche@acm.org,
-	haris.iqbal@ionos.com,
-	jinpu.wang@ionos.com,
-	grzegorz.prajsner@ionos.com
-Subject: [PATCH 6/6] rnbd-srv: Zero the rsp buffer before using it
-Date: Fri,  5 Dec 2025 13:47:33 +0100
-Message-ID: <20251205124733.26358-7-haris.iqbal@ionos.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251205124733.26358-1-haris.iqbal@ionos.com>
-References: <20251205124733.26358-1-haris.iqbal@ionos.com>
+        d=1e100.net; s=20230601; t=1764942752; x=1765547552;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v2NJsbOFgjDMjMXuTTthPeUQ4SXsnG37aVsP6Rf2Hfw=;
+        b=tqhF7NnqvX0dMF1sRMI9+9q3cj+Z6Pbxx+xCLvglFJ+cXbxPLChKkxC/zFHeVU//OR
+         fsiobEHhv5EmIEznmezZjPXuJW7qip+/AxoDNkMA/Sgvig5ywe7vrIFB9bG7tUjOsC/+
+         sJpMWMEgHKRRSPPpYbNhIwm7BONVeblkdHcpHzLwe97Lj7xE3y4wz0cu1QBl6r36e0ju
+         UyWOkDQPZ4XDUuIeBKQd5dceZ92mByS5Mfq9BTD4FcSnq/QX4ySM5WfJRd/RSSP+9k0q
+         jUl0JByr3HM4FdzVOBfSmiK0fM8QLq/JxfzhcZDbPX/4Y6mmcn5C0CXk1j4KTnnMVyhX
+         tq9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWalzvxI5OCIAPXdwT48f2sPq1nI0N1cstCGCVAuwOzTatoI3nJa7pGTYrD7dNZNyImV3rHGmXlNDyYTg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+US2RE8SAU8+2uBT4zt/ZUh67wTKDxfMizUML6Rf5PE0vtfcw
+	ZynYuz4HktrE3cPM6adPcbFmgnq6Xlkp7hOSoiKOjxO+T3qdssUKMwn1nAKzxd7018F6wOeX9Bn
+	mYFMrWiUiHk1d4BNCQpQNMQo5Z1Km8igrYeH2DfXqACzbnmHiO/zXNMrhLz0=
+X-Google-Smtp-Source: AGHT+IHWFKnCnOqu89ScSwCSTHdi2z9hmBNOjlHIHVufF/6YxQ2sdGEhrDokhnEXojx9qkfHff8TrfeUNSK2uLZcRH4nqUL/6+jr
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6808:221a:b0:442:522:41a3 with SMTP id
+ 5614622812f47-4536e5de194mr5174327b6e.60.1764942752324; Fri, 05 Dec 2025
+ 05:52:32 -0800 (PST)
+Date: Fri, 05 Dec 2025 05:52:32 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6932e3a0.a70a0220.243dc6.000a.GAE@google.com>
+Subject: [syzbot] Monthly nbd report (Dec 2025)
+From: syzbot <syzbot+list151df4a5fb9739ee568a@syzkaller.appspotmail.com>
+To: josef@toxicpanda.com, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nbd@other.debian.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Before using the data buffer to send back the response message, zero it
-completely. This prevents any stray bytes to be picked up by the client
-side when there the message is exchanged between different protocol
-versions.
+Hello nbd maintainers/developers,
 
-Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
-Signed-off-by: Grzegorz Prajsner <grzegorz.prajsner@ionos.com>
+This is a 31-day syzbot report for the nbd subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/nbd
+
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 5 issues are still open and 8 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 2556    Yes   possible deadlock in pcpu_alloc_noprof (2)
+                  https://syzkaller.appspot.com/bug?extid=91771b3fb86ec2dd7227
+<2> 353     Yes   INFO: task hung in nbd_queue_rq
+                  https://syzkaller.appspot.com/bug?extid=30c16035531e3248dcbc
+<3> 67      Yes   possible deadlock in nbd_queue_rq
+                  https://syzkaller.appspot.com/bug?extid=3dbc6142c85cc77eaf04
+
 ---
- drivers/block/rnbd/rnbd-srv.c | 3 +++
- 1 file changed, 3 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 9b3fdc202e15..7eeb321d6140 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -551,6 +551,8 @@ static void rnbd_srv_fill_msg_open_rsp(struct rnbd_msg_open_rsp *rsp,
- {
- 	struct block_device *bdev = file_bdev(sess_dev->bdev_file);
- 
-+	memset(rsp, 0, sizeof(*rsp));
-+
- 	rsp->hdr.type = cpu_to_le16(RNBD_MSG_OPEN_RSP);
- 	rsp->device_id = cpu_to_le32(sess_dev->device_id);
- 	rsp->nsectors = cpu_to_le64(bdev_nr_sectors(bdev));
-@@ -657,6 +659,7 @@ static void process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 
- 	trace_process_msg_sess_info(srv_sess, sess_info_msg);
- 
-+	memset(rsp, 0, sizeof(*rsp));
- 	rsp->hdr.type = cpu_to_le16(RNBD_MSG_SESS_INFO_RSP);
- 	rsp->ver = srv_sess->ver;
- }
--- 
-2.43.0
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
 
