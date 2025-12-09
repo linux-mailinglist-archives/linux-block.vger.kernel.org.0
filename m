@@ -1,108 +1,118 @@
-Return-Path: <linux-block+bounces-31769-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31766-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C628FCB0B77
-	for <lists+linux-block@lfdr.de>; Tue, 09 Dec 2025 18:24:10 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D916CB0B38
+	for <lists+linux-block@lfdr.de>; Tue, 09 Dec 2025 18:21:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 46CB83103327
-	for <lists+linux-block@lfdr.de>; Tue,  9 Dec 2025 17:22:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3C3663009F63
+	for <lists+linux-block@lfdr.de>; Tue,  9 Dec 2025 17:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA0C32E6B7;
-	Tue,  9 Dec 2025 17:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A96B832ABC1;
+	Tue,  9 Dec 2025 17:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuUNgvto"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bGovVEd1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CAF32E69C;
-	Tue,  9 Dec 2025 17:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3811C329E6E
+	for <linux-block@vger.kernel.org>; Tue,  9 Dec 2025 17:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765300913; cv=none; b=GaTcqqYlYJI+4LPZGEwJgX0IAsTxVi6l+/7QxlSBNSPOavj+CZ2wixcOLRqXab2mNjHETEyBXbsluEiq5O3yd81fX5KQdbHGx2ZUfKlJ7j2COfVaZ7bT9MkVBdz0nbdHLZQ+JpV5unXTbMR+mJPQgMt4HN6qhsTiT1sNM/aRhCw=
+	t=1765300895; cv=none; b=p7P5/TWTB3TKaDK6T6wZ9VCk/488h8DsoKzWuv2qxMDFdBjS6iaAaPa5VPkD7E8bR/Dktj2OGy3W80hzqFDRGmqcY5+1IL+bwgxp54SlaA8LRr03ekYbRyE1WkG1pKd+OyjNl6KcMssllZ/SO52lui1W7NQ1MvZpbHu8rDUDiZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765300913; c=relaxed/simple;
-	bh=4D7MGFxeRJTDY1I7TVqNGOxjKxHrYX8Xu/NQUp33yQY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Oe4fkSenS4PIzKTSb2Gkz1cRIqcRZpIGr77TjfmkYn1924SCgyHmutcejW8t3mFhUt+d0uSmocf1npBiZOzF0ucSUcgDG8qqt78bDHLLpNuciVMv3j9F2R1hn0oh/oeMPotPuFqXKkQzPemtpLBXwHCty9YSiSBS4AjJHlzSIY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuUNgvto; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2988C4CEF5;
-	Tue,  9 Dec 2025 17:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765300912;
-	bh=4D7MGFxeRJTDY1I7TVqNGOxjKxHrYX8Xu/NQUp33yQY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZuUNgvto237oQlEXMdNAwfCle3hrlKfTdWltwxprsJTDwDSOdfrCe6Lc0w70aYteg
-	 USDyX2OxNMDGgtWaUvicOUoeIciT2t7tAOw3WDlhOMzTKJeRy4m0i+RWtaUBFa7E/C
-	 Fh64065DCj12G8NmPeComkTbsyqVXopIMgdcUxuhBpB7h2CHxjNtePOG2zHBH1ffFn
-	 jYf9fNs4YEVS13NGMzinskDsNMCoWsCgmTtfmDYOQcD1Rw43ZeZ7C07/EiBlJbd9QX
-	 ILeieRrStbLL0RC69ydyLES/kPMYSQcagtEyRshqmJjUXuvmVrcEofuvPcdhc/bh6r
-	 wr318dPlMkLHw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F2AFB3808200;
-	Tue,  9 Dec 2025 17:18:48 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1765300895; c=relaxed/simple;
+	bh=MCW3vFe/rHCVt1VsjfYj58bBs01I9LZR7YOnzkj4474=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SeSkkWEbHxqwgTQkoqVptBrxiX98Dnmk4pfPBEgy62JNm2lZ7ywmTfY4FklSlJD/D7k/MNDFix5SiLH2AOXahULcD2kaz3RHMUBs14sj9X0TtuYkslLXnn3jQ4xOzDbl+RgoCYx8LC6/vctb3rDJbdT/zo1UFXP72L6eeKGUCAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bGovVEd1; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29812589890so81658295ad.3
+        for <linux-block@vger.kernel.org>; Tue, 09 Dec 2025 09:21:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1765300891; x=1765905691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UAgPi/FoX2rT03UDFaRERjzlWh6wXMi2wuOp2oMH7JM=;
+        b=bGovVEd16VyGp9JHCCdFYKk+nMHXZ0CRpyMvGpLihmXnzXQRdEdITPhaDREkY9uQb6
+         Wg//4q4ICQ2P2L2r2oJ/C1BsUxnZqpJFhPIcWcshXOCUOgXARYoT2agdleCn0+q+SEdI
+         39+q08YN84uVObSNAqEPMK18l6XppIeSjy4DcEwK3GNhM872kSna/fJUlKXmL3mZr1Cr
+         CUl1MsrLkou3atgkLNVaA4o2xhRrnank0sQ20Ez42hmoqRYL6JXpgH6w8Udr2GwFqVPt
+         NgnGQd3aeYf/5dCCvP7QSuIvgavyT2sVqZPJCEitjDyoA+l1rYXF230iWw3UvlEbm1nH
+         s93g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765300891; x=1765905691;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UAgPi/FoX2rT03UDFaRERjzlWh6wXMi2wuOp2oMH7JM=;
+        b=TduKzo9S4XSzM69Mue+5PoCE3hSxrn3FpzZ72QT31vBjlz+JkUUrxFxFZifDkXHTHw
+         LyA42kDpD9OZ73WfZrEUZSNa9DC/wZCXXXrvlFp+gCL+NNRenxj3QEcc9hAStgStuYeq
+         Nlcf7VKGcOXl5mTbxgmIspZ9J75yuVwAEetvrtrHlvZY9hJ0D0c2b7jbdElfXKRXMW8s
+         KsHs0hhAv9bxc+vbBeDUimGAsxyhOqZNxPCoti4UUKVb3LJ2wPfFs/cYePM73VzZKS3r
+         Q415iCqgKIK6tgXw6felFxHq+L6cTckoiS44pbRsPEl8x0UgdeVLRrq4CuSWCCwuZ0+A
+         ki2w==
+X-Gm-Message-State: AOJu0YzenGkZZJiFeSgJBMDnUTDB2vsyiNN1tBO6Kx6mZzaN3hjX4Lsm
+	1N8VkmARhfnEHIunxPTc2usKmMs4EwZ3td1r5W7CYaaax2TSEbrB/Hibe3cBJMCSR/Y=
+X-Gm-Gg: ASbGncuEv4BNc546qI/+OTpRpSn2wUQk+rt9HwF0UY2fYwY9XUQuYm4PTUmbtvG2gXf
+	AVTJ7Hribzq/4K5fbP7qrrYr1trXf8w//ZNlvGiD238m6BdbwdcedWU3FxYugQkQcjptIFkXlOk
+	tqv8xqC1CvvMyPbiH+dJC1zols1h9pOeK499WWGZfgm/tcQt+lytnoxJQo/UQBQtwkrOGTF3oHv
+	1hW8U74L0mmIxpJEHaGSnP+6G58BhtwllojiUEuOLNAIejMLmXvVjEgEBAP1Ja/EF0Hg2Bv1v+u
+	su4eCFGRpSa3iR18LSgQzzwGiTT+IihvXlrvzL9xJuHhYWYGMEPMnBWxT82Hdp6kAJPg1ry9kdj
+	27jn7LRU06YHvl7TQynpqtXBCufGWuPhmh7YBlbB/ZDEblxTYYi0FOhXhOMiqCkAADFG8ARm2jV
+	pk6cMdQ6XaClx25e3poGPLU+lKDD+nxP4c9BeCTM9+o3K7oA==
+X-Google-Smtp-Source: AGHT+IH2N4S4MYogc3UTuDeyAMXMfTllgWv/8hm33I55C+oA9tgQ6BUCnLFJP9uCdnKOSkJ7g8bvLw==
+X-Received: by 2002:a05:7022:6199:b0:11e:3e9:3e8a with SMTP id a92af1059eb24-11e03e94439mr11045757c88.49.1765300891300;
+        Tue, 09 Dec 2025 09:21:31 -0800 (PST)
+Received: from [127.0.0.1] (221x255x142x61.ap221.ftth.ucom.ne.jp. [221.255.142.61])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f283d4733sm994549c88.17.2025.12.09.09.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Dec 2025 09:21:30 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Ming Lei <ming.lei@redhat.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20251201214145.3183381-1-csander@purestorage.com>
+References: <20251201214145.3183381-1-csander@purestorage.com>
+Subject: Re: [PATCH] ublk: allow non-blocking ctrl cmds in
+ IO_URING_F_NONBLOCK issue
+Message-Id: <176530089007.83150.7264093177786219301.b4-ty@kernel.dk>
+Date: Tue, 09 Dec 2025 10:21:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH V3 0/6] block: ignore __blkdev_issue_discard()
- ret value
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <176530072781.4018985.3920629164173659180.git-patchwork-notify@kernel.org>
-Date: Tue, 09 Dec 2025 17:18:47 +0000
-References: <20251124234806.75216-1-ckulkarnilinux@gmail.com>
-In-Reply-To: <20251124234806.75216-1-ckulkarnilinux@gmail.com>
-To: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
- song@kernel.org, yukuai@fnnas.com, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, jaegeuk@kernel.org, chao@kernel.org, cem@kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-block@vger.kernel.org,
- bpf@vger.kernel.org, linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Jens Axboe <axboe@kernel.dk>:
-
-On Mon, 24 Nov 2025 15:48:00 -0800 you wrote:
-> Hi,
-> 
-> __blkdev_issue_discard() only returns value 0, that makes post call
-> error checking code dead. This patch series revmoes this dead code at
-> all the call sites and adjust the callers.
-> 
-> Please note that it doesn't change the return type of the function from
-> int to void in this series, it will be done once this series gets merged
-> smoothly.
+On Mon, 01 Dec 2025 14:41:44 -0700, Caleb Sander Mateos wrote:
+> Handling most of the ublksrv_ctrl_cmd opcodes require locking a mutex,
+> so ublk_ctrl_uring_cmd() bails out with EAGAIN when called with the
+> IO_URING_F_NONBLOCK issue flag. However, several opcodes can be handled
+> without blocking:
+> - UBLK_CMD_GET_QUEUE_AFFINITY
+> - UBLK_CMD_GET_DEV_INFO
+> - UBLK_CMD_GET_DEV_INFO2
+> - UBLK_U_CMD_GET_FEATURES
 > 
 > [...]
 
-Here is the summary with links:
-  - [f2fs-dev,V3,1/6] block: ignore discard return value
-    https://git.kernel.org/jaegeuk/f2fs/c/7d09a8e25121
-  - [f2fs-dev,V3,2/6] md: ignore discard return value
-    (no matching commit)
-  - [f2fs-dev,V3,3/6] dm: ignore discard return value
-    (no matching commit)
-  - [f2fs-dev,V3,4/6] nvmet: ignore discard return value
-    (no matching commit)
-  - [f2fs-dev,V3,5/6] f2fs: ignore discard return value
-    (no matching commit)
-  - [f2fs-dev,V3,6/6] xfs: ignore discard return value
-    (no matching commit)
+Applied, thanks!
 
-You are awesome, thank you!
+[1/1] ublk: allow non-blocking ctrl cmds in IO_URING_F_NONBLOCK issue
+      commit: 87213b0d847cd300285b5545598e0548baeb5208
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Jens Axboe
+
 
 
 
