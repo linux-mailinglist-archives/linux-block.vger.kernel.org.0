@@ -1,488 +1,239 @@
-Return-Path: <linux-block+bounces-31824-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31826-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F338CB4BE6
-	for <lists+linux-block@lfdr.de>; Thu, 11 Dec 2025 06:17:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 539A7CB4E22
+	for <lists+linux-block@lfdr.de>; Thu, 11 Dec 2025 07:34:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DB1C23014A08
-	for <lists+linux-block@lfdr.de>; Thu, 11 Dec 2025 05:16:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4EC793009F83
+	for <lists+linux-block@lfdr.de>; Thu, 11 Dec 2025 06:34:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AFBB285CB4;
-	Thu, 11 Dec 2025 05:16:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4582773FC;
+	Thu, 11 Dec 2025 06:34:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AB/w2X0j"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gU5ykaZJ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="qC3iDG0f"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D3D279DB7
-	for <linux-block@vger.kernel.org>; Thu, 11 Dec 2025 05:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765430198; cv=none; b=d+vdmRxdJjZtXPe6WpHJWFd98t0PZNhbG6M4zKpiYOj8OS/JFmZaU/uRkShdxIsljHIWBUZcwfEu9g22wfcvGALiNGZE8OT4uYaMqRH4JUI5+YLu9TEe/SmQE0Hdwiq5DfsVwtFtlvk8wixO0vVWouGM0ATL6ZPzYytUmDn16SU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765430198; c=relaxed/simple;
-	bh=yqsFqRraCuU6qLjbv6DFoFf1m8GL0qY6w2CbR8yfHSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DrNiiMu1cEEh2nI7SKySKKZariziVZPFDCGg2HwDkNnIj+gonv2CfTDEM3zqPrtcLHcmb8CgOj2sr8V4+pU4Lfbg1bHpbruQiD9xSqFlEsZyyMN9zHBN3/0HCxpY28RMqHeJimiNKxcGuyEh0MlEKv0ldtpMmNKNDXr+tjt18AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AB/w2X0j; arc=none smtp.client-ip=209.85.214.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-297f5278e5cso1282865ad.3
-        for <linux-block@vger.kernel.org>; Wed, 10 Dec 2025 21:16:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B14770FE;
+	Thu, 11 Dec 2025 06:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765434868; cv=fail; b=n7cD/VF/u7zCIuPgzg7qcn60/hGk6Ey9tnRCPUXIIgkRxInTrJQ+tx0uSvqj7JI5GX5KcwPwPUS2yjex+/YpRijQGxZLWW70jNO7sif5wFKPNCSY+x3CxegeukzoE6yqIrsMid0vyQR2gFLPNPzEuc2gmud4OpssriMidjpKA4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765434868; c=relaxed/simple;
+	bh=DsBCwdcIIsopehRui40XQohuw7pPP0456Lv3LA2grPA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=DFNnS2LLX33R2MpKmp5ee/bX/rIpmZSJ37rinah6VThj8mjZY5UEWbonjcpSdNWIoCF9rTOO841MPbyMwwEk4EPUPaGBUlcUOdXrv4uhLHlBZa8W4BekgrwQLoLID12qdUaw0Apetqv4gu+e0qFLpQCoA9pCNUP06F+xxTr5rxc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=gU5ykaZJ; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=qC3iDG0f; arc=fail smtp.client-ip=216.71.154.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1765434866; x=1796970866;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=DsBCwdcIIsopehRui40XQohuw7pPP0456Lv3LA2grPA=;
+  b=gU5ykaZJub3r0uDTrJ58pO63sljwXp4z7XvWqkiMJe0ULKXrHegliaz1
+   w9cTZ2lDzz3ZzLX/1iu90EfvJCIzwYj3HK226hvtqYJhXvTLH2021JQQU
+   nrAUOjAOjfzvZ/TeLQ5g9LCQIYF6xaxN15Kw0y+4nDmbHlOlEasDMzmAV
+   pVkzKO9GfnJTGoBto9izaYnm2dUpXashGsru3eU22XcF8VE5YYMLta0Sp
+   CsZ/jpMk1m4T7Hk0guM/3Mxyu9ZYbhLx4NwAo4lCI1/ooEE8fkeC+TYgX
+   ECG4Uknq4VW8ZjmG5hruGhCZQpOA5JWw/w70BYSOmnA5ADJZe0YVe+3Co
+   w==;
+X-CSE-ConnectionGUID: 5qD3Pti2TaSQxZyJwAibBw==
+X-CSE-MsgGUID: YosafEM2STKM7rzr3aETPw==
+X-IronPort-AV: E=Sophos;i="6.20,265,1758556800"; 
+   d="scan'208";a="133653280"
+Received: from mail-westus3azon11010039.outbound.protection.outlook.com (HELO PH7PR06CU001.outbound.protection.outlook.com) ([52.101.201.39])
+  by ob1.hgst.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Dec 2025 14:34:19 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AprYnwK/E88PHGD5Gtthm+jeqoedKFvDN7CREODupX+jMwXGvkDD796iwM0fkegbTxuKyG9GS0plGlR7tcmgV9iDD1pUANojaxq8SsTQgnxSsLOyiWXFgxCsdkOYNsHECBVCL67LUnPo7kqbSEcg5TmiGc/8Imyl9pdLRGW4yD9+5wCSVCMPSlJeFb6ZaTKAgliaiiiu7cm/CWJh/WP6cbrEyPC4CLVji1cyBe4Sja0Nf1l6ah5nVPSn1Gb9ucf/5fb1BWiRARE+IzppRju1dOlexBj4gZlmXudvbgTtdQySmip9D6QuwpiwxVXwoltmQPDW6G5f6KTOa46M1V2h/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DsBCwdcIIsopehRui40XQohuw7pPP0456Lv3LA2grPA=;
+ b=vVgMIHNcycznDbDT8wWL/aviJjJ8kwb+KbuRCJ5W7BhDeCUDTgFDbaYWERPjdvJZ3wCql6gsBCO66GI+KE7vs8D3xO/afHvB5+ez6SKPH66ovFoMe4dqhiSVircdt9aYeiHZo/rLS+ccdxDLEPK/TOpzBobOgitASPSW1+FyiODt3cZACrjyqP23WJpTOa69e6H6gdQBm22Qn4Xsxtk2hETR6+ZtjatMxNhaArz/awv4LNYbbkFITtAoiWHkAXM/LIAHBvj+mJgpg/pqFdCo+BR4dkqOLYXJ8OkX62gzJg1V5zfLZX9WWgImojoyWjefjTHLWwAy/Yfj4miXJ9rOkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1765430194; x=1766034994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SuNOPxZW7Nye7tVoThWbMH6oZw/ivt2VUKr8V6qrvgM=;
-        b=AB/w2X0jWnq6nshCAJWwPsYbG8wlev4oqidvQN1DUBaAE0c5Qhpw7IumthyRne4vJ8
-         LzUWOZl9IW0Dqi9bP89gnA+5Km/MPySkCDwqJkIJyzUAix1g6Po2yrC/At7twwRa6Ypf
-         vVfGg0XBbj9zkDDj9VwNb8HNkSd2heZBjprbKbhLku4KhxJgI+aqmViR1suVT3+wxPqq
-         MEiS/+kprxRju8+0yxz2wDGr2MDVRgWbiRG+aV87iQ2QwaAZ/9RGjRG1kFTLxmsrSE0Q
-         WgmDlCf81ZJBaKulqqXkRvYmWCsBngIdwiNPxrcRfDQ7GvTvESdu0v++yZGM1RflJIBa
-         2Eyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765430194; x=1766034994;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SuNOPxZW7Nye7tVoThWbMH6oZw/ivt2VUKr8V6qrvgM=;
-        b=Ky1y8tnl/8ZLj2A3NOFYKUROEZL18n4Ho+kEkQ+jPE7UO59ir1qEc1p1Tgke2p9jOu
-         csgg7TXwZJVCz0q8pAZNReVAuU2c07F6DJhlSUK6tvDtv3Ko+NLB4GgHVVJkyugOSLJW
-         w+RwSriVjfvgWLNYlItIrIWB2Tn86fvJr0uhpkxJFb9mN/QaGvv8lnQ+HLqN+OfgRoz9
-         pqrOwhFCUeJEdOCIGXCZBJ1XlLm5JeP906pREi3kBKV1GJMLAmMK81VT3BCNqQlfVB+u
-         cUleLthv/dxUje7zb83Lk0QzJaC6D87CU3Nalv0dvOonNku1wyh6GJPT59VlMWvhfLtS
-         o9xg==
-X-Gm-Message-State: AOJu0Ywlr9Y7bTt1UqbqDwMVObQuWWliYBQE0uSrwOH1LVZxyPqkSbNG
-	HRJbxcYeNH/C7MLXEwacemPVIt61Un3Iy9n7J3Pvai27BKIGOq74pmroUG/S+tf36vqIRRJLGP0
-	im/AnBEAZSMnQPe1I/9YBCDUAcJ2U3vWJcKms
-X-Gm-Gg: AY/fxX7HMG2qQPLYlSOi5sm+RbrZTgQMgxHbwjQBHedGdPME6iGsbV9kYaBjcrLOGc/
-	+9fOMs1KxiEixtaDK6seKb7qjngjtD2cTvmK+BN805c4l7RHpXnGf0rHTrMQCd+JduB8S54gpzx
-	+H1Mj7ygQvJdM3yu37nzNimsAOn2DZzq4nW4JGc/F0KxOg0ToutozDb57U2xZLqP0tyFlHvaszQ
-	yYeDLmNn/H7Bn83AP3iXVN3Fahau4OaTRSzgjMiqcroCyTLdWZKdi1LiVRRQDj9o7pTCb/4kN/d
-	+ZxLbezXr5YLIXQ9RVjhZu25v8iWvDTM6aACD2R5kDiOfYIgjJ8ipypFuSbwmPOS4Mz95/vxhZm
-	zvVX3yCWDThkJupOkp+xZi3fDdrOEkqpqWLAPnpcunQ==
-X-Google-Smtp-Source: AGHT+IGBDOAGzJM4hUb5ptKH/Um9Pge2SQjp4QLIFDY2SRLAV9pNQQv6koiJWCoez/1i8X5zR6Xjd0Gs4fe7
-X-Received: by 2002:a17:903:3c24:b0:29d:779c:c0cb with SMTP id d9443c01a7336-29eed191802mr9708775ad.2.1765430193618;
-        Wed, 10 Dec 2025 21:16:33 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-29ee9dae906sm2047475ad.62.2025.12.10.21.16.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Dec 2025 21:16:33 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 13FDC341D2E;
-	Wed, 10 Dec 2025 22:16:33 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 111EFE41888; Wed, 10 Dec 2025 22:16:33 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 8/8] selftests: ublk: add user copy test cases
-Date: Wed, 10 Dec 2025 22:16:03 -0700
-Message-ID: <20251211051603.1154841-9-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20251211051603.1154841-1-csander@purestorage.com>
-References: <20251211051603.1154841-1-csander@purestorage.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DsBCwdcIIsopehRui40XQohuw7pPP0456Lv3LA2grPA=;
+ b=qC3iDG0fCTFy2D0PTMMjXV2v8OGLKRHsmYBpngSHmTGuimi51Cg6rZXRsCQTy+PG9uEXDkwFV8vo1BrS8giYr39IugwJPeksEF1Td2CBf5B8SvuSaWHael6s98WwKfrL5xdDP7cN+UELxlVVWH7T+ma+roebfc7J2BpQOdXdXWk=
+Received: from LV8PR04MB8984.namprd04.prod.outlook.com (2603:10b6:408:18b::13)
+ by MW4PR04MB7218.namprd04.prod.outlook.com (2603:10b6:303:76::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Thu, 11 Dec
+ 2025 06:34:17 +0000
+Received: from LV8PR04MB8984.namprd04.prod.outlook.com
+ ([fe80::9ba6:7273:90bc:53a8]) by LV8PR04MB8984.namprd04.prod.outlook.com
+ ([fe80::9ba6:7273:90bc:53a8%5]) with mapi id 15.20.9412.005; Thu, 11 Dec 2025
+ 06:34:17 +0000
+From: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To: "axboe@kernel.dk" <axboe@kernel.dk>
+CC: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
+	hch <hch@lst.de>, Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-btrace@vger.kernel.org" <linux-btrace@vger.kernel.org>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v4 00/20] blktrace: Add user-space support for zoned
+ command tracing
+Thread-Topic: [PATCH v4 00/20] blktrace: Add user-space support for zoned
+ command tracing
+Thread-Index: AQHcXeBpPFpy+uemYEipyeBJXPxiLrUcFJYA
+Date: Thu, 11 Dec 2025 06:34:17 +0000
+Message-ID: <9e5bb107-a4ed-4f7e-a0a7-a447066803a4@wdc.com>
+References: <20251125075206.876902-1-johannes.thumshirn@wdc.com>
+In-Reply-To: <20251125075206.876902-1-johannes.thumshirn@wdc.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV8PR04MB8984:EE_|MW4PR04MB7218:EE_
+x-ms-office365-filtering-correlation-id: a8140d48-6477-454d-cbbc-08de387f4f50
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|19092799006|38070700021;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ajAzdkFvRWpuOUNLeXdvR09YK2M0dFZpU2g2ZXRDV3V0UkxuaTZBeGRLNHQz?=
+ =?utf-8?B?dkJiM0h1RDE1U2JzZ2I5ZHBRVHRiU3p2aHB4ZUQ2NVBKNjBLUnJuNVg5bnY3?=
+ =?utf-8?B?NWJ6dXhhbmUwTjVVeS96RTdINnUwN3I4bVFXNU5zS0pxT3hEbTltWXRSUDFo?=
+ =?utf-8?B?R0o1dWpJWWxlMnlsQ0h4Z21UNFhrZHdLamV2cTRwZWNJc0VudTErb1lYaW5m?=
+ =?utf-8?B?TjhCOUJDVFFqMjJJM3JiTkRWVGo3SCtzb04rRk1XN2l6Ym1pWmx1Mk5ETzRI?=
+ =?utf-8?B?bHoxK0RiVnAzYWswQ2RjL3NOQm9nN2k0ZVpXQTJwam5nRnpMbVIxdkRiOXh4?=
+ =?utf-8?B?c3pWRHlvUE1ISU9heVpVQnVVQnBhWmM5bXluTDdqZ1cyM1JzcjUzWDVOWFg5?=
+ =?utf-8?B?OFNVR1c2WG5iSFZuVlY3Vk1LT1NFQXN5UlhjN1VhTUt1TjRaMlY0VGJpbmgr?=
+ =?utf-8?B?TVAyalo3aDJndnBMaHVndkNJSGdCWTgxcmRTUS9jVGpkS2Z5c0xzNDZSRzhi?=
+ =?utf-8?B?elQwMDFGS0IrR0lTVjVqVXU0SlZ3N0lLdzFOaUxIc1VvRitOK3JqcUZWL2hn?=
+ =?utf-8?B?R2lsdjM3L1pTUnovK2JqdGhlV2lRQXR1azh6RG5jTXBtT2pDRWNjWkxXazd0?=
+ =?utf-8?B?cmhxT2xndnlOMUYzTXcxczBFOWlnT3laY2J1MG5ZK0xZaVFtNlV6VjJMSTFu?=
+ =?utf-8?B?aDdDVmlta3FvS0laR0U1R0FadDgzNUtOUmxQT0RldnExQ2VVVDl0bDBFZ3pm?=
+ =?utf-8?B?eDZIZ2NBSWtpTENHYWU1NmY5WnhwYXZaYTBwc0dHV053bU80WUVyVGhZdXRK?=
+ =?utf-8?B?aDFlQytaTTRSZVBuZ2tXbmU0RGU4Q0xKZGNwenFodG44cytsNkYvZ2R1dEFu?=
+ =?utf-8?B?SGR4Rm00dFh6N3pQVDZMRSt1QUM0ZjJXQXVLa1ZDRDNqcGN1OFdiWXRvTnlx?=
+ =?utf-8?B?VVU0T1FYVTdPUTlidXhxWmJnZjErdzhKZ0FzTWEyOC9Sc3p4dkM4UWc4TUNa?=
+ =?utf-8?B?NGZ2U2c2MXRScTJaaGpVOU5sNFM0RHNqUnUvWnZXeHZpM3lOOFhXNmpTZzls?=
+ =?utf-8?B?bE9wNmd4N05JV3NOaThWSnJTekd2dndsMFFZTGdxd3g2SHI3UDRzRm5ZUFVZ?=
+ =?utf-8?B?TVpvc0VVOEd6bEJKdXRGUmNlY1ZsNlIwekR6bWNqeU9iMDIrTFdhSWN4aEh2?=
+ =?utf-8?B?MjdjRlo4VHA3dlBzQXNVM0hpZW95WE0rWGxleHVkMVRJN1F6ZlE4MG9Kb0ZO?=
+ =?utf-8?B?K3dJbGpHeWN1K3dPMW1UNGlRdU1qYzZ2dlJrSXYwR3czTkpBN3BnbVhqS0Jl?=
+ =?utf-8?B?Q1pvRkRTZ29SRGxtaEpZRkE5aGg4b0VDT2p1WktVT3p2WjkvanhRQjNWMmt2?=
+ =?utf-8?B?YnRTQlJDeEhtOEYxZ3NrME9oeURwbEVGTHhIUWRwRm1vRzF3VUZQelpHWjN5?=
+ =?utf-8?B?dkJYcVZncERyN2ZtWWR5V1kxMHFYclp1L0pBeDQ5T3NsMHZFWUpaSDNZZWQ3?=
+ =?utf-8?B?OEpDM2oxZzZvZjlvVDc5ZkR2a1FXV0prWHAxZDFZZVJhVVREendlODhoakhH?=
+ =?utf-8?B?STZ6ZG9JK1htcityWHNEaUZLTnBOVGI3RUZBRlZCejMxQ2p6N2IycWJjOUts?=
+ =?utf-8?B?N3hDM0V6RTZSNlBCbHV2TkhremVWYkg2SjdOcFBDSHpPWUVKUDd0Y3NHakti?=
+ =?utf-8?B?cERGVEZFSHFhSW1tY2RsTnpGNGhtb29BQ1JFM2JqT0FUOTF5STV3K2grTlZT?=
+ =?utf-8?B?SnVjc0FwaHVpUG8xNERDMjZTc1hDTno2QndzTzJTQ1E3ZXg5SmdTQlIwZTdB?=
+ =?utf-8?B?VXlLWktoTmIydENQY2E5anlLRDNBekt0SXdsekNHbEFBaVVjcTdUU2ZrUHpR?=
+ =?utf-8?B?VVhVTEZiWW1xT0d4UjAvRnVWSnc2RFMxMlFXclpvSng1MTVEY0kwSGpJbjZN?=
+ =?utf-8?B?SWhDQVJ4VVBHekN4emJlZmx0RjNYZkhNcWUwT1V0UlJxazBNREFUUk1JZmlx?=
+ =?utf-8?B?b2k4K0FhTWVGMXQ5YWk2OHhwZHV2TmNvVFVYdWswN21OWjlxYWdQYVByTzBi?=
+ =?utf-8?Q?vJtYkn?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR04MB8984.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(19092799006)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Qks3NEk0NnZnV3VpUG8rU3FrallNamJiQkFJQkRHOTRkczVRQ3l0ak0xc0t6?=
+ =?utf-8?B?WVJIVUowMVRhaW9hUWc0YWhvVHlMZWtSWWY4R2FLMzRMNFBzQk9vQ2hvakR3?=
+ =?utf-8?B?R2ZUUDJkT01Fa1c5MTFzSWhuOGw4ZGlWV3RNVDM4YVNodTAxVUlWdDkyMFRq?=
+ =?utf-8?B?OVM0bmVFZkxDQUdCd25oMlFJTHN2enRFbFdkdlNmZjhGNmo4eDk1OWlpRTNH?=
+ =?utf-8?B?OFRmM0IwOWxZY1Z4MEVUUXZMbUdwZUlmTUR3NlhJc2p3cmRoMHVNdHNPUDNZ?=
+ =?utf-8?B?aTFzTzFDM0wxS0ErMzBObC9iU2VOQ2M2WHZjL1o2OUpUZ2c2Vzg2Qzl3ZnVG?=
+ =?utf-8?B?eWdBdElJeWp5Z1h4SnFGU3VFNnBtbExLMWM1WncweGthQitVdm52dWw1eEwz?=
+ =?utf-8?B?ZFJmWERUeEpXcnBjTGMzc2I2ZkpyL2RpbTdmWWp0ejZyTklleVpDMDhQY3N4?=
+ =?utf-8?B?WjVsejE5cUxRdVpHMFhTSm1IZ1lYNlRRN1RXOEZFazJaZXkwQWpCRDY5Mzk2?=
+ =?utf-8?B?NndWSnlWWXRHYkphTUpobFAvV0tXL1FWTFduaDh5bGRkMzQ3b1FEV0RJUk8y?=
+ =?utf-8?B?a0dqd2YvZk5NRlRsVDlEZ1gySkoreDMxTzhWbHYwVEhGRnpZTzBOOC9sYk5L?=
+ =?utf-8?B?RXdnSHdQNkU2K2NLaWcxdlpvcmUrQ1JwY2lLRGRFb0pHOFBSRUtwWFFYWkNv?=
+ =?utf-8?B?dTdKbnRkT0g3a2YwdDJ2MXppTXlQZi93OG8vVGRCdERKaG9XMFJoM0x3eGMx?=
+ =?utf-8?B?aFJQK3FTc1ZOMXMxeEViOFR3Sy9GTXp0MTl0M1l5UlVrazJUaHBZdjFEOFpq?=
+ =?utf-8?B?UEREK3Qza3ZBbTFqeUhVU3h2ZC9pNXQwWVZjWFNyQ3MzbkE4SWlBREU4cmtx?=
+ =?utf-8?B?bGFMSzJNZ3F0VFdWUUpZMy9CSDJEZEt1aU5uMFFXSUVsZFpaYnR6VkRPdDR5?=
+ =?utf-8?B?RW5INmN1b1JpTHo1UCt5S2tWOXhBRzVodnlxZ21tSVFUenlJVUV5cWtrYUIy?=
+ =?utf-8?B?Y09uZTZyMlI2QTN3UmFYR2JFeFdnSW1hUFBOLzRIZ3MyallZZHBiTVRpNHRx?=
+ =?utf-8?B?MEJnWHpESmpSYURhMUlOUHlxcENKenRUTk9QdEcyUk9Sb2VXZ1lLeC8rcWp5?=
+ =?utf-8?B?WVd3Zis5RjBaWElaRitqOG5mTU9XM3BmcDNZVlRvYytocWNkSVpNdWFOS1Z1?=
+ =?utf-8?B?QThkRHJVOWw2UUhMMEdvSXJjZHlyN0ZLQmhFM1FOeE9JNEVacWpzbUdvd2N0?=
+ =?utf-8?B?VVpRUDl0UXlCazVJa0cxTFlUZnd1Qm9KYkFuSW1GNHp0WFdyZ081cmxpNWZv?=
+ =?utf-8?B?YVE0TVd1U25LUVZ4ckZseWFDaWM0Zms2MUFNVUFqaFA2QWlvaktRaEdMbHIv?=
+ =?utf-8?B?U3Zia0pING5rNUtoNXZmZW5lUUZETXRrbkxPa0xwSkZRYjkwdjJCckgyRnEv?=
+ =?utf-8?B?cEM4dEZSd3BWSkI2VHA1L1JmN3R6WUwzYjAwSFpFUTJOU2huYWkwMGVFYWNP?=
+ =?utf-8?B?ejU5R0huYVhCb0F6a0YwRmpXUmRpUnJxdUlKeWNTQ1JjeHZmMTdwRWErWk1i?=
+ =?utf-8?B?ekpoeFhzOWMxbmhZRUoxYytTZlRHMTJXNnJ2R2t5YW1FYVhnY011T3N2Zkwr?=
+ =?utf-8?B?bWtCRnV6NGpvS1Mva29ET0s2eUU2MXN1NER5TzgzbldXaHZxd0ZGQ1VUUlVS?=
+ =?utf-8?B?MlpuV2JHTWZpbVc3VEt3K0dVcWY4ZWVQMk9ZelExOGZsZ3dqd3QrL0M5ME5U?=
+ =?utf-8?B?OExBZUdnRjUrK0RvNmY5ekhjN2hjdkhQdGJyQkdiZURsRjlNcnhHcWdjQzVs?=
+ =?utf-8?B?a2xFSktpNXo1a1RucEdQQlVsT1RxSjYrenZzTklJN3FPMHp5NFpnbEx3NHls?=
+ =?utf-8?B?SjJrdWJJM0Z1cHJNb3lYdEVESFVPWTd3K3R0d0lwbTE5elFmazZNNnJRSEd1?=
+ =?utf-8?B?ekZucys0S213Yy9idmVYMDQxVkpUbm15MEp5K2tLYkU2emQycGZzVTMzUG1T?=
+ =?utf-8?B?RE44LzZzbXdZNzM3VU5nRXZjbUpVNkw3ZTEvQ2tFMndYeEFza3ZGT0lPRGM3?=
+ =?utf-8?B?V2lMbFRhR0JnYmgwR2RSR0xNM05jbnBTRE1pMHRUb1NLSHZmS3RwRXJHMnRj?=
+ =?utf-8?B?a2N6bVZpaUJ2bUdkcjJ0eHBhTUx3d0cvL0V2YlRFQjFNb3BHSHNzN1dyQWs5?=
+ =?utf-8?Q?wQohFNEVmIoGtog1vENeUSY=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <14CCFEF7AEBB57448F5DE1BF02007E50@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	23gIwx6PIgyh75p95+gaHOXDH68RBB/MWt8lAf7NN9ufouNZONQcjsm/nGzFEWwJoMKt0Fd2CvupMO8v0owyk4KlQFTazyg9/CtjQjHPK72wTr8zAY3UTSwy3aqjbTeGU3HxRDDayXZVFpb98s6aifhWNiab5rvzsub5IauxFh1SMhbSLsqZcCzVs35rkWUforq1jrFikr1ZvjXW54DZ2IaFeRKfTMRN5/OIcCdFsAyYYrakj0gznDSoHS/uYyF9a+/S7FrfyR+8MksieOTImRkmT4ShXnhvGA0yibp3hjTD5tZdxMidWOpckPshNtDINLVzjLeK9n8vpw3jTfOh2e+Cmd5PduelbJRFZH5QxLm3Xs/4YiM8XHl+kZWZkj/xVo87bSTN0F+tP/t979B+NUpr26whHPd+0DknKN87zVXS7vzNL2ngrjxBQTmyTaL/dajEzvcg7CJNdkLw6xm3T4DKB7njEhWf6y7c55kUjtz52o1zhOrjZAlAZAfODNwc0msojYghH2EQsnbIvkfSNG5jHhLUELGod3V4Nyi+yg4fElgxqJHesRHe6WXng1iHmS9vMVG5SamvKYTzXk9bcci8Ae8CiBXu00S2z6NlPlplBhjYqGL3tTDe4YekEhuA
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR04MB8984.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8140d48-6477-454d-cbbc-08de387f4f50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2025 06:34:17.5767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M9/tTIVrImn5EzDDQed1OtQ5VGppoRQqipgdyzODZwVU6NhbLutr2SYKYH26j+C7wU22vuLBZghRR3hrJduKchT3F+4HuuVfexCBCE5s6Ro=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR04MB7218
 
-The ublk selftests cover every data copy mode except user copy. Add
-tests for user copy based on the existing test suite:
-- generic_14 ("basic recover function verification (user copy)") based
-  on generic_04 and generic_05
-- null_03 ("basic IO test with user copy") based on null_01 and null_02
-- loop_06 ("write and verify over user copy") based on loop_01 and
-  loop_03
-- loop_07 ("mkfs & mount & umount with user copy") based on loop_02 and
-  loop_04
-- stripe_05 ("write and verify test on user copy") based on stripe_03
-- stripe_06 ("mkfs & mount & umount on user copy") based on stripe_02
-  and stripe_04
-- Added test cases to stress_05 ("run IO and remove device with recovery
-  enabled") for user copy
-- stress_06 ("run IO and remove device (user copy)") based on stress_01
-  and stress_03
-- stress_07 ("run IO and kill ublk server (user copy)") based on
-  stress_02 and stress_04
-
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- tools/testing/selftests/ublk/Makefile         |  8 ++++
- .../testing/selftests/ublk/test_generic_14.sh | 40 +++++++++++++++++++
- tools/testing/selftests/ublk/test_loop_06.sh  | 25 ++++++++++++
- tools/testing/selftests/ublk/test_loop_07.sh  | 21 ++++++++++
- tools/testing/selftests/ublk/test_null_03.sh  | 24 +++++++++++
- .../testing/selftests/ublk/test_stress_05.sh  |  7 ++++
- .../testing/selftests/ublk/test_stress_06.sh  | 39 ++++++++++++++++++
- .../testing/selftests/ublk/test_stress_07.sh  | 39 ++++++++++++++++++
- .../testing/selftests/ublk/test_stripe_05.sh  | 26 ++++++++++++
- .../testing/selftests/ublk/test_stripe_06.sh  | 21 ++++++++++
- 10 files changed, 250 insertions(+)
- create mode 100755 tools/testing/selftests/ublk/test_generic_14.sh
- create mode 100755 tools/testing/selftests/ublk/test_loop_06.sh
- create mode 100755 tools/testing/selftests/ublk/test_loop_07.sh
- create mode 100755 tools/testing/selftests/ublk/test_null_03.sh
- create mode 100755 tools/testing/selftests/ublk/test_stress_06.sh
- create mode 100755 tools/testing/selftests/ublk/test_stress_07.sh
- create mode 100755 tools/testing/selftests/ublk/test_stripe_05.sh
- create mode 100755 tools/testing/selftests/ublk/test_stripe_06.sh
-
-diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-index 770269efe42a..837977b62417 100644
---- a/tools/testing/selftests/ublk/Makefile
-+++ b/tools/testing/selftests/ublk/Makefile
-@@ -19,28 +19,36 @@ TEST_PROGS += test_generic_08.sh
- TEST_PROGS += test_generic_09.sh
- TEST_PROGS += test_generic_10.sh
- TEST_PROGS += test_generic_11.sh
- TEST_PROGS += test_generic_12.sh
- TEST_PROGS += test_generic_13.sh
-+TEST_PROGS += test_generic_14.sh
- 
- TEST_PROGS += test_null_01.sh
- TEST_PROGS += test_null_02.sh
-+TEST_PROGS += test_null_03.sh
- TEST_PROGS += test_loop_01.sh
- TEST_PROGS += test_loop_02.sh
- TEST_PROGS += test_loop_03.sh
- TEST_PROGS += test_loop_04.sh
- TEST_PROGS += test_loop_05.sh
-+TEST_PROGS += test_loop_06.sh
-+TEST_PROGS += test_loop_07.sh
- TEST_PROGS += test_stripe_01.sh
- TEST_PROGS += test_stripe_02.sh
- TEST_PROGS += test_stripe_03.sh
- TEST_PROGS += test_stripe_04.sh
-+TEST_PROGS += test_stripe_05.sh
-+TEST_PROGS += test_stripe_06.sh
- 
- TEST_PROGS += test_stress_01.sh
- TEST_PROGS += test_stress_02.sh
- TEST_PROGS += test_stress_03.sh
- TEST_PROGS += test_stress_04.sh
- TEST_PROGS += test_stress_05.sh
-+TEST_PROGS += test_stress_06.sh
-+TEST_PROGS += test_stress_07.sh
- 
- TEST_GEN_PROGS_EXTENDED = kublk
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/ublk/test_generic_14.sh b/tools/testing/selftests/ublk/test_generic_14.sh
-new file mode 100755
-index 000000000000..cd9b44b97c24
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_generic_14.sh
-@@ -0,0 +1,40 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="generic_14"
-+ERR_CODE=0
-+
-+ublk_run_recover_test()
-+{
-+	run_io_and_recover 256M "kill_daemon" "$@"
-+	ERR_CODE=$?
-+	if [ ${ERR_CODE} -ne 0 ]; then
-+		echo "$TID failure: $*"
-+		_show_result $TID $ERR_CODE
-+	fi
-+}
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "recover" "basic recover function verification (user copy)"
-+
-+_create_backfile 0 256M
-+_create_backfile 1 128M
-+_create_backfile 2 128M
-+
-+ublk_run_recover_test -t null -q 2 -r 1 -u &
-+ublk_run_recover_test -t loop -q 2 -r 1 -u "${UBLK_BACKFILES[0]}" &
-+ublk_run_recover_test -t stripe -q 2 -r 1 -u "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+ublk_run_recover_test -t null -q 2 -r 1 -u -i 1 &
-+ublk_run_recover_test -t loop -q 2 -r 1 -u -i 1 "${UBLK_BACKFILES[0]}" &
-+ublk_run_recover_test -t stripe -q 2 -r 1 -u -i 1 "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+_cleanup_test "recover"
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_loop_06.sh b/tools/testing/selftests/ublk/test_loop_06.sh
-new file mode 100755
-index 000000000000..1d1a8a725502
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_loop_06.sh
-@@ -0,0 +1,25 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="loop_06"
-+ERR_CODE=0
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "loop" "write and verify over user copy"
-+
-+_create_backfile 0 256M
-+dev_id=$(_add_ublk_dev -t loop -u "${UBLK_BACKFILES[0]}")
-+_check_add_dev $TID $?
-+
-+# run fio over the ublk disk
-+_run_fio_verify_io --filename=/dev/ublkb"${dev_id}" --size=256M
-+ERR_CODE=$?
-+
-+_cleanup_test "loop"
-+
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_loop_07.sh b/tools/testing/selftests/ublk/test_loop_07.sh
-new file mode 100755
-index 000000000000..493f3fb611a5
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_loop_07.sh
-@@ -0,0 +1,21 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="loop_07"
-+ERR_CODE=0
-+
-+_prep_test "loop" "mkfs & mount & umount with user copy"
-+
-+_create_backfile 0 256M
-+
-+dev_id=$(_add_ublk_dev -t loop -u "${UBLK_BACKFILES[0]}")
-+_check_add_dev $TID $?
-+
-+_mkfs_mount_test /dev/ublkb"${dev_id}"
-+ERR_CODE=$?
-+
-+_cleanup_test "loop"
-+
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_null_03.sh b/tools/testing/selftests/ublk/test_null_03.sh
-new file mode 100755
-index 000000000000..0051067b4686
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_null_03.sh
-@@ -0,0 +1,24 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="null_03"
-+ERR_CODE=0
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "null" "basic IO test with user copy"
-+
-+dev_id=$(_add_ublk_dev -t null -u)
-+_check_add_dev $TID $?
-+
-+# run fio over the two disks
-+fio --name=job1 --filename=/dev/ublkb"${dev_id}" --ioengine=libaio --rw=readwrite --iodepth=32 --size=256M > /dev/null 2>&1
-+ERR_CODE=$?
-+
-+_cleanup_test "null"
-+
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_stress_05.sh b/tools/testing/selftests/ublk/test_stress_05.sh
-index 09b94c36f2ba..cb8203957d1d 100755
---- a/tools/testing/selftests/ublk/test_stress_05.sh
-+++ b/tools/testing/selftests/ublk/test_stress_05.sh
-@@ -78,7 +78,14 @@ if _have_feature "PER_IO_DAEMON"; then
- 	ublk_io_and_remove 256M -t loop -q 4 --nthreads 8 --per_io_tasks -r 1 -i "$reissue" "${UBLK_BACKFILES[0]}" &
- 	ublk_io_and_remove 8G -t null -q 4 --nthreads 8 --per_io_tasks -r 1 -i "$reissue"  &
- fi
- wait
- 
-+for reissue in $(seq 0 1); do
-+	ublk_io_and_remove 8G -t null -q 4 -u -r 1 -i "$reissue" &
-+	ublk_io_and_remove 256M -t loop -q 4 -u -r 1 -i "$reissue" "${UBLK_BACKFILES[1]}" &
-+	ublk_io_and_remove 8G -t null -q 4 -u -r 1 -i "$reissue" &
-+	wait
-+done
-+
- _cleanup_test "stress"
- _show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_stress_06.sh b/tools/testing/selftests/ublk/test_stress_06.sh
-new file mode 100755
-index 000000000000..37188ec2e1f7
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_stress_06.sh
-@@ -0,0 +1,39 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+TID="stress_06"
-+ERR_CODE=0
-+
-+ublk_io_and_remove()
-+{
-+	run_io_and_remove "$@"
-+	ERR_CODE=$?
-+	if [ ${ERR_CODE} -ne 0 ]; then
-+		echo "$TID failure: $*"
-+		_show_result $TID $ERR_CODE
-+	fi
-+}
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "stress" "run IO and remove device (user copy)"
-+
-+_create_backfile 0 256M
-+_create_backfile 1 128M
-+_create_backfile 2 128M
-+
-+ublk_io_and_remove 8G -t null -q 4 -u &
-+ublk_io_and_remove 256M -t loop -q 4 -u "${UBLK_BACKFILES[0]}" &
-+ublk_io_and_remove 256M -t stripe -q 4 -u "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+ublk_io_and_remove 8G -t null -q 4 -u --nthreads 8 --per_io_tasks &
-+ublk_io_and_remove 256M -t loop -q 4 -u --nthreads 8 --per_io_tasks "${UBLK_BACKFILES[0]}" &
-+ublk_io_and_remove 256M -t stripe -q 4 -u --nthreads 8 --per_io_tasks "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+_cleanup_test "stress"
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_stress_07.sh b/tools/testing/selftests/ublk/test_stress_07.sh
-new file mode 100755
-index 000000000000..fb061fc26d36
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_stress_07.sh
-@@ -0,0 +1,39 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+TID="stress_07"
-+ERR_CODE=0
-+
-+ublk_io_and_kill_daemon()
-+{
-+	run_io_and_kill_daemon "$@"
-+	ERR_CODE=$?
-+	if [ ${ERR_CODE} -ne 0 ]; then
-+		echo "$TID failure: $*"
-+		_show_result $TID $ERR_CODE
-+	fi
-+}
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "stress" "run IO and kill ublk server (user copy)"
-+
-+_create_backfile 0 256M
-+_create_backfile 1 128M
-+_create_backfile 2 128M
-+
-+ublk_io_and_kill_daemon 8G -t null -q 4 -u --no_ublk_fixed_fd &
-+ublk_io_and_kill_daemon 256M -t loop -q 4 -u --no_ublk_fixed_fd "${UBLK_BACKFILES[0]}" &
-+ublk_io_and_kill_daemon 256M -t stripe -q 4 -u "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+ublk_io_and_kill_daemon 8G -t null -q 4 -u --nthreads 8 --per_io_tasks &
-+ublk_io_and_kill_daemon 256M -t loop -q 4 -u --nthreads 8 --per_io_tasks "${UBLK_BACKFILES[0]}" &
-+ublk_io_and_kill_daemon 256M -t stripe -q 4 -u --nthreads 8 --per_io_tasks "${UBLK_BACKFILES[1]}" "${UBLK_BACKFILES[2]}" &
-+wait
-+
-+_cleanup_test "stress"
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_stripe_05.sh b/tools/testing/selftests/ublk/test_stripe_05.sh
-new file mode 100755
-index 000000000000..05d71951d710
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_stripe_05.sh
-@@ -0,0 +1,26 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="stripe_05"
-+ERR_CODE=0
-+
-+if ! _have_program fio; then
-+	exit "$UBLK_SKIP_CODE"
-+fi
-+
-+_prep_test "stripe" "write and verify test on user copy"
-+
-+_create_backfile 0 256M
-+_create_backfile 1 256M
-+
-+dev_id=$(_add_ublk_dev -t stripe -q 2 -u "${UBLK_BACKFILES[0]}" "${UBLK_BACKFILES[1]}")
-+_check_add_dev $TID $?
-+
-+# run fio over the ublk disk
-+_run_fio_verify_io --filename=/dev/ublkb"${dev_id}" --size=512M
-+ERR_CODE=$?
-+
-+_cleanup_test "stripe"
-+_show_result $TID $ERR_CODE
-diff --git a/tools/testing/selftests/ublk/test_stripe_06.sh b/tools/testing/selftests/ublk/test_stripe_06.sh
-new file mode 100755
-index 000000000000..d06cac7626e2
---- /dev/null
-+++ b/tools/testing/selftests/ublk/test_stripe_06.sh
-@@ -0,0 +1,21 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-+
-+TID="stripe_06"
-+ERR_CODE=0
-+
-+_prep_test "stripe" "mkfs & mount & umount on user copy"
-+
-+_create_backfile 0 256M
-+_create_backfile 1 256M
-+
-+dev_id=$(_add_ublk_dev -t stripe -u -q 2 "${UBLK_BACKFILES[0]}" "${UBLK_BACKFILES[1]}")
-+_check_add_dev $TID $?
-+
-+_mkfs_mount_test /dev/ublkb"${dev_id}"
-+ERR_CODE=$?
-+
-+_cleanup_test "stripe"
-+_show_result $TID $ERR_CODE
--- 
-2.45.2
-
+T24gMTEvMjUvMjUgODo1MiBBTSwgSm9oYW5uZXMgVGh1bXNoaXJuIHdyb3RlOg0KPiBbIEFwbG9n
+aWVzIGlmIHlvdSByZWNpZXZlIHRoaXMgc2VyaWVzIHR3aWNlLCBteSBJU1AgZWZmZWQgdXAgYmFk
+bHkgXQ0KPg0KPiBUaGlzIHBhdGNoIHNlcmllcyBleHRlbmRzIHRoZSB1c2VyLXNwYWNlIGJsa3Ry
+YWNlIHRvb2xzIHRvIHN1cHBvcnQgdGhlIG5ldw0KPiB0cmFjZSBldmVudHMgZm9yIHpvbmVkIGJs
+b2NrIGRldmljZSBjb21tYW5kcyBpbnRyb2R1Y2VkIGluIHRoZSBjb3JyZXNwb25kaW5nDQo+IGtl
+cm5lbCBwYXRjaCBzZXJpZXMuDQo+DQo+IFRoZSB1cGRhdGVzIGluY2x1ZGU6DQo+DQo+IC0gSW50
+cm9kdWN0aW9uIG9mIGEgbmV3IGlvY3RsIHJlcXVlc3RpbmcgdGhlIHYyIHZlcnNpb24gb2YgdGhl
+IHRyYWNlDQo+IC0gRGVmaW5pdGlvbnMgZm9yIG5ldyB6b25lZCBvcGVyYXRpb24gdHJhY2UgZXZl
+bnRzLg0KPiAtIFBhcnNpbmcgc3VwcG9ydCBpbiBibGtwYXJzZSBmb3IgdGhlc2UgZXZlbnRzLg0K
+PiAtIERpc3BsYXkgb2YgdGhlIG5ldyBldmVudHMgd2l0aCBjbGVhciBsYWJlbGluZyAoZS5nLiwg
+Wk8sIFpBLCBaUikuDQo+IC0gQmFja3dhcmQtY29tcGF0aWJsZSBjaGFuZ2VzIHRoYXQgZG8gbm90
+IGFmZmVjdCBleGlzdGluZyBmdW5jdGlvbmFsaXR5Lg0KPg0KPiBUaGVzZSBjaGFuZ2VzIGNvbXBs
+ZW1lbnQgdGhlIGtlcm5lbCBwYXRjaGVzIGFuZCBhbGxvdyBmdWxsIHZpc2liaWxpdHkgaW50bw0K
+PiB6b25lIG1hbmFnZW1lbnQgY29tbWFuZHMgaW4gYmxrdHJhY2Ugb3V0cHV0LCBlbmFibGluZyBi
+ZXR0ZXIgYW5hbHlzaXMgYW5kDQo+IGRlYnVnZ2luZyBvZiB6b25lZCBzdG9yYWdlIHdvcmtsb2Fk
+cy4NCj4NCj4gVGhlIHVwZGF0ZWQgYmxrdHJhY2UgdXRpbGl0eSB3aWxsIGZpcnN0IGlzc3VlIHRo
+ZSBCTEtUUkFDRVNFVFVQMiBpb2N0bCBhbmQgaWYNCj4gaXQgZmFpbHMgdHJhbnNwYXJ0ZW50bHkg
+ZmFsbCBiYWNrIHRvIEJMS1RSQUNFU0VUVVAgYWxsb3dpbmcgYmFja3dhcmRzDQo+IGNvbXBhdGli
+aWxpdHkuDQo+DQo+IEZlZWRiYWNrIGFuZCB0ZXN0aW5nIG9uIGFkZGl0aW9uYWwgZGV2aWNlIHR5
+cGVzIGFyZSBhcHByZWNpYXRlZC4NCj4NCj4gTGluayB0byB2MzogaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvbGludXgtYnRyYWNlLzIwMjUxMTI0MDczNzM5LjUxMzIxMi0xLWpvaGFubmVzLnRodW1z
+aGlybkB3ZGMuY29tDQo+IENoYW5nZXMgdG8gdjM6DQo+IC0gTW92ZSBwYXRjaCAiYmxrdHJhY2U6
+IHN1cHBvcnQgcHJvdG9jb2wgdmVyc2lvbiA4IiBsYXN0IGluIHNlcmllcw0KPiAtIEFkZCBEYW1p
+ZW4ncyBhbmQgTWFydGluJ3MgUmV2aWV3ZWQtYnkNCj4gLSBEb2N1bWVudCBwYXRjaCAiYmxrdHJh
+Y2U6IHJlbmFtZSB0cmFjZV90b19jcHUgdG8gYml0X3RyYWNlX3RvX2NwdSINCj4NCj4gQ2hhbmdl
+cyB0byB2MjoNCj4gLSBTeW5jIHdpdGgga2VybmVsIGNoYW5nZXMNCj4gLSBEcm9wIHRoZSBab25l
+IE1hbmFnZW1lbnQgdHJhY2UgYWN0aW9uDQo+DQo+IENoYW5nZXMgdG8gdjE6DQo+IC0gSW5jb3Jw
+b3JhdGVkIGZlZWRiYWNrIGZyb20gQ2hhaXRhbnlhDQo+IC0gQWRkIHBhdGNoIGZpeGluZyBhIGNv
+bXBpbGVyIHdhcm5pbmcgYXQgdGhlIGJlZ2lubmluZw0KPg0KSmVucywgcGluZz8NCg==
 
