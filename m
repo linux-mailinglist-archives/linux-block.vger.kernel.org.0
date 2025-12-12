@@ -1,91 +1,94 @@
-Return-Path: <linux-block+bounces-31899-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31898-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0263FCB96B9
-	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 18:17:43 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC4DCB969C
+	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 18:17:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9EFD630792B6
-	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 17:17:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A93D330052CE
+	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 17:17:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFA812D979D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D252D8387;
 	Fri, 12 Dec 2025 17:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="WsbL74lv"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Wm7JCvi4"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-yx1-f97.google.com (mail-yx1-f97.google.com [74.125.224.97])
+Received: from mail-pl1-f227.google.com (mail-pl1-f227.google.com [209.85.214.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5562B2D77F7
-	for <linux-block@vger.kernel.org>; Fri, 12 Dec 2025 17:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29B72D77E3
+	for <linux-block@vger.kernel.org>; Fri, 12 Dec 2025 17:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765559833; cv=none; b=l5NjraZcFBXBxMdeHyAe2jUn1MfZt7HsBGqMko3i6CvBL8LQN8E9+mLohdvayYKAmsIijhSgzgbSuhwctXabQybqBRvlIqwBBB74uBaTQQeorFXJcrr8vCuukj3Ih+/0BmnND5n3pN+5v9pUBwLejzHTXU0124VsaIEOPbL0ilM=
+	t=1765559832; cv=none; b=LLDcS70c64K+4zXEzYt1OWExqSziAOMyyMKnl3rTp8LbfPmAKDn9ADkOqjny8pqlmbhtjM7oGRCShUujeGu2zJu2oME0Op627Q0scOWCbViGzsvpE1IobzB9KygdFbtwzOyYvX+07FuaNwxaSKR88SJ8QbQbsr0fzQyuhEPsIm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765559833; c=relaxed/simple;
-	bh=3eF8wdj4iHtPXdLstraLhCXNJ4/+KGFi7l6xPTGi3Y4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ft6l6/kSa+6Bw5fDUTbOtSHL966RlhHjFUT8sw6NSYP7HE2xap1XHTuuhb1xo8lqgpIqxzyvAeRuLpHjRcmm6ppKlJCcckJCBaRQef2zPRVs+3EnmQXy1E9pXnCAHzrFJdc94GgWAGbZHTdqKsUyJr46zjTddk2jmj6qUyKA9iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=WsbL74lv; arc=none smtp.client-ip=74.125.224.97
+	s=arc-20240116; t=1765559832; c=relaxed/simple;
+	bh=OCxuEyv2nas70eB8lxzrmKzbwZmA0QEfOrxPlpwtsjA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OqBCO9m3FDVlabKbWYPfnSMW5Wac0f+4aEM0he46y5I/tGaP1qICmX/mzgGtMacMlnNUt8JTjj1otMv9GYD8VlvLIvQ0l59ao+DcFA0HaMDuHFIHy0I4Js54z4ujv0cijo8p0AaTctqeZXOlGREXpG4YYf5BvV4EurBo6CNrcIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Wm7JCvi4; arc=none smtp.client-ip=209.85.214.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-yx1-f97.google.com with SMTP id 956f58d0204a3-6446c7c5178so251715d50.1
+Received: by mail-pl1-f227.google.com with SMTP id d9443c01a7336-297dfb8a52dso1672935ad.0
         for <linux-block@vger.kernel.org>; Fri, 12 Dec 2025 09:17:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1765559830; x=1766164630; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nin3N5YD0QrEQZWUKpcQtJlJJY1LYkKO6ykxYCXjcaI=;
-        b=WsbL74lvOKVShquB4GKRSoM/Ur4RVKZwrc6NGtSTN4dGrnO630pkEwvQTERJVVOWAK
-         vP43O0MNRZcqvPMuYbG9QUatdJq/OsACi+YR6mO6BlOU7sFieS8CygNJbx7lVHr9hqMM
-         kwvK9oGd8fXan8DZOSYW2DmLtwyh7s+2hPZ+zrDg2kSRpGXhbEQH1teUItp3OR/0TJLS
-         SNVjqtlNKtU8A+IjTjZnAfhP4shMK4uK6ubKVDuqT+Zmt6usXRK7bWgNaBG4WsgoFUJN
-         7i+C+adXJnlpgeUneR/ferszJ+Q7CwLFWoK99dZG/2xKgirHon6o3Ib0LF5DiDlHCflZ
-         US4Q==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kUEatCbGKBwWq9sjai5DOHkl1bVC/1UgUICmtg/O0zA=;
+        b=Wm7JCvi4/NBSFYsrODbv48z54R+RKKp5q8854fJRK4biJ16UZXuEAtAuzOfc3yVSRH
+         R2fKTo+PtXkKSrXPASt5VPom1xMOVFLMGhVvI2ciwixSwfbBMW8nONv8dgklr06P7M1Y
+         rctkGkZUnhaHYR0+moyzFmUchZupH89hkdFqlFWIimURutXwocoBLDJ2uqkiGeA9NpBF
+         E+Vqvw+TuWR2ZquIwdWYe0rzUtVycotqKpI5rPKFcvgTbuA4aF3KauyYGyyFFKVy5ESH
+         3QBmM9IMGQOto9TUJ4ETmbeSq9THAcLInIIQPIj3YuwGVT7zvx2VCFTUu2shnzM0feOB
+         y7jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1765559830; x=1766164630;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nin3N5YD0QrEQZWUKpcQtJlJJY1LYkKO6ykxYCXjcaI=;
-        b=dzUbT0dkj6nOlMu8Hvya9wdDr/CmRfOXjaWpvdEUAnDATZVut8hwDzJBVyVNoHEFEG
-         LDPx78jO4vvNHjFtC7V1GrajJ3BFwPLKLzLpCYTH+TYvnZnmhyM0jjMH3zargZLpbMCS
-         q6ykWTYnkxcFISOX3ChzT4eslbR8+ZDVk4CORk1lCVfZSlsXd3PNKZSswDD0p4gtwVRY
-         wiaZE87a2K5rWcno90H5GFMkxRch8m8bou/YIbdaAz0CbFBw3P3a1I/ocilwACdRkwBw
-         XqVePSTKo6EuY6jV0ld3PxWzm+cqWpQKCv80qPNUgS/bT9RnAKnEAEEXahBydHILtgAR
-         KNPw==
-X-Gm-Message-State: AOJu0YwoKRXmKU/5HgcW5Kn+ayTGe4Jp/wUI4dJdEd4IkNo/cZ6L0hzY
-	yg5GoMFsufV9jDHlEsEqdxL4mUT1kuD0QpZkH9s/kT1i9e8zS62/g+y9RPX4J8UgiDP7Jqx4f5e
-	I1IgMah1Ap4UQsA8JWsJWYwwTtESU2Goo6g2Y
-X-Gm-Gg: AY/fxX66gMbzV+YHOUlcVbyDr/2d2S2zaXE2PK/RT50U/ebL5R8k/AeXYKrb9Rr7vTO
-	VEvcA4JqlgxTaSQCZDgp5SYDBr1iEfPkhoTGOTAVRcE6ZsiDA8ncjNoprETGHPZkq9UF7EM2tUM
-	GLMa7aRXhMr1bX8/zxt0Yr+aPBe6NLiDkDOUcb6ykLUNvbDdPqAgm1uLnZlkKJnkda3QSNM7J6z
-	kzc+6qH6J9tcxDKyW6LWAE6ImRTxVE7OwMclDzU5wKVdq3F67J9l08uCYDSzdWYJTA3FT3iuN0G
-	szb7pbffxBozlvSJbg2ndXLfiROct4YJM4PDIyjWy1eLMGNVa02gsIVHATBbRTycAi4wi6uWlgN
-	JkyUoJo+pEcxBaYWiXTnVAx84OWqeQIDLGSKXBrOnIg==
-X-Google-Smtp-Source: AGHT+IGCRZk7BK0zCjm9pcZPSmL33KqF5HPsix5a4+gK0uM8zmeY7npJJbW3aEgp1QhGNReMbgi71EFVM9ki
-X-Received: by 2002:a53:acc4:0:10b0:645:52b8:888f with SMTP id 956f58d0204a3-64555681388mr1348992d50.8.1765559829798;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kUEatCbGKBwWq9sjai5DOHkl1bVC/1UgUICmtg/O0zA=;
+        b=IYuh1Y6W+Vl/sxKWJGcUoZlojIDVS4TZ96YKUkVzJp7ijW+duwYpGf3QNmKszvUhz7
+         /ZmGa9U74XqOt6TrshTC2oYmpJZdGxjOVWXfnyRtngxD7mv4cclgnVOrspb0aJj7z8Vt
+         h/w/MdZQ7DYz8ry1yZTToVnG9wmoUX0L6R/6VZJGxQ2/OGbVwMWuG9eiYARgPBhE0JdS
+         XT55kkoyO/OMZkUGMV6EWwrFhkgmYgDncAgmu0z/Marg8sXwI1usoGAzMOlQWpOr3bJa
+         WYWmJ0JUYwZVHoGckmytNxPrqXOtp7Qc+jHQZ7xBo3AEWIxqTG4zikOzPjBxu62r3asJ
+         0xQQ==
+X-Gm-Message-State: AOJu0YzWBSQuvhBEAgRZukdxDRrl+iNA7fwVjLJUKsFB8xUHQFPVKoN+
+	LvbbvGmd76Oef8IbWR1X9pyVlcW3URj02HuVdGfbGziCyZdbr2fL1+9+bPPaZs3PhtmQ8lLP0sO
+	x21dwAKRP81BbJs3pjqR2k4MMmlTggMCNOnYUzBK3bTBxHDw4Aqlg
+X-Gm-Gg: AY/fxX5RQAFKIIarK2Ij/eAVpYAyVQEfqOOtePpYung5h5UeEi8zr3lynZu9Q6FiRQD
+	2h5qYorMZMM3k0xIghVljPmMxc46UlQOPQbWM9tMXBC/L9M19HyfvZLA0WkotrY1h5zBdTZ6MlP
+	4gVVNOWwRqSme87dIW9aWEj0pmSrncC1DvZaTj6xDnzdvkgn3Ej1sHsg6ExkJujZwbfzh1bHyKk
+	xpMr9yfHBG7cGP4+7dVIbBFlzThPrIwZN81uxV5FKkFDgBBDB8mMiYAM2iDuAy7fu1SXJYxn/AQ
+	x5Ijhy0oY+oK+ChLocDo9zaFjsnPmV6uvQwIi3YbSqKCJh3sfUmg1LAza4UkqqGLdPw3+rCavZe
+	VnU7h4oL6/thgmMcO4zVeykdlTqw=
+X-Google-Smtp-Source: AGHT+IHn2ulh+ZuwuN1vTN3PVxeOFgna9Rb1nC6ChWNZ0/CCmOhfBSYIXXuw9VcJ4K+kBBcLwkyXdHgn/Ed/
+X-Received: by 2002:a17:902:e5cb:b0:29a:56a:8b81 with SMTP id d9443c01a7336-29f244b9b3fmr19693165ad.8.1765559829756;
         Fri, 12 Dec 2025 09:17:09 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-78e6a404223sm2118797b3.18.2025.12.12.09.17.09
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-29ee9dae935sm8900575ad.54.2025.12.12.09.17.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 12 Dec 2025 09:17:09 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id F10BD34027F;
-	Fri, 12 Dec 2025 10:17:08 -0700 (MST)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 1A37B3404B4;
+	Fri, 12 Dec 2025 10:17:09 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id EA7D0E4232B; Fri, 12 Dec 2025 10:17:08 -0700 (MST)
+	id 17D86E4232B; Fri, 12 Dec 2025 10:17:09 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Shuah Khan <shuah@kernel.org>
 Cc: linux-block@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v3 0/9] selftests: ublk: add user copy test cases
-Date: Fri, 12 Dec 2025 10:16:58 -0700
-Message-ID: <20251212171707.1876250-1-csander@purestorage.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/9] selftests: ublk: fix overflow in ublk_queue_auto_zc_fallback()
+Date: Fri, 12 Dec 2025 10:16:59 -0700
+Message-ID: <20251212171707.1876250-2-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20251212171707.1876250-1-csander@purestorage.com>
+References: <20251212171707.1876250-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -94,61 +97,68 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix some existing issues in the ublk selftest suite and add coverage
-for user copy, which is currently untested.
+From: Ming Lei <ming.lei@redhat.com>
 
-v3:
-- Add patch from Ming to actually implement --auto_zc_fallback
-- Add missing -z to --auto_zc_fallback test case in stress_04
+The functions ublk_queue_use_zc(), ublk_queue_use_auto_zc(), and
+ublk_queue_auto_zc_fallback() were returning int, but performing
+bitwise AND on q->flags which is __u64.
 
-v2:
-- Allow --zero_copy and --auto_zc to coexist for --auto_zc_fallback
-- Don't add test cases to test_stress_05.sh as it's close to the timeout
-- Add Reviewed-By tags
+When a flag bit is set in the upper 32 bits (beyond INT_MAX), the
+result of the bitwise AND operation could overflow when cast to int,
+leading to incorrect boolean evaluation.
 
-Caleb Sander Mateos (8):
-  selftests: ublk: correct last_rw map type in seq_io.bt
-  selftests: ublk: remove unused ios map in seq_io.bt
-  selftests: ublk: fix fio arguments in run_io_and_recover()
-  selftests: ublk: use auto_zc for PER_IO_DAEMON tests in stress_04
-  selftests: ublk: don't share backing files between ublk servers
-  selftests: ublk: forbid multiple data copy modes
-  selftests: ublk: add support for user copy to kublk
-  selftests: ublk: add user copy test cases
+For example, if UBLKS_Q_AUTO_BUF_REG_FALLBACK is 0x8000000000000000:
+  - (u64)flags & 0x8000000000000000 = 0x8000000000000000
+  - Cast to int: undefined behavior / incorrect value
+  - Used in if(): may evaluate incorrectly
 
-Ming Lei (1):
-  selftests: ublk: fix overflow in ublk_queue_auto_zc_fallback()
+Fix by:
+1. Changing return type from int to bool for semantic correctness
+2. Using !! to explicitly convert to boolean (0 or 1)
 
- tools/testing/selftests/ublk/Makefile         |  8 +++
- tools/testing/selftests/ublk/file_backed.c    |  7 +-
- tools/testing/selftests/ublk/kublk.c          | 64 +++++++++++++++++--
- tools/testing/selftests/ublk/kublk.h          | 23 +++++--
- tools/testing/selftests/ublk/stripe.c         |  2 +-
- tools/testing/selftests/ublk/test_common.sh   |  5 +-
- .../testing/selftests/ublk/test_generic_04.sh |  2 +-
- .../testing/selftests/ublk/test_generic_05.sh |  2 +-
- .../testing/selftests/ublk/test_generic_11.sh |  2 +-
- .../testing/selftests/ublk/test_generic_14.sh | 40 ++++++++++++
- tools/testing/selftests/ublk/test_loop_06.sh  | 25 ++++++++
- tools/testing/selftests/ublk/test_loop_07.sh  | 21 ++++++
- tools/testing/selftests/ublk/test_null_03.sh  | 24 +++++++
- .../testing/selftests/ublk/test_stress_04.sh  | 12 ++--
- .../testing/selftests/ublk/test_stress_05.sh  | 10 +--
- .../testing/selftests/ublk/test_stress_06.sh  | 39 +++++++++++
- .../testing/selftests/ublk/test_stress_07.sh  | 39 +++++++++++
- .../testing/selftests/ublk/test_stripe_05.sh  | 26 ++++++++
- .../testing/selftests/ublk/test_stripe_06.sh  | 21 ++++++
- tools/testing/selftests/ublk/trace/seq_io.bt  |  3 +-
- 20 files changed, 342 insertions(+), 33 deletions(-)
- create mode 100755 tools/testing/selftests/ublk/test_generic_14.sh
- create mode 100755 tools/testing/selftests/ublk/test_loop_06.sh
- create mode 100755 tools/testing/selftests/ublk/test_loop_07.sh
- create mode 100755 tools/testing/selftests/ublk/test_null_03.sh
- create mode 100755 tools/testing/selftests/ublk/test_stress_06.sh
- create mode 100755 tools/testing/selftests/ublk/test_stress_07.sh
- create mode 100755 tools/testing/selftests/ublk/test_stripe_05.sh
- create mode 100755 tools/testing/selftests/ublk/test_stripe_06.sh
+This ensures the functions return proper boolean values regardless
+of which bit position the flags occupy in the 64-bit field.
 
+Fixes: c3a6d48f86da ("selftests: ublk: remove ublk queue self-defined flags")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ tools/testing/selftests/ublk/kublk.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
+index fe42705c6d42..6e8f381f3481 100644
+--- a/tools/testing/selftests/ublk/kublk.h
++++ b/tools/testing/selftests/ublk/kublk.h
+@@ -388,23 +388,23 @@ static inline int ublk_completed_tgt_io(struct ublk_thread *t,
+ 	t->io_inflight--;
+ 
+ 	return --io->tgt_ios == 0;
+ }
+ 
+-static inline int ublk_queue_use_zc(const struct ublk_queue *q)
++static inline bool ublk_queue_use_zc(const struct ublk_queue *q)
+ {
+-	return q->flags & UBLK_F_SUPPORT_ZERO_COPY;
++	return !!(q->flags & UBLK_F_SUPPORT_ZERO_COPY);
+ }
+ 
+-static inline int ublk_queue_use_auto_zc(const struct ublk_queue *q)
++static inline bool ublk_queue_use_auto_zc(const struct ublk_queue *q)
+ {
+-	return q->flags & UBLK_F_AUTO_BUF_REG;
++	return !!(q->flags & UBLK_F_AUTO_BUF_REG);
+ }
+ 
+-static inline int ublk_queue_auto_zc_fallback(const struct ublk_queue *q)
++static inline bool ublk_queue_auto_zc_fallback(const struct ublk_queue *q)
+ {
+-	return q->flags & UBLKS_Q_AUTO_BUF_REG_FALLBACK;
++	return !!(q->flags & UBLKS_Q_AUTO_BUF_REG_FALLBACK);
+ }
+ 
+ static inline int ublk_queue_no_buf(const struct ublk_queue *q)
+ {
+ 	return ublk_queue_use_zc(q) || ublk_queue_use_auto_zc(q);
 -- 
 2.45.2
 
