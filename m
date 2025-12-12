@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-31862-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-31864-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDF23CB7EAF
-	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 06:17:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EDA80CB7EB8
+	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 06:17:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2D5A63036CAC
-	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 05:17:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 87F6D3051328
+	for <lists+linux-block@lfdr.de>; Fri, 12 Dec 2025 05:17:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970253081B8;
-	Fri, 12 Dec 2025 05:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47FC830E0D4;
+	Fri, 12 Dec 2025 05:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="MWCugvxG"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="beLM2HVI"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ej1-f97.google.com (mail-ej1-f97.google.com [209.85.218.97])
+Received: from mail-lj1-f227.google.com (mail-lj1-f227.google.com [209.85.208.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986B323EA93
-	for <linux-block@vger.kernel.org>; Fri, 12 Dec 2025 05:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA4526ED31
+	for <linux-block@vger.kernel.org>; Fri, 12 Dec 2025 05:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765516627; cv=none; b=izRDTT7yOnEBGCv5vK8ryw6NJAKiyG+08lX0lUURmvLNp1pA4GoJ1oD1MdfhSx8BL32LJx600WC6tiUe65xo2eBAXRQN/+7N7BUbMvoVRsT2TNJ4LdMNUDntnS2/SYh0lb4Vi8zvXIk5XJBS2CqI2xA+3ZXg81cJRfKcBgzzs4c=
+	t=1765516628; cv=none; b=i6NDrTnvUOa1PhACgFgMkcTHZbYPzOywkVajLzpWGV0SqL5N4z00gGQvZd1tkLb4NYgulyWnojFJ/PYYGuG78vz/Yiwp6ctfHkB5c/m9gUKwNg38ZPJw1Mj8vaJi2EWWnN7uH5foxZZMJcHZSA0lB+bErfKZuRGqjgNif5DXZPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765516627; c=relaxed/simple;
-	bh=Nv/iP0PPlu7PYFQwI+jBPI8ffRylYj1zxIf1qEKb0tE=;
+	s=arc-20240116; t=1765516628; c=relaxed/simple;
+	bh=hMDvcWZRxsHgEupNzfRaoWl4qKW471diyO0Q/xWeRr8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U16vTc6npp2Gk1/Cwu3OAmEjoltrhpxxzsMeAddjQRhQyoBkEIYHgxlYZqgdEUpIGDhS+WBA29ekUnhJaXj9Bmm3b4PZtLtkhCzczOZhy9Ea1yUzSii14mZgS8GnxMy/3Cqd5NWaLepM7fAIQLEVJv1AVJx3jTUbVHNro7Zl+P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=MWCugvxG; arc=none smtp.client-ip=209.85.218.97
+	 MIME-Version; b=QUzo3WyRITwP64HQpnuxFjV571GH9D8Y+BKB6i+65mBgIMYBcbh0sIj4w3h8Qe9y6VvD/mXgiEFPXfNhajCOB0L8NQC7NibEBbZ0dlbKdszmtAFM6fqLZ3GIhmYLPU2Yb5MgcnPz+6J6RH2wluRBiOwcqojQellOaks8kol+qCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=beLM2HVI; arc=none smtp.client-ip=209.85.208.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ej1-f97.google.com with SMTP id a640c23a62f3a-b7639da2362so14371966b.1
-        for <linux-block@vger.kernel.org>; Thu, 11 Dec 2025 21:17:05 -0800 (PST)
+Received: by mail-lj1-f227.google.com with SMTP id 38308e7fff4ca-37a5a3f6bc2so1040611fa.1
+        for <linux-block@vger.kernel.org>; Thu, 11 Dec 2025 21:17:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1765516624; x=1766121424; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1765516625; x=1766121425; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ro8OsZF3uJAug4OtKve3tUbRbgxB29DrKAw1agkxt6A=;
-        b=MWCugvxGJ5bcaQvBBCe1EmAUmVNkByLHzjxtweQxeEFnrCecaqahJ9CiRCBIIkuydN
-         MxQHmXwdCOjCuq+uJxdAAtmiPpFWVKJoVYfz3vNCopWvy/E1rEn3UI2F44zdkRQUey3J
-         nZ9YcqhYf5OGls7PC0umB4f9+5BpUb2+HYSUdUdLoZZvMmM47qkm5bq+1Z+uprJKrJfi
-         1WQHbrNS0cEqie8Sr7+T4xAPt/Roa6MpZdMDM5NlvpNO7fJkMR5LhUmeGkkAHeuTqJ0X
-         jJkAtUum3tKjyG0jD6S8rcBAWZtMMLUjtopMRrYF89udxUR1cHf1bNxNLwvOGy0bFBRm
-         3t8w==
+        bh=5vaZfyTagTLiPkyNwQyOOZqa8fNIA0b68wD31umuEqc=;
+        b=beLM2HVIbumy1pdkLCSkW5I9XqEAI/uVEif3tYe8XA1JiMU69e/kj4fxtlVfLnyRV+
+         9GIl0Da34eUqhzmUaaNXr6k2HZkwD9BL9fFodjK6PCf/+rvaNzvBzBbg69SXszH5+aDV
+         fXKnFOE6CQubFqJp7YpbCs8wZf+oJzrlhrgAlMh9wTfTM3texYCiHI8UQxpSDK8FsHEV
+         jpg96jytf3ScrXcYD2te7ySYmm42AGlCf7j8jZFmgS+MOtIUIsdkppn7VQadgpSWvKlQ
+         zqoOYytBA6p8wu8lzWqPq8aK5BWGzewGQbu1HtPJ3fS1puR1LXg5ACujU45gQ/eKp3YH
+         VnxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765516624; x=1766121424;
+        d=1e100.net; s=20230601; t=1765516625; x=1766121425;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ro8OsZF3uJAug4OtKve3tUbRbgxB29DrKAw1agkxt6A=;
-        b=EPeBIe2HQ2YOgSDCidBmpp6VO8t6XM7OL5Reor4RVw185XKCx9+rHwVb3AZbEqlXjT
-         eax1fU4hJZ0NYGNs3Ovuoe4DRcnHataaUXJ26d44d/GYH6dWT0+6MH5TtOMXLZ52QX7f
-         BWABUwBKACUWwUKSZOnbVqnvL/j5hmJ2uW+oO/V5xBP65yc3OE7jSnx4G2Akc+6yC38N
-         nyVxfPLnNO7pcVRrrtb7KBzzhf7sTkJ4IWpEeerICAG5PKMjaSKqJpNbEuZ+Ds6U3/48
-         VxjmAHwJOGF0r478nAC/0y2CqHQIQvoW7k5LUxlPRT7jtge/i/34ACS6QSwsvoGzXbbe
-         Qohw==
-X-Gm-Message-State: AOJu0YxWrEVmSAeOlDVqOMlMQI0gBTpjPYeyond/qwHtGvG/oTzGfHQf
-	9FP+KOzPVgK5EQf9AXgHQn/NQFKX0muRWOeWobP5xp9G/QPWLXbCrFiy2QWs5eYJbnBPDitCRVc
-	ILD/KmP+nSA4mS2/B8sOEp+9E22IaUopsLk6G
-X-Gm-Gg: AY/fxX5Ei8Cn823ut1aOi22lVhMEu3v7UCfgc0ftIU7E3S2Oo+6H2DIoUj57sbxQHrW
-	MAobiWE3rqWhU/E3ILTG2jJvjN/HkfyXQM3hmdxyYWi6Vq067HooiXQJ4GmAkmuzH4SiwTjQB5L
-	CgmjZ6MVnC1hHASouwn/0j7/siUsu9Co7rZXkPp73S32e7oSfVocFj3dGD1WK183raVEyTl8ZA9
-	JI+iGIxIMsZyp9mtm1TSan7H3ayaVFnofgKwlX1KfHf5y2cz1Irg5sUdzxIKQ40voVNM6oO33Ny
-	1EcCJOmGhyA7KjoSgdIKmh7s8m3Lah0YE1HN45aThVVsHDp52tdNjkPu0m5zkO6gPF4JyV0tj+B
-	7MOWlCDr4bHRlqkJMTOWG2HGjci4OeSOEIQxZ6y5cGA==
-X-Google-Smtp-Source: AGHT+IEawf1to/V+/+Qx4OvUJswtkr88PbpqURl0CG0xqAJjTju6BHqC8DK8KJbweq/Q9sRitTwQT4JGUkml
-X-Received: by 2002:a17:907:60d0:b0:b76:c498:d410 with SMTP id a640c23a62f3a-b7d23aa5780mr34437166b.8.1765516623927;
-        Thu, 11 Dec 2025 21:17:03 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id a640c23a62f3a-b7cfa609a26sm86779066b.86.2025.12.11.21.17.03
+        bh=5vaZfyTagTLiPkyNwQyOOZqa8fNIA0b68wD31umuEqc=;
+        b=wXduWgnt2O8Sbkkho2AtrSjxJFfYt66Sa6xJP5vv85L5oTi9gLwJ+taKOq5DvUKhGg
+         gATpswLc6rvzXXb7K16fr89cjoARtYiFs8JuLrKb27l5GoQwa43zATXsilSSScUlHwWj
+         Z3XrT6n2C5anF0eOg/gkjMIP9R1FnQYvNLRv59l6133UnzEuA2V94DZX7tnd8nzdUb2E
+         kgh47++udcN/esellv67Bnkia6yuh+UMuRo7pVhePgDyOsLQiKp9bClINLqcPg3FDFWB
+         9gF3WHbSFi1mONxBBj2uC45KoqEVVW6E1Qml1AcZ/m0/v5rhA2uka8LPNqk0PDvJJLuF
+         Rlag==
+X-Gm-Message-State: AOJu0YxCsuhzJip3uGg0l7gsl4raddjGYhb6HPE0392Ny2Cv6tioKhjz
+	V6A9Pw8ytv4cTPCSLt5As/JT5Gtq2Cf+Unb5FX91H2DmG7FUAqampSJVP/FzPauKSdESzBh1pPr
+	FCxSrpWJJbiE40wsIGuIPfJPlPqn3CD5aU9jm
+X-Gm-Gg: AY/fxX7HC3Bbo3ISa1QnbauBs3PTU3TtTCU0gxKc4ZvUzr4tZvb1vjKSiJ+SABy1n3F
+	0NOzTrifPsudNMoFoqJytU2DSJH+GVNVBDRl60PHq+sn+mi1gq3n2WoZwYp4+mwZXVbgBOpj5xo
+	+PVkFxlJX4YYDM51LHAdgg3XtdmNwC8GcX3KyVl6jhjxaKixp1EhqDzz8IsI9it2N0DRe69Wv5U
+	zRrx4d/+bXjZOX07BSPSZxDiBgZ3CAptdqneH1Gxmd7+kROEUJXL6m+ai7ElKO3jWzPCefhKudS
+	Rplg/XGWm552nzcTQRIxxaKwvIzlf78/xUihwp3b9BWmTj8pdDfD+q2MnMs5Snwdn26rACTMk25
+	aq3U7SlNLWRT0qdpAmLuM2qbTa97qq5x2wNDdI3VsCQ==
+X-Google-Smtp-Source: AGHT+IGtF7eyo8lXcOR8WUkH9+guQzHvCZGlU7C+InJFwFhMRt+x3f30HEC/DWoVBssc+TB5k2rM71vsdf3i
+X-Received: by 2002:a05:6512:10d1:b0:594:2a33:ac17 with SMTP id 2adb3069b0e04-598faa21734mr115979e87.2.1765516624456;
+        Thu, 11 Dec 2025 21:17:04 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 2adb3069b0e04-598f2f72a24sm939705e87.40.2025.12.11.21.17.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Dec 2025 21:17:03 -0800 (PST)
+        Thu, 11 Dec 2025 21:17:04 -0800 (PST)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 9E989340B96;
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id D2A56341DDC;
 	Thu, 11 Dec 2025 22:17:02 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 9B464E41A2E; Thu, 11 Dec 2025 22:17:02 -0700 (MST)
+	id CE18BE41A2E; Thu, 11 Dec 2025 22:17:02 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Shuah Khan <shuah@kernel.org>
@@ -84,9 +84,9 @@ Cc: linux-block@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 1/8] selftests: ublk: correct last_rw map type in seq_io.bt
-Date: Thu, 11 Dec 2025 22:16:51 -0700
-Message-ID: <20251212051658.1618543-2-csander@purestorage.com>
+Subject: [PATCH v2 2/8] selftests: ublk: remove unused ios map in seq_io.bt
+Date: Thu, 11 Dec 2025 22:16:52 -0700
+Message-ID: <20251212051658.1618543-3-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20251212051658.1618543-1-csander@purestorage.com>
 References: <20251212051658.1618543-1-csander@purestorage.com>
@@ -98,37 +98,30 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The last_rw map is initialized with a value of 0 but later assigned the
-value args.sector + args.nr_sector, which has type sector_t = u64.
-bpftrace complains about the type mismatch between int64 and uint64:
-trace/seq_io.bt:18:3-59: ERROR: Type mismatch for @last_rw: trying to assign value of type 'uint64' when map already contains a value of type 'int64'
-        @last_rw[$dev, str($2)] = (args.sector + args.nr_sector);
-
-Cast the initial value to uint64 so bpftrace will load the program.
+The ios map populated by seq_io.bt is never read, so remove it.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- tools/testing/selftests/ublk/trace/seq_io.bt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/ublk/trace/seq_io.bt | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/tools/testing/selftests/ublk/trace/seq_io.bt b/tools/testing/selftests/ublk/trace/seq_io.bt
-index 272ac54c9d5f..507a3ca05abf 100644
+index 507a3ca05abf..b2f60a92b118 100644
 --- a/tools/testing/selftests/ublk/trace/seq_io.bt
 +++ b/tools/testing/selftests/ublk/trace/seq_io.bt
-@@ -2,11 +2,11 @@
- 	$1: 	dev_t
- 	$2: 	RWBS
- 	$3:     strlen($2)
- */
- BEGIN {
--	@last_rw[$1, str($2)] = 0;
-+	@last_rw[$1, str($2)] = (uint64)0;
+@@ -15,11 +15,10 @@ tracepoint:block:block_rq_complete
+ 			printf("io_out_of_order: exp %llu actual %llu\n",
+ 				args.sector, $last);
+ 		}
+ 		@last_rw[$dev, str($2)] = (args.sector + args.nr_sector);
+ 	}
+-	@ios = count();
  }
- tracepoint:block:block_rq_complete
- {
- 	$dev = $1;
- 	if ((int64)args.dev == $1 && !strncmp(args.rwbs, str($2), $3)) {
+ 
+ END {
+ 	clear(@last_rw);
+ }
 -- 
 2.45.2
 
