@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-32072-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32077-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B410CC60FC
-	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 06:35:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E415CC613E
+	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 06:38:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B47433014A8C
-	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 05:35:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F28AB307396E
+	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 05:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D2272D0C9B;
-	Wed, 17 Dec 2025 05:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88A8D2D73A0;
+	Wed, 17 Dec 2025 05:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="KPEueBWg"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="VJCQn6ag"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ot1-f97.google.com (mail-ot1-f97.google.com [209.85.210.97])
+Received: from mail-ot1-f100.google.com (mail-ot1-f100.google.com [209.85.210.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE65B299A94
-	for <linux-block@vger.kernel.org>; Wed, 17 Dec 2025 05:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC06284B2F
+	for <linux-block@vger.kernel.org>; Wed, 17 Dec 2025 05:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765949721; cv=none; b=nxy7Nt/mBoX77ECZyd+L/e0/AkD1JG0EGGTx+ctZYB9I98WfJqk1i7ND63H6rBx34661YHrfiGBIKxZX8a/p5JfVVRdH6CiDG9Tn03LYajNVzfd6AuGKLiWB3rEr6fpKoFrzOnRDpMszkMPc6tlK++20cVjXdaaQTi/rjOKTT+o=
+	t=1765949724; cv=none; b=byLbqg+FBkLT04JNKVVratZABidFVlTYp3zxtP8/VjVplQQuRuLsQBRCUqUP3qDHonbJqqsP7D9NXQMBSL+U2LauxVgWFf2Gyx34285Eg6n9qt2Xt4hHuEMqL3IyMVX0ZYlmjF8SxYPssWkZTeChsJxiZdZOdshBk1mkMYJSN7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765949721; c=relaxed/simple;
-	bh=gCDcxrwsQIo9Zl4D9+H5tFsOAIyHBgcO/hwZeW+CHUU=;
+	s=arc-20240116; t=1765949724; c=relaxed/simple;
+	bh=/9oWm8ceEqAfsBsRYIxRgDxZg5GCtOB+F+ShDr0LW3Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CdjiY/q5+2PEz3voOFGKeB3hn1KMOl9oUEDHkOKVj07z+3z4E62qI+g9O+evlJZGrKEOWgc36XdhYJ4/WiKIEm6nFkr225EcePOkH75ON+T2kdriDjTrPQvPMTrIRGsPZCwZfRT0+oEimciyB+31fmNgeWf+O3mx6CLebm/BZHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=KPEueBWg; arc=none smtp.client-ip=209.85.210.97
+	 MIME-Version; b=Ka4YnXLp8f611WOXgH+cr6phaNFSH562lKUHE0QRjgyGfdOwrFCcLzp8r65JoL0fabtG1Zn8y5c4F24ayPIRjMvv2VlpOmRNfSiT76e88eeGwvCXD1lITRF58stvK00Hu+pAQVTy7l90md0wHazPWwD0DwahlnTBTxoEOUBWSms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=VJCQn6ag; arc=none smtp.client-ip=209.85.210.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ot1-f97.google.com with SMTP id 46e09a7af769-7c78003b948so1095963a34.1
-        for <linux-block@vger.kernel.org>; Tue, 16 Dec 2025 21:35:16 -0800 (PST)
+Received: by mail-ot1-f100.google.com with SMTP id 46e09a7af769-7c914482db2so969576a34.3
+        for <linux-block@vger.kernel.org>; Tue, 16 Dec 2025 21:35:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1765949714; x=1766554514; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2OvJx7AxTUJ0pacBHpfR4EB7axuem5OmBv1tntyjd18=;
-        b=KPEueBWgGwFpRBHMsmlxq+17449raT7ttquKsRKjNsssQxetX3ulLY7866k/dwShWw
-         5Tm9ENFk/TOFJwhRLAGay1NBoN8m+tD51thMeLoC1WbUG8U957EzPYrqQiBSmGoDbO6s
-         nR4Og2Qz+z03peiVFERzOfjBW2bXcCjrjEvOdibugyDL1iRNQlosBPXhAGGKQa7ilDev
-         /GX1stlQj2fxDySShZUcxHPI5bgxFRlr7QrNewYs4SPBT2857m1bhsZI6AD38KO1X5Lt
-         6Y+FQa1fv3IUITOKmWt9FNlGYSj83JBRTdg+j+ddPCUDG/HqlRiWk5T8gr6iHmOBobrZ
-         vAIA==
+        bh=eXZxkMGXAND9SSH5kAPkz2RMm8mE6lzClGRP/OAbhxk=;
+        b=VJCQn6agCcXKaI+LUIjJ4n+k6Eo0cWNzp/wrQtzqjxyVdSwdzLrDdfZXEIEkM7+ixM
+         4nyI7oIDvSh2VmvDvhkhUWst9jnfWW7BLPIa3TPVjiEvabKToGYPJ/e7yfp6e1Fj3gX4
+         Idr4t/dQG5pPZ3fKXiKx4c5/cOkQa74OiR5n14ZzUxqITGSnzWr9nC8EwfOcG8ZZ+Z+9
+         ot2dFA3eh55snxbbb/6k0hptYjnJy/RBCSZgBC5RzKFVXSsVogh7uJgygccNvlvPxp3/
+         D8GmOvbhzRwD/tRYCNMrkA+gxMB9MSh4co8HKsF/sAy14RYzZDvKQK91fALRPAAL6g4s
+         wkMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1765949714; x=1766554514;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=2OvJx7AxTUJ0pacBHpfR4EB7axuem5OmBv1tntyjd18=;
-        b=acD/G2dyY+2BqYnze8bf/9r1AsTGFtygZvrznXn62yZSMCaDEQj3OoEKnuaRbUUupZ
-         sUYyqlFvyb5s55vISlFBnsQPsOcehpXFtz3jXqVxD/RF1NdYsFTYShFfOKcgQ2weqT0K
-         m0P3Aohuxx3NfzYzwYozesU9Sk+hzRLr6y+aYbEy1xEboH8TkieOnhXaQ+AR48ISDNgB
-         8ngyOYEnEvDogNDrwJidhXawC2GNuJfLI0G2i89zEr9xEHOe9TuLYPqT4Y85q/76yLWT
-         Hzg7iA4baDOYgMb0fJL3ddssvlIFsKtP/ZoP1+mJoG8Pz1wtyJLIJNMzAvdCwtxC3ukF
-         UC/g==
-X-Gm-Message-State: AOJu0YzoczyBF90CfCpd0jukzg96q7C0bcN/1xEQLmol1HSLLrGDnjuC
-	G07grZRJj2zYsShL3bqYC9fZnb7BNIVWG5uypPw/mYnrF0ufp0ssbH5qZtriVz/VDWkWTZJJrSY
-	8ToQOxy3ZbHKpcJI+A+Z+fN/0A/RpG5d4TXA1V3MAFMC4UdRoCEjp
-X-Gm-Gg: AY/fxX4WEZ2L1ha7GTIeIb27UNl26TLZnUTO4LGtT4xw8NJtVgH8XCZ1Qza5kjNu7Qd
-	qzZTAE9piAkjmGzqlFNNQIMIycu2Um1fp3keM5X6Ekx8CYjiDP5aM7Jb4qJLSJMfNDUB1Ue2gFH
-	/S9foebhc6vIfpyE1jWaSBZhLdvpgyhQ9GFYKfjPFzACBJeCJAvZTgBcfdyj77XqyIaTSVVHGPK
-	CltBjMyCiMWGJr+A6JNuYrxmfTVhoIjxX6XD96ziXpoIS+DiHbLkBwi+uinx4f2u9YE6gqGZu5c
-	SxSXzfyIiZ/pBNSEbLLRviVse0M2kH2KYiNwAaYNUBnieHHL5KkcNZEO2GySMJgUsia2DAXdDNt
-	Gz/VLTnbk+FMry6K3/TLLRIbEU3Q=
-X-Google-Smtp-Source: AGHT+IFbG6sbuUMK8Z52DIdwdRmhPJfwF/v7UIPe9gL8Y8b6oOH7po6qZZFyRaDqM7Jnd07PI/nXVcYALu2n
-X-Received: by 2002:a05:6870:e8e:b0:3ec:3bfe:bda7 with SMTP id 586e51a60fabf-3f5f8a3a5admr7121872fac.1.1765949713810;
+        bh=eXZxkMGXAND9SSH5kAPkz2RMm8mE6lzClGRP/OAbhxk=;
+        b=R+mtRD1BF9KB707qKTFesr81TkKF+SMnQev4zE2rftiVaTIwk2BxA0RrU1BWBQfc/0
+         7UdxLdmLEhM6T4hy3tS3XJyahn7BEftMRZECC50bqmA1u7DTzM3K4ukt/lcrO8Yt6bMX
+         41iKkW8cmPydHca+X8tT73k2oSH+c2PettewyxrcQdkELv92/DegdL6uUKHtbDtb7Iu9
+         LrtPDZEvd/0OMAM3cGqeaWNsBO0ptvpfBFbreYR1AMPbH4QOzYInuuYnp56ZBZxoizjw
+         Kl6B9rmffW6sbrcBpfDdbeudGSX65GhkZ3Howfn1pKd3tvftlDTnHeuB8OqIBg0aLUDO
+         loKA==
+X-Gm-Message-State: AOJu0YzrHeyeRGlIuZrkAaQHmKR49HRTbCj07wcgiFUk1gvDuhUlVp/K
+	FE7SJpMertZw61Ow75OFE16D19jT9XYkTr/WL843j3PtsnNeYQJNceKouneTzphOibOJ8BEfIGw
+	XJgw5JEPgzZHj04RoOV8lLfSHBPG4t2QSwmy1
+X-Gm-Gg: AY/fxX58n6ZpHAa6uzSy6M8usycXslY707M6YxkkfIZVfKNNWWwruCHMAfJwx5sUwYP
+	N/pDOzQwGXOQms16jfPYfvVAMGinqI1I6L9oUW1bExYgj8G3kBTfSxHnrlcJV2pmsKGwy91IT/L
+	Xbqf3wJZxmn7fh2MEFfwbM49yDgNZTe9ApKBkVsVW60bQ/VAqC8xNwNgcEvrHUa5BPJQM8681N9
+	kxTQusKuJwEa7r5gY5l7CXK/8/NUa9p7iHTa27sZdyvbot0TJf6k7HOgcT/fU/31M3Bel8UTiwS
+	F4C2BE9yoElXT5yK1t9OvrJhL/7POzv2GMwoYbcFkraTfcZmPvVZZivk+gdScO28j5itl/Dj/VJ
+	DceEQn1lLrkjh+M+C+HmBF5gTx14aixObj667i5K5pw==
+X-Google-Smtp-Source: AGHT+IHXjysvU040YFqXFjQ9lictL0w/Wiouu+uAIOKK3LSVq7ies8MkHYN1VQATthOXjraDEMCDPEeJjZXq
+X-Received: by 2002:a05:6830:2685:b0:7c9:594f:2d1d with SMTP id 46e09a7af769-7cae8362350mr8864025a34.3.1765949713977;
         Tue, 16 Dec 2025 21:35:13 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-3f614e7dab4sm1520399fac.18.2025.12.16.21.35.13
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 46e09a7af769-7cadb33121dsm2862394a34.8.2025.12.16.21.35.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 16 Dec 2025 21:35:13 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id E028D3420F0;
-	Tue, 16 Dec 2025 22:35:12 -0700 (MST)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 089EA342237;
+	Tue, 16 Dec 2025 22:35:13 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id DCFA5E41A08; Tue, 16 Dec 2025 22:35:12 -0700 (MST)
+	id 06676E41A08; Tue, 16 Dec 2025 22:35:13 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -87,9 +87,9 @@ Cc: linux-block@vger.kernel.org,
 	Stanley Zhang <stazhang@purestorage.com>,
 	Uday Shankar <ushankar@purestorage.com>,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 13/20] ublk: optimize ublk_user_copy() on daemon task
-Date: Tue, 16 Dec 2025 22:34:47 -0700
-Message-ID: <20251217053455.281509-14-csander@purestorage.com>
+Subject: [PATCH 14/20] selftests: ublk: add utility to get block device metadata size
+Date: Tue, 16 Dec 2025 22:34:48 -0700
+Message-ID: <20251217053455.281509-15-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20251217053455.281509-1-csander@purestorage.com>
 References: <20251217053455.281509-1-csander@purestorage.com>
@@ -101,95 +101,85 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ublk user copy syscalls may be issued from any task, so they take a
-reference count on the struct ublk_io to check whether it is owned by
-the ublk server and prevent a concurrent UBLK_IO_COMMIT_AND_FETCH_REQ
-from completing the request. However, if the user copy syscall is issued
-on the io's daemon task, a concurrent UBLK_IO_COMMIT_AND_FETCH_REQ isn't
-possible, so the atomic reference count dance is unnecessary. Check for
-UBLK_IO_FLAG_OWNED_BY_SRV to ensure the request is dispatched to the
-sever and obtain the request from ublk_io's req field instead of looking
-it up on the tagset. Skip the reference count increment and decrement.
-Commit 8a8fe42d765b ("ublk: optimize UBLK_IO_REGISTER_IO_BUF on daemon
-task") made an analogous optimization for ublk zero copy buffer
-registration.
+Some block device integrity parameters are available in sysfs, but
+others are only accessible using the FS_IOC_GETLBMD_CAP ioctl. Add a
+metadata_size utility program to print out the logical block metadata
+size, PI offset, and PI size within the metadata. Example output:
+$ metadata_size /dev/ublkb0
+metadata_size: 64
+pi_offset: 56
+pi_tuple_size: 8
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- drivers/block/ublk_drv.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ tools/testing/selftests/ublk/Makefile        |  4 +--
+ tools/testing/selftests/ublk/metadata_size.c | 36 ++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/ublk/metadata_size.c
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 042df4de9253..a0fbabd49feb 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -180,11 +180,11 @@ struct ublk_io {
- 	/*
- 	 * The number of uses of this I/O by the ublk server
- 	 * if user copy or zero copy are enabled:
- 	 * - UBLK_REFCOUNT_INIT from dispatch to the server
- 	 *   until UBLK_IO_COMMIT_AND_FETCH_REQ
--	 * - 1 for each inflight ublk_ch_{read,write}_iter() call
-+	 * - 1 for each inflight ublk_ch_{read,write}_iter() call not on task
- 	 * - 1 for each io_uring registered buffer not registered on task
- 	 * The I/O can only be completed once all references are dropped.
- 	 * User copy and buffer registration operations are only permitted
- 	 * if the reference count is nonzero.
- 	 */
-@@ -2644,10 +2644,11 @@ ublk_user_copy(struct kiocb *iocb, struct iov_iter *iter, int dir)
- 	struct ublk_queue *ubq;
- 	struct request *req;
- 	struct ublk_io *io;
- 	unsigned data_len;
- 	bool is_integrity;
-+	bool on_daemon;
- 	size_t buf_off;
- 	u16 tag, q_id;
- 	ssize_t ret;
+diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+index 837977b62417..0f6abb95c87a 100644
+--- a/tools/testing/selftests/ublk/Makefile
++++ b/tools/testing/selftests/ublk/Makefile
+@@ -46,14 +46,14 @@ TEST_PROGS += test_stress_03.sh
+ TEST_PROGS += test_stress_04.sh
+ TEST_PROGS += test_stress_05.sh
+ TEST_PROGS += test_stress_06.sh
+ TEST_PROGS += test_stress_07.sh
  
- 	if (!user_backed_iter(iter))
-@@ -2670,13 +2671,24 @@ ublk_user_copy(struct kiocb *iocb, struct iov_iter *iter, int dir)
+-TEST_GEN_PROGS_EXTENDED = kublk
++TEST_GEN_PROGS_EXTENDED = kublk metadata_size
  
- 	if (tag >= ub->dev_info.queue_depth)
- 		return -EINVAL;
+ include ../lib.mk
  
- 	io = &ubq->ios[tag];
--	req = __ublk_check_and_get_req(ub, q_id, tag, io);
--	if (!req)
--		return -EINVAL;
-+	on_daemon = current == READ_ONCE(io->task);
-+	if (on_daemon) {
-+		/* On daemon, io can't be completed concurrently, so skip ref */
-+		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
-+			return -EINVAL;
+-$(TEST_GEN_PROGS_EXTENDED): kublk.c null.c file_backed.c common.c stripe.c \
++$(OUTPUT)/kublk: kublk.c null.c file_backed.c common.c stripe.c \
+ 	fault_inject.c
+ 
+ check:
+ 	shellcheck -x -f gcc *.sh
+diff --git a/tools/testing/selftests/ublk/metadata_size.c b/tools/testing/selftests/ublk/metadata_size.c
+new file mode 100644
+index 000000000000..76ecddf04d25
+--- /dev/null
++++ b/tools/testing/selftests/ublk/metadata_size.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <fcntl.h>
++#include <linux/fs.h>
++#include <stdio.h>
++#include <sys/ioctl.h>
 +
-+		req = io->req;
-+		if (!ublk_rq_has_data(req))
-+			return -EINVAL;
-+	} else {
-+		req = __ublk_check_and_get_req(ub, q_id, tag, io);
-+		if (!req)
-+			return -EINVAL;
++int main(int argc, char **argv)
++{
++	struct logical_block_metadata_cap cap = {};
++	const char *filename;
++	int fd;
++	int result;
++
++	if (argc != 2) {
++		fprintf(stderr, "Usage: %s BLOCK_DEVICE\n", argv[0]);
++		return 1;
 +	}
- 
- 	if (is_integrity) {
- 		struct blk_integrity *bi = &req->q->limits.integrity;
- 
- 		data_len = bio_integrity_bytes(bi, blk_rq_sectors(req));
-@@ -2697,11 +2709,12 @@ ublk_user_copy(struct kiocb *iocb, struct iov_iter *iter, int dir)
- 		ret = ublk_copy_user_integrity(req, buf_off, iter, dir);
- 	else
- 		ret = ublk_copy_user_pages(req, buf_off, iter, dir);
- 
- out:
--	ublk_put_req_ref(io, req);
-+	if (!on_daemon)
-+		ublk_put_req_ref(io, req);
- 	return ret;
- }
- 
- static ssize_t ublk_ch_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
++
++	filename = argv[1];
++	fd = open(filename, O_RDONLY);
++	if (fd < 0) {
++		perror(filename);
++		return 1;
++	}
++
++	result = ioctl(fd, FS_IOC_GETLBMD_CAP, &cap);
++	if (result < 0) {
++		perror("ioctl");
++		return 1;
++	}
++
++	printf("metadata_size: %u\n", cap.lbmd_size);
++	printf("pi_offset: %u\n", cap.lbmd_pi_offset);
++	printf("pi_tuple_size: %u\n", cap.lbmd_pi_size);
++	return 0;
++}
 -- 
 2.45.2
 
