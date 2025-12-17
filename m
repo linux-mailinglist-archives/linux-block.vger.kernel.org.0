@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-32066-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32062-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBC8CCC6117
-	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 06:36:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EB4ACC6105
+	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 06:36:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DD146304B20B
-	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 05:35:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EE69D3047679
+	for <lists+linux-block@lfdr.de>; Wed, 17 Dec 2025 05:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034E32BEC23;
-	Wed, 17 Dec 2025 05:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE288286889;
+	Wed, 17 Dec 2025 05:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AjwV1PEY"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="buAMOgLO"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-qk1-f229.google.com (mail-qk1-f229.google.com [209.85.222.229])
+Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FC41DFFD
-	for <linux-block@vger.kernel.org>; Wed, 17 Dec 2025 05:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE12254B19
+	for <linux-block@vger.kernel.org>; Wed, 17 Dec 2025 05:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765949718; cv=none; b=beWcLfUJy0LV6cA1ovDO4vHWRtVyuobiNLmBoD5mdCCqIhorIv6qihdOdbXZbKuFdneL9IIO2wQJZjcRTeSO7abfc+PYqBAzMcOOV8WHYLqv/+kf+DcHlmVD4w14sU1zuoGuzJmJdrdleKA0wDoQ3u2JYN9EaaTcbqkmjedG9z4=
+	t=1765949718; cv=none; b=tJoGZuKHeHih43hAR2nFZddHBnQ92ThHu6zAHxR8IRq5+bzAzW4UX9dzMO1yYzevvSEecG5UArhHe6Vi4SC/XQtyXPM6KLhY6GsJdg70CpWZi/nDqGhT891KDF5p5Xf025f9W2/5rcdmXCj1qSN5Iy6T49a8j4uXHRG9vazJNbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765949718; c=relaxed/simple;
-	bh=1m8EvyXDwfnBtO4rKSJxv1p1kVYtxq+BhiSXNiIuIFc=;
+	bh=pFLON0C1oQtjJn2qiXI7MdgjCCHKt6ZzUS2gWW7cigc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hfp67HRLnrKAIxrgA0DVGYNz0NeL7ZELQPQKKJr0tBuk0PfGGiHlNdmM3CW67/ow/KiXctfqlrUM+RgQojKcpHH0J5Dda6sCDBjXHAX1pwIUvvqRZnXBRuwkpHlIe16coKYH85JQln1yrAdagb55g94jJ+ESjR/Dc+LQfDla3OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AjwV1PEY; arc=none smtp.client-ip=209.85.222.229
+	 MIME-Version; b=MTlfNLPgxDvy1wLLtuAgkNYFcbXps/lGiJ1GYEDYF2AUspcr16DZR1/tmikXTWbinzUxVHqt7rxFzqoXqICgmmxbrr1QXHvVVCJf/zSpOwBFHUT3OIQclUHd0Q+NR++Oq8DA8tlrYdAB/XDomm1JTlSo0Ya5HSOVWmbVhffxtEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=buAMOgLO; arc=none smtp.client-ip=209.85.214.226
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-qk1-f229.google.com with SMTP id af79cd13be357-8b2df1e0c10so109124985a.0
-        for <linux-block@vger.kernel.org>; Tue, 16 Dec 2025 21:35:14 -0800 (PST)
+Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-29f08b909aeso12049505ad.2
+        for <linux-block@vger.kernel.org>; Tue, 16 Dec 2025 21:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1765949713; x=1766554513; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hLmTlnuPqHH6b8/uqO7lFBozYXk9kulItImdN914sps=;
-        b=AjwV1PEYCUMrcRrMXXX7CSjXLyq/7Cj2m+OKXHjC7fIObSwcRE2fTS4xCpQ8BuGWZe
-         f0yJ7PgQPrUKTWa62gKHUls9dWJvqFXKXnDizP4GeU0h7xHnXbvKuHI+K7RV8XFfjjWm
-         2EKnutONnce/D54HoRPLUMc0NqIj3JOqiLnhzl8ww1a5ownoLwmbuys9nfXRBr0dWX1y
-         X1rfdVWrVZ7vB3Bq3keRB7vA6WwXsLhW6+kmS/y5kLCdu3Ciw8ae2OE0sSIzmC7WMS9s
-         ATRh9fI8/rhS6Or07I+6Ne1xcrS1nFvJwCAmr1fusfjKTRYpi/YPjaNhO5yEpwlStKPK
-         AbxA==
+        bh=7nnWCsd7c+dSY8wBQngk2tPTTYvptZXaImBTrn5efMQ=;
+        b=buAMOgLOoVGXYmYAYaKLYDeO9Am+GPjYU9O9hSlbEHV3PP0WTn4AaRHjqTDzyN1Yf2
+         80TQP5nXMWsig84mlOzwIZB6tvRn1WHVrVLw56IiaS0xrfu5+rdyZrOZw0l2jhZ4gtck
+         N1dk53bZ1WXyHMJT0z+rc1jvuPy6XvrbhzVYJessQjoxt3a0ecpFnnvLX/fgzCNs+6oN
+         gvrV0lQkPu713+2Bp7DesvEw1RNnrsXF2NQjB3inar8u2L/KN0QsuBXBcxTaJahEZbqR
+         L+GWUkZLopEU9AEUW16CPvgVUMxPCVAs0jzWlTuMJGqc11zEzuEWdAm+dwIN6sIWzsPc
+         V0kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1765949713; x=1766554513;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hLmTlnuPqHH6b8/uqO7lFBozYXk9kulItImdN914sps=;
-        b=I8LSYhOrwvOJlZDli1xMEZUH3t8mAuFvB59RcCN4CEZPGE1IRYgFnjV8OUH2qpTknl
-         TlpdsS1PR+uqFttqxIgN3RQFX81Ht0ItJVAUNU05QWY+IVCiBEUAnPqKydQSCOGIF2GF
-         NASm0DP9W6lhlcXG20aUfaANigNq2c03qulIUT0bnNlJZPDuwHAXSE4XZ0DGi79gwrPg
-         GvxO5sAhaz5OPC+VJ825hKftGHD0FEsRM6hJ5U1T/JBoG3LxNBDUV7o49H8AuEG7bwll
-         wacFZPE2f6vZld9vD31lCKJONKXbHqx/diXZ5klRSJpxyUuqfDmqshV3a8r4QmTT0YGh
-         RXkA==
-X-Gm-Message-State: AOJu0YzeXSkpT+rpXURGm1ri6nrzloEomqg1ZkltGY5Xj2kX7btbKVCf
-	tAD2PN/nXHZn79y1gsiTJw4eg/XgdmzqbiLO36fkO2Yu0p858kFKD+AFj9it0kcEGqW/I3mvK+B
-	9MqmzOjQonIZxIOjHrBjq/MMckt782csOlF6xKKyQDyL2kTtX1O62
-X-Gm-Gg: AY/fxX7C+8LvkY5vQRwpdua6DxTi36FvX0EnSGIpmsYl6KG5UNh0TwdYDH69/sLtNXH
-	7s8g7Y9Qj65u9hPGMZ/KZjVpiqE7wvW/rFZgjVUmh2q9XDzzVCyKeLaz+vgd0wQujazvuGTskMK
-	W6dJJSZyAao0gMEIoB5slV3RrwNBp0o+zizZG3Jc87KLmoRrZ+HC+ozb17s+418VE+e6hd1mjgE
-	9XLw/SJKhf4cupXgexM4WMXQ/7AplYYA4qMHoDtsQHWhX8+z7nkF3k4N6FHhpNbk2MReQ1CozrL
-	s4R4jhOyJunXGAw4/p5q6JX2/vKUKCbI2jfom54RGY01xBWclFiOpE/JkIvJ9P+PJOdSsTWfSbr
-	sXe9BO4fCcfNtkjn0RwULxKEKwWs=
-X-Google-Smtp-Source: AGHT+IEww8Xn6us3eOELOJf2dWwwlAwsZJ+WOpO1sBLgJOCvWnuS6p6k5sw8+fQPVGcQ83L4wdZsBp1KT178
-X-Received: by 2002:a05:6214:3009:b0:880:6fa4:f55c with SMTP id 6a1803df08f44-8887e15808fmr208544136d6.6.1765949713446;
-        Tue, 16 Dec 2025 21:35:13 -0800 (PST)
+        bh=7nnWCsd7c+dSY8wBQngk2tPTTYvptZXaImBTrn5efMQ=;
+        b=FVTL9UM9/Rmn5qQQehfJrrnpOEkXPv+7FJMEmIZJitfp7MldCweJM/hWmPe1P6SSRd
+         g9OI/xNB739/owdUZKPe1sEIans1YQDP7GTmloc/n4mpUhXTQKZdL++PgYUos/YxHJhq
+         t+QR/Y1Uim6DA9GP6QMym4ls7c+MW8bVmLkvfjTbz7yQY8FJt5kN7xfDP94x34O++RWC
+         m78OG6l0FCHTvjKkzlgSXeICIQj4RJlIXvIAwjgrfWEL4n+tdp4JaO3YMccGkK/UrWOW
+         xhVuqg1YFXvEMA3sKCKbVOMyrAL+Un1XFUlk7Jlv07pYStbDsW/cHOxI1NFCX4DDUTXM
+         OFEA==
+X-Gm-Message-State: AOJu0YzlsqaqMhmyGOLAnTtcEjKMEGYGEb3uJrcCipmg4wcyn2R3ThFq
+	hxCPqbmEoe5JKPOIgH20Bbe8ZrpgBuVcJmOovsRASZKY4Y2mHlM0aWdYfCG/lkLcBR6v+/AYeXd
+	lgHM2/5xAkVxvFgvCJq7Sju+P3bQIOHYYtZI0z237QoosfA6vKb2e
+X-Gm-Gg: AY/fxX6Paa++DnOPfFE6KuLDdWPMrmdg0h+QrkwOFuHk6Mt5aoz2tBw6bFgepTk0JPA
+	1yWIBjXHknPN6em/WIPw9MwDSdZfozODxZSI0eKjF6FQT2UTOH4dpL9QfW9TzmYkUOvPB5VDvTu
+	Ty0nAQEZqEAdAmWSTVVmqxlr9bL9oKhvHGUAzPGhyt26ft2g/6kSnGwhTLTJAM/YMGipb60dnMp
+	wNKCGnmxkQrNqYN71sgC3KWl/hOZZeo4Pnel7DivlVcr3PHE+BkqQVeAQ6cIEsJV6WrElZg05L8
+	ICwXKQIdb5uwgYczUu+DuN2OAeJ+NzatYYAwO5QX36tXUmXpNG7Oex88rmGYCAqm+F83MVRItBL
+	UzqmiIlS/DjHuFVv5Jr1G+xTnXCU=
+X-Google-Smtp-Source: AGHT+IHMdHsws7Dly3g8BQupcQIOtlAn+95WYWkTsv2m0JLOGAKnlJx71g9i0zbiAmgrrLQ8YLltVLenV8LJ
+X-Received: by 2002:a05:7300:fc0f:b0:2a4:3592:8623 with SMTP id 5a478bee46e88-2ac30187911mr4942568eec.1.1765949712815;
+        Tue, 16 Dec 2025 21:35:12 -0800 (PST)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-88993b13d22sm19235286d6.4.2025.12.16.21.35.13
+        by smtp-relay.gmail.com with ESMTPS id a92af1059eb24-11f2e151243sm3230590c88.0.2025.12.16.21.35.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Dec 2025 21:35:13 -0800 (PST)
+        Tue, 16 Dec 2025 21:35:12 -0800 (PST)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::1199])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 486FF3401D2;
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5FBA534225B;
 	Tue, 16 Dec 2025 22:35:12 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 45A06E41A08; Tue, 16 Dec 2025 22:35:12 -0700 (MST)
+	id 5DB2BE41A08; Tue, 16 Dec 2025 22:35:12 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -87,9 +87,9 @@ Cc: linux-block@vger.kernel.org,
 	Stanley Zhang <stazhang@purestorage.com>,
 	Uday Shankar <ushankar@purestorage.com>,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 08/20] ublk: add ublk_copy_user_bvec() helper
-Date: Tue, 16 Dec 2025 22:34:42 -0700
-Message-ID: <20251217053455.281509-9-csander@purestorage.com>
+Subject: [PATCH 09/20] ublk: split out ublk_user_copy() helper
+Date: Tue, 16 Dec 2025 22:34:43 -0700
+Message-ID: <20251217053455.281509-10-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20251217053455.281509-1-csander@purestorage.com>
 References: <20251217053455.281509-1-csander@purestorage.com>
@@ -101,93 +101,72 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Factor a helper function ublk_copy_user_bvec() out of
-ublk_copy_user_pages(). It will be used for copying integrity data too.
+ublk_ch_read_iter() and ublk_ch_write_iter() are nearly identical except
+for the iter direction. Split out a helper function ublk_user_copy() to
+reduce the code duplication as these functions are about to get larger.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- drivers/block/ublk_drv.c | 52 +++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 22 deletions(-)
+ drivers/block/ublk_drv.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index d3652ceba96d..0499add560b5 100644
+index 0499add560b5..e39ed8a0f0ae 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -987,10 +987,39 @@ static const struct block_device_operations ub_fops = {
- 	.open =		ublk_open,
- 	.free_disk =	ublk_free_disk,
- 	.report_zones =	ublk_report_zones,
- };
- 
-+static bool ublk_copy_user_bvec(struct bio_vec bv, unsigned *offset,
-+				struct iov_iter *uiter, int dir, size_t *done)
-+{
-+	unsigned len;
-+	void *bv_buf;
-+	size_t copied;
-+
-+	if (*offset >= bv.bv_len) {
-+		*offset -= bv.bv_len;
-+		return true;
-+	}
-+
-+	len = bv.bv_len - *offset;
-+	bv_buf = kmap_local_page(bv.bv_page) + bv.bv_offset + *offset;
-+	if (dir == ITER_DEST)
-+		copied = copy_to_iter(bv_buf, len, uiter);
-+	else
-+		copied = copy_from_iter(bv_buf, len, uiter);
-+
-+	kunmap_local(bv_buf);
-+
-+	*done += copied;
-+	if (copied < len)
-+		return false;
-+
-+	*offset = 0;
-+	return true;
-+}
-+
- /*
-  * Copy data between request pages and io_iter, and 'offset'
-  * is the start point of linear offset of request.
-  */
- static size_t ublk_copy_user_pages(const struct request *req,
-@@ -999,33 +1028,12 @@ static size_t ublk_copy_user_pages(const struct request *req,
- 	struct req_iterator iter;
- 	struct bio_vec bv;
- 	size_t done = 0;
- 
- 	rq_for_each_segment(bv, req, iter) {
--		unsigned len;
--		void *bv_buf;
--		size_t copied;
--
--		if (offset >= bv.bv_len) {
--			offset -= bv.bv_len;
--			continue;
--		}
--
--		len = bv.bv_len - offset;
--		bv_buf = kmap_local_page(bv.bv_page) + bv.bv_offset + offset;
--		if (dir == ITER_DEST)
--			copied = copy_to_iter(bv_buf, len, uiter);
--		else
--			copied = copy_from_iter(bv_buf, len, uiter);
--
--		kunmap_local(bv_buf);
--
--		done += copied;
--		if (copied < len)
-+		if (!ublk_copy_user_bvec(bv, &offset, uiter, dir, &done))
- 			break;
--
--		offset = 0;
- 	}
- 	return done;
+@@ -2657,42 +2657,36 @@ static struct request *ublk_check_and_get_req(struct kiocb *iocb,
+ fail:
+ 	ublk_put_req_ref(*io, req);
+ 	return ERR_PTR(-EACCES);
  }
  
- static inline bool ublk_need_map_req(const struct request *req)
+-static ssize_t ublk_ch_read_iter(struct kiocb *iocb, struct iov_iter *to)
++static ssize_t
++ublk_user_copy(struct kiocb *iocb, struct iov_iter *iter, int dir)
+ {
+ 	struct request *req;
+ 	struct ublk_io *io;
+ 	size_t buf_off;
+ 	size_t ret;
+ 
+-	req = ublk_check_and_get_req(iocb, to, &buf_off, ITER_DEST, &io);
++	req = ublk_check_and_get_req(iocb, iter, &buf_off, dir, &io);
+ 	if (IS_ERR(req))
+ 		return PTR_ERR(req);
+ 
+-	ret = ublk_copy_user_pages(req, buf_off, to, ITER_DEST);
++	ret = ublk_copy_user_pages(req, buf_off, iter, dir);
+ 	ublk_put_req_ref(io, req);
+ 
+ 	return ret;
+ }
+ 
+-static ssize_t ublk_ch_write_iter(struct kiocb *iocb, struct iov_iter *from)
++static ssize_t ublk_ch_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct request *req;
+-	struct ublk_io *io;
+-	size_t buf_off;
+-	size_t ret;
+-
+-	req = ublk_check_and_get_req(iocb, from, &buf_off, ITER_SOURCE, &io);
+-	if (IS_ERR(req))
+-		return PTR_ERR(req);
+-
+-	ret = ublk_copy_user_pages(req, buf_off, from, ITER_SOURCE);
+-	ublk_put_req_ref(io, req);
++	return ublk_user_copy(iocb, to, ITER_DEST);
++}
+ 
+-	return ret;
++static ssize_t ublk_ch_write_iter(struct kiocb *iocb, struct iov_iter *from)
++{
++	return ublk_user_copy(iocb, from, ITER_SOURCE);
+ }
+ 
+ static const struct file_operations ublk_ch_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = ublk_ch_open,
 -- 
 2.45.2
 
