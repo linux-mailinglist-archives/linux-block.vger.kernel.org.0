@@ -1,119 +1,103 @@
-Return-Path: <linux-block+bounces-32334-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32336-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E065CDD99D
-	for <lists+linux-block@lfdr.de>; Thu, 25 Dec 2025 10:39:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5487CDDAAC
+	for <lists+linux-block@lfdr.de>; Thu, 25 Dec 2025 11:33:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DFA40301F075
-	for <lists+linux-block@lfdr.de>; Thu, 25 Dec 2025 09:39:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D4CA300C6D9
+	for <lists+linux-block@lfdr.de>; Thu, 25 Dec 2025 10:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7DD13C8EA;
-	Thu, 25 Dec 2025 09:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="Bcwd1oQc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A452423D7FC;
+	Thu, 25 Dec 2025 10:32:58 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from lf-1-31.ptr.blmpb.com (lf-1-31.ptr.blmpb.com [103.149.242.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECBF23BD1B
-	for <linux-block@vger.kernel.org>; Thu, 25 Dec 2025 09:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.149.242.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EAA2F616E
+	for <linux-block@vger.kernel.org>; Thu, 25 Dec 2025 10:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766655542; cv=none; b=uO9G7JK1cANWABjKOAuSLJUe1rD4swMkr0E7ap/G2VphCDJcq7vOrLh7whFH2pDLTYgMAnC2Ul+Hf2x2D/xrPszHt+Jia131HXlz06hpBYbdBW4pYthGs88lTCZuCo0hS2O87SF7wHSpJ4bjHVDGErgD/Q9gY8bgCIP+qn25lyc=
+	t=1766658778; cv=none; b=CS9eC/cvyN71sk6IMygSCBf6wP2JQ/eV7tyqRPjEZmD/gfV5tinrNedKUOTlshJ7z97wAlHZIeUyGOvd1KRiI8skpuI25bW34+qv6HjzbJS6tdO+7EwFvtrTGh+9t1pFw7H7lTI7oX7zYSXVaI6FZ8RvBALI0anqiqxA8dUdoKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766655542; c=relaxed/simple;
-	bh=6hb1f6agks+u1vYbejC6Yhcy/l1CIhp6Qc8007Sbeg0=;
-	h=To:In-Reply-To:References:Subject:Date:From:Message-Id:
-	 Mime-Version:Content-Type; b=NqabzHjIcMR7UXrBIaUHo/jbz5GXHg+cRWmb5/R2wdYoAYH0pW06fzUcVY6EY3uCNywRCcy4q8b3p4oddOs8C6lng+0CTVpIOZbxkbFRRdqZygJ+FgHW/30o7MyGG6BZ5/ZpBcI4D4a3K9TdJ4gWR09vXx4njJ0U+6xxpeW7qXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=Bcwd1oQc; arc=none smtp.client-ip=103.149.242.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1766655456;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=Hol+qj4ORCwOm7RzsRfyYODATAjXKHe0lNt3mayjK0M=;
- b=Bcwd1oQcgsxK9FUpFkJuKZWS+DUUL52pyVB+DA6QdnKOdYK6RaawmiGPXG1WD5HQxuLoHI
- xcgyuzYL1icmfCTLf/pROdtXbSFRr0jZnX98j9XAWwdc9U09xFKYMoAM0DeVEh6WM7Afq1
- zLySsphsRdsY5r8uV6woIfq3+7ENAZbHniqppSMIgpca88m2nrd4uR1a4zRaOxDsBgT4W9
- iuZUyMCbmAEbqh94Qw4KtnI4ySlq3UJvZO5l6B+JPNDVsv2ytWpkty5/dDEgb9dvtJaquC
- ZanNC4kkIurfqDhMPCBoQIQdc1ncbnt1WkBECmXNEiLoOzeX0hGt7HgvOgLH9Q==
-To: "Nilay Shroff" <nilay@linux.ibm.com>, <axboe@kernel.dk>, 
-	<linux-block@vger.kernel.org>, <tj@kernel.org>, <ming.lei@redhat.com>, 
-	<yukuai@fnnas.com>
-In-Reply-To: <33f9030a-5c84-4e91-8c2e-247e0d691be9@linux.ibm.com>
-X-Lms-Return-Path: <lba+2694d05de+268617+vger.kernel.org+yukuai@fnnas.com>
-Content-Transfer-Encoding: quoted-printable
-References: <20251214101409.1723751-1-yukuai@fnnas.com> <20251214101409.1723751-7-yukuai@fnnas.com> <33f9030a-5c84-4e91-8c2e-247e0d691be9@linux.ibm.com>
-Reply-To: yukuai@fnnas.com
-Subject: Re: [PATCH v5 06/13] blk-mq-debugfs: warn about possible deadlock
-Date: Thu, 25 Dec 2025 17:37:32 +0800
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-From: "Yu Kuai" <yukuai@fnnas.com>
-Content-Language: en-US
-Received: from [192.168.1.104] ([39.182.0.136]) by smtp.feishu.cn with ESMTPS; Thu, 25 Dec 2025 17:37:33 +0800
-Message-Id: <6136ccd3-b4e2-4249-8000-a485d4420e12@fnnas.com>
+	s=arc-20240116; t=1766658778; c=relaxed/simple;
+	bh=LI2HLGAHJpkpCgYZSY2T1MdXT7OxHlvtdyYlNV56DmI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OKAQgp/ujk24NoeKV9aiIxUhYXKkZGP4qf8CEpsN1Akdfuipbm9ZZuDIsUJgSYj1QtFgG6/v4TElqhuyKuXxLC4rTkUW6nFDNJf5ty3LOqrgeENAm1p/PQ9gSRH26OH/61S+DAe8der9ZFmtOUgZeCpibXSItY3PcT8oNGSXJNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1E7C4CEF1;
+	Thu, 25 Dec 2025 10:32:55 +0000 (UTC)
+From: Yu Kuai <yukuai@fnnas.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	tj@kernel.org,
+	nilay@linux.ibm.com,
+	ming.lei@redhat.com
+Cc: yukuai@fnnas.com
+Subject: [PATCH v6 00/13] blk-mq: fix possible deadlocks
+Date: Thu, 25 Dec 2025 18:32:35 +0800
+Message-ID: <20251225103248.1303397-1-yukuai@fnnas.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi,
+changes in v6:
+ - rebase on the top of block-6.19;
+ - add patch 6 to cleanup  blk_mq_debugfs_unregister_rqos();
+ - change patch 8, from GFP_NOIO to blkg_conf_open_bdev_frozen();
+changes in v5:
+ - free rwb from wbt_init() caller in patch 2;
+ - don't recheck rwb in patch 2 to make code cleaner, concurrent callers
+   will fail from rq_qos_add();
+ - add patch 7 to fix possible deadlock in blk-throtle;
+changes in v4:
+ - add patch 1,2 to fix a new deadlock;
+changes in v3:
+ - remove changes for blk-iolatency and blk-iocost in patch 2, since
+   they don't have debugfs entries.
+ - add patch 9 to fix lock order for blk-throttle.
+changes in v2:
+ - combine two set into one;
 
-=E5=9C=A8 2025/12/19 2:26, Nilay Shroff =E5=86=99=E9=81=93:
->
-> On 12/14/25 3:44 PM, Yu Kuai wrote:
->> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
->> index 99466595c0a4..d54f8c29d2f4 100644
->> --- a/block/blk-mq-debugfs.c
->> +++ b/block/blk-mq-debugfs.c
->> @@ -610,9 +610,22 @@ static const struct blk_mq_debugfs_attr blk_mq_debu=
-gfs_ctx_attrs[] =3D {
->>   	{},
->>   };
->>  =20
->> -static void debugfs_create_files(struct dentry *parent, void *data,
->> +static void debugfs_create_files(struct request_queue *q, struct dentry=
- *parent,
->> +				 void *data,
->>   				 const struct blk_mq_debugfs_attr *attr)
->>   {
->> +	/*
->> +	 * Creating new debugfs entries with queue freezed has the risk of
->> +	 * deadlock.
->> +	 */
->> +	WARN_ON_ONCE(q->mq_freeze_depth !=3D 0);
->> +	/*
->> +	 * debugfs_mutex should not be nested under other locks that can be
->> +	 * grabbed while queue is frozen.
->> +	 */
->> +	lockdep_assert_not_held(&q->elevator_lock);
->> +	lockdep_assert_not_held(&q->rq_qos_mutex);
->> +
-> Shouldn't we also ensure that ->debugfs_mutex is already held by the call=
-er while
-> the above function is invoked? That said, I also found that we need to fi=
-x the
-> locking order in rq_qos_del() which is invoked just before cleaning up de=
-bugfs
-> entries.
+Fix deadlocks:
+ - patch 1-2, pcpu_alloc_mutex under q_usage_counter in blk-wbt;
+ - patch 3-7, debugfs_mutex under q_usage_counter;
+ - patch 8, fs_reclaim under rq_qos_mutex in blk-throttle;
+ - patch 9-13, q_usage_counter under rq_qos_mutex;
 
-I can add the assert for debugfs_mutex(), however, for rq_qos_del(), I'll p=
-refer
-to delete blk_mq_debugfs_unregister_rqos() directly, it's only called by io=
-cost
-and iolatency that don't have debugfs.
+Yu Kuai (13):
+  blk-wbt: factor out a helper wbt_set_lat()
+  blk-wbt: fix possible deadlock to nest pcpu_alloc_mutex under
+    q_usage_counter
+  blk-mq-debugfs: factor out a helper to register debugfs for all rq_qos
+  blk-rq-qos: fix possible debugfs_mutex deadlock
+  blk-mq-debugfs: make blk_mq_debugfs_register_rqos() static
+  blk-mq-debugfs: remove blk_mq_debugfs_unregister_rqos()
+  blk-mq-debugfs: warn about possible deadlock
+  blk-throttle: fix possible deadlock for fs reclaim under rq_qos_mutex
+  block/blk-rq-qos: add a new helper rq_qos_add_frozen()
+  blk-wbt: fix incorrect lock order for rq_qos_mutex and freeze queue
+  blk-iocost: fix incorrect lock order for rq_qos_mutex and freeze queue
+  blk-iolatency: fix incorrect lock order for rq_qos_mutex and freeze
+    queue
+  block/blk-rq-qos: cleanup rq_qos_add()
 
->
-> Thanks,
-> --Nilay
->
---=20
-Thansk,
-Kuai
+ block/blk-iocost.c     |  15 ++--
+ block/blk-iolatency.c  |  11 +--
+ block/blk-mq-debugfs.c |  66 +++++++++++-------
+ block/blk-mq-debugfs.h |   8 +--
+ block/blk-rq-qos.c     |  31 ++-------
+ block/blk-sysfs.c      |  39 +----------
+ block/blk-throttle.c   |  27 ++++----
+ block/blk-wbt.c        | 153 +++++++++++++++++++++++++++++++----------
+ block/blk-wbt.h        |   7 +-
+ 9 files changed, 194 insertions(+), 163 deletions(-)
+
+-- 
+2.51.0
+
 
