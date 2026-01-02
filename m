@@ -1,89 +1,58 @@
-Return-Path: <linux-block+bounces-32484-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32491-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF97ECED8C7
-	for <lists+linux-block@lfdr.de>; Fri, 02 Jan 2026 00:22:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31725CEECBA
+	for <lists+linux-block@lfdr.de>; Fri, 02 Jan 2026 15:49:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E583B3017EF7
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jan 2026 23:21:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 791D4300DC96
+	for <lists+linux-block@lfdr.de>; Fri,  2 Jan 2026 14:49:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D6630DD21;
-	Thu,  1 Jan 2026 22:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E54A230BE9;
+	Fri,  2 Jan 2026 14:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3tzAh1q"
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="seVnVSHi"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C508A30DD14;
-	Thu,  1 Jan 2026 22:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECFB20C488;
+	Fri,  2 Jan 2026 14:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767305874; cv=none; b=soj7oguk7xddQzcBd1ZhJsWV/RDQj4ziOzDSfOWAQsSwzHfXLWcNAsCMr8Xc6afridogRvTaYGp+kGk+AbhXoOiKe3o3nr6/fHWsb6d1/8KiTsPHAu6k/dp97HWbwivBV9AFeqT1uczrzfE5Bf9iYV1T+INiQl8oNTuaChFB7hc=
+	t=1767365380; cv=none; b=LsGap3QoM94GJVC9sp1/fRxj/Cbndu4QcPQSCzQR2+4Gec86OK85+zsjd5dHI0jBDkbnOSVrMZeAoVo/NAB/uvlK0zRYAd+5hZ9Rwst4p50zKohRFUiJLc6ulBYWl5NPrLeFW8j/+bgT2rkqEFiDWXvtYn8BaxzT2eCS/B4y4Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767305874; c=relaxed/simple;
-	bh=OKxr66AuTYpmtINGeWatnOeeLWTfC6xUU/wfI1fZOeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jrILqCXd9AEXg9kOO92KC9l9unsS0IemVVrnuSHNkP8bZStUIUBIFABCrWefERaS55hrAqS5G1CZKQc+wQ9V0ZtI8Ild7lZ1SyA2GhcHAqLk6yN3jas36h95gP84VmdDwE4VKcWxtAaRJuzkZ0I8SaqoG0MA3q9qeMbbosmnWXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3tzAh1q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696F1C4CEF7;
-	Thu,  1 Jan 2026 22:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767305874;
-	bh=OKxr66AuTYpmtINGeWatnOeeLWTfC6xUU/wfI1fZOeA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k3tzAh1qqBzEdJr7W13PBSjlKJJ2OZj+v1bk3WgK5Y/gMgiJhnOqkbzrE4d5fNn6r
-	 3ihlWEqcfPQ/esrNTdCUpshwQlHu06VG7Fg8ddHxFPeJyiGDYP6VsaEe7AtkYGFNID
-	 7bW3zS0Mk2L74PT+vdla6Mz6/0qfIdMkfBICDBxermqoh+GzMfbu/cvTlTD1Um7KNG
-	 qADGnv9N68YVfnTeHvZRAP+S2Gd2w3P6I51mCUa2XTbkMdiLCDF9BPwbcddsZ2ehdj
-	 ZdhkVDdGYr4dZ1sqs2Pe0ofLfYQE9v4eJ/Tk1J3wPU7EWgXsmp45dISB+MYVn2h/GZ
-	 vonDrbTOK4C9w==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Ridong <chenridong@huawei.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	cgroups@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 27/33] kthread: Rely on HK_TYPE_DOMAIN for preferred affinity management
-Date: Thu,  1 Jan 2026 23:13:52 +0100
-Message-ID: <20260101221359.22298-28-frederic@kernel.org>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20260101221359.22298-1-frederic@kernel.org>
-References: <20260101221359.22298-1-frederic@kernel.org>
+	s=arc-20240116; t=1767365380; c=relaxed/simple;
+	bh=qZZVe7dI5RoV7ypfn2BCqByQl/Rrfb6IN8o30oe5hfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KN5YZ0vKOhfeKsLgOjSe8ZtfIWDiVgWozk+zlrYNvg8p/3dx3bqm7LDmWVfbH7DXdnE7Iw7OCnFZeb5Sg0wqnXflUQdKcTz2wqrTWvjKsvbqNkdiZ2imxVg84dqpuSeIMwxBocWUfzL9xGIGo7yRb1FTOZd3R8obI2jtQ40P1V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=seVnVSHi; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:In-Reply-To:
+	References; bh=IN4ZPEM2XJumj6U3hK6l0T7+VyujQJ17XVJbwsFxc0s=; b=seVnVSHiKS2K32
+	sZ0LGNS7eqki1O2IyxS11970Xo/zJ5tJCmye3Ojz0knjjTwknwKkoftgdCdvb0+z6StErHBxNN6M2
+	rl4Q+iXWrO4jIrSqYZhTLo/XRDGFVqkTgdVUyk9agUgjjCxegy/ClsP/WiKApja2eqE2UAO2DElHn
+	wNDcs3as0nZkIcZNydKgrMVMa29euo7eeA2skv+hOLmKh507NZ3/Yj4JUCfy9wMgj+LG0cQEQZRHM
+	8gsQXCKTfeaUlJelOoZJIz3966mOEqzAYpjY6TI231LJcK6MDMJIM3kMUanVjj6KKZcl/vwcxznoP
+	EGm4f8bxWR8PziA9IziQ==;
+Received: from [167.98.27.226] (helo=rainbowdash)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1vbgT8-0006BT-B5; Fri, 02 Jan 2026 14:49:34 +0000
+Received: from ben by rainbowdash with local (Exim 4.99.1)
+	(envelope-from <ben@rainbowdash>)
+	id 1vbgT8-00000002kko-0UCa;
+	Fri, 02 Jan 2026 14:49:34 +0000
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+To: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] block: fix type for printf argument
+Date: Fri,  2 Jan 2026 14:49:21 +0000
+Message-Id: <20260102144921.656362-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.37.2.352.g3c44437643
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -91,48 +60,33 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: srv_ts003@codethink.com
 
-Unbound kthreads want to run neither on nohz_full CPUs nor on domain
-isolated CPUs. And since nohz_full implies domain isolation, checking
-the latter is enough to verify both.
+When making the block-%d id, the type should be %u. Fixes:
 
-Therefore exclude kthreads from domain isolation.
+block/bio.c:92:62: warning: incorrect type in argument 4 (different types)
+block/bio.c:92:62:    expected int
+block/bio.c:92:62:    got unsigned int size
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- kernel/kthread.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 85ccf5bb17c9..968fa5868d21 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -362,18 +362,20 @@ static void kthread_fetch_affinity(struct kthread *kthread, struct cpumask *cpum
- {
- 	const struct cpumask *pref;
+diff --git a/block/bio.c b/block/bio.c
+index b3a79285c278..198b966d71b8 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -89,7 +89,7 @@ static struct bio_slab *create_bio_slab(unsigned int size)
+ 	if (!bslab)
+ 		return NULL;
  
-+	guard(rcu)();
-+
- 	if (kthread->preferred_affinity) {
- 		pref = kthread->preferred_affinity;
- 	} else {
- 		if (kthread->node == NUMA_NO_NODE)
--			pref = housekeeping_cpumask(HK_TYPE_KTHREAD);
-+			pref = housekeeping_cpumask(HK_TYPE_DOMAIN);
- 		else
- 			pref = cpumask_of_node(kthread->node);
- 	}
- 
--	cpumask_and(cpumask, pref, housekeeping_cpumask(HK_TYPE_KTHREAD));
-+	cpumask_and(cpumask, pref, housekeeping_cpumask(HK_TYPE_DOMAIN));
- 	if (cpumask_empty(cpumask))
--		cpumask_copy(cpumask, housekeeping_cpumask(HK_TYPE_KTHREAD));
-+		cpumask_copy(cpumask, housekeeping_cpumask(HK_TYPE_DOMAIN));
- }
- 
- static void kthread_affine_node(void)
+-	snprintf(bslab->name, sizeof(bslab->name), "bio-%d", size);
++	snprintf(bslab->name, sizeof(bslab->name), "bio-%u", size);
+ 	bslab->slab = kmem_cache_create(bslab->name, size,
+ 			ARCH_KMALLOC_MINALIGN,
+ 			SLAB_HWCACHE_ALIGN | SLAB_TYPESAFE_BY_RCU, NULL);
 -- 
-2.51.1
+2.37.2.352.g3c44437643
 
 
