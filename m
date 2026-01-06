@@ -1,253 +1,183 @@
-Return-Path: <linux-block+bounces-32615-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32619-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8515ACF9D2B
-	for <lists+linux-block@lfdr.de>; Tue, 06 Jan 2026 18:45:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 217D0CFA685
+	for <lists+linux-block@lfdr.de>; Tue, 06 Jan 2026 19:59:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A37A231D521A
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jan 2026 17:34:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2842C304F653
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jan 2026 18:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E1E3346AFC;
-	Tue,  6 Jan 2026 17:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B748D22F77B;
+	Tue,  6 Jan 2026 18:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="XO9wN6w3"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uhOcDUvN"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010053.outbound.protection.outlook.com [52.101.56.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218E93469F2
-	for <linux-block@vger.kernel.org>; Tue,  6 Jan 2026 17:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C93A304BDA
+	for <linux-block@vger.kernel.org>; Tue,  6 Jan 2026 18:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767719759; cv=pass; b=kANoe2mI6+BtEd7z2IlFVVY+eUjyKsCWn49CU8yzrZPO6g9WmZDfGJeivG/kGBmLTizM6q4g4f8gFLOj9deKGm94LmPgOPKD3DhG5T/GuCbfB1M2NA9onY439GrrQ0BgJ/T720fXOKFFc8f1sHFlbyhz8RkTYoAvlzg00vY0280=
+	t=1767725954; cv=fail; b=dRr3+YfurcJFsNNMoJ6c0ldqchVHqEIWaCxwq8JvYef5Uj+Hlm5DSbnXoFjlxJMnU8p1PLj+l1NaYpDkZdFuHHv60Ho7AU8G2DG18oBh5rEv1gixOt2RQrbNXcQ7VyO2O+QJB27WAqa5yL0m1JkvIoXk+b6D6ZyZwJurkMLl7QU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767719759; c=relaxed/simple;
-	bh=BcUKT/WaKF3cc5RT8cSr1Hmp5p8kpbrtWjAK1Grl5Fg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=roDf1H5p0c4dzmYuMgsJyhEcL4/q3mhp78QoxKIr+7bgDW6GDpXfdZfSSKoV1xNunLcQueBESvDcn45RMdvLM0yetOYnaxcJY8NkhNkhfLmDCk6NbvVr5PG0fvXCyD5AA8g9AtM3CaDAmiwrFuXdBjfzC9tNRaLkyOIeuuD3nmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=XO9wN6w3; arc=pass smtp.client-ip=74.125.82.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-11f1cb6cefeso37135c88.0
-        for <linux-block@vger.kernel.org>; Tue, 06 Jan 2026 09:15:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1767719756; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Lgqc5gRRmNM+S3tZdQ2mVYkI2KwmoeJ6C8nOD/bQi8ZG/GRynup17kmQgP7qQ9dD6h
-         3dEZkcGeWnWPjUK1qLCyeZJRkb+Q+yyOkVPKHT05/JydP/XqVe5NvzQBX40J0mJrZGR+
-         WSFjMBRPj8S5KTBf8jaW9uHBaR/foG1Ev2HCAUnj8aZ6qCRy1k1POtKmNwc8wiso3M0r
-         +eflA3+GjiwWk5LAw2HBiCBUGRZ10ivfwsaXkAnCqo5qxzU/2JGCMC023ANYLIgeJj9i
-         UzOycRULLjo94o8ZIDtvqaAujQE5XQrzWM2vNm/VmSVZetFsUMTIicN2BAG4GFPy2mXF
-         +iug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=h0S9X35x1dPYmVywIfwy49RDgI1meLSZA2LdM4U3+6o=;
-        fh=TvVbB9aHBmf30eSOU7pttDUjF9Rtrf3xvQZw5Zr4wHs=;
-        b=anMqfdx3V5pTbAa0ce3Lvuj6hDgM+ypKzNdA8ZsZx6OOLytBUdloGVynp0hu5vokhx
-         WVHJcw2cYdFaaACsGSpQcj4xRLWeYYIEqHHE0qC+m/I9qP6z2ssvjQlUby9uuegNA7NB
-         ywOYlWa8TeUEh1RSu61MTWnR0GX+D3wm3XV1qxbqt4n2916fyz/ax+Au9tweoatRH1zh
-         Ch7qUw5TQUd4avofrLh8Kg5S/bYDT5lDtaNUoMvaPlcPLLNNWp2hgXwJpCB3Rs0W4K+5
-         wbyBfLdlOTuAY8csdU7dRVjdtifiIRzVZGWhhhv74k/rm3aJhZPDOtq0nX7hyYI7Cwm7
-         uS4g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1767719756; x=1768324556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0S9X35x1dPYmVywIfwy49RDgI1meLSZA2LdM4U3+6o=;
-        b=XO9wN6w3Opl7nMwLomPxLAU98QSEE6/7I4oGQQFjM3wtnqQSdRDxJalKkX2vq3OsWg
-         il5XdccSJfDz+Bv9lZGLKHbLnwj8mSjjhsc2zkLmIlXuevG/AQnRKeQh6oHHc0qrVBW+
-         jbkcx+Y6QPmgOM1XRyHJUcpvOM4bXFMGuD3PzfkGba0SR6NsanQfg7hQoggDguDpJX5E
-         fZabPw5l81W4yK05v1oooaBtbl9uKJKCnuzAyIxyLwoBmu2to7KoRXPJ8TZhzJZ/gN6B
-         N3eFZgSF6O5q0n8nPdKLdOA6295ZYXhU7U5edlXeY5Byov89mRUg+WPKcgHAD+n3IzfZ
-         zuCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767719756; x=1768324556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=h0S9X35x1dPYmVywIfwy49RDgI1meLSZA2LdM4U3+6o=;
-        b=AKdVMhvYTqDyTYkzA6KRKtbbnh39uLAM3wqavoqanmXmZPRKhewgj2EnetHUrlgxKz
-         dWngNbc4L7R0VMe5Vg7AolyandTFNZk0F4WO3Kq2xhg7osD+RS1ilhxQ6EUJ/eaREo77
-         8khO3nqMpkZJ3kX3wVJrjvDjzGpCV/DpW9qcZ87PRsbhyYWIts3ViDiJpEUVASaiqsJ8
-         B33bqtIg80qZQtnQ5W9HzSeqCn9cp+CrZ0oqI8UgvyQoUNEdKPk7AvNmyfKKIhcer6oz
-         agmeot7PRK66S6RKMtkP8Ey2HBes5//c99LpeIALyfmC+ekXKwYBOMeq3ymFZgVuUqbK
-         F5dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaFaZLfro8G23acdOzyyzrsAUQbHAfLZ2BXfjoLh9cViPMxhAzRm3pdGdfxtsAOfYz+yZvJwvL2Cp+gQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5yKFXVFWY+bOVGmj6XVBplWfMloIueay1y4ErY9QgG/f/R//Q
-	ElmNP2zgndmOa8IsNsv4ZYJ38ODDEBLZ3xzLbFNEiQ/UOAEe3GL7DaVDcEl8oA5/TLf3qEhWdvW
-	kn+L+Ic/DGvGFfzRp2z7X5QietB8kbL4bREZ0sM+3+bpkgKdn/eCBDd4=
-X-Gm-Gg: AY/fxX6uvzcFfzSjetsWeKpe9R7bEvJ9oUGzT/p3XZ1gMnwEqWFwtwci9w3or7+z68G
-	oRZn4/EpQu5MCSWzT1LsnvQPUPgaYdBIk44peMZmMWEvBd0+6XPVdDNCfo1yNFmk80CTkj215fr
-	0j8m9T1I39if+XR3QqoN5xdO4e9+9PkpXLpe5suZ3+POLBTvyoj5oauQojMM6ea9ZbZDQ2wy+xh
-	JxoN4bBzktG+iTTrpdY0Ui2lp0Y6IBXNzddCliNQVPeG29gAMUAbEiaPJZFub5Cusrpg4kwnsiO
-	yKAQ5Mw=
-X-Google-Smtp-Source: AGHT+IHsx2prbXYg3j18SfdVTQFJ60Rbk1R0GsSR/Ko74ivczv03vINWOjHdxoRdXuVpHJS26gsubAcJWKCBQS4KIZA=
-X-Received: by 2002:a05:7022:6195:b0:119:e56a:4fff with SMTP id
- a92af1059eb24-121f18e1ff2mr1694930c88.4.1767719756030; Tue, 06 Jan 2026
- 09:15:56 -0800 (PST)
+	s=arc-20240116; t=1767725954; c=relaxed/simple;
+	bh=nZdvFp2oJcMHjbI+PLasZh18GqMiBbq21xQeuSNWuLw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CJt4IUaWXesaYBDVkudb4h8L2m8hA5bXTPrj2AmnZMRhq/96qzlTGhE/ezh20DIuOtjdhLcYmwYCeg+X5F2r2gaM5O2OkZHtEufrQK8MStFLDWBwyoD8AMk0M/W0rRBpj0iNqHv4wMez6FZF4FWBcMeUrrb+s7K55HL8lKSj7/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uhOcDUvN; arc=fail smtp.client-ip=52.101.56.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BMlwBpUAGRiG0Xfa0LyVFC68LFDPMKCZ/XfY5BhboB57/F48v35NR59V8Y1xJ+ZAYvxD9hBI93MhBdsS+v0PAlwKEQCbslyde3JX1afgt+WvtoOZ6ryPEmuIKKezCQ8a+xrY1rN9JB7Q2VUfsPlCsXk3H6K5VF8DwvZEeJXoqfATufBEGj3tVK3GH+9v+FuyBca0lo64OdUgMEthoEdwD8NCp5w0KkqPLnpr1qJ3I3/dErOy/OMwlV3o3mSFt8ktdPE7nLprlyeIjAGhpDIv98ZlmCqYfzpGGd2+fOshk5K0tkdF2hsVxyD4u+pvyYlGSNco+GcvEQZvZBjfu7HMiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kOZGP2pn7WVQJLWgZGqMetV/0RWfcB8fT5k5vJm0D4Q=;
+ b=u/bktviiEgTn2LYgpkN2Cdi5J6sQ6yYtdiv+apMaC+alBKga0WHQtiD252AauFfXNxRgLMBnEo+LEQkrOdjqKazhuzD8Q+3Of0btaTt9t4uRd3EmaKWsJmHEPb7CZ8vXKvjPwWPO6Nza/sNOK37jeA9CgdDRZhrJi9dDWx1CwEwuFJLJWFvP28ioK5WPgbu11SmGhpumWRNRmmxSENjWF+MpETg0mtJZw236VZPlBbml1yqD49tcY7mk2OkvYPUO1athPtqDCa34sWfQIbJF/j/jbsiwOPbcmrEBNv6ezZQO3C6TDfJqi9dN6MmAqBjwsreotzIJVLnKU2TRg2DS0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kOZGP2pn7WVQJLWgZGqMetV/0RWfcB8fT5k5vJm0D4Q=;
+ b=uhOcDUvN7quQEbCNTsMWUdwYjdCmosfsPdKyWLOONzB2hlxtuQT+dihsDCxcvQiQo+OQfvsV6RRbgAYKeS9ngjjatwfxLbMp0W+2+vuqU9qSHPfXtYJc4au0uAQVM4y/UvHMjn5RiYY4cZ2t/yfuOeedm4RRAdLPSkyNWnZosOkcY+LKxsiCTbnBKwhrQK621Ydaf5Fv3QT3kySGKFTZ3amYvd8WDTiJCjjOqRRQNZ8t1TmMFk57eBbwtK5tyZf2LkabKjUem2xxPLZy8poaxKT6fxiiWCvv91nu3cThtUp7ofio/5gEM1mGeT4hsaYB6jEJSbKIVGyhp0ASX0FnyA==
+Received: from DS7PR06CA0050.namprd06.prod.outlook.com (2603:10b6:8:54::32) by
+ CY8PR12MB8067.namprd12.prod.outlook.com (2603:10b6:930:74::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9478.4; Tue, 6 Jan 2026 18:59:06 +0000
+Received: from DS3PEPF000099E2.namprd04.prod.outlook.com
+ (2603:10b6:8:54:cafe::96) by DS7PR06CA0050.outlook.office365.com
+ (2603:10b6:8:54::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9478.4 via Frontend Transport; Tue, 6
+ Jan 2026 18:58:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS3PEPF000099E2.mail.protection.outlook.com (10.167.17.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9499.1 via Frontend Transport; Tue, 6 Jan 2026 18:59:06 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 6 Jan
+ 2026 10:58:53 -0800
+Received: from yoav-mlt.nvidia.com (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 6 Jan
+ 2026 10:58:50 -0800
+From: Yoav Cohen <yoav@nvidia.com>
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	<linux-block@vger.kernel.org>, <csander@purestorage.com>
+CC: <jholzman@nvidia.com>, <omril@nvidia.com>, Yoav Cohen <yoav@example.com>,
+	Yoav Cohen <yoav@nvidia.com>
+Subject: [PATCH v3 1/2] ublk: make ublk_ctrl_stop_dev return void
+Date: Tue, 6 Jan 2026 20:58:30 +0200
+Message-ID: <20260106185831.18711-2-yoav@nvidia.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260106185831.18711-1-yoav@nvidia.com>
+References: <20260106185831.18711-1-yoav@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260106005752.3784925-1-csander@purestorage.com>
- <20260106005752.3784925-20-csander@purestorage.com> <aV0Xx2vWmL5Iuls4@fedora>
-In-Reply-To: <aV0Xx2vWmL5Iuls4@fedora>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Tue, 6 Jan 2026 09:15:44 -0800
-X-Gm-Features: AQt7F2oH1KSrEU_qjpFRn21_6eSA-1DRw6ns58qu5_CQ83y4Pw0aC2-PF1SPR9A
-Message-ID: <CADUfDZofEg0Q=veyihy=M-XCxoga6fkueJmLdJ4CVd6KU=GdBg@mail.gmail.com>
-Subject: Re: [PATCH v3 19/19] selftests: ublk: add end-to-end integrity test
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stanley Zhang <stazhang@purestorage.com>, Uday Shankar <ushankar@purestorage.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E2:EE_|CY8PR12MB8067:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e4b7a5c-7537-4163-6947-08de4d55aa9e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?H5JlaGvy//2T52l1Qm9WO914UY2aeNw2724VlfUYsIpWSBySH65KnlltXaG4?=
+ =?us-ascii?Q?/gE/6mUKH6edESyhNgJdIGeG0L1iN1lviDo57qoj4IgCcC5QniuWPogMYJN+?=
+ =?us-ascii?Q?nkheIDqTAht9XZFb7wojDbDwZEXITWEf4xFsj3MAf7AhBYigWzbkmwm0EYPY?=
+ =?us-ascii?Q?NzfUYTlNLZpeDyX68QchqbZBdKcINFVPlujzlI8i3qv4XUtfvRWiswugeCbE?=
+ =?us-ascii?Q?2C3/wD7osENbaJG3L8CupuBpTDVtiZfTXKAk5E+xJWBKPXQ7yBuOF4vCubg3?=
+ =?us-ascii?Q?NxXwM3F3fiBTHF7hfpiD/bYM8O4r7HT2f5qYbtvUXvZVneNM96407l9pUvPg?=
+ =?us-ascii?Q?C0dK6Lk6lgZdlAyP8XNAtJtQU/G1ChjWrjxjWoDjY/z5ql+i4frTjPUNzVsG?=
+ =?us-ascii?Q?4Hg5HEHvttOieZ0hwemwIbfuJgStcuzvjk4c/rrksUQNzhsVULA4afTzG2MZ?=
+ =?us-ascii?Q?dH0dzBD9dq0T2DEfS65K0is0x1crZZDSEpd/sV1lX32y9uAADi7rWcBHqIJq?=
+ =?us-ascii?Q?nR4eTxQgomcq7KbJ3HjEV8eE3VX5e5Y2jPiiB1/aZu0zsbj4/UNbpDwkuFwo?=
+ =?us-ascii?Q?j3AgUyFmlF+tmk9mA8+AFVrCEaz8zlGdFKAdNXR9OekndguDcCMjsMCoyXKC?=
+ =?us-ascii?Q?NxZFx9zKFY75eyve/YidfT80wOQlWvIAIgYMRL4DD+VN6RJM3WmE0TMu2aC0?=
+ =?us-ascii?Q?4eVADZ0pgE8KkdgLcN/rL96Wyk5o7LtCcOnRxhGH5TXGtXsxFKTx2ETwkNBy?=
+ =?us-ascii?Q?OxxG0zx/2e7obGCM8e3re0iBT+1mIspZHmJAT8QwiVhRJWdHCGTpyz75XBxh?=
+ =?us-ascii?Q?F0e4dXBEGgJm86iAd11xxsxYuGJ1SfkcKK2fKpzHUZNtHcE+edghaqeb/gx+?=
+ =?us-ascii?Q?7olMyxLsH2rmg2xyV1dviwZrpp12BsrVwe3Y3RByQ0KxKzGEqkW/ylTBPjtj?=
+ =?us-ascii?Q?hYMwPNoHy19woLDTofEPFvGyz5ZhbcdNSRUHXf7BLJD1SUfpau0Rs/53tTOl?=
+ =?us-ascii?Q?fGR4FkqnrusI17NQ4iPUv9/zQ7YFRkPW2IKbWnPyvY8mewqYhkoyTjobrrT2?=
+ =?us-ascii?Q?U+mZk6//Alb1jG172hyYhbH6IyQTSeQ4H9+0m1OTroAP/YOFIEAfOuh7umyb?=
+ =?us-ascii?Q?GwPyKFjCPsTlYP1HwboWhCb0PAJ4+zDNgTKhBBdRHsfggKpALaXT+7y677Tl?=
+ =?us-ascii?Q?655pTqHcQ+/8Mr8sfLB4mD+ZouMKSiUu2iYWgc6Oqyab8+5eVY/TvOaOnn37?=
+ =?us-ascii?Q?fsHQQEXUt5u2e43SgyOvtmtUQ5lnuWxHApQFaF0GvbB5PQPD8gARhBPGxNj0?=
+ =?us-ascii?Q?q9PwE/XznTGrWu4K32XljLZQnWuvg0Tynv77p8Q/SJON9us9GbwumckEXdw5?=
+ =?us-ascii?Q?lSdf6zLo+/5PeZMtSvyjIJqme/vErPWGRsYwKDdm/zqqnIJ+buUx3wCSUYrR?=
+ =?us-ascii?Q?qdQrpoYNgqoZXa4DVh9I4FpojUzrLQH0AgVcZYEInqVEEj1E7xrvMz57AdSP?=
+ =?us-ascii?Q?pT8LtJZcsn+7RIr/dXRuL+sFdVsByKVQDlFO8cDWEFL393G8WFKtAMeOoDED?=
+ =?us-ascii?Q?hnkluKbmOSBthmY24bU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2026 18:59:06.1845
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e4b7a5c-7537-4163-6947-08de4d55aa9e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E2.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8067
 
-On Tue, Jan 6, 2026 at 6:10=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrote=
-:
->
-> On Mon, Jan 05, 2026 at 05:57:51PM -0700, Caleb Sander Mateos wrote:
-> > Add test case loop_08 to verify the ublk integrity data flow. It uses
-> > the kublk loop target to create a ublk device with integrity on top of
-> > backing data and integrity files. It then writes to the whole device
-> > with fio configured to generate integrity data. Then it reads back the
-> > whole device with fio configured to verify the integrity data.
-> > It also verifies that injected guard, reftag, and apptag corruptions ar=
-e
-> > correctly detected.
-> >
-> > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> > ---
-> >  tools/testing/selftests/ublk/Makefile        |   1 +
-> >  tools/testing/selftests/ublk/test_loop_08.sh | 111 +++++++++++++++++++
-> >  2 files changed, 112 insertions(+)
-> >  create mode 100755 tools/testing/selftests/ublk/test_loop_08.sh
-> >
-> > diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/self=
-tests/ublk/Makefile
-> > index bfd68ae64142..ab745443fd58 100644
-> > --- a/tools/testing/selftests/ublk/Makefile
-> > +++ b/tools/testing/selftests/ublk/Makefile
-> > @@ -33,10 +33,11 @@ TEST_PROGS +=3D test_loop_02.sh
-> >  TEST_PROGS +=3D test_loop_03.sh
-> >  TEST_PROGS +=3D test_loop_04.sh
-> >  TEST_PROGS +=3D test_loop_05.sh
-> >  TEST_PROGS +=3D test_loop_06.sh
-> >  TEST_PROGS +=3D test_loop_07.sh
-> > +TEST_PROGS +=3D test_loop_08.sh
-> >  TEST_PROGS +=3D test_stripe_01.sh
-> >  TEST_PROGS +=3D test_stripe_02.sh
-> >  TEST_PROGS +=3D test_stripe_03.sh
-> >  TEST_PROGS +=3D test_stripe_04.sh
-> >  TEST_PROGS +=3D test_stripe_05.sh
-> > diff --git a/tools/testing/selftests/ublk/test_loop_08.sh b/tools/testi=
-ng/selftests/ublk/test_loop_08.sh
-> > new file mode 100755
-> > index 000000000000..ca289cfb2ad4
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ublk/test_loop_08.sh
-> > @@ -0,0 +1,111 @@
-> > +#!/bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-> > +
-> > +if ! _have_program fio; then
-> > +     exit $UBLK_SKIP_CODE
-> > +fi
-> > +
-> > +fio_version=3D$(fio --version)
-> > +if [[ "$fio_version" =3D~ fio-[0-9]+\.[0-9]+$ ]]; then
-> > +     echo "Requires development fio version with https://github.com/ax=
-boe/fio/pull/1992"
-> > +     exit $UBLK_SKIP_CODE
-> > +fi
-> > +
-> > +TID=3Dloop_08
-> > +
-> > +_prep_test "loop" "end-to-end integrity"
-> > +
-> > +_create_backfile 0 256M
-> > +_create_backfile 1 32M # 256M * (64 integrity bytes / 512 data bytes)
-> > +integrity_params=3D"--integrity_capable --integrity_reftag
-> > +                  --metadata_size 64 --pi_offset 56 --csum_type t10dif=
-"
-> > +dev_id=3D$(_add_ublk_dev -t loop -u $integrity_params "${UBLK_BACKFILE=
-S[@]}")
->
-> I tried above setting:
->
-> ./kublk add -t loop --integrity_capable --integrity_reftag --metadata_siz=
-e 64 --pi_offset 56 --csum_type t10dif --foreground -u /dev/sdb /dev/sdc
-> dev id 1: nr_hw_queues 2 queue_depth 128 block size 512 dev_capacity 8388=
-608
->         max rq size 1048576 daemon pid 38295 flags 0x160c2 state LIVE
->         queue 0: affinity(0 )
->         queue 1: affinity(8 )
->
-> However, IO error is always triggered:
->
-> [ 9202.316382] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.317171] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
+This function always returns 0, so there is no need to return a value.
 
-Hmm, what are the initial contents of /dev/sdc? It looks like they are
-nonzero, as the reftag being read for logical block 0 is 128 rather
-than the expected 0 (the reftag would be read from bytes 60 to 63 of
-/dev/sdc). In general, though, the partition scan may be expected to
-fail the bio-integrity-auto checks if the integrity data hasn't been
-initialized. I don't think this is an issue, since the partition scan
-is looking for a partition table but there's no guarantee that one
-exists.
-You can disable the kernel integrity checks if you want by writing 0
-to /sys/block/ublkb1/integrity/read_verify. However, I'm not sure it's
-possible to do this soon enough to take effect before the partition
-scan.
-We could also use the UBLK_F_NO_AUTO_PART_SCAN feature, once it lands,
-to suppress the partition scan and these error messages.
+Signed-off-by: Yoav Cohen <yoav@nvidia.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best,
-Caleb
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 837fedb02e0d..2d5602ef05cc 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -3304,10 +3304,9 @@ static inline void ublk_ctrl_cmd_dump(struct io_uring_cmd *cmd)
+ 			header->data[0], header->addr, header->len);
+ }
+ 
+-static int ublk_ctrl_stop_dev(struct ublk_device *ub)
++static void ublk_ctrl_stop_dev(struct ublk_device *ub)
+ {
+ 	ublk_stop_dev(ub);
+-	return 0;
+ }
+ 
+ static int ublk_ctrl_get_dev_info(struct ublk_device *ub,
+@@ -3780,7 +3779,8 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
+ 		ret = ublk_ctrl_start_dev(ub, header);
+ 		break;
+ 	case UBLK_CMD_STOP_DEV:
+-		ret = ublk_ctrl_stop_dev(ub);
++		ublk_ctrl_stop_dev(ub);
++		ret = 0;
+ 		break;
+ 	case UBLK_CMD_GET_DEV_INFO:
+ 	case UBLK_CMD_GET_DEV_INFO2:
+-- 
+2.39.5 (Apple Git-154)
 
-> [ 9202.319478] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.319983] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.326332] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.326974] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.327570] ldm_validate_partition_table(): Disk read failed.
-> [ 9202.336539] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.337228] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.339247] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.339779] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.344306] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.344948] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.347067] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.347558] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.348100] Dev ublkb1: unable to read RDB block 0
-> [ 9202.350159] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.350642] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.354977] ublkb1: ref tag error at location 0 (rcvd 128)
-> [ 9202.355539] Buffer I/O error on dev ublkb1, logical block 0, async pag=
-e read
-> [ 9202.356280]  ublkb1: unable to read partition table
->
->
->
-> Thanks,
-> Ming
->
 
