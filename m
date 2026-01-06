@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-32554-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32556-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68DF1CF628A
-	for <lists+linux-block@lfdr.de>; Tue, 06 Jan 2026 01:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28233CF6298
+	for <lists+linux-block@lfdr.de>; Tue, 06 Jan 2026 01:59:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A51C63044BAE
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jan 2026 00:58:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E76D83048926
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jan 2026 00:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4912723EABF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88E1253B73;
 	Tue,  6 Jan 2026 00:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Pw9gKtRb"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AxZuJH8w"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-oo1-f99.google.com (mail-oo1-f99.google.com [209.85.161.99])
+Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2472A2253EC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8998E2236E0
 	for <linux-block@vger.kernel.org>; Tue,  6 Jan 2026 00:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767661096; cv=none; b=p3y5UOC+6N5nQStzmsy2qi/YJcOCvMweTgEGnkeNwWkBHiKtuiWTmX9wKuLY57XULA1YQD5DRvDF/4gAOqiE57jIaBVkQFyhTWbPNql3zCTfXI7VNy2QG14fNoPJ9Wy6L7tD365iIl9f0brXg1ZxAFUO3t25G2w9ArEc2qSH3J0=
+	t=1767661097; cv=none; b=iVOY8aF1AXH2N+bf9vvK1aTVgQrIS92ZjHaxFp6tk8uILTQLt+w73xXNkOjqBgPJghDFhbIyQCWdoaTKB1693K446La312OjiDZJIdRDlmVkx+YlEb07pinuyMsHHUMdWhaUTy/F42qIbtIwZonvT8OO3BpAG+K6+7j6anbmtAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767661096; c=relaxed/simple;
-	bh=C7WOnO6ID4LqxTasOYmRz/f/EOUiS1sTWpJj01SHmZ0=;
+	s=arc-20240116; t=1767661097; c=relaxed/simple;
+	bh=W1ZlcN21O1nUErIL2QddLDLpe6HN6kZRnr32eNyAemQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t0E4MCndkvYdrbrHB9wjFC3+Y4oTHXOkaS4YCUEpt+9yE02OvPysWQgb7ZpaE1ujp4pF49LRq71ZlVHlM0v7L2PssGFakj8iKSp2Y2SufcItRiFNIisqo14TEH36MMg5nxbq4JVw9uD72XzaLVE8mVp1/hHO86/vKcLUzC9ol3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Pw9gKtRb; arc=none smtp.client-ip=209.85.161.99
+	 MIME-Version; b=RZRGRESDVdpPhipi86u5i9dDHh0ZjyWBSZ50uSAoWhWh3wuFGV06khDYhD5biYuxUPCKo3CgPd/GU/bGiKIszhQqruzVbatbfqOsbQsz2XBmgX8ryuqP1pJDFu+i2Vt95XMAUcSdSus5YsrCkhoSqbRDm8rXSplsJ4G7CKB3SpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AxZuJH8w; arc=none smtp.client-ip=209.85.214.226
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-oo1-f99.google.com with SMTP id 006d021491bc7-65e8c8831f4so7290eaf.1
+Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-2a31d7107faso564765ad.0
         for <linux-block@vger.kernel.org>; Mon, 05 Jan 2026 16:58:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1767661091; x=1768265891; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5bEkLGAxkvhhHV6OBGkQMN8FAiPS5rx2ziWg20da5Ww=;
-        b=Pw9gKtRbEcNvLZ9M2gdnR/rFsJICU9bctaHwYi/qb4qAUecD8D5diL2qS9EUq8DWZd
-         nNyp5LLUGBlur0+eszz8Fp6NOYvvAWK3yHlre497PXKF4oT5nCInNOmuGPG0Qb1hYy8j
-         GNGq3CaIehBPJ943kOnTPrR0rK9ZdZ5Afrv4DMtYzK8MM/fAFXCI83XjS6RoVKZWvWjL
-         CiVapZayTw14ySQ6hZFM7XW+Quq1oXVIqGP6zNAAz2L+9sJ3l3y8DZqwmnv+dLn5oV7E
-         +DJb5BZDc8181/rdSnplkCmnK5zAjsJGrvXIYFjcdDPfXn3smC3wvzcg1NbdjT1Eto0s
-         AjxQ==
+        bh=Jcv9O2RJUqAVhSh3+8hkyCUs42mqp2c/jNxHfDkP5b8=;
+        b=AxZuJH8wbIWQSNz5LcKsA2GGBvgRfyBJ7Dn9hAwLesIOcKQ3VWosKqTwS8kZh9LbZD
+         OxlO4igUZkWA6OFWW7sVl/f8igL+ej9Ddz9gG4AQahlVVzOFg1DuXUsKegs0oUAl1q5a
+         KCLSaxf78MpvZV/5lb/ZJW7LutOWGxY6COLiVWibjjiu3uuOF42X8fSo/lJfLRaxW/3W
+         0EGiwEogd1prEzl8M8TB0lAfy2NSWhGQ8kwBHHylb9f+T8i/5zNnXzzefFBTuiOkZJqe
+         Dc5Er+0NLH+WJmGD4M15mK43U0iPKne//IrWWx/PzqWr25ga3eXWvdOLDyXDdVn0WIao
+         5D+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1767661091; x=1768265891;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5bEkLGAxkvhhHV6OBGkQMN8FAiPS5rx2ziWg20da5Ww=;
-        b=ixZj38CWuWE4EgcwWK741cmGf2Jbkmni/e2j62mOfHFjiB5gPxM2T+YnTq3QtRN2pc
-         2Gniy9mOK54ZCLr/zFaG6nDye3QZ8G1leURpwJhidKY+2onebFSP4ognlAkGuyyu5W/2
-         GLxcLTcPot8/UlsvQdz+XMP/zAlmkDzCM7nlTJ5r/6n6JS/VFJGhL/NRwJZVOI0yd4mp
-         xbJ2SKnXyVCblVUVPXBp8TiFlmvu2guLuKSSnoyipVpsKQjCwFVJTcMyfmw5fVI+xYTU
-         5Io861jTpD2eSRWzXfn/AWKvMsiEsGzbCUmXSdIyiUOHoocu/BZjJrgVGj8Tj4KR8yuU
-         KVxA==
-X-Gm-Message-State: AOJu0Yxyl7qRjSuXRVtf+N99xH0alZuoga1ajwFgEbyv2LoqFDr8EUfX
-	kh/uXF4YBao98olz7v0GHsHeonM0c7yMnah5AgxaARFADwunnwTTthZ9thfBb8OkOlb23NPplCH
-	zQHEShmR3lMpIREV29Ex7x+5tbMKm3veGuUXA9wFiP7UJcR+Rj78K
-X-Gm-Gg: AY/fxX6asrqXIJl+JoQo/7DH7qn2Xg/+pQIIAPQZFjoWHd+ldHhpG17HGAkp0kNo80Z
-	OdftasPtdMkHbIuQaYN73zMr9GnkjQ/+J1BHq2JSfI+GoZYPA5uTCqP1l+kkmETvEoubNlntuPK
-	LYmL5lzABTLk1iS8L79SCr7KqZZ4BQ2qO/f5rQZx+vwPQOTHlE4s3oM7/V9n6V3WrFAjPjKl3DM
-	2X2fgVKK3g0euTz9Yk1nLkkSucirxoaGrcFLhZIwgld4ijp9RydElcfwZOSVDfHHG4MWOearfSS
-	3cw9FJet+R4PGjsXzAsj96vUsN85piLKYRigKPdjWxh12F8tl1ptgV0xmUj+WB1GgZaub3heenu
-	EexvnGTQJCHtHZNFOi1iZlJBdrVw=
-X-Google-Smtp-Source: AGHT+IFG8Io995j2dSJYPSJmiBupcP810PQCJoAnia5A/MggoC25scMJzZR56R+YMLt056CG0G4W8kcI28h3
-X-Received: by 2002:a05:6820:6601:b0:654:f5aa:7434 with SMTP id 006d021491bc7-65f479fd91dmr439065eaf.1.1767661090901;
+        bh=Jcv9O2RJUqAVhSh3+8hkyCUs42mqp2c/jNxHfDkP5b8=;
+        b=e3uSHNBOIfA0XZIgHkhTyVFmwDdKZrXRyT78tcH/mJgBJPrJximgZ/1jAB4ya7P+45
+         uad5nadbyZL4yzmCcK0PGRVE7oWm70UWE6Sxz3GmdOnFqeRmZGt4CqO686te/fKBRCOF
+         3fV9hF1quuskExZyVqhW+aDFQ9xWbf5fpI3W2GkqOWUJfNiG8BlFAqbnUELNFC1/4GuZ
+         njhIW7J0kMK0+tcMKOeEIHXnD7NXq/GvWQFFBZexfknBDpd8HuysxNtK0K6YGytiu7Yu
+         t1sHCKt+HyB/KzcffhKRqHiDZp0LzmUR4I6SiWF8sIsN8By23VITx2EMFzLfh53HL/Gs
+         dA3Q==
+X-Gm-Message-State: AOJu0YzIl/zjkVGG1WMj+CKa0L4MHQeh2ZJj7af3UzLYoPSMxS4r2ygN
+	VbtDCyHrZjeEHc0+VecntStiBt3zc8gvTC/5iqv31BFhGdAtQq8/jqFECIjWk/DJK3GOsz27OPe
+	ZOwzCDGZY5oQzQs5/M0xoxN3Z9qZHI9sINX10
+X-Gm-Gg: AY/fxX6CndB7GNYJxbuzaGbYKa8ol9EANh6hYyNkzwBupgLR5ZD93TfdoYOWCIsy8Va
+	lPNB1LhVuguqBOWmnRrSijsginboJ86ZepuCYoAcEAfX+HYQCPTIL4IDwn9Y4M/aIs+4Sk+5jKr
+	JsAv0OwDxW1IAhL8UYgrxKVchdm1PlvrGFUH0EBG4qlp/0BWsr5x+j1x7fV8UxVpttJ2oO/ycb/
+	3ZAwcQKxJXcC1BsuTbC9TvrcVA+OFS4dhK1u0wSAmXawl5W8OmKuMhnhzovCIjb5H8mjV3b8rOn
+	/cyGze2664QIELOlBlPJ+++DTAKprOIkU+6u/2SnPT5QV9F1JJUDV8LWcBCpE0m7v7UmiPAo1gB
+	WluSdkRQd1z3bn5l4jw0fmQbStO+PpGZu55sO5C/rEg==
+X-Google-Smtp-Source: AGHT+IHLQX9+6t9gQS5XXoTmsg+XV0v3ZeAzjuEnNtQMHHDKs8HvmssZR5sNGfICmbVWpPQD/SfXOwS3XIFV
+X-Received: by 2002:a17:902:c94c:b0:266:914a:2e7a with SMTP id d9443c01a7336-2a3e2e2a904mr9242545ad.6.1767661090901;
         Mon, 05 Jan 2026 16:58:10 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 006d021491bc7-65f48d05533sm12250eaf.7.2026.01.05.16.58.10
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2a3e3c6017asm874605ad.27.2026.01.05.16.58.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 05 Jan 2026 16:58:10 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.49.34.222])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2F7C3340960;
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 62C8834173B;
 	Mon,  5 Jan 2026 17:58:10 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 2103AE44554; Mon,  5 Jan 2026 17:58:10 -0700 (MST)
+	id 5472CE44554; Mon,  5 Jan 2026 17:58:10 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -88,9 +88,9 @@ Cc: linux-block@vger.kernel.org,
 	Uday Shankar <ushankar@purestorage.com>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v3 12/19] selftests: ublk: display UBLK_F_INTEGRITY support
-Date: Mon,  5 Jan 2026 17:57:44 -0700
-Message-ID: <20260106005752.3784925-13-csander@purestorage.com>
+Subject: [PATCH v3 13/19] selftests: ublk: add utility to get block device metadata size
+Date: Mon,  5 Jan 2026 17:57:45 -0700
+Message-ID: <20260106005752.3784925-14-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20260106005752.3784925-1-csander@purestorage.com>
 References: <20260106005752.3784925-1-csander@purestorage.com>
@@ -102,30 +102,85 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for printing the UBLK_F_INTEGRITY feature flag in the
-human-readable kublk features output.
+Some block device integrity parameters are available in sysfs, but
+others are only accessible using the FS_IOC_GETLBMD_CAP ioctl. Add a
+metadata_size utility program to print out the logical block metadata
+size, PI offset, and PI size within the metadata. Example output:
+$ metadata_size /dev/ublkb0
+metadata_size: 64
+pi_offset: 56
+pi_tuple_size: 8
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- tools/testing/selftests/ublk/kublk.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/ublk/Makefile        |  4 +--
+ tools/testing/selftests/ublk/metadata_size.c | 36 ++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/ublk/metadata_size.c
 
-diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index 185ba553686a..261095f19c93 100644
---- a/tools/testing/selftests/ublk/kublk.c
-+++ b/tools/testing/selftests/ublk/kublk.c
-@@ -1452,10 +1452,11 @@ static int cmd_dev_get_features(void)
- 		FEAT_NAME(UBLK_F_UPDATE_SIZE),
- 		FEAT_NAME(UBLK_F_AUTO_BUF_REG),
- 		FEAT_NAME(UBLK_F_QUIESCE),
- 		FEAT_NAME(UBLK_F_PER_IO_DAEMON),
- 		FEAT_NAME(UBLK_F_BUF_REG_OFF_DAEMON),
-+		FEAT_NAME(UBLK_F_INTEGRITY),
- 	};
- 	struct ublk_dev *dev;
- 	__u64 features = 0;
- 	int ret;
+diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+index 06ba6fde098d..41f776bb86a6 100644
+--- a/tools/testing/selftests/ublk/Makefile
++++ b/tools/testing/selftests/ublk/Makefile
+@@ -47,14 +47,14 @@ TEST_PROGS += test_stress_03.sh
+ TEST_PROGS += test_stress_04.sh
+ TEST_PROGS += test_stress_05.sh
+ TEST_PROGS += test_stress_06.sh
+ TEST_PROGS += test_stress_07.sh
  
+-TEST_GEN_PROGS_EXTENDED = kublk
++TEST_GEN_PROGS_EXTENDED = kublk metadata_size
+ 
+ LOCAL_HDRS += $(wildcard *.h)
+ include ../lib.mk
+ 
+-$(TEST_GEN_PROGS_EXTENDED): $(wildcard *.c)
++$(OUTPUT)/kublk: common.c fault_inject.c file_backed.c kublk.c null.c stripe.c
+ 
+ check:
+ 	shellcheck -x -f gcc *.sh
+diff --git a/tools/testing/selftests/ublk/metadata_size.c b/tools/testing/selftests/ublk/metadata_size.c
+new file mode 100644
+index 000000000000..76ecddf04d25
+--- /dev/null
++++ b/tools/testing/selftests/ublk/metadata_size.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <fcntl.h>
++#include <linux/fs.h>
++#include <stdio.h>
++#include <sys/ioctl.h>
++
++int main(int argc, char **argv)
++{
++	struct logical_block_metadata_cap cap = {};
++	const char *filename;
++	int fd;
++	int result;
++
++	if (argc != 2) {
++		fprintf(stderr, "Usage: %s BLOCK_DEVICE\n", argv[0]);
++		return 1;
++	}
++
++	filename = argv[1];
++	fd = open(filename, O_RDONLY);
++	if (fd < 0) {
++		perror(filename);
++		return 1;
++	}
++
++	result = ioctl(fd, FS_IOC_GETLBMD_CAP, &cap);
++	if (result < 0) {
++		perror("ioctl");
++		return 1;
++	}
++
++	printf("metadata_size: %u\n", cap.lbmd_size);
++	printf("pi_offset: %u\n", cap.lbmd_pi_offset);
++	printf("pi_tuple_size: %u\n", cap.lbmd_pi_size);
++	return 0;
++}
 -- 
 2.45.2
 
