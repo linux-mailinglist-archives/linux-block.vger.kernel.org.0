@@ -1,151 +1,113 @@
-Return-Path: <linux-block+bounces-32688-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32690-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5D1DCFFBA8
-	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 20:25:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98708CFFA62
+	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 20:07:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9295530216B4
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 19:25:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D5957302C9DA
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 19:06:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56ED34D906;
-	Wed,  7 Jan 2026 16:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C8692ECEBB;
+	Wed,  7 Jan 2026 19:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="XmY22dUP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4RHJTdV"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BEF238166
-	for <linux-block@vger.kernel.org>; Wed,  7 Jan 2026 16:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FCF1EB9E1;
+	Wed,  7 Jan 2026 19:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767804642; cv=none; b=C6G/CbbNF6U4LZBF0Ccd8bgVV9ISx8Ml9bdif3xzRbbKSKwPV3CXA9A3X2EFe9GuAkzKE0n545klXxysofZ703agVK8A0dKtgpEAUSE5vZVU78b8j0mclWCa1yWk6jSioXRnX4ayOiG0mfDhz2HQb5XedWLyS4RMYLG/EvBZQPw=
+	t=1767812736; cv=none; b=oRKZozxZSSjwdTs+XF5CkwfYYHV0+IJmC5Yr9FleceiiYhmjFOnlWyJt1A6+9rGPhtpodPcTKZIK8MtsWCzBqqA1CnCDJ9zTOPVVFMm2zH2I+BfD5eGrkUb021Ywr57A4/xuiDhO163hZwgnEknaWLZ7ieTKiFJtl3Tp6CcrJds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767804642; c=relaxed/simple;
-	bh=Rs+CHfz2pEdJ9ZDzoS58n/HTicuPIYuGFoXpeFE643M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=R6GBDqddWPeTtkAEXkm/+qQUxdu7w3FCwO19G5t4Wj3KhKKQOjkTZ5FzX/L9Ag0kOd994HlVgY5E4029UXzw4rnTKdjuDhWtMbi0vkUZOGG+1hHmYeOio4Q3FX/SeWZEvFCPUcuITip87u1s3uEfDZUh1rlq1KD5ryJWbnxK22k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=XmY22dUP; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7cac8243bcdso1411216a34.3
-        for <linux-block@vger.kernel.org>; Wed, 07 Jan 2026 08:50:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1767804631; x=1768409431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mSTQ4KUiVWxTX9B5UYC0FohSYWYTxrtxwk0QjL7KUTM=;
-        b=XmY22dUPlJDG8dB3YdW1TSOXup+kUK8A0j/nJmah+afBZ4Y72ho0RET/laxmWoJvrY
-         A8PoSL/fB7q2h0ty9QUrQ3ErhMC79adufhJ0HnngjHFTZE8OpDYIdXqLX8pWS9xxFE/b
-         t5lheXspsCkGor6djZobbFX0f+UmvK6ceLk5xv6SmxcaS4nh/jz8KYpLA+hQHmXGpgv+
-         qUgdZrqjWaaUxIe6/kkOa07HQsTl0ARxpaCbD1HW5TnNqUlJTh8ZFwv4gqVO100Vsgia
-         j7mcAGrY71DWsNyIOCGZolOdegd8FyPKS/8/abu2Yb439RuJVGimrJVXvBz9zLjIY3ku
-         m/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767804631; x=1768409431;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mSTQ4KUiVWxTX9B5UYC0FohSYWYTxrtxwk0QjL7KUTM=;
-        b=ZWOClvvjDSR9JROV32b9CUj6U63apNQedlvi/yK4dZTUOc8wQVhtlcyLUWbD3Xem1O
-         Xpe6iQJqUXeQQpHVSyXabFkI/gciDs9PMo2AHj9o663Ln2ExFZWVXZbAaE5hNXDjpjY2
-         +XeBc1TXJ4j9FpFFaYwCT2+lNdJNolHg4c0KN/dU3Fud2WoU7Hxjf6ykUcp+CvNf4Gp8
-         JT9gtZD+RJ9rGQAFc2zON0gOm4y8c4nP46eIs2qP+dsZxiJwqdorAvwaPULrEXohEs6U
-         ZBQQEScaHRz/CeanZRxgcR7M0RZGXpLovBhFTbVJ4zG0dcFy8/lkS6YDpPMaX99jxise
-         kJ/g==
-X-Forwarded-Encrypted: i=1; AJvYcCU475158wZzzDNDN3lJaouVTOY3GdZBoPDiiJYcA5FEkgH8oqB77zk7T3arfjmv/PK1Gc3xSqqdEe8Jlg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw94LcI6Ua2cQXO8i+lz4C0jZCVcrAewtx8Us/6nDlSF0zSevg2
-	ovZw5HLp/PxsVAvuz79KeujNQfGI+rZw2aECIyrMLjEaG4iJPbupgvNj8xpTErsWW+k=
-X-Gm-Gg: AY/fxX72dmwGJowsMr4shg1Uzj5GpmrEWGX3rloptpRwW9aIxzKAkEPf8sNHxorVCrc
-	ZR9t2MRqA45pP7rb+jW9tS/zPkevnjbGzaiDTTxuv29gFsINLeZWHLTCrPoYhr24R8dfG2UkWJB
-	sYf3fM8hFHmgmW5GqZBgtjk0TO1dST4uWVOsH1tKOTQ5NPqXoj0Pj7z5ZwQ0g5pw9Ht/pmE7R28
-	ix743MvPqJVtr5RPC6X3omMbz9RTQBFKcrxWiDE51WNZcBQj+xbu+PQU1OhpSS1S8qp4bNJ9CrR
-	rVHhV6PknoKZ+dPPhjptFKet0EAVg9WDHNEiqvVpCSllu3u2HTuqQp7KxANfxx/utVB8cOlbQ6+
-	BlYfh5VyXDpCx8QYIbpkbh3X1VJiL1vI6Pzhbf2dgSCNL8SIVgg8+WUhxLqmCb4c0Bx1zFlp7D1
-	eBqjXRQhWNXAQp
-X-Google-Smtp-Source: AGHT+IGEPBCTt7sZXurao3XnNt1QoORRbvvUnmqRem8cMfzEqzLO4Y8vE8KoMsGJYRw0936GVdeCDQ==
-X-Received: by 2002:a05:6830:2706:b0:7cb:125d:2a47 with SMTP id 46e09a7af769-7ce50a0039bmr1540987a34.1.1767804631140;
-        Wed, 07 Jan 2026 08:50:31 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce4762eefbsm4012413a34.0.2026.01.07.08.50.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 08:50:30 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Fengnan Chang <fengnanchang@gmail.com>, Yu Kuai <yukuai3@huawei.com>, 
- Fengnan Chang <changfengnan@bytedance.com>, 
- "Paul E. McKenney" <paulmck@kernel.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
- Joel Fernandes <joelagnelf@nvidia.com>, 
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
- Uladzislau Rezki <urezki@gmail.com>, Mikulas Patocka <mpatocka@redhat.com>
-Cc: rcu@vger.kernel.org, linux-block@vger.kernel.org
-In-Reply-To: <8e5d6c26-4854-74f8-9f44-fdb1b74cf3c4@redhat.com>
-References: <8e5d6c26-4854-74f8-9f44-fdb1b74cf3c4@redhat.com>
-Subject: Re: [PATCH] blk-mq: avoid stall during boot due to
- synchronize_rcu_expedited
-Message-Id: <176780463002.77199.18373913031463054048.b4-ty@kernel.dk>
-Date: Wed, 07 Jan 2026 09:50:30 -0700
+	s=arc-20240116; t=1767812736; c=relaxed/simple;
+	bh=cXrxAzv98+rTuAo6AZR2IpL01l/GgbnBK6hzUkgo918=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JgW3CwVayZkeEv8ASfTK2hgrZg9l9Ds+Vy1KmLG2IHtz2ENkZi7Na8ie8hFo8KwC0Kng3X7ijrci6B6lOfPlXSi/54Bbiap9dxphnsAok6SYZ+YcP39BtNQBwuJPOI69yaOFewP/u9UyqEX7R5fBszfNvOyARhrGQ0HgAZvnWaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4RHJTdV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F10CC4CEF1;
+	Wed,  7 Jan 2026 19:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767812735;
+	bh=cXrxAzv98+rTuAo6AZR2IpL01l/GgbnBK6hzUkgo918=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=A4RHJTdVg2eo8w4IuucYp7SsRoCH3YT//hVw93Zkkrf5yuY7VdVHzXn5p17rzjL12
+	 qFhnYO1sBxAF8pzvUHMpneAhxajxGMSSn/P5eWKV8DgEr+V8cC0I0it/mxBoIwnpzA
+	 ZTG5e65Y87dMZvAKJQ5K5dt9Ppt1bkZCnEZg46y9U/FleUdZZwCi/IwOgRoSRZueGl
+	 wWU3xb2cH5R7JKWBRu+isqhIrXzOJQiW5H8Z0OLzuYO0YHMw3moiytq6UZetkvnrs/
+	 q+BCtxWtQqAd1Xg6v3hFI08liH2/hzx+9bPTHbu7bb9UT4hw/68aVlXtLjWeg5+mZk
+	 TljZ3k+3lL8bg==
+Date: Wed, 7 Jan 2026 13:05:34 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Ridong <chenridong@huawei.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org, Jinhui Guo <guojinhui.liam@bytedance.com>
+Subject: Re: [PATCH 01/33] PCI: Prepare to protect against concurrent
+ isolated cpuset change
+Message-ID: <20260107190534.GA441483@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260101221359.22298-2-frederic@kernel.org>
 
+[+cc Jinhui]
 
-On Tue, 06 Jan 2026 16:56:07 +0100, Mikulas Patocka wrote:
-> On the kernel 6.19-rc, I am experiencing 15-second boot stall in a
-> virtual machine when probing a virtio-scsi disk:
-> [    1.011641] SCSI subsystem initialized
-> [    1.013972] virtio_scsi virtio6: 16/0/0 default/read/poll queues
-> [    1.015983] scsi host0: Virtio SCSI HBA
-> [    1.019578] ACPI: \_SB_.GSIA: Enabled at IRQ 16
-> [    1.020225] ahci 0000:00:1f.2: AHCI vers 0001.0000, 32 command slots, 1.5 Gbps, SATA mode
-> [    1.020228] ahci 0000:00:1f.2: 6/6 ports implemented (port mask 0x3f)
-> [    1.020230] ahci 0000:00:1f.2: flags: 64bit ncq only
-> [    1.024688] scsi host1: ahci
-> [    1.025432] scsi host2: ahci
-> [    1.025966] scsi host3: ahci
-> [    1.026511] scsi host4: ahci
-> [    1.028371] scsi host5: ahci
-> [    1.028918] scsi host6: ahci
-> [    1.029266] ata1: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23100 irq 16 lpm-pol 1
-> [    1.029305] ata2: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23180 irq 16 lpm-pol 1
-> [    1.029316] ata3: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23200 irq 16 lpm-pol 1
-> [    1.029327] ata4: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23280 irq 16 lpm-pol 1
-> [    1.029341] ata5: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23300 irq 16 lpm-pol 1
-> [    1.029356] ata6: SATA max UDMA/133 abar m4096@0xfea23000 port 0xfea23380 irq 16 lpm-pol 1
-> [    1.118111] scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK 2.5+ PQ: 0 ANSI: 5
-> [    1.348916] ata1: SATA link down (SStatus 0 SControl 300)
-> [    1.350713] ata2: SATA link down (SStatus 0 SControl 300)
-> [    1.351025] ata6: SATA link down (SStatus 0 SControl 300)
-> [    1.351160] ata5: SATA link down (SStatus 0 SControl 300)
-> [    1.351326] ata3: SATA link down (SStatus 0 SControl 300)
-> [    1.351536] ata4: SATA link down (SStatus 0 SControl 300)
-> [    1.449153] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input2
-> [   16.483477] sd 0:0:0:0: Power-on or device reset occurred
-> [   16.483691] sd 0:0:0:0: [sda] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-> [   16.483762] sd 0:0:0:0: [sda] Write Protect is off
-> [   16.483877] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-> [   16.569225] sd 0:0:0:0: [sda] Attached SCSI disk
+On Thu, Jan 01, 2026 at 11:13:26PM +0100, Frederic Weisbecker wrote:
+> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
+> therefore be made modifiable at runtime. Synchronize against the cpumask
+> update using RCU.
 > 
-> [...]
+> The RCU locked section includes both the housekeeping CPU target
+> election for the PCI probe work and the work enqueue.
+> 
+> This way the housekeeping update side will simply need to flush the
+> pending related works after updating the housekeeping mask in order to
+> make sure that no PCI work ever executes on an isolated CPU. This part
+> will be handled in a subsequent patch.
+> 
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-Applied, thanks!
+Just FYI, Jinhui posted a series that touches this same code and might
+need some coordination:
 
-[1/1] blk-mq: avoid stall during boot due to synchronize_rcu_expedited
-      commit: 9670db22e7ab4aefe2b2619589a47fef9d3e0c7e
+  https://lore.kernel.org/r/20260107175548.1792-1-guojinhui.liam@bytedance.com
 
-Best regards,
--- 
-Jens Axboe
+IIUC, Jinhui's series adds some more NUMA smarts in the driver core
+sync probing path and removes corresponding NUMA code from the PCI
+core probe path.
 
-
-
+Bjorn
 
