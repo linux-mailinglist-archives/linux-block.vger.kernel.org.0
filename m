@@ -1,114 +1,100 @@
-Return-Path: <linux-block+bounces-32657-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32654-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13C81CFD41B
-	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 11:50:59 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC241CFD415
+	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 11:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 51D2D3081E54
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 10:45:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 670F33009683
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 10:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AC3F2EBB8C;
-	Wed,  7 Jan 2026 10:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pRfqWlDK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD7B32E146;
+	Wed,  7 Jan 2026 10:41:56 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991DD2D6E6F
-	for <linux-block@vger.kernel.org>; Wed,  7 Jan 2026 10:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB0D32E144;
+	Wed,  7 Jan 2026 10:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767782709; cv=none; b=XxjYR89EqJDyEH5tmgqV3jN8Ac6q620m/zZKW0Y2GtLEGuzIno2JJlA+e94Z5Jd3FOaA/5NGAHoHEmiBAyjr/tavebx6tcrq4clpmu0/DR2q2W4oNTt9iKFQQpSosUR7AiNbeQDDjGNF7h5GcxO6gzzAra6PgrYIiWtIcOhsMKI=
+	t=1767782516; cv=none; b=VDrYy3XLUGb8Jz3LsmAZNeyrXkYzd1tqU8xt+cbq+2yAO5PIjucLa0/Dy/isS/eFHZCuK5jYZZpm3uDgNzUuq+bvMkTGpnyk06T5ti338Wfve77AmNqz0Y3qg42b2KQT7z5wtfTOub8Lk802HfPohQeIDc2IV3LJmP0B7elIVJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767782709; c=relaxed/simple;
-	bh=v+WKDEsViGraYcGxAfnCHy6lQ12vFK8jQW7jUHTphac=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=Z68T/5iAmULQ5eq5P4MpI+A8SP63SJLD3JsJM+Z+0BqFmnLQkx2dn7neAqJU8XGN7Y9b1R2UzvEnmACRMjZBZmSLkk0cIUxb5VggD/CzNaoFbCiJLfXYj7FKWvNyInVttjsIuaenH5AKrzD4W7VPuGeDMgS/LGpCWOSZU9N2YxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pRfqWlDK; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260107104459epoutp034625626b9626fd67296d2ad517dda7d0~IbP_nG_3c2220122201epoutp03Y
-	for <linux-block@vger.kernel.org>; Wed,  7 Jan 2026 10:44:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260107104459epoutp034625626b9626fd67296d2ad517dda7d0~IbP_nG_3c2220122201epoutp03Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1767782699;
-	bh=86JHWYKwvYo56a5/dl3RgoEI+n+U3DhR8uxQgUFdtIE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pRfqWlDKke2TDcucdq0RPbxiojtQY4hhlZFmNRDnvmD5jkI2leKCPbsphqNTLZdpa
-	 B3T9WoxFc576/fqABujYQ1QxuIpaSLvzAxH/B2EJGwzkTfAf2CF2OM4OVZ1wE9i2iv
-	 lrcBsnabvNXbm22CKLBL44AII8SLoSIoADXeKJWQ=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260107104458epcas5p40d912ba427bd3a6e5dc68b7a11fa3705~IbP9xQ7kp2752027520epcas5p4a;
-	Wed,  7 Jan 2026 10:44:58 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.90]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4dmPn51C43z3hhTB; Wed,  7 Jan
-	2026 10:44:57 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260107104456epcas5p2d338842fca72f093ebf233c5c6bda766~IbP8MOkFV0407704077epcas5p2T;
-	Wed,  7 Jan 2026 10:44:56 +0000 (GMT)
-Received: from green245.gost (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260107104455epsmtip2aa182e94aaabac72a7816a5419f4779d~IbP7Q1ueu1746317463epsmtip2F;
-	Wed,  7 Jan 2026 10:44:55 +0000 (GMT)
-Date: Wed, 7 Jan 2026 16:10:50 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	io-uring@vger.kernel.org, Caleb Sander Mateos <csander@purestorage.com>
-Subject: Re: [PATCH V2 3/3] io_uring: remove nr_segs recalculation in
- io_import_kbuf()
-Message-ID: <20260107104050.wetbkrjfsnzw2duk@green245.gost>
+	s=arc-20240116; t=1767782516; c=relaxed/simple;
+	bh=hxEAwiXPiLra0qei2/9MeDGrDIPKlKc03052nvMFF0c=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=KjSuKyJBpR7+Tefua7ErqGL/29EVVlHjaGK0mXfMj/vfAQ3gmK8hD6ylp1uqar8pEOwdhw6EhRJoyYqz1kgXuQQHNJV7VXz8+IrgXMoKG1Z7XKQJ0Mr4yVKtxTV/JTQ4OT8euyz8qSRkp5WKj//0H+74IasRgvoFQ7a7szCqwKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 607AfhAw090713;
+	Wed, 7 Jan 2026 19:41:44 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.10] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 607AfhFV090709
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 7 Jan 2026 19:41:43 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <cb9229f1-5472-4221-89d4-4df31bee8488@I-love.SAKURA.ne.jp>
+Date: Wed, 7 Jan 2026 19:41:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20251231030101.3093960-4-ming.lei@redhat.com>
-X-CMS-MailID: 20260107104456epcas5p2d338842fca72f093ebf233c5c6bda766
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_db825_"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260107104456epcas5p2d338842fca72f093ebf233c5c6bda766
-References: <20251231030101.3093960-1-ming.lei@redhat.com>
-	<20251231030101.3093960-4-ming.lei@redhat.com>
-	<CGME20260107104456epcas5p2d338842fca72f093ebf233c5c6bda766@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jens Axboe <axboe@kernel.dk>,
+        Raphael Pinsonneault-Thibeault <rpthibeault@gmail.com>,
+        Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH] loop: add missing bd_abort_claiming in loop_set_status
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav304.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_db825_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+Commit 08e136ebd193 ("loop: don't change loop device under exclusive
+opener in loop_set_status") forgot to call bd_abort_claiming() when
+mutex_lock_killable() failed.
 
-On 31/12/25 11:00AM, Ming Lei wrote:
->io_import_kbuf() recalculates iter->nr_segs to reflect only the bvecs
->needed for the requested byte range. This was added to provide an
->accurate segment count to bio_iov_bvec_set(), which copied nr_segs to
->bio->bi_vcnt for use as a bio split hint.
->
->The previous two patches eliminated this dependency:
-> - bio_may_need_split() now uses bi_iter instead of bi_vcnt for split
->   decisions
-> - bio_iov_bvec_set() no longer copies nr_segs to bi_vcnt
->
->Since nr_segs is no longer used for bio split decisions, the
->recalculation loop is unnecessary. The iov_iter already has the correct
->bi_size to cap iteration, so an oversized nr_segs is harmless.
->
->Link: https://lkml.org/lkml/2025/4/16/351
->Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Fixes: 08e136ebd193 ("loop: don't change loop device under exclusive opener in loop_set_status")
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+Since that commit for some reason calls loop_reread_partitions() when
+bd_prepare_to_claim() failed, this patch calls loop_reread_partitions()
+when mutex_lock_killable() failed after bd_abort_claiming()...
+Maybe we should return as soon as possible?
 
-Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+ drivers/block/loop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_db825_
-Content-Type: text/plain; charset="utf-8"
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ca74cc31bf07f..bd59c0e9508b7 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1245,7 +1245,8 @@ loop_set_status(struct loop_device *lo, blk_mode_t mode,
+ 
+ 	err = mutex_lock_killable(&lo->lo_mutex);
+ 	if (err)
+-		return err;
++		goto out_abort_claiming;
++
+ 	if (lo->lo_state != Lo_bound) {
+ 		err = -ENXIO;
+ 		goto out_unlock;
+@@ -1284,6 +1285,7 @@ loop_set_status(struct loop_device *lo, blk_mode_t mode,
+ 	}
+ out_unlock:
+ 	mutex_unlock(&lo->lo_mutex);
++out_abort_claiming:
+ 	if (!(mode & BLK_OPEN_EXCL))
+ 		bd_abort_claiming(bdev, loop_set_status);
+ out_reread_partitions:
+-- 
+2.47.3
 
-
-------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_db825_--
 
