@@ -1,116 +1,122 @@
-Return-Path: <linux-block+bounces-32636-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32638-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D060CFBB5F
-	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 03:26:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A603CCFBB59
+	for <lists+linux-block@lfdr.de>; Wed, 07 Jan 2026 03:25:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 54A0530ED00E
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 02:21:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2DB9330DF3C1
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jan 2026 02:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEA6258EC1;
-	Wed,  7 Jan 2026 02:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075DF2609DC;
+	Wed,  7 Jan 2026 02:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rMw5Unk2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jiyBDCeq"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0567C2376E0
-	for <linux-block@vger.kernel.org>; Wed,  7 Jan 2026 02:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBB525EFBB
+	for <linux-block@vger.kernel.org>; Wed,  7 Jan 2026 02:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767751852; cv=none; b=ED/sflwzHBnczCuOsmzXFYonVgaE4V2LjZbK+u2Hk5HcfDYLvCkZ/1EN5/cn9D/AylGOf/SGJVfQevkcrIiTewZ2E1wRCIideO3+baZi9YaVyyfxi/bbPCSaf87+tQkIpg2BXNDlo2QEAvYiVFi3ARrfBF4rtuTh4VIVnWeW/NM=
+	t=1767752026; cv=none; b=nJvkps3INtnEX/5kT4zKJHme2QdMH3YUiLyGd92b0QOg30bJHClNdKi0tDCY7XeA2nBHhm7MvNbYnmf70/WCx4Iplx+xHn+vSuNP7RN8OZtXMIaV9qa+8IJRc+hHAe8c+fLXq4RushomzruGhvTwtW1nLu/29xQB7hdmy1iA1m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767751852; c=relaxed/simple;
-	bh=CaibCJhvL55waHquyt1b0Ro+XASHw/tKbBumUPMIUkY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Tn/RYCCM+pRSrZr3Pa1j4lFmEfJ7R1o6j7Zjek0DJ/gTKoS67yYHit7IIao/SSGa9Eg8PreuBxCthdPP2YT2B1C8kiNYRAouHhtBRbkOcO7HTFia/Ojur8K0+c2B8l4MpXyznLDHGPigeEe6HxTqX/iclSIEB2TXXeEI1msvFEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rMw5Unk2; arc=none smtp.client-ip=209.85.210.44
+	s=arc-20240116; t=1767752026; c=relaxed/simple;
+	bh=ko5ju/j5NSockVrPDdBGG7MHmEDZS4hS4BKQnuN+2+I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZfoRNyKIepvd4Hbwwng6BF8v3jOkUYGmSYNSI1ZOMw8LggQ67egpwcLRgab1vfU9E3Mniyn8fWTG2uRU1iskqS31x+pqF7xPDjFbjXsi1zmxHBsBJJG+6Ufceco6apMIRkp2MBRCUyVHlMnRF5tFbiXmcfN2PuYheMfbHcgtHj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jiyBDCeq; arc=none smtp.client-ip=209.85.160.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7cae2330765so200803a34.0
-        for <linux-block@vger.kernel.org>; Tue, 06 Jan 2026 18:10:50 -0800 (PST)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-3f13043e2fdso661972fac.1
+        for <linux-block@vger.kernel.org>; Tue, 06 Jan 2026 18:13:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1767751850; x=1768356650; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hGO9V6t38pWhRcUjuKcEmhXixM/ugRlM9F+VeEvQ1Sk=;
-        b=rMw5Unk2NgEm31ZQKzkk3tj08RNE5jiLP9tkejreXq5KjLbri2Krbqp7knmt+FZzDx
-         T+wesA9628SmVLzV7b/qqXT1kJunSWyV4Rq5eC8dBd74SSl5kBASAdlSP8/JOFG46YDp
-         Qse/yVf0vUJVWwve2rXheUV8Heu1iLZF1ZLCRmka7Q1nSmR7kQxZ2uU2Yk+A4yfBRjBf
-         V4KSdikeLEnceI97Suiwpy4UsQgd6I9Chk7+JQFKdvPgbr0nbhuyFNO+B2YKrY9vh6D9
-         rWjcp4IpOdquSQ86/WwWQYdiqNKUkWGPuN303azy17IdAJhuvZqk+I2pXWpQbzhLT1Z/
-         Er9w==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1767752024; x=1768356824; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cmFoPTysutl7lpdqNp7zT7B4cAvUQjN/lrEalOzdDr0=;
+        b=jiyBDCeqhaN9n2up9RBylu9i2vGERKWpCyotZrjqe1LBSp3UlZLOQ4y4X6+GL3sauN
+         6AcBYGUOvxds4xMRil0UFNR1IwjpuWXsR539S/UkWN58Pr4K0XZAhb7VLeaVXnmVfAYG
+         MOeSUOIZ2sYqJfUTzaDeqnilPQ+DBuMSnaWxzbprdvSEuxLtrfacegMbA/HT9YzMBfuH
+         LMNzXo7LpCGbqcUUIUfQ8bpOArsbBiiG05wMnIEnz2xSUTexpWhSxqkcrzmpW6CmtLPR
+         IQz4CIAjcYSIsEuvCfKWh0ZKnkZybcxuNCTUbn/MWja8fEBhp64Ufftq4cQxnFQk/0Y9
+         GyRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767751850; x=1768356650;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hGO9V6t38pWhRcUjuKcEmhXixM/ugRlM9F+VeEvQ1Sk=;
-        b=sK1QpGZ2KFN0SqyQ5Ku4VBffNhKDxv8/JfqMfJ5NdHC7bXT0AmbutAsRWRJPdDGiqn
-         tyewVnjhkb0iuq2VKgruRXbgBThATfa+liPYazSYefzJd8Q05dOHVujnH/ZpY9IvDtmb
-         0BCjerAq2S0zLZ9uqQHb9mqCad8aQq0Q1aWGP9uTfE9vCsNISkwxhj/+R9z19aUe7rN9
-         s6K7/DEFXbSa1gb1pCGO8wDFopx9EZM+4D8E10nWNhojw4ow8h+4S7upEHXndqmyxONI
-         3v/zGi75DXXv1Z170BBnfO5ochsQQYOPgeluUToHP09Zj83TKBPqFHbZ1GhGEpz6E6TB
-         O/oA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTk3kccdRf2CbS/epRBazmNhcp1lh6khNWmth3ByY1YTAQdRvUSfa3RDHtEulcRaEZBVcp8OlX8R9lGg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd6adNpC+i/WQ6/T3DnSg1hMG7Pna0JvsZsWROKjPExujNVmMV
-	49XMKQTTatxmpJyRu3IERRS6jV+WodwA7qfYkQsZebVrAJnT71I3isPelPlLPWJEDL8=
-X-Gm-Gg: AY/fxX6DVeJaaC+Ot/vX3nvv0bsrOqMNUlQxuldTwJ42fzXtUNFiM+o8N2J27s+qRdN
-	7a+MoA8GMv3TEQoIZSpWNZVHw67wYPdKokJNwPgS9mmFtXzXKsBbvGzRa5Jta1W05BEznbEHVZC
-	Qa9oaaKZib+GGVBoPR5gXwPrFX0H9kXQU1L9UnB3/WmOwj1Sy65qB4NA8YIrvuO+yp/lxzv6GSN
-	Huiuw0iR7zqOTMC8OdGtnjYwy2INVJYFBRe7mj3ZowsYDJ7Nl1+X+0MtizE4knrjSEYPNcp1bxB
-	13X/Dmkvj8JD1HaiQAi9SwJ2WfTuK80Iahvx43UKCAZPv7DpwFN3mjw323+gyksQqq2F+AYdkg8
-	IxflRK4PefBse4XsIbZuQm+9JAGBYoEGR/3Zc49l+FaG7rTZ0PdeuBc32hMR1UH3KZ+1E+TGI9T
-	xeKpU=
-X-Google-Smtp-Source: AGHT+IF1niecuKpR9e1VzWHOa/0aIml7CsgcQQ4j4j1BLPt+s7mJSiluFktoFQ0BrivFQkdNzmZpDw==
-X-Received: by 2002:a05:6830:1bed:b0:7ca:f4cd:db57 with SMTP id 46e09a7af769-7ce46d10370mr1904762a34.17.1767751850040;
-        Tue, 06 Jan 2026 18:10:50 -0800 (PST)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478af8besm2460657a34.14.2026.01.06.18.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 18:10:49 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, Ming Lei <ming.lei@redhat.com>, 
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260106200838.152055-1-csander@purestorage.com>
-References: <20260106200838.152055-1-csander@purestorage.com>
-Subject: Re: [PATCH] block: don't merge bios with different app_tags
-Message-Id: <176775184888.14145.7372547504260204885.b4-ty@kernel.dk>
-Date: Tue, 06 Jan 2026 19:10:48 -0700
+        d=1e100.net; s=20230601; t=1767752024; x=1768356824;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cmFoPTysutl7lpdqNp7zT7B4cAvUQjN/lrEalOzdDr0=;
+        b=pyCsqCjussbO4FoIMo86S/XPwsh5mzIQh+LvINgWqb6tTG9Lk9gVqsMpZVhB6sWOEM
+         7nWedhmWrkqwhYHLMKLo1HL5vSN21WgbkOsXS3lkF+63WYoBv7dm4H4FuoHEfDNSGzFB
+         /SVyjIu/F1T8tLzfqXIQWbG+ZGAAYVtmbuje8F1nYpP6Y7BYrtGgLTlfQt9nrTT75U1X
+         30+1gquN1Y0UF3nxK5RLs7EIW91A8AZBt0XT2s9GlDDE7GHhSd7M/MCCW6gnKSn8czpT
+         7FdG1dS3KmRg2dXI6bdQe/H1KP+jqCA8g7NyjZofl78nUxXZXb8vvG481QN4H7GnyhOh
+         7oHg==
+X-Gm-Message-State: AOJu0YxGjiCD4ekqE0Nf/r0ehD+qdflg/cDpyHTIGm59o/XWhjvmFUJR
+	LcJ7I6fdtXTKAj59srqH+//cAXIndKQ1GKYi2qMRiehnsFhRfIynGSqH77MKkrt2em0Wv+wByxB
+	V5hMw
+X-Gm-Gg: AY/fxX4AYidKOJvDje6i7TEjV5a1ocyZsFBABGTGk1I+mtVY0lVKLBVIaFXvlFm+MGQ
+	G3l22btR31NLn1yRMflU0mbTxlKUBjnaIurgwYFZnRBc83LAvKb60UcOIHbXLP7udXrF7Q6bSxM
+	vpb+3kbN33ymutL5x4qYuwpKzAFSxPIoE57va4vTz/zItjk5AlurAWxSBMMxWeq174k9l0sDUPs
+	rs2BN5gijxPQQ3qqxzGYGnPIydx6ZpmuzN48PBCEk7XyhZzNpDt2MCv44rtE8Qat3MKZyuDoNEP
+	vrLuYiDnjw+1zQVx8mZ4GOa2sJn0t5J7H+TU4vKu22ImfDve4aOOVAYpe960yKllS5RuXcViOvE
+	XgbQOjhXRIptsBOQ6vgsnKiBt4X80Bg1z4YwBdXg8Cgg9ELesg0CIqRl/16SGqNlLuVbcu8Wri6
+	y8YhxRdd+e
+X-Google-Smtp-Source: AGHT+IEppoxbhawLA/RHqdOT5mS+agQwDkfuGX33BEL6nW7U9EwrGzbn/dp5d0/9QmUXu76YicDHeg==
+X-Received: by 2002:a05:6820:16a8:b0:65b:ccd9:c9b with SMTP id 006d021491bc7-65f55089d14mr424682eaf.62.1767752023811;
+        Tue, 06 Jan 2026 18:13:43 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4de40bfsm2280001fac.5.2026.01.06.18.13.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jan 2026 18:13:43 -0800 (PST)
+Message-ID: <8f839d6a-02a2-47f2-97af-f77cb10c5790@kernel.dk>
+Date: Tue, 6 Jan 2026 19:13:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] block: Generalize physical entry definition
+From: Jens Axboe <axboe@kernel.dk>
+To: Leon Romanovsky <leon@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, Chaitanya Kulkarni <kch@nvidia.com>
+References: <20251217-nvme-phys-types-v3-0-f27fd1608f48@nvidia.com>
+ <20260104151517.GA563680@unreal>
+ <258e49de-7af3-4a35-852a-8f26fcb7ddbd@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <258e49de-7af3-4a35-852a-8f26fcb7ddbd@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
 
-
-On Tue, 06 Jan 2026 13:08:37 -0700, Caleb Sander Mateos wrote:
-> nvme_set_app_tag() uses the app_tag value from the bio_integrity_payload
-> of the struct request's first bio. This assumes all the request's bios
-> have the same app_tag. However, it is possible for bios with different
-> app_tag values to be merged into a single request.
-> Add a check in blk_integrity_merge_{bio,rq}() to prevent the merging of
-> bios/requests with different app_tag values if BIP_CHECK_APPTAG is set.
+On 1/6/26 5:46 AM, Jens Axboe wrote:
+> On 1/4/26 8:15 AM, Leon Romanovsky wrote:
+>> On Wed, Dec 17, 2025 at 11:41:22AM +0200, Leon Romanovsky wrote:
+>>> Jens,
+>>>
+>>> I would like to ask you to put these patches on some shared branch based
+>>> on v6.19-rcX tag, so I will be able to reuse this general type in VFIO
+>>> and DMABUF code.
+>>
+>> Jens,
+>>
+>> Can we please progress with this simple series?
 > 
-> [...]
+> If Keith/Christoph are happy with it?
 
-Applied, thanks!
+It's here:
 
-[1/1] block: don't merge bios with different app_tags
-      commit: 6acd4ac5f8f0ec9b946875553e52907700bcfc77
+for-7.0/blk-pvec
 
-Best regards,
+now.
+
 -- 
 Jens Axboe
-
-
 
 
