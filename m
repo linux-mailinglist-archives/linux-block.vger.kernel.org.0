@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-32726-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32711-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F254D01D65
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 10:31:06 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C27CD02206
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 11:32:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BD8773062E09
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 09:26:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7EF973122C5A
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 09:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF7142CD77;
-	Thu,  8 Jan 2026 09:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D220C42AC6E;
+	Thu,  8 Jan 2026 09:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="fdnVn3xO"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="MkaV3Y+5"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-ot1-f97.google.com (mail-ot1-f97.google.com [209.85.210.97])
+Received: from mail-pl1-f227.google.com (mail-pl1-f227.google.com [209.85.214.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5AB42A810
-	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 09:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B502142A59D
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 09:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864018; cv=none; b=DVqdBoTX/Gn1kmYC/3oVm3qgMHVVgvYVxzSpXja85xjtbg/ommF6fCeMqj/U521QzwsQLob6+kssP+kKWtn+qmZYEdrhj0gtp8weSh8jOwJHl97kmnVZd8k4P98tiyyC4Ezv31RTzpteeM9dEh5e6OGgnNyUWXoXUYCnOcw8GDc=
+	t=1767864008; cv=none; b=dR5/OeOh03K2tB07x/0o61aJ6CWzUgI0/y/i5QYvZPC1a7X6lPbXICC1peircFGJhoMPppQMi2XBQEqL4S45PsqIal2wfDW9mSkRVvC0/ns1rAw6YSCMCO3en21RRf4kX9sb0p1ttzmkK8rUv2HStdMp5ht9PDPiKudHL/EcBoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864018; c=relaxed/simple;
-	bh=FpSk9SBO7a8fTola1zwsU8+516cI+0H9/8WbLKjGV0Y=;
+	s=arc-20240116; t=1767864008; c=relaxed/simple;
+	bh=1aDaPI2v4Zeo3O7crQSGBiyCnNWXJlIc6pmuFCCIr2A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nvytWLqkoSt5RBps7Y1ppgTC+3nninvIpRzL0IUGAdynEn09LV63MNISg2EDL5kR0cGmc66Qh+WG/xPrOWuHpBt1DA5Sa06eL0+eTOC/yrSrygTir6Gz4QCNjTz9Pt1Fxg2+A3eJuhfB5rQTRzNlk0yQuqYWtayehDnLEIjT9JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=fdnVn3xO; arc=none smtp.client-ip=209.85.210.97
+	 MIME-Version; b=Ne2VBrQvRUHARSlOKDKvZnTQOdiDW96OWguVDkjTNBhPVQ7gsyisewQlfk25ISriHbRqs0sKG+C7oB2Ao+qnDAOQoIiGvpqnRkHGEqI9lYrrBMPj/K8gbYiCa4mNUyC12G0Hic4sfaz6p0hoazM8MbcwbKaiFbOO8qq3lQJIJkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=MkaV3Y+5; arc=none smtp.client-ip=209.85.214.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ot1-f97.google.com with SMTP id 46e09a7af769-7c78003b948so362715a34.1
+Received: by mail-pl1-f227.google.com with SMTP id d9443c01a7336-2a08ced9a36so2758495ad.2
         for <linux-block@vger.kernel.org>; Thu, 08 Jan 2026 01:20:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1767863998; x=1768468798; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zdwpGAzUowZ3h68lzOUG2hhVHWdUBrDTU/ZZOy1LyBQ=;
-        b=fdnVn3xOzniOFrhulHPWBCbcV61TrJZr+RzhgBc8HuMpRWwcadBsxxCk6hmIbR0JF+
-         INKXdlqqbp6MTQKCKuQ3YTeBLBtrgH8wrkrNalFS76Zqq+bmZYvnr/rIYGviPfTijAix
-         kbK6oELQp/Kn7w33QwWuyqAMAB0HvCGY/0yEElSoKdQqOqmDBRLt06IAg2shcPzLIyYB
-         hzk8beGcLPwnURPiR2Ec6ADvnT20H4n10k+L6L/Lwa0e7r4XYXQ248w+VaLTtS1X1Dy6
-         w1f/rV5YyY354ft4wQz69spaGGJHKonLTv3FN3lsX5BVNKhtT8YqBHqmhqqpsBiuKual
-         x3zA==
+        bh=UaTLRDW4Ok0YQzJQSdBnJS8VxZrTaE64GOqPLwd4Ilc=;
+        b=MkaV3Y+53v5MSqIJ18b/X+HkU+ZUsCyvrP+tJLpAEDJaNnJ8dIv/Dwwr2E9pkl0HSp
+         xx3OIIkflJbJYuNugqmNeylb8mfIAFHqsxGUxMypZ9hurizBOXOBCQVvcVHLuqYBqBNx
+         eiMDXVeBTMFMX5kujBQBk7xBjyxx5+ghIi7TfbGC8+6PXL4SwYSHyW3YRI1J6OX+dxyy
+         BdWBz0G/QZiB3j+ecgtX5TtUTa+z/FvgiW7nrrrK0vWmTCkQm94eXLdZVSwCXyic8Ozd
+         wS1jLUkse8u7GFTeMq78QcJOkIji2JZbGlR5vD6z3KB0OqCNzNEW8qQE6s7EnCuywsXv
+         keRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1767863998; x=1768468798;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zdwpGAzUowZ3h68lzOUG2hhVHWdUBrDTU/ZZOy1LyBQ=;
-        b=JIutlThgDvbxDMp6jV3+Ttl55YELVX1X4UUOi0UY7lL88ZLRqbu8rwSoPq2ngaLOl4
-         Cg0Csrzt4qXtf/Xz0fjx+CgDDLZz2n/tLlykgjo3XKykFV5H3C1uEp0bNjALvyxhhET6
-         kQDIXu2WEsZS89Jm6GdTQ8lFbYsyshusCRSptdua/YgMdvP6dg6JUkXLu5zHIraQodXH
-         OOn1R4DBc5pPZrj2pWprbnAwa2/2XMIawRo0DR84NHSrhJnRYKX3jEGQN4/xlJAiWp8e
-         JuJTb9KkxXYPx8IVxIqFeqIUVhVaFPl2tAfbBdzz0Usoe31jbSsweovSjrWf/8mcyWwP
-         5btw==
-X-Gm-Message-State: AOJu0YxkOsNcXDCR8/d4gF/wbgMCuF98Eh5f5uWEzVX7c8bOnO+1RA92
-	4shuoLAIGPoFuey6f2pt75gZ/sBpkE0tl1BbgWUFPJPz46DpVuTjDNUEBGUDoMX2eFcXO90tZFI
-	cyu9k0tki4es3GH3vs1bvoSEaoQE1b04RMOBQ
-X-Gm-Gg: AY/fxX4eL9GDU0WzG5Pc3buCuA5m0YA6MpWm/VttLG3GNkB7DxnjDUGDW9sQPe0IStk
-	5g6BuGwCQfDIN8x0AJpzfTzWuHbqfxJjQ9D6lj0RL2YImknSIqE9H+BZR3ZQVg6h6xmF8dETLjo
-	2KjMnU6PAxBJK0ONFaKEi7hkncEzk+/EBqXEduyOAg6uIgbkBp6dQo1J9stmIXgxxEZEl47ttF9
-	N9vN+TKrgHcX0sVhjua8zrArfdj7wA65jq7gkC/DlxMwpeRppZg+WGPGP7smq8q94WCcJuePWZP
-	cC+AiCNbzTgxL0SJzQOG1MbyV+WU4/apgsMGHm+/dl8lKSQl9j6P4pIv2a24k2AdAvZ9dCDgtI9
-	7RjiN/zGaj2Qyu+idVpNanmIb1gAz0zRJ0W9Tqew8Cg==
-X-Google-Smtp-Source: AGHT+IGUm/Iy1iheWFfw5eo3T3n1C7/QfcUR6biu7iVn+XpWzIDZiQTmzwOni9Bte3nRtpcuFZadeg9tZXhd
-X-Received: by 2002:a05:6870:32ce:b0:3ec:4e27:1f21 with SMTP id 586e51a60fabf-3ffc0c3c800mr2191144fac.8.1767863998371;
+        bh=UaTLRDW4Ok0YQzJQSdBnJS8VxZrTaE64GOqPLwd4Ilc=;
+        b=jb4Xe6qdMWnEQeMm1VtapMCRo893K3ByxOfAO2IknWkaVxnRhCALAz7IVIVZGASBeO
+         mv8QpaIMjpKniWda1BVXXlOHzLRG/O6AwPM9iNJ7BA8tDwE/4cvUQEdDvaWHWbZ4DOv2
+         y8UbFMM8nnnWafihAjC7c4beN8CzTc6/Y+Dwj7BNfX1zbVblZ8GGTAndxWngJx6gMOzq
+         OLk6IVfdYnhH6A6RlsNNKuOYaHQKoLUgPb79cw3WWQCOXkqipif51i1D2tsidm+k58gJ
+         CIW5E44s8JYwoTBFPYnrCxUcwmX0oq4yvJkYWSDccRtiGx1KsR2hMy7lqRbP0wQnMM+2
+         VNOw==
+X-Gm-Message-State: AOJu0YyBH4U2POB58rbElDC2ocn1USsCm4AlPiSpyJm+wEB0q01VB3Pu
+	aQcdZVWTbS/PJ9sz+cVP7aBfW4ONtoMs9pre4cwEYcHruBMALl/C1IPIGJ1bs8Tt4eY/QiYS4ox
+	Ty6cUeW85xZI77buFlFBlpo9mPBTLE+yQsd4RgxVBZfHYsxgwpXyc
+X-Gm-Gg: AY/fxX5RdCBhWT6ehlh2iXXkjRgW2hVjBif5LxhtEsj/7T8ZHEaTiJHw+VLt/rrB4vK
+	J5EFPWW4lTYorhXzrrxM/WhCi42lnaHfVWKps317OaeT83pNPIjFACoxIs6d4XXPyceg4fSVlR/
+	4OZVB5fM2FTE2dE0lkeZh2PrGYDRaYwYLltyMZse4U0X5TpqJQrtuKUCTPfct0E9XmTDrp+trA2
+	6FGDsc36dhWfXz31xOz6bTXXV019EmCTRrsQ9FPblKCsr9Wb0tWZ6zVQKTCM8+/rbvP8eC8Vsd7
+	A3M7EjdIra5ncYSnJQ93yYSBDRn/5KXRZTwyn0fMYvyFPzdKMH5SpHDa0tNpUCQx9pPtO9kPCuc
+	0L8FOJ4kjHlmlVX/P7WEdmj+2o5Q=
+X-Google-Smtp-Source: AGHT+IGYbi8ogzRt0rfT3w7cbk4NGI6oUYGnuR0yEq1AIRmedSlfeRJenAraivQu7TSxjwkdAacjLt1JQOC7
+X-Received: by 2002:a17:902:ce03:b0:2a0:ccee:b356 with SMTP id d9443c01a7336-2a3ee4252f2mr39375565ad.1.1767863998032;
         Thu, 08 Jan 2026 01:19:58 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-3ffa508e961sm818826fac.14.2026.01.08.01.19.57
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2a3e3cc4ab4sm8606025ad.44.2026.01.08.01.19.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 08 Jan 2026 01:19:58 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.112.6.120])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 536BC3400F7;
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 7767C34223B;
 	Thu,  8 Jan 2026 02:19:57 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 4E6DFE42F2C; Thu,  8 Jan 2026 02:19:57 -0700 (MST)
+	id 72926E42F2C; Thu,  8 Jan 2026 02:19:57 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -88,9 +88,9 @@ Cc: linux-block@vger.kernel.org,
 	Uday Shankar <ushankar@purestorage.com>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v4 16/19] selftests: ublk: support non-O_DIRECT backing files
-Date: Thu,  8 Jan 2026 02:19:44 -0700
-Message-ID: <20260108091948.1099139-17-csander@purestorage.com>
+Subject: [PATCH v4 17/19] selftests: ublk: add integrity data support to loop target
+Date: Thu,  8 Jan 2026 02:19:45 -0700
+Message-ID: <20260108091948.1099139-18-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20260108091948.1099139-1-csander@purestorage.com>
 References: <20260108091948.1099139-1-csander@purestorage.com>
@@ -102,100 +102,210 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A subsequent commit will add support for using a backing file to store
-integrity data. Since integrity data is accessed in intervals of
-metadata_size, which may be much smaller than a logical block on the
-backing device, direct I/O cannot be used. Add an argument to
-backing_file_tgt_init() to specify the number of files to open for
-direct I/O. The remaining files will use buffered I/O. For now, continue
-to request direct I/O for all the files.
+To perform and end-to-end test of integrity information through a ublk
+device, we need to actually store it somewhere and retrieve it. Add this
+support to kublk's loop target. It uses a second backing file for the
+integrity data corresponding to the data stored in the first file.
+The integrity file is initialized with byte 0xFF, which ensures the app
+and reference tags are set to the "escape" pattern to disable the
+bio-integrity-auto guard and reftag checks until the blocks are written.
+The integrity file is opened without O_DIRECT since it will be accessed
+at sub-block granularity. Each incoming read/write results in a pair of
+reads/writes, one to the data file, and one to the integrity file. If
+either backing I/O fails, the error is propagated to the ublk request.
+If both backing I/Os read/write some bytes, the ublk request is
+completed with the smaller of the number of blocks accessed by each I/O.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- tools/testing/selftests/ublk/common.c      | 4 ++--
- tools/testing/selftests/ublk/file_backed.c | 2 +-
- tools/testing/selftests/ublk/kublk.h       | 2 +-
- tools/testing/selftests/ublk/stripe.c      | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ tools/testing/selftests/ublk/file_backed.c | 92 +++++++++++++++++-----
+ 1 file changed, 74 insertions(+), 18 deletions(-)
 
-diff --git a/tools/testing/selftests/ublk/common.c b/tools/testing/selftests/ublk/common.c
-index 01580a6f8519..d9873d4d50d0 100644
---- a/tools/testing/selftests/ublk/common.c
-+++ b/tools/testing/selftests/ublk/common.c
-@@ -10,11 +10,11 @@ void backing_file_tgt_deinit(struct ublk_dev *dev)
- 		fsync(dev->fds[i]);
- 		close(dev->fds[i]);
- 	}
- }
- 
--int backing_file_tgt_init(struct ublk_dev *dev)
-+int backing_file_tgt_init(struct ublk_dev *dev, unsigned int nr_direct)
- {
- 	int fd, i;
- 
- 	assert(dev->nr_fds == 1);
- 
-@@ -23,11 +23,11 @@ int backing_file_tgt_init(struct ublk_dev *dev)
- 		unsigned long bytes;
- 		struct stat st;
- 
- 		ublk_dbg(UBLK_DBG_DEV, "%s: file %d: %s\n", __func__, i, file);
- 
--		fd = open(file, O_RDWR | O_DIRECT);
-+		fd = open(file, O_RDWR | (i < nr_direct ? O_DIRECT : 0));
- 		if (fd < 0) {
- 			ublk_err("%s: backing file %s can't be opened: %s\n",
- 					__func__, file, strerror(errno));
- 			return -EBADF;
- 		}
 diff --git a/tools/testing/selftests/ublk/file_backed.c b/tools/testing/selftests/ublk/file_backed.c
-index c14ce6608696..db4c176a4f28 100644
+index db4c176a4f28..c3ce5ff72422 100644
 --- a/tools/testing/selftests/ublk/file_backed.c
 +++ b/tools/testing/selftests/ublk/file_backed.c
-@@ -161,11 +161,11 @@ static int ublk_loop_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 	if (ctx->metadata_size) {
- 		ublk_err("%s: integrity not supported\n", __func__);
- 		return -EINVAL;
+@@ -33,48 +33,62 @@ static int loop_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	unsigned ublk_op = ublksrv_get_op(iod);
+ 	unsigned zc = ublk_queue_use_zc(q);
+ 	unsigned auto_zc = ublk_queue_use_auto_zc(q);
+ 	enum io_uring_op op = ublk_to_uring_op(iod, zc | auto_zc);
+ 	struct ublk_io *io = ublk_get_io(q, tag);
++	__u64 offset = iod->start_sector << 9;
++	__u32 len = iod->nr_sectors << 9;
+ 	struct io_uring_sqe *sqe[3];
+ 	void *addr = io->buf_addr;
+ 
++	if (iod->op_flags & UBLK_IO_F_INTEGRITY) {
++		ublk_io_alloc_sqes(t, sqe, 1);
++		/* Use second backing file for integrity data */
++		io_uring_prep_rw(op, sqe[0], ublk_get_registered_fd(q, 2),
++				 io->integrity_buf,
++				 ublk_integrity_len(q, len),
++				 ublk_integrity_len(q, offset));
++		sqe[0]->flags = IOSQE_FIXED_FILE;
++		/* tgt_data = 1 indicates integrity I/O */
++		sqe[0]->user_data = build_user_data(tag, ublk_op, 1, q->q_id, 1);
++	}
++
+ 	if (!zc || auto_zc) {
+ 		ublk_io_alloc_sqes(t, sqe, 1);
+ 		if (!sqe[0])
+ 			return -ENOMEM;
+ 
+ 		io_uring_prep_rw(op, sqe[0], ublk_get_registered_fd(q, 1) /*fds[1]*/,
+ 				addr,
+-				iod->nr_sectors << 9,
+-				iod->start_sector << 9);
++				len,
++				offset);
+ 		if (auto_zc)
+ 			sqe[0]->buf_index = tag;
+ 		io_uring_sqe_set_flags(sqe[0], IOSQE_FIXED_FILE);
+ 		/* bit63 marks us as tgt io */
+ 		sqe[0]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
+-		return 1;
++		return !!(iod->op_flags & UBLK_IO_F_INTEGRITY) + 1;
  	}
  
--	ret = backing_file_tgt_init(dev);
-+	ret = backing_file_tgt_init(dev, 1);
+ 	ublk_io_alloc_sqes(t, sqe, 3);
+ 
+ 	io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, io->buf_index);
+ 	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
+ 	sqe[0]->user_data = build_user_data(tag,
+ 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
+ 
+ 	io_uring_prep_rw(op, sqe[1], ublk_get_registered_fd(q, 1) /*fds[1]*/, 0,
+-		iod->nr_sectors << 9,
+-		iod->start_sector << 9);
++			len,
++			offset);
+ 	sqe[1]->buf_index = tag;
+ 	sqe[1]->flags |= IOSQE_FIXED_FILE | IOSQE_IO_HARDLINK;
+ 	sqe[1]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
+ 
+ 	io_uring_prep_buf_unregister(sqe[2], q, tag, q->q_id, io->buf_index);
+ 	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
+ 
+-	return 2;
++	return !!(iod->op_flags & UBLK_IO_F_INTEGRITY) + 2;
+ }
+ 
+ static int loop_queue_tgt_io(struct ublk_thread *t, struct ublk_queue *q, int tag)
+ {
+ 	const struct ublksrv_io_desc *iod = ublk_get_iod(q, tag);
+@@ -117,29 +131,55 @@ static void ublk_loop_io_done(struct ublk_thread *t, struct ublk_queue *q,
+ {
+ 	unsigned tag = user_data_to_tag(cqe->user_data);
+ 	unsigned op = user_data_to_op(cqe->user_data);
+ 	struct ublk_io *io = ublk_get_io(q, tag);
+ 
+-	if (cqe->res < 0 || op != ublk_cmd_op_nr(UBLK_U_IO_UNREGISTER_IO_BUF)) {
+-		if (!io->result)
+-			io->result = cqe->res;
+-		if (cqe->res < 0)
+-			ublk_err("%s: io failed op %x user_data %lx\n",
+-					__func__, op, cqe->user_data);
++	if (cqe->res < 0) {
++		io->result = cqe->res;
++		ublk_err("%s: io failed op %x user_data %lx\n",
++				__func__, op, cqe->user_data);
++	} else if (op != ublk_cmd_op_nr(UBLK_U_IO_UNREGISTER_IO_BUF)) {
++		__s32 data_len = user_data_to_tgt_data(cqe->user_data)
++			? ublk_integrity_data_len(q, cqe->res)
++			: cqe->res;
++
++		if (!io->result || data_len < io->result)
++			io->result = data_len;
+ 	}
+ 
+ 	/* buffer register op is IOSQE_CQE_SKIP_SUCCESS */
+ 	if (op == ublk_cmd_op_nr(UBLK_U_IO_REGISTER_IO_BUF))
+ 		io->tgt_ios += 1;
+ 
+ 	if (ublk_completed_tgt_io(t, q, tag))
+ 		ublk_complete_io(t, q, tag, io->result);
+ }
+ 
++static int ublk_loop_memset_file(int fd, __u8 byte, size_t len)
++{
++	off_t offset = 0;
++	__u8 buf[4096];
++
++	memset(buf, byte, sizeof(buf));
++	while (len) {
++		int ret = pwrite(fd, buf, min(len, sizeof(buf)), offset);
++
++		if (ret < 0)
++			return -errno;
++		if (!ret)
++			return -EIO;
++
++		len -= ret;
++		offset += ret;
++	}
++	return 0;
++}
++
+ static int ublk_loop_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
+ {
+ 	unsigned long long bytes;
++	unsigned long blocks;
+ 	int ret;
+ 	struct ublk_params p = {
+ 		.types = UBLK_PARAM_TYPE_BASIC | UBLK_PARAM_TYPE_DMA_ALIGN,
+ 		.basic = {
+ 			.attrs = UBLK_ATTR_VOLATILE_CACHE,
+@@ -152,27 +192,43 @@ static int ublk_loop_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
+ 		.dma = {
+ 			.alignment = 511,
+ 		},
+ 	};
+ 
++	ublk_set_integrity_params(ctx, &p);
+ 	if (ctx->auto_zc_fallback) {
+ 		ublk_err("%s: not support auto_zc_fallback\n", __func__);
+ 		return -EINVAL;
+ 	}
+-	if (ctx->metadata_size) {
+-		ublk_err("%s: integrity not supported\n", __func__);
+-		return -EINVAL;
+-	}
+ 
++	/* Use O_DIRECT only for data file */
+ 	ret = backing_file_tgt_init(dev, 1);
  	if (ret)
  		return ret;
  
- 	if (dev->tgt.nr_backing_files != 1)
+-	if (dev->tgt.nr_backing_files != 1)
++	/* Expect a second file for integrity data */
++	if (dev->tgt.nr_backing_files != 1 + !!ctx->metadata_size)
  		return -EINVAL;
-diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-index 830b49a7716a..96c66b337bc0 100644
---- a/tools/testing/selftests/ublk/kublk.h
-+++ b/tools/testing/selftests/ublk/kublk.h
-@@ -460,8 +460,8 @@ extern const struct ublk_tgt_ops null_tgt_ops;
- extern const struct ublk_tgt_ops loop_tgt_ops;
- extern const struct ublk_tgt_ops stripe_tgt_ops;
- extern const struct ublk_tgt_ops fault_inject_tgt_ops;
  
- void backing_file_tgt_deinit(struct ublk_dev *dev);
--int backing_file_tgt_init(struct ublk_dev *dev);
-+int backing_file_tgt_init(struct ublk_dev *dev, unsigned int nr_direct);
+-	bytes = dev->tgt.backing_file_size[0];
++	blocks = dev->tgt.backing_file_size[0] >> p.basic.logical_bs_shift;
++	if (ctx->metadata_size) {
++		unsigned long metadata_blocks =
++			dev->tgt.backing_file_size[1] / ctx->metadata_size;
++		unsigned long integrity_len;
++
++		/* Ensure both data and integrity data fit in backing files */
++		blocks = min(blocks, metadata_blocks);
++		integrity_len = blocks * ctx->metadata_size;
++		/*
++		 * Initialize PI app tag and ref tag to 0xFF
++		 * to disable bio-integrity-auto checks
++		 */
++		ret = ublk_loop_memset_file(dev->fds[2], 0xFF, integrity_len);
++		if (ret)
++			return ret;
++	}
++	bytes = blocks << p.basic.logical_bs_shift;
+ 	dev->tgt.dev_size = bytes;
+ 	p.basic.dev_sectors = bytes >> 9;
+ 	dev->tgt.params = p;
  
- #endif
-diff --git a/tools/testing/selftests/ublk/stripe.c b/tools/testing/selftests/ublk/stripe.c
-index d4aaf3351d71..2be1c36438e7 100644
---- a/tools/testing/selftests/ublk/stripe.c
-+++ b/tools/testing/selftests/ublk/stripe.c
-@@ -313,11 +313,11 @@ static int ublk_stripe_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 		return -EINVAL;
- 	}
- 
- 	chunk_shift = ilog2(chunk_size);
- 
--	ret = backing_file_tgt_init(dev);
-+	ret = backing_file_tgt_init(dev, dev->tgt.nr_backing_files);
- 	if (ret)
- 		return ret;
- 
- 	if (!dev->tgt.nr_backing_files || dev->tgt.nr_backing_files > NR_STRIPE)
- 		return -EINVAL;
+ 	return 0;
 -- 
 2.45.2
 
