@@ -1,60 +1,60 @@
-Return-Path: <linux-block+bounces-32738-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32740-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA3DD02BD5
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 13:50:43 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9674AD02BB4
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 13:49:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AB5D230B2B9F
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 12:45:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0FF99300E409
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 12:49:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945E6472782;
-	Thu,  8 Jan 2026 12:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FAE465EA5;
+	Thu,  8 Jan 2026 12:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="We33i2xG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EOu5bz6t"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0193472776
-	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 12:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFB0465EB3
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 12:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767875278; cv=none; b=Nq4KYpElLVStYUanPc5yVxe4Cp26/7n87PLTPc6UoNiFjBCu0o/A4mnIwCRR5G4ea3SI2VrCVcFmKUQNJO3Dpz3GNdJfibS8SZJ1EmaxdCk3xP4Mik6+cQY13psBRhep0wOFb+ILw3NW6cgdxZBn27QfrjvTM1bPY8460K18Aec=
+	t=1767876171; cv=none; b=XuuJ/KYdUlY8C2SwUOzhF+b23IEeMULE2dYrA9EbDM0al9yMR0l+E2L6q+/8SQh8d0Zvp0rFsJpN+Q0d0FCIK+oruv9JmbWDvb4fuuKHBXS/eCE0s6qf3vRse6apWqkQ8wWy8Wid8zKuPcq8jEefm2+45cGd1aghklyL/MIRm+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767875278; c=relaxed/simple;
-	bh=Mv3xIbvO6qBeve+QW9fRU6oey42jpoH0UUFwCj2Z1b4=;
+	s=arc-20240116; t=1767876171; c=relaxed/simple;
+	bh=rCID7ihfpqiqBJh5JGnaHJiTTRwiLi8w2ml7fCklyR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gcTV/Uxlm+vvf/qkCRKwYZLwrCx0vmC7ySWMP8tol0US7jGl5gzp6JbQRL++o+wdVzUWpi6XgBNEcRXzleSDkycGE9VJmgYzy4/CIL6axLYaWJDtzCdju72em/XFhBoIAkmaT45HOAjIp4yLqL3uMysJQ/rZDnXYan/0xjB7/eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=We33i2xG; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4yUgQzXtv9tgQa/mk7ERg5W0gjGjUPw2ux2wjsYOd2zvIklHkbWDsBNoWJCzJSssnrSqsz1n53K6p3PZgyNhwbcxeUU9VqDH1UPtsILJxu6nkRDO5NL6Jjj/BCt0M6/0PL+IDCcvVZv6kmbVZdSlCymOMK2g/idjVGkqy8BSwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EOu5bz6t; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767875275;
+	s=mimecast20190719; t=1767876168;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zCUZ7jG07z3qpW3MUQnwKGbfDx/GqG1olorkz/pyZ04=;
-	b=We33i2xGhnC5h6cW+oh+E0k5vflTj0r23l1to5ZoEbuA6dV+cWNXLH5xMiwRCRnylPdKY3
-	TPKXOouCOlxPloB4JP9VdI4+QelgWZHfJvquA1yjT54y2sgDAH7U854stktSULGLMRbV9Y
-	sqM5rdLQBFQT/70OWhkUzR9XC9pakdg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=xxorc1hYnSYDj5qHulGUOtJiB+WHqxZGOCjvPA69Ukg=;
+	b=EOu5bz6tTwbzZWO14AWN1LzSNKZKgj96WbkrXGOyo7cbNG/j0u469rv47wWUM6ypKQLNUK
+	KVXW0WPHAh/T7yq8bL8jijP+/1ZGrtvUTVRhaK3VS8KsEjwA2l3cjahC7q8fAeZLGtAw1i
+	L35NpkZOZcKPYD6O02bfgVa+XKXqRnw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-0Y-_IwM7NJ2O8EK9TrNCqg-1; Thu,
- 08 Jan 2026 07:27:54 -0500
-X-MC-Unique: 0Y-_IwM7NJ2O8EK9TrNCqg-1
-X-Mimecast-MFC-AGG-ID: 0Y-_IwM7NJ2O8EK9TrNCqg_1767875273
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-517-xzBPntqaM8ibymP7cKLTBw-1; Thu,
+ 08 Jan 2026 07:42:43 -0500
+X-MC-Unique: xzBPntqaM8ibymP7cKLTBw-1
+X-Mimecast-MFC-AGG-ID: xzBPntqaM8ibymP7cKLTBw_1767876161
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCE231955F3F;
-	Thu,  8 Jan 2026 12:27:52 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7FB518005AE;
+	Thu,  8 Jan 2026 12:42:41 +0000 (UTC)
 Received: from fedora (unknown [10.72.116.180])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7F4619560A2;
-	Thu,  8 Jan 2026 12:27:47 +0000 (UTC)
-Date: Thu, 8 Jan 2026 20:27:42 +0800
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC8A430002D1;
+	Thu,  8 Jan 2026 12:42:35 +0000 (UTC)
+Date: Thu, 8 Jan 2026 20:42:30 +0800
 From: Ming Lei <ming.lei@redhat.com>
 To: Caleb Sander Mateos <csander@purestorage.com>
 Cc: Jens Axboe <axboe@kernel.dk>, Shuah Khan <shuah@kernel.org>,
@@ -63,11 +63,11 @@ Cc: Jens Axboe <axboe@kernel.dk>, Shuah Khan <shuah@kernel.org>,
 	Stanley Zhang <stazhang@purestorage.com>,
 	Uday Shankar <ushankar@purestorage.com>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v4 15/19] selftests: ublk: implement integrity user copy
- in kublk
-Message-ID: <aV-ivp99MRjUBD3j@fedora>
+Subject: Re: [PATCH v4 17/19] selftests: ublk: add integrity data support to
+ loop target
+Message-ID: <aV-mNgMwsYEMTLSW@fedora>
 References: <20260108091948.1099139-1-csander@purestorage.com>
- <20260108091948.1099139-16-csander@purestorage.com>
+ <20260108091948.1099139-18-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -76,14 +76,23 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260108091948.1099139-16-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20260108091948.1099139-18-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, Jan 08, 2026 at 02:19:43AM -0700, Caleb Sander Mateos wrote:
-> If integrity data is enabled for kublk, allocate an integrity buffer for
-> each I/O. Extend ublk_user_copy() to copy the integrity data between the
-> ublk request and the integrity buffer if the ublksrv_io_desc indicates
-> that the request has integrity data.
+On Thu, Jan 08, 2026 at 02:19:45AM -0700, Caleb Sander Mateos wrote:
+> To perform and end-to-end test of integrity information through a ublk
+> device, we need to actually store it somewhere and retrieve it. Add this
+> support to kublk's loop target. It uses a second backing file for the
+> integrity data corresponding to the data stored in the first file.
+> The integrity file is initialized with byte 0xFF, which ensures the app
+> and reference tags are set to the "escape" pattern to disable the
+> bio-integrity-auto guard and reftag checks until the blocks are written.
+> The integrity file is opened without O_DIRECT since it will be accessed
+> at sub-block granularity. Each incoming read/write results in a pair of
+> reads/writes, one to the data file, and one to the integrity file. If
+> either backing I/O fails, the error is propagated to the ublk request.
+> If both backing I/Os read/write some bytes, the ublk request is
+> completed with the smaller of the number of blocks accessed by each I/O.
 > 
 > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
