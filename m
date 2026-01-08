@@ -1,59 +1,42 @@
-Return-Path: <linux-block+bounces-32747-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32750-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6278FD040B7
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 16:52:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5967DD0434E
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 17:10:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DAD583637655
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:29:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D9C9C300F24D
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:33:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F004F1541;
-	Thu,  8 Jan 2026 13:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2ZKAaH9P"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 952CF4C954E;
+	Thu,  8 Jan 2026 13:58:27 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598B44EAC81;
-	Thu,  8 Jan 2026 13:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B555E4C870D;
+	Thu,  8 Jan 2026 13:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767880276; cv=none; b=lBabBL2/AAtZMKkquGaXwOw36V3mK/UIRGCG/nmLLsBYrrSOKP9U8K1p9FGlYqwqMR2bci1eePRyvzqudQ+0N7yth+I+YQHvRf604eJkyv63DD8bVzpem3bJOiXmgD6TtQgYU/+eZ1T0wzT3JAt8EPCXlTESDyNtRmHzMLE8+bU=
+	t=1767880707; cv=none; b=Zpfpj0jaHvlNNWwI8nvojiKpFN6sB2rwrToWwBuyYyhxf+Bf7Yc9comZGWbi1VofAHXUy/ORF1h1dJeB5whwOPolmrz78P/AhD5y/eXsiOmTVK8DOaeQeZqVFSsWLFYucr41DSwSpX9tJpvkgu8M4KMBcPkEf9RosSVtEhRJEYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767880276; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1767880707; c=relaxed/simple;
+	bh=mVDVp/XpkfFMLxjpzuhZbM9IvMM4Xol+e6l3g7M/PTw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LLz2poPzF6LuC5s4b9A3MuhJCK5ws1AvcpDXjbb4p+ySm1+YiAj3ZZfznJMVHG/p/MVAsCXWQjuyF9vjjv7TN0vyQi9prVHFzTAZHjpUSMIg0GnPKFsPd6H7yHXBWjox80v2pBwecajxyqAyTiIC4/wVxtN+zMagLt/u5/W5GQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2ZKAaH9P; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=2ZKAaH9PBmRPaWo7Zg+Sh2J3x+
-	wEO3kXxd9ZIZEv5v3Liqlz1ygQFwOsPuSnMJ1JxQiqL0+rtrI+aaHvnmRTIY+Xd51GWM8S0T6Jng9
-	IWjZWNHACkBs9jQCWcIsxzi37wdQ6MHQGHrjmaw2aKRn9VPa89BonvVwPo9Q6KeTZ9M6dKcpgdFN/
-	g3a6/JsADuVfjd+RQZS93h+pknUi50SvZqcfnK2HbUloTTMfuiPiR9UeNlwRoM0ci8PyDs1kKk7Rr
-	Lxvz9uLVH31ULJ9GwVg9WBx95ee+tAuU/D9xl2kd2Lp814a02tk9mryURxcW2fgGgu7IMetAhlRCF
-	WEnQpwrQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdqPu-0000000HEUh-1h53;
-	Thu, 08 Jan 2026 13:51:10 +0000
-Date: Thu, 8 Jan 2026 05:51:10 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk, yukuai@fnnas.com,
-	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com, houtao1@huawei.com, zhengqixing@huawei.com
-Subject: Re: [PATCH 1/3] blk-cgroup: factor policy pd teardown loop into
- helper
-Message-ID: <aV-2Tl8R3R0rm8ZF@infradead.org>
-References: <20260108014416.3656493-1-zhengqixing@huaweicloud.com>
- <20260108014416.3656493-2-zhengqixing@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQ7ePCFbMMxwN0u26uq0GKhL9cc0tPPx/jseNLZukOsFnbgMB0vdIvjTfe4KM5ryJTJ+zrCzNl0S3UcrpGxyzc0tUzeK1qbSkgZ8gMvwK9h2EupuyWyNcxdfJ316gFVkanCk6oX8V6XNASOTXWzm1Za6/o6lihyOBVCV79YuAaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 0C63B6732A; Thu,  8 Jan 2026 14:58:22 +0100 (CET)
+Date: Thu, 8 Jan 2026 14:58:21 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: initialize auto integrity buffer opaque
+Message-ID: <20260108135821.GA8886@lst.de>
+References: <20260108090401.1091352-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -62,11 +45,20 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260108014416.3656493-2-zhengqixing@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260108090401.1091352-1-csander@purestorage.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+The subject sounds a little weird.  From looking at the commit
+message and the code change I'd expect it to be something like:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+block: zero auto integrity buffer when not fully occupied by PI tuple
+
+does that make sense?
+
+> Switch the gfp_t variable to bool zero_buffer since it's only used to
+> compute the zero_buffer argument to bio_integrity_alloc_buf().
+
+Yeah, that also makes total sense now.  But maybe split it into a
+separate cleanup patch to not detract from the bug fix?
 
 
