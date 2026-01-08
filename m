@@ -1,56 +1,55 @@
-Return-Path: <linux-block+bounces-32744-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32746-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E8D5D047A5
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 17:42:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3FAD03EC8
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 16:39:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D314B338B7A3
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:32:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E088B30AC67A
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA782EBBA2;
-	Thu,  8 Jan 2026 13:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA64739A7E3;
+	Thu,  8 Jan 2026 13:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FgMzYBXb"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="x1hcOxJT"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911C3033DE
-	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 13:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B84B431B5F
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 13:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767880116; cv=none; b=rNWm2IclbQZz+gNs5/OawdACB2ZfvDJIQE4BJ7ldM3koRlxVyhf+LOYLWZOyIsD41R192P7IRhYiQ2JDSd+cgJMnYTrdnzPOOLQYMf/OSI4bACKdTkdgHNpvRCb4UV6F8hC1+7qtLyPhqvC9DQvPTcooPQlfqv4GAyw/59uJ4tI=
+	t=1767880184; cv=none; b=L9bILf2JuoGwOS11sKSeJUNvcYMdkF2jgFGrAnmRFaLnrfaHsKE2tBrhTX9Xq6USS0AgVfEB69fNBUrmDjKJ3EIJPwKLRhH4rIC1a67xIFNsF/erSXSPpwYEddQg6TJj/jVD5ZJRBRtL9S8K4o30aelYqh5H7j66jtCBlngISZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767880116; c=relaxed/simple;
-	bh=q2gktZaI3iJ68ali07j63J50uSZdm6RWZIyWubdy33E=;
+	s=arc-20240116; t=1767880184; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHX/LDFilvC7SFCa7nCwSOfjlJ1acrPlR1y4zVjKubTbb+mXo5bbY8rcPRwWq2cLDWpMGb8kCrhBLwaBDrPu4VxWGz4bPBe98UH/QBkHW2sIvijLr3L8/mh7YzOxPhFO7UjjWloEnZSExRwPpxBPN1+2c2s2nzkX2nKUKNZ07YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FgMzYBXb; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=P1gTeuWV91C+ioxgfQCn2cxbHXvs0da72Cis+3amOIYp2aejLXda49INt7Z1aOCIFAmpwHHDNeLpLlbxuckWmQWvjpcOuiTC1GM8Cxh3XTKk4OwUnhCYK8n1mUS4vMaixZSoKICT+nulQPXEaP7Ok/NMqQDobyh2P61I1HS0nMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=x1hcOxJT; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p1sZS3m0lsESovdK/nVUcC9uG25QhRuYoiAvNbpXvm4=; b=FgMzYBXbn+a6ApaHjuElokETE/
-	5OjC7EwnasWA45TjwvV9et5mVxnNABAA7o8j/0FpJn0DQgJoocD0yuxK5+8o5tk2YbL474KMrPj44
-	EGSDJ5TBka50sqPXWOcBD5ScgDx6N8jnEaAtXQvyN0efU3nZSMSyO4X4hRuDPP6LwzHPjiolCxFfl
-	fLM/zX7dm5+mycbjGbkfmpKKJN2tPUm5PO+9VfiQhRSM8iZHlmqsys826vnt9tdFpIP+d0fmjIyls
-	xZvzPEO3BnFM+P1ohyLj+YF0V96dU86GCRZ0Cr/8QfvXUhogmg+nxw2bWh4ZApENwvx3zIpIOVmCp
-	LPXX6Ykw==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=x1hcOxJTPEQx+XqrTpeU4RXlbE
+	Fx2xEhLIFf8Sefy0BKeWmzr4hekyib8wjE76RrssfBh8jeKJz/kn0Tjxbq0s3AjJIh6D6pklUvmPJ
+	lbutgKEN2H2pwi7J5JVegd3yhao0L+UZUOaWWWMs83yi3fI/40E9yfxBddcCYRrBf7m77+R14uAfK
+	w9eOvrJHuve61W9b6R657tHbMFfQfNYDwqGbeYwDZYP417bN4S6s1i6/brcv56dbtT/4trhtNARF/
+	3YpAvanhG3yumHo3PyIYw7nzWR2uFHP6poktCAXySwX1iWpXBOapywhH6hzQ+Htx+JWNPPsxNWKrq
+	4bPHocww==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdqNG-0000000HE6z-0dfN;
-	Thu, 08 Jan 2026 13:48:26 +0000
-Date: Thu, 8 Jan 2026 05:48:26 -0800
+	id 1vdqOP-0000000HEFS-3zHu;
+	Thu, 08 Jan 2026 13:49:37 +0000
+Date: Thu, 8 Jan 2026 05:49:37 -0800
 From: Christoph Hellwig <hch@infradead.org>
-To: Yang Xiuwei <yangxiuwei2025@163.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	Yang Xiuwei <yangxiuwei@kylinos.cn>
-Subject: Re: [PATCH] block: remove redundant kill_bdev() call in
- set_blocksize()
-Message-ID: <aV-1qjWsdCtsUjds@infradead.org>
-References: <20260106024257.144974-1-yangxiuwei2025@163.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/2] block: improve blk_op_str() comment
+Message-ID: <aV-18Qcn8A0tUBsT@infradead.org>
+References: <20260106070057.1364551-1-dlemoal@kernel.org>
+ <20260106070057.1364551-3-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -59,17 +58,10 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260106024257.144974-1-yangxiuwei2025@163.com>
+In-Reply-To: <20260106070057.1364551-3-dlemoal@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jan 06, 2026 at 10:42:57AM +0800, Yang Xiuwei wrote:
-> From: Yang Xiuwei <yangxiuwei@kylinos.cn>
-> 
-> The second kill_bdev() call in set_blocksize() is redundant as the first
-> call already clears all buffers and pagecache, and locks prevent new
-> pagecache creation between the calls.
-
-Indeed.  Looks good:
+Looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 
