@@ -1,72 +1,56 @@
-Return-Path: <linux-block+bounces-32735-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32744-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBDD4D04120
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 16:55:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E8D5D047A5
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 17:42:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 317883391FFF
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:32:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D314B338B7A3
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 15:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A512B4B254C;
-	Thu,  8 Jan 2026 12:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA782EBBA2;
+	Thu,  8 Jan 2026 13:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5w8XX5y"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FgMzYBXb"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F374AC79F
-	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 12:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911C3033DE
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 13:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767874818; cv=none; b=J+WMkwP/kjjY/Btrcxgw9ndXrwCyjRbuDKgAMMk6HaO/Q1DZmt+p19PxAVxfOIYW8mO8+uoM2oFFXT4z4pMsIKciVFuA1jia/GM0tAxx/g6bLen0zIyLZs8CHGQMLMPZ8uBYIFhfN4s882OlyGweaZw+L8WaTnr7O6eXErENcuA=
+	t=1767880116; cv=none; b=rNWm2IclbQZz+gNs5/OawdACB2ZfvDJIQE4BJ7ldM3koRlxVyhf+LOYLWZOyIsD41R192P7IRhYiQ2JDSd+cgJMnYTrdnzPOOLQYMf/OSI4bACKdTkdgHNpvRCb4UV6F8hC1+7qtLyPhqvC9DQvPTcooPQlfqv4GAyw/59uJ4tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767874818; c=relaxed/simple;
-	bh=NNpGr0TUosqGSN2a0EGi84k3Eo0OmIJDd6rO5DGlzxA=;
+	s=arc-20240116; t=1767880116; c=relaxed/simple;
+	bh=q2gktZaI3iJ68ali07j63J50uSZdm6RWZIyWubdy33E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gUiSIgCeM4Ujb/FA4YqKGkUbv494DLx5cGipWsyL3NzaswW9XTbHng9At7PqtAVqfSKZTlhTw9l2wMWdTAzoEZYep9rSuMZrAcKDOMkCzcVuLkVl5iiZugpU74Q/FJK9Ei38ABt54g2bgOfoy0KIEZUzJ3uDjxnJg5zTB7TW5FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D5w8XX5y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767874814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O3gEBAPNPXaPH1lX1DR0amMzqk/RyPoLCSLo0EIYFeo=;
-	b=D5w8XX5yj28poGLF3tYM0EmHQsdIejG1avhkBRdv5WzzZUOVIvc9qWslkqVd2GSSDvJYZj
-	VqFDYOpkRL+39qs1msSfODyLP0DSCIBidMVao6zwDbwaDcYXQO9rchgofaMVuLIR8v+GMa
-	Xj+Bu/kYg8gcL1DGns/YhqDf/TRVgw0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-J4mfcCOBPt-WaBJOwseDYQ-1; Thu,
- 08 Jan 2026 07:20:13 -0500
-X-MC-Unique: J4mfcCOBPt-WaBJOwseDYQ-1
-X-Mimecast-MFC-AGG-ID: J4mfcCOBPt-WaBJOwseDYQ_1767874811
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60BE21956059;
-	Thu,  8 Jan 2026 12:20:11 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.180])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE57430002D1;
-	Thu,  8 Jan 2026 12:20:03 +0000 (UTC)
-Date: Thu, 8 Jan 2026 20:19:58 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Shuah Khan <shuah@kernel.org>,
-	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stanley Zhang <stazhang@purestorage.com>,
-	Uday Shankar <ushankar@purestorage.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v4 09/19] ublk: implement integrity user copy
-Message-ID: <aV-g7obwQw4HFcn8@fedora>
-References: <20260108091948.1099139-1-csander@purestorage.com>
- <20260108091948.1099139-10-csander@purestorage.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHX/LDFilvC7SFCa7nCwSOfjlJ1acrPlR1y4zVjKubTbb+mXo5bbY8rcPRwWq2cLDWpMGb8kCrhBLwaBDrPu4VxWGz4bPBe98UH/QBkHW2sIvijLr3L8/mh7YzOxPhFO7UjjWloEnZSExRwPpxBPN1+2c2s2nzkX2nKUKNZ07YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FgMzYBXb; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=p1sZS3m0lsESovdK/nVUcC9uG25QhRuYoiAvNbpXvm4=; b=FgMzYBXbn+a6ApaHjuElokETE/
+	5OjC7EwnasWA45TjwvV9et5mVxnNABAA7o8j/0FpJn0DQgJoocD0yuxK5+8o5tk2YbL474KMrPj44
+	EGSDJ5TBka50sqPXWOcBD5ScgDx6N8jnEaAtXQvyN0efU3nZSMSyO4X4hRuDPP6LwzHPjiolCxFfl
+	fLM/zX7dm5+mycbjGbkfmpKKJN2tPUm5PO+9VfiQhRSM8iZHlmqsys826vnt9tdFpIP+d0fmjIyls
+	xZvzPEO3BnFM+P1ohyLj+YF0V96dU86GCRZ0Cr/8QfvXUhogmg+nxw2bWh4ZApENwvx3zIpIOVmCp
+	LPXX6Ykw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vdqNG-0000000HE6z-0dfN;
+	Thu, 08 Jan 2026 13:48:26 +0000
+Date: Thu, 8 Jan 2026 05:48:26 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Yang Xiuwei <yangxiuwei2025@163.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+	Yang Xiuwei <yangxiuwei@kylinos.cn>
+Subject: Re: [PATCH] block: remove redundant kill_bdev() call in
+ set_blocksize()
+Message-ID: <aV-1qjWsdCtsUjds@infradead.org>
+References: <20260106024257.144974-1-yangxiuwei2025@163.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -75,27 +59,18 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260108091948.1099139-10-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20260106024257.144974-1-yangxiuwei2025@163.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Jan 08, 2026 at 02:19:37AM -0700, Caleb Sander Mateos wrote:
-> From: Stanley Zhang <stazhang@purestorage.com>
+On Tue, Jan 06, 2026 at 10:42:57AM +0800, Yang Xiuwei wrote:
+> From: Yang Xiuwei <yangxiuwei@kylinos.cn>
 > 
-> Add a function ublk_copy_user_integrity() to copy integrity information
-> between a request and a user iov_iter. This mirrors the existing
-> ublk_copy_user_pages() but operates on request integrity data instead of
-> regular data. Check UBLKSRV_IO_INTEGRITY_FLAG in iocb->ki_pos in
-> ublk_user_copy() to choose between copying data or integrity data.
-> 
-> Signed-off-by: Stanley Zhang <stazhang@purestorage.com>
-> [csander: change offset units from data bytes to integrity data bytes,
->  fix CONFIG_BLK_DEV_INTEGRITY=n build, rebase on user copy refactor]
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> The second kill_bdev() call in set_blocksize() is redundant as the first
+> call already clears all buffers and pagecache, and locks prevent new
+> pagecache creation between the calls.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Indeed.  Looks good:
 
-
-Thanks,
-Ming
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
