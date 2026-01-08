@@ -1,44 +1,73 @@
-Return-Path: <linux-block+bounces-32731-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32736-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6775FD0263A
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 12:30:47 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26387D02A02
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 13:28:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 832D0300E421
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 11:30:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 866D6300EE40
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 12:28:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FB622D9EDB;
-	Thu,  8 Jan 2026 09:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E084C487568;
+	Thu,  8 Jan 2026 12:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KB+BSUz9"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC737083C;
-	Thu,  8 Jan 2026 09:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0644B69A
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 12:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864681; cv=none; b=QRdHlm4ufLjYHtOniwoRNR+KKGkKi7XLHQhDdAEo+lGrzKct1Q829ThXSdZpQzAxnd0jHL15uHnF8ATFUkGHrwedl09kgK6Rj1QtYSGY3J3emapvwlh5LX2tTAWMPwSqn6X95BOwUvcQ5SD6ZVoK33mseKn04Iw5jrR9R3RnE/Q=
+	t=1767874898; cv=none; b=JJTTCGMVgG1Fb6JTCrDtpkrYZyxFqO5CBhveTwoVvtPQb5lG3Zmy1h6SegVjEOwzcd2Nqx9IZZruwSN2Ga0DjbzYMklOmfVy23qhE8CDzkAnERitt4Q5PvWgY5I17TX0r45XlCvRpdp2pT5QXuUalfRV5TZ4VYgAxJxsX2+bvMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864681; c=relaxed/simple;
-	bh=jgrwJ32MrtKLFCwfKG6SoX/ziA1fnF3cqXAWEWhwFVI=;
+	s=arc-20240116; t=1767874898; c=relaxed/simple;
+	bh=8SM4MI9MHu2d+B7/tHCcJBOA3yty0hENdIFkqsI3XQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V09NN3Ehn3JPDHVGAxEnlnYULMINBTUqT7/ydl6xr/lcd/zN6WW3Ixp5TU2TzWXYe8y+03XpVUcVORvW4n+eyPeub2Drg8oTTy5RYdztVWblbHNgTM8RQhkp00WmCTyncqb3BxOSMHhx9n6gDI12AETVQ2x7XFXqvKe1BnNkLl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C2BD0227A87; Thu,  8 Jan 2026 10:31:02 +0100 (CET)
-Date: Thu, 8 Jan 2026 10:31:01 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org
-Subject: Re: [PATCH 7/9] blk-crypto: use mempool_alloc_bulk for encrypted
- bio page allocation
-Message-ID: <20260108093101.GA20489@lst.de>
-References: <20260106073651.1607371-1-hch@lst.de> <20260106073651.1607371-8-hch@lst.de> <20260108002250.GA2614@sol>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pekPKtfFjzC3Bn3fQfdqRHnPUY9/3BwcdPCy8l/3PK3Sh7T3eOntsycalkfmxvFdMM1wnZ3LonCT+qw90yNKlKfrT7VGDPXrysFzucij/3zYgACjNnm7pBPqIB/snxAc+bL5wU02l/kXEdriMFqy89bxmxLYnKBfc7eOlXKUwEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KB+BSUz9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767874895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=26Rj5TAjE/4/XHt4A+TRRbU6e7CFdZ1rGBzWbzvXsvA=;
+	b=KB+BSUz9gxDM5Ma4p7N1LUv5jhgxscNgyN81GyWLFdDgxey5+ikkqHwEp5wSRaJL/pYCJ1
+	WaY5FM1rjpMsj0kQmUNOokfMV2duzn3CKgRMf4hXhckCfD0VDrMkIkvXMLMVYt2MEHwbsf
+	4CH1/qCeVPCGiV1i8bR4OvvZ2aT+Pl8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-_5jIPL6tNyaTpF0xrqTXgw-1; Thu,
+ 08 Jan 2026 07:21:32 -0500
+X-MC-Unique: _5jIPL6tNyaTpF0xrqTXgw-1
+X-Mimecast-MFC-AGG-ID: _5jIPL6tNyaTpF0xrqTXgw_1767874890
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70BC619560B7;
+	Thu,  8 Jan 2026 12:21:30 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.180])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD56518008FF;
+	Thu,  8 Jan 2026 12:21:23 +0000 (UTC)
+Date: Thu, 8 Jan 2026 20:21:18 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Shuah Khan <shuah@kernel.org>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stanley Zhang <stazhang@purestorage.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v4 13/19] selftests: ublk: add utility to get block
+ device metadata size
+Message-ID: <aV-hPqT3B4rHV2s8@fedora>
+References: <20260108091948.1099139-1-csander@purestorage.com>
+ <20260108091948.1099139-14-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -47,25 +76,24 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260108002250.GA2614@sol>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20260108091948.1099139-14-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, Jan 07, 2026 at 04:22:50PM -0800, Eric Biggers wrote:
-> On Tue, Jan 06, 2026 at 08:36:30AM +0100, Christoph Hellwig wrote:
-> > +out_free_enc_bio:
-> > +	/*
-> > +	 * Add the remaining pages to the bio so that the normal completion path
-> > +	 * in blk_crypto_fallback_encrypt_endio frees them.  The exact data
-> > +	 * layout does not matter for that, so don't bother iterating the source
-> > +	 * bio.
-> > +	 */
-> > +	for (; enc_idx < nr_enc_pages; enc_idx++)
-> > +		__bio_add_page(enc_bio, enc_pages[enc_idx++], PAGE_SIZE, 0);
-> > +	bio_io_error(enc_bio);
+On Thu, Jan 08, 2026 at 02:19:41AM -0700, Caleb Sander Mateos wrote:
+> Some block device integrity parameters are available in sysfs, but
+> others are only accessible using the FS_IOC_GETLBMD_CAP ioctl. Add a
+> metadata_size utility program to print out the logical block metadata
+> size, PI offset, and PI size within the metadata. Example output:
+> $ metadata_size /dev/ublkb0
+> metadata_size: 64
+> pi_offset: 56
+> pi_tuple_size: 8
 > 
-> There's a double increment above.
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-Indeed.  Which also means the failure testing wasn't all that
-great..
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thanks
+Ming
 
 
