@@ -1,82 +1,82 @@
-Return-Path: <linux-block+bounces-32757-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32759-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DEEFD05078
-	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 18:35:38 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 167BED05502
+	for <lists+linux-block@lfdr.de>; Thu, 08 Jan 2026 19:03:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DF2133045669
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 17:26:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A44C53100A9B
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jan 2026 17:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80DF2FFDEC;
-	Thu,  8 Jan 2026 17:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D2D3033F9;
+	Thu,  8 Jan 2026 17:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eVgl0rGd"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Mstndcqe"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-yx1-f103.google.com (mail-yx1-f103.google.com [74.125.224.103])
+Received: from mail-dy1-f227.google.com (mail-dy1-f227.google.com [74.125.82.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EF62FF16F
-	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 17:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3652FE05D
+	for <linux-block@vger.kernel.org>; Thu,  8 Jan 2026 17:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767892953; cv=none; b=dNHjZHiutdmHRaBhuX3IQ3gU2eDOLQTb6psWRgv4r7SPCtUPgtpH84d+4yCMEZVXV1pEqTBrOtMgU1MU5/uWc17qfpM5ahKehOznqPyPuGZD/WOL1CgSnrPSvrvhh9GIV4icYc8AlLBYieJmtOg52Oqs7oy02NelUXCe/37Ha24=
+	t=1767892954; cv=none; b=G58lGkS+raem+EWXw9+Z3ph6xEvCY5RuyUfgKROqVACPXOVXAVck12RIuvyuOPwka6izMo2E9FhL9xRL87hKDIVOpYq6GPVuAyBcHf6iBqL6mThQD5+uk9xu72yUi/yQKwRZo0vLTUnTQ8qlC2IIblLzevT9TNQK3E496HHviYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767892953; c=relaxed/simple;
-	bh=i4p29NAYQUFaC6TakPUiO6FyaXMSmwrUFhPBK4q5+XY=;
+	s=arc-20240116; t=1767892954; c=relaxed/simple;
+	bh=uSp6bgEKbOC3tTzvHqcKfBiWs/omsHUdUObr3QB3yFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WOQozlqh5AcYOMGP3vgx9TZ3n4GtZ6cCzKwLDniXphKWdANNUqIfIR51/W77SG8BSeKWj6rHleyYTz9WIqVlPegZbH992Q3ae03yylBKZdaSwZO2ugpybIbkBabKu9sZfPBQFbzr3PNMGPR4kCyO6ZuxlrZopF/peVGNUMzxHRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eVgl0rGd; arc=none smtp.client-ip=74.125.224.103
+	 MIME-Version; b=AMVt1F0glSRvCN+F/J2m82V5kBxTOakc86BNLCh7XGIswjkKshBlCalFIW49swiWNQW+3P/O74nmem+vaD/shDmcwUrwGKQmtZCMhPgz1GEvvHENkhF1PrgRqPpCmRmckkAmEhmUG5anwjJmjaVCfvAB5rz+u9qlqWQQmNQBWk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Mstndcqe; arc=none smtp.client-ip=74.125.82.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-yx1-f103.google.com with SMTP id 956f58d0204a3-646d51949f9so519598d50.1
-        for <linux-block@vger.kernel.org>; Thu, 08 Jan 2026 09:22:32 -0800 (PST)
+Received: by mail-dy1-f227.google.com with SMTP id 5a478bee46e88-2b175c4bb64so206316eec.2
+        for <linux-block@vger.kernel.org>; Thu, 08 Jan 2026 09:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1767892951; x=1768497751; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jxex0w2xVdLJ5pj+6cE9HhLbWu2So1kRLspmYigE0yw=;
-        b=eVgl0rGd9VsthzbNMoscq8+rAN8Q2gD0jdD9qqPPEJ8hFGXp5W4mq4biznrcLYUB3y
-         ybjSuvg5Ce8RCb00M49kMoX+Ou+43XiEeH7CmzszZZkrnCUvZj/OqTgUf9TzGc4j+RFT
-         M8gdtudPJj3AE+qLg8lDFpkOqKidvG9YU6H+RJKSt6NBWJlHQH+lqP0tjAx57UhKQ3qg
-         c6zsPwPxqqMMWOub4EdTgDsWZVCJBkFxqnqJBK1jrhNctycVxjhG5xPj1EBaW2t5IuTe
-         SAh3nzYmv1/hhQ5hB2Ds7m4mpQPOe2/IL7OO4CFKzLL5s8E0WK5Ebi4xamdPPJ77GXr7
-         7QHg==
+        bh=mGTTq8K3vQ+V+uQpl8CqSqa2h/Tj/HL+yYnwJhFFpIE=;
+        b=Mstndcqe7JoWjeRacZGw3DMPhZ5pFIhSg9eTj7v7gVu27+aLfux6wLaBUzpBrE1Ep5
+         EbufN0R52mYWR4KaBtL4SJM4TumoWCCB+oUYf5NsUsq2lYLrzmk1qW1xL3qNDZ5mBjMy
+         sM0kc7tZg2L29F0VIS62J/PyGivNzdyjA2ndDaiEZoInUpceHkPTikyJ99e7E9ojGnu3
+         bgx12avOsoed5Qg7NqZrkY84YRD0V5cJFTnjZ0mUohv1hKpKJerSi0wdNFsKmBGp+b1N
+         6P1YXGS4+J8NZgv1REP0UxIaN4qQCk59entYshzbp3zJDfud+Rolm3dZ/ZtgL+/4pd3R
+         m6Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1767892951; x=1768497751;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jxex0w2xVdLJ5pj+6cE9HhLbWu2So1kRLspmYigE0yw=;
-        b=GTirjldkoezKtowi46WdTUfMJJ3HgTIJ4ifopjHpxQMFe0OLB0CLBkMCCvucA/gD39
-         TKFMKUqL1ZEFnG9AmZi3rCQ6Aor4rwXdw4mlJKcapFyFKPRj83Nitp4sbImWo+RhOkpy
-         dOnGOeNLV7twv27uU8HfLE63E+hsV1iMojqc1IryPvvxEIJCes/xwCu3rN4cHOFI6qih
-         cDO2gtKlEbEIEAEScBkaPmWnC0bTTvi73LiyVBKuAfd+Ey8op6H1OMJMR31Nrz9InFyX
-         FiJYizKhuvEJCEJH3V7iRIMaZxF4iQ7MoLl/BejCC5Sjv6KgFT5Yyi+AQX/oPkvHy+o3
-         tyTg==
-X-Gm-Message-State: AOJu0YyC3vWj7IrDQLzKeK9wOm7BnDjv1Qscq4GySMzXEYDyQElxBa+H
-	cNPrORVE10z35yCri5cFBaJ3oUInHFK0HIX3jtGnVp50zVGbAI3ldmkY8zwX/C/9vQDdA97Yl/Q
-	EZV/W8wQ53OIHw62MJEyiouBafiFLpGj8qfkAWGPWxJI0daKfn8wi
-X-Gm-Gg: AY/fxX68+zmyQLI01vUaRsTXsIq8E6G2WbSH26ChvSj4dfWyEeG/uwj2WobIQ8iqscS
-	cORfBBH0GAtthYQs037sMUTWQBR9iwGudEUCneKu8vtzD5lp/BPgjwnX+1g5KvLLRKPwLQSZl0n
-	ukf/B5hg4UHdFLtgipQ7noZ4SVamiZsQk0MYShYnD8TcB7NDIcRWK433ei6vGhLA33BgrRHuajO
-	v+ZYdlDzwBnUsdBgsV+qrH8v/Tz1w3S5W9w2xaY4r09Qw8c7CH0T9JYrQfMxliOuqOL1gf+J/cc
-	6MQ2uRJ7cYXxGJWF1GpFW01bRRd6z4uesUPxfzur213+6ivOAwvTLrnoDbggg/8/hmmjArBMc/w
-	o59MBi3D2ODDTI+43ggIwVB1+tTo=
-X-Google-Smtp-Source: AGHT+IHT4rzoi1pIcJ2b2EbFL4SNsnV2Kx5sXAVunV6KAEhZUrhWimnE1b6DVrmZ22bjEufdrqkaea05RYU3
-X-Received: by 2002:a05:690c:6608:b0:78f:c943:b2f3 with SMTP id 00721157ae682-790b568e27emr61630227b3.4.1767892951115;
-        Thu, 08 Jan 2026 09:22:31 -0800 (PST)
+        bh=mGTTq8K3vQ+V+uQpl8CqSqa2h/Tj/HL+yYnwJhFFpIE=;
+        b=R6o0YonOQzWKkXiJTY1x/dbQWgp3z7P/y7eC7aSJE/5Am8fE0RTxW4URFRvGn/K50D
+         3MrJZi/Pah2J8vkYc2gG92DwMT2bgB3zRDWjsYD90fSHjDWBhEQsdX9gtUS6/GpyvFpN
+         156oqrsryvxCAkIAiiBs1SLExZNzOrsvwsnWK29SuFOawH+nscoBVOzV01qe62RSebaz
+         5zOHE6q4ksFkIlYGH2gJ19RkX1EWyaKaoTs/JL1+TONF7RtAHou6psRYdQr4MzXJXcH8
+         QzNyY8DI3t2B75xxnHahUETgde09RwOF27IFwIigW/qE2BqU/ho+58tGlD0vcY8neOIe
+         kyow==
+X-Gm-Message-State: AOJu0Yxno7qqsLIgrQbOPgzGDjl7PilLeAVBuf9X3KFXuEeh33T1Lkh9
+	odmN+EOCe4uZ2tkpcsbjR9bFMu3SxQU9/cu5OdAmu3iirlqrJNCvnPYCwcigi2AjubG9e76fK1D
+	JX8bovEklvDpN6e2jELcyxOp7qda6RBAN/tcbyNLOl8dMVSoECd1W
+X-Gm-Gg: AY/fxX71/Jwx3mapPztJxeRmLvg8PemWpOcEn0VA7iRM2N9POXz2R8tsedsn+865Qkz
+	PDZePGu4GqON9PZXDqRcDnmXK8mWoq7X1bSxKE56aVYrgyTjf8zxftH5ZhLeP2j5HVBPV23EY4/
+	xV1rJcM4aSRJ/ipwxXmibwRy8gQgGT7fWv0PAaKmJzP+Ht6dAoFTnCkMU9s3m5/VCgcaVmI0Pbx
+	VgfSbnaEVW5Nzt8sitlZWSpW8U7RW92bLdGN5tzyoDxN0cgHVvOxvY1DdPdmc//4CxZ7tc+xmj4
+	As4bb51ZgYuGxYTI5CvDXms62gKSgzkMTO3xCrBhLah5JEbsSze/sfWWyNtDhlM0Xze555C0+sW
+	oZGMpf6k21PO55FN0q1IQezKKZ/Q=
+X-Google-Smtp-Source: AGHT+IFJWaVqXL8QZVhWAMzKEfobRXwlVmAyoGeEH2E3UTRcXBRpGCtErafdB8C1hiJLzqQPDnJzA1hizh0L
+X-Received: by 2002:a05:7022:2483:b0:122:33e:6ec1 with SMTP id a92af1059eb24-122033e706emr617564c88.0.1767892950828;
+        Thu, 08 Jan 2026 09:22:30 -0800 (PST)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-790aa6a9f37sm6287247b3.17.2026.01.08.09.22.30
+        by smtp-relay.gmail.com with ESMTPS id a92af1059eb24-121f23c0e38sm1872968c88.0.2026.01.08.09.22.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 09:22:31 -0800 (PST)
+        Thu, 08 Jan 2026 09:22:30 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.112.6.120])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2966A3406AA;
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5BE58340794;
 	Thu,  8 Jan 2026 10:22:30 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 1E459E42165; Thu,  8 Jan 2026 10:22:30 -0700 (MST)
+	id 51786E42165; Thu,  8 Jan 2026 10:22:30 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org,
@@ -84,9 +84,9 @@ Cc: linux-block@vger.kernel.org,
 	Anuj Gupta <anuj20.g@samsung.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 2/3] block: replace gfp_t with bool in bio_integrity_prep()
-Date: Thu,  8 Jan 2026 10:22:11 -0700
-Message-ID: <20260108172212.1402119-3-csander@purestorage.com>
+Subject: [PATCH v2 3/3] block: use pi_tuple_size in bi_offload_capable()
+Date: Thu,  8 Jan 2026 10:22:12 -0700
+Message-ID: <20260108172212.1402119-4-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20260108172212.1402119-1-csander@purestorage.com>
 References: <20260108172212.1402119-1-csander@purestorage.com>
@@ -98,65 +98,44 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since commit ec7f31b2a2d3 ("block: make bio auto-integrity deadlock
-safe"), the gfp_t gfp variable in bio_integrity_prep() is no longer
-passed to an allocation function. It's only used to compute the
-zero_buffer argument to bio_integrity_alloc_buf(). So change the
-variable to bool zero_buffer to simplify the code.
+bi_offload_capable() returns whether a block device's metadata size
+matches its PI tuple size. Use pi_tuple_size instead of switching on
+csum_type. This makes the code considerably simpler and less branchy.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- block/bio-integrity-auto.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ block/bio-integrity-auto.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/block/bio-integrity-auto.c b/block/bio-integrity-auto.c
-index cff025b06be1..605403b52c90 100644
+index 605403b52c90..626bbe17eb23 100644
 --- a/block/bio-integrity-auto.c
 +++ b/block/bio-integrity-auto.c
-@@ -107,11 +107,11 @@ bool __bio_integrity_endio(struct bio *bio)
- bool bio_integrity_prep(struct bio *bio)
+@@ -50,23 +50,11 @@ static bool bip_should_check(struct bio_integrity_payload *bip)
+ 	return bip->bip_flags & BIP_CHECK_FLAGS;
+ }
+ 
+ static bool bi_offload_capable(struct blk_integrity *bi)
  {
- 	struct blk_integrity *bi = blk_get_integrity(bio->bi_bdev->bd_disk);
- 	struct bio_integrity_data *bid;
- 	bool set_flags = true;
--	gfp_t gfp = GFP_NOIO;
-+	bool zero_buffer = false;
+-	switch (bi->csum_type) {
+-	case BLK_INTEGRITY_CSUM_CRC64:
+-		return bi->metadata_size == sizeof(struct crc64_pi_tuple);
+-	case BLK_INTEGRITY_CSUM_CRC:
+-	case BLK_INTEGRITY_CSUM_IP:
+-		return bi->metadata_size == sizeof(struct t10_pi_tuple);
+-	default:
+-		pr_warn_once("%s: unknown integrity checksum type:%d\n",
+-			__func__, bi->csum_type);
+-		fallthrough;
+-	case BLK_INTEGRITY_CSUM_NONE:
+-		return false;
+-	}
++	return bi->metadata_size == bi->pi_tuple_size;
+ }
  
- 	if (!bi)
- 		return true;
- 
- 	if (!bio_sectors(bio))
-@@ -137,13 +137,14 @@ bool bio_integrity_prep(struct bio *bio)
- 		 */
- 		if (bi->flags & BLK_INTEGRITY_NOGENERATE) {
- 			if (bi_offload_capable(bi))
- 				return true;
- 			set_flags = false;
--			gfp |= __GFP_ZERO;
--		} else if (bi->metadata_size > bi->pi_tuple_size)
--			gfp |= __GFP_ZERO;
-+			zero_buffer = true;
-+		} else {
-+			zero_buffer = bi->metadata_size > bi->pi_tuple_size;
-+		}
- 		break;
- 	default:
- 		return true;
- 	}
- 
-@@ -152,11 +153,11 @@ bool bio_integrity_prep(struct bio *bio)
- 
- 	bid = mempool_alloc(&bid_pool, GFP_NOIO);
- 	bio_integrity_init(bio, &bid->bip, &bid->bvec, 1);
- 	bid->bio = bio;
- 	bid->bip.bip_flags |= BIP_BLOCK_INTEGRITY;
--	bio_integrity_alloc_buf(bio, gfp & __GFP_ZERO);
-+	bio_integrity_alloc_buf(bio, zero_buffer);
- 
- 	bip_set_seed(&bid->bip, bio->bi_iter.bi_sector);
- 
- 	if (set_flags) {
- 		if (bi->csum_type == BLK_INTEGRITY_CSUM_IP)
+ /**
+  * __bio_integrity_endio - Integrity I/O completion function
+  * @bio:	Protected bio
 -- 
 2.45.2
 
