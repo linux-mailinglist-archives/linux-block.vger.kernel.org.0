@@ -1,305 +1,479 @@
-Return-Path: <linux-block+bounces-32873-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-32877-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC91CD11511
-	for <lists+linux-block@lfdr.de>; Mon, 12 Jan 2026 09:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DFD7FD1171D
+	for <lists+linux-block@lfdr.de>; Mon, 12 Jan 2026 10:16:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 77B1C305A478
-	for <lists+linux-block@lfdr.de>; Mon, 12 Jan 2026 08:46:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 92D5D301E6EE
+	for <lists+linux-block@lfdr.de>; Mon, 12 Jan 2026 09:16:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45BEC3446DB;
-	Mon, 12 Jan 2026 08:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B34AA1EFF8D;
+	Mon, 12 Jan 2026 09:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="G6BHNV7y"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="yC81uHX+"
 X-Original-To: linux-block@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-12.ptr.blmpb.com (sg-1-12.ptr.blmpb.com [118.26.132.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF0534404E;
-	Mon, 12 Jan 2026 08:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B86946C
+	for <linux-block@vger.kernel.org>; Mon, 12 Jan 2026 09:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768207603; cv=none; b=BJkiqeUZpU9YNr6HC4FSly6UIIplo0Tip2qiKaG5zfcsyDbe5MSUcNU3qKUUfAoBWbEdpciOBfjB8QI1PHKfP//YhByB5FfDtId8ls3Mx/tCZ218l3J11EJ/wzKzfKlIebc5fsSe7cBb0y/RTMD5moChkIeFXZ7PaGdb+5xYSMU=
+	t=1768209408; cv=none; b=nem0EYKl+o3uTYvrzrN8h0dPvVXG1Kl98iIeMmdwZyY9NJgg4BXphdoZZS3w4NWNDvmm9rm9YeNCwnjSj5JH3IQx81ArWJlLd6A+02QXJaQuVZHT+42fhSGVrkF0C2R4w+gPzG3Fn1Py+HRoCAZAE77Z5I4Se1ZDG9jV5O4l7Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768207603; c=relaxed/simple;
-	bh=1fQ+wCidl8AdlNQr0yTP+kzimLcX6917SAdUURzbovk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oX8vuOPn/BI0GbIRqz3wwo15/pKYTc4aoWnuYf3VD2rT2EUpF0IhYXej/oyOUAYGjxK1xfk8uVjHEIUU20cqlzO3DaQe9c1lHWw689uozUYCSH2kJaI7cXy0IQBPOWtYYQjpETfMpsqtizL52MvriEVPohAmCIY8vy7HjrAuy40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=G6BHNV7y; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=aJ
-	mw2UKvTCOZIMChkwQSwywauH0iuPure5AD/kUzQgY=; b=G6BHNV7yiBdvJ8wLym
-	Gjd3gzCf+XBI4ZRJZdUbcViRlSRWZlFRKnQJDyNUQaUI764vecgK3PP5P2wVgJ98
-	J3u1cxh8UuvQiLyMwnut241g2bEmgWxlyDbwbqUMKSwfQLQoknRoXuPDayNm+Zvq
-	Db9nLxJspIdEnGza7HJqJb3ts=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDX7+bQtGRpQ4BSMg--.12084S5;
-	Mon, 12 Jan 2026 16:46:13 +0800 (CST)
-From: Yang Xiuwei <yangxiuwei@kylinos.cn>
-To: linux-scsi@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	io-uring@vger.kernel.org
-Cc: fujita.tomonori@lab.ntt.co.jp,
-	axboe@kernel.dk,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	Yang Xiuwei <yangxiuwei@kylinos.cn>
-Subject: [RFC PATCH 3/3] bsg: implement SCSI BSG uring_cmd handler
-Date: Mon, 12 Jan 2026 16:46:06 +0800
-Message-Id: <20260112084606.570887-4-yangxiuwei@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260112084606.570887-1-yangxiuwei@kylinos.cn>
-References: <20260112084606.570887-1-yangxiuwei@kylinos.cn>
+	s=arc-20240116; t=1768209408; c=relaxed/simple;
+	bh=p+uER8WuyRRVzNg+EdwdAt76d59KYQ0wTK9immabVpo=;
+	h=From:Subject:To:Mime-Version:References:Date:In-Reply-To:
+	 Content-Type:Message-Id; b=T4W3V6QOPwYPeDM1vrd7lR0c8vVDu37rhq8LL4ThetzD6VjQN6ugiRCNwgm2LzaWLSl2+Q9hXGKRP45Z8g0uEeOnZOAQtd3f69EpzyQ6VmL2ON6fLIyHYg8COe9Oo64I9p5JjNXSz6IVKh4FdxmzUUIYXEFOMbuQeMEjI5Be9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=yC81uHX+; arc=none smtp.client-ip=118.26.132.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1768209392;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=p+uER8WuyRRVzNg+EdwdAt76d59KYQ0wTK9immabVpo=;
+ b=yC81uHX+1wihZv9Dfh9Ct54D6ZWnjAW1CliJk9Q+ER6yhkLTUNA9vmM5oZmOYp3k1xnD68
+ XTpefslfr6TQFTR8Dt/1DAsTn99NrQW6IFHJT4TlEjQnA4sK45Q+sVwCCcgdUHWsLKFH+o
+ JqTMcPqC+13D2UbvdmUQgtNuK1GWH5ZHwy6jNDwa/y0vlQfN84XyD6HNYWq7tpq35sdoto
+ IUPYiKmAaQKWmB3/dzTrgcxORlz77MN8FpQLI2Kbn2G0Ak9gDNSpr9gcDmawAMkCtIF3rO
+ ea6i1lElgTWbodyC5m/GoChvN/qm5GxkD2SSSnrfuXOqFAks25/ZfoydRSPVAA==
+From: "Yu Kuai" <yukuai@fnnas.com>
+Subject: Re: [PATCH v8 2/8] blk-wbt: fix possible deadlock to nest pcpu_alloc_mutex under q_usage_counter
+Received: from [192.168.1.104] ([39.182.0.185]) by smtp.feishu.cn with ESMTPS; Mon, 12 Jan 2026 17:16:30 +0800
+X-Lms-Return-Path: <lba+26964bbef+9eb808+vger.kernel.org+yukuai@fnnas.com>
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+To: "Hannes Reinecke" <hare@suse.de>, <axboe@kernel.dk>, 
+	<linux-block@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
+	<ming.lei@redhat.com>, <yukuai@fnnas.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgDX7+bQtGRpQ4BSMg--.12084S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Jr1DJF4kurW8JF4rWr4kZwb_yoW3JF1xpF
-	W5tw4jvrW5Ww409FykAr4DCFyYqws5ua47KFW5u3ySkr1UCF90ga10kF10qF1fJr4kAa42
-	qF4vkF98CF1jq37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j-8n5UUUUU=
-Sender: yangxiuwei2025@163.com
-X-CM-SenderInfo: p1dqw55lxzvxisqskqqrwthudrp/xtbC6hXVZmlktNXq7wAA3l
+Mime-Version: 1.0
+References: <20260109065230.653281-1-yukuai@fnnas.com> <20260109065230.653281-3-yukuai@fnnas.com> <b6110ffc-f999-49a1-8a7e-ce51af51e211@suse.de>
+Date: Mon, 12 Jan 2026 17:16:29 +0800
+In-Reply-To: <b6110ffc-f999-49a1-8a7e-ce51af51e211@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <25dc9258-30af-4132-bd38-ba055ed61005@fnnas.com>
+Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Reply-To: yukuai@fnnas.com
 
-Implement the SCSI-specific io_uring command handler for BSG. This
-handler processes SCSI passthrough commands asynchronously via io_uring,
-supporting both traditional user buffers and zero-copy fixed buffers.
+Hi=EF=BC=8C
 
-Key features:
-- Async command execution with proper completion handling
-- Zero-copy support via io_uring fixed buffers
-- Status information returned in CQE res2 field
-- Non-blocking I/O support via IO_URING_F_NONBLOCK
-- Proper error handling and validation
+=E5=9C=A8 2026/1/12 15:38, Hannes Reinecke =E5=86=99=E9=81=93:
+> On 1/9/26 07:52, Yu Kuai wrote:
+>> If wbt is disabled by default and user configures wbt by sysfs, queue
+>> will be frozen first and then pcpu_alloc_mutex will be held in
+>> blk_stat_alloc_callback().
+>>
+>> Fix this problem by allocating memory first before queue frozen.
+>>
+>> Signed-off-by: Yu Kuai <yukuai@fnnas.com>
+>> Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+>> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>> ---
+>> =C2=A0 block/blk-wbt.c | 108 ++++++++++++++++++++++++++++---------------=
+-----
+>> =C2=A0 1 file changed, 63 insertions(+), 45 deletions(-)
+>>
+>> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+>> index abc2190689bb..9bef71ec645d 100644
+>> --- a/block/blk-wbt.c
+>> +++ b/block/blk-wbt.c
+>> @@ -93,7 +93,7 @@ struct rq_wb {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rq_depth rq_depth;
+>> =C2=A0 };
+>> =C2=A0 -static int wbt_init(struct gendisk *disk);
+>> +static int wbt_init(struct gendisk *disk, struct rq_wb *rwb);
+>> =C2=A0 =C2=A0 static inline struct rq_wb *RQWB(struct rq_qos *rqos)
+>> =C2=A0 {
+>> @@ -698,6 +698,41 @@ static void wbt_requeue(struct rq_qos *rqos,=20
+>> struct request *rq)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0 }
+>> =C2=A0 +static int wbt_data_dir(const struct request *rq)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 const enum req_op op =3D req_op(rq);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (op =3D=3D REQ_OP_READ)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return READ;
+>> +=C2=A0=C2=A0=C2=A0 else if (op_is_write(op))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return WRITE;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 /* don't account */
+>> +=C2=A0=C2=A0=C2=A0 return -1;
+>> +}
+>> +
+>> +static struct rq_wb *wbt_alloc(void)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb =3D kzalloc(sizeof(*rwb), GFP_KERN=
+EL);
+>> +> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+>> index e0a70d26972b..a580688c3ad5 100644
+>> --- a/block/blk-sysfs.c
+>> +++ b/block/blk-sysfs.c
+>> @@ -636,11 +636,8 @@ static ssize_t queue_wb_lat_show(struct gendisk=20
+>> *disk, char *page)
+>> =C2=A0 static ssize_t queue_wb_lat_store(struct gendisk *disk, const cha=
+r=20
+>> *page,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size_t count)
+>> =C2=A0 {
+>> -=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> -=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ssize_t ret;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 s64 val;
+>> -=C2=A0=C2=A0=C2=A0 unsigned int memflags;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D queue_var_store64(&val, pa=
+ge);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> @@ -648,40 +645,8 @@ static ssize_t queue_wb_lat_store(struct gendisk=20
+>> *disk, const char *page,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (val < -1)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> =C2=A0 -=C2=A0=C2=A0=C2=A0 /*
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * Ensure that the queue is idled, in case the =
+latency update
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * ends up either enabling or disabling wbt com=
+pletely. We can't
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * have IO inflight if that happens.
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> -=C2=A0=C2=A0=C2=A0 memflags =3D blk_mq_freeze_queue(q);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 rqos =3D wbt_rq_qos(q);
+>> -=C2=A0=C2=A0=C2=A0 if (!rqos) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D wbt_init(disk);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto=
+ out;
+>> -=C2=A0=C2=A0=C2=A0 }
+>> -
+>> -=C2=A0=C2=A0=C2=A0 ret =3D count;
+>> -=C2=A0=C2=A0=C2=A0 if (val =3D=3D -1)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D wbt_default_latency_=
+nsec(q);
+>> -=C2=A0=C2=A0=C2=A0 else if (val >=3D 0)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val *=3D 1000ULL;
+>> -
+>> -=C2=A0=C2=A0=C2=A0 if (wbt_get_min_lat(q) =3D=3D val)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
+>> -
+>> -=C2=A0=C2=A0=C2=A0 blk_mq_quiesce_queue(q);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 mutex_lock(&disk->rqos_state_mutex);
+>> -=C2=A0=C2=A0=C2=A0 wbt_set_min_lat(q, val);
+>> -=C2=A0=C2=A0=C2=A0 mutex_unlock(&disk->rqos_state_mutex);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 blk_mq_unquiesce_queue(q);
+>> -out:
+>> -=C2=A0=C2=A0=C2=A0 blk_mq_unfreeze_queue(q, memflags);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 return ret;
+>> +=C2=A0=C2=A0=C2=A0 ret =3D wbt_set_lat(disk, val);
+>> +=C2=A0=C2=A0=C2=A0 return ret ? ret : count;
+>> =C2=A0 }
+>> =C2=A0 =C2=A0 QUEUE_RW_ENTRY(queue_wb_lat, "wbt_lat_usec");
+>> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+>> index 0974875f77bd..abc2190689bb 100644
+>> --- a/block/blk-wbt.c
+>> +++ b/block/blk-wbt.c
+>> @@ -93,6 +93,8 @@ struct rq_wb {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rq_depth rq_depth;
+>> =C2=A0 };
+>> =C2=A0 +static int wbt_init(struct gendisk *disk);
+>> +
+>> =C2=A0 static inline struct rq_wb *RQWB(struct rq_qos *rqos)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return container_of(rqos, struct rq_wb, r=
+qos);
+>> @@ -506,7 +508,7 @@ u64 wbt_get_min_lat(struct request_queue *q)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return RQWB(rqos)->min_lat_nsec;
+>> =C2=A0 }
+>> =C2=A0 -void wbt_set_min_lat(struct request_queue *q, u64 val)
+>> +static void wbt_set_min_lat(struct request_queue *q, u64 val)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos =3D wbt_rq_qos(q);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!rqos)
+>> @@ -741,7 +743,7 @@ void wbt_init_enable_default(struct gendisk *disk)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON_ONCE(wbt_=
+init(disk));
+>> =C2=A0 }
+>> =C2=A0 -u64 wbt_default_latency_nsec(struct request_queue *q)
+>> +static u64 wbt_default_latency_nsec(struct request_queue *q)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * We default to 2msec for non-rotat=
+ional storage, and 75msec
+>> @@ -902,7 +904,7 @@ static const struct rq_qos_ops wbt_rqos_ops =3D {
+>> =C2=A0 #endif
+>> =C2=A0 };
+>> =C2=A0 -int wbt_init(struct gendisk *disk)
+>> +static int wbt_init(struct gendisk *disk)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb;
+>> @@ -949,3 +951,45 @@ int wbt_init(struct gendisk *disk)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0 =C2=A0 }
+>> +
+>> +int wbt_set_lat(struct gendisk *disk, s64 val)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> +=C2=A0=C2=A0=C2=A0 unsigned int memflags;
+>> +=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos;
+>> +=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 /*
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Ensure that the queue is idled, in case the =
+latency update
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 * ends up either enabling or disabling wbt com=
+pletely. We can't
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 * have IO inflight if that happens.
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> +=C2=A0=C2=A0=C2=A0 memflags =3D blk_mq_freeze_queue(q);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 rqos =3D wbt_rq_qos(q);
+>> +=C2=A0=C2=A0=C2=A0 if (!rqos) {
+>
+> Isn't 'if (!wbt_rq_qos(q))' sufficient here?
+> 'rqos' is never used, and might even trigger an 'unused variable'
+> compiler warning ...
 
-The implementation uses a PDU structure overlaying io_uring_cmd.pdu[32]
-to store temporary state during command execution. Completion is handled
-via task work to safely access user space.
+Yes
 
-This patch replaces the stub implementation from patch 2/3 with the full
-implementation.
+>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D wbt_init(disk);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto=
+ out;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (val =3D=3D -1)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D wbt_default_latency_=
+nsec(q);
+>> +=C2=A0=C2=A0=C2=A0 else if (val >=3D 0)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val *=3D 1000ULL;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (wbt_get_min_lat(q) =3D=3D val)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 blk_mq_quiesce_queue(q);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&disk->rqos_state_mutex);
+>> +=C2=A0=C2=A0=C2=A0 wbt_set_min_lat(q, val);
+>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&disk->rqos_state_mutex);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 blk_mq_unquiesce_queue(q);
+>> +out:
+>> +=C2=A0=C2=A0=C2=A0 blk_mq_unfreeze_queue(q, memflags);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return ret;
+>> +}
+>> diff --git a/block/blk-wbt.h b/block/blk-wbt.h
+>> index 925f22475738..6e39da17218b 100644
+>> --- a/block/blk-wbt.h
+>> +++ b/block/blk-wbt.h
+>> @@ -4,16 +4,13 @@
+>> =C2=A0 =C2=A0 #ifdef CONFIG_BLK_WBT
+>> =C2=A0 -int wbt_init(struct gendisk *disk);
+>> =C2=A0 void wbt_init_enable_default(struct gendisk *disk);
+>> =C2=A0 void wbt_disable_default(struct gendisk *disk);
+>> =C2=A0 void wbt_enable_default(struct gendisk *disk);
+>> =C2=A0 =C2=A0 u64 wbt_get_min_lat(struct request_queue *q);
+>> -void wbt_set_min_lat(struct request_queue *q, u64 val);
+>> -bool wbt_disabled(struct request_queue *);
+>> -
+>> -u64 wbt_default_latency_nsec(struct request_queue *);
+>> +bool wbt_disabled(struct request_queue *q);
+>> +int wbt_set_lat(struct gendisk *disk, s64 val);
+>> =C2=A0 =C2=A0 #else
+>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (!rwb)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NULL;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 rwb->cb =3D blk_stat_alloc_callback(wb_timer_fn, wbt=
+_data_dir, 2,=20
+>> rwb);
+>> +=C2=A0=C2=A0=C2=A0 if (!rwb->cb) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(rwb);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NULL;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return rwb;
+>> +}
+>> +
+>> +static void wbt_free(struct rq_wb *rwb)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 blk_stat_free_callback(rwb->cb);
+>> +=C2=A0=C2=A0=C2=A0 kfree(rwb);
+>> +}
+>> +
+>> =C2=A0 /*
+>> =C2=A0=C2=A0 * Enable wbt if defaults are configured that way
+>> =C2=A0=C2=A0 */
+>> @@ -739,8 +774,17 @@ EXPORT_SYMBOL_GPL(wbt_enable_default);
+>> =C2=A0 =C2=A0 void wbt_init_enable_default(struct gendisk *disk)
+>> =C2=A0 {
+>> -=C2=A0=C2=A0=C2=A0 if (__wbt_enable_default(disk))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON_ONCE(wbt_init(disk))=
+;
+>> +=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (!__wbt_enable_default(disk))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 rwb =3D wbt_alloc();
+>> +=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(!rwb))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(wbt_init(disk, rwb)))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wbt_free(rwb);
+>> =C2=A0 }
+>> =C2=A0 =C2=A0 static u64 wbt_default_latency_nsec(struct request_queue *=
+q)
+>> @@ -755,19 +799,6 @@ static u64 wbt_default_latency_nsec(struct=20
+>> request_queue *q)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 75000000UL=
+L;
+>> =C2=A0 }
+>> =C2=A0 -static int wbt_data_dir(const struct request *rq)
+>> -{
+>> -=C2=A0=C2=A0=C2=A0 const enum req_op op =3D req_op(rq);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 if (op =3D=3D REQ_OP_READ)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return READ;
+>> -=C2=A0=C2=A0=C2=A0 else if (op_is_write(op))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return WRITE;
+>> -
+>> -=C2=A0=C2=A0=C2=A0 /* don't account */
+>> -=C2=A0=C2=A0=C2=A0 return -1;
+>> -}
+>> -
+>> =C2=A0 static void wbt_queue_depth_changed(struct rq_qos *rqos)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 RQWB(rqos)->rq_depth.queue_depth =3D=20
+>> blk_queue_depth(rqos->disk->queue);
+>> @@ -779,8 +810,7 @@ static void wbt_exit(struct rq_qos *rqos)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb =3D RQWB(rqos);
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 blk_stat_remove_callback(rqos->dis=
+k->queue, rwb->cb);
+>> -=C2=A0=C2=A0=C2=A0 blk_stat_free_callback(rwb->cb);
+>> -=C2=A0=C2=A0=C2=A0 kfree(rwb);
+>> +=C2=A0=C2=A0=C2=A0 wbt_free(rwb);
+>> =C2=A0 }
+>> =C2=A0 =C2=A0 /*
+>> @@ -904,22 +934,11 @@ static const struct rq_qos_ops wbt_rqos_ops =3D {
+>> =C2=A0 #endif
+>> =C2=A0 };
+>> =C2=A0 -static int wbt_init(struct gendisk *disk)
+>> +static int wbt_init(struct gendisk *disk, struct rq_wb *rwb)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> -=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb;
+>> -=C2=A0=C2=A0=C2=A0 int i;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>> -
+>> -=C2=A0=C2=A0=C2=A0 rwb =3D kzalloc(sizeof(*rwb), GFP_KERNEL);
+>> -=C2=A0=C2=A0=C2=A0 if (!rwb)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> -
+>> -=C2=A0=C2=A0=C2=A0 rwb->cb =3D blk_stat_alloc_callback(wb_timer_fn, wbt=
+_data_dir, 2,=20
+>> rwb);
+>> -=C2=A0=C2=A0=C2=A0 if (!rwb->cb) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(rwb);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> -=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0=C2=A0 int i;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < WBT_NUM_RWQ; i++=
+)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rq_wait_init(&rwb=
+->rq_wait[i]);
+>> @@ -939,38 +958,38 @@ static int wbt_init(struct gendisk *disk)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D rq_qos_add(&rwb->rqos, disk, RQ_Q=
+OS_WBT, &wbt_rqos_ops);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&q->rq_qos_mutex);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_free;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 blk_stat_add_callback(q, rwb->cb);
+>> -
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> -
+>> -err_free:
+>> -=C2=A0=C2=A0=C2=A0 blk_stat_free_callback(rwb->cb);
+>> -=C2=A0=C2=A0=C2=A0 kfree(rwb);
+>> -=C2=A0=C2=A0=C2=A0 return ret;
+>> -
+>> =C2=A0 }
+>> =C2=A0 =C2=A0 int wbt_set_lat(struct gendisk *disk, s64 val)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> +=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos =3D wbt_rq_qos(q);
+>> +=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb =3D NULL;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int memflags;
+>> -=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (!rqos) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rwb =3D wbt_alloc();
+>
+> Similar here...
+>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!rwb)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
+rn -ENOMEM;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Ensure that the queue is idled, i=
+n case the latency update
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * ends up either enabling or disabl=
+ing wbt completely. We can't
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * have IO inflight if that happens.
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memflags =3D blk_mq_freeze_queue(q);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 rqos =3D wbt_rq_qos(q);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!rqos) {
+>
+> Huh? Am I reading this correctly that we have
+> two calls for 'if (!rqos)' after this change?
+> That looks odd ...
 
-Signed-off-by: Yang Xiuwei <yangxiuwei@kylinos.cn>
+Because if wbt is initialized, it will never be freed until disk removal.
+The first check is used to allocate memory before queue frozen. The second
+check is used to initialize wbt.
 
-diff --git a/drivers/scsi/scsi_bsg.c b/drivers/scsi/scsi_bsg.c
-index 4399a25990fc..1c4c29ef7e35 100644
---- a/drivers/scsi/scsi_bsg.c
-+++ b/drivers/scsi/scsi_bsg.c
-@@ -10,10 +10,205 @@
- 
- #define uptr64(val) ((void __user *)(uintptr_t)(val))
- 
-+/*
-+ * BSG io_uring PDU structure overlaying io_uring_cmd.pdu[32].
-+ * Stores temporary data needed during command execution.
-+ */
-+struct scsi_bsg_uring_cmd_pdu {
-+	struct bio *bio;		/* mapped user buffer, unmap in task work */
-+	struct request *req;		/* block request, freed in task work */
-+	u64 sense_addr;			/* user space sense buffer address */
-+	u32 resid_len;			/* residual transfer length */
-+	u8 sense_len_wr;		/* actual sense data length written */
-+	u8 device_status;		/* SCSI device status (low 8 bits of result) */
-+	u8 host_status;			/* SCSI host status (host_byte of result) */
-+	u8 driver_status;		/* SCSI driver status (DRIVER_SENSE if check condition) */
-+};
-+
-+static inline struct scsi_bsg_uring_cmd_pdu *scsi_bsg_uring_cmd_pdu(
-+	struct io_uring_cmd *ioucmd)
-+{
-+	return io_uring_cmd_to_pdu(ioucmd, struct scsi_bsg_uring_cmd_pdu);
-+}
-+
-+/*
-+ * Task work callback executed in process context.
-+ * Builds res2 with status information and copies sense data to user space.
-+ * res2 layout (64-bit):
-+ *   0-7:   device_status
-+ *   8-15:  driver_status
-+ *   16-23: sense_len_wr
-+ *   24-31: host_status
-+ *   32-63: resid_len
-+ */
-+static void scsi_bsg_uring_task_cb(struct io_tw_req tw_req, io_tw_token_t tw)
-+{
-+	struct io_uring_cmd *ioucmd = io_uring_cmd_from_tw(tw_req);
-+	struct scsi_bsg_uring_cmd_pdu *pdu = scsi_bsg_uring_cmd_pdu(ioucmd);
-+	struct scsi_cmnd *scmd;
-+	struct request *rq = pdu->req;
-+	int ret = 0;
-+	u64 res2;
-+
-+	scmd = blk_mq_rq_to_pdu(rq);
-+
-+	if (pdu->bio)
-+		blk_rq_unmap_user(pdu->bio);
-+
-+	res2 = ((u64)pdu->resid_len << 32) |
-+	       ((u64)(pdu->host_status & 0xff) << 24) |
-+	       ((u64)(pdu->sense_len_wr & 0xff) << 16) |
-+	       ((u64)(pdu->driver_status & 0xff) << 8) |
-+	       (pdu->device_status & 0xff);
-+
-+	if (pdu->sense_len_wr && pdu->sense_addr) {
-+		if (copy_to_user(uptr64(pdu->sense_addr), scmd->sense_buffer,
-+				 pdu->sense_len_wr))
-+			ret = -EFAULT;
-+	}
-+
-+	blk_mq_free_request(rq);
-+	io_uring_cmd_done32(ioucmd, ret, res2,
-+			    IO_URING_CMD_TASK_WORK_ISSUE_FLAGS);
-+}
-+
-+/*
-+ * Async completion callback executed in interrupt/atomic context.
-+ * Saves SCSI status information and schedules task work for final completion.
-+ */
-+static enum rq_end_io_ret scsi_bsg_uring_cmd_done(struct request *req,
-+						  blk_status_t status)
-+{
-+	struct io_uring_cmd *ioucmd = req->end_io_data;
-+	struct scsi_bsg_uring_cmd_pdu *pdu = scsi_bsg_uring_cmd_pdu(ioucmd);
-+	struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(req);
-+
-+	pdu->device_status = scmd->result & 0xff;
-+	pdu->host_status = host_byte(scmd->result);
-+	pdu->driver_status = 0;
-+	pdu->sense_len_wr = 0;
-+
-+	if (scsi_status_is_check_condition(scmd->result)) {
-+		pdu->driver_status = DRIVER_SENSE;
-+		if (pdu->sense_addr)
-+			pdu->sense_len_wr = min_t(u8, scmd->sense_len, SCSI_SENSE_BUFFERSIZE);
-+	}
-+
-+	pdu->resid_len = scmd->resid_len;
-+
-+	io_uring_cmd_do_in_task_lazy(ioucmd, scsi_bsg_uring_task_cb);
-+	return RQ_END_IO_NONE;
-+}
-+
-+/*
-+ * Map user buffer to request, supporting both zero-copy (fixed buffers)
-+ * and traditional mode.
-+ */
-+static int scsi_bsg_map_user_buffer(struct request *req,
-+				    struct io_uring_cmd *ioucmd,
-+				    unsigned int issue_flags, gfp_t gfp_mask)
-+{
-+	const struct bsg_uring_cmd *cmd = io_uring_sqe_cmd(ioucmd->sqe);
-+	struct request_queue *q = req->q;
-+	struct iov_iter iter;
-+	bool is_write = cmd->dout_xfer_len > 0;
-+	u64 buf_addr = is_write ? cmd->dout_xferp : cmd->din_xferp;
-+	unsigned long buf_len = is_write ? cmd->dout_xfer_len : cmd->din_xfer_len;
-+	bool use_fixed = (ioucmd->flags & IORING_URING_CMD_FIXED) != 0;
-+	int ddir = is_write ? WRITE : READ;
-+	int ret;
-+
-+	if (use_fixed) {
-+		ret = io_uring_cmd_import_fixed(buf_addr, buf_len, ddir,
-+						&iter, ioucmd, issue_flags);
-+		if (ret < 0)
-+			return ret;
-+		ret = blk_rq_map_user_iov(q, req, NULL, &iter, gfp_mask);
-+	} else {
-+		ret = blk_rq_map_user(q, req, NULL, uptr64(buf_addr),
-+				      buf_len, gfp_mask);
-+	}
-+
-+	return ret;
-+}
-+
- int scsi_bsg_uring_cmd(struct request_queue *q, struct io_uring_cmd *ioucmd,
- 		       unsigned int issue_flags, bool open_for_write)
- {
--	return -EOPNOTSUPP;
-+	struct scsi_bsg_uring_cmd_pdu *pdu = scsi_bsg_uring_cmd_pdu(ioucmd);
-+	const struct bsg_uring_cmd *cmd = io_uring_sqe_cmd(ioucmd->sqe);
-+	struct scsi_cmnd *scmd;
-+	struct request *req;
-+	blk_mq_req_flags_t blk_flags = 0;
-+	gfp_t gfp_mask = GFP_KERNEL;
-+	int ret = 0;
-+
-+	if (cmd->protocol != BSG_PROTOCOL_SCSI ||
-+	    cmd->subprotocol != BSG_SUB_PROTOCOL_SCSI_CMD)
-+		return -EINVAL;
-+
-+	if (cmd->cdb_len == 0 || cmd->cdb_len > 32)
-+		return -EINVAL;
-+
-+	if (!cmd->cdb_addr)
-+		return -EINVAL;
-+
-+	if (cmd->dout_xfer_len && cmd->din_xfer_len)
-+		return -EOPNOTSUPP;
-+
-+	if (cmd->dout_iovec_count > 0 || cmd->din_iovec_count > 0)
-+		return -EOPNOTSUPP;
-+
-+	if (issue_flags & IO_URING_F_NONBLOCK) {
-+		blk_flags = BLK_MQ_REQ_NOWAIT;
-+		gfp_mask = GFP_NOWAIT;
-+	}
-+
-+	req = scsi_alloc_request(q, cmd->dout_xfer_len ?
-+				 REQ_OP_DRV_OUT : REQ_OP_DRV_IN, blk_flags);
-+	if (IS_ERR(req))
-+		return PTR_ERR(req);
-+
-+	scmd = blk_mq_rq_to_pdu(req);
-+	scmd->cmd_len = cmd->cdb_len;
-+	scmd->allowed = SG_DEFAULT_RETRIES;
-+
-+	if (copy_from_user(scmd->cmnd, uptr64(cmd->cdb_addr), cmd->cdb_len)) {
-+		ret = -EFAULT;
-+		goto out_free_req;
-+	}
-+
-+	if (!scsi_cmd_allowed(scmd->cmnd, open_for_write)) {
-+		ret = -EPERM;
-+		goto out_free_req;
-+	}
-+
-+	pdu->sense_addr = cmd->sense_addr;
-+	scmd->sense_len = cmd->sense_len ?
-+		min(cmd->sense_len, SCSI_SENSE_BUFFERSIZE) : SCSI_SENSE_BUFFERSIZE;
-+
-+	if (cmd->dout_xfer_len || cmd->din_xfer_len) {
-+		ret = scsi_bsg_map_user_buffer(req, ioucmd, issue_flags, gfp_mask);
-+		if (ret)
-+			goto out_free_req;
-+		pdu->bio = req->bio;
-+	} else {
-+		pdu->bio = NULL;
-+	}
-+
-+	req->timeout = cmd->timeout_ms ?
-+		msecs_to_jiffies(cmd->timeout_ms) : BLK_DEFAULT_SG_TIMEOUT;
-+
-+	req->end_io = scsi_bsg_uring_cmd_done;
-+	req->end_io_data = ioucmd;
-+	pdu->req = req;
-+
-+	blk_execute_rq_nowait(req, false);
-+	return -EIOCBQUEUED;
-+
-+out_free_req:
-+	blk_mq_free_request(req);
-+	return ret;
- }
- 
- static int scsi_bsg_sg_io_fn(struct request_queue *q, struct sg_io_v4 *hdr,
--- 
-2.25.1
+>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D wbt_init(disk);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D wbt_init(disk, rwb);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wbt_=
+free(rwb);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 goto out;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (val =3D=3D -1)
+>> @@ -990,6 +1009,5 @@ int wbt_set_lat(struct gendisk *disk, s64 val)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 blk_mq_unquiesce_queue(q);
+>> =C2=A0 out:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 blk_mq_unfreeze_queue(q, memflags);
+>> -
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0 }
+>
+> Cheers,
+>
+> Hannes
 
+--=20
+Thansk,
+Kuai
 
