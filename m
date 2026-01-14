@@ -1,248 +1,89 @@
-Return-Path: <linux-block+bounces-33022-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33024-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79061D1FF84
-	for <lists+linux-block@lfdr.de>; Wed, 14 Jan 2026 16:55:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 792F2D20877
+	for <lists+linux-block@lfdr.de>; Wed, 14 Jan 2026 18:24:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2510030A53C3
-	for <lists+linux-block@lfdr.de>; Wed, 14 Jan 2026 15:50:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BDE823011AAD
+	for <lists+linux-block@lfdr.de>; Wed, 14 Jan 2026 17:24:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6C52C159A;
-	Wed, 14 Jan 2026 15:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05EAD285CAD;
+	Wed, 14 Jan 2026 17:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Q5gHH5DJ"
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="MCgnMKpD"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-39.ptr.blmpb.com (va-2-39.ptr.blmpb.com [209.127.231.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C069A3A0B3A
-	for <linux-block@vger.kernel.org>; Wed, 14 Jan 2026 15:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66322FF160
+	for <linux-block@vger.kernel.org>; Wed, 14 Jan 2026 17:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768405816; cv=none; b=PsDX4zBKt7SVLhE05qsBRzNEoqSrbCzVg54s6s5Xki8ORskU9JNe8A53bvVwqPv6aezTnSssGDERyBp9F1jtQ5xkmEjVWqbtGTD1F+04xNaQ4UCklyG+rcPxj6jf/1vw4W7/aJw0fqqog8zzNKhqhitmsfuESnDdCiLi7btpJgg=
+	t=1768411445; cv=none; b=T2wn3SXiH/qN/xZgkZLCqdp1qbjs9pjRT4YC+K5UELhItgKsbfVUzn/D18+xo7ACLbT3kKhE5dPUva/5HFuxEeVHQ0DuoqVn5Uh0IEpmTe7hN6oTEBIztN8tEo5phmZE1LoWbj6ua/46e4OtI4cydR+YgoKMUVAWyl6aJBQ3B10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768405816; c=relaxed/simple;
-	bh=T8weHn8otMphpEreUJWqv5SlzDSbz8VmMVimy7muyEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VTkAYUby6qeH/qe31BYqVDxn2DYKI9qWQs1udL/i4wrRI0YoWRsnPOsdZOXJssGCXNF6ohLwFLpylFTyhk9aXFm4OHGjuocy2U6Ze2IBt5w1Juj+zNwZ4gjh71863wQf2rpizQdJF2hGAHFqCGIE04PndozFGFKhxKkb7MeFpSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Q5gHH5DJ; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60EETUGw4028597
-	for <linux-block@vger.kernel.org>; Wed, 14 Jan 2026 07:50:14 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=l/N0oNZdrOxC+sMk7wLBt3mzHipkA8OrRZGOO0xO1fI=; b=Q5gHH5DJCkKD
-	XO0ecH6AdjNeDaEBiq39eablHUGyqkusjNCr4MyinHf1foajOOTVwO2sN/916p+1
-	chhuhDl+VhqHsQ1JDiUTG9yh8uV/9W2OJff2+RUh1DjVdHJkIwWgnx/R6LtAAKyk
-	f8EmhNjdNHqFAQwU01t2A2UV1/OteDAaoRo6UWEqc8VElv1TmRJiRwxoJ+bawNUn
-	U2lu0Puo5eTdn80JR6F7h2FqXDHMBi3Qz7Jtg78lBOHJ63OoX0QZ+FaCZIQrMp0z
-	BUKZAwDLMa/pZTDHOvUJOtTS/Q6dGzuWkNe60Z2kGQ7mLoPf0rTwyCaEoedXEXc0
-	Ekb004f+pw==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bp6pwujf4-7
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Wed, 14 Jan 2026 07:50:14 -0800 (PST)
-Received: from twshared25002.15.frc2.facebook.com (2620:10d:c085:208::7cb7) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Wed, 14 Jan 2026 15:50:12 +0000
-Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
-	id 1AD5263A9E16; Wed, 14 Jan 2026 07:50:09 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <dm-devel@lists.linux.dev>, <snitzer@kernel.org>, <hch@lst.de>,
-        <ebiggers@kernel.org>
-CC: <linux-block@vger.kernel.org>, <axboe@kernel.dk>,
-        Keith Busch
-	<kbusch@kernel.org>
-Subject: [RESEND PATCHv3 2/2] dm-crypt: dynamic scatterlist for many segments
-Date: Wed, 14 Jan 2026 07:49:54 -0800
-Message-ID: <20260114154954.3282207-3-kbusch@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260114154954.3282207-1-kbusch@meta.com>
-References: <20260114154954.3282207-1-kbusch@meta.com>
+	s=arc-20240116; t=1768411445; c=relaxed/simple;
+	bh=hxmiHVCcKE3/Yocna+eDPqZ+73wncyP6BILnrvmtXV0=;
+	h=From:Mime-Version:Date:References:To:Subject:Message-Id:
+	 Content-Type:In-Reply-To; b=YTR5+6rbwZiGc42rnFndN6lZxAIfi/sKTKPUpsb9QIST4nmMea7A33/Bq4v/OXpyA6k59rGSrKzGiJC9SCUr8qkUeT6Lly/ROmn7t9AjYPrbPH7l9F7B3Tk0r0TVphzcibgD8mAx+PZMtUPkUhVYBweZRT03cMcS2ZSHop1wZnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=MCgnMKpD; arc=none smtp.client-ip=209.127.231.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1768411394;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=/CnDTCJeP7SqyefY7N1x7ZhXQVr6kPeznOAU4W+bA78=;
+ b=MCgnMKpDNJhzEOlzF9Hte7PweY+U69GgFfUudZPmJ8MjVWeCw2L8hlWVUpqonzaos73Vf5
+ px48qA7QfdESlJR3GNI96YEhRwAkupo0EQXhmIBiBU2zc8ZIL7+PKmt18mlFAcyqO0gm4f
+ 2FvmELjqrAOD9ivl9c4WwzOFD55Ywe/wEfWPifV1fKIZjVaMkhHYOV+3+pqF7k2d29nMwS
+ SKU3IJjLBL1yjbAR3LIAXoQmRunwnzgqUrskVcy2xPPvDx4xUfS6gt5ngQofnusyLvNUoz
+ yw2SJeEyhFOWm2I9hUWs1xif7kIBquxWB2YULjk8O6J6/0sns4m7v7sPcUoahQ==
+From: "Yu Kuai" <yukuai@fnnas.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Received: from [192.168.1.104] ([39.182.0.185]) by smtp.feishu.cn with ESMTPS; Thu, 15 Jan 2026 01:23:12 +0800
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+User-Agent: Mozilla Thunderbird
+Reply-To: yukuai@fnnas.com
+Date: Thu, 15 Jan 2026 01:23:10 +0800
+References: <20260109065230.653281-1-yukuai@fnnas.com> <20260109065230.653281-3-yukuai@fnnas.com> <b6110ffc-f999-49a1-8a7e-ce51af51e211@suse.de> <25dc9258-30af-4132-bd38-ba055ed61005@fnnas.com>
+To: "Hannes Reinecke" <hare@suse.de>, <axboe@kernel.dk>, 
+	<linux-block@vger.kernel.org>, <tj@kernel.org>, <nilay@linux.ibm.com>, 
+	<ming.lei@redhat.com>, <yukuai@fnnas.com>
+Subject: Re: [PATCH v8 2/8] blk-wbt: fix possible deadlock to nest pcpu_alloc_mutex under q_usage_counter
+Message-Id: <03ab5e68-1977-4938-ac03-e36f53a87149@fnnas.com>
+X-Lms-Return-Path: <lba+26967d101+6f358b+vger.kernel.org+yukuai@fnnas.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=GYIaXAXL c=1 sm=1 tr=0 ts=6967bb36 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8
- a=uKr_gk69WBrFS6epR-gA:9
-X-Proofpoint-GUID: SjMURvBFd0yVlcIGxaKIt_Qtj3059-4e
-X-Proofpoint-ORIG-GUID: SjMURvBFd0yVlcIGxaKIt_Qtj3059-4e
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE0MDEzMiBTYWx0ZWRfXwMEGYULmidAA
- IP2/OwHWPmahd53shI0NcwiuBj97FYq68bdA9KF7scW289Z9UNDb2CSVFvlNZHpAdZfVVNiYl5H
- vCJkdgKdj0sdgsCo+JE75mohyR+vNUuA4hwPdJzigVwmf4tF2Tocae7SI/9B3YoD1JbsCZAUUAZ
- eQATeiLPP93PFdKSCnExHmY6y6HG0wVeYGkMrti74ZaZCMorS5KtPujdoxjpLhyVIizFuWlltRV
- E1AC7K3BcGDoeAj8Ttn1NRBd3ErtHaOlspa0LlEhHGzt5+qHnZDIAhsRRSW3TebrHw9G0fwUBEb
- XNj7ytZiB4NDEO3dgOnHTtODhJEfFGkt74hNORgvsKHksLDHP0a5MVzz4YEBYpm4Pd5UfAQ0nA1
- NZQO/aU5z3xir7vmSG8Ntxuu4a+5Mns01SPKtcq9Jk5l35nXy4JfhKgEpIZmBrUKW3R4K31PClj
- CLvTPPgLZmSbsQBOOSA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-14_04,2026-01-14_01,2025-10-01_01
+In-Reply-To: <25dc9258-30af-4132-bd38-ba055ed61005@fnnas.com>
+Content-Language: en-US
 
-From: Keith Busch <kbusch@kernel.org>
+Hi,
 
-In the unlikely case where the base bio uses a highly fragmented vector,
-the four inline scatterlist elements may not be enough, so allocate a
-temporary scatterlist when needed.
+=E5=9C=A8 2026/1/12 17:16, Yu Kuai =E5=86=99=E9=81=93:
+>>  =C2=A0 =C2=A0 int wbt_set_lat(struct gendisk *disk, s64 val)
+>>  =C2=A0 {
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct request_queue *q =3D disk->queue;
+>> +=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos =3D wbt_rq_qos(q);
+>> +=C2=A0=C2=A0=C2=A0 struct rq_wb *rwb =3D NULL;
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int memflags;
+>> -=C2=A0=C2=A0=C2=A0 struct rq_qos *rqos;
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>>  =C2=A0 +=C2=A0=C2=A0=C2=A0 if (!rqos) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rwb =3D wbt_alloc();
+> Similar here...
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/md/dm-crypt.c | 51 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 40 insertions(+), 11 deletions(-)
+Just checked, looks like something is wrong while you were reviewing this
+patch, the same context wbt_set_lat() shows twice in your reply.
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 5304954b4574b..d659ea4573192 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -98,6 +98,8 @@ struct dm_crypt_request {
- 	struct scatterlist sg_in[4];
- 	struct scatterlist sg_out[4];
- 	u64 iv_sector;
-+	struct scatterlist *__sg_in;
-+	struct scatterlist *__sg_out;
- };
-=20
- struct crypt_config;
-@@ -1426,18 +1428,32 @@ static int crypt_convert_block_aead(struct crypt_=
-config *cc,
- 	return r;
- }
-=20
--static int crypt_build_sgl(struct crypt_config *cc, struct scatterlist *=
-sg,
-+static void crypt_free_sgls(struct dm_crypt_request *dmreq)
-+{
-+	if (dmreq->__sg_in !=3D dmreq->sg_in)
-+		kfree(dmreq->__sg_in);
-+	if (dmreq->__sg_out !=3D dmreq->sg_out)
-+		kfree(dmreq->__sg_out);
-+	dmreq->__sg_in =3D NULL;
-+	dmreq->__sg_out =3D NULL;
-+}
-+
-+static int crypt_build_sgl(struct crypt_config *cc, struct scatterlist *=
-*psg,
- 			   struct bvec_iter *iter, struct bio *bio,
- 			   int max_segs)
- {
- 	unsigned int bytes =3D cc->sector_size;
-+	struct scatterlist *sg =3D *psg;
- 	struct bvec_iter tmp =3D *iter;
- 	int segs, i =3D 0;
-=20
- 	bio_advance_iter(bio, &tmp, bytes);
- 	segs =3D tmp.bi_idx - iter->bi_idx + !!tmp.bi_bvec_done;
--	if (segs > max_segs)
--		return -EIO;
-+	if (segs > max_segs) {
-+		sg =3D kmalloc_array(segs, sizeof(struct scatterlist), GFP_NOIO);
-+		if (!sg)
-+			return -ENOMEM;
-+	}
-=20
- 	sg_init_table(sg, segs);
- 	do {
-@@ -1446,7 +1462,7 @@ static int crypt_build_sgl(struct crypt_config *cc,=
- struct scatterlist *sg,
-=20
- 		/* Reject unexpected unaligned bio. */
- 		if (unlikely((len | bv.bv_offset) & cc->io_alignment))
--			return -EIO;
-+			goto error;
-=20
- 		sg_set_page(&sg[i++], bv.bv_page, len, bv.bv_offset);
- 		bio_advance_iter_single(bio, iter, len);
-@@ -1454,8 +1470,13 @@ static int crypt_build_sgl(struct crypt_config *cc=
-, struct scatterlist *sg,
- 	} while (bytes);
-=20
- 	if (WARN_ON_ONCE(i !=3D segs))
--		return -EIO;
-+		goto error;
-+	*psg =3D sg;
- 	return 0;
-+error:
-+	if (sg !=3D *psg)
-+		kfree(sg);
-+	return -EIO;
- }
-=20
- static int crypt_convert_block_skcipher(struct crypt_config *cc,
-@@ -1484,18 +1505,21 @@ static int crypt_convert_block_skcipher(struct cr=
-ypt_config *cc,
- 	sector =3D org_sector_of_dmreq(cc, dmreq);
- 	*sector =3D cpu_to_le64(ctx->cc_sector - cc->iv_offset);
-=20
--	sg_in  =3D &dmreq->sg_in[0];
--	sg_out =3D &dmreq->sg_out[0];
-+	dmreq->__sg_in =3D &dmreq->sg_in[0];
-+	dmreq->__sg_out =3D &dmreq->sg_out[0];
-=20
--	r =3D crypt_build_sgl(cc, sg_in, &ctx->iter_in, ctx->bio_in,
-+	r =3D crypt_build_sgl(cc, &dmreq->__sg_in, &ctx->iter_in, ctx->bio_in,
- 			    ARRAY_SIZE(dmreq->sg_in));
- 	if (r < 0)
- 		return r;
-=20
--	r =3D crypt_build_sgl(cc, sg_out, &ctx->iter_out, ctx->bio_out,
-+	r =3D crypt_build_sgl(cc, &dmreq->__sg_out, &ctx->iter_out, ctx->bio_ou=
-t,
- 			    ARRAY_SIZE(dmreq->sg_out));
- 	if (r < 0)
--		return r;
-+		goto out;
-+
-+	sg_in =3D dmreq->__sg_in;
-+	sg_out =3D dmreq->__sg_out;
-=20
- 	if (cc->iv_gen_ops) {
- 		/* For READs use IV stored in integrity metadata */
-@@ -1504,7 +1528,7 @@ static int crypt_convert_block_skcipher(struct cryp=
-t_config *cc,
- 		} else {
- 			r =3D cc->iv_gen_ops->generator(cc, org_iv, dmreq);
- 			if (r < 0)
--				return r;
-+				goto out;
- 			/* Data can be already preprocessed in generator */
- 			if (test_bit(CRYPT_ENCRYPT_PREPROCESS, &cc->cipher_flags))
- 				sg_in =3D sg_out;
-@@ -1525,6 +1549,9 @@ static int crypt_convert_block_skcipher(struct cryp=
-t_config *cc,
-=20
- 	if (!r && cc->iv_gen_ops && cc->iv_gen_ops->post)
- 		r =3D cc->iv_gen_ops->post(cc, org_iv, dmreq);
-+out:
-+	if (r !=3D -EINPROGRESS && r !=3D -EBUSY)
-+		crypt_free_sgls(dmreq);
-=20
- 	return r;
- }
-@@ -1590,7 +1617,9 @@ static void crypt_free_req_skcipher(struct crypt_co=
-nfig *cc,
- 				    struct skcipher_request *req, struct bio *base_bio)
- {
- 	struct dm_crypt_io *io =3D dm_per_bio_data(base_bio, cc->per_bio_data_s=
-ize);
-+	struct dm_crypt_request *dmreq =3D dmreq_of_req(cc, req);
-=20
-+	crypt_free_sgls(dmreq);
- 	if ((struct skcipher_request *)(io + 1) !=3D req)
- 		mempool_free(req, &cc->req_pool);
- }
+For now, I won't send a new version, otherwise please let me know.
+
 --=20
-2.47.3
-
+Thansk,
+Kuai
 
