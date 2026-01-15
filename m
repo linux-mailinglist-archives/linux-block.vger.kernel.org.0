@@ -1,222 +1,153 @@
-Return-Path: <linux-block+bounces-33046-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33047-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06A18D21B41
-	for <lists+linux-block@lfdr.de>; Thu, 15 Jan 2026 00:07:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED13ED22047
+	for <lists+linux-block@lfdr.de>; Thu, 15 Jan 2026 02:25:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CA7F7301D5CB
-	for <lists+linux-block@lfdr.de>; Wed, 14 Jan 2026 23:07:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8DF48300721B
+	for <lists+linux-block@lfdr.de>; Thu, 15 Jan 2026 01:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4735E37F8AA;
-	Wed, 14 Jan 2026 23:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782FE23B628;
+	Thu, 15 Jan 2026 01:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipDz0e50"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="f6+0/olL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498BF43AA4;
-	Wed, 14 Jan 2026 23:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE971C5D77;
+	Thu, 15 Jan 2026 01:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768432050; cv=none; b=ev7uX7WCX6zKM2giHk7B+GEitGgyPgmygHRxMAOnXYsaXVPS+3cRm0+/wPBAWRRNyfZVqBsGDmjKB2j5wTv6d9wCSQ2cEv9ysVyqgAKgmOWsmmZe5RAkQO8ZuM08wmcUZZ8JzJJBH0LIfzoJNjNe/UG/fVO3OtmY3zM7np/J3nU=
+	t=1768440319; cv=none; b=ghqdu/6i3CenIfwXeN2SEdFW818NUsdSwvZhQU4OZM9Vu34lJPVCqrTw5IL/c+KtYyAG+3nHtzpalJ1sNionjjGvwn080H4nUzw0+ZxgVTATZ7M/6kVanSTJe6kyUnmLV8kEyhgQgEB8iqnJa88XoJdtNO+mLXTczCzAFQpDHWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768432050; c=relaxed/simple;
-	bh=MmRMnONimKR3VDLK+nHIP/fZEo9OsD82HxQSy/6hNe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+ougOSVvN36mKaCMolmh5dJbIS8GKAKEMYp5ss17lEx6xu/dbYQwxrBmcnhAx8fps8LMat2Onpo+aMamBNJNVwgywVkwksY6Pc3hiUcDgNiSl4el1XQOFpjX1FwIKcZe7JZ8Cqht0x2vmWiO7qotZuuVxrJonMlxqYV08D1Fak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipDz0e50; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FF0C16AAE;
-	Wed, 14 Jan 2026 23:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768432049;
-	bh=MmRMnONimKR3VDLK+nHIP/fZEo9OsD82HxQSy/6hNe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ipDz0e50AzttcrjDdJqj0KoQ/njzbR/g0MrrmyB3My1i+G0RYFMMPwzb5qJ+FYElM
-	 KJv3F7U7r6al8qcBD5ZByl30Oc/Pkt/O21aHEZnlSPPPn+XSWSiuRU3gAZG7RAqGso
-	 UKBSRbWUZ6XRLLxty+91N9pkE6TIEobs5/srMmpC3/ZBg7CCZ1kLFA+33u2fWdV/cV
-	 lan83rlpI4KLPZ1AodqWXtRE0eRQp3tcxOKoSY+wJQB19jvMkavMW/HmouuszvTtel
-	 A5UTKUoPaxtxlCQA50PXWnTRLkStoU9mlB8+gpKCRwBzxA5B8a15uofAxhwhAwzHou
-	 V1EExXtn0GLbg==
-Date: Wed, 14 Jan 2026 15:07:28 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
-	Carlos Maiolino <cem@kernel.org>, Qu Wenruo <wqu@suse.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-block@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 14/14] xfs: use bounce buffering direct I/O when the
- device requires stable pages
-Message-ID: <20260114230728.GS15551@frogsfrogsfrogs>
-References: <20260114074145.3396036-1-hch@lst.de>
- <20260114074145.3396036-15-hch@lst.de>
+	s=arc-20240116; t=1768440319; c=relaxed/simple;
+	bh=sPfse5Cc5z9C+okX6nNmVsZ6uUCzWV2DIzBj3kmjSW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q1uqforQfIawqiK5ghx8Nvukq2eGwQFwOZMctVIqBOgV+fWJ5hXEZQHyWmpMSHwOFtNesr81Op27YEp3wI8zMWpf4QkhqxbvfPvLHRc+GRAkFbI1OxmFS5IeArdSm+dtm9bXz4MF+78k488wwMymY0J8LqiAyhD5eKWPYVM2BzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=f6+0/olL; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Kx
+	pEQ33grYiIYyFVG6/rA3+zwrNTxIpguT9J6DE6a4o=; b=f6+0/olLiTCWyzsHrn
+	QIel86VQi3rYG5ceXPbL9KsGTtTJwB/ry4Pbj0U59oMUGk1Z1FNvUlFIcPEMBCPo
+	ikoX4JAIBnQxhXV1NO2lw2CUJTK2iRQwDZIX2yd2TnzeQU0gES5J2DI9y+sDEiKQ
+	5UZ8eK3a3mwOJfqfL28IxS4OQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAnDqzXQWhp5NZdGA--.64S2;
+	Thu, 15 Jan 2026 09:24:41 +0800 (CST)
+From: Yang Xiuwei <yangxiuwei@kylinos.cn>
+To: linux-scsi@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	io-uring@vger.kernel.org
+Cc: fujita.tomonori@lab.ntt.co.jp,
+	axboe@kernel.dk,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	bvanassche@acm.org,
+	Yang Xiuwei <yangxiuwei@kylinos.cn>
+Subject: [RFC PATCH v2 0/3] bsg: add io_uring command support for SCSI passthrough
+Date: Thu, 15 Jan 2026 09:24:34 +0800
+Message-Id: <cover.1768439194.git.yangxiuwei@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114074145.3396036-15-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAnDqzXQWhp5NZdGA--.64S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWFyrJr48AF17ZryDJr4kXrb_yoW5ZF47pF
+	WSgr93GayUJr1xuFn3XrZrZFWFqa95G347G343K34vyr909F9FyF1UKF1Fq397Gry2q34j
+	qw4jqrs8Ca1kAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j1v38UUUUU=
+Sender: yangxiuwei2025@163.com
+X-CM-SenderInfo: p1dqw55lxzvxisqskqqrwthudrp/xtbCwRn6i2loQdk0kQAA3V
 
-On Wed, Jan 14, 2026 at 08:41:12AM +0100, Christoph Hellwig wrote:
-> Fix direct I/O on devices that require stable pages by asking iomap
-> to bounce buffer.  To support this, ioends are used for direct reads
-> in this case to provide a user context for copying data back from the
-> bounce buffer.
-> 
-> This fixes qemu when used on devices using T10 protection information
-> and probably other cases like iSCSI using data digests.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_aops.c |  8 ++++++--
->  fs/xfs/xfs_file.c | 41 ++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 44 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 56a544638491..c3c1e149fff4 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -103,7 +103,7 @@ xfs_ioend_put_open_zones(
->   * IO write completion.
->   */
->  STATIC void
-> -xfs_end_ioend(
-> +xfs_end_ioend_write(
->  	struct iomap_ioend	*ioend)
->  {
->  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
-> @@ -202,7 +202,11 @@ xfs_end_io(
->  			io_list))) {
->  		list_del_init(&ioend->io_list);
->  		iomap_ioend_try_merge(ioend, &tmp);
-> -		xfs_end_ioend(ioend);
-> +		if (bio_op(&ioend->io_bio) == REQ_OP_READ)
-> +			iomap_finish_ioends(ioend,
-> +				blk_status_to_errno(ioend->io_bio.bi_status));
-> +		else
-> +			xfs_end_ioend_write(ioend);
->  		cond_resched();
->  	}
->  }
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 7874cf745af3..f6cc63dcf961 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -224,12 +224,34 @@ xfs_ilock_iocb_for_write(
->  	return 0;
->  }
->  
-> +/*
-> + * Bounce buffering dio reads need a user context to copy back the data.
-> + * Use an ioend to provide that.
-> + */
-> +static void
-> +xfs_dio_read_bounce_submit_io(
-> +	const struct iomap_iter	*iter,
-> +	struct bio		*bio,
-> +	loff_t			file_offset)
-> +{
-> +	iomap_init_ioend(iter->inode, bio, file_offset, IOMAP_IOEND_DIRECT);
-> +	bio->bi_end_io = xfs_end_bio;
-> +	submit_bio(bio);
-> +}
-> +
-> +static const struct iomap_dio_ops xfs_dio_read_bounce_ops = {
-> +	.submit_io	= xfs_dio_read_bounce_submit_io,
-> +	.bio_set	= &iomap_ioend_bioset,
-> +};
-> +
->  STATIC ssize_t
->  xfs_file_dio_read(
->  	struct kiocb		*iocb,
->  	struct iov_iter		*to)
->  {
->  	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-> +	unsigned int		dio_flags = 0;
-> +	const struct iomap_dio_ops *dio_ops = NULL;
->  	ssize_t			ret;
->  
->  	trace_xfs_file_direct_read(iocb, to);
-> @@ -242,7 +264,12 @@ xfs_file_dio_read(
->  	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
->  	if (ret)
->  		return ret;
-> -	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL, 0, NULL, 0);
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping)) {
-> +		dio_ops = &xfs_dio_read_bounce_ops;
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
-> +	}
-> +	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, dio_ops, dio_flags,
+This RFC series adds io_uring command support to the BSG (Block layer
+SCSI Generic) driver, enabling asynchronous SCSI passthrough operations
+via io_uring.
 
-Now that I've gotten to the final patch, one thing strikes me as a
-little strange -- we pass the iocb to iomap_dio_rw, which means that in
-theory iomap could set IOMAP_DIO_BOUNCE for us, instead of XFS having to
-do that on its own.
+Motivation:
+-----------
+The current BSG interface uses ioctl() for SCSI passthrough, which is
+synchronous and has limitations for high-performance applications. By
+integrating with io_uring, we can provide:
 
-I think the only barrier to that is the little bit with
-xfs_dio_read_bounce_submit_io where we have to kick the direct read
-completion to a place where we can copy the bounce buffer contents to
-the pages that the caller gave us in the iov_iter, right?
+1. Asynchronous I/O support for better scalability
+2. Zero-copy I/O via io_uring fixed buffers
+3. Better integration with modern async I/O frameworks
+4. Reduced system call overhead
 
-Directio already has a mechanism for doing completions from
-s_dio_done_wq, so can't we reuse that?  Or is the gamble here that
-things like btrfs might want to do something further with the bounce
-buffer (like verifying checksums before copying to the caller's pages)
-so we might as well make the fs responsible for setting IOMAP_DIO_BOUNCE
-and taking control of the bio completion?
+Design:
+-------
+The implementation follows the io_uring uring_cmd pattern used by other
+drivers (e.g., nvme). Key design decisions:
 
---D
+1. UAPI Structure: A new bsg_uring_cmd structure is defined that fits
+   within the 80-byte cmd field of a 128-byte SQE, with 24 bytes reserved
+   for future extensions. The structure uses protocol-agnostic field names
+   to support multiple protocols beyond SCSI.
 
-> +			NULL, 0);
->  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
->  
->  	return ret;
-> @@ -703,6 +730,8 @@ xfs_file_dio_write_aligned(
->  		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
->  		iolock = XFS_IOLOCK_SHARED;
->  	}
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
->  	trace_xfs_file_direct_write(iocb, from);
->  	ret = iomap_dio_rw(iocb, from, ops, dops, dio_flags, ac, 0);
->  out_unlock:
-> @@ -750,6 +779,7 @@ xfs_file_dio_write_atomic(
->  {
->  	unsigned int		iolock = XFS_IOLOCK_SHARED;
->  	ssize_t			ret, ocount = iov_iter_count(from);
-> +	unsigned int		dio_flags = 0;
->  	const struct iomap_ops	*dops;
->  
->  	/*
-> @@ -777,8 +807,10 @@ xfs_file_dio_write_atomic(
->  	}
->  
->  	trace_xfs_file_direct_write(iocb, from);
-> -	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
-> -			0, NULL, 0);
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
-> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops, dio_flags,
-> +			NULL, 0);
->  
->  	/*
->  	 * The retry mechanism is based on the ->iomap_begin method returning
-> @@ -867,6 +899,9 @@ xfs_file_dio_write_unaligned(
->  	if (flags & IOMAP_DIO_FORCE_WAIT)
->  		inode_dio_wait(VFS_I(ip));
->  
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		flags |= IOMAP_DIO_BOUNCE;
-> +
->  	trace_xfs_file_direct_write(iocb, from);
->  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
->  			   &xfs_dio_write_ops, flags, NULL, 0);
-> -- 
-> 2.47.3
-> 
-> 
+2. Status Information: SCSI status (device_status, host_status,
+   driver_status, sense_len, resid_len) is returned in the CQE res2 field
+   using a compact 64-bit encoding.
+
+3. Zero-copy Support: The implementation supports both traditional
+   user buffers and io_uring fixed buffers for zero-copy I/O.
+
+4. Async Completion: Command completion is handled via task work to
+   safely access user space and copy sense data.
+
+5. Non-blocking I/O: Support for IO_URING_F_NONBLOCK flag to enable
+   non-blocking command submission.
+
+Limitations:
+-----------
+- Currently only SCSI commands are supported (BSG_PROTOCOL_SCSI)
+- Scatter/gather I/O (iovec arrays) is not currently supported, but
+  the data structure includes fields for future implementation.
+- Bidirectional transfers are not supported (consistent with existing
+  BSG behavior).
+
+Testing:
+--------
+A user-space test program has been developed to validate the
+implementation, including:
+- Basic SCSI commands (INQUIRY, READ CAPACITY (10), READ (10),
+  WRITE (10))
+- Zero-copy mode using fixed buffers
+- Error handling (invalid flags, unsupported features)
+
+The test program is available separately and can be provided upon request.
+
+Changes since v1:
+-----------------
+- Renamed SCSI-specific fields (cdb_addr/cdb_len) to protocol-agnostic
+  names (request/request_len) to support multiple protocols beyond SCSI
+- Removed __packed attribute and optimized field alignment to avoid
+  suboptimal code generation on architectures that don't support unaligned
+  accesses
+- Simplified data transfer structure: unified din_xferp/dout_xferp into a
+  single xfer_addr field with xfer_dir to indicate direction (0=read, 1=write),
+  consistent with existing BSG behavior where bidirectional transfers are not
+  supported
+- Updated implementation to use new protocol-agnostic field names
+
+Yang Xiuwei (3):
+  bsg: add bsg_uring_cmd uapi structure
+  bsg: add uring_cmd support to BSG generic layer
+  bsg: implement SCSI BSG uring_cmd handler
+
+ block/bsg.c              |  28 +++++
+ drivers/scsi/scsi_bsg.c  | 222 +++++++++++++++++++++++++++++++++++++++
+ include/linux/bsg.h      |   4 +
+ include/uapi/linux/bsg.h |  19 ++++
+ 4 files changed, 273 insertions(+)
+
+-- 
+2.25.1
+
 
