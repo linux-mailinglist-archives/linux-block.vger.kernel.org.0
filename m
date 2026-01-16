@@ -1,69 +1,69 @@
-Return-Path: <linux-block+bounces-33131-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33133-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533BAD327EB
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:21:06 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BC65D3283C
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:22:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A03DE30158DE
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:20:36 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E49513018CAA
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:20:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A7D330B04;
-	Fri, 16 Jan 2026 14:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B5F5332906;
+	Fri, 16 Jan 2026 14:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POpAzroT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d6knCn22"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46445330B06
-	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC90331A52
+	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768573234; cv=none; b=V70D4tJDjbLp5ixmqja8t4ZUtFb9/xVfxk3uSIUSFQcBDb0G31C6zGpZeskLWha4EfHQbYkhyd/QWSEv4RVILFYVJXiWRfkiByGAT/RjQuR8FGUmVm72jnew5JEvROtJJzzEl9OC/G9SpkehKhQBv6jBNt4rY4NKwHjjtYVo4Lg=
+	t=1768573242; cv=none; b=MiiPS5JTEEJfNSwE/elY6gzKaWHw1YwMLjX/lpPYZQ6v//gU80f/wIP1NTFGxUM7Z2Xb+RYpLOoeGaFRebeWyhRNYlvAVesy3/NWvJe+nEHSez1HTID+5N/IN9HPfz3Fqmi3z1CdO1e7QejlVLnToa5v/Q/Q2s8aBu1J7cUse8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768573234; c=relaxed/simple;
-	bh=b3T4sYd8YReIhizxWwC9hIfdXls4hIPiFdvGqYk5v8A=;
+	s=arc-20240116; t=1768573242; c=relaxed/simple;
+	bh=FnJ9PID8abbMapJUVZ8m4GwHTNSCCk+t11h9GO1tmnk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pOni0ptv00ZDPX4tpa5z9SDRXsIakYlK192ff+bYy01h8qPBj1sUSfhe5E3F7CnRow8XjdH1OpADT/AaWoCoS9w8k+qW2x03cTdW98Lhu8pz/9OLu1BHR9j4erk1QWs3ATwC+uEMqy+nxzIctA5N396XuZ3oBGswKaSkh1GPcmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=POpAzroT; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=fvyCtVtx39QWfAnOs1/ZJ0F95NcKu2K6S1xfvInRZIhELgKx7QQ95xZF5Ji5O710Dw94FlgO7HSxxxUACjnfjJ6gBJtkZkUg8hDfINSD6muRwtSgo53lGe2o7vtrBONjPZjbv6hbOCbTIHpwypOpRNU7smdlHBdr/EbN814lfl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d6knCn22; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768573230;
+	s=mimecast20190719; t=1768573238;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qBY63pGyaNJyjKSQR+Qz5/KdMXx7BEicskOXNL4/Iac=;
-	b=POpAzroTKirqlKVnITxMmF6zbsoIqcBNIKxjpamMHMd971uhWUD15/sm+AUpyoBtDa1HDd
-	umD7TbYZqdibsKLdJorNP6f8bhAbCHSWr+WcWWQC8nizduCS7Wch8iAbD5HGPpO2/LvCjk
-	ZzEYnJaGqEpQXSBBWmYEZXCzDxLkrtM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=vXLMj0CvvBzflkwpA4K0fwEGo7nmcdWjePH1Jj9Cwd4=;
+	b=d6knCn22N9ByOGnbN4dxGlktV/taGomivtgwtCvhjKbiZWtfB34v7fxwZfdfCVnY05B6ME
+	HobIwuIodcKNCapgFRhEm0lwT+xwdfIhjqsAPc/Zrm2eHAYrk2BrJO694h02PldbmQvaa3
+	EiA23xJ9PZLeenRqdOJKJjEkXGHAueo=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-7L9-IFhSOemde-fW9MmLHg-1; Fri,
- 16 Jan 2026 09:20:25 -0500
-X-MC-Unique: 7L9-IFhSOemde-fW9MmLHg-1
-X-Mimecast-MFC-AGG-ID: 7L9-IFhSOemde-fW9MmLHg_1768573224
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-EUIvpLfmP3aXiKxxlIcPkw-1; Fri,
+ 16 Jan 2026 09:20:29 -0500
+X-MC-Unique: EUIvpLfmP3aXiKxxlIcPkw-1
+X-Mimecast-MFC-AGG-ID: EUIvpLfmP3aXiKxxlIcPkw_1768573228
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C8EA1955F34;
-	Fri, 16 Jan 2026 14:20:24 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57F431956060;
+	Fri, 16 Jan 2026 14:20:28 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.198])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B0B9180049F;
-	Fri, 16 Jan 2026 14:20:22 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 44B6A1955F22;
+	Fri, 16 Jan 2026 14:20:26 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
 Cc: Caleb Sander Mateos <csander@purestorage.com>,
 	Uday Shankar <ushankar@purestorage.com>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V6 16/24] selftests: ublk: replace assert() with ublk_assert()
-Date: Fri, 16 Jan 2026 22:18:49 +0800
-Message-ID: <20260116141859.719929-17-ming.lei@redhat.com>
+Subject: [PATCH V6 17/24] selftests: ublk: add ublk_io_buf_idx() for returning io buffer index
+Date: Fri, 16 Jan 2026 22:18:50 +0800
+Message-ID: <20260116141859.719929-18-ming.lei@redhat.com>
 In-Reply-To: <20260116141859.719929-1-ming.lei@redhat.com>
 References: <20260116141859.719929-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -73,150 +73,235 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Replace assert() with ublk_assert() since it is often triggered in daemon,
-and we may get nothing shown in terminal.
+Since UBLK_F_PER_IO_DAEMON is added, io buffer index may depend on current
+thread because the common way is to use per-pthread io_ring_ctx for issuing
+ublk uring_cmd.
 
-Add ublk_assert(), so we can log something to syslog when assert() is
-triggered.
+Add one helper for returning io buffer index, so we can hide the buffer
+index implementation details for target code.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- tools/testing/selftests/ublk/common.c      |  2 +-
- tools/testing/selftests/ublk/file_backed.c |  2 +-
- tools/testing/selftests/ublk/kublk.c       |  2 +-
- tools/testing/selftests/ublk/kublk.h       |  2 +-
- tools/testing/selftests/ublk/stripe.c      | 10 +++++-----
- tools/testing/selftests/ublk/utils.h       | 10 ++++++++++
- 6 files changed, 19 insertions(+), 9 deletions(-)
+ tools/testing/selftests/ublk/file_backed.c |  9 +++++----
+ tools/testing/selftests/ublk/kublk.c       |  9 +++++----
+ tools/testing/selftests/ublk/kublk.h       | 10 +++++++++-
+ tools/testing/selftests/ublk/null.c        | 18 ++++++++++--------
+ tools/testing/selftests/ublk/stripe.c      |  7 ++++---
+ 5 files changed, 33 insertions(+), 20 deletions(-)
 
-diff --git a/tools/testing/selftests/ublk/common.c b/tools/testing/selftests/ublk/common.c
-index d9873d4d50d0..530f9877c9dd 100644
---- a/tools/testing/selftests/ublk/common.c
-+++ b/tools/testing/selftests/ublk/common.c
-@@ -16,7 +16,7 @@ int backing_file_tgt_init(struct ublk_dev *dev, unsigned int nr_direct)
- {
- 	int fd, i;
- 
--	assert(dev->nr_fds == 1);
-+	ublk_assert(dev->nr_fds == 1);
- 
- 	for (i = 0; i < dev->tgt.nr_backing_files; i++) {
- 		char *file = dev->tgt.backing_file[i];
 diff --git a/tools/testing/selftests/ublk/file_backed.c b/tools/testing/selftests/ublk/file_backed.c
-index c3ce5ff72422..889047bd8fa3 100644
+index 889047bd8fa3..228af2580ac6 100644
 --- a/tools/testing/selftests/ublk/file_backed.c
 +++ b/tools/testing/selftests/ublk/file_backed.c
-@@ -10,7 +10,7 @@ static enum io_uring_op ublk_to_uring_op(const struct ublksrv_io_desc *iod, int
- 		return zc ? IORING_OP_READ_FIXED : IORING_OP_READ;
- 	else if (ublk_op == UBLK_IO_OP_WRITE)
- 		return zc ? IORING_OP_WRITE_FIXED : IORING_OP_WRITE;
--	assert(0);
-+	ublk_assert(0);
- }
+@@ -39,6 +39,7 @@ static int loop_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	__u32 len = iod->nr_sectors << 9;
+ 	struct io_uring_sqe *sqe[3];
+ 	void *addr = io->buf_addr;
++	unsigned short buf_index = ublk_io_buf_idx(t, q, tag);
  
- static int loop_queue_flush_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	if (iod->op_flags & UBLK_IO_F_INTEGRITY) {
+ 		ublk_io_alloc_sqes(t, sqe, 1);
+@@ -62,7 +63,7 @@ static int loop_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 				len,
+ 				offset);
+ 		if (auto_zc)
+-			sqe[0]->buf_index = tag;
++			sqe[0]->buf_index = buf_index;
+ 		io_uring_sqe_set_flags(sqe[0], IOSQE_FIXED_FILE);
+ 		/* bit63 marks us as tgt io */
+ 		sqe[0]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
+@@ -71,7 +72,7 @@ static int loop_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 
+ 	ublk_io_alloc_sqes(t, sqe, 3);
+ 
+-	io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, io->buf_index);
++	io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, buf_index);
+ 	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
+ 	sqe[0]->user_data = build_user_data(tag,
+ 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
+@@ -79,11 +80,11 @@ static int loop_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	io_uring_prep_rw(op, sqe[1], ublk_get_registered_fd(q, 1) /*fds[1]*/, 0,
+ 			len,
+ 			offset);
+-	sqe[1]->buf_index = tag;
++	sqe[1]->buf_index = buf_index;
+ 	sqe[1]->flags |= IOSQE_FIXED_FILE | IOSQE_IO_HARDLINK;
+ 	sqe[1]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
+ 
+-	io_uring_prep_buf_unregister(sqe[2], q, tag, q->q_id, io->buf_index);
++	io_uring_prep_buf_unregister(sqe[2], q, tag, q->q_id, buf_index);
+ 	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
+ 
+ 	return !!(iod->op_flags & UBLK_IO_F_INTEGRITY) + 2;
 diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index cdd5434a6147..08ba094df64d 100644
+index 08ba094df64d..51c4e20898a7 100644
 --- a/tools/testing/selftests/ublk/kublk.c
 +++ b/tools/testing/selftests/ublk/kublk.c
-@@ -825,7 +825,7 @@ static void ublk_handle_uring_cmd(struct ublk_thread *t,
- 	}
+@@ -605,16 +605,17 @@ static void ublk_dev_unprep(struct ublk_dev *dev)
+ 	close(dev->fds[0]);
+ }
  
- 	if (cqe->res == UBLK_IO_RES_OK) {
--		assert(tag < q->q_depth);
-+		ublk_assert(tag < q->q_depth);
+-static void ublk_set_auto_buf_reg(const struct ublk_queue *q,
++static void ublk_set_auto_buf_reg(const struct ublk_thread *t,
++				  const struct ublk_queue *q,
+ 				  struct io_uring_sqe *sqe,
+ 				  unsigned short tag)
+ {
+ 	struct ublk_auto_buf_reg buf = {};
  
- 		if (ublk_queue_use_user_copy(q))
- 			ublk_user_copy(io, UBLK_IO_OP_WRITE);
+ 	if (q->tgt_ops->buf_index)
+-		buf.index = q->tgt_ops->buf_index(q, tag);
++		buf.index = q->tgt_ops->buf_index(t, q, tag);
+ 	else
+-		buf.index = q->ios[tag].buf_index;
++		buf.index = ublk_io_buf_idx(t, q, tag);
+ 
+ 	if (ublk_queue_auto_zc_fallback(q))
+ 		buf.flags = UBLK_AUTO_BUF_REG_FALLBACK;
+@@ -730,7 +731,7 @@ int ublk_queue_io_cmd(struct ublk_thread *t, struct ublk_io *io)
+ 		cmd->addr	= 0;
+ 
+ 	if (ublk_queue_use_auto_zc(q))
+-		ublk_set_auto_buf_reg(q, sqe[0], io->tag);
++		ublk_set_auto_buf_reg(t, q, sqe[0], io->tag);
+ 
+ 	user_data = build_user_data(io->tag, _IOC_NR(cmd_op), 0, q->q_id, 0);
+ 	io_uring_sqe_set_data64(sqe[0], user_data);
 diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-index 69fd5794f300..48634d29c084 100644
+index 48634d29c084..311a75da9b21 100644
 --- a/tools/testing/selftests/ublk/kublk.h
 +++ b/tools/testing/selftests/ublk/kublk.h
-@@ -260,7 +260,7 @@ static inline __u64 build_user_data(unsigned tag, unsigned op,
- {
- 	/* we only have 7 bits to encode q_id */
- 	_Static_assert(UBLK_MAX_QUEUES_SHIFT <= 7);
--	assert(!(tag >> 16) && !(op >> 8) && !(tgt_data >> 16) && !(q_id >> 7));
-+	ublk_assert(!(tag >> 16) && !(op >> 8) && !(tgt_data >> 16) && !(q_id >> 7));
+@@ -150,7 +150,8 @@ struct ublk_tgt_ops {
+ 	void (*usage)(const struct ublk_tgt_ops *ops);
  
- 	return tag | ((__u64)op << 16) | ((__u64)tgt_data << 24) |
- 		(__u64)q_id << 56 | (__u64)is_target_io << 63;
+ 	/* return buffer index for UBLK_F_AUTO_BUF_REG */
+-	unsigned short (*buf_index)(const struct ublk_queue *, int tag);
++	unsigned short (*buf_index)(const struct ublk_thread *t,
++			const struct ublk_queue *, int tag);
+ };
+ 
+ struct ublk_tgt {
+@@ -393,6 +394,13 @@ static inline void ublk_set_sqe_cmd_op(struct io_uring_sqe *sqe, __u32 cmd_op)
+ 	addr[1] = 0;
+ }
+ 
++static inline unsigned short ublk_io_buf_idx(const struct ublk_thread *t,
++					     const struct ublk_queue *q,
++					     unsigned tag)
++{
++	return q->ios[tag].buf_index;
++}
++
+ static inline struct ublk_io *ublk_get_io(struct ublk_queue *q, unsigned tag)
+ {
+ 	return &q->ios[tag];
+diff --git a/tools/testing/selftests/ublk/null.c b/tools/testing/selftests/ublk/null.c
+index 3aa162f08476..7656888f4149 100644
+--- a/tools/testing/selftests/ublk/null.c
++++ b/tools/testing/selftests/ublk/null.c
+@@ -44,12 +44,12 @@ static int ublk_null_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
+ }
+ 
+ static void __setup_nop_io(int tag, const struct ublksrv_io_desc *iod,
+-		struct io_uring_sqe *sqe, int q_id)
++		struct io_uring_sqe *sqe, int q_id, unsigned buf_idx)
+ {
+ 	unsigned ublk_op = ublksrv_get_op(iod);
+ 
+ 	io_uring_prep_nop(sqe);
+-	sqe->buf_index = tag;
++	sqe->buf_index = buf_idx;
+ 	sqe->flags |= IOSQE_FIXED_FILE;
+ 	sqe->rw_flags = IORING_NOP_FIXED_BUFFER | IORING_NOP_INJECT_RESULT;
+ 	sqe->len = iod->nr_sectors << 9; 	/* injected result */
+@@ -61,18 +61,19 @@ static int null_queue_zc_io(struct ublk_thread *t, struct ublk_queue *q,
+ {
+ 	const struct ublksrv_io_desc *iod = ublk_get_iod(q, tag);
+ 	struct io_uring_sqe *sqe[3];
++	unsigned short buf_idx = ublk_io_buf_idx(t, q, tag);
+ 
+ 	ublk_io_alloc_sqes(t, sqe, 3);
+ 
+-	io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
++	io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, buf_idx);
+ 	sqe[0]->user_data = build_user_data(tag,
+ 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
+ 	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
+ 
+-	__setup_nop_io(tag, iod, sqe[1], q->q_id);
++	__setup_nop_io(tag, iod, sqe[1], q->q_id, buf_idx);
+ 	sqe[1]->flags |= IOSQE_IO_HARDLINK;
+ 
+-	io_uring_prep_buf_unregister(sqe[2], q, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
++	io_uring_prep_buf_unregister(sqe[2], q, tag, q->q_id, buf_idx);
+ 	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
+ 
+ 	// buf register is marked as IOSQE_CQE_SKIP_SUCCESS
+@@ -86,7 +87,7 @@ static int null_queue_auto_zc_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	struct io_uring_sqe *sqe[1];
+ 
+ 	ublk_io_alloc_sqes(t, sqe, 1);
+-	__setup_nop_io(tag, iod, sqe[0], q->q_id);
++	__setup_nop_io(tag, iod, sqe[0], q->q_id, ublk_io_buf_idx(t, q, tag));
+ 	return 1;
+ }
+ 
+@@ -137,11 +138,12 @@ static int ublk_null_queue_io(struct ublk_thread *t, struct ublk_queue *q,
+  * return invalid buffer index for triggering auto buffer register failure,
+  * then UBLK_IO_RES_NEED_REG_BUF handling is covered
+  */
+-static unsigned short ublk_null_buf_index(const struct ublk_queue *q, int tag)
++static unsigned short ublk_null_buf_index(const struct ublk_thread *t,
++		const struct ublk_queue *q, int tag)
+ {
+ 	if (ublk_queue_auto_zc_fallback(q))
+ 		return (unsigned short)-1;
+-	return q->ios[tag].buf_index;
++	return ublk_io_buf_idx(t, q, tag);
+ }
+ 
+ const struct ublk_tgt_ops null_tgt_ops = {
 diff --git a/tools/testing/selftests/ublk/stripe.c b/tools/testing/selftests/ublk/stripe.c
-index 2be1c36438e7..b967447fe591 100644
+index b967447fe591..dca819f5366e 100644
 --- a/tools/testing/selftests/ublk/stripe.c
 +++ b/tools/testing/selftests/ublk/stripe.c
-@@ -96,12 +96,12 @@ static void calculate_stripe_array(const struct stripe_conf *conf,
- 			this->seq = seq;
- 			s->nr += 1;
- 		} else {
--			assert(seq == this->seq);
--			assert(this->start + this->nr_sects == stripe_off);
-+			ublk_assert(seq == this->seq);
-+			ublk_assert(this->start + this->nr_sects == stripe_off);
- 			this->nr_sects += nr_sects;
+@@ -135,6 +135,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	struct ublk_io *io = ublk_get_io(q, tag);
+ 	int i, extra = zc ? 2 : 0;
+ 	void *base = io->buf_addr;
++	unsigned short buf_idx = ublk_io_buf_idx(t, q, tag);
+ 
+ 	io->private_data = s;
+ 	calculate_stripe_array(conf, iod, s, base);
+@@ -142,7 +143,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	ublk_io_alloc_sqes(t, sqe, s->nr + extra);
+ 
+ 	if (zc) {
+-		io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, io->buf_index);
++		io_uring_prep_buf_register(sqe[0], q, tag, q->q_id, buf_idx);
+ 		sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
+ 		sqe[0]->user_data = build_user_data(tag,
+ 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
+@@ -158,7 +159,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 				t->start << 9);
+ 		io_uring_sqe_set_flags(sqe[i], IOSQE_FIXED_FILE);
+ 		if (auto_zc || zc) {
+-			sqe[i]->buf_index = tag;
++			sqe[i]->buf_index = buf_idx;
+ 			if (zc)
+ 				sqe[i]->flags |= IOSQE_IO_HARDLINK;
  		}
+@@ -168,7 +169,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
+ 	if (zc) {
+ 		struct io_uring_sqe *unreg = sqe[s->nr + 1];
  
--		assert(this->nr_vec < this->cap);
-+		ublk_assert(this->nr_vec < this->cap);
- 		this->vec[this->nr_vec].iov_base = (void *)(base + done);
- 		this->vec[this->nr_vec++].iov_len = nr_sects << 9;
- 
-@@ -120,7 +120,7 @@ static inline enum io_uring_op stripe_to_uring_op(
- 		return zc ? IORING_OP_READV_FIXED : IORING_OP_READV;
- 	else if (ublk_op == UBLK_IO_OP_WRITE)
- 		return zc ? IORING_OP_WRITEV_FIXED : IORING_OP_WRITEV;
--	assert(0);
-+	ublk_assert(0);
- }
- 
- static int stripe_queue_tgt_rw_io(struct ublk_thread *t, struct ublk_queue *q,
-@@ -322,7 +322,7 @@ static int ublk_stripe_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 	if (!dev->tgt.nr_backing_files || dev->tgt.nr_backing_files > NR_STRIPE)
- 		return -EINVAL;
- 
--	assert(dev->nr_fds == dev->tgt.nr_backing_files + 1);
-+	ublk_assert(dev->nr_fds == dev->tgt.nr_backing_files + 1);
- 
- 	for (i = 0; i < dev->tgt.nr_backing_files; i++)
- 		dev->tgt.backing_file_size[i] &= ~((1 << chunk_shift) - 1);
-diff --git a/tools/testing/selftests/ublk/utils.h b/tools/testing/selftests/ublk/utils.h
-index a852e0b7153e..17eefed73690 100644
---- a/tools/testing/selftests/ublk/utils.h
-+++ b/tools/testing/selftests/ublk/utils.h
-@@ -43,6 +43,7 @@ static inline void ublk_err(const char *fmt, ...)
- 
- 	va_start(ap, fmt);
- 	vfprintf(stderr, fmt, ap);
-+	va_end(ap);
- }
- 
- static inline void ublk_log(const char *fmt, ...)
-@@ -52,6 +53,7 @@ static inline void ublk_log(const char *fmt, ...)
- 
- 		va_start(ap, fmt);
- 		vfprintf(stdout, fmt, ap);
-+		va_end(ap);
+-		io_uring_prep_buf_unregister(unreg, q, tag, q->q_id, io->buf_index);
++		io_uring_prep_buf_unregister(unreg, q, tag, q->q_id, buf_idx);
+ 		unreg->user_data = build_user_data(
+ 			tag, ublk_cmd_op_nr(unreg->cmd_op), 0, q->q_id, 1);
  	}
- }
- 
-@@ -62,7 +64,15 @@ static inline void ublk_dbg(int level, const char *fmt, ...)
- 
- 		va_start(ap, fmt);
- 		vfprintf(stdout, fmt, ap);
-+		va_end(ap);
- 	}
- }
- 
-+#define ublk_assert(x)  do { \
-+	if (!(x)) {     \
-+		ublk_err("%s %d: assert!\n", __func__, __LINE__); \
-+		assert(x);      \
-+	}       \
-+} while (0)
-+
- #endif
 -- 
 2.47.0
 
