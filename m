@@ -1,265 +1,262 @@
-Return-Path: <linux-block+bounces-33140-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33115-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 634C5D32A13
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:31:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F15ABD32804
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:21:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2FE8530001A7
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:31:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A20AD306BC5B
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BFD38F238;
-	Fri, 16 Jan 2026 14:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2588B31BCA9;
+	Fri, 16 Jan 2026 14:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=deepseek.com header.i=@deepseek.com header.b="HIuilLG6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/Sgm7lW"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-m49221.qiye.163.com (mail-m49221.qiye.163.com [45.254.49.221])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A40338E5DA
-	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB44328630
+	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768573865; cv=none; b=l2QQfABfa+WCHCvlKjlqTWIU0dcTXd3MvL/+Q33M72mXmNhhRIZRsLgA91wxqwQ46XrzHo5RryxD3xpgHJJDWTyTM5+gYcjR9l9Aor4hUIbMpgrbZ5VnfrNtVXJhY6WSIxlb5u9804oOKsDYO8GyzfABogM0o4gdebpiTCfjxcU=
+	t=1768573154; cv=none; b=fmiVZJaylGP1KDAJBXKb7Z9q9ijhA4hJy7Sx4zFNcuPCbGEapBkPlDui5ZCMGxIL4Yy1/7wwF0BeiZFXXIsQOkW/oFW90bkmy/iErPfULPVHCNSC/i+/1gn711GFjZsgLYZTx1zLoaA5FfjiTNk+efbCpXhS3wAbee1mFDHTDr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768573865; c=relaxed/simple;
-	bh=FoUvpqph+5SqbKMCQuJStRHysTpu5223UDa+ERnaEdk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=g975tYeeHmA78rNjvKYRkLBhHo/jxcWDij71k4uUv5nKHO138HTjDbiDCM9rn0H0v9RItBeipEYkldrOe7xoqw+UYpQ+O0fpM6EH4lolT5tZRpXvC10wG2z+W8ED52hl+Czvll/kP95RDlITK77D5YCNXbqVrubCVtzKBzENEVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deepseek.com; spf=pass smtp.mailfrom=deepseek.com; dkim=pass (1024-bit key) header.d=deepseek.com header.i=@deepseek.com header.b=HIuilLG6; arc=none smtp.client-ip=45.254.49.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deepseek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepseek.com
-Received: from localhost.localdomain (unknown [210.12.28.78])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 30ef4cd10;
-	Fri, 16 Jan 2026 22:15:35 +0800 (GMT+08:00)
-From: huang-jl <huang-jl@deepseek.com>
-To: ming.lei@redhat.com
-Cc: linux-block@vger.kernel.org
-Subject: [BUG] ublk: ublk server hangs in D state during STOP_DEV
-Date: Fri, 16 Jan 2026 22:15:32 +0800
-Message-Id: <20260116141532.45377-1-huang-jl@deepseek.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	s=arc-20240116; t=1768573154; c=relaxed/simple;
+	bh=Bz5Sd4ylRUWMyWjmOMutYm7RRREWSeDhtOsmPdyzmB8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TAV1PTSC1QkGtNg+PK44XZ4vuhQqjt5zMNDX7QM+bayY0o2sopSCcOF9qREx6GAIsRpkVV6MwGZiAVGIefsnVsbJr6KqP9LjFQE25trLU7eK5X9PagYRxBk0cyBSw9WjS6fU21gxK6WlX2QVN076hzDwYURFgUIHcdaLNG/Zsjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/Sgm7lW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768573148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jZ1AwD9wd6q4D0KI0M7coJWJc+0XlSyfg1Ez1BoV4lg=;
+	b=E/Sgm7lWTejbwwUHaxxwhlaSIkNjaoH/1+proFQPJt0/t8Lp48T7C5pmR06B7qTT+6rB82
+	mgnP/81FoWtrZ3j8kTk7nCpgDUHO8SI5m6JJSNcUAGhG15o48tzpzxM9hNvtuImfL79Vxn
+	4DJv1Ty349ZdkJ/5AhzPw4pkc4q6Mf8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-604-F2pVo0aANBqVMgu3RQRU1Q-1; Fri,
+ 16 Jan 2026 09:19:07 -0500
+X-MC-Unique: F2pVo0aANBqVMgu3RQRU1Q-1
+X-Mimecast-MFC-AGG-ID: F2pVo0aANBqVMgu3RQRU1Q_1768573146
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1244318005B3;
+	Fri, 16 Jan 2026 14:19:06 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.198])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1168F19560A7;
+	Fri, 16 Jan 2026 14:19:04 +0000 (UTC)
+From: Ming Lei <ming.lei@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V6 00/24] ublk: add UBLK_F_BATCH_IO
+Date: Fri, 16 Jan 2026 22:18:33 +0800
+Message-ID: <20260116141859.719929-1-ming.lei@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9bc7295ba409d9kunmfac338536a1c16
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx1MVkpIT05DQk1JHUMaTlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlJSktVSklVSUNVTENZV1kWGg8SFR0UWUFZT0tIVUpLSUJNSEtVSktLVU
-	tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=HIuilLG6F8BGh0mwUSHLIOXdr5eYTkY1Km/n/+rOMFUs3sTOPCjijfScoTP3PG9ymC7wBqm23uUxRbC/lot0JrwCYjfj4PfkUtLvz9xG0BDTwnVGevCwDI8MuPBRTLYtW0fEhsVydtTKdNx3LQdRKFOGiXFTQKup6xJEIy80qQ0=; c=relaxed/relaxed; s=default; d=deepseek.com; v=1;
-	bh=7C38hxvkMxnKo0930aGOXegDjWPBSvt65Kz3t1+6QtU=;
-	h=date:mime-version:subject:message-id:from;
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
 Hello,
 
-I am reporting a bug in the ublk driver observed during production usage.
-Under specific conditions during device removal, the ublk server process
-enters an uninterruptible sleep (D state) and becomes unkillable,
-subsequently blocking further device deletions on the system.
+This patchset adds UBLK_F_BATCH_IO feature for communicating between kernel and ublk
+server in batching way:
 
-[1. Description]
-We run a customized ublk server with the following configuration:
+- Per-queue vs Per-I/O: Commands operate on queues rather than individual I/Os
 
-- ublksrv_ctrl_dev_info.flags = 0 (UBLK_F_USER_RECOVERY is not enabled).
-- Environment: Frequent creation/deletion of ublk devices (400–500 active
-  devices, one device at most 5-hour lifespan).
-- Upon receiving SIGINT, our ublk server will sends UBLK_U_CMD_STOP_DEV to the
-  driver.
-- A monitor process will send SIGINT to the ublk server when deleting. If it
-  finds the ublk server does not stopped within 10 seconds, the monitor will
-  send SIGKILL.
+- Batch processing: Multiple I/Os are handled in single operation
+
+- Multishot commands: Use io_uring multishot for reducing submission overhead
+
+- Flexible task assignment: Any task can handle any I/O (no per-I/O daemons)
+
+- Better load balancing: Tasks can adjust their workload dynamically
+
+- help for future optimizations:
+	- blk-mq batch tags free
+  	- support io-poll
+	- per-task batch for avoiding per-io lock
+	- fetch command priority
+
+- simplify command cancel process with per-queue lock
+
+selftest are provided.
 
 
-On one production node, a ublk server process (PID 348910) failed to exit and
-entered D state. Simultaneously, related kworkers also entered D state:
+Performance test result(IOPS) on V3:
 
-$ ps -eo pid,stat,lstart,comm | grep -E "^ *[0-9]+ D"
- 77625 D    Wed Jan 14 15:23:57 2026 kworker/303:0+events
-348910 Dl   Wed Jan 14 23:00:20 2026 uvm_ublk
-355239 D    Wed Jan 14 23:04:18 2026 kworker/u775:1+flush-259:11
+- page copy
 
-The device number of the ublk device is exact 259:11.
+tools/testing/selftests/ublk//kublk add -t null -q 16 [-b]
 
-After this hang occurs, we can still create new ublk devices, but we cannot
-delete them. While UBLK_U_CMD_STOP_DEV can be sent, UBLK_U_CMD_DEL_DEV never
-receives a response from io_uring, and the issuing process hangs in S state.
+- zero copy(--auto_zc)
+tools/testing/selftests/ublk//kublk add -t null -q 16 --auto_zc [-b]
 
-I give the process's stack in the following:
+- IO test
+taskset -c 0-31 fio/t/io_uring -p0 -n $JOBS -r 30 /dev/ublkb0
 
-# The kworker/303:0+events
-$ cat /proc/77625/stack 
-[<0>] folio_wait_bit_common+0x136/0x330
-[<0>] __folio_lock+0x17/0x30
-[<0>] write_cache_pages+0x1cd/0x430
-[<0>] blkdev_writepages+0x6f/0xb0
-[<0>] do_writepages+0xcd/0x1f0
-[<0>] filemap_fdatawrite_wbc+0x75/0xb0
-[<0>] __filemap_fdatawrite_range+0x58/0x80
-[<0>] filemap_write_and_wait_range+0x59/0xc0
-[<0>] bdev_release+0x18e/0x240
-[<0>] blkdev_release+0x15/0x30
-[<0>] __fput+0xa0/0x2e0
-[<0>] delayed_fput+0x23/0x40
-[<0>] process_one_work+0x181/0x3a0
-[<0>] worker_thread+0x306/0x440
-[<0>] kthread+0xef/0x120
-[<0>] ret_from_fork+0x44/0x70
-[<0>] ret_from_fork_asm+0x1b/0x30
+1) 16 jobs IO
+- page copy:  			37.77M vs. 42.40M(BATCH_IO), +12%
+- zero copy(--auto_zc): 42.83M vs. 44.43M(BATCH_IO), +3.7%
 
-# The ublk server
-$ cat /proc/348910/stack 
-[<0>] io_wq_put_and_exit+0xa6/0x210
-[<0>] io_uring_clean_tctx+0x8c/0xd0
-[<0>] io_uring_cancel_generic+0x19b/0x370
-[<0>] __io_uring_cancel+0x1b/0x30
-[<0>] do_exit+0x17a/0x530
-[<0>] do_group_exit+0x35/0x90
-[<0>] get_signal+0x96e/0x9b0
-[<0>] arch_do_signal_or_restart+0x39/0x120
-[<0>] syscall_exit_to_user_mode+0x15f/0x1e0
-[<0>] do_syscall_64+0x8c/0x180
-[<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
 
-# kworker/u775:1+flush-259:11
-$ cat /proc/355239/stack
-cat /proc/355239/stack 
-[<0>] rq_qos_wait+0xcf/0x180
-[<0>] wbt_wait+0xb3/0x100
-[<0>] __rq_qos_throttle+0x25/0x40
-[<0>] blk_mq_submit_bio+0x168/0x6b0
-[<0>] __submit_bio+0xb3/0x1c0
-[<0>] submit_bio_noacct_nocheck+0x13c/0x1f0
-[<0>] submit_bio_noacct+0x162/0x5b0
-[<0>] submit_bio+0xb2/0x110
-[<0>] submit_bh_wbc+0x156/0x190
-[<0>] __block_write_full_folio+0x1da/0x3d0
-[<0>] block_write_full_folio+0x150/0x180
-[<0>] write_cache_pages+0x15b/0x430
-[<0>] blkdev_writepages+0x6f/0xb0
-[<0>] do_writepages+0xcd/0x1f0
-[<0>] __writeback_single_inode+0x44/0x290
-[<0>] writeback_sb_inodes+0x21b/0x520
-[<0>] __writeback_inodes_wb+0x54/0x100
-[<0>] wb_writeback+0x2df/0x350
-[<0>] wb_do_writeback+0x225/0x2a0
-[<0>] wb_workfn+0x5f/0x240
-[<0>] process_one_work+0x181/0x3a0
-[<0>] worker_thread+0x306/0x440
-[<0>] kthread+0xef/0x120
-[<0>] ret_from_fork+0x44/0x70
-[<0>] ret_from_fork_asm+0x1b/0x30
+2) single job IO
+- page copy:  			2.54M vs. 2.6M(BATCH_IO),   +2.3%
+- zero copy(--auto_zc): 3.13M vs. 3.35M(BATCH_IO),  +7%
 
-There is also and iou-wrk of that ublk server process:
 
-$ cat /proc/348910/task/348911/stack 
-[<0>] folio_wait_bit_common+0x136/0x330
-[<0>] __folio_lock+0x17/0x30
-[<0>] write_cache_pages+0x1cd/0x430
-[<0>] blkdev_writepages+0x6f/0xb0
-[<0>] do_writepages+0xcd/0x1f0
-[<0>] filemap_fdatawrite_wbc+0x75/0xb0
-[<0>] __filemap_fdatawrite_range+0x58/0x80
-[<0>] filemap_write_and_wait_range+0x59/0xc0
-[<0>] bdev_mark_dead+0x85/0xd0
-[<0>] blk_report_disk_dead+0x87/0xf0
-[<0>] del_gendisk+0x37f/0x3b0
-[<0>] ublk_stop_dev+0x89/0x100 [ublk_drv]
-[<0>] ublk_ctrl_uring_cmd+0x51a/0x750 [ublk_drv]
-[<0>] io_uring_cmd+0x9f/0x140
-[<0>] io_issue_sqe+0x193/0x410
-[<0>] io_wq_submit_work+0xe2/0x380
-[<0>] io_worker_handle_work+0xdf/0x340
-[<0>] io_wq_worker+0xf9/0x350
-[<0>] ret_from_fork+0x44/0x70
-[<0>] ret_from_fork_asm+0x1b/0x30
+Links: https://lore.kernel.org/linux-block/20251202121917.1412280-1-ming.lei@redhat.com/
+Links: https://lore.kernel.org/linux-block/20251121015851.3672073-1-ming.lei@redhat.com/
+Links: https://lore.kernel.org/linux-block/20251112093808.2134129-1-ming.lei@redhat.com/
+Links: https://lore.kernel.org/linux-block/20251023153234.2548062-1-ming.lei@redhat.com/
+Links: https://lore.kernel.org/linux-block/20250901100242.3231000-1-ming.lei@redhat.com/
 
-[2. Kernel version]
 
-Linux  6.8.0-87-generic #88-Ubuntu SMP PREEMPT_DYNAMIC Sat Oct 11 09:28:41 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+This patchset is based on for-7.0/block with the following two patches:
 
-I am running Ubuntu 24:
+	[PATCH v4] ublk: fix ublksrv pid handling for pid namespaces ( https://lore.kernel.org/linux-block/20260115025952.2321238-1-sconnor@purestorage.com/ )
 
-Distributor ID: Ubuntu
-Description:    Ubuntu-Server 24.04.2 2025.05.26 (Cubic 2025-05-27 05:35)
-Release:        24.04
-Codename:       noble
+	[PATCH 0/3] selftests/ublk: three bug fixes ( https://lore.kernel.org/linux-block/20260113085805.233214-1-ming.lei@redhat.com/ ) 
 
-[3. Steps to reproduce]
-Sorry, as this happens only in one process among one of our production servers,
-I do not find an easy way to reproduce the error.
 
-[4. Dmesg/Logs]
-I can only find the logs like following. Apart from the kworker, there are
-similar logs for the ublk server iou-wrk.
+V6:
+	- rebase on for-7.0/block
+	- fix ublk_handle_non_batch_cmd() (Caleb Sander Mateos)
+	- add `ublk: refactor ublk_queue_rq() and add ublk_batch_queue_rq()` (Caleb Sander Mateos)
+	- add `ublk: fix batch I/O recovery -ENODEV error`
+	- increase selftest timeout for running more things in some generic tests
+	- fix kublk utility wrt. ->cmd_inflight accounting for BATCH_IO
+	- pass all selftest after applying the io_uring cancel fix
 
-Jan 15 00:53:02 kernel: INFO: task kworker/303:0:77625 blocked for more than 122 seconds.
-Jan 15 00:53:02 kernel:       Tainted: G           OE      6.8.0-87-generic #88-Ubuntu
-Jan 15 00:53:02 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Jan 15 00:53:02 kernel: task:kworker/303:0   state:D stack:0     pid:77625 tgid:77625 ppid:2      flags:0x00004000
-Jan 15 00:53:02 kernel: Workqueue: events delayed_fput
-Jan 15 00:53:02 kernel: Call Trace:
-Jan 15 00:53:02 kernel:  <TASK>
-Jan 15 00:53:02 kernel:  __schedule+0x27c/0x6b0
-Jan 15 00:53:02 kernel:  schedule+0x33/0x110
-Jan 15 00:53:02 kernel:  io_schedule+0x46/0x80
-Jan 15 00:53:02 kernel:  folio_wait_bit_common+0x136/0x330
-Jan 15 00:53:02 kernel:  ? __pfx_wake_page_function+0x10/0x10
-Jan 15 00:53:02 kernel:  __folio_lock+0x17/0x30
-Jan 15 00:53:02 kernel:  write_cache_pages+0x1cd/0x430
-Jan 15 00:53:02 kernel:  ? __pfx_blkdev_get_block+0x10/0x10
-Jan 15 00:53:02 kernel:  ? __pfx_block_write_full_folio+0x10/0x10
-Jan 15 00:53:02 kernel:  blkdev_writepages+0x6f/0xb0
-Jan 15 00:53:02 kernel:  do_writepages+0xcd/0x1f0
-Jan 15 00:53:02 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
-Jan 15 00:53:02 kernel:  filemap_fdatawrite_wbc+0x75/0xb0
-Jan 15 00:53:02 kernel:  __filemap_fdatawrite_range+0x58/0x80
-Jan 15 00:53:02 kernel:  filemap_write_and_wait_range+0x59/0xc0
-Jan 15 00:53:02 kernel:  bdev_release+0x18e/0x240
-Jan 15 00:53:02 kernel:  blkdev_release+0x15/0x30
-Jan 15 00:53:02 kernel:  __fput+0xa0/0x2e0
-Jan 15 00:53:02 kernel:  delayed_fput+0x23/0x40
-Jan 15 00:53:02 kernel:  process_one_work+0x181/0x3a0
-Jan 15 00:53:02 kernel:  worker_thread+0x306/0x440
-Jan 15 00:53:02 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
-Jan 15 00:53:02 kernel:  ? _raw_spin_lock_irqsave+0xe/0x20
-Jan 15 00:53:02 kernel:  ? __pfx_worker_thread+0x10/0x10
-Jan 15 00:53:02 kernel:  kthread+0xef/0x120
-Jan 15 00:53:02 kernel:  ? __pfx_kthread+0x10/0x10
-Jan 15 00:53:02 kernel:  ret_from_fork+0x44/0x70
-Jan 15 00:53:02 kernel:  ? __pfx_kthread+0x10/0x10
-Jan 15 00:53:02 kernel:  ret_from_fork_asm+0x1b/0x30
-Jan 15 00:53:02 kernel:  </TASK>
+V5:
+	- rebase on for-6.19/block
+	- fix fetch command leak in ublk_batch_attach() by marking correct
+	  uring_cmd as cancellable
+	- add ublk_batch_queue_rqs() for building per-queue batch
+	- add __ublk_deinit_queue() for fixing failure path of initializing
+	  queue(Caleb Sander Mateos)
+	- explicitly disable UBLK_F_NEED_GET_DATA for BATCH_IO(Caleb Sander Mateos)
+	- kill unnecessary check in ublk_batch_commit_io_check()(Caleb Sander Mateos)
+	- rename `ublk_batch_fcmd` as `ublk_batch_fetch_cmd`(Caleb Sander Mateos)
+	- improve ublk_batch_dispatch() by not running inline dispatch for different
+	  fetch command(Caleb Sander Mateos)
+	- use READ_ONCE() for reading all ubq->active_fcmd(Caleb Sander Mateos)
+	- simplify ublk_abort_batch_queue()(Caleb Sander Mateos)
+	- improve handling for non-batch commands(Caleb Sander Mateos)
+	- document fetch command lifetime(Caleb Sander Mateos)
+	- patch style, sizeof(tag), signed/unsigned changes(Caleb Sander Mateos)
+	- add recovery function test for BATCH_IO in generic_04/genereic_05
 
-[5. Technical Hypothesis]
-I suspect a deadlock occurs during the following sequence (assuming ublk id
-is 123):
+V4:
+	- fix handling in case of running out of mshot buffer, request has to
+	  be un-prepared for zero copy
+	- don't expose unused tag to userspace
+	- replace fixed buffer with plain user buffer for
+	  UBLK_U_IO_PREP_IO_CMDS and UBLK_U_IO_COMMIT_IO_CMDS
+	- replace iov iterator with plain copy_from_user() for
+	  ublk_walk_cmd_buf(), code is simplified with performance improvement
+	- don't touch sqe->len for UBLK_U_IO_PREP_IO_CMDS and
+	  UBLK_U_IO_COMMIT_IO_CMDS(Caleb Sander Mateos)
+	- use READ_ONCE() for access sqe->addr (Caleb Sander Mateos)
+	- all kinds of patch style fix(Caleb Sander Mateos)
+	- inline __kfifo_alloc() (Caleb Sander Mateos)
 
-1. User program writes to /dev/ublkb123 via cached I/O, leaving dirty pages
-   in the page cache.
-2. The ublk server receives SIGINT and issues UBLK_U_CMD_STOP_DEV.
-3. The kernel path STOP_DEV -> del_gendisk() -> bdev_mark_dead() attempts to
-   flush dirty pages.
-4. This flush generates new I/O requests directed back to the ublk server.
-5. The ublk server receives SIGKILL at this moment, its threads stop and can
-   no longer handle the I/O requests generated by the flush in step 3.
-6. The server remains stuck in del_gendisk(), waiting for I/O completion that
-   will never happen.
 
-[6. My Question]
-1. Would enable UBLK_F_USER_RECOVERY solve this bug? I find UBLK_F_USER_RECOVERY
-   allows  ublk_unquiesce_dev() to be called during ublk_stop_dev.
-2. Should userspace strictly forbid to send SIGKILL to ublk server?
-3. I try to search the related bug fix or patches, but does not find.
-   Are there known fixes in later kernels (6.10+) that address this specific
-   interaction between del_gendisk and server termination?
+V3:
+	- rebase on for-6.19/block
+	- use blk_mq_end_request_batch() to free requests in batch, only for
+	  page copy
+	- fix one IO hang issue because of memory barrier order, comments on
+	the memory barrier pairing
+	- add NUMA ware kfifo_alloc_node()
+	- fix one build warning reported by 0-DAY CI
+	- selftests improvement & fix
 
-Thanks,
-huang-jl
+V2:
+	- ublk_config_io_buf() vs. __ublk_fetch() order
+	- code style clean
+	- use READ_ONCE() to cache sqe data because sqe copy becomes
+	  conditional recently
+	- don't use sqe->len for UBLK_U_IO_PREP_IO_CMDS &
+	  UBLK_U_IO_COMMIT_IO_CMDS
+	- fix one build warning
+	- fix build_user_data()
+	- run performance analysis, and find one bug in
+	  io_uring_cmd_buffer_select(), fix is posted already
+
+
+Ming Lei (24):
+  ublk: define ublk_ch_batch_io_fops for the coming feature F_BATCH_IO
+  ublk: prepare for not tracking task context for command batch
+  ublk: add new batch command UBLK_U_IO_PREP_IO_CMDS &
+    UBLK_U_IO_COMMIT_IO_CMDS
+  ublk: handle UBLK_U_IO_PREP_IO_CMDS
+  ublk: handle UBLK_U_IO_COMMIT_IO_CMDS
+  ublk: add io events fifo structure
+  ublk: add batch I/O dispatch infrastructure
+  ublk: add UBLK_U_IO_FETCH_IO_CMDS for batch I/O processing
+  ublk: refactor ublk_queue_rq() and add ublk_batch_queue_rq()
+  ublk: abort requests filled in event kfifo
+  ublk: add new feature UBLK_F_BATCH_IO
+  ublk: document feature UBLK_F_BATCH_IO
+  ublk: implement batch request completion via
+    blk_mq_end_request_batch()
+  ublk: fix batch I/O recovery -ENODEV error
+  selftests: ublk: fix user_data truncation for tgt_data >= 256
+  selftests: ublk: replace assert() with ublk_assert()
+  selftests: ublk: add ublk_io_buf_idx() for returning io buffer index
+  selftests: ublk: add batch buffer management infrastructure
+  selftests: ublk: handle UBLK_U_IO_PREP_IO_CMDS
+  selftests: ublk: handle UBLK_U_IO_COMMIT_IO_CMDS
+  selftests: ublk: handle UBLK_U_IO_FETCH_IO_CMDS
+  selftests: ublk: increase timeout to 150 seconds
+  selftests: ublk: add --batch/-b for enabling F_BATCH_IO
+  selftests: ublk: support arbitrary threads/queues combination
+
+ Documentation/block/ublk.rst                  |   64 +-
+ drivers/block/ublk_drv.c                      | 1303 ++++++++++++++++-
+ include/uapi/linux/ublk_cmd.h                 |   84 ++
+ tools/testing/selftests/ublk/Makefile         |    8 +
+ tools/testing/selftests/ublk/batch.c          |  607 ++++++++
+ tools/testing/selftests/ublk/common.c         |    2 +-
+ tools/testing/selftests/ublk/file_backed.c    |   11 +-
+ tools/testing/selftests/ublk/kublk.c          |  149 +-
+ tools/testing/selftests/ublk/kublk.h          |  195 ++-
+ tools/testing/selftests/ublk/null.c           |   18 +-
+ tools/testing/selftests/ublk/settings         |    1 +
+ tools/testing/selftests/ublk/stripe.c         |   17 +-
+ tools/testing/selftests/ublk/test_batch_01.sh |   32 +
+ tools/testing/selftests/ublk/test_batch_02.sh |   30 +
+ tools/testing/selftests/ublk/test_batch_03.sh |   30 +
+ .../testing/selftests/ublk/test_generic_04.sh |    5 +
+ .../testing/selftests/ublk/test_generic_05.sh |    5 +
+ .../testing/selftests/ublk/test_stress_08.sh  |   45 +
+ .../testing/selftests/ublk/test_stress_09.sh  |   44 +
+ tools/testing/selftests/ublk/utils.h          |   64 +
+ 20 files changed, 2569 insertions(+), 145 deletions(-)
+ create mode 100644 tools/testing/selftests/ublk/batch.c
+ create mode 100644 tools/testing/selftests/ublk/settings
+ create mode 100755 tools/testing/selftests/ublk/test_batch_01.sh
+ create mode 100755 tools/testing/selftests/ublk/test_batch_02.sh
+ create mode 100755 tools/testing/selftests/ublk/test_batch_03.sh
+ create mode 100755 tools/testing/selftests/ublk/test_stress_08.sh
+ create mode 100755 tools/testing/selftests/ublk/test_stress_09.sh
+
+-- 
+2.47.0
+
 
