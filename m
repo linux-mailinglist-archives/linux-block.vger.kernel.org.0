@@ -1,69 +1,69 @@
-Return-Path: <linux-block+bounces-33119-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33121-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25F62D32888
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:23:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1DDBD3289C
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:23:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 03F8C3121373
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:19:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 793843124046
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7BB731BCA9;
-	Fri, 16 Jan 2026 14:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8856D32939A;
+	Fri, 16 Jan 2026 14:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mv3LEOV1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UONSv7P8"
 X-Original-To: linux-block@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6C8328B63
-	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E2031BCA9
+	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:19:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768573181; cv=none; b=k1b6LS0Nq8OUrkD+ajwWHLOaTtPE4mkhdWrb+15qWpG2FFF8IlHA9d0KJVUXoICS1AdPZm0thGuRAknqUc8u51xBEIUzGCcYCBCX5Ydeu1yQVOF4l25SKVcwb7DegIiVavFA4KYt3YGeyRvkNn1QbycaG9liGIsAFPMzkir8IZA=
+	t=1768573186; cv=none; b=Kku/j2GO+nFrD1dWoK+HrXEg5+7/6CTdvlRDr4skQByCGUL8+Dfo2zdYWzrIfoYiJ4YcjIMiiIdf1NDEzy4aTvguiRYZE/sbr6QiB6ffn6VEwnQSjiaRwWewKdiPZcfWfWQEHXI7xpgjtRh2pamQRF6oAMojyLm9KjEElYciq8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768573181; c=relaxed/simple;
-	bh=fg1D+OK1stb4yGMMrupl06I7oQ+ay8UeFLHL0CFP/JI=;
+	s=arc-20240116; t=1768573186; c=relaxed/simple;
+	bh=z/yryDXMsrJuxRHm1l+e/l9tX9n1N9oalie5IMQCcyw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YCQOysT6y/1UrJaNvmGCM3DW46UapHG5Fsp4IMIf2oBrOc1ImhT2xFrvAKzNRnEfbVo8Qa2AdunhtXhMFFX/S/55+0Bm5N+5COMxSnAs1erk00+dZYIvjDTACBxqzMbh1GbGXkqZYMzBVIKIYh+K/bDBqs9KfyV79yFwXfS9S94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mv3LEOV1; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=S9o8OhElaIE7uSKc/BqygGBqZx8JRBWNJFIuhkpsNgNMG23Fr48vvKhWUsNyg4/mPR+FafgXNVgMJoygrpKUKiDUtQS3XpgwY2aPV/F0Ld7cVzxMdmbMDUPvJLujrtQh9SMX4PLf9zmL7AA0pJ22sfH5psVCDTZ/0GuNvjNXBwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UONSv7P8; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768573178;
+	s=mimecast20190719; t=1768573183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ofwym2MC9YSEdZpo0/V2We+Rwm7uaHs5lyQRKOj7Hto=;
-	b=Mv3LEOV16gta6TmshS5+mPaVaIFQAkZ9uQbnBMTHpfvFae4xAqEmOPcZ/UFizhuTMc1TqT
-	Y/YhUG3Ki4jQPYhbALvYsRmKzeI8NrfCqyyaccROWpjr/dJknL7nBBrLTSySqNE5pNJR0v
-	/VGmI/ybD4nQ/vFOEd8aOZY9KkmCoB0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=cnOmStHpZBde5gVANMsOomf93RcYMVOazEra5U3dmSQ=;
+	b=UONSv7P8M+YbRoS04ZRYbJznKKwZcnezbNBPHPV1b3aAN8Z3bZpnIRMsL3SOg9GlK+0s9X
+	1PPe9RG9foneuh7qO1RnLf6h2tFoWK0q1+BTNlZ/7SuGaylNRleUQ/hKvmv5999HzSnVNo
+	hcJd8j0N0TAA9LJgCdzDmS5c7L01ntc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-372-XXXaHhKcPHKDRT5FrcqOvw-1; Fri,
- 16 Jan 2026 09:19:32 -0500
-X-MC-Unique: XXXaHhKcPHKDRT5FrcqOvw-1
-X-Mimecast-MFC-AGG-ID: XXXaHhKcPHKDRT5FrcqOvw_1768573170
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-fm_lDAY_M7WjByl3atVqAg-1; Fri,
+ 16 Jan 2026 09:19:42 -0500
+X-MC-Unique: fm_lDAY_M7WjByl3atVqAg-1
+X-Mimecast-MFC-AGG-ID: fm_lDAY_M7WjByl3atVqAg_1768573180
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C8A7195609F;
-	Fri, 16 Jan 2026 14:19:28 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 382F71956061;
+	Fri, 16 Jan 2026 14:19:40 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.198])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 62865195419F;
-	Fri, 16 Jan 2026 14:19:26 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5C6C330002D6;
+	Fri, 16 Jan 2026 14:19:33 +0000 (UTC)
 From: Ming Lei <ming.lei@redhat.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	linux-block@vger.kernel.org
 Cc: Caleb Sander Mateos <csander@purestorage.com>,
 	Uday Shankar <ushankar@purestorage.com>,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V6 04/24] ublk: handle UBLK_U_IO_PREP_IO_CMDS
-Date: Fri, 16 Jan 2026 22:18:37 +0800
-Message-ID: <20260116141859.719929-5-ming.lei@redhat.com>
+Subject: [PATCH V6 05/24] ublk: handle UBLK_U_IO_COMMIT_IO_CMDS
+Date: Fri, 16 Jan 2026 22:18:38 +0800
+Message-ID: <20260116141859.719929-6-ming.lei@redhat.com>
 In-Reply-To: <20260116141859.719929-1-ming.lei@redhat.com>
 References: <20260116141859.719929-1-ming.lei@redhat.com>
 Precedence: bulk
@@ -73,204 +73,133 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-This commit implements the handling of the UBLK_U_IO_PREP_IO_CMDS command,
-which allows userspace to prepare a batch of I/O requests.
+Handle UBLK_U_IO_COMMIT_IO_CMDS by walking the uring_cmd fixed buffer:
 
-The core of this change is the `ublk_walk_cmd_buf` function, which iterates
-over the elements in the uring_cmd fixed buffer. For each element, it parses
-the I/O details, finds the corresponding `ublk_io` structure, and prepares it
-for future dispatch.
+- read each element into one temp buffer in batch style
 
-Add per-io lock for protecting concurrent delivery and committing.
+- parse and apply each element for committing io result
 
 Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c      | 191 +++++++++++++++++++++++++++++++++-
- include/uapi/linux/ublk_cmd.h |   5 +
- 2 files changed, 195 insertions(+), 1 deletion(-)
+ drivers/block/ublk_drv.c      | 103 +++++++++++++++++++++++++++++++++-
+ include/uapi/linux/ublk_cmd.h |   8 +++
+ 2 files changed, 109 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 9fd81213b81b..6aef1a856a80 100644
+index 6aef1a856a80..d919e04885b6 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -208,6 +208,7 @@ struct ublk_io {
- 	unsigned task_registered_buffers;
- 
- 	void *buf_ctx_handle;
-+	spinlock_t lock;
- } ____cacheline_aligned_in_smp;
- 
- struct ublk_queue {
-@@ -280,6 +281,16 @@ static inline bool ublk_dev_support_batch_io(const struct ublk_device *ub)
- 	return false;
+@@ -2267,7 +2267,7 @@ static inline int ublk_set_auto_buf_reg(struct ublk_io *io, struct io_uring_cmd
+ 	return 0;
  }
  
-+static inline void ublk_io_lock(struct ublk_io *io)
-+{
-+	spin_lock(&io->lock);
-+}
-+
-+static inline void ublk_io_unlock(struct ublk_io *io)
-+{
-+	spin_unlock(&io->lock);
-+}
-+
- static inline struct ublksrv_io_desc *
- ublk_get_iod(const struct ublk_queue *ubq, unsigned tag)
+-static int ublk_handle_auto_buf_reg(struct ublk_io *io,
++static void ublk_clear_auto_buf_reg(struct ublk_io *io,
+ 				    struct io_uring_cmd *cmd,
+ 				    u16 *buf_idx)
  {
-@@ -2699,6 +2710,171 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
- 	return ublk_ch_uring_cmd_local(cmd, issue_flags);
+@@ -2287,7 +2287,13 @@ static int ublk_handle_auto_buf_reg(struct ublk_io *io,
+ 		if (io->buf_ctx_handle == io_uring_cmd_ctx_handle(cmd))
+ 			*buf_idx = io->buf.auto_reg.index;
+ 	}
++}
+ 
++static int ublk_handle_auto_buf_reg(struct ublk_io *io,
++				    struct io_uring_cmd *cmd,
++				    u16 *buf_idx)
++{
++	ublk_clear_auto_buf_reg(io, cmd, buf_idx);
+ 	return ublk_set_auto_buf_reg(io, cmd);
  }
  
-+static inline __u64 ublk_batch_buf_addr(const struct ublk_batch_io *uc,
+@@ -2720,6 +2726,17 @@ static inline __u64 ublk_batch_buf_addr(const struct ublk_batch_io *uc,
+ 	return 0;
+ }
+ 
++static inline __u64 ublk_batch_zone_lba(const struct ublk_batch_io *uc,
 +					const struct ublk_elem_header *elem)
 +{
 +	const void *buf = elem;
 +
-+	if (uc->flags & UBLK_BATCH_F_HAS_BUF_ADDR)
-+		return *(const __u64 *)(buf + sizeof(*elem));
++	if (uc->flags & UBLK_BATCH_F_HAS_ZONE_LBA)
++		return *(const __u64 *)(buf + sizeof(*elem) +
++				8 * !!(uc->flags & UBLK_BATCH_F_HAS_BUF_ADDR));
++	return -1;
++}
++
+ static struct ublk_auto_buf_reg
+ ublk_batch_auto_buf_reg(const struct ublk_batch_io *uc,
+ 			const struct ublk_elem_header *elem)
+@@ -2875,6 +2892,84 @@ static int ublk_handle_batch_prep_cmd(const struct ublk_batch_io_data *data)
+ 	return ret;
+ }
+ 
++static int ublk_batch_commit_io_check(const struct ublk_queue *ubq,
++				      struct ublk_io *io,
++				      union ublk_io_buf *buf)
++{
++	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
++		return -EBUSY;
++
++	/* BATCH_IO doesn't support UBLK_F_NEED_GET_DATA */
++	if (ublk_need_map_io(ubq) && !buf->addr)
++		return -EINVAL;
 +	return 0;
 +}
 +
-+static struct ublk_auto_buf_reg
-+ublk_batch_auto_buf_reg(const struct ublk_batch_io *uc,
-+			const struct ublk_elem_header *elem)
-+{
-+	struct ublk_auto_buf_reg reg = {
-+		.index = elem->buf_index,
-+		.flags = (uc->flags & UBLK_BATCH_F_AUTO_BUF_REG_FALLBACK) ?
-+			UBLK_AUTO_BUF_REG_FALLBACK : 0,
-+	};
-+
-+	return reg;
-+}
-+
-+/*
-+ * 48 can hold any type of buffer element(8, 16 and 24 bytes) because
-+ * it is the least common multiple(LCM) of 8, 16 and 24
-+ */
-+#define UBLK_CMD_BATCH_TMP_BUF_SZ  (48 * 10)
-+struct ublk_batch_io_iter {
-+	void __user *uaddr;
-+	unsigned done, total;
-+	unsigned char elem_bytes;
-+	/* copy to this buffer from user space */
-+	unsigned char buf[UBLK_CMD_BATCH_TMP_BUF_SZ];
-+};
-+
-+static inline int
-+__ublk_walk_cmd_buf(struct ublk_queue *ubq,
-+		    struct ublk_batch_io_iter *iter,
-+		    const struct ublk_batch_io_data *data,
-+		    unsigned bytes,
-+		    int (*cb)(struct ublk_queue *q,
-+			    const struct ublk_batch_io_data *data,
-+			    const struct ublk_elem_header *elem))
-+{
-+	unsigned int i;
-+	int ret = 0;
-+
-+	for (i = 0; i < bytes; i += iter->elem_bytes) {
-+		const struct ublk_elem_header *elem =
-+			(const struct ublk_elem_header *)&iter->buf[i];
-+
-+		if (unlikely(elem->tag >= data->ub->dev_info.queue_depth)) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		ret = cb(ubq, data, elem);
-+		if (unlikely(ret))
-+			break;
-+	}
-+
-+	iter->done += i;
-+	return ret;
-+}
-+
-+static int ublk_walk_cmd_buf(struct ublk_batch_io_iter *iter,
-+			     const struct ublk_batch_io_data *data,
-+			     int (*cb)(struct ublk_queue *q,
-+				     const struct ublk_batch_io_data *data,
-+				     const struct ublk_elem_header *elem))
-+{
-+	struct ublk_queue *ubq = ublk_get_queue(data->ub, data->header.q_id);
-+	int ret = 0;
-+
-+	while (iter->done < iter->total) {
-+		unsigned int len = min(sizeof(iter->buf), iter->total - iter->done);
-+
-+		if (copy_from_user(iter->buf, iter->uaddr + iter->done, len)) {
-+			pr_warn("ublk%d: read batch cmd buffer failed\n",
-+					data->ub->dev_info.dev_id);
-+			return -EFAULT;
-+		}
-+
-+		ret = __ublk_walk_cmd_buf(ubq, iter, data, len, cb);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static int ublk_batch_unprep_io(struct ublk_queue *ubq,
++static int ublk_batch_commit_io(struct ublk_queue *ubq,
 +				const struct ublk_batch_io_data *data,
 +				const struct ublk_elem_header *elem)
 +{
 +	struct ublk_io *io = &ubq->ios[elem->tag];
++	const struct ublk_batch_io *uc = &data->header;
++	u16 buf_idx = UBLK_INVALID_BUF_IDX;
++	union ublk_io_buf buf = { 0 };
++	struct request *req = NULL;
++	bool auto_reg = false;
++	bool compl = false;
++	int ret;
 +
-+	data->ub->nr_io_ready--;
++	if (ublk_dev_support_auto_buf_reg(data->ub)) {
++		buf.auto_reg = ublk_batch_auto_buf_reg(uc, elem);
++		auto_reg = true;
++	} else if (ublk_dev_need_map_io(data->ub))
++		buf.addr = ublk_batch_buf_addr(uc, elem);
++
 +	ublk_io_lock(io);
-+	io->flags = 0;
++	ret = ublk_batch_commit_io_check(ubq, io, &buf);
++	if (!ret) {
++		io->res = elem->result;
++		io->buf = buf;
++		req = ublk_fill_io_cmd(io, data->cmd);
++
++		if (auto_reg)
++			ublk_clear_auto_buf_reg(io, data->cmd, &buf_idx);
++		compl = ublk_need_complete_req(data->ub, io);
++	}
 +	ublk_io_unlock(io);
++
++	if (unlikely(ret)) {
++		pr_warn_ratelimited("%s: dev %u queue %u io %u: commit failure %d\n",
++			__func__, data->ub->dev_info.dev_id, ubq->q_id,
++			elem->tag, ret);
++		return ret;
++	}
++
++	/* can't touch 'ublk_io' any more */
++	if (buf_idx != UBLK_INVALID_BUF_IDX)
++		io_buffer_unregister_bvec(data->cmd, buf_idx, data->issue_flags);
++	if (req_op(req) == REQ_OP_ZONE_APPEND)
++		req->__sector = ublk_batch_zone_lba(uc, elem);
++	if (compl)
++		__ublk_complete_rq(req, io, ublk_dev_need_map_io(data->ub));
 +	return 0;
 +}
 +
-+static void ublk_batch_revert_prep_cmd(struct ublk_batch_io_iter *iter,
-+				       const struct ublk_batch_io_data *data)
-+{
-+	int ret;
-+
-+	/* Re-process only what we've already processed, starting from beginning */
-+	iter->total = iter->done;
-+	iter->done = 0;
-+
-+	ret = ublk_walk_cmd_buf(iter, data, ublk_batch_unprep_io);
-+	WARN_ON_ONCE(ret);
-+}
-+
-+static int ublk_batch_prep_io(struct ublk_queue *ubq,
-+			      const struct ublk_batch_io_data *data,
-+			      const struct ublk_elem_header *elem)
-+{
-+	struct ublk_io *io = &ubq->ios[elem->tag];
-+	const struct ublk_batch_io *uc = &data->header;
-+	union ublk_io_buf buf = { 0 };
-+	int ret;
-+
-+	if (ublk_dev_support_auto_buf_reg(data->ub))
-+		buf.auto_reg = ublk_batch_auto_buf_reg(uc, elem);
-+	else if (ublk_dev_need_map_io(data->ub)) {
-+		buf.addr = ublk_batch_buf_addr(uc, elem);
-+
-+		ret = ublk_check_fetch_buf(data->ub, buf.addr);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ublk_io_lock(io);
-+	ret = __ublk_fetch(data->cmd, data->ub, io);
-+	if (!ret)
-+		io->buf = buf;
-+	ublk_io_unlock(io);
-+
-+	return ret;
-+}
-+
-+static int ublk_handle_batch_prep_cmd(const struct ublk_batch_io_data *data)
++static int ublk_handle_batch_commit_cmd(const struct ublk_batch_io_data *data)
 +{
 +	const struct ublk_batch_io *uc = &data->header;
 +	struct io_uring_cmd *cmd = data->cmd;
@@ -281,77 +210,53 @@ index 9fd81213b81b..6aef1a856a80 100644
 +	};
 +	int ret;
 +
-+	mutex_lock(&data->ub->mutex);
-+	ret = ublk_walk_cmd_buf(&iter, data, ublk_batch_prep_io);
++	ret = ublk_walk_cmd_buf(&iter, data, ublk_batch_commit_io);
 +
-+	if (ret && iter.done)
-+		ublk_batch_revert_prep_cmd(&iter, data);
-+	mutex_unlock(&data->ub->mutex);
-+	return ret;
++	return iter.done == 0 ? ret : iter.done;
 +}
 +
  static int ublk_check_batch_cmd_flags(const struct ublk_batch_io *uc)
  {
  	unsigned elem_bytes = sizeof(struct ublk_elem_header);
-@@ -2765,6 +2941,11 @@ static int ublk_ch_batch_io_uring_cmd(struct io_uring_cmd *cmd,
- 
- 	switch (cmd_op) {
- 	case UBLK_U_IO_PREP_IO_CMDS:
-+		ret = ublk_check_batch_cmd(&data);
-+		if (ret)
-+			goto out;
-+		ret = ublk_handle_batch_prep_cmd(&data);
-+		break;
- 	case UBLK_U_IO_COMMIT_IO_CMDS:
+@@ -2950,7 +3045,7 @@ static int ublk_ch_batch_io_uring_cmd(struct io_uring_cmd *cmd,
  		ret = ublk_check_batch_cmd(&data);
  		if (ret)
-@@ -2952,7 +3133,7 @@ static int ublk_init_queue(struct ublk_device *ub, int q_id)
- 	struct ublk_queue *ubq;
- 	struct page *page;
- 	int numa_node;
--	int size;
-+	int size, i;
+ 			goto out;
+-		ret = -EOPNOTSUPP;
++		ret = ublk_handle_batch_commit_cmd(&data);
+ 		break;
+ 	default:
+ 		ret = -EOPNOTSUPP;
+@@ -3668,6 +3763,10 @@ static int ublk_ctrl_add_dev(const struct ublksrv_ctrl_cmd *header)
+ 				UBLK_F_AUTO_BUF_REG))
+ 		ub->dev_info.flags &= ~UBLK_F_NEED_GET_DATA;
  
- 	/* Determine NUMA node based on queue's CPU affinity */
- 	numa_node = ublk_get_queue_numa_node(ub, q_id);
-@@ -2977,6 +3158,9 @@ static int ublk_init_queue(struct ublk_device *ub, int q_id)
- 	}
- 	ubq->io_cmd_buf = page_address(page);
- 
-+	for (i = 0; i < ubq->q_depth; i++)
-+		spin_lock_init(&ubq->ios[i].lock);
++	/* UBLK_F_BATCH_IO doesn't support GET_DATA */
++	if (ublk_dev_support_batch_io(ub))
++		ub->dev_info.flags &= ~UBLK_F_NEED_GET_DATA;
 +
- 	ub->queues[q_id] = ubq;
- 	ubq->dev = ub;
- 	return 0;
-@@ -3229,6 +3413,11 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub,
- 		return -EINVAL;
- 
- 	mutex_lock(&ub->mutex);
-+	/* device may become not ready in case of F_BATCH */
-+	if (!ublk_dev_ready(ub)) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
- 	if (ub->dev_info.state == UBLK_S_DEV_LIVE ||
- 	    test_bit(UB_STATE_USED, &ub->state)) {
- 		ret = -EEXIST;
+ 	/*
+ 	 * Zoned storage support requires reuse `ublksrv_io_cmd->addr` for
+ 	 * returning write_append_lba, which is only allowed in case of
 diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 0cc58e19d401..1a3d4d33c1d1 100644
+index 1a3d4d33c1d1..3894d676dd02 100644
 --- a/include/uapi/linux/ublk_cmd.h
 +++ b/include/uapi/linux/ublk_cmd.h
-@@ -103,6 +103,11 @@
- 	_IOWR('u', 0x23, struct ublksrv_io_cmd)
- #define	UBLK_U_IO_UNREGISTER_IO_BUF	\
- 	_IOWR('u', 0x24, struct ublksrv_io_cmd)
-+
-+/*
-+ * return 0 if the command is run successfully, otherwise failure code
-+ * is returned
-+ */
+@@ -110,6 +110,14 @@
+  */
  #define	UBLK_U_IO_PREP_IO_CMDS	\
  	_IOWR('u', 0x25, struct ublk_batch_io)
++/*
++ * If failure code is returned, nothing in the command buffer is handled.
++ * Otherwise, the returned value means how many bytes in command buffer
++ * are handled actually, then number of handled IOs can be calculated with
++ * `elem_bytes` for each IO. IOs in the remained bytes are not committed,
++ * userspace has to check return value for dealing with partial committing
++ * correctly.
++ */
  #define	UBLK_U_IO_COMMIT_IO_CMDS	\
+ 	_IOWR('u', 0x26, struct ublk_batch_io)
+ 
 -- 
 2.47.0
 
