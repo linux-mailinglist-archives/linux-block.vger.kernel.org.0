@@ -1,232 +1,265 @@
-Return-Path: <linux-block+bounces-33114-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-33140-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 909F4D31858
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:06:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 634C5D32A13
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 15:31:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 230713096003
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 13:04:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2FE8530001A7
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jan 2026 14:31:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 028AE23B612;
-	Fri, 16 Jan 2026 13:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BFD38F238;
+	Fri, 16 Jan 2026 14:31:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Dr2w/Xa+";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="kH3z3bjW"
+	dkim=pass (1024-bit key) header.d=deepseek.com header.i=@deepseek.com header.b="HIuilLG6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+Received: from mail-m49221.qiye.163.com (mail-m49221.qiye.163.com [45.254.49.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3B721576E
-	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 13:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768568675; cv=fail; b=rmNTQGvjhsTJfBX1xsjcAYJQ7tlIOPBwvDpe78arFtjApUEgMAuw8XvilLQbTzMXgY9s5y7GUm29Wwmb5fbULODCmDf8txvy16liAOUn5/seRDep72t81xEgpcbv6kvNxpcjKdRil1YM4m55qz3zWC0Y5fLRfxwkida+z7oKQfc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768568675; c=relaxed/simple;
-	bh=2rj11n2NyQMUMA9y/R3TYsobM6bw/Mm4eVPPpNbHK/o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UnpDJfnA5nNB1iQ6nFwxUcS9VdJJWKGmKxVOeaL8nYjrKOHBG+qfU3FmAsA8snTEaRiay0xX2+ccohiytxGsGd76+QwilIDbwg1dXmqkWS6nvgJwZshIiA+UCxq5LhUnScdb+Kqa6ieR7Mj9hpQ2rMwiP4IXd29kyNazEkEU2zc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=Dr2w/Xa+; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=kH3z3bjW; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1768568674; x=1800104674;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=2rj11n2NyQMUMA9y/R3TYsobM6bw/Mm4eVPPpNbHK/o=;
-  b=Dr2w/Xa+nD0vCIKn9PqU5JHZwkuG/zLYdBU/mHaGpsQjiO6RV6g27Gss
-   X+P2mWJWLPqkAq4PX/qLG0+wai2ekw7q3lrW6oyLTOhG1RKuV72dqodPk
-   BeCNsqQF0TOhu5G776j3U2Dpq7V8Y3j8QioL57Sq67AW7cglMThRHmVfh
-   QkiusY7nZ8zCb1TcznPBXRWS1k03/ua3YviXmkvyysW1UFh7A6q3pPr+X
-   IsaUhr1p/evJB2QZtw3phO+6DN7YKADwkiO4ydMFbArp4oG0DOxEfR+Xn
-   b+eDKuo8NQNChbWv9lblNE4F6FErsl3PGgMLOWKeroLNuX2iW/8H9aSYT
-   g==;
-X-CSE-ConnectionGUID: 26ZL+zGqQ1eKZem0qbMDbA==
-X-CSE-MsgGUID: 0erMoJ43S1iByAuIVnuZYA==
-X-IronPort-AV: E=Sophos;i="6.21,231,1763395200"; 
-   d="scan'208";a="140107412"
-Received: from mail-eastusazon11011050.outbound.protection.outlook.com (HELO BL2PR02CU003.outbound.protection.outlook.com) ([52.101.52.50])
-  by ob1.hgst.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2026 21:04:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QV5a3STOxuI5e7hHf9PeUZUdZ2Vms1FK37qheG5fa5dhwoiGLFuGQOpx6ju+u15oEiwDxeYdqDso4XZA8P/C/NKDo04r82aQFzJC/6Vpgozt1/0cshiN6w9mMkQvOVj7d47LGNPZ4J+1OAa8/G0geWpcVgrlqX9PdtYyeIScKEdeS5YD2HlTB9M9yi2Of9RXda27PZNmprYM+dz8TYYz3Ymkuc+8aTZSVdhY87idMKMaqc4BupWnLE/VhT85ZRN7u5e0CrAlqg4giJ6x4PAS2qqcAbjzT7yHXJi4wF0UKzorccLDBN6iw7QZ6MerwcCGARmqWB9RoO2aI8q8zIZHLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A+Ev3G+IG0Xnk8woVKyrOxJRS90SD1dG5j+Z+zJakmQ=;
- b=b3jHUQh69MSEZJusQzBw0n0X+zO3C6cSVxDb3fBorMK4FoDjjKFM7xEGmibO5Qc6Dp0pX1OJkkt3Fu877AAiNAu0spNpE6qtpl4KBbNBjx8gPykndq3AWacInylT6kIuXkKlp+bJgoPLIPc59hmOcciVvawhGu7LqJ5ThErVVvzMsl5HyNpIgLNsqjdow+CtJ+0/Mk6xvLWl8fxZkG8V4QYSt3tAvtfctp7MovuLA5NLk9sFVarCbTrSf00IeoRBPDhIyEEE4DyI06bgHQjvB1uf5CHYOMOifEQQghnGqDVBFu1lHS9fUtAcVMBe1GuLV50AfaTdGHYopzopkbhBGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A+Ev3G+IG0Xnk8woVKyrOxJRS90SD1dG5j+Z+zJakmQ=;
- b=kH3z3bjW/4JhVMhMWjzsfpTPdVdV1A+mswV60oS1ZVQ6RwqwzMqG5qvx5BAqzyNGHhoVIPCgt78YmMBd9VRG09VVRgksuWn5CXAsbMamWZH7zG2YCCaS23KcJWs8bXeBUb4CdQ4pSyOaLELpPL5Y0qq6cyQmk2jxi2ZJx630cgw=
-Received: from SN7PR04MB8532.namprd04.prod.outlook.com (2603:10b6:806:350::6)
- by IA3PR04MB9160.namprd04.prod.outlook.com (2603:10b6:208:518::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Fri, 16 Jan
- 2026 13:04:29 +0000
-Received: from SN7PR04MB8532.namprd04.prod.outlook.com
- ([fe80::4e14:94e7:a9b3:a4d4]) by SN7PR04MB8532.namprd04.prod.outlook.com
- ([fe80::4e14:94e7:a9b3:a4d4%7]) with mapi id 15.20.9542.003; Fri, 16 Jan 2026
- 13:04:28 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: John Pittman <jpittman@redhat.com>
-CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH blktests 1/2] common/rc: support multiple arguments for
- _require_test_dev_sysfs()
-Thread-Topic: [PATCH blktests 1/2] common/rc: support multiple arguments for
- _require_test_dev_sysfs()
-Thread-Index: AQHchZnsAcmrLYjZ6EG5ZEz9oHpE8LVUxhWA
-Date: Fri, 16 Jan 2026 13:04:28 +0000
-Message-ID: <aWo3H2Lb2E8K4pIY@shinmob>
-References: <20260114210809.2195262-1-jpittman@redhat.com>
- <20260114210809.2195262-2-jpittman@redhat.com>
-In-Reply-To: <20260114210809.2195262-2-jpittman@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR04MB8532:EE_|IA3PR04MB9160:EE_
-x-ms-office365-filtering-correlation-id: 1a27a387-3da7-4cff-edba-08de54ffc837
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|19092799006|366016|376014|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?bkSfoLOF44BR2SSWTlfKCmmwhz0ZOjHnet+Vu7dZpzI4pelVBs+EqRiPho6U?=
- =?us-ascii?Q?cmelOOTlSIUSCTTkGF85kA5Tct4rWTNXV6sECXaabffMseeUZ4gxeMPUPxxd?=
- =?us-ascii?Q?4X9aBRoQfQpJzf666yDR+U76XFkVEZqSm+uZVrjh9WxmFb7pcT8+Unu0Zpc5?=
- =?us-ascii?Q?x6P5NlpjrpWHUCrGE7EkzyqC43rAtjsSxMjifg8LeCG7i91QBB7SMbIGsgf6?=
- =?us-ascii?Q?L0qA0C1rFwo16P5zwx1HUwAleCvhEps0QZ4Zdkpkb9GLuR0jzYm8qN55qKnv?=
- =?us-ascii?Q?3GEVmEvwmZjnMID9H96MGu/sZpuvcg70P7eEw61emmBaWy+ELrnSR/v+AaaU?=
- =?us-ascii?Q?qBodAwMwHiAPFVJAW+mXCiZmut4ZA1R0xYnRoD2fQlxg2jkiwWhvhAk3zfv9?=
- =?us-ascii?Q?hc0uenpFeV83aWQPv3nSb2Cz13/go2nc6WDPMpDx55JZRNGaTs35ot7GR8ih?=
- =?us-ascii?Q?qKMMtpgaexdCdg1S6z2ZMeJykjl2AsyhzDtEWXEqYyoR4kAcLu9FhwoNXLXu?=
- =?us-ascii?Q?jPKz2oLNVo+rnNqt7+Vpa1kYODNfpLtyT9daHT+Bx+KDx3MRUcluFdsq1inj?=
- =?us-ascii?Q?cC06ZZjIFVcQ9SLEajEZeRxp2fym4GUhWxBDbQj8GLqNFqu/bEGMq6oDoJOi?=
- =?us-ascii?Q?l3uFP5rt0GFGHQaXyntMq7ticH2zlngII/SojhSj9IUT+kSgJTCnVWOIdQA8?=
- =?us-ascii?Q?E6YSiGrbVKyZFVxz+FIf0enmBR/0Yc1W0URrysQaJDx9Tx/V2wsbqb208N4a?=
- =?us-ascii?Q?YE0TYdvMhJhH77GhJNlM5lbAi2VLNnbW+PKuNecK8A7d1+SKtBg8ZzUNf2le?=
- =?us-ascii?Q?2lzh7Ig38lXaBLHj5Bq8ZtaWLFhBGeyVlsvDLBwRHNcnvSOGa5oAcy1WfMtG?=
- =?us-ascii?Q?eJ/0UJ8CHDp/DcdZSv1fvFmjCDiwdBJDuglWUJN+lFxU4jEM0FxtKvRXmMrs?=
- =?us-ascii?Q?rgLymQql8BuapI1r82EdsqePG2CdGf23lGqO/9hQsFgIwCXE3eZclksl8o6D?=
- =?us-ascii?Q?i/MFnTs+Hi2Tf0/7gJliqk17ftyZl3GYMF6MwcrFQ6pxB0Lq6kKNfs5d1fco?=
- =?us-ascii?Q?Rpb2NXoEQuYI1vVZuciMROPwy9iYmBZpncfg46uF49lHpoKAkUHCcdL5+UAg?=
- =?us-ascii?Q?FlFkErbB9ejdTl4A5xRcgbIXGOwAgAeOrbGviMt1FJ/5lSWRJS52xzKdTOSZ?=
- =?us-ascii?Q?9VQTuXr6VDRHWUkWH2AF8yC198K5e2VwhqAyCSPB+4TwOBenEktVkHN8wW5Y?=
- =?us-ascii?Q?bNuY9ToFFFoXTxydVAkg/WkD9Cw1ICRprawPWHrHdMK6d3kCXDXppEZa+vUh?=
- =?us-ascii?Q?fJyk1Y4WJHdsf06Q2RHefdLJbJxRWlIbCsXvTVjfQ7i64v4HLspj4hGxyeyZ?=
- =?us-ascii?Q?LXrwoAy6O9zwYPnApHxH9777+Uz7yutblvfOoOCgC1C/7bX5Mmmc6mTpRlTo?=
- =?us-ascii?Q?RfK9g6th1KrVJ4oRStntLzHQ11ymPfOmr1znW9KQ7eXxz2y9G2RxUXVR1gW8?=
- =?us-ascii?Q?mpHKdzYuWM0HDccyC2cxC9MMwrBDurdkZCOveS1DS426s9IL+gS9ve8/erTt?=
- =?us-ascii?Q?yEO5CjGGEtTQTohf4CRR+8ldXItFjyQRu7rYbGOdtcQBLXsZO1uFANxqS6Hr?=
- =?us-ascii?Q?DhC9rA1HGLrWAjUWgnZGWfk=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR04MB8532.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(376014)(1800799024)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Ne83DXIgBR18q2MEA2S1D0TsxlwqibFyyVYwiBTB+JKEyWMgnvzzK6AzTq0G?=
- =?us-ascii?Q?BYc39MsN8dm2QYS4lwcQKpVaceRjzVl2W+dwzqBKUmsUnKoOxM/JllWX7h4P?=
- =?us-ascii?Q?BHSIUHLZs6r6KJuHbZzwfnF5edl7JzU+ks7gcaKE1Png9EyeOJ7a+/DFGiW9?=
- =?us-ascii?Q?VmcKPM/RlzTiMfeJerRjcMPE7/bf9xPHQeGL0ypd8NhEUQOa3ff6MUQyj9lN?=
- =?us-ascii?Q?oOBpOz29QvzolYw6F4v/rlKdzOPxkGZtaQ73ygsOENADLOL/C2C5Jve9yDDp?=
- =?us-ascii?Q?S6Ft/IPEh7aXmBwzsesSkyGfUtfibe0JULDzNAlsgmshOZN1hTJ417Ka2vJL?=
- =?us-ascii?Q?ALmUck3XUHbWcqjY/hWUtLw0QAimaZVIEhD7F2QnaErCqxxe0pqL81ukB0hl?=
- =?us-ascii?Q?8KaBOIWp3Fb2Bnbsnmtwsis6kXBnKw40b/Nhcm/WGBfwVjp+5ptSJ/Jqg/t/?=
- =?us-ascii?Q?QcoDLwkM77JsmY0E90QAglQU+xBaHDXLXt7ZVqSr0HiU9fwsJh7JHi3hr5re?=
- =?us-ascii?Q?Rjr2488Umi+wFQtDZB3oY2N9lj9gPoI4N8UnmcHrqgJpqgpLPaw+BCx3FhJt?=
- =?us-ascii?Q?r5l0+P4t+oX93ZrQ2qab9mlQw8ZU99d52GoHlaECa2HfEGmLtrnvsWGu3csi?=
- =?us-ascii?Q?xeEEvEjmiB//NBV+h1+A3W1zbevlLKDMFrHnxgOL3MxB/LVYW29Y1qnZWdtV?=
- =?us-ascii?Q?Goc8A3zlwN1i4y9s4kUe9vF3zIGcGFW4JyFOvrztkQAn+3QILLDtDkoffJ1x?=
- =?us-ascii?Q?JOvskVKBPypDfonOJ7VMnDoFI9KOoFO4Liw0gs0jLS8ZiqDKSNf8dEeOYTor?=
- =?us-ascii?Q?VTYQNn6BitL5nngY9920p7FZYmErMofDVsy7oI74N7R4/FdFMOxmW1Zxgwhl?=
- =?us-ascii?Q?amII7zyk3vugsLI9wfracTXksiZjBnVlpkB0BoAkO62P1wVkSxWOVm+s6czA?=
- =?us-ascii?Q?4Xxva7qNj9RQe9uf55faZMOXTxPH9ztR6NoY85hWDehK6pQMqzQhuzU+Q8y/?=
- =?us-ascii?Q?AJXCxK+EOwJmv+IzGzkb/bXk4Y3a2UW5osIOoNcWm9v537X2su7bIMVw3rwz?=
- =?us-ascii?Q?/2/LK7ahwBki6VYLvawEyE5hmQe/nzvMtb2AgVbCV0lCU9Y8yuZFjSmKj15u?=
- =?us-ascii?Q?Xz3Zd/KqMHxr37qMz0y4f9JYBTe6lFQvZ20+a65VFXPVZrD13GxcdwZMsSNb?=
- =?us-ascii?Q?ikMZwyHqx1/LEx/6X4i1xYIaLXn12S62P2mLRGixtz3Iz11rt6gsmkbzEDTn?=
- =?us-ascii?Q?qQwrCL3B1T9jPPh4aKkpaGhwIycjcfHPdCKhiAyGr65bOdZVZwUxwfY/861b?=
- =?us-ascii?Q?mKJlPTTWEyhvfe/PKprPsGcNaVEsvzaIupKG0gGaxYL0P8Ug2cLmrWANZ8wi?=
- =?us-ascii?Q?vLMTGNqdd0f57jc0azuQLJNGyS9y03aDz0Pfm/VA9lHBhAcg9UK0KWYuwP3q?=
- =?us-ascii?Q?jsZfMbeVD/n7yMlQnVp08Nnjzkw+ahKdBaNNXJZFel5lYQAz2nZ65+87jJdc?=
- =?us-ascii?Q?Er2OtwWho8X+R4axJiqj/htHh78e3ifUOoofSA7y0Yl/ZKHUc3xUvqvFVfAK?=
- =?us-ascii?Q?9qg/0AKPvJPyROylS0FlZEqo6dI1bqU/W8yIa7Ugxt1miQYD3dUG6IGIB8AO?=
- =?us-ascii?Q?+C4XtIzHAJacdaxAW6SI87Ql2yJgxMExSZNQfviJEn3gPoYSmD8XdpbOQ7Wd?=
- =?us-ascii?Q?LEgazLCKIiAggQnTpx/J5bC+EDn19NTULtqnVfH9xAVEmpZuzsUOtWoEBGgr?=
- =?us-ascii?Q?dHFgR3l0wdaK5H4LL2i/+pVJ5mI2Wjc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AECCCB403C390840A9134760FD7ED38B@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A40338E5DA
+	for <linux-block@vger.kernel.org>; Fri, 16 Jan 2026 14:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.221
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768573865; cv=none; b=l2QQfABfa+WCHCvlKjlqTWIU0dcTXd3MvL/+Q33M72mXmNhhRIZRsLgA91wxqwQ46XrzHo5RryxD3xpgHJJDWTyTM5+gYcjR9l9Aor4hUIbMpgrbZ5VnfrNtVXJhY6WSIxlb5u9804oOKsDYO8GyzfABogM0o4gdebpiTCfjxcU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768573865; c=relaxed/simple;
+	bh=FoUvpqph+5SqbKMCQuJStRHysTpu5223UDa+ERnaEdk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=g975tYeeHmA78rNjvKYRkLBhHo/jxcWDij71k4uUv5nKHO138HTjDbiDCM9rn0H0v9RItBeipEYkldrOe7xoqw+UYpQ+O0fpM6EH4lolT5tZRpXvC10wG2z+W8ED52hl+Czvll/kP95RDlITK77D5YCNXbqVrubCVtzKBzENEVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deepseek.com; spf=pass smtp.mailfrom=deepseek.com; dkim=pass (1024-bit key) header.d=deepseek.com header.i=@deepseek.com header.b=HIuilLG6; arc=none smtp.client-ip=45.254.49.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deepseek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepseek.com
+Received: from localhost.localdomain (unknown [210.12.28.78])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 30ef4cd10;
+	Fri, 16 Jan 2026 22:15:35 +0800 (GMT+08:00)
+From: huang-jl <huang-jl@deepseek.com>
+To: ming.lei@redhat.com
+Cc: linux-block@vger.kernel.org
+Subject: [BUG] ublk: ublk server hangs in D state during STOP_DEV
+Date: Fri, 16 Jan 2026 22:15:32 +0800
+Message-Id: <20260116141532.45377-1-huang-jl@deepseek.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	etgb8ZiRz+Luq5dk+KfxqFaulLrqGhj5CCCxH0cKO4noYaSlL0Fi159FhIWxaLWpiz9APDAUUb7aF+N6UzdVrmdqhjB4pBFSwXKwLZqhfEOF6oZp6pUxd67dTUHN4YOTvWV0DLmhwPxz9qLVDdq/LvOZS5McaT9GPKU3KwhvGSjhP003sr8Sr+a3SzteeaDOS0oPVJciOjrHBbGLW/AW51LvKWpKKAsM2Zm0RFlyYEd1uExTU+tejm0yUBXru0HervHJC+qcIKHnpIVqXD1KBK8c1L0px/T+Z1AQCguiORThplzCEAWydJD0NI2ReCyS+v+di7MVekZQAHH/g5+D/PLsh2jo06JIVlKr4FpsgL8xNDicG/8KHwdB0dyIibbvPBhQ9Y528tSkjflQtLjurdvcHW/rLOPhBcMWsiqnagaQmFFcCq4nWpoYs9UZHPb6tCNz91XbUFH9j6qqS0aFT5HkZfwOdkK63RIUMy86zc7qJcZS4I1fonSuIvnZj8KP5LGhl7p6kMbOGEgx2R8mRIwjOz5p+B4nNykHM0BSMlmG8C1Ajo7NxyETX6eaUdln6lUCorsl+bEkrp2iV+pQ30aXSpxUrCE/X74YidWGqHjRCyCgcF7rNKVKAyzdlkbM
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR04MB8532.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a27a387-3da7-4cff-edba-08de54ffc837
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2026 13:04:28.5656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6caDVKXv/IJ4MgQ0VYNZFBQ0AFtU99RxVdKgvR3xYGlI84vG9Yvmo4nTmUdbe3yuWj6mCnLDlkCpNHDzZwTjh+WSn1M7MwPb165BL2X60Ak=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR04MB9160
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9bc7295ba409d9kunmfac338536a1c16
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx1MVkpIT05DQk1JHUMaTlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlJSktVSklVSUNVTENZV1kWGg8SFR0UWUFZT0tIVUpLSUJNSEtVSktLVU
+	tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=HIuilLG6F8BGh0mwUSHLIOXdr5eYTkY1Km/n/+rOMFUs3sTOPCjijfScoTP3PG9ymC7wBqm23uUxRbC/lot0JrwCYjfj4PfkUtLvz9xG0BDTwnVGevCwDI8MuPBRTLYtW0fEhsVydtTKdNx3LQdRKFOGiXFTQKup6xJEIy80qQ0=; c=relaxed/relaxed; s=default; d=deepseek.com; v=1;
+	bh=7C38hxvkMxnKo0930aGOXegDjWPBSvt65Kz3t1+6QtU=;
+	h=date:mime-version:subject:message-id:from;
 
-On Jan 14, 2026 / 16:08, John Pittman wrote:
-> In some cases we may need to check multiple sysfs values for tests.
-> If this happens, create the ability to pass in multiple arguments to
-> _require_test_dev_sysfs() instead of having to call the function
-> multiple times.
->=20
-> Signed-off-by: John Pittman <jpittman@redhat.com>
-> ---
->  common/rc | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->=20
-> diff --git a/common/rc b/common/rc
-> index b76a856..e4b5196 100644
-> --- a/common/rc
-> +++ b/common/rc
-> @@ -326,11 +326,14 @@ _test_dev_is_rotational() {
->  }
-> =20
->  _require_test_dev_sysfs() {
-> -	if [[ ! -e "${TEST_DEV_SYSFS}/$1" ]]; then
-> -		SKIP_REASONS+=3D("${TEST_DEV} does not have sysfs attribute $1")
-> -		return 1
-> -	fi
-> -	return 0
-> +	local ret=3D0
+Hello,
 
-Nit: it's a bit safer to declare "attr" as a local variable here.
+I am reporting a bug in the ublk driver observed during production usage.
+Under specific conditions during device removal, the ublk server process
+enters an uninterruptible sleep (D state) and becomes unkillable,
+subsequently blocking further device deletions on the system.
 
-> +	for attr in "$@"; do
-> +		if [[ ! -e "${TEST_DEV_SYSFS}/$attr" ]]; then
-> +			SKIP_REASONS+=3D("${TEST_DEV} does not have sysfs attribute $attr")
-> +			ret=3D1
-> +		fi
-> +	done
-> +	return $ret
->  }
-> =20
->  _require_test_dev_is_rotational() {
-> --=20
-> 2.51.1
-> =
+[1. Description]
+We run a customized ublk server with the following configuration:
+
+- ublksrv_ctrl_dev_info.flags = 0 (UBLK_F_USER_RECOVERY is not enabled).
+- Environment: Frequent creation/deletion of ublk devices (400–500 active
+  devices, one device at most 5-hour lifespan).
+- Upon receiving SIGINT, our ublk server will sends UBLK_U_CMD_STOP_DEV to the
+  driver.
+- A monitor process will send SIGINT to the ublk server when deleting. If it
+  finds the ublk server does not stopped within 10 seconds, the monitor will
+  send SIGKILL.
+
+
+On one production node, a ublk server process (PID 348910) failed to exit and
+entered D state. Simultaneously, related kworkers also entered D state:
+
+$ ps -eo pid,stat,lstart,comm | grep -E "^ *[0-9]+ D"
+ 77625 D    Wed Jan 14 15:23:57 2026 kworker/303:0+events
+348910 Dl   Wed Jan 14 23:00:20 2026 uvm_ublk
+355239 D    Wed Jan 14 23:04:18 2026 kworker/u775:1+flush-259:11
+
+The device number of the ublk device is exact 259:11.
+
+After this hang occurs, we can still create new ublk devices, but we cannot
+delete them. While UBLK_U_CMD_STOP_DEV can be sent, UBLK_U_CMD_DEL_DEV never
+receives a response from io_uring, and the issuing process hangs in S state.
+
+I give the process's stack in the following:
+
+# The kworker/303:0+events
+$ cat /proc/77625/stack 
+[<0>] folio_wait_bit_common+0x136/0x330
+[<0>] __folio_lock+0x17/0x30
+[<0>] write_cache_pages+0x1cd/0x430
+[<0>] blkdev_writepages+0x6f/0xb0
+[<0>] do_writepages+0xcd/0x1f0
+[<0>] filemap_fdatawrite_wbc+0x75/0xb0
+[<0>] __filemap_fdatawrite_range+0x58/0x80
+[<0>] filemap_write_and_wait_range+0x59/0xc0
+[<0>] bdev_release+0x18e/0x240
+[<0>] blkdev_release+0x15/0x30
+[<0>] __fput+0xa0/0x2e0
+[<0>] delayed_fput+0x23/0x40
+[<0>] process_one_work+0x181/0x3a0
+[<0>] worker_thread+0x306/0x440
+[<0>] kthread+0xef/0x120
+[<0>] ret_from_fork+0x44/0x70
+[<0>] ret_from_fork_asm+0x1b/0x30
+
+# The ublk server
+$ cat /proc/348910/stack 
+[<0>] io_wq_put_and_exit+0xa6/0x210
+[<0>] io_uring_clean_tctx+0x8c/0xd0
+[<0>] io_uring_cancel_generic+0x19b/0x370
+[<0>] __io_uring_cancel+0x1b/0x30
+[<0>] do_exit+0x17a/0x530
+[<0>] do_group_exit+0x35/0x90
+[<0>] get_signal+0x96e/0x9b0
+[<0>] arch_do_signal_or_restart+0x39/0x120
+[<0>] syscall_exit_to_user_mode+0x15f/0x1e0
+[<0>] do_syscall_64+0x8c/0x180
+[<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
+
+# kworker/u775:1+flush-259:11
+$ cat /proc/355239/stack
+cat /proc/355239/stack 
+[<0>] rq_qos_wait+0xcf/0x180
+[<0>] wbt_wait+0xb3/0x100
+[<0>] __rq_qos_throttle+0x25/0x40
+[<0>] blk_mq_submit_bio+0x168/0x6b0
+[<0>] __submit_bio+0xb3/0x1c0
+[<0>] submit_bio_noacct_nocheck+0x13c/0x1f0
+[<0>] submit_bio_noacct+0x162/0x5b0
+[<0>] submit_bio+0xb2/0x110
+[<0>] submit_bh_wbc+0x156/0x190
+[<0>] __block_write_full_folio+0x1da/0x3d0
+[<0>] block_write_full_folio+0x150/0x180
+[<0>] write_cache_pages+0x15b/0x430
+[<0>] blkdev_writepages+0x6f/0xb0
+[<0>] do_writepages+0xcd/0x1f0
+[<0>] __writeback_single_inode+0x44/0x290
+[<0>] writeback_sb_inodes+0x21b/0x520
+[<0>] __writeback_inodes_wb+0x54/0x100
+[<0>] wb_writeback+0x2df/0x350
+[<0>] wb_do_writeback+0x225/0x2a0
+[<0>] wb_workfn+0x5f/0x240
+[<0>] process_one_work+0x181/0x3a0
+[<0>] worker_thread+0x306/0x440
+[<0>] kthread+0xef/0x120
+[<0>] ret_from_fork+0x44/0x70
+[<0>] ret_from_fork_asm+0x1b/0x30
+
+There is also and iou-wrk of that ublk server process:
+
+$ cat /proc/348910/task/348911/stack 
+[<0>] folio_wait_bit_common+0x136/0x330
+[<0>] __folio_lock+0x17/0x30
+[<0>] write_cache_pages+0x1cd/0x430
+[<0>] blkdev_writepages+0x6f/0xb0
+[<0>] do_writepages+0xcd/0x1f0
+[<0>] filemap_fdatawrite_wbc+0x75/0xb0
+[<0>] __filemap_fdatawrite_range+0x58/0x80
+[<0>] filemap_write_and_wait_range+0x59/0xc0
+[<0>] bdev_mark_dead+0x85/0xd0
+[<0>] blk_report_disk_dead+0x87/0xf0
+[<0>] del_gendisk+0x37f/0x3b0
+[<0>] ublk_stop_dev+0x89/0x100 [ublk_drv]
+[<0>] ublk_ctrl_uring_cmd+0x51a/0x750 [ublk_drv]
+[<0>] io_uring_cmd+0x9f/0x140
+[<0>] io_issue_sqe+0x193/0x410
+[<0>] io_wq_submit_work+0xe2/0x380
+[<0>] io_worker_handle_work+0xdf/0x340
+[<0>] io_wq_worker+0xf9/0x350
+[<0>] ret_from_fork+0x44/0x70
+[<0>] ret_from_fork_asm+0x1b/0x30
+
+[2. Kernel version]
+
+Linux  6.8.0-87-generic #88-Ubuntu SMP PREEMPT_DYNAMIC Sat Oct 11 09:28:41 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+I am running Ubuntu 24:
+
+Distributor ID: Ubuntu
+Description:    Ubuntu-Server 24.04.2 2025.05.26 (Cubic 2025-05-27 05:35)
+Release:        24.04
+Codename:       noble
+
+[3. Steps to reproduce]
+Sorry, as this happens only in one process among one of our production servers,
+I do not find an easy way to reproduce the error.
+
+[4. Dmesg/Logs]
+I can only find the logs like following. Apart from the kworker, there are
+similar logs for the ublk server iou-wrk.
+
+Jan 15 00:53:02 kernel: INFO: task kworker/303:0:77625 blocked for more than 122 seconds.
+Jan 15 00:53:02 kernel:       Tainted: G           OE      6.8.0-87-generic #88-Ubuntu
+Jan 15 00:53:02 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Jan 15 00:53:02 kernel: task:kworker/303:0   state:D stack:0     pid:77625 tgid:77625 ppid:2      flags:0x00004000
+Jan 15 00:53:02 kernel: Workqueue: events delayed_fput
+Jan 15 00:53:02 kernel: Call Trace:
+Jan 15 00:53:02 kernel:  <TASK>
+Jan 15 00:53:02 kernel:  __schedule+0x27c/0x6b0
+Jan 15 00:53:02 kernel:  schedule+0x33/0x110
+Jan 15 00:53:02 kernel:  io_schedule+0x46/0x80
+Jan 15 00:53:02 kernel:  folio_wait_bit_common+0x136/0x330
+Jan 15 00:53:02 kernel:  ? __pfx_wake_page_function+0x10/0x10
+Jan 15 00:53:02 kernel:  __folio_lock+0x17/0x30
+Jan 15 00:53:02 kernel:  write_cache_pages+0x1cd/0x430
+Jan 15 00:53:02 kernel:  ? __pfx_blkdev_get_block+0x10/0x10
+Jan 15 00:53:02 kernel:  ? __pfx_block_write_full_folio+0x10/0x10
+Jan 15 00:53:02 kernel:  blkdev_writepages+0x6f/0xb0
+Jan 15 00:53:02 kernel:  do_writepages+0xcd/0x1f0
+Jan 15 00:53:02 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Jan 15 00:53:02 kernel:  filemap_fdatawrite_wbc+0x75/0xb0
+Jan 15 00:53:02 kernel:  __filemap_fdatawrite_range+0x58/0x80
+Jan 15 00:53:02 kernel:  filemap_write_and_wait_range+0x59/0xc0
+Jan 15 00:53:02 kernel:  bdev_release+0x18e/0x240
+Jan 15 00:53:02 kernel:  blkdev_release+0x15/0x30
+Jan 15 00:53:02 kernel:  __fput+0xa0/0x2e0
+Jan 15 00:53:02 kernel:  delayed_fput+0x23/0x40
+Jan 15 00:53:02 kernel:  process_one_work+0x181/0x3a0
+Jan 15 00:53:02 kernel:  worker_thread+0x306/0x440
+Jan 15 00:53:02 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Jan 15 00:53:02 kernel:  ? _raw_spin_lock_irqsave+0xe/0x20
+Jan 15 00:53:02 kernel:  ? __pfx_worker_thread+0x10/0x10
+Jan 15 00:53:02 kernel:  kthread+0xef/0x120
+Jan 15 00:53:02 kernel:  ? __pfx_kthread+0x10/0x10
+Jan 15 00:53:02 kernel:  ret_from_fork+0x44/0x70
+Jan 15 00:53:02 kernel:  ? __pfx_kthread+0x10/0x10
+Jan 15 00:53:02 kernel:  ret_from_fork_asm+0x1b/0x30
+Jan 15 00:53:02 kernel:  </TASK>
+
+[5. Technical Hypothesis]
+I suspect a deadlock occurs during the following sequence (assuming ublk id
+is 123):
+
+1. User program writes to /dev/ublkb123 via cached I/O, leaving dirty pages
+   in the page cache.
+2. The ublk server receives SIGINT and issues UBLK_U_CMD_STOP_DEV.
+3. The kernel path STOP_DEV -> del_gendisk() -> bdev_mark_dead() attempts to
+   flush dirty pages.
+4. This flush generates new I/O requests directed back to the ublk server.
+5. The ublk server receives SIGKILL at this moment, its threads stop and can
+   no longer handle the I/O requests generated by the flush in step 3.
+6. The server remains stuck in del_gendisk(), waiting for I/O completion that
+   will never happen.
+
+[6. My Question]
+1. Would enable UBLK_F_USER_RECOVERY solve this bug? I find UBLK_F_USER_RECOVERY
+   allows  ublk_unquiesce_dev() to be called during ublk_stop_dev.
+2. Should userspace strictly forbid to send SIGKILL to ublk server?
+3. I try to search the related bug fix or patches, but does not find.
+   Are there known fixes in later kernels (6.10+) that address this specific
+   interaction between del_gendisk and server termination?
+
+Thanks,
+huang-jl
 
