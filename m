@@ -1,139 +1,165 @@
-Return-Path: <linux-block+bounces-33188-lists+linux-block=lfdr.de@vger.kernel.org>
-X-Original-To: lists+linux-block@lfdr.de
+Return-Path: <linux-block+bounces-33191-lists+linux-block=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FF9BD3C5DA
-	for <lists+linux-block@lfdr.de>; Tue, 20 Jan 2026 11:45:21 +0100 (CET)
+Received: from mail.lfdr.de
+	by lfdr with LMTP
+	id ELQZLB6wb2nMKgAAu9opvQ
+	(envelope-from <linux-block+bounces-33191-lists+linux-block=lfdr.de@vger.kernel.org>)
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jan 2026 17:41:02 +0100
+X-Original-To: lists+linux-block@lfdr.de
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9065A47C88
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jan 2026 17:41:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8FFB5588CD1
-	for <lists+linux-block@lfdr.de>; Tue, 20 Jan 2026 10:28:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A0D3F7E049A
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jan 2026 15:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 968E53EF0C4;
-	Tue, 20 Jan 2026 10:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0721248F47;
+	Tue, 20 Jan 2026 15:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ARmobf+L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTm6pm0U"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828B13ED135
-	for <linux-block@vger.kernel.org>; Tue, 20 Jan 2026 10:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A717A1531E8;
+	Tue, 20 Jan 2026 15:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768904833; cv=none; b=WAaBN/sm1M518qg3KiwqL6EGdeDkZYTHxZ5panGsj+tLpozEasSBLMKSKsGk2pdqm3QT1wfS7fBWi9whCo5rXdU4M24LayUv4VnFnUbfL+HlWXFbzuVeBp/8PGxIaul2sNifaiCq6dF/PeeJvxxRHlbrH5CLOYSvvF2WCH8zIR8=
+	t=1768922124; cv=none; b=V3U0MhiT5NKSuT7OLQICbIXOtNe5C/oKaTyCsIqTPx3LwMa/OpvLuTO7GMLazPAUhN+OtjlE1B2XwLosM0SH5qRVXcJ3OXi8jhzud9EZ2H7tir26p7QXuLbfWsm6pF/c7orGsmXctScJtN7kUbX6vWLItDfzUs1cfNyyeGuYTuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768904833; c=relaxed/simple;
-	bh=uCEWYU2Al1i1RDivX5HCNm7JcyuJQ2TuUqwzkCAfF4o=;
+	s=arc-20240116; t=1768922124; c=relaxed/simple;
+	bh=cB6+u0cGFM+BuA6s4Sw76CjAr/+izfs5ypcZfWumP+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6fYqw6cSIKQzvKx4vKh1QIUt4p+HSwFSVF15wEu0unlzbiuwpC4dCXdeOVIen3GTC2NqGJh84lpVmZOokTbuSG5H9kWhOSt33Y1pkjBbNRC7HaSviyOwUxtS5pIQLYRDoje09HKg63KUnvYoLZlac+ozCaTBsmbbgObae7cBVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ARmobf+L; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4801eb2c0a5so32903615e9.3
-        for <linux-block@vger.kernel.org>; Tue, 20 Jan 2026 02:27:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768904830; x=1769509630; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCEWYU2Al1i1RDivX5HCNm7JcyuJQ2TuUqwzkCAfF4o=;
-        b=ARmobf+LH+SLF2eykKjTXs6ojlrTL9BrofW2lIDxN8rtj2KZ71Oh8QoMMd50JK2oWa
-         K+X2zOLPUXBHZSDlXCKLWyCLsev8mZ08JIgT6y4fOdIFPYb69GGvKUpol+qqKoE1X+xm
-         HZq9NukrH2rC79DTdxor7qZP2Bt05blEZB2vkN2ZHOkIixwyQ1u6Zb+pHTfPUdTMy3nC
-         lFGAb+N7Q5Lmun0mJeJX98lLMrl9yhC2p5wWP3bt51QOXNRRHRtJMD2nxUCIAsbktue0
-         g0tB6LmGmr1nGnpu7LKUG2ZGparCv90sNh1CNJTt954MxMr3jC6Wxn3YKJWRXT922y45
-         aYHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768904830; x=1769509630;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uCEWYU2Al1i1RDivX5HCNm7JcyuJQ2TuUqwzkCAfF4o=;
-        b=Ed/pTUU/CMOFs76InTS2bpsVlvzu0ldmq4nxqxMZuP+5ao7X9UQwrrSbzU8ZYY0daY
-         uFitCQD4xq8qi0v8VBxSr9NF80VHbhIrrhuZ+Qqm4G3RzgFkqXl/ldKBP9QwF9+BDYHD
-         gX2/KxR4Mx/OR/VmT3l7yb9/Nj86ynft9SuO24jZbybp506HvC9yCa7vWwCOl+UdWEl2
-         PTsTcuDhr8XlMtoNLSnUhyAr/SFJgmjcJgss+LtD+xT91q4DAL+1DPjXTLJwJELBrzOO
-         Nw1WAed352C5Z0syheVL+twRqWhOZpt5kVW0bvuz8HZ1sU6XqXu1jQG8Og+arYp53kZF
-         DPbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdUMYhn2nV6q6gaoFfKCRp3xuan87EaCvTpDpf/nJ9eGSEWcS5RwVH84faSThdtuoAXAyK8zyibkqAfg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8ivxSfEAuXywgNXD3Ghejl0N0Yt+zxPr/Z0qPoCRQwfwzrsK9
-	9nZAeRwLOZ2yYqew2MNU5jhcmGa0rmfQMWvNJU10892Cik+0uAfBw97fE2QDiTjuUTc=
-X-Gm-Gg: AY/fxX4VemUJpz/QJro4MCWFL7wYMLlW8TtYVbxIS/y7Gqtvu5MGm17aeR6R9IHUS1U
-	L2geezoC8ZAVjWS8V1DkmrrkgZGUSt2pWxdvjUR+lfl5UCq9BZlpTxfSsAFpUuQAEA/Hvl7Xrl4
-	5rgupJf+DXRNTX/CEJbcUKLTi2ZmMFtdiHguJXmwzOfUNxOO+dFt3+ynQIgnCRcw531ZYt1fJMb
-	/+Uf0HSSUMYfqXIbFKLdWlAHX4sDGXRqBn0pq11D9rzcF9PaYSWvL5l3j2814gAZg6rXQfRFI1b
-	WJ249RYK32bRqODA/9wX3MV7g+3rniMp2D/VITZqEC1/8f3w6aGQuoXjT77EUoIMM9ITotN8+Bf
-	WkzKm9HVfMLhrfrndsJKdWCrfMWzcYxWFZpNnGa3YOXI+ZmCav0296dKA7oJ2KPYYukbBrmF1B+
-	QLVLukAwBgUg5ukJHBXpRs2GvIDZDJqCA=
-X-Received: by 2002:a05:600c:3483:b0:471:1717:411 with SMTP id 5b1f17b1804b1-4801e334248mr182913705e9.24.1768904829791;
-        Tue, 20 Jan 2026 02:27:09 -0800 (PST)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f4b267661sm300938025e9.13.2026.01.20.02.27.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 02:27:09 -0800 (PST)
-Date: Tue, 20 Jan 2026 11:27:07 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Yu Kuai <yukuai@fnnas.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org, tj@kernel.org, 
-	nilay@linux.ibm.com, ming.lei@redhat.com, zhengqixing@huawei.com, hch@infradead.org
-Subject: Re: [PATCH 1/6] blk-cgroup: protect q->blkg_list iteration in
- blkg_destroy_all() with blkcg_mutex
-Message-ID: <sq7fx334im64pvgiieemit4sb67z4p3ftoc4544rsea2ojy4u4@mtwvaerxqikn>
-References: <20260115163818.162968-1-yukuai@fnnas.com>
- <20260115163818.162968-2-yukuai@fnnas.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EzEy85kqJ/2Z+LMoThi5rMTg30Nv+y4s5oJbfL6KtV1t6+EM9nk+x7tOnQemBr2j1V/QCxZoozQV6tdQ+dx/ojGdxFbb0bcPAVFqCnNoYpPPtS6uVaBCHUjcDguU83O7RU/XIImmqztEh8xsCBsXySbCmjruTmCoWjT5gi21C40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTm6pm0U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B042EC16AAE;
+	Tue, 20 Jan 2026 15:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768922124;
+	bh=cB6+u0cGFM+BuA6s4Sw76CjAr/+izfs5ypcZfWumP+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dTm6pm0UbqrACPX84K25WsKI0mLcsga30LnGZ0xAs1QeHOq8GuYQb0tsVAj/1PyOk
+	 AN1JtPlGK2Lo1SN6drBYr1dVy9fdgzrRQCr2v1Zr5WaI0DgPDkYpbpHSPBc0lzPVxT
+	 mDodJS2/jqZjTXVaKaFD5qjNt2270SzYmLSpr9NA2qekfz0PdVSlZLmHpnEvNYJ+eY
+	 A07k9S1Ry7xxwMicubb01dCJM4tNlasnq386AOzVL87vqKI0T34pSKz9QNypV2LDxE
+	 2HWPcTW6E/V+Ce+TphpVMpakDh1WcI3tzKUwZtHRXG5Gb8k9H87NfGW6D+dQQz/FfZ
+	 kpuAsAsDnxf/g==
+Date: Tue, 20 Jan 2026 15:15:14 +0000
+From: Will Deacon <will@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Ridong <chenridong@huawei.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+	cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 29/33] sched/arm64: Move fallback task cpumask to
+ HK_TYPE_DOMAIN
+Message-ID: <aW-cAlJCtI5Qtify@willie-the-truck>
+References: <20260101221359.22298-1-frederic@kernel.org>
+ <20260101221359.22298-30-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="skz75jirqnv3i5o3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260115163818.162968-2-yukuai@fnnas.com>
+In-Reply-To: <20260101221359.22298-30-frederic@kernel.org>
+X-Spamd-Result: default: False [-1.46 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-33191-lists,linux-block=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,linux-foundation.org,google.com,arm.com,huawei.com,kernel.org,davemloft.net,redhat.com,linuxfoundation.org,kernel.dk,cmpxchg.org,gmail.com,linux.dev,infradead.org,linutronix.de,suse.cz,lists.infradead.org,kvack.org];
+	RCPT_COUNT_TWELVE(0.00)[37];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[will@kernel.org,linux-block@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-block];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 9065A47C88
+X-Rspamd-Action: no action
+X-Rspamd-Server: lfdr
 
+Hi Frederic,
 
---skz75jirqnv3i5o3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/6] blk-cgroup: protect q->blkg_list iteration in
- blkg_destroy_all() with blkcg_mutex
-MIME-Version: 1.0
+On Thu, Jan 01, 2026 at 11:13:54PM +0100, Frederic Weisbecker wrote:
+> When none of the allowed CPUs of a task are online, it gets migrated
+> to the fallback cpumask which is all the non nohz_full CPUs.
+> 
+> However just like nohz_full CPUs, domain isolated CPUs don't want to be
+> disturbed by tasks that have lost their CPU affinities.
+> 
+> And since nohz_full rely on domain isolation to work correctly, the
+> housekeeping mask of domain isolated CPUs should always be a superset of
+> the housekeeping mask of nohz_full CPUs (there can be CPUs that are
+> domain isolated but not nohz_full, OTOH there shouldn't be nohz_full
+> CPUs that are not domain isolated):
+> 
+> 	HK_TYPE_DOMAIN | HK_TYPE_KERNEL_NOISE == HK_TYPE_DOMAIN
+> 
+> Therefore use HK_TYPE_DOMAIN as the appropriate fallback target for
+> tasks and since this cpumask can be modified at runtime, make sure
+> that 32 bits support CPUs on ARM64 mismatched systems are not isolated
+> by cpusets.
+> 
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Reviewed-by: Waiman Long <longman@redhat.com>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 18 +++++++++++++++---
+>  include/linux/cpu.h            |  4 ++++
+>  kernel/cgroup/cpuset.c         | 17 ++++++++++++++---
+>  3 files changed, 33 insertions(+), 6 deletions(-)
 
-Hi Kuai.
+tbh, I'd also be fine just saying that isolation isn't reliable on these
+systems and then you don't need to add the extra arch hook.
 
-On Fri, Jan 16, 2026 at 12:38:13AM +0800, Yu Kuai <yukuai@fnnas.com> wrote:
-> blkg_destroy_all() iterates q->blkg_list without holding blkcg_mutex,
-> which can race with blkg_free_workfn() that removes blkgs from the list
-> while holding blkcg_mutex.
->=20
-> Add blkcg_mutex protection around the q->blkg_list iteration to prevent
-> potential list corruption or use-after-free issues.
+Whatever you prefer, but please can you update the text in
+Documentation/arch/arm64/asymmetric-32bit.rst to cover the interaction
+between the asymmetric stuff and cpu isolation?
 
-I'm little bit confused why q->queue_lock is not sufficient for this
-problem. (If pd_free_fn() was moved after list_del_init() in
-blkg_free_workfn().)
+Cheers,
 
-I'd find useful some overview of the involved locks (queue_lock and
-blkcg_mutex) and what data structures are synchronized with each of
-them. It'd help to disambiguat which locks are needed where.
-
-Thanks,
-Michal
-
---skz75jirqnv3i5o3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaW9YbBsUgAAAAAAEAA5t
-YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+AivvQD/QdEFpSn/BsD5QnvcmK0g
-WEcYYbMLWP5G6uzWjlI9QQAA/R1oNcLVKIXy/ctc2g6fiWT+qy3k1nTH0R4JvQNB
-OgoD
-=FZq0
------END PGP SIGNATURE-----
-
---skz75jirqnv3i5o3--
+Will
 
